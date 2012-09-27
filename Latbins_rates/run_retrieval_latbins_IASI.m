@@ -14,11 +14,7 @@
 
 ix = JOB;
 
-pwd
-
-addpath /home/sergio/MATLABCODE/oem_pkg
-addpath /home/sergio/MATLABCODE/oem_pkg/Test
-addpath /home/sergio/MATLABCODE/oem_pkg/Test/Debug
+add_path_to_oem_pkg
 
 %% Define default driver structure
 driver = set_struct;

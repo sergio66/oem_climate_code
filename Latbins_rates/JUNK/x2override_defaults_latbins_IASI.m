@@ -138,6 +138,5 @@ driver.oem.lambda_Q1        = 5;
 driver.oem.lambda_temp      = 5;
 driver.oem.lambda_qst       = [0.1 0.1 0.1 0.1 0.10 0.1]*1e-1;
 driver.oem.lambda           = 0;
-driver.oem.adjust_spectral_errorbars = 5;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
