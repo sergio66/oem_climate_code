@@ -8,7 +8,7 @@ function driver = override_defaults(driver,ix);
 driver.iibin = ix;
 driver.filename = ['../Output/testx_' int2str(driver.iibin)];
 
-load /strowdata1/shared/sergio/MATLABCODE/TMP_RATES_Fit_pkg/Cluster/strow_stmNov2011_dobs20
+load AIRS_MATFILES/strow_stmNov2011_dobs20.mat
 driver.jacobian.chanset = dobs20.jacobian.chanset;
 
 %% these are limits for good and bad input SPECTRA
@@ -49,11 +49,14 @@ driver.oem.lambda_temp      = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-driver.rateset.datafile = '/home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Aug28_2012_span_07_2007_07_2012.mat';
-driver.rateset.datafile = '/home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Sep11_2012_span_07_2007_07_2012.mat';
-driver.jacobian.filename    = '/home/sergio/MATLABCODE/BUFFER_Fit_pkg/Aux_jacs_AIRS_General/JACS/Sep11_2012/all_kcarta_jacs_6_97_97.mat';
-driver.rateset.datafile = '/home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_1day_clr_era_lays_spanday01_day_avgL1Brates_robust_Sep17_2012_span_09_2002_08_2012.mat';
-driver.rateset.datafile = '/home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Sep17_2012_span_09_2002_08_2012.mat';
+%% copy stuff from /home/sergio/MATLABCODE/BUFFER_Fit_pkg/Aux_jacs_AIRS_General/JACS/Sep11_2012/all_kcarta_jacs_6_97_97.mat';
+driver.jacobian.filename = 'AIRS_MATFILES/all_kcarta_jacs_6_97_97.mat';
+
+%% copy stuff from /home/sergio/MATLABCODE/RATES_TARO/MAT/
+driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Aug28_2012_span_07_2007_07_2012.mat';
+driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Sep11_2012_span_07_2007_07_2012.mat';
+driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_day_avgL1Brates_robust_Sep17_2012_span_09_2002_08_2012.mat';
+driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Sep17_2012_span_09_2002_08_2012.mat';
 
 %% orig
 driver.oem.lambda_qst       = 0.1;
