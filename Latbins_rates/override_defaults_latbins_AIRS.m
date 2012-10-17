@@ -82,6 +82,6 @@ driver.oem.lambda           = 1e-4;
 driver.oem.adjust_spectral_errorbars = 5;
 
 fprintf(1,'%s \n',driver.rateset.datafile);
-xstartup
+
 %g = dogoodchan;
 %driver.jacobian.chanset = g;
