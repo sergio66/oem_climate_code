@@ -47,8 +47,8 @@ if iFreqOrNoise == 2
     y = hcris.vchan;
     error('cris noise???')
   elseif findstr(instr,'airs') | findstr(instr,'AIRS')
-    fx = '/home/sergio/MATLABCODE/';
-    fx = [fx 'AIRS_IASI_AMSU_JACS_gas_T/airs_chanlist_calib_tomp'];
+    %fx = '/home/sergio/MATLABCODE/';
+    %fx = [fx 'AIRS_IASI_AMSU_JACS_gas_T/airs_chanlist_calib_tomp'];
     fx = ['airs_chanlist_calib_tomp'];
     dd = load(fx);
     %% everything is screwup here ie need to re-order things 

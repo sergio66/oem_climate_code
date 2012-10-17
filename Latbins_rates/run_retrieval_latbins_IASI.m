@@ -25,15 +25,15 @@ if driver.debug
 end;
 
 %% Change some defaults
-%driver = override_defaults_iasi(driver,ix);  %% this is for LLS oem_pkg
-driver = override_defaults_latbins_IASI(driver,ix);
+driver = override_defaults_iasi(driver,ix);  %% this is for LLS oem_pkg
+%driver = override_defaults_latbins_IASI(driver,ix);
 
 %% cd ../WORKS_Sept1_2012
 
 % Get rate data and Jacobians
 driver            = get_rates(driver);
-[driver,m_ts_jac] = get_jacs(driver);          %% strow's new renorm
-%[driver,m_ts_jac] = get_jacs_NOrenorm(driver); %% no renorm
+%[driver,m_ts_jac] = get_jacs(driver);          %% default TEST driver .. should always work!
+[driver,m_ts_jac] = get_jacs_NOrenorm(driver); %% no renorm
 
 %  Adjust the rates?
 if driver.rateset.adjust

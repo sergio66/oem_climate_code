@@ -27,10 +27,8 @@ if driver.debug
 end;
 
 %% Change some defaults
-%driver = override_defaults_airs(driver,ix);  %% this is for LLS oem_pkg
+%driver = override_defaults_airs(driver,ix);  %% this is TEST and should always work!
 driver = override_defaults_latbins_AIRS(driver,ix);
-
-%% cd ../WORKS_Sept1_2012
 
 % Get rate data and Jacobians
 driver            = get_rates(driver);

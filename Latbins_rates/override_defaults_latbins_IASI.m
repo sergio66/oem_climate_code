@@ -18,7 +18,6 @@ driver.rateset.max = +1;
 driver.rateset.min = -1;
 
 driver.oem.apriori_filename = 'apriori_zero';
-addpath /home/sergio/MATLABCODE
 y = instr_chans('iasi');
 ind = find(y <= 2205);
 ind = (1:4:length(ind));
@@ -104,7 +103,7 @@ driver.rateset.datafile = '/home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_
 driver.jacobian.filename = ...
   '/home/sergio/MATLABCODE/BUFFER_Fit_pkg/Aux_jacs_IASI_General/JACS/Sep11_2012/all_kcarta_6_97_97_jacsB1.mat';
 driver.jacobian.qstnames = {'CO2' 'O3' 'N2O' 'CH4' 'CFC11' 'stemp'};
-driver.jacobian.qstYesOrNo = [1     1   1     1      1       1];
+driver.jacobian.qstYesOrNo = [1     1   1     1       1       1];
 driver.jacobian.numQlays   = 1;   %% have N lays of temp jacs; how many gases we want to retrieve profiles
                                   %% must be at least 1 (for water)
 driver.jacobian.numlays    = 97;
