@@ -40,41 +40,41 @@ plays = flipud(plays);
 load /home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_1dayV1_era3_lays_spanday01_save_lat_Sep7_2011.mat
 tropics = find(abs(save_lat) <= 30);
 
-figure(3); clf
-  plot(nanmean(waterrate(tropics,:)),plays,'b--','linewidth',2); hold on
-  plot(nanmean(ptemprate(tropics,:)),plays,'r--','linewidth',2); 
-plot(nanmean(waterrate(tropics,:))+nanstd(waterrate(tropics,:)),plays,'c--','linewidth',2);
-plot(nanmean(waterrate(tropics,:))-nanstd(waterrate(tropics,:)),plays,'c--','linewidth',2);
-plot(nanmean(ptemprate(tropics,:))+nanstd(ptemprate(tropics,:)),plays,'m--','linewidth',2);
-plot(nanmean(ptemprate(tropics,:))-nanstd(ptemprate(tropics,:)),plays,'m--','linewidth',2);
-hold off
-  set(gca,'ydir','reverse'); grid; title('ERA (b) WV frac/yr (r) Temp K/yr')
-  %hl = legend('ERA WV','location','east'); set(hl,'fontsize',10)
-  %end
-
-figure(3); clf
+figure(6); clf
   subplot(121)
-  plot(nanmean(waterrate(tropics,:)),plays,'b--','linewidth',2); hold on
-  plot(nanmean(waterrate(tropics,:))+nanstd(waterrate(tropics,:)),plays,'c--','linewidth',2);
-  plot(nanmean(waterrate(tropics,:))-nanstd(waterrate(tropics,:)),plays,'c--','linewidth',2);
-  hold off; title('ERA Water frac/yr'); %set(hl,'fontsize',10); grid
+  shadedErrorBarY(nanmean(water(tropics,:)),plays,nanstd(water(tropics,:)),'bo-',1);
+  hold on
+  shadedErrorBarY(nanmean(waterrate(tropics,:)),plays,nanstd(waterrate(tropics,:)),'rx-',1);
+  hold off; title('AIRS(b) ERA(r) Water frac/yr'); %set(hl,'fontsize',10); grid
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0 1000]);
 
   subplot(122)
-  plot(nanmean(ptemprate(tropics,:)),plays,'r--','linewidth',2); hold on
-  plot(nanmean(ptemprate(tropics,:))+nanstd(ptemprate(tropics,:)),plays,'m--','linewidth',2);
-  plot(nanmean(ptemprate(tropics,:))-nanstd(ptemprate(tropics,:)),plays,'m--','linewidth',2);
-  hold off; title('ERA Temp frac/yr'); %set(hl,'fontsize',10); grid
+  shadedErrorBarY(nanmean(temp(tropics,:)),plays,nanstd(temp(tropics,:)),'bo-',1);
+  hold on
+  shadedErrorBarY(nanmean(ptemprate(tropics,:)),plays,nanstd(ptemprate(tropics,:)),'rx-',1);
+  hold off; title('AIRS(b) ERA(r) Temp K/yr'); %set(hl,'fontsize',10); grid
   set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 1000]);
 
-  %set(gca,'ydir','reverse'); grid; title('ERA (b) WV frac/yr (r) Temp K/yr')
-  %hl = legend('ERA WV','location','east'); 
-  %end
+figure(4); clf
+  pcolor(save_lat,plays,double(waterrate')); shading interp; colorbar; 
+  set(gca,'ydir','reverse'); grid; title('ERA WV frac/yr ')
+figure(5); clf
+  pcolor(save_lat,plays,double(ptemprate')); shading interp; colorbar; 
+  set(gca,'ydir','reverse'); grid; title('ERA T K/yr ')
 
+figure(1); caxis([-0.02 +0.02]); colorbar
+figure(4); caxis([-0.02 +0.02]); colorbar
 
+figure(2); caxis([-0.1 +0.1]); colorbar  
+figure(5); caxis([-0.1 +0.1]); colorbar
 
-%hold on
-%hold off
+figure(7);
+  shadedErrorBar(save_lat,params(:,6),params_sigs(:,6),'bo-',1);
+  hold on
+  shadedErrorBar(save_lat,stemprate,stempratestd,'ro-',1);
+  hold off
+grid
+title('AIRS(b) ERA(r) STemp K/yr'); %set(hl,'fontsize',10); grid
 
 %figure(4)
 %hold off

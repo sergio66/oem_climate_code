@@ -25,8 +25,8 @@ if driver.debug
 end;
 
 %% Change some defaults
-driver = override_defaults_iasi_test(driver,ix);       %% default TEST driver .. should always work!
-%driver = override_defaults_latbins_IASI(driver,ix);   %% this is YOUR settings
+%driver = override_defaults_iasi_test(driver,ix);       %% default TEST driver .. should always work!
+driver = override_defaults_latbins_IASI(driver,ix);   %% this is YOUR settings
 
 %% cd ../WORKS_Sept1_2012
 

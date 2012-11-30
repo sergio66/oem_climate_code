@@ -14,8 +14,6 @@
 
 ix = JOB;
 
-pwd
-
 add_path_to_oem_pkg
 
 %% Define default driver structure
@@ -27,8 +25,8 @@ if driver.debug
 end;
 
 %% Change some defaults
-driver = override_defaults_airs_test(driver,ix);      %% this is TEST and should always work!
-%driver = override_defaults_latbins_AIRS(driver,ix);  %% this is YOUR settings
+%driver = override_defaults_airs_test(driver,ix);      %% this is TEST and should always work!
+driver = override_defaults_latbins_AIRS(driver,ix);  %% this is YOUR settings
 
 % Get rate data and Jacobians
 driver            = get_rates(driver);

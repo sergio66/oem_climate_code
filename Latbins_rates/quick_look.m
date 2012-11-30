@@ -14,7 +14,7 @@ end
 for ix = 1 : N
   loader = ['load ../Output/testx_' num2str(ix) '.mat'];
   eval(loader)
-  params(ix,:)     = oem.finalrates;
+  params(ix,:)      = oem.finalrates;
   params_sigs(ix,:) = oem.finalsigs;
   fitted_rates(ix,:) = oem.fit;
   input_rates(ix,:)  = rateset.rates;
@@ -23,6 +23,7 @@ end
 thestr = jacobian.qstnames;
 chanset = jacobian.chanset;
 chanset = jacobian.chanset_used;
+
 lambdax = struct;
   lambdax.lambda      = oem.lambda;
   lambdax.lambda_qst  = oem.lambda_qst;
@@ -42,25 +43,54 @@ else
   error('oops')
 end
 
-figure(1); clf; plot(water,1:97); set(gca,'ydir','reverse'); title('WV(z)')
-figure(2); clf; plot(temp,1:97);  set(gca,'ydir','reverse'); title('T(z)')
+figure(1); clf; plot(water,1:97); set(gca,'ydir','reverse'); title('AIRS WV(z)')
+figure(2); clf; plot(temp,1:97);  set(gca,'ydir','reverse'); title('AIRS T(z)')
 
 figure(1); clf; pcolor(save_lat,1:97,water'); set(gca,'ydir','reverse'); 
-  title('WV(z) frac yr-1'); shading flat; colorbar
+  title('AIRS WV(z) frac yr-1'); shading flat; colorbar
 figure(2); clf; pcolor(save_lat,1:97,temp');  set(gca,'ydir','reverse'); 
-  title('T(z) K yr-1'); shading flat; colorbar
-figure(3); clf; plot(tracegases,save_lat,'-o','linewidth',2); grid
-  set(gca,'ydir','reverse'); title('trace');
-  hl = legend(thestr); set(hl,'fontsize',8);
-  
+  title('AIRS T(z) K yr-1'); shading flat; colorbar
+
+figure(1); clf; pcolor(save_lat,plays,water'); set(gca,'ydir','reverse'); 
+  title('AIRS WV(z) frac yr-1'); shading flat; colorbar
+figure(2); clf; pcolor(save_lat,plays,temp');  set(gca,'ydir','reverse'); 
+  title('AIRS T(z) K yr-1'); shading flat; colorbar
+
+figure(3); clf; plot(tracegases,save_lat,'-o','linewidth',2);
+  hold on
+  shadedErrorBarY(tracegases(:,1),save_lat,tracegases_sigs(:,1),'bo-',1); hold on
+  shadedErrorBarY(tracegases(:,2),save_lat,tracegases_sigs(:,2),'go-',1); hold on
+  shadedErrorBarY(tracegases(:,3),save_lat,tracegases_sigs(:,3),'ro-',1); hold on
+  shadedErrorBarY(tracegases(:,4),save_lat,tracegases_sigs(:,4),'co-',1); hold on
+  shadedErrorBarY(tracegases(:,5),save_lat,tracegases_sigs(:,5)*0,'mo-',1); hold on
+  shadedErrorBarY(tracegases(:,6),save_lat,tracegases_sigs(:,6),'ko-',1); hold on
+  hold off; grid; title('AIRS trace');
+  hl = legend(thestr); 
+  %legendlinestyles(hl,{'o' 'o'  'o' 'o' 'o' 'o'},{},{'b' 'g'  'r' 'c' 'm' 'k'})
+  set(hl,'fontsize',8);
+    
 if length(input_rates) == 2378
   ff = instr_chans('airs'); g = dogoodchan;
   figure(4); clf; plot(ff(g),input_rates(:,g)-fitted_rates(:,g)); title('AIRS : fitted biases'); grid
+    hold on
+      plot(ff(chanset),nanmean(input_rates(:,chanset) - fitted_rates(:,chanset)),'ko-','linewidth',2);
+    hold off
+
   figure(5); clf; plot(ff(g),input_rates(:,g)); title('AIRS : inputs'); grid
+    hold on
+      plot(ff(chanset),nanmean(input_rates(:,chanset)),'ko-','linewidth',2);
+    hold off
 else
   ff = instr_chans('iasi'); g = 1:length(ff);
   figure(4); clf; plot(ff(g),input_rates(:,g)-fitted_rates(:,g)); title('IASI : fitted biases'); grid
+    hold on
+      plot(ff(chanset),nanmean(input_rates(:,chanset) - fitted_rates(:,chanset)),'ko-','linewidth',2);
+    hold off
+
   figure(5); clf; plot(ff(g),input_rates(:,g)); title('IASI : inputs'); grid
+    hold on
+      plot(ff(chanset),nanmean(input_rates(:,chanset)),'ko-','linewidth',2);
+    hold off
 end
 
 if N == 5
