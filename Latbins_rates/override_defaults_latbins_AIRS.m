@@ -79,8 +79,7 @@ driver.oem.adjust_spectral_errorbars = 5;
 %driver.oem.lambda_temp      = 0.001;
 %driver.oem.lambda_qst       = [0.1 0.1 0.1 0.1 0.10 0.1]*1e-2;
 %driver.oem.lambda           = 1e-1;
-%driver.oem.spectralcov_filename = ...
-%  ['/strowdata1/shared/sergio/MATLABCODE/oem_pkg_run/MakeERA_ratespectra/cov_spectra_yy_2009_latbin_' num2str(ix,'%02d') '.mat'];
+%driver.oem.spectralcov_filename = ['../MakeERA_ratespectra/cov_spectra_yy_2009_latbin_' num2str(ix,'%02d') '.mat'];
 
 fprintf(1,'%s \n',driver.rateset.datafile);
 
