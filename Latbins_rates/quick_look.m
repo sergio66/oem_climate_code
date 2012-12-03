@@ -1,4 +1,4 @@
-plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
+plevs = load('airslevels.dat');
 plevsA = plevs(1:end-1) - plevs(2:end);
 plevsB = log(plevs(1:end-1)./plevs(2:end));
 plevs = plevsA./plevsB;
