@@ -11,24 +11,48 @@ else
   load latbins.mat;
 end
 
-for ix = 1 : N
-  loader = ['load ../Output/testx_' num2str(ix) '.mat'];
-  eval(loader)
-  params(ix,:)      = oem.finalrates;
-  params_sigs(ix,:) = oem.finalsigs;
-  fitted_rates(ix,:) = oem.fit;
-  input_rates(ix,:)  = rateset.rates;
+iWhich = input('(1) OEM or (-1) LLS : ');
+
+if iWhich == 1
+  for ix = 1 : N
+    loader = ['load ../Output/testx_' num2str(ix) '.mat'];
+    eval(loader)
+    params(ix,:)      = oem.finalrates;
+    params_sigs(ix,:) = oem.finalsigs;
+    fitted_rates(ix,:) = oem.fit;
+    input_rates(ix,:)  = rateset.rates;
+  end
+
+  lambdax = struct;
+    lambdax.lambda      = oem.lambda;
+    lambdax.lambda_qst  = oem.lambda_qst;
+    lambdax.lambda_Q1   = oem.lambda_Q1;
+    lambdax.lambda_temp = oem.lambda_temp;
+
+elseif iWhich == -1
+
+  for ix = 1 : N
+    loader = ['load ../Output/testx_' num2str(ix) '.mat'];
+    eval(loader)
+    params(ix,:)      = lls.finalrates;
+    params_sigs(ix,:) = lls.finalsigs;
+    fitted_rates(ix,:) = lls.fit;
+    input_rates(ix,:)  = rateset.rates;
+  end
+
+%lambdax = struct;
+%  lambdax.lambda      = lls.lambda;
+%  lambdax.lambda_qst  = lls.lambda_qst;
+%  lambdax.lambda_Q1   = lls.lambda_Q1;
+%  lambdax.lambda_temp = lls.lambda_temp;
+%clear oem rateset jacobian lls
+
 end
 
 thestr = jacobian.qstnames;
 chanset = jacobian.chanset;
 chanset = jacobian.chanset_used;
 
-lambdax = struct;
-  lambdax.lambda      = oem.lambda;
-  lambdax.lambda_qst  = oem.lambda_qst;
-  lambdax.lambda_Q1   = oem.lambda_Q1;
-  lambdax.lambda_temp = oem.lambda_temp;
 clear oem rateset jacobian lls
 
 if length(params) == 200
@@ -68,7 +92,8 @@ figure(3); clf; plot(tracegases,save_lat,'-o','linewidth',2);
   hl = legend(thestr); 
   %legendlinestyles(hl,{'o' 'o'  'o' 'o' 'o' 'o'},{},{'b' 'g'  'r' 'c' 'm' 'k'})
   set(hl,'fontsize',8);
-    
+  axis([-5 +5 -90 +90]);
+
 if length(input_rates) == 2378
   ff = instr_chans('airs'); g = dogoodchan;
   figure(4); clf; plot(ff(g),input_rates(:,g)-fitted_rates(:,g)); title('AIRS : fitted biases'); grid
@@ -92,6 +117,28 @@ else
       plot(ff(chanset),nanmean(input_rates(:,chanset)),'ko-','linewidth',2);
     hold off
 end
+
+figure(7); clf;
+figure(7); hold on
+if length(input_rates) == 2378
+  ff = instr_chans('airs'); g = dogoodchan;
+else
+  ff = instr_chans('iasi'); g = 1:length(ff);
+end
+xx = find(abs(save_lat) <= 30);
+if length(xx) > 0
+  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'b');   
+end
+xx = find(save_lat > 30);
+if length(xx) > 0
+  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'g');   
+end
+xx = find(save_lat < -30);
+if length(xx) > 0
+  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'r');   
+end
+title('Biases (B) tropics (G) NML (R) SML'); grid
+figure(7); hold off
 
 if N == 5
   [tracegases(3,:);tracegases_sigs(3,:)]'
