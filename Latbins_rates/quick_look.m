@@ -125,17 +125,17 @@ if length(input_rates) == 2378
 else
   ff = instr_chans('iasi'); g = 1:length(ff);
 end
-xx = find(abs(save_lat) <= 30);
+xx = find(save_lat < -30);
 if length(xx) > 0
-  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'b');   
+  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'r');   
 end
 xx = find(save_lat > 30);
 if length(xx) > 0
   plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'g');   
 end
-xx = find(save_lat < -30);
+xx = find(abs(save_lat) <= 30);
 if length(xx) > 0
-  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'r');   
+  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'b');   
 end
 title('Biases (B) tropics (G) NML (R) SML'); grid
 figure(7); hold off
