@@ -80,28 +80,38 @@ driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanda
 %driver.oem.lambda           = 1e-2;
 %driver.oem.adjust_spectral_errorbars = 0.5;
 
-driver.oem.diag_only        = false;
-driver.oem.lambda_Q1        = 5;
-driver.oem.lambda_temp      = 1;
-driver.oem.lambda_qst       = [0.1 0.1 0.1 0.1 0.10 0.1]*1e-2;
-driver.oem.lambda           = 1e+4;
-driver.oem.adjust_spectral_errorbars = 0.5;
+%driver.oem.diag_only        = false;
+%driver.oem.lambda_Q1        = 5;
+%driver.oem.lambda_temp      = 1;
+%driver.oem.lambda_qst       = [0.1 0.1 0.1 0.1 0.10 0.1]*1e-2;
+%driver.oem.lambda           = 1e+4;
+%driver.oem.adjust_spectral_errorbars = 0.5;
 
-driver.oem.lambda_qst       = [1 1 1 1 1 1                                 ones(1,1)*(-9999)]*1e-4;
-driver.oem.lambda_Q1        = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*10;
-driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*1;
-driver.oem.lambda           = 1e-2;
+%driver.oem.lambda_qst       = [1 1 1 1 1 1                                 ones(1,1)*(-9999)]*1e-4;
+%driver.oem.lambda_Q1        = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*10;
+%driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*1;
+%driver.oem.lambda           = 1e-2;
 
 % WORKS WELL WITH Nov02_2012_span_09_2002_08_2012.mat gives good T WV
+%driver.oem.lambda_qst       = [1 1 1 1 1 1                                 ones(1,1)*(-9999)]*1e-4;
+%driver.oem.lambda_Q1        = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*50;
+%driver.oem.lambda_Q1        = [ones(1,40)*10 ones(1,30)*15 ones(1,27)*20 ones(1,1)*(-9999)]*5;
+%driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*5;
+%driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*1.7 ones(1,27)*2.5 ones(1,1)*(-9999)]*5;
+%driver.oem.lambda           = 1e-2;
+%driver.jacobian.filename = 'M_TS_jac_all.mat';
+% WORKS WELL WITH Nov02_2012_span_09_2002_08_2012.mat gives good T WV
+
+driver.rateset.ocb_set = 'obs';
+driver.rateset.ocb_set = 'cal';
 driver.oem.lambda_qst       = [1 1 1 1 1 1                                 ones(1,1)*(-9999)]*1e-4;
 driver.oem.lambda_Q1        = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*50;
-driver.oem.lambda_Q1        = [ones(1,40)*10 ones(1,30)*15 ones(1,27)*20 ones(1,1)*(-9999)]*5;
+driver.oem.lambda_Q1        = [ones(1,40)*12.5 ones(1,30)*15 ones(1,27)*20 ones(1,1)*(-9999)]*5;
 driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*5;
-driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*1.7 ones(1,27)*2.5 ones(1,1)*(-9999)]*5;
+driver.oem.lambda_temp      = [ones(1,40)*10.0 ones(1,30)*11.7 ones(1,27)*12.5 ones(1,1)*(-9999)]*0.1;
+driver.oem.lambda_temp      = [ones(1,40)*10.0 ones(1,30)*11.7 ones(1,27)*12.5]*1;
 driver.oem.lambda           = 1e-2;
-% WORKS WELL WITH Nov02_2012_span_09_2002_08_2012.mat gives good T WV
-
-
+driver.jacobian.filename = '/home/sergio/MATLABCODE/TMP_RATES_Fit_pkg_General/Aux_jacs_AIRS/NOV02_2012/all_kcarta_jacs.mat';
 driver.oem.spectralcov_filename = ['../MakeERA_ratespectra/cov_spectra_yy_2009_latbin_' num2str(ix,'%02d') '.mat'];
 
 fprintf(1,'%s \n',driver.rateset.datafile);

@@ -1,25 +1,32 @@
-ecmrates = input('enter (1) 2002-2011 or (2) 2007-2011  or (3) 2007-2012  ERA rates : ');
+figure(6); 
+
+ecmrates = input('enter (1) 2002 - 2012 or (2) 2002-2011 or (3) 2007-2011  or (4) 2007-2012  ERA rates : ');
 ecmfile = '/strowdata1/shared/sergio/MATLABCODE/RATES_TARO/MAT/';
 if ecmrates == 1
   co2str = '_07_2002_07_2010';
   ecmfile = [ecmfile ...
-      'overocean_gsx_1dayV1_era2_lays_profilerates_May23_2011_robust.mat'];
+    'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat'];
 elseif ecmrates == 2
+  co2str = '_07_2002_07_2010';
+  ecmfile = [ecmfile ...
+      'overocean_gsx_1dayV1_era2_lays_profilerates_May23_2011_robust.mat'];
+elseif ecmrates == 3
   %ecmfile = [ecmfile ...
   %    'overocean_gsx_1dayV1_ecmwf2_lays_spanday16_profilerates_Aug18_2011_robust.mat'];
   co2str = '_07_2007_07_2010';
   ecmfile = [ecmfile ...
       'overocean_gsx_1dayV1_era_lays_spanday01_profilerates_Aug26_2011_robust.mat'];
-elseif ecmrates == 3
+elseif ecmrates == 4
   co2str = '_07_2007_07_2010';
   ecmfile = [ecmfile ...
     'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Aug28_2012_robust_span_07_2007_07_2012.mat'];
 end
 load(ecmfile);
 
-disp('tracegas times : (1) 8yr 07/2002-07/2010 (2) 8 yr 09/2003-09/2011 (3) 9 yr 09/2002-09/2011');
-disp('tracegas times : (1) 8yr 09/2002-08/2010 (2) 7 yr 09/2003-08/2010')
-tracegasrates = input('Enter tracegas rates : ');
+%disp('tracegas times : (1) 8yr 07/2002-07/2010 (2) 8 yr 09/2003-09/2011 (3) 9 yr 09/2002-09/2011');
+%disp('tracegas times : (1) 8yr 09/2002-08/2010 (2) 7 yr 09/2003-08/2010')
+%tracegasrates = input('Enter tracegas rates : ');
+tracegasrates = 1;
 if tracegasrates == 1
   co2str = '_07_2002_07_2010';
   co2str = '_09_2002_08_2010';
@@ -84,123 +91,41 @@ plays = plays(4:100);
 plays = flipud(plays);
 
 load /home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_1dayV1_era3_lays_spanday01_save_lat_Sep7_2011.mat
-tropics = find(abs(save_lat) <= 30);
+iWhich = input('Enter (-4)SH (-3)SP (-2)SML (-1)ST (0)Tropics (+1)NT (+2)NML (3)NP (4)NH (5)All (10)individual bin (20)my subset : ');
+if iWhich == 0
+  lat_index = find(abs(save_lat) <= 30);
+elseif iWhich == -4
+  lat_index = find(save_lat <= 0);
+elseif iWhich == +4
+  lat_index = find(save_lat > 0);
+elseif iWhich == -3
+  lat_index = find(save_lat <= -60);
+elseif iWhich == +3
+  lat_index = find(save_lat >= 60);
+elseif iWhich == -2
+  lat_index = find(save_lat > -60 & save_lat < -30);
+elseif iWhich == +2
+  lat_index = find(save_lat > +30 & save_lat < +60);
+elseif iWhich == -1
+  lat_index = find(save_lat > -30 & save_lat < 0);
+elseif iWhich == +1
+  lat_index = find(save_lat > 00 & save_lat < 30);
+elseif iWhich == +5
+  lat_index = 1:36;
+elseif iWhich == 10
+  figure(9); clf; plot(save_lat,'o-'); grid
+  lat_index = input('Enter individual bin : ');
+elseif iWhich == 20
+  figure(9); clf; plot(save_lat,'o-'); grid
+  ijunk = input('Enter [latbinstart latbinstop] : ');
+  lat_index = find(save_lat >= min(ijunk) & save_lat <= max(ijunk))
+end
 
-figure(6); clf
-  subplot(121)
-  shadedErrorBarY(nanmean(water(tropics,:)),plays,nanstd(water(tropics,:)),'bo-',1);
-  hold on
-  shadedErrorBarY(nanmean(waterrate(tropics,:)),plays,nanstd(waterrate(tropics,:)),'rx-',1);
-  hold off; title('AIRS(b) ERA(r) Water frac/yr'); %set(hl,'fontsize',10); grid
-  set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0 1000]); 
-
-  subplot(122)
-  shadedErrorBarY(nanmean(temp(tropics,:)),plays,nanstd(temp(tropics,:)),'bo-',1);
-  hold on
-  shadedErrorBarY(nanmean(ptemprate(tropics,:)),plays,nanstd(ptemprate(tropics,:)),'rx-',1);
-
-  oink = find(abs(nTLS.lats) < 30);
+oink = find(abs(nTLS.lats) < 30);
+oink = lat_index;
   
-  hl=errorbar_x(nanmean(nTMT.trend(oink)),xPRESS_tmt,nanstd(nTMT.trend(oink)),'ko'); set(hl,'linewidth',2)
-  hl=errorbar_x(nanmean(nTUT.trend(oink)),xPRESS_ttt,nanstd(nTUT.trend(oink)),'ko'); set(hl,'linewidth',2)
-  hl=errorbar_x(nanmean(nTLS.trend(oink)),xPRESS_tls,nanstd(nTLS.trend(oink)),'ko'); set(hl,'linewidth',2)
-
-  %these were 30 yr trends
-  %oink = find(abs(rssTLT(:,1)) < 30);   errorbar_x(nanmean(rssTLT(oink,2))/10,xPRESS_tlt,nanstd(rssTLT(oink,2)),'k*')
-  %oink = find(abs(rssTMT(:,1)) < 30);   errorbar_x(nanmean(rssTMT(oink,2))/10,xPRESS_tmt,nanstd(rssTMT(oink,2)),'k*')
-  %oink = find(abs(rssTTT(:,1)) < 30);   errorbar_x(nanmean(rssTTT(oink,2))/10,xPRESS_ttt,nanstd(rssTTT(oink,2)),'k*')
-  %oink = find(abs(rssTLS(:,1)) < 30);   errorbar_x(nanmean(rssTLS(oink,2))/10,xPRESS_tls,nanstd(rssTLS(oink,2)),'k*')
-  %oink = find(abs(rssTTS(:,1)) < 30);   errorbar_x(nanmean(rssTTS(oink,2))/10,xPRESS_tts,nanstd(rssTTS(oink,2)),'k*')
-
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(1),xPRESS_tls,rssTRP.amsu_rss_error_robust(1),'g*'); set(hl,'linewidth',2)
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(2),xPRESS_tts,rssTRP.amsu_rss_error_robust(2),'g*'); set(hl,'linewidth',2)
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(3),xPRESS_tmt,rssTRP.amsu_rss_error_robust(3),'g*'); set(hl,'linewidth',2)
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(4),xPRESS_tlt,rssTRP.amsu_rss_error_robust(4),'g*'); set(hl,'linewidth',2)
-
-  hold off; title('AIRS(b) ERA(r) Temp K/yr'); %set(hl,'fontsize',10); grid
-  set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 1000]);
-
-figure(4); clf
-  pcolor(save_lat,plays,double(waterrate')); shading interp; colorbar; 
-  set(gca,'ydir','reverse'); grid; title('ERA WV frac/yr ')
-figure(5); clf
-  pcolor(save_lat,plays,double(ptemprate')); shading interp; colorbar; 
-  set(gca,'ydir','reverse'); grid; title('ERA T K/yr ')
-
-figure(1); caxis([-0.02 +0.02]); colorbar
-figure(4); caxis([-0.02 +0.02]); colorbar
-
-figure(2); caxis([-0.1 +0.1]); colorbar  
-figure(5); caxis([-0.1 +0.1]); colorbar
-
-figure(8);
-  shadedErrorBar(save_lat,params(:,6),params_sigs(:,6),'bo-',1);
-  hold on
-  shadedErrorBar(save_lat,stemprate,stempratestd,'ro-',1);
-  hold off
-grid
-title('AIRS(b) ERA(r) STemp K/yr'); %set(hl,'fontsize',10); grid
-
-%figure(4)
-%hold off
-%  set(gca,'ydir','reverse'); grid; title('T K/yr')
-%  hl = legend('OEM','ERA','location','east'); set(hl,'fontsize',10)
-
-figure(9); clf
-  shadedErrorBarY(nanmean(temp(tropics,:)),log10(plays),nanstd(temp(tropics,:)),'bo-',1);
-  hold on
-  shadedErrorBarY(nanmean(ptemprate(tropics,:)),log10(plays),nanstd(ptemprate(tropics,:)),'rx-',1);
-
-  oink = find(abs(nTLS.lats) < 30);
-  
-  lxPRESS_tmt = log10(xPRESS_tmt);
-  lxPRESS_ttt = log10(xPRESS_ttt);
-  lxPRESS_tlt = log10(xPRESS_tlt);
-  lxPRESS_tts = log10(xPRESS_tts);
-  lxPRESS_tls = log10(xPRESS_tls);
-
-  hl=errorbar_x(nanmean(nTMT.trend(oink)),lxPRESS_tmt,nanstd(nTMT.trend(oink)),'ko'); set(hl,'linewidth',2)
-  hl=errorbar_x(nanmean(nTUT.trend(oink)),lxPRESS_ttt,nanstd(nTUT.trend(oink)),'ko'); set(hl,'linewidth',2)
-  hl=errorbar_x(nanmean(nTLS.trend(oink)),lxPRESS_tls,nanstd(nTLS.trend(oink)),'ko'); set(hl,'linewidth',2)
-
-  %these were 30 yr trends
-  %oink = find(abs(rssTLT(:,1)) < 30);   errorbar_x(nanmean(rssTLT(oink,2))/10,lxPRESS_tlt,nanstd(rssTLT(oink,2)),'k*')
-  %oink = find(abs(rssTMT(:,1)) < 30);   errorbar_x(nanmean(rssTMT(oink,2))/10,lxPRESS_tmt,nanstd(rssTMT(oink,2)),'k*')
-  %oink = find(abs(rssTTT(:,1)) < 30);   errorbar_x(nanmean(rssTTT(oink,2))/10,lxPRESS_ttt,nanstd(rssTTT(oink,2)),'k*')
-  %oink = find(abs(rssTLS(:,1)) < 30);   errorbar_x(nanmean(rssTLS(oink,2))/10,lxPRESS_tls,nanstd(rssTLS(oink,2)),'k*')
-  %oink = find(abs(rssTTS(:,1)) < 30);   errorbar_x(nanmean(rssTTS(oink,2))/10,lxPRESS_tts,nanstd(rssTTS(oink,2)),'k*')
-
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(1),lxPRESS_tls,rssTRP.amsu_rss_error_robust(1),'g*'); set(hl,'linewidth',2)
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(2),lxPRESS_tts,rssTRP.amsu_rss_error_robust(2),'g*'); set(hl,'linewidth',2)
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(3),lxPRESS_tmt,rssTRP.amsu_rss_error_robust(3),'g*'); set(hl,'linewidth',2)
-  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(4),lxPRESS_tlt,rssTRP.amsu_rss_error_robust(4),'g*'); set(hl,'linewidth',2)
-
-  hold off; title('AIRS(b) ERA(r) Temp K/yr'); %set(hl,'fontsize',10); grid
-  set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 1 3]);
-
-
-%{
-chanset = jacobian.chanset;
-%g = dogoodchan;
-figure(5);
-plot(f,input_rates(18,:),'b',f,fitted_rates(18,:),'r',...
-      f,input_rates(18,:)-fitted_rates(18,:),'k',...
-      f(chanset),input_rates(18,chanset)-fitted_rates(18,chanset),'ko')
-  hl = legend('input','fit','bias=input-fit','location','north'); set(hl,'fontsize',10)
-  axis([640 2780 -0.10 +0.10]); grid
-
-wvrates.oem = wv(18,:);
-wvrates.oem_d = dwv(18,:);
-wvrates.era = nanmean(waterrate(tropics,:));
-wvrates.plays = plays;
-
-trates.oem = t(18,:);
-trates.oem_d = dt(18,:);
-trates.era = nanmean(ptemprate(tropics,:));
-trates.plays = plays;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fprintf(1,'rateset = %s \n',rateset.datafile);
-fprintf(1,'jacset  = %s \n',jacobian.filename);
-
-%}
+if length(lat_index) > 1
+  nanmean_era_plots
+else
+  individual_era_plots
+end
