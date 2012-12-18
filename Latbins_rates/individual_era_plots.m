@@ -3,7 +3,7 @@ figure(6); clf
   shadedErrorBarY(water(lat_index,:),plays,water_sigs(lat_index,:),'bo-',1);
   hold on
   shadedErrorBarY(waterrate(lat_index,:),plays,waterratestd(lat_index,:),'rx-',1);
-  hold off; title('AIRS(b) ERA(r) Water frac/yr'); %set(hl,'fontsize',10); grid
+  hold off; hl = title('AIRS(b) ERA(r) Water frac/yr'); set(hl,'fontsize',10); grid
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0 1000]); 
 
   subplot(122)
@@ -27,7 +27,7 @@ figure(6); clf
   hl=errorbar_x(rssTRP.amsu_rss_rate_robust(3),xPRESS_tmt,rssTRP.amsu_rss_error_robust(3),'g*'); set(hl,'linewidth',2)
   hl=errorbar_x(rssTRP.amsu_rss_rate_robust(4),xPRESS_tlt,rssTRP.amsu_rss_error_robust(4),'g*'); set(hl,'linewidth',2)
 
-  hold off; title('AIRS(b) ERA(r) Temp K/yr'); %set(hl,'fontsize',10); grid
+  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10); grid
   set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 1000]);
 
 figure(4); clf
@@ -66,7 +66,7 @@ figure(9); clf
   set(hl,'linewidth',2)
   hl=errorbar_x(tracegases(lat_index,2),200,tracegases_sigs(lat_index,2),'bo');
   set(hl,'linewidth',2)
-  hold off; title('AIRS(b) ERA(r) Ozone frac/yr'); %set(hl,'fontsize',10); 
+  hold off; hl = title('AIRS(b) ERA(r) Ozone frac/yr'); set(hl,'fontsize',10); 
   set(gca,'ydir','reverse'); grid; axis([-0.05 +0.05 0 1000]); grid
 
 figure(7); clf

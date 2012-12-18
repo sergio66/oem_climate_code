@@ -129,3 +129,5 @@ if length(lat_index) > 1
 else
   individual_era_plots
 end
+
+figure(6); figure(3); figure(9)

@@ -10,7 +10,7 @@
 %       run_retrieval_cluster_AIRS
 %     end
 % 
-% /bin/rm slurm*; clustcmd -q short run_retrieval_latbins_AIRS.m 1:N
+% /bin/rm slurm*; /bin/rm ../Output/*.mat; clustcmd -q short -n 36 run_retrieval_latbins_AIRS.m 1:N
 
 ix = JOB;
 
@@ -60,4 +60,54 @@ if length(driver.oem.finalrates) == 200
   plot(driver.oem.finalrates(7:103),1:97,driver.oem.finalrates(104:200),1:97,'r')
   set(gca,'ydir','reverse');
   title('AIRS (b) : WV frac/yr (r) T K/yr'); grid
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if isunix
+    [~, user_name] = system('whoami'); % exists on every unix that I know of
+    % on my mac, isunix == 1
+elseif ispc
+    [~, user_name] = system('echo %USERDOMAIN%\%USERNAME%'); % Not as familiar with windows,
+                            % found it on the net elsewhere, you might want to verify
+end
+if strcmp(user_name(1:end-1),'sergio')
+  ecmfile = '/strowdata1/shared/sergio/MATLABCODE/RATES_TARO/MAT/';
+  ecmfile = [ecmfile ...
+    'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat'];
+  load(ecmfile);
+
+  if length(driver.oem.finalrates) == 200
+    water = driver.oem.finalrates(7:103);
+    watersigs = driver.oem.finalsigs(7:103);
+    temp = driver.oem.finalrates(104:200);
+    tempsigs = driver.oem.finalsigs(104:200);
+ elseif length(driver.oem.finalrates) == 103 & length(driver.jacobian.Q1jacindex) < 1
+    temp = driver.oem.finalrates(7:103);
+    tempsigs = driver.oem.finalsigs(7:103);
+    water = temp * 0;
+    watersigs = temp*0;
+ elseif length(driver.oem.finalrates) > 103 & length(driver.jacobian.Q1jacindex) < 97
+    bonk = length(driver.jacobian.Q1jacindex);
+    temp = driver.oem.finalrates((7:103)+bonk);
+    tempsigs = driver.oem.finalsigs((7:103)+bonk);
+    water = temp * 0;      water(driver.jacobian.Q1jacindex) = driver.oem.finalrates(7:7+length(driver.jacobian.Q1jacindex)-1);
+    watersigs = temp * 0;  watersigs(driver.jacobian.Q1jacindex) = driver.oem.finalsigs(7:7+length(driver.jacobian.Q1jacindex)-1);
+  else
+    return
+  end
+  figure(6); clf
+  subplot(121)
+  shadedErrorBarY(water,1:97,watersigs,'bo-',1);
+  hold on
+  shadedErrorBarY(waterrate(ix,:),1:97,waterratestd(ix,:),'rx-',1);
+  hold off; hl = title('AIRS(b) ERA(r) Water frac/yr'); set(hl,'fontsize',10); 
+  set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0 100]); 
+
+  subplot(122)
+  shadedErrorBarY(temp,1:97,tempsigs,'bo-',1);
+  hold on
+  shadedErrorBarY(ptemprate(ix,:),1:97,ptempratestd(ix,:),'rx-',1);
+  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10); 
+  set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 100]);
+  
 end
