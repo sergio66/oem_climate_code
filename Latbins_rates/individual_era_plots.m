@@ -1,9 +1,13 @@
+iLinearOrLog = +1;   %% linear plot
+iLinearOrLog = -1;   %% log plot
+
 figure(6); clf
+if iLinearOrLog == +1 
   subplot(121)
   shadedErrorBarY(water(lat_index,:),plays,water_sigs(lat_index,:),'bo-',1);
   hold on
   shadedErrorBarY(waterrate(lat_index,:),plays,waterratestd(lat_index,:),'rx-',1);
-  hold off; hl = title('AIRS(b) ERA(r) Water frac/yr'); set(hl,'fontsize',10); grid
+  hold off; hl = title('AIRS(b) ERA(r) Water frac/yr'); set(hl,'fontsize',10); 
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0 1000]); 
 
   subplot(122)
@@ -27,8 +31,43 @@ figure(6); clf
   hl=errorbar_x(rssTRP.amsu_rss_rate_robust(3),xPRESS_tmt,rssTRP.amsu_rss_error_robust(3),'g*'); set(hl,'linewidth',2)
   hl=errorbar_x(rssTRP.amsu_rss_rate_robust(4),xPRESS_tlt,rssTRP.amsu_rss_error_robust(4),'g*'); set(hl,'linewidth',2)
 
-  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10); grid
-  set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 1000]);
+  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10);
+  set(gca,'ydir','reverse'); grid; axis([-0.25 +0.25 0 1000]);
+
+else
+  subplot(121)
+  shadedErrorBarYLog10(water(lat_index,:),plays,water_sigs(lat_index,:),'bo-');
+  hold on
+  shadedErrorBarYLog10(waterrate(lat_index,:),plays,waterratestd(lat_index,:),'rx-')
+  hold off; hl = title('AIRS(b) ERA(r) Water frac/yr'); set(hl,'fontsize',10); 
+  set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0 1000]); 
+
+  subplot(122)
+  shadedErrorBarYLog10(temp(lat_index,:),plays,temp_sigs(lat_index,:),'bo-');
+  hold on
+  shadedErrorBarYLog10(ptemprate(lat_index,:),plays,ptempratestd(lat_index,:),'rx-');
+
+%  shadedErrorBarY(nTMT.trend(oink),(xPRESS_tmt),nTMT.err_trend(oink),'ko',1,-1);
+%  hlxx=errorbar_x(nTMT.trend(oink),(xPRESS_tmt),nTMT.err_trend(oink),'ko'); set(hlxx,'linewidth',2); 
+%  set(hlxx,'YScale','log')
+%  hl=errorbar_x(nTUT.trend(oink),log10(xPRESS_ttt),nTUT.err_trend(oink),'ko'); set(hl,'linewidth',2)
+%  hl=errorbar_x(nTLS.trend(oink),log10(xPRESS_tls),nTLS.err_trend(oink),'ko'); set(hl,'linewidth',2)
+
+  %these were 30 yr trends
+  %oink = find(abs(rssTLT(:,1)) < 30);   errorbar_x(nanmean(rssTLT(oink,2))/10,xPRESS_tlt,nanstd(rssTLT(oink,2)),'k*')
+  %oink = find(abs(rssTMT(:,1)) < 30);   errorbar_x(nanmean(rssTMT(oink,2))/10,xPRESS_tmt,nanstd(rssTMT(oink,2)),'k*')
+  %oink = find(abs(rssTTT(:,1)) < 30);   errorbar_x(nanmean(rssTTT(oink,2))/10,xPRESS_ttt,nanstd(rssTTT(oink,2)),'k*')
+  %oink = find(abs(rssTLS(:,1)) < 30);   errorbar_x(nanmean(rssTLS(oink,2))/10,xPRESS_tls,nanstd(rssTLS(oink,2)),'k*')
+  %oink = find(abs(rssTTS(:,1)) < 30);   errorbar_x(nanmean(rssTTS(oink,2))/10,xPRESS_tts,nanstd(rssTTS(oink,2)),'k*')
+
+%  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(1),xPRESS_tls,rssTRP.amsu_rss_error_robust(1),'g*'); set(hl,'linewidth',2)
+%  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(2),xPRESS_tts,rssTRP.amsu_rss_error_robust(2),'g*'); set(hl,'linewidth',2)
+%  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(3),xPRESS_tmt,rssTRP.amsu_rss_error_robust(3),'g*'); set(hl,'linewidth',2)
+%  hl=errorbar_x(rssTRP.amsu_rss_rate_robust(4),xPRESS_tlt,rssTRP.amsu_rss_error_robust(4),'g*'); set(hl,'linewidth',2)
+
+  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10);
+  set(gca,'ydir','reverse'); grid; axis([-0.25 +0.25 0 1000]);
+end
 
 figure(4); clf
   pcolor(save_lat,plays,double(waterrate')); shading flat; colorbar; 

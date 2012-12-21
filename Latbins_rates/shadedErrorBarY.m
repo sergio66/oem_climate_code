@@ -52,7 +52,7 @@ function H=shadedErrorBarY(x,y,errBar,lineProps,transparent)
 
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-% Error checking    
+% Error checking 
 error(nargchk(3,5,nargin))
 
 %Process y using function handles if needed to make the error bar
@@ -108,15 +108,17 @@ if nargin<5 || ~isnumeric(transparent)
     transparent=0; 
 end
 
-
-
+iLinearOrLog = +1;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 % Plot the main line. We plot this first in order to extract the RGB values
 % for the line colour. I am not aware of a function that does this.
-H.mainLine=plot(x,y,lineProps{:});
-
+if iLinearOrLog > 0
+  H.mainLine=plot(x,y,lineProps{:});
+else
+  H.mainLine=semilogy(x,y,lineProps{:});
+end
 
 % Work out the color of the shaded region and associated lines
 % Using alpha requires the render to be openGL and so you can't
@@ -164,15 +166,25 @@ H.patch=patch(xP,yP,1,'facecolor',patchColor,...
 
 
 %Make nice edges around the patch. 
-H.edge(1)=plot(lE,y,'-','color',edgeColor);
-H.edge(2)=plot(uE,y,'-','color',edgeColor);
+if iLinearOrLog > 0
+  H.edge(1)=plot(lE,y,'-','color',edgeColor);
+  H.edge(2)=plot(uE,y,'-','color',edgeColor);
+else
+  H.edge(1)=semilogy(lE,y,'-','color',edgeColor);
+  H.edge(2)=semilogy(uE,y,'-','color',edgeColor);
+end
 
 %The main line is now covered by the patch object and was plotted first to
 %extract the RGB value of the main plot line. I am not aware of an easy way
 %to change the order of plot elements on the graph so we'll just remove it
 %and put it back (yuk!)
 delete(H.mainLine)
-H.mainLine=plot(x,y,lineProps{:});
+
+if iLinearOrLog > 0
+  H.mainLine=plot(x,y,lineProps{:});
+else
+  H.mainLine=semilogy(x,y,lineProps{:});
+end
 
 
 if ~holdStatus, hold off, end
