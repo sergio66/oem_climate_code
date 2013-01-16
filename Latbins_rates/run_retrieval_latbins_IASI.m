@@ -53,6 +53,7 @@ if driver.debug
   writelog('close')
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(1); 
   ff = instr_chans('iasi'); g = 1:length(ff);
   plot(ff(g),driver.rateset.rates(g),ff(g),driver.oem.fit(g),'r'); grid; axis([500 3000 -0.15 +0.15]);
@@ -62,3 +63,5 @@ if length(driver.oem.finalrates) == 200
   plot(driver.oem.finalrates(7:103),1:97,driver.oem.finalrates(104:200),1:97,'r')
   title('IASI (b) : WV frac/yr (r) T K/yr'); grid
 end
+
+plot_retrieval_latbins
