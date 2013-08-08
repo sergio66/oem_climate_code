@@ -17,6 +17,12 @@ if iWhich == 1
   for ix = 1 : N
     loader = ['load ../Output/testx_' num2str(ix) '.mat'];
     eval(loader)
+    if ix == 1
+      fprintf(1,'  rateset = %s \n',rateset.datafile);
+      fprintf(1,'  ncfile  = %s \n',rateset.ncfile);
+      fprintf(1,'  jacs    = %s \n',jacobian.filename);
+      fprintf(1,'  covs    = %s \n',oem.cov_filename);
+    end
     params(ix,:)      = oem.finalrates;
     params_sigs(ix,:) = oem.finalsigs;
     fitted_rates(ix,:) = oem.fit;

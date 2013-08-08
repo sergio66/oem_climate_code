@@ -2,6 +2,7 @@ figure(6);
 
 ecmrates = input('enter (1) 2002 - 2012 or (2) 2002-2011 or (3) 2007-2011  or (4) 2007-2012  ERA rates : ');
 ecmfile = '/strowdata1/shared/sergio/MATLABCODE/RATES_TARO/MAT/';
+ecmfile = '/home/sergio/MATLABCODE/RATES_TARO/MAT/';
 if ecmrates == 1
   co2str = '_07_2002_07_2010';
   ecmfile = [ecmfile ...
