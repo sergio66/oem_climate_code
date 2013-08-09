@@ -1,3 +1,7 @@
+%%   MakeERA_ratespectra  : just uses linear trends to add jacobians together
+%%   MakeERA_ratespectra2 : puts in "time series" of gas_1,gas_3, ptemp and stemp, based on linear trends
+%%   MakeERA_ratespectra3 : puts in "time series" of gas_1,gas_3, ptemp and stemp, based on linear trends AND ADDS IN variability
+
 addpath ../Latbins_rates/
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
