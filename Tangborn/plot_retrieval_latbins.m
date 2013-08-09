@@ -1,6 +1,6 @@
 %% this is plotting
 
-ecmfile = '/asl/s1/general_data/Rate_data/Aug2013/';
+ecmfile = '/asl/s1/rates/clear/Aug2013/';
 ecmfile = [ecmfile ...
     'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat'];
 load(ecmfile);
