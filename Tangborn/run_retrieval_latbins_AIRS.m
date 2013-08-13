@@ -33,13 +33,14 @@ driver            = get_rates(driver);
 [driver,m_ts_jac] = get_jacs(driver);          %% strow's new renorm
 %[driver,m_ts_jac] = get_jacs_NOrenorm(driver); %% no renorm
 
+
 %  Adjust the rates?
 if driver.rateset.adjust
   % m_ts_jac0 = get_jacs_6_97_97(driver);
   m_ts_jac0 = get_jacs0(driver);
   driver = adjust_rates(driver,m_ts_jac0);
 end
-
+figure(1)
 % Do the retrieval
 driver = retrieval(driver,m_ts_jac);
 
@@ -58,8 +59,13 @@ figure(1);
   g1 = driver.jacobian.chanset_used;
   plot(ff(g),driver.rateset.rates(g),ff(g),driver.oem.fit(g),'r',ff(g1),driver.oem.fit(g1),'r.'); grid; axis([500 3000 -0.15 +0.15])
   title('AIRS'); hl=legend('data','fits'); set(hl,'fontsize',10)
+figure(2);
+  g  = dogoodchan; ff = instr_chans;
+  g1 = driver.jacobian.chanset_used;
+  plot(ff(g),driver.rateset.rates(g),ff(g),driver.rateset.rates(g)-driver.oem.fit(g)','r'); grid; axis([500 3000 -0.15 +0.15])
+  title('AIRS'); hl=legend('data','fits'); set(hl,'fontsize',10)
 if length(driver.oem.finalrates) == 200
-  figure(2)
+  figure(3)
   plot(driver.oem.finalrates(7:103),1:97,driver.oem.finalrates(104:200),1:97,'r')
   set(gca,'ydir','reverse');
   title('AIRS (b) : WV frac/yr (r) T K/yr'); grid
