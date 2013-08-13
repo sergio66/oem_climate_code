@@ -124,7 +124,63 @@ driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones
 driver.oem.lambda           = 1e-2;
 driver.jacobian.filename        = 'AIRS_MATFILES/all_kcarta_jacs_NOV02_2012_6_97_97.mat';
 driver.oem.spectralcov_filename = ['../MakeERA_ratespectra/cov_spectra_yy_2009_latbin_' num2str(ix,'%02d') '.mat'];
-%% testV2 ERA cals
+driver.rateset.ncfile   = '/home/sergio/MATLABCODE/RATES_TARO/MAT/overocean_gsx_1day_clr_era_lays_spanday01_fatsummary_Nov02_2012_lagcor.mat';
+
+driver.rateset.ocb_set = 'obs';
+driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+%driver.rateset.ncfile   = 'dne';
+
+%driver.rateset.datafile  = '/home/sergio/MATLABCODE/RATES_TARO/MAT/xoverocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012_lag1corr_linearfit.mat';
+%driver.rateset.ncfile   = 'dne';
+
+%driver.rateset.datafile  = '/home/sergio/MATLABCODE/RATES_TARO/MAT/xoverocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012_lag1corr_complexfit.mat';
+%driver.rateset.ncfile   = 'dne';
+
+driver.rateset.ocb_set = 'obs';
+driver.rateset.datafile  = '/home/sergio/MATLABCODE/RATES_TARO/MAT/FEW_LATBINS/19_19//summary_lonbins_19_19.mat';
+driver.rateset.datafile  = '/home/sergio/MATLABCODE/RATES_TARO/MAT/FEW_LATBINS/19_19//xsummary_lonbins_19_19.mat';
+driver.jacobian.filename = '/home/sergio/MATLABCODE/RATES_TARO/MAT/FEW_LATBINS/19_19/summary_lonbins_19_19_jacobian.mat';
+driver.rateset.ncfile   = 'dne';
+driver.oem.lambda_qst       = [1 1 1 1 1 1                                 ones(1,1)*(-9999)]*1e-4;
+driver.oem.lambda_Q1        = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*50;
+driver.oem.lambda_Q1        = [ones(1,40)*10 ones(1,30)*15 ones(1,27)*20 ones(1,1)*(-9999)]*5;
+driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*0.9 ones(1,27)*0.8 ones(1,1)*(-9999)]*5;
+driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*1.7 ones(1,27)*2.5 ones(1,1)*(-9999)]*5;
+driver.oem.lambda           = 1e-2;
+
+driver.rateset.ocb_set = 'obs';
+driver.rateset.datafile  = '/home/sergio/MATLABCODE/RATES_TARO/MAT/FEW_LATBINS/19_19//summary_lonbins_19_19.mat';
+driver.rateset.datafile  = '/home/sergio/MATLABCODE/RATES_TARO/MAT/FEW_LATBINS/19_19//xsummary_lonbins_19_19.mat';
+driver.jacobian.filename = '/home/sergio/MATLABCODE/RATES_TARO/MAT/FEW_LATBINS/19_19/summary_lonbins_19_19_jacobian.mat';
+driver.rateset.ncfile   = 'dne';
+driver.oem.lambda_qst       = [1 1 1 1 1 1                                 ones(1,1)*(-9999)]*1e-1;
+driver.oem.lambda_Q1        = [ones(1,40)*10 ones(1,30)*15 ones(1,27)*20 ones(1,1)*(-9999)]*10;
+driver.oem.lambda_temp      = [ones(1,40)*1.0 ones(1,30)*1.7 ones(1,27)*2.5 ones(1,1)*(-9999)]*10;
+driver.oem.lambda           = 1e+1;
+
+driver.rateset.datafile  = '/home/sergio/MATLABCODE/RATES_TARO/MAT/xoverocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Dec13_2012_span_09_2002_08_2012.mat';
+
+  driver.oem.spectralcov_filename = ['../MakeERA_ratespectra/cov_spectra_yy_2009_latbin_' num2str(ix,'%02d') '.mat'];
+  driver.oem.adjust_spectral_errorbars = 1.0;  %% notice how I need to increase this when I use spectral_cov
+  driver.oem.lambda           = 1e2;   %% pretty good
+  driver.oem.lambda_temp      = 1e2;   %% pretty good
+  driver.oem.lambda_Q1        = 1e4;   %% pretty good
+  driver.oem.lambda           = 2.5e+2;   %% very good
+  driver.oem.lambda_temp      = 2000;     %% very good
+  driver.oem.lambda_Q1        = 250000.0; %% very good
+
+%{
+  driver.oem.lambda           = 2.5e+2;   %% very good
+  driver.oem.lambda_temp      = 8000;     %% very good
+  driver.oem.lambda_Q1        = 250000.0; %% very good
+
+  driver.oem.lambda           = 2.5e+2;   %% very good
+  driver.oem.lambda_temp      = 8000;     %% very good
+  driver.oem.lambda_Q1        = 200000.0; %% very good
+%}
+
+%driver.jacobian.chanset = driver.jacobian.chanset(driver.jacobian.chanset < 1406);  %% this is roughly 1305 cm-1
+%driver.jacobian.chanset = driver.jacobian.chanset(driver.jacobian.chanset < 904);  %% this is roughly 961 cm-1
 
 fprintf(1,'%s \n',driver.rateset.datafile);
 

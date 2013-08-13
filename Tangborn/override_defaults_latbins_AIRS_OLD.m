@@ -5,12 +5,14 @@ function driver = override_defaults(driver,ix);
 %   ix
 %   clear driver; run_retrieval; end
 
-driver.oem.regularizationVScovariances = 'C'
-
 driver.iibin = ix;
 driver.filename = ['../Output/testx_' int2str(driver.iibin)];
 
-load AIRS_MATFILES/strow_stmNov2011_dobs20.mat
+% good!!!!%%%
+driver.rateset.datafile  = '/asl/s1/sergio/Rate_data/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+% good!!!!%%%
+
+load /asl/s1/sergio/Rate_data/strow_stmNov2011_dobs20.mat
 driver.jacobian.chanset = dobs20.jacobian.chanset;
 
 % these are limits for good and bad input SPECTRA
@@ -22,7 +24,7 @@ driver.rateset.min = -0.25;
 
 % orig 6_97_97 stuff
 driver.rateset.ncfile    = 'all_lagcor.mat';
-% driver.jacobian.filename = 'M_TS_jac_all.mat';
+%driver.rateset.ocb_set  = 'bias';
 driver.jacobian.qstnames = {'CO2' 'O3' 'N2O' 'CH4' 'CFC11' 'stemp'};
 driver.jacobian.qstYesOrNo = [1     1   1     1      1       1];
 driver.jacobian.numQlays   = 1;   % how many gases we want to retrieve profiles
@@ -40,16 +42,6 @@ driver.jacobian.numlays     = 97;
 %driver.oem.lambda_temp      = 1;
 % ABOVE IS STROW, BELOW IS MINE %%%%%%%%%%%
 % ABOVE IS STROW, BELOW IS MINE %%%%%%%%%%%
-
-% copied rates from /home/sergio/MATLABCODE/RATES_TARO/MAT/
-% driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Aug28_2012_span_07_2007_07_2012.mat';
-% driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Sep11_2012_span_07_2007_07_2012.mat';
-% driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_day_avgL1Brates_robust_Sep17_2012_span_09_2002_08_2012.mat';
-% driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Sep17_2012_span_09_2002_08_2012.mat';
-
-% good!!!!%%%
-driver.rateset.datafile  = 'AIRS_MATFILES/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
-% good!!!!%%%
 
 % orig
 %driver.oem.lambda_qst       = 0.1;
@@ -99,6 +91,44 @@ driver.jacobian.filename = 'M_TS_jac_all.mat';
 
 %driver.jacobian.chanset = driver.jacobian.chanset(driver.jacobian.chanset < 1406);  %% this is roughly 1305 cm-1
 %driver.jacobian.chanset = driver.jacobian.chanset(driver.jacobian.chanset < 904);  %% this is roughly 961 cm-1
+
+driver.jacobian.filename = '/asl/s1/sergio/Rate_data/Aug2013/all_kcarta_HARTMANNCO2_jacs_NOV02_2012_HARTMANN_6_97_97.mat';
+driver.jacobian.filename = 'M_TS_jac_all.mat';
+driver.jacobian.filename = '/asl/s1/sergio/Rate_data/Aug2013/all_kcarta_UMBCCO2_jacs_NOV02_2012_UMBCCO2_6_97_97.mat';
+
+  %% but if smoothVSregularization = 'c'
+  %% note these are PHYSICAL units eg sigma_temp_stratVALUE is in KELVIN (or KELVIN/YR)
+  %% so eg Andy Tangborn finds after normalization driver.oem.sigma.temp_strat_VALUE  = 4;
+  %% is a "good value" which means we default set it to 4*0.01 (0.01 is qrenorm for T(z))
+  %% strat temp
+    driver.oem.sigma.temp_strat_VALUE  = 4.0*0.01;       %% sigsqr
+    driver.oem.sigma.temp_strat_TOPLAY = 01;  %% start layer
+    driver.oem.sigma.temp_strat_BOTLAY = 49;  %% stop layer
+  %% trop temp
+    driver.oem.sigma.temp_trop_VALUE  = 0.3*0.01;       %% sigsqr
+    driver.oem.sigma.temp_trop_TOPLAY = 50;  %% start layer
+    driver.oem.sigma.temp_trop_BOTLAY = 97;  %% stop layer
+    driver.oem.sigma.temp_trop_TOPLAY = driver.oem.sigma.temp_strat_BOTLAY + 1; %% start layer
+    driver.oem.sigma.temp_trop_BOTLAY = driver.jacobian.numlays;                %% stop layer
+  %% strat GAS 1
+    driver.oem.sigma.hum_strat_VALUE  = 1.5*0.01;       %% sigsqr
+    driver.oem.sigma.hum_strat_TOPLAY = 01;  %% start layer
+    driver.oem.sigma.hum_strat_BOTLAY = 49;  %% stop layer
+  %% trop GAS 1
+    driver.oem.sigma.hum_trop_VALUE  = 1.0*0.01;       %% sigsqr
+    driver.oem.sigma.hum_trop_TOPLAY = 50;  %% start layer
+    driver.oem.sigma.hum_trop_BOTLAY = 97;  %% stop layer
+    driver.oem.sigma.hum_trop_TOPLAY = driver.oem.sigma.hum_strat_BOTLAY + 1; %% start layer
+    driver.oem.sigma.hum_trop_BOTLAY = driver.jacobian.numlays;                %% stop layer
+  %% length_correlation for T(z) and WV(z) .. note this is in terms of INDEX
+    driver.oem.sigma.l_c = 2.4;
+  %% QST 1 ..6 values
+    driver.oem.sigma.qst(1) = 4*2.20;  %% co2
+    driver.oem.sigma.qst(2) = 1*0.01;  %% o3
+    driver.oem.sigma.qst(3) = 4*1.00;  %% n2o
+    driver.oem.sigma.qst(4) = 1*5.00;  %% ch4 
+    driver.oem.sigma.qst(5) = 1*1.00;  %% cfc11
+    driver.oem.sigma.qst(6) = 1*0.10;  %% Stemp
 
 fprintf(1,'%s \n',driver.rateset.datafile);
 

@@ -2,7 +2,6 @@ figure(6);
 
 ecmrates = input('enter (1) 2002 - 2012 or (2) 2002-2011 or (3) 2007-2011  or (4) 2007-2012  ERA rates : ');
 ecmfile = '/strowdata1/shared/sergio/MATLABCODE/RATES_TARO/MAT/';
-ecmfile = '/home/sergio/MATLABCODE/RATES_TARO/MAT/';
 if ecmrates == 1
   co2str = '_07_2002_07_2010';
   ecmfile = [ecmfile ...
@@ -126,9 +125,7 @@ oink = find(abs(nTLS.lats) < 30);
 oink = lat_index;
   
 if length(lat_index) > 1
-  nanmean_era_plots
+  xnanmean_era_plots
 else
-  individual_era_plots
+  xindividual_era_plots
 end
-
-figure(6); figure(3); figure(9)

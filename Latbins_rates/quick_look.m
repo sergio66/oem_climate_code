@@ -17,6 +17,12 @@ if iWhich == 1
   for ix = 1 : N
     loader = ['load ../Output/testx_' num2str(ix) '.mat'];
     eval(loader)
+    if ix == 1
+      fprintf(1,'  rateset = %s \n',rateset.datafile);
+      fprintf(1,'  ncfile  = %s \n',rateset.ncfile);
+      fprintf(1,'  jacs    = %s \n',jacobian.filename);
+      fprintf(1,'  covs    = %s \n',oem.cov_filename);
+    end
     params(ix,:)      = oem.finalrates;
     params_sigs(ix,:) = oem.finalsigs;
     fitted_rates(ix,:) = oem.fit;
@@ -53,7 +59,7 @@ thestr = jacobian.qstnames;
 chanset = jacobian.chanset;
 chanset = jacobian.chanset_used;
 
-clear oem rateset jacobian lls
+water_index = jacobian.Q1jacindex;
 
 if length(params) == 200
   water      = params(:,007:103);
@@ -63,9 +69,32 @@ if length(params) == 200
   tracegases      = params(:,1:6);
   tracegases_sigs = params_sigs(:,1:6);
   %thestr = {'CO2','O3','N2O','CH4','CFC11','stemp'};
+elseif length(water_index) == 0 & length(params) == 103
+  tracegases      = params(:,1:6);
+  tracegases_sigs = params_sigs(:,1:6);
+  temp      = params(:,007:103);
+  temp_sigs = params_sigs(:,007:103);
+  water       = temp * 0;
+  water_sigs  = temp_sigs*0;
+elseif length(oem.finalrates) > 103 & length(jacobian.Q1jacindex) < 97
+  tracegases      = params(:,1:6);
+  tracegases_sigs = params_sigs(:,1:6);
+  bonk = length(jacobian.Q1jacindex);
+  temp = params(:,(7:103)+bonk);
+  temp_sigs = params_sigs(:,(7:103)+bonk);
+  oof = 7:7+length(jacobian.Q1jacindex)-1;
+  water = temp * 0;      water(:,jacobian.Q1jacindex) = params(:,oof);
+  watersigs = temp * 0;  water_sigs(:,jacobian.Q1jacindex) = params_sigs(:,oof);
 else
-  error('oops')
+  disp('OOOOPS')
+  return
 end
+
+clear oem rateset jacobian lls
+
+
+water = double(water);
+temp  = double(temp);
 
 figure(1); clf; plot(water,1:97); set(gca,'ydir','reverse'); title('AIRS WV(z)')
 figure(2); clf; plot(temp,1:97);  set(gca,'ydir','reverse'); title('AIRS T(z)')
@@ -100,22 +129,28 @@ if length(input_rates) == 2378
     hold on
       plot(ff(chanset),nanmean(input_rates(:,chanset) - fitted_rates(:,chanset)),'ko-','linewidth',2);
     hold off
+  axis([630 2830 -0.25 +0.25]); grid on
 
   figure(5); clf; plot(ff(g),input_rates(:,g)); title('AIRS : inputs'); grid
     hold on
       plot(ff(chanset),nanmean(input_rates(:,chanset)),'ko-','linewidth',2);
     hold off
+  axis([630 2830 -0.25 +0.25]); grid on
+
 else
   ff = instr_chans('iasi'); g = 1:length(ff);
   figure(4); clf; plot(ff(g),input_rates(:,g)-fitted_rates(:,g)); title('IASI : fitted biases'); grid
     hold on
       plot(ff(chanset),nanmean(input_rates(:,chanset) - fitted_rates(:,chanset)),'ko-','linewidth',2);
     hold off
+  axis([630 2830 -0.25 +0.25]); grid on
 
   figure(5); clf; plot(ff(g),input_rates(:,g)); title('IASI : inputs'); grid
     hold on
       plot(ff(chanset),nanmean(input_rates(:,chanset)),'ko-','linewidth',2);
     hold off
+  axis([630 2830 -0.25 +0.25]); grid on
+
 end
 
 figure(7); clf;
@@ -125,19 +160,20 @@ if length(input_rates) == 2378
 else
   ff = instr_chans('iasi'); g = 1:length(ff);
 end
-xx = find(abs(save_lat) <= 30);
+xx = find(save_lat < -30);
 if length(xx) > 0
-  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'b');   
+  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'r');   
 end
 xx = find(save_lat > 30);
 if length(xx) > 0
   plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'g');   
 end
-xx = find(save_lat < -30);
+xx = find(abs(save_lat) <= 30);
 if length(xx) > 0
-  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'r');   
+  plot(ff(g),input_rates(xx,g)-fitted_rates(xx,g),'b');   
 end
 title('Biases (B) tropics (G) NML (R) SML'); grid
+  axis([630 2830 -0.25 +0.25]); grid on
 figure(7); hold off
 
 if N == 5
@@ -151,7 +187,8 @@ if N == 5
   title('TROPICS (b)water (frac)/yr (r)temp K/yr'); grid
 end
 
-iSave = input('save the quick results (-1/+1) : ');
+%iSave = input('save the quick results (-1/+1) : ');
+iSave = -1;
 if iSave > 0
   caName = input('Enter name of file : ');
   saver = ['save ' caName ' ff g input_rates fitted_rates water* temp* tracegases* thestr save_lat chanset lambdax plays'];
