@@ -62,7 +62,7 @@ figure(1);
 figure(2);
   g  = dogoodchan; ff = instr_chans;
   g1 = driver.jacobian.chanset_used;
-  plot(ff(g),driver.rateset.rates(g),ff(g),driver.rateset.rates(g)-driver.oem.fit(g)','r'); grid; axis([500 3000 -0.15 +0.15])
+  plot(ff(g1),driver.rateset.rates(g1),ff(g1),driver.rateset.rates(g1)-driver.oem.fit(g1)','r'); grid; axis([500 3000 -0.15 +0.15])
   title('AIRS'); hl=legend('data','fits'); set(hl,'fontsize',10)
 if length(driver.oem.finalrates) == 200
   figure(3)

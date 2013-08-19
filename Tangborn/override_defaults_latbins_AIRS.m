@@ -16,8 +16,8 @@ driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_e
 load /asl/s1/rates/clear/good_chanset.mat 
 driver.jacobian.chanset = chanset;
 %driver.jacobian.chanset = dobs20.jacobian.chanset;
-% Remove some channels 
-%k=find(driver.jacobian.chanset <=1864)
+% Remove some channels 1864 
+%k=find(driver.jacobian.chanset >=500)
 %driver.jacobian.chanset=driver.jacobian.chanset(k); 
 
 % these are limits for good and bad input SPECTRA
@@ -36,6 +36,7 @@ driver.jacobian.numQlays   = 1;   % how many gases we want to retrieve profiles
                                   % must be at least 1 (for water)
 driver.jacobian.numlays     = 97;
 
+aux_stuff.xb(1)=2.2; 
 %########################################################################
 % larrabee used these in the file he gave me, but I get bad trace gas rates
 % they give decent WV/T rates
@@ -59,15 +60,15 @@ driver.jacobian.filename = 'M_TS_jac_all.mat';
   %% so eg Andy Tangborn finds after normalization driver.oem.sigma.temp_strat_VALUE  = 4;
   %% is a "good value" which means we default set it to 4*0.01 (0.01 is qrenorm for T(z))
   %% strat temp
-    driver.oem.sigma.temp_strat_VALUE  = 3*0.01;       %% sigsqr
+    driver.oem.sigma.temp_strat_VALUE  = 2*0.01;       %% sigsqr
     driver.oem.sigma.temp_strat_TOPLAY = 01;  %% start layer
     driver.oem.sigma.temp_strat_BOTLAY = 49;  %% stop layer
   %% upper trop temp 
-    driver.oem.sigma.temp_upper_trop_VALUE = 1.2*0.01; 
+    driver.oem.sigma.temp_upper_trop_VALUE = 0.2*0.01; 
     driver.oem.sigma.temp_upper_trop_TOPLAY = 50;  %% start layer
     driver.oem.sigma.temp_upper_trop_BOTLAY = 79; 
   %% lower trop temp
-    driver.oem.sigma.temp_trop_VALUE  = 0.9*0.01;       %% sigsqr
+    driver.oem.sigma.temp_trop_VALUE  = 0.2*0.01;       %% sigsqr
     driver.oem.sigma.temp_trop_TOPLAY = 80;  %% start layer
     driver.oem.sigma.temp_trop_BOTLAY = 97;  %% stop layer
     driver.oem.sigma.temp_trop_TOPLAY = driver.oem.sigma.temp_upper_trop_BOTLAY + 1; %% start layer
@@ -77,20 +78,20 @@ driver.jacobian.filename = 'M_TS_jac_all.mat';
     driver.oem.sigma.hum_strat_TOPLAY = 01;  %% start layer
     driver.oem.sigma.hum_strat_BOTLAY = 49;  %% stop layer
   %% trop GAS 1
-    driver.oem.sigma.hum_trop_VALUE  = 0.16*0.01;       %% sigsqr
+    driver.oem.sigma.hum_trop_VALUE  = 0.1*0.01;       %% sigsqr
     driver.oem.sigma.hum_trop_TOPLAY = 50;  %% start layer
     driver.oem.sigma.hum_trop_BOTLAY = 97;  %% stop layer
     driver.oem.sigma.hum_trop_TOPLAY = driver.oem.sigma.hum_strat_BOTLAY + 1; %% start layer
     driver.oem.sigma.hum_trop_BOTLAY = driver.jacobian.numlays;                %% stop layer
   %% length_correlation for T(z) and WV(z) .. note this is in terms of INDEX
-    driver.oem.sigma.l_c = 0.1;
+    driver.oem.sigma.l_c = 2.4;
   %% QST 1 ..6 values
-    driver.oem.sigma.qst(1) = 1*2.20;  %% co2
+    driver.oem.sigma.qst(1) = .008*2.20;  %% co2
     driver.oem.sigma.qst(2) = 1*0.01;  %% o3
     driver.oem.sigma.qst(3) = 1*1.00;  %% n2o
     driver.oem.sigma.qst(4) = 1*5.00;  %% ch4 
     driver.oem.sigma.qst(5) = 1*1.00;  %% cfc11
-    driver.oem.sigma.qst(6) = 2*0.10;  %% Stemp
+    driver.oem.sigma.qst(6) = 1*0.10;  %% Stemp
 
 
 fprintf(1,'%s \n',driver.rateset.datafile);
