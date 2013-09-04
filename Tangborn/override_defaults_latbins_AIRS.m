@@ -29,7 +29,7 @@ driver.rateset.min = -0.25;
 
 % orig 6_97_97 stuff
 driver.rateset.ncfile    = 'all_lagcor.mat';
-driver.rateset.ocb_set  = 'bias';
+%driver.rateset.ocb_set  = 'bias';
 driver.jacobian.qstnames = {'CO2' 'O3' 'N2O' 'CH4' 'CFC11' 'stemp'};
 driver.jacobian.qstYesOrNo = [1     1   1     1      1       1];
 driver.jacobian.numQlays   = 1;   % how many gases we want to retrieve profiles
@@ -60,7 +60,7 @@ driver.jacobian.filename = 'M_TS_jac_all.mat';
   %% so eg Andy Tangborn finds after normalization driver.oem.sigma.temp_strat_VALUE  = 4;
   %% is a "good value" which means we default set it to 4*0.01 (0.01 is qrenorm for T(z))
   %% strat temp
-    driver.oem.sigma.temp_strat_VALUE  = 2*0.01;       %% sigsqr
+    driver.oem.sigma.temp_strat_VALUE  = 0.3*0.01;       %% sigsqr
     driver.oem.sigma.temp_strat_TOPLAY = 01;  %% start layer
     driver.oem.sigma.temp_strat_BOTLAY = 49;  %% stop layer
   %% upper trop temp 
@@ -74,24 +74,24 @@ driver.jacobian.filename = 'M_TS_jac_all.mat';
     driver.oem.sigma.temp_trop_TOPLAY = driver.oem.sigma.temp_upper_trop_BOTLAY + 1; %% start layer
     driver.oem.sigma.temp_trop_BOTLAY = driver.jacobian.numlays;                %% stop layer
   %% strat GAS 1
-    driver.oem.sigma.hum_strat_VALUE  = 0.7*0.01;       %% sigsqr
+    driver.oem.sigma.hum_strat_VALUE  = 0.2*0.01;       %% sigsqr
     driver.oem.sigma.hum_strat_TOPLAY = 01;  %% start layer
     driver.oem.sigma.hum_strat_BOTLAY = 49;  %% stop layer
   %% trop GAS 1
-    driver.oem.sigma.hum_trop_VALUE  = 0.06*0.01;       %% sigsqr
+    driver.oem.sigma.hum_trop_VALUE  = 0.2*0.01;       %% sigsqr
     driver.oem.sigma.hum_trop_TOPLAY = 50;  %% start layer
     driver.oem.sigma.hum_trop_BOTLAY = 97;  %% stop layer
     driver.oem.sigma.hum_trop_TOPLAY = driver.oem.sigma.hum_strat_BOTLAY + 1; %% start layer
     driver.oem.sigma.hum_trop_BOTLAY = driver.jacobian.numlays;                %% stop layer
   %% length_correlation for T(z) and WV(z) .. note this is in terms of INDEX
-    driver.oem.sigma.l_c = 2.4;
+    driver.oem.sigma.l_c = .1;
   %% QST 1 ..6 values
-    driver.oem.sigma.qst(1) = .008*2.20;  %% co2
-    driver.oem.sigma.qst(2) = 1*0.01;  %% o3
-    driver.oem.sigma.qst(3) = 1*1.00;  %% n2o
-    driver.oem.sigma.qst(4) = 1*5.00;  %% ch4 
-    driver.oem.sigma.qst(5) = 1*1.00;  %% cfc11
-    driver.oem.sigma.qst(6) = 1*0.10;  %% Stemp
+    driver.oem.sigma.qst(1) = 2*2.20;  %% co2
+    driver.oem.sigma.qst(2) = 2*0.01;  %% o3
+    driver.oem.sigma.qst(3) = 2*1.00;  %% n2o
+    driver.oem.sigma.qst(4) = 2*5.00;  %% ch4 
+    driver.oem.sigma.qst(5) = 2*1.00;  %% cfc11
+    driver.oem.sigma.qst(6) = 2*0.10;  %% Stemp
 
 
 fprintf(1,'%s \n',driver.rateset.datafile);
