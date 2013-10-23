@@ -1,5 +1,8 @@
 %% this is plotting
 
+merrafile = '/asl/s1/rates/clear/Oct2013_MERRA/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat';
+merrarates = load(merrafile);
+
 ecmfile = '/asl/s1/rates/clear/Aug2013/';
 ecmfile = [ecmfile ...
     'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat'];
@@ -54,15 +57,18 @@ figure(5); clf
   shadedErrorBarYLog10(water,plays,watersigs,'bo-');
   hold on
   shadedErrorBarYLog10(waterrate(ix,:),plays,waterratestd(ix,:),'rx-');
-  hold off; hl = title('AIRS(b) ERA(r) Water frac/yr'); set(hl,'fontsize',10); 
+  shadedErrorBarYLog10(squeeze(merrarates.water_allpars(ix,:,2)),plays,squeeze(merrarates.water_allerrors(ix,:,2)),'gs-');
+  hold off; hl = title('AIRS(b) ERA(r) MERRA(g) Water frac/yr'); set(hl,'fontsize',10); 
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 1 3]); 
   rms_wtr_strat=rms(water(1:49)'-waterrate(ix,1:49))./rms(waterrate(ix,1:49)) 
   rms_wtr_trop=rms(water(50:97)'-waterrate(ix,50:97))./rms(waterrate(ix,50:97)) 
+
   subplot(122)
   shadedErrorBarYLog10(temp,plays,tempsigs,'bo-');
   hold on
   shadedErrorBarYLog10(ptemprate(ix,:),plays,ptempratestd(ix,:),'rx-');
-  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10); 
+  shadedErrorBarYLog10(squeeze(merrarates.ptemp_allpars(ix,:,2)),plays,squeeze(merrarates.ptemp_allerrors(ix,:,2)),'gs-');
+  hold off; hl = title('AIRS(b) ERA(r) MERRA(g) Temp K/yr'); set(hl,'fontsize',10); 
   set(gca,'ydir','reverse'); grid; axis([-0.2 +0.15 1 3]);
   rms_tmp_strat=rms(temp(1:49)'-ptemprate(ix,1:49))./rms(ptemprate(ix,1:49)) 
   rms_tmp_trop=rms(temp(50:97)'-ptemprate(ix,50:97))./rms(ptemprate(ix,50:97))
