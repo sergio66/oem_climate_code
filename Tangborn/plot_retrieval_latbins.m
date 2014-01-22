@@ -1,4 +1,13 @@
-%% this is plotting
+% this is plotting
+ecmcloud_file='/strowdataN/home/sergio/MATLABCODE/RATES_CLOUD/CLARREO_STM_Jan2014/';
+ecmcloud_file=[ecmcloud_file ...
+    'allsky_rates.mat'
+];
+load(ecmcloud_file);
+ptemp_rate_cloud=ptemp_rate(1:36,1:97);
+ptemp_rate_cloud_err=ptemp_rate_err(1:36,1:97); 
+gas1_rate_cloud=gas1_rate(1:36,1:97); 
+gas1_rate_cloud_err=gas1_rate_err(1:36,1:97); 
 
 merrafile = '/asl/s1/rates/clear/Oct2013_MERRA/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat';
 merrarates = load(merrafile);
@@ -6,7 +15,8 @@ merrarates = load(merrafile);
 ecmfile = '/asl/s1/rates/clear/Aug2013/';
 ecmfile = [ecmfile ...
     'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat'];
-load(ecmfile);
+load(ecmfile); 
+
 
 if length(driver.oem.finalrates) == 200
   water = driver.oem.finalrates(7:103);
@@ -52,13 +62,14 @@ plays = plevs(4:100); plays = flipud(plays);
 %  set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 1000]);
 
 figure(5); clf
-'test 7' 
+%'test 7' 
   subplot(121)
   shadedErrorBarYLog10(water,plays,watersigs,'bo-');
   hold on
   shadedErrorBarYLog10(waterrate(ix,:),plays,waterratestd(ix,:),'rx-');
   shadedErrorBarYLog10(squeeze(merrarates.water_allpars(ix,:,2)),plays,squeeze(merrarates.water_allerrors(ix,:,2)),'gs-');
-  hold off; hl = title('AIRS(b) ERA(r) MERRA(g) Water frac/yr'); set(hl,'fontsize',10); 
+  shadedErrorBarYLog10(gas1_rate_cloud(ix,:),plays,gas1_rate_cloud_err(ix,:),'k^-'); 
+  hold off; hl = title('AIRS(b) ERA(r) MERRA(g) ERA-CLD(blk) H2O fr/yr'); set(hl,'fontsize',9); 
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 1 3]); 
   rms_wtr_strat=rms(water(1:49)'-waterrate(ix,1:49))./rms(waterrate(ix,1:49)) 
   rms_wtr_trop=rms(water(50:97)'-waterrate(ix,50:97))./rms(waterrate(ix,50:97)) 
@@ -68,11 +79,12 @@ figure(5); clf
   hold on
   shadedErrorBarYLog10(ptemprate(ix,:),plays,ptempratestd(ix,:),'rx-');
   shadedErrorBarYLog10(squeeze(merrarates.ptemp_allpars(ix,:,2)),plays,squeeze(merrarates.ptemp_allerrors(ix,:,2)),'gs-');
-  hold off; hl = title('AIRS(b) ERA(r) MERRA(g) Temp K/yr'); set(hl,'fontsize',10); 
+  shadedErrorBarYLog10(ptemp_rate_cloud(ix,:),plays,ptemp_rate_cloud_err(ix,:),'k^-');
+  hold off; hl = title('AIRS(b) ERA(r) MERRA(g) ERA-CLD(blk) T (K/yr)'); set(hl,'fontsize',9); 
   set(gca,'ydir','reverse'); grid; axis([-0.2 +0.15 1 3]);
-  rms_tmp_strat=rms(temp(1:49)'-ptemprate(ix,1:49))./rms(ptemprate(ix,1:49)) 
-  rms_tmp_trop=rms(temp(50:97)'-ptemprate(ix,50:97))./rms(ptemprate(ix,50:97))
-'test 9' 
+  rms_tmp_strat=rms(temp(1:49)'-ptemprate(ix,1:49))./rms(ptemprate(ix,1:49)) ;
+  rms_tmp_trop=rms(temp(50:97)'-ptemprate(ix,50:97))./rms(ptemprate(ix,50:97));
+%'test 9' 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 if isunix
     [~, user_name] = system('whoami'); % exists on every unix that I know of

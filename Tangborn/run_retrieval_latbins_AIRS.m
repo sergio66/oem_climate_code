@@ -52,6 +52,14 @@ if driver.debug
   writelog('close')
 end
 
+profile=['/home/tangborn/Matlab/oem_pkg_run/Tangborn/prof',num2str(ix),'.dat']
+fid=fopen(profile,'w');
+fprintf(fid,'%12.4e\n',driver.oem.finalrates); 
+profsigs=['/home/tangborn/Matlab/oem_pkg_run/Tangborn/sigs',num2str(ix),'.dat']
+fid2=fopen(profsigs,'w');
+fprintf(fid2,'%12.4e\n',driver.oem.finalsigs); 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 aa = load(driver.rateset.datafile);
