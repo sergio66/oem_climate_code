@@ -1,7 +1,5 @@
 % this is plotting
-ecmcloud_file='/strowdataN/home/sergio/MATLABCODE/RATES_CLOUD/CLARREO_STM_Jan2014/';
-ecmcloud_file=[ecmcloud_file ...
-    'allsky_rates.mat'
+ecmcloud_file=['allsky_rates.mat' 
 ];
 load(ecmcloud_file);
 ptemp_rate_cloud=ptemp_rate(1:36,1:97);
