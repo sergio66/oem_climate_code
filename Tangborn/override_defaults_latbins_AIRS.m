@@ -67,7 +67,7 @@ driver.jacobian.filename = 'M_TS_jac_all.mat';
 %driver.jacobian.filename = '/asl/s1/rates/clear/Aug2013/all_kcarta_UMBCCO2_jacs_NOV02_2012_UMBCCO2_6_97_97.mat';
 
 smoothVSregularization='c'; 
-covariance_tuning='carb'
+covariance_tuning='prof'
   %% but if smoothVSregularization = 'c'
   %% note these are PHYSICAL units eg sigma_temp_stratVALUE is in KELVIN (or KELVIN/YR)
   %% so eg Andy Tangborn finds after normalization driver.oem.sigma.temp_strat_VALUE  = 4;
