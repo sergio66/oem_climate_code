@@ -59,18 +59,35 @@ plays = plevs(4:100); plays = flipud(plays);
 %  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10); 
 %  set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 1000]);
 
+%  Apply averaging kernel to waterrate:
+
+for i=1:97
+   sum_era=0;
+   sum_cloud=0; 
+   sum_merra=0; 
+   for j=1:97
+       sum_era=sum_era+waterrate(ix,j)*driver.oem.ak(6+i,6+j);
+       sum_cloud=sum_cloud+gas1_rate_cloud(ix,j)*driver.oem.ak(6+i,6+j); 
+       sum_merra=sum_merra+merrarates.water_allpars(ix,j,2)*driver.oem.ak(6+i,6+j); 
+   end
+   waterrate_ak(ix,i)=sum_era;                        
+   waterrate_merra_ak(ix,i)=sum_merra; 
+   waterrate_cloud_ak(ix,i)=sum_cloud; 
+end
 figure(5); clf
 %'test 7' 
   subplot(121)
   shadedErrorBarYLog10(water,plays,watersigs,'bo-');
   hold on
-  shadedErrorBarYLog10(waterrate(ix,:),plays,waterratestd(ix,:),'rx-');
-  shadedErrorBarYLog10(squeeze(merrarates.water_allpars(ix,:,2)),plays,squeeze(merrarates.water_allerrors(ix,:,2)),'gs-');
-  shadedErrorBarYLog10(gas1_rate_cloud(ix,:),plays,gas1_rate_cloud_err(ix,:),'k^-'); 
+  shadedErrorBarYLog10(waterrate_ak(ix,:),plays,waterratestd(ix,:),'rx-');
+%  shadedErrorBarYLog10(squeeze(merrarates.water_allpars(ix,:,2)),plays,squeeze(merrarates.water_allerrors(ix,:,2)),'gs-');
+  shadedErrorBarYLog10(waterrate_merra_ak(ix,:),plays,squeeze(merrarates.water_allerrors(ix,:,2)),'gs-'); 
+%  shadedErrorBarYLog10(gas1_rate_cloud(ix,:),plays,gas1_rate_cloud_err(ix,:),'k^-'); 
+  shadedErrorBarYLog10(waterrate_cloud_ak(ix,:),plays,gas1_rate_cloud_err(ix,:),'k^-'); 
   hold off; hl = title('AIRS(b) ERA(r) MERRA(g) ERA-CLD(blk) H2O fr/yr'); set(hl,'fontsize',9); 
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 1 3]); 
-  rms_wtr_strat=rms(water(1:49)'-waterrate(ix,1:49))./rms(waterrate(ix,1:49)) 
-  rms_wtr_trop=rms(water(50:97)'-waterrate(ix,50:97))./rms(waterrate(ix,50:97)) 
+  rms_wtr_strat=rms(water(1:49)'-waterrate(ix,1:49))./rms(waterrate(ix,1:49)); 
+  rms_wtr_trop=rms(water(50:97)'-waterrate(ix,50:97))./rms(waterrate(ix,50:97));
 
   subplot(122)
   shadedErrorBarYLog10(temp,plays,tempsigs,'bo-');
