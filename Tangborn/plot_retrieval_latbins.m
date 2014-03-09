@@ -10,6 +10,12 @@ gas1_rate_cloud_err=gas1_rate_err(1:36,1:97);
 merrafile = '/asl/s1/rates/clear/Oct2013_MERRA/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat';
 merrarates = load(merrafile);
 
+load airsL3_v6_rates_stats_March2014.mat
+l3temprate=thestats.ptemprate; 
+l3waterrate=thestats.waterrate; 
+l3tempstd=thestats.ptempratestd; 
+l3waterstd=thestats.waterratestd; 
+
 ecmfile = '/asl/s1/rates/clear/Aug2013/';
 ecmfile = [ecmfile ...
     'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat'];
@@ -59,23 +65,47 @@ plays = plevs(4:100); plays = flipud(plays);
 %  hold off; hl = title('AIRS(b) ERA(r) Temp K/yr'); set(hl,'fontsize',10); 
 %  set(gca,'ydir','reverse'); grid; axis([-0.10 +0.10 0 1000]);
 
+% Normalize averaging kernel:
+  
+   for i=1:97 
+     sum_water=0.0; 
+     sum_temp=0.0; 
+     for j=1:97 
+        sum_water=sum_water+driver.oem.ak_water(j,i); 
+        sum_temp=sum_temp+driver.oem.ak_temp(j,i); 
+     end 
+     for j=1:97
+        ak_water(j,i)=driver.oem.ak_water(j,i);%/sum_water; 
+        ak_temp(j,i)=driver.oem.ak_temp(j,i);%/sum_temp; 
+     end 
+   end 
+
 %  Apply averaging kernel to waterrate:
+
 
 for i=1:97
    sum_era=0;
    sum_cloud=0; 
    sum_merra=0; 
+   sum_era_temp=0; 
+   sum_cloud_temp=0; 
+   sum_merra_temp=0; 
    for j=1:97
-       sum_era=sum_era+waterrate(ix,j)*driver.oem.ak(6+i,6+j);
-       sum_cloud=sum_cloud+gas1_rate_cloud(ix,j)*driver.oem.ak(6+i,6+j); 
-       sum_merra=sum_merra+merrarates.water_allpars(ix,j,2)*driver.oem.ak(6+i,6+j); 
+       sum_era=sum_era+waterrate(ix,j)*ak_water(i,j);
+       sum_cloud=sum_cloud+gas1_rate_cloud(ix,j)*ak_water(i,j); 
+       sum_merra=sum_merra+merrarates.water_allpars(ix,j,2)*ak_water(i,j); 
+       sum_era_temp=sum_era_temp+ptemprate(ix,j)*ak_temp(i,j); 
+       sum_cloud_temp=sum_cloud_temp+ptemp_rate_cloud(ix,j)*ak_temp(i,j); 
+       sum_merra_temp=sum_merra_temp+merrarates.ptemp_allpars(ix,j,2)*ak_temp(i,j); 
    end
    waterrate_ak(ix,i)=sum_era;                        
    waterrate_merra_ak(ix,i)=sum_merra; 
    waterrate_cloud_ak(ix,i)=sum_cloud; 
+   temprate_ak(ix,i)=sum_era_temp; 
+   temprate_cloud_ak(ix,i)=sum_cloud_temp; 
+   temprate_merra_ak(ix,i)=sum_merra_temp; 
 end
 figure(5); clf
-%'test 7' 
   subplot(121)
   shadedErrorBarYLog10(water,plays,watersigs,'bo-');
   hold on
@@ -84,6 +114,7 @@ figure(5); clf
   shadedErrorBarYLog10(waterrate_merra_ak(ix,:),plays,squeeze(merrarates.water_allerrors(ix,:,2)),'gs-'); 
 %  shadedErrorBarYLog10(gas1_rate_cloud(ix,:),plays,gas1_rate_cloud_err(ix,:),'k^-'); 
   shadedErrorBarYLog10(waterrate_cloud_ak(ix,:),plays,gas1_rate_cloud_err(ix,:),'k^-'); 
+% L3 rates  shadedErrorBarYLog10(l3waterrate(ix,:),Qlevs,l3waterstd(ix,:),'mv-'); 
   hold off; hl = title('AIRS(b) ERA(r) MERRA(g) ERA-CLD(blk) H2O fr/yr'); set(hl,'fontsize',9); 
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 1 3]); 
   rms_wtr_strat=rms(water(1:49)'-waterrate(ix,1:49))./rms(waterrate(ix,1:49)); 
@@ -92,9 +123,15 @@ figure(5); clf
   subplot(122)
   shadedErrorBarYLog10(temp,plays,tempsigs,'bo-');
   hold on
-  shadedErrorBarYLog10(ptemprate(ix,:),plays,ptempratestd(ix,:),'rx-');
-  shadedErrorBarYLog10(squeeze(merrarates.ptemp_allpars(ix,:,2)),plays,squeeze(merrarates.ptemp_allerrors(ix,:,2)),'gs-');
-  shadedErrorBarYLog10(ptemp_rate_cloud(ix,:),plays,ptemp_rate_cloud_err(ix,:),'k^-');
+%  shadedErrorBarYLog10(ptemprate(ix,:),plays,ptempratestd(ix,:),'rx-');
+  shadedErrorBarYLog10(temprate_ak(ix,:),plays,ptempratestd(ix,:),'rx-'); 
+%  shadedErrorBarYLog10(squeeze(merrarates.ptemp_allpars(ix,:,2)),plays,squeeze(merrarates.ptemp_allerrors(ix,:,2)),'gs-');
+  shadedErrorBarYLog10(temprate_merra_ak(ix,:),plays,squeeze(merrarates.ptemp_allerrors(ix,:,2)),'gs-'); 
+%  shadedErrorBarYLog10(ptemp_rate_cloud(ix,:),plays,ptemp_rate_cloud_err(ix,:),'k^-');
+  shadedErrorBarYLog10(temprate_cloud_ak(ix,:),plays,ptemp_rate_cloud_err(ix,:),'k^-'); 
+%  shadedErrorBarYLog10(thestats.ptemprate(ix,:),Tlevs,ptempratestd(ix,1:24),'mv-'); 
+%  shadedErrorBarYLog10(thestats.ptemprate(ix,:),Tlevs,thestats.ptempratestd(ix,:),'mv-');
+% L3 temp profile rates  shadedErrorBarYLog10(l3temprate(ix,:),Tlevs,l3tempstd(ix,:),'mv-')
   hold off; hl = title('AIRS(b) ERA(r) MERRA(g) ERA-CLD(blk) T (K/yr)'); set(hl,'fontsize',9); 
   set(gca,'ydir','reverse'); grid; axis([-0.2 +0.15 1 3]);
   rms_tmp_strat=rms(temp(1:49)'-ptemprate(ix,1:49))./rms(ptemprate(ix,1:49)) ;
