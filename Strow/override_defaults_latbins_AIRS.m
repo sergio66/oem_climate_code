@@ -67,7 +67,7 @@ driver.jacobian.filename = 'M_TS_jac_all.mat';
 %driver.jacobian.filename = '/asl/s1/rates/clear/Aug2013/all_kcarta_UMBCCO2_jacs_NOV02_2012_UMBCCO2_6_97_97.mat';
 
 smoothVSregularization='c'; 
-covariance_tuning='carb'
+covariance_tuning='prof'
   %% but if smoothVSregularization = 'c'
   %% note these are PHYSICAL units eg sigma_temp_stratVALUE is in KELVIN (or KELVIN/YR)
   %% so eg Andy Tangborn finds after normalization driver.oem.sigma.temp_strat_VALUE  = 4;
@@ -127,6 +127,13 @@ covariance_tuning='carb'
 
 
 
+     % Stratosphere temperature
+     TS(1:36)=2.0;  TS(36)=1.0;  TS(35)=1.0; TS(34)=1.0; TS(33)=0.7; TS(32)=1.0; TS(31)=1.0; TS(30)=1.0; TS(29)=0.8; TS(28)=0.5; TS(27)=0.5; TS(26)=0.5; TS(25)=0.5; TS(24)=0.5; TS(23)=0.5; TS(22)=0.5; TS(21)=0.5; TS(20)=0.5; TS(19)=0.5; TS(18)=1.0; TS(17)=1.0; TS(16)=1.0; TS(15)=1.0; TS(14)=1.0; TS(13)=1.0; TS(12)=1.0; TS(11)=1.0; TS(10)=1.0; TS(9)=1.0; TS(8)=1.0; TS(7)=1.0; TS(6)=1.0; TS(5)=1.0; TS(4)=1.0; TS(3)=1.0; TS(2)=1.0; TS(1)=1.0;              
+     % Upper troposphere temperature
+     TUT(1:36)=2.0; TUT(36)=1.0; TUT(35)=1.0; TUT(34)=1.0; TUT(33)=1.0; TUT(32)=0.8; TUT(31)=0.8; TUT(30)=0.8; TUT(29)=0.8; TUT(28)=0.5; TUT(27)=0.4; TUT(26)=0.8; TUT(25)=0.5; TUT(24)=0.5; TUT(23)=0.5; TUT(22)=0.5; TUT(21)=0.5; TUT(20)=0.5; TUT(19)=0.2; TUT(18)=0.9; TUT(17)=0.9; TUT(16)=0.9; TUT(15)=1.0; TUT(14)=0.9; TUT(13)=0.9; TUT(12)=0.9; TUT(11)=0.4; TUT(10)=0.9; TUT(9)=1.0; TUT(8)=1.0; TUT(7)=1.0; TUT(6)=0.7; TUT(5)=1.0; TUT(4)=1.0; TUT(3)=1.0; TUT(2)=1.0; TUT(1)=1.0;   
+     % Lower troposphere temperature
+     TLT(1:36)=2.0; TLT(36)=1.0; TLT(35)=1.5; TLT(34)=1.0; TLT(33)=0.5; TLT(32)=0.3; TLT(31)=0.3; TLT(30)=0.3; TLT(29)=0.3; TLT(28)=0.3; TLT(27)=0.2; TLT(26)=0.2; TLT(25)=0.12; TLT(24)=0.2; TLT(23)=0.2; TLT(22)=0.1; TLT(21)=0.1; TLT(20)=0.2; TLT(19)=0.3 ;TLT(18)=0.65; TLT(17)=0.65; TLT(16)=0.65; TLT(15)=0.6; TLT(14)=0.4;  TLT(13)=0.4; TLT(12)=0.4; TLT(11)=0.4; TLT(10)=0.4; TLT(9)=0.4; TLT(8)=0.5; TLT(7)=0.5; TLT(6)=0.5; TLT(5)=0.6; TLT(4)=0.5; TLT(3)=1.0; TLT(2)=1.0; TLT(1)=1.0;  
+     % Stratosphere water vapor
 
 % Stratosphere water vapor
      WVS(1:36)=1.0; WVS(36)=0.5; WVS(35)=0.5; WVS(34)=.5; WVS(33)=0.4; ...

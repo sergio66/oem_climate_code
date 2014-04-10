@@ -26,18 +26,20 @@ end;
 
 %% Change some defaults
 %driver = override_defaults_airs_test(driver,ix);      %% this is TEST and should always work!
-driver = override_defaults_latbins_AIRS(driver,ix);  %% this is YOUR settings
+driver = strow_override_defaults_latbins_AIRS(driver,ix);  %% this is YOUR settings
 
 % Get rate data and Jacobians
 driver            = get_rates(driver);
 
-% Modify with estimated error in freq = 0.01K
-driver.rateset.unc_rates = ones(2378,1)*0.02;
+% Load in freq corrections
+load Data/dbt_10year  % alldbt
+driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
 
+% Modify with estimated error in freq = 0.01K
+driver.rateset.unc_rates = ones(2378,1)*0.005;
 
 [driver,m_ts_jac] = get_jacs(driver);          %% strow's new renorm
 %[driver,m_ts_jac] = get_jacs_NOrenorm(driver); %% no renorm
-
 
 %  Adjust the rates?
 if driver.rateset.adjust
