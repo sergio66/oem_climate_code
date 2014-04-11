@@ -93,12 +93,14 @@ tunc     = ones(1,pmat_size)*0.01;
 t_sigma = (tunc./tnorm).^2;
 % Make cov matrix
 tmat = (t_sigma'*t_sigma).*mat_od;
+driver.oem.tunc = tunc;
 
 % Temperature level uncertainties, then scaled and squared
-wunc     = ones(1,pmat_size)*0.005;
+wunc     = ones(1,pmat_size)*0.02;
 w_sigma = (wunc./wnorm).^2;
 % Make cov matrix
 wmat = (w_sigma'*w_sigma).*mat_od;
+driver.oem.wunc = wunc;
 
 %fmat = zeros(6,6);
 %            CO2(ppm) O3(frac) N2O(ppb) CH4(ppb) CFC11(ppt) Tsurf(K)    
@@ -106,6 +108,7 @@ wmat = (w_sigma'*w_sigma).*mat_od;
 %     CO2(ppm) O3(frac) N2O(ppb) CH4(ppb) CFC11(ppt) Tsurf(K)    
 fmatd = [2     0.02       2      0.2      0.8        0.01];
 fmat  = diag(fmatd.*fnorm); 
+driver.oem.func = fmatd;
 
 driver.oem.fmat = fmat;
 driver.oem.wmat = wmat;

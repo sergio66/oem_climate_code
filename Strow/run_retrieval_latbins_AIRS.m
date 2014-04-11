@@ -92,5 +92,5 @@ if length(driver.oem.finalrates) == 200
 %  title('AIRS (b) : WV frac/yr (r) T K/yr'); grid
 end
 
-plot_retrieval_latbins
+%plot_retrieval_latbins
 
