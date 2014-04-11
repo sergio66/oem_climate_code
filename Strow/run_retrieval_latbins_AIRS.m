@@ -26,6 +26,9 @@ end;
 
 %% Change some defaults
 %driver = override_defaults_airs_test(driver,ix);      %% this is TEST and should always work!
+
+ix
+
 driver = strow_override_defaults_latbins_AIRS(driver,ix);  %% this is YOUR settings
 
 % Get rate data and Jacobians

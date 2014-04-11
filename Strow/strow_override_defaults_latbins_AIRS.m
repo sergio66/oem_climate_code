@@ -75,7 +75,7 @@ end
 l_c = 2.4;
 mat_od = exp(-mat_od.^2./(1*l_c^2));
 
-% % Sample values for c structure, use co3lev.m to build
+% % Sample values for c structure, use cov3lev.m to build
 % %   now using normal physical units
 % c.trans1 = 20;
 % c.trans2 = 73;
@@ -89,7 +89,7 @@ mat_od = exp(-mat_od.^2./(1*l_c^2));
 % and conentrate on getting the off-diagonals correct
 
 % Temperature level uncertainties, then scaled and squared
-tunc     = ones(1,pmat_size)*0.02;
+tunc     = ones(1,pmat_size)*0.01;
 t_sigma = (tunc./tnorm).^2;
 % Make cov matrix
 tmat = (t_sigma'*t_sigma).*mat_od;
