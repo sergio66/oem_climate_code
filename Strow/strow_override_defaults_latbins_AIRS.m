@@ -1,19 +1,11 @@
 function driver = strow_override_defaults_latbins_AIRS(driver);
-
-% Select the latitude bin
-ix = 16;
-driver.iibin = ix;
-
 %---------------------------------------------------------------------------
-%% Open debug file if desired
-if driver.debug
-  writelog('open');
-end;
-% Set code debugger   
-driver.debug     = false;
-driver.debug_dir = '../Debug';
-
-driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+% Select the latitude bin
+ix = 32;
+driver.iibin = ix;
+%---------------------------------------------------------------------------
+% Apriori file
+driver.oem.apriori_filename = 'apriori_zero';
 
 driver.oem.adjust_spectral_errorbars = 1;
 driver.adjust_spectral_errorbars = 1;
@@ -31,9 +23,6 @@ driver.jacobian.chanset = chanset;
 % Fits observed rates
 driver.rateset.ocb_set = 'obs'; 
 %driver.rateset.ocb_set  = 'bias';
-
-% What is this?
-aux_stuff.xb(1)=0.0; 
 
 driver.oem.regularizationVScovariances = 'C'; 
 % driver.oem.regularizationVScovariances = 'ERA'; 
@@ -134,4 +123,3 @@ driver.oem.fmat = fmat;
 driver.oem.wmat = wmat;
 driver.oem.tmat = tmat;
 
-driver.filename = ['../Output/test' int2str(driver.iibin)];

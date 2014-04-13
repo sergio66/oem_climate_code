@@ -1,5 +1,22 @@
+load Data/airs_f
+figure(1);
+  g1 = driver.jacobian.chanset_used;
+  plot(f(g1),driver.rateset.rates(g1),f(g1),driver.rateset.rates(g1),'k',f(g1),driver.oem.fit(g1),'r.-'); grid; 
+    axis([500 3000 -0.15 +0.15])
+  title('AIRS'); hl=legend('data','DEFINITELY OBS','fits'); set(hl,'fontsize',10)
+figure(2);
+  g1 = driver.jacobian.chanset_used;
+  plot(f(g1),driver.rateset.rates(g1),f(g1),driver.rateset.rates(g1)-driver.oem.fit(g1)','r'); grid; axis([500 3000 -0.15 +0.15])
+  title('AIRS'); hl=legend('data','fits'); set(hl,'fontsize',10)
+% if length(driver.oem.finalrates) == 200
+%   figure(3)
+%   plot(driver.oem.finalrates(7:103),1:97,driver.oem.finalrates(104:200),1:97,'r')
+%   set(gca,'ydir','reverse');
+%   title('AIRS (b) : WV frac/yr (r) T K/yr'); grid
+% end
+
 % this is plotting
-ecmcloud_file=['allsky_rates.mat' 
+ecmcloud_file=['Data/allsky_rates.mat' 
 ];
 load(ecmcloud_file);
 ptemp_rate_cloud=ptemp_rate(1:36,1:97);
@@ -10,7 +27,7 @@ gas1_rate_cloud_err=gas1_rate_err(1:36,1:97);
 merrafile = '/asl/s1/rates/clear/Oct2013_MERRA/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat';
 merrarates = load(merrafile);
 
-load airsL3_v6_rates_stats_March2014.mat
+load Data/airsL3_v6_rates_stats_March2014.mat
 l3temprate=thestats.ptemprate; 
 l3waterrate=thestats.waterrate; 
 l3tempstd=thestats.ptempratestd; 
@@ -42,7 +59,7 @@ else
   return
 end
 
-plevs = load('airslevels.dat');
+plevs = load('Data/airslevels.dat');
 plevsA = plevs(1:end-1) - plevs(2:end);
 plevsB = log(plevs(1:end-1)./plevs(2:end));
 plevs = plevsA./plevsB;
