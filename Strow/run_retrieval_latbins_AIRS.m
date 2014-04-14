@@ -4,71 +4,51 @@
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Select the latitude bin
-ix = 22;
-driver.iibin = ix;
-
-
+driver.iibin = JOB;
+ix = driver.iibin;
+%---------------------------------------------------------------------------
 % Need oem_pkg
 addpath ../../oem_pkg
 %---------------------------------------------------------------------------
 % Doing debug?
 driver.debug = false;
 driver.debug_dir = '../Debug';
-%---------------------------------------------------------------------------
-% Perform OEM fit?
-driver.oem.dofit = true;
-%---------------------------------------------------------------------------
+
 % Open debug file if desired
 if driver.debug
   writelog('open');
 end;
 %---------------------------------------------------------------------------
-driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
-%---------------------------------------------------------------------------
-% Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200
-driver.jacobian.filename = '../../oem_pkg/Test/M_TS_jac_all.mat';
-driver.jacobian.varname = 'M_TS_jac_all';
-%---------------------------------------------------------------------------
-% Fitting [obs][cal][biases], pick one
-driver.rateset.ocb_set  = 'obs';
-driver.jacobian.numlays    = 97;
-%---------------------------------------------------------------------------
-% Lag-1 correlation file
-driver.rateset.ncfile   = 'all_lagcor.mat';
-%---------------------------------------------------------------------------
-% SARTA forward model and other "representation" errors
-driver.oem.sarta_error = 0.0;
-%---------------------------------------------------------------------------
+% Perform OEM fit?
+driver.oem.dofit = true;
+
 % Oem loops?  Just one if linear.
 driver.oem.nloop = 1;
 %---------------------------------------------------------------------------
-% Get rate data
+% Raw rate data file
+driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+
+% Fitting [obs][cal][bias], pick one
+driver.rateset.ocb_set  = 'obs';
+
+% Good channel set
+load /asl/s1/rates/clear/good_chanset.mat 
+driver.jacobian.chanset = chanset;
+
+% Lag-1 correlation file; if using rate least-squares errors
+driver.rateset.ncfile   = '../../oem_pkg/Test/all_lagcor.mat';
+
+% Get rate data, do Q/A elsewhere
 driver = get_rates(driver);
 %---------------------------------------------------------------------------
-% Q/A rates
-% bad = find(driver.rateset.rates > driver.rateset.max);
-% if length(bad) > 0
-%   disp('resetting some bad input (max)');
-%   driver.rateset.rates(bad) = driver.rateset.max;
-% end
-% bad = find(driver.rateset.rates < driver.rateset.min);
-% if length(bad) > 0
-%   disp('resetting some bad input (min)');
+% Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200
+driver.jacobian.filename = '../../oem_pkg/Test/M_TS_jac_all.mat';
+driver.jacobian.varname  = 'M_TS_jac_all';
+driver.jacobian.scalar_i = 1:6;
+driver.jacobian.water_i  = 7:103;
+driver.jacobian.temp_i   = 104:200;
+driver.jacobian.numlays  = 97;
 
-%---------------------------------------------------------------------------
-% Modify rates with lag-1 correlation errors
-%nc_cor = nc_rates(driver);
-%driver.rateset.unc_rates = nc_cor.*driver.rateset.unc_rates;
-%---------------------------------------------------------------------------
-%---------------------------------------------------------------------------
-%---------------------------------------------------------------------------
-% Override many settings and add covariance matrix
-driver = strow_override_defaults_latbins_AIRS(driver);
-%---------------------------------------------------------------------------
-%---------------------------------------------------------------------------
-%---------------------------------------------------------------------------
-ix = driver.iibin
-%---------------------------------------------------------------------------
 % Get jacobians
 jac             = load(driver.jacobian.filename);
 aux.m_ts_jac    = squeeze(jac.M_TS_jac_all(ix,:,:));
@@ -76,6 +56,9 @@ driver.qrenorm  = jac.qrenorm;
 f = jac.f;
 clear jac
 %---------------------------------------------------------------------------
+% Apriori file
+driver.oem.apriori_filename = 'apriori_lls';
+
 % Load in apriori
 xb = load(driver.oem.apriori_filename,'apriori');
 xb = xb.apriori;
@@ -83,17 +66,14 @@ xb = xb.apriori;
 if nn > 1
   xb = xb(:,driver.ix);
 end
-xb = xb./driver.qrenorm';
+% A Priori stored in aux.xb
+aux.xb = xb./driver.qrenorm';
 %---------------------------------------------------------------------------
-% Form structure needed by rodgers.m
-aux.xb       = xb;
+% SARTA forward model and other "representation" errors
+driver.oem.sarta_error = 0.0;
 %---------------------------------------------------------------------------
-% Load in freq corrections
-load Data/dbt_10year  % alldbt
-driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
-%---------------------------------------------------------------------------
-% Modify with estimated error in freq = 0.01K
-driver.rateset.unc_rates = ones(2378,1)*0.005;
+% Override many settings and add covariance matrix
+driver = strow_override_defaults_latbins_AIRS(driver);
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
