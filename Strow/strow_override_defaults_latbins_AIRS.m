@@ -130,7 +130,4 @@ fmatd = [2     0.2       2      0.2      0.8        0.01];
 fmat  = diag(fmatd.*fnorm); 
 driver.oem.func = fmatd;
 
-driver.oem.fmat = fmat;
-driver.oem.wmat = wmat;
-driver.oem.tmat = tmat;
-
+driver.oem.cov = blkdiag(fmat,wmat,tmat);
