@@ -1,9 +1,9 @@
 function driver = strow_override_defaults_latbins_AIRS(driver);
 %---------------------------------------------------------------------------
-% Select the latitude bin
-ix = 32;
-driver.iibin = ix;
 %---------------------------------------------------------------------------
+
+ix = driver.iibin;
+
 % Apriori file
 driver.oem.apriori_filename = 'apriori_zero';
 
@@ -56,25 +56,36 @@ for i=1:pmat_size
    end
 end
 
+% Defines tropopause index trpi
+trop_index
+
 % Relative off-diagonal
 l_c = 2.4;
 mat_od = exp(-mat_od.^2./(1*l_c^2));
 
-% Defines tropopause index trpi
-trop_index
+% Attempt to change l_c in strat, unstable as Andy said
+% Maybe should change Jacobians and have fewer strat layers
+% l_c_trop = 2.4;
+% l_c_strat = 2.4;
+% mat_od_strat = mat_od(1:trpi(ix),1:trpi(ix));
+% mat_od_trop  = mat_od(trpi(ix)+1:end,trpi(ix)+1:end);
+% mat_od_strat = exp(-mat_od_strat.^2./(1*l_c_strat^2));
+% mat_od_trop = exp(-mat_od_trop.^2./(1*l_c_trop^2));
+% No off-diagonal between strat and trop
+% mat_od = blkdiag(mat_od_strat,mat_od_trop);
 
 for i=1:36
    ct(i).trans1 = trpi(i);
    ct(i).trans2 = trpi(i)+10;
-   ct(i).lev1 = 0.02;
-   ct(i).lev2 = 0.01;
+   ct(i).lev1 = 0.01;
+   ct(i).lev2 = 0.02;
    ct(i).lev3 = ct(i).lev2;
    ct(i).width1 = 1/5;
    ct(i).width2 = ct(i).width1;
 
    cw(i).trans1 = trpi(i);
    cw(i).trans2 = trpi(i)+10;
-   cw(i).lev1 = 0.005;
+   cw(i).lev1 = 0.01;
    cw(i).lev2 = 0.005;
    cw(i).lev3 = cw(i).lev2;
    cw(i).width1 = 1/5;

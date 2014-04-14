@@ -1,11 +1,11 @@
 load Data/airs_f
 figure(1);
-  g1 = driver.jacobian.chanset_used;
+  g1 = driver.jacobian.chanset;
   plot(f(g1),driver.rateset.rates(g1),f(g1),driver.rateset.rates(g1),'k',f(g1),driver.oem.fit(g1),'r.-'); grid; 
     axis([500 3000 -0.15 +0.15])
   title('AIRS'); hl=legend('data','DEFINITELY OBS','fits'); set(hl,'fontsize',10)
 figure(2);
-  g1 = driver.jacobian.chanset_used;
+  g1 = driver.jacobian.chanset;
   plot(f(g1),driver.rateset.rates(g1),f(g1),driver.rateset.rates(g1)-driver.oem.fit(g1)','r'); grid; axis([500 3000 -0.15 +0.15])
   title('AIRS'); hl=legend('data','fits'); set(hl,'fontsize',10)
 % if length(driver.oem.finalrates) == 200
