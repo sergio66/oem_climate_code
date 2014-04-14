@@ -21,9 +21,13 @@ end;
 %---------------------------------------------------------------------------
 % Perform OEM fit?
 driver.oem.dofit = true;
+driver.lls.dofit = false;
 
 % Oem loops?  Just one if linear.
 driver.oem.nloop = 1;
+
+% Debug plots inside rodgers?
+driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 % Raw rate data file
 driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
@@ -83,8 +87,8 @@ driver = retrieval(driver,aux);
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Save retrieval output
-driver.filename = ['../Output/test' int2str(driver.iibin)];
-save(driver.filename,'-struct','driver');
+driver.filename = ['Output/test' int2str(driver.iibin)];
+%save(driver.filename,'-struct','driver');
 % Close debug file
 if driver.debug
   writelog('close')
@@ -100,6 +104,8 @@ fprintf(1,'CFC11 (ppt)  %5.3f  +- %5.3f \n',driver.oem.finalrates(5),driver.oem.
 fprintf(1,'SST   (K)    %5.3f  +- %5.3f \n',driver.oem.finalrates(6),driver.oem.finalsigs(6));
 %---------------------------------------------------------------------------
 % Plot Results
-addpath Plotutils
-plot_retrieval_latbins
+%addpath Plotutils
+%plot_retrieval_latbins
+
+co2(JOB) = driver.oem.finalrates(1);
 

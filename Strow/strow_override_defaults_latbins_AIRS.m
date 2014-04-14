@@ -8,12 +8,10 @@ regress_rates = driver.rateset.unc_rates;
 load Data/dbt_10year  % alldbt
 driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
 
-% Modify with estimated error in freq = 0.01K
-driver.rateset.unc_rates = ones(2378,1)*0.005;
-
 % Modify rates with lag-1 correlation errors or add to above
-% nc_cor = nc_rates(driver);
-% driver.rateset.unc_rates = driver.rateset.unc_rates + nc_cor.*regress_rates;
+nc_cor = nc_rates(driver);
+% Modify with estimated error in freq + regress errors 
+driver.rateset.unc_rates = ones(2378,1)*0.001 +driver.rateset.unc_rates.*nc_cor;
 %---------------------------------------------------------------------------
 % Do rate Q/A (empty for now)
 %---------------------------------------------------------------------------
@@ -53,8 +51,8 @@ mat_od = exp(-mat_od.^2./(1*l_c^2));
 for i=1:36
    ct(i).trans1 = trpi(i);
    ct(i).trans2 = trpi(i)+10;
-   ct(i).lev1 = 0.01;
-   ct(i).lev2 = 0.02;
+   ct(i).lev1 = 0.02;
+   ct(i).lev2 = 0.01;
    ct(i).lev3 = ct(i).lev2;
    ct(i).width1 = 1/5;
    ct(i).width2 = ct(i).width1;
