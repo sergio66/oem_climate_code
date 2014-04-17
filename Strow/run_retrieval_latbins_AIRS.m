@@ -104,8 +104,8 @@ fprintf(1,'CFC11 (ppt)  %5.3f  +- %5.3f \n',driver.oem.finalrates(5),driver.oem.
 fprintf(1,'SST   (K)    %5.3f  +- %5.3f \n',driver.oem.finalrates(6),driver.oem.finalsigs(6));
 %---------------------------------------------------------------------------
 % Plot Results
-%addpath Plotutils
-%plot_retrieval_latbins
+addpath Plotutils
+plot_retrieval_latbins
 
 co2(JOB) = driver.oem.finalrates(1);
 
