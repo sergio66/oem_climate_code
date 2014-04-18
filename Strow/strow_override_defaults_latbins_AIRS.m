@@ -34,12 +34,8 @@ end
 trop_index
 
 % Relative off-diagonal
-l_c = 0.4;
+l_c = 2.4;
 mat_od = exp(-mat_od.^2./(1*l_c^2));
-
-% Override a priori values 
-
-xb(1)=2.2; 
 
 % Attempt to change l_c in strat, unstable as Andy said
 % Maybe should change Jacobians and have fewer strat layers
