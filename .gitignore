@@ -30,8 +30,7 @@ Tangborn
 
 # specific files
 Strow/.#*
-Strow/Data/M_TS_jac_all.mat
-Strow/Data/sarta_M_TS_jac_all_5_97_97_4.mat
+Strow/Data
 Strow/Figs
 Strow/Old
 Strow/Test
