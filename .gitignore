@@ -1,2 +1,37 @@
 *~
 .DS_Store
+
+#
+# oem_pkg_run .gitignore file
+#
+
+# tex work files
+*.aux
+*.bbl
+*.blg
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.snm
+*.toc
+*.dvi
+
+# archives and packages
+*.gz
+*.tgz
+*.tar
+*.zip
+*.bz2
+
+# directories
+Tangborn
+
+# specific files
+Strow/.#*
+Strow/Data/M_TS_jac_all.mat
+Strow/Data/sarta_M_TS_jac_all_5_97_97_4.mat
+Strow/Figs
+Strow/Old
+Strow/Test
