@@ -7,6 +7,10 @@ regress_rates = driver.rateset.unc_rates;
 % Load in freq corrections
 load Data/dbt_10year  % alldbt
 driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
+% % Offset rates to get sensitivity to AIRS BT drift
+% if driver.rateset.ocb_set  == 'obs';
+%    driver.rateset.rates = driver.rateset.rates + 0.1;
+% end
 
 % Modify rates with lag-1 correlation errors or add to above
 nc_cor = nc_rates(driver);

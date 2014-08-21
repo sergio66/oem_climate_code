@@ -117,6 +117,7 @@ end
 %---------------------------------------------------------------------------
 % Some simple output
 fprintf('Scalar Retrievals from OEM\n')
+fprintf('Lat Index %5.1f \n',JOB)
 fprintf(1,'CO2   (ppm)   %5.3f  +- %5.3f \n',driver.oem.finalrates(1),driver.oem.finalsigs(1));
 fprintf(1,'O3    (%%)     %5.3f  +- %5.3f \n',100*driver.oem.finalrates(2),100*driver.oem.finalsigs(2));
 fprintf(1,'N2O   (ppb)   %5.3f  +- %5.3f \n',driver.oem.finalrates(3),driver.oem.finalsigs(3));
@@ -161,7 +162,7 @@ if iob==2
 end 
 
 
-
+alldriver(JOB,iob) = driver;
 
 end % end of latbin loop  
 
