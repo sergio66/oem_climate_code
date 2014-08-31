@@ -30,8 +30,9 @@ driver.oem.nloop = 1;
 driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 % Raw rate data file
-driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
-
+%driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_fitout.mat';
+%driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_radunits_fitout.mat';
 % Fitting [obs][cal][bias], pick one
 driver.rateset.ocb_set  = 'obs';
 
@@ -66,6 +67,7 @@ driver.oem.apriori_filename = 'apriori_lls';
 % Load in apriori
 xb = load(driver.oem.apriori_filename,'apriori');
 xb = xb.apriori;
+%xb(1) = 0;  % Set CO2 apriori to zero (now at 2)
 [mm,nn] = size(xb);
 if nn > 1
   xb = xb(:,driver.ix);

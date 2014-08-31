@@ -5,7 +5,7 @@
 %---------------------------------------------------------------------------
 % Select obs or cal. We do both to get "obs-cal" rates.
 
-for iob=1:2 
+for iob=1:1 
 
 
 % Select the latitude bin
@@ -36,7 +36,9 @@ driver.oem.nloop = 1;
 driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 % Raw rate data file
-driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+driver.rateset.datafile  = '/asl/s1/rates/clear/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+%driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_radunits_fitout.mat';
+%driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_fitout.mat';
 %driver.rateset.datafile = '/home/sergio/MATLABCODE/RATES_TARO/ANOM/merra_linearratesfor_andy.mat';
 
 % Fitting [obs][cal][bias], pick one  This is moved to outer loop for plotting
@@ -77,6 +79,7 @@ driver.qrenorm  = jac.qrenorm;
 [jac_max i_max(ix)] = max(abs(aux.m_ts_jac(1147,7:103)));
 f = jac.f;
 clear jac
+
 
 % Test for removing CO2 from obs driver.rateset.rates=driver.rateset.rates - 1.0*aux.m_ts_jac(:,1); 
 

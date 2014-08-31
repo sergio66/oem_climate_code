@@ -2,8 +2,13 @@ function driver = strow_override_defaults_latbins_AIRS(driver);
 %---------------------------------------------------------------------------
 % Which latitude bin
 ix = driver.iibin;
-regress_rates = driver.rateset.unc_rates;
 %---------------------------------------------------------------------------
+% Convert radiance rates into bt rate
+% load_fairs
+% deriv = drdbt(f,rad2bt(f,driver.rateset.r));
+% driver.rateset.rates = driver.rateset.rates./(1000*deriv);
+% driver.rateset.unc_rates = driver.rateset.unc_rates./(1000*deriv);
+
 % Load in freq corrections
 load Data/dbt_10year  % alldbt
 driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
@@ -13,9 +18,10 @@ driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
 % end
 
 % Modify rates with lag-1 correlation errors or add to above
-nc_cor = nc_rates(driver);
+%nc_cor = nc_rates(driver);
 % Modify with estimated error in freq + regress errors 
-driver.rateset.unc_rates = ones(2378,1)*0.001 +driver.rateset.unc_rates.*nc_cor;
+%driver.rateset.unc_rates = ones(2378,1)*0.001 +driver.rateset.unc_rates.*nc_cor;
+driver.rateset.unc_rates = ones(2378,1)*0.001;
 %---------------------------------------------------------------------------
 % Do rate Q/A (empty for now)
 %---------------------------------------------------------------------------
@@ -57,6 +63,8 @@ for i=1:36
    ct(i).trans2 = trpi(i)+10;
    ct(i).lev1 = 0.02;
    ct(i).lev2 = 0.01;
+%    ct(i).lev1 = 0.002;
+%    ct(i).lev2 = 0.002;
    ct(i).lev3 = ct(i).lev2;
    ct(i).width1 = 1/5;
    ct(i).width2 = ct(i).width1;
@@ -90,6 +98,6 @@ driver.oem.wunc = wunc;
 %fmat definitions below
 %            CO2(ppm) O3(frac) N2O(ppb) CH4(ppb) CFC11(ppt) Tsurf(K)    
 %fmat_orgi = [5/2.2     0.02       2      0.2      0.8        0.01];
-fmatd = [2     0.1       2      10      1        0.1];
+fmatd = [4     0.1       2      10      1        0.1];
 fmat  = diag(fmatd.*fnorm); 
 driver.oem.cov = blkdiag(fmat,wmat,tmat);

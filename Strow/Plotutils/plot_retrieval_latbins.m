@@ -24,7 +24,7 @@ ptemp_rate_cloud_err=ptemp_rate_err(1:36,1:97);
 gas1_rate_cloud=gas1_rate(1:36,1:97); 
 gas1_rate_cloud_err=gas1_rate_err(1:36,1:97); 
 
-merrafile = '/asl/s1/rates/clear/Oct2013_MERRA/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat';
+merrafile = '/asl/s1/rates/Clear/Merra_rates/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat';
 merrarates = load(merrafile);
 
 load Data/airsL3_v6_rates_stats_March2014.mat
@@ -33,7 +33,7 @@ l3waterrate=thestats.waterrate;
 l3tempstd=thestats.ptempratestd; 
 l3waterstd=thestats.waterratestd; 
 
-ecmfile = '/asl/s1/rates/clear/Aug2013/';
+ecmfile = '/asl/s1/rates/Clear/Profile_rates/';
 ecmfile = [ecmfile ...
     'overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat'];
 load(ecmfile); 

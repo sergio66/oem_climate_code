@@ -13,4 +13,5 @@ switch driver.rateset.ocb_set
      driver.rateset.rates = real(squeeze(b_obs(ix,:,2))');
      driver.rateset.unc_rates = real(squeeze(b_err_obs(ix,:,2))');
 end
+%driver.rateset.r = r(:,ix);
 
