@@ -45,6 +45,7 @@ trop_index
 
 % Relative off-diagonal
 l_c = 2.4;
+l_c = 1;
 mat_od = exp(-mat_od.^2./(1*l_c^2));
 
 % Attempt to change l_c in strat, unstable as Andy said
@@ -71,8 +72,8 @@ for i=1:36
 
    cw(i).trans1 = trpi(i);
    cw(i).trans2 = trpi(i)+10;
-   cw(i).lev1 = 0.01;
-   cw(i).lev2 = 0.005;
+   cw(i).lev1 = 0.01/2;
+   cw(i).lev2 = 0.005/2;
    cw(i).lev3 = cw(i).lev2;
    cw(i).width1 = 1/5;
    cw(i).width2 = cw(i).width1;
@@ -81,7 +82,7 @@ end
 % Temperature level uncertainties, then scaled and squared
 %tunc     = ones(1,pmat_size)*0.01;
 tunc = cov2lev(ct(ix));
-t_sigma = (tunc./tnorm).^2;
+t_sigma = (tunc./tnorm);%.^2;
 % Make cov matrix
 tmat = (t_sigma'*t_sigma).*mat_od;
 driver.oem.tunc = tunc;
@@ -89,7 +90,7 @@ driver.oem.tunc = tunc;
 % Water level uncertainties, then scaled and squared
 %wunc     = ones(1,pmat_size)*0.02;
 wunc = cov2lev(cw(ix));
-w_sigma = (wunc./wnorm).^2;
+w_sigma = (wunc./wnorm);%.^2;
 % Make cov matrix
 wmat = (w_sigma'*w_sigma).*mat_od;
 driver.oem.wunc = wunc;
@@ -99,5 +100,5 @@ driver.oem.wunc = wunc;
 %            CO2(ppm) O3(frac) N2O(ppb) CH4(ppb) CFC11(ppt) Tsurf(K)    
 %fmat_orgi = [5/2.2     0.02       2      0.2      0.8        0.01];
 fmatd = [4     0.1       2      10      1        0.1];
-fmat  = diag(fmatd.*fnorm); 
+fmat  = diag(fmatd./fnorm); 
 driver.oem.cov = blkdiag(fmat,wmat,tmat);
