@@ -62,8 +62,8 @@ mat_od = exp(-mat_od.^2./(1*l_c^2));
 for i=1:36
    ct(i).trans1 = trpi(i);
    ct(i).trans2 = trpi(i)+10;
-   ct(i).lev1 = 0.02;
-   ct(i).lev2 = 0.01;
+   ct(i).lev1 = 0.02*2;
+   ct(i).lev2 = 0.01*2;
 %    ct(i).lev1 = 0.002;
 %    ct(i).lev2 = 0.002;
    ct(i).lev3 = ct(i).lev2;
@@ -74,6 +74,8 @@ for i=1:36
    cw(i).trans2 = trpi(i)+10;
    cw(i).lev1 = 0.01/2;
    cw(i).lev2 = 0.005/2;
+   cw(i).lev1 = 0.01;
+   cw(i).lev2 = 0.005;
    cw(i).lev3 = cw(i).lev2;
    cw(i).width1 = 1/5;
    cw(i).width2 = cw(i).width1;
@@ -99,6 +101,6 @@ driver.oem.wunc = wunc;
 %fmat definitions below
 %            CO2(ppm) O3(frac) N2O(ppb) CH4(ppb) CFC11(ppt) Tsurf(K)    
 %fmat_orgi = [5/2.2     0.02       2      0.2      0.8        0.01];
-fmatd = [4     0.1       2      10      1        0.1];
+fmatd = [0.1     0.1       2      10      1        0.1];
 fmat  = diag(fmatd./fnorm); 
 driver.oem.cov = blkdiag(fmat,wmat,tmat);

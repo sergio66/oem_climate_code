@@ -36,9 +36,9 @@ driver.oem.nloop = 1;
 driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 % Raw rate data file
-driver.rateset.datafile  = '/asl/s1/rates/clear/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
+%driver.rateset.datafile  = '/asl/s1/rates/clear/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
 %driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_radunits_fitout.mat';
-%driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_fitout.mat';
+driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_fitout.mat';
 %driver.rateset.datafile = '/home/sergio/MATLABCODE/RATES_TARO/ANOM/merra_linearratesfor_andy.mat';
 
 % Fitting [obs][cal][bias], pick one  This is moved to outer loop for plotting
@@ -55,6 +55,8 @@ driver.rateset.datafile  = '/asl/s1/rates/clear/overocean_gsx_1day_clr_era_lays_
 % Good channel set
 load /asl/s1/rates/clear/good_chanset.mat 
 driver.jacobian.chanset = chanset;
+k = find(f(chanset) < 970 |  f(chanset) > 1117 );
+driver.jacobian.chanset = chanset(k);
 
 % Lag-1 correlation file; if using rate least-squares errors
 driver.rateset.ncfile   = '../../oem_pkg/Test/all_lagcor.mat';
@@ -172,4 +174,4 @@ end % end of latbin loop
 end  % end of iob loop 
 
 
-plot_tracegas_latbins; 
+% plot_tracegas_latbins; 

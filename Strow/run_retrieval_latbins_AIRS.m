@@ -39,6 +39,9 @@ driver.rateset.ocb_set  = 'obs';
 % Good channel set
 load /asl/s1/rates/clear/good_chanset.mat 
 driver.jacobian.chanset = chanset;
+load_fairs
+k = find(f(chanset) < 970 |  f(chanset) > 1117 );
+driver.jacobian.chanset = chanset(k);
 
 % Lag-1 correlation file; if using rate least-squares errors
 driver.rateset.ncfile   = '../../oem_pkg/Test/all_lagcor.mat';
