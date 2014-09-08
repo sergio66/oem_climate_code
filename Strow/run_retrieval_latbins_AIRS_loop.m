@@ -55,7 +55,7 @@ driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robus
 % Good channel set
 load /asl/s1/rates/clear/good_chanset.mat 
 driver.jacobian.chanset = chanset;
-k = find(f(chanset) < 970 |  f(chanset) > 1117 );
+k = find(f(chanset) < 970 |  f(chanset) > 1136 );
 driver.jacobian.chanset = chanset(k);
 
 % Lag-1 correlation file; if using rate least-squares errors
