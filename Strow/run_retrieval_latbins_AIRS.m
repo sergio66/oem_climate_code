@@ -31,15 +31,18 @@ driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 % Raw rate data file
 %driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
-driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_fitout.mat';
+driver.rateset.datafile  = '/asl/s1/rates/Clear/lls_robust_all_fitout.mat';
 %driver.rateset.datafile  = '/Users/strow/Work/Airs/Stability/Rate_fits/lls_robust_all_radunits_fitout.mat';
 % Fitting [obs][cal][bias], pick one
 driver.rateset.ocb_set  = 'obs';
 
 % Good channel set
-load /asl/s1/rates/clear/good_chanset.mat 
+load /asl/s1/rates/Clear/good_chanset.mat 
 driver.jacobian.chanset = chanset;
-load_fairs
+
+
+load /home/strow/Matlab/Airs/airs_f
+%load_fairs
 k = find(f(chanset) < 970 |  f(chanset) > 1117 );
 driver.jacobian.chanset = chanset(k);
 
