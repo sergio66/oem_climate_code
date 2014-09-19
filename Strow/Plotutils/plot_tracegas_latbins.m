@@ -30,7 +30,7 @@ ylabel('CO2 rate (ppm/year)')
 % filtering before the robust fit.  May not matter, or maybe he didn't 
 % apply this filtering here.
 % Variables: stemprate, stempratestd, waterrate, ozonerate, ptemprate, etc.
-model_old = load('/asl/s1/rates/clear/Profile_rates/overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012');
+model_old = load('/asl/s1/rates/Clear/Profile_rates/overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012');
 
 % This file has LLS fits to ERA using gdays set of days used for radiance rates
 % Variables: gdays, sst (36x10), sst_rate (sst(:,2)), sst_rate_err
