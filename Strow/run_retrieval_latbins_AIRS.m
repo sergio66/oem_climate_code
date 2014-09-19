@@ -5,7 +5,6 @@
 %---------------------------------------------------------------------------
 % Select the latitude bin
 driver.iibin = JOB;
-ix = driver.iibin;
 %---------------------------------------------------------------------------
 % Need oem_pkg
 addpath ../../oem_pkg
@@ -31,7 +30,7 @@ driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Override many settings and add covariance matrix
-driver = strow_override_defaults_latbins_AIRS(driver);
+[driver,aux] = strow_override_defaults_latbins_AIRS(driver);
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Do the retrieval

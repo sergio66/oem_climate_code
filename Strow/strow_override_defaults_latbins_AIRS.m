@@ -1,10 +1,10 @@
-function driver = strow_override_defaults_latbins_AIRS(driver);
+function [driver,aux] = strow_override_defaults_latbins_AIRS(driver);
 %---------------------------------------------------------------------------
 % Which latitude bin
 ix = driver.iibin;
 %---------------------------------------------------------------------------
 % Fitting [obs][cal][bias], pick one
-driver.rateset.ocb_set  = 'obs';
+driver.rateset.ocb_set  = 'cal';
 %---------------------------------------------------------------------------
 % Raw rate data file
 %driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
@@ -34,8 +34,9 @@ load /asl/s1/rates/Clear/good_chanset.mat
 driver.jacobian.chanset = chanset;
 
 % Remove ozone channels
-% k = find(f(chanset) < 970 |  f(chanset) > 1117 );
-% driver.jacobian.chanset = chanset(k);
+%k = find(f(chanset) < 970 |  f(chanset) > 1117 );
+k = find(f(chanset) < 970 |  f(chanset) > 1200 );
+driver.jacobian.chanset = chanset(k);
 %---------------------------------------------------------------------------
 % Apriori file
 driver.oem.apriori_filename = 'apriori_lls';
@@ -46,7 +47,7 @@ xb = xb.apriori;
 %xb(1) = 0;  % Set CO2 apriori to zero (now at 2)
 [mm,nn] = size(xb);
 if nn > 1
-  xb = xb(:,driver.ix);
+  xb = xb(:,driver.iibin);
 end
 % A Priori stored in aux.xb
 aux.xb = xb./driver.qrenorm';
@@ -60,7 +61,14 @@ driver.oem.sarta_error = 0.0;
 %---------------------------------------------------------------------------
 % Load in freq corrections
 load Data/dbt_10year  % alldbt
-driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
+
+if driver.rateset.ocb_set  == 'obs';
+   driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
+end
+% elseif driver.rateset.ocb_set  == 'cal';
+%   
+% end
+
 % % Offset rates to get sensitivity to AIRS BT drift
 % if driver.rateset.ocb_set  == 'obs';
 %    driver.rateset.rates = driver.rateset.rates + 0.1;
@@ -112,8 +120,8 @@ for i=1:36
    cw(i).trans2 = trpi(i)+10;
 %    cw(i).lev1 = 0.01;
 %    cw(i).lev2 = 0.005;
-   cw(i).lev1 = 0.005;%*4;
-   cw(i).lev2 = 0.005;%*4;
+   cw(i).lev1 = 0.005*4;
+   cw(i).lev2 = 0.005*4;
    cw(i).lev3 = cw(i).lev2;
    cw(i).width1 = 1/5;
    cw(i).width2 = cw(i).width1;
@@ -139,15 +147,15 @@ driver.oem.wunc = wunc;
 %fmat definitions below
 %            CO2(ppm) O3(frac) N2O(ppb) CH4(ppb) CFC11(ppt) Tsurf(K)    
 %fmat_orgi = [5/2.2     0.02       2      0.2      0.8        0.01];
-fmatd = [2     0.1       2      10      1        0.01];
+fmatd = [2     0.1       2      1      1        0.1];
 fmat  = diag(fmatd./fnorm); 
 driver.oem.cov = blkdiag(fmat,wmat,tmat);
 
 %---------------------------------------------------------------------
 % Empirical regularization parameters and switches
-driver.oem.reg_type = 'reg_and_cov'; % 'cov','reg' are other choices
+driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices
 % Separate reg weights for water, temperature profiles
-driver.oem.alpha_water = 100;
+driver.oem.alpha_water = 200;
 driver.oem.alpha_temp = 10;
 
 

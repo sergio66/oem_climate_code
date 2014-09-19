@@ -34,7 +34,7 @@ driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Override many settings and add covariance matrix
-driver = strow_override_defaults_latbins_AIRS(driver);
+[driver,aux] = strow_override_defaults_latbins_AIRS(driver);
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Do the retrieval

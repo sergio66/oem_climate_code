@@ -1,5 +1,5 @@
 load Data/airs_f
-figure(1);
+figure(1);clf;
   g1 = driver.jacobian.chanset;
   plot(f(g1),driver.rateset.rates(g1),f(g1),driver.rateset.rates(g1),'k',f(g1),driver.oem.fit(g1),'r.-'); grid; 
     axis([500 3000 -0.15 +0.15])
