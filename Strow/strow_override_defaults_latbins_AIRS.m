@@ -4,7 +4,7 @@ function [driver,aux] = strow_override_defaults_latbins_AIRS(driver);
 ix = driver.iibin;
 %---------------------------------------------------------------------------
 % Fitting [obs][cal][bias], pick one
-driver.rateset.ocb_set  = 'cal';
+driver.rateset.ocb_set  = 'obs';
 %---------------------------------------------------------------------------
 % Raw rate data file
 %driver.rateset.datafile  = '/asl/s1/rates/clear/Aug2013/overocean_gsx_1day_clr_era_lays_spanday01_avgL1Brates_robust_Nov02_2012_span_09_2002_08_2012.mat';
@@ -61,13 +61,7 @@ driver.oem.sarta_error = 0.0;
 %---------------------------------------------------------------------------
 % Load in freq corrections
 load Data/dbt_10year  % alldbt
-
-if driver.rateset.ocb_set  == 'obs';
-   driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
-end
-% elseif driver.rateset.ocb_set  == 'cal';
-%   
-% end
+driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
 
 % % Offset rates to get sensitivity to AIRS BT drift
 % if driver.rateset.ocb_set  == 'obs';

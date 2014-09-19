@@ -38,7 +38,7 @@ a = patch([xdata+xdatasigs fliplr(xdata-xdatasigs) xdata(1)+xdatasigs(1)],...
 
   alpha(a,0.15)
 hold on
-  plot(xdata,log10(yplays),patchColor);
+  plot(xdata,log10(yplays),patchColor,'linewidth',2);
 hold off
 
 ticks = [0 1 2 3];
