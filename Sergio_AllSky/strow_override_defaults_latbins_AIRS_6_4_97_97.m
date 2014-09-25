@@ -1,4 +1,11 @@
 function [driver,aux] = strow_override_defaults_latbins_AIRS(driver);
+
+%%%%%%%%%% look at /home/sergio/MATLABCODE/oem_pkg_run_Aug2014/Strow/overrides_history.m
+%%%%%%%%%% look at /home/sergio/MATLABCODE/oem_pkg_run_Aug2014/Strow/overrides_history.m
+%%%%%%%%%% look at /home/sergio/MATLABCODE/oem_pkg_run_Aug2014/Strow/overrides_history.m
+%%%%%%%%%% look at /home/sergio/MATLABCODE/oem_pkg_run_Aug2014/Strow/overrides_history.m
+%%%%%%%%%% look at /home/sergio/MATLABCODE/oem_pkg_run_Aug2014/Strow/overrides_history.m
+
 %---------------------------------------------------------------------------
 % Which latitude bin
 ix = driver.iibin;
@@ -100,8 +107,8 @@ trop_index
 
 % Relative off-diagonal
 % l_c = 2.4;
-l_c = 1.25;
 l_c = 0.5;
+l_c = 1.25;
 mat_od = exp(-mat_od.^2./(1*l_c^2));
 
 for i=1:36
@@ -111,20 +118,20 @@ for i=1:36
    ct(i).lev2 = 0.01*10*2;    %% for clouds
    ct(i).lev3 = ct(i).lev2;
    ct(i).width1 = 1/5*1/2;    %% for clouds
-   ct(i).width1 = 1/5;        %% for clouds
+   %ct(i).width1 = 1/5;        %% for clouds
    ct(i).width2 = ct(i).width1;
 
    cw(i).trans1 = trpi(i);
    cw(i).trans2 = trpi(i)+10;
    cw(i).lev1 = 0.01*10*1;
    cw(i).lev2 = 0.005*10*2;   %% for clouds
-   cw(i).lev2 = 0.005;
-   cw(i).lev2 = 0.001;
+   %cw(i).lev2 = 0.005;
+   %cw(i).lev2 = 0.001;
    cw(i).lev2 = 1;
    cw(i).lev3 = cw(i).lev2;
    cw(i).width1 = 1/5*1/2;    %% for clouds
-   cw(i).width1 = 1/5;
-   cw(i).width1 = 1;
+   %cw(i).width1 = 1/5;
+   %cw(i).width1 = 1;
    cw(i).width2 = cw(i).width1;
 end
 
