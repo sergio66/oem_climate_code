@@ -35,6 +35,11 @@ if length(driver.oem.finalrates) == 200
   watersigs = driver.oem.finalsigs(7:103);
   temp = driver.oem.finalrates(104:200);
   tempsigs = driver.oem.finalsigs(104:200);
+elseif length(driver.oem.finalrates) == 204
+  water = driver.oem.finalrates(11:107);
+  watersigs = driver.oem.finalsigs(11:107);
+  temp = driver.oem.finalrates(108:204);
+  tempsigs = driver.oem.finalsigs(108:204);
 elseif length(driver.oem.finalrates) == 206
   water = driver.oem.finalrates(13:109);
   watersigs = driver.oem.finalsigs(13:109);
@@ -102,7 +107,7 @@ for i=1:97
 end
 
 figure(2); clf
-  subplot(121)
+%  subplot(121)
   shadedErrorBarYLog10(water,plays,watersigs,'bo-');
   hold on
   shadedErrorBarYLog10(waterrate_ak(ix,:),plays,waterratestd(ix,:),'rx-');
@@ -117,7 +122,9 @@ figure(2); clf
   set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 1 3]); 
   rms_wtr_strat=rms(water(1:49)'-waterrate(ix,1:49))./rms(waterrate(ix,1:49)); 
   rms_wtr_trop=rms(water(50:97)'-waterrate(ix,50:97))./rms(waterrate(ix,50:97));
-  subplot(122)
+
+figure(3); clf
+%  subplot(122)
   shadedErrorBarYLog10(temp,plays,tempsigs,'bo-');
   hold on
   shadedErrorBarYLog10(temprate_ak(ix,:),plays,ptempratestd(ix,:),'rx-'); 

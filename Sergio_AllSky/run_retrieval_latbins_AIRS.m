@@ -1,6 +1,8 @@
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % run_retrieval_latbins_AIRS.m
+% clustcmd -n 32 -q short run_retrieval_latbins_AIRS.m 1:36
+%
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Select the latitude bin
@@ -30,7 +32,8 @@ driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Override many settings and add covariance matrix
-[driver,aux] = strow_override_defaults_latbins_AIRS(driver);
+%[driver,aux] = strow_override_defaults_latbins_AIRS_6_6_97_97(driver);  %% 6 usual jacs, 6 cld jacs
+[driver,aux] = strow_override_defaults_latbins_AIRS_6_4_97_97(driver);  %% 6 usual jacs, 4 cld jacs
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Do the retrieval
@@ -56,7 +59,9 @@ fprintf(1,'SST   (K)    %5.3f  +- %5.3f \n',driver.oem.finalrates(6),driver.oem.
 %---------------------------------------------------------------------------
 % Plot Results
 addpath Plotutils
-plot_retrieval_latbins
+if exist('f','var')
+  plot_retrieval_latbins
+end
 %---------------------------------------------------------------------------
 co2(JOB) = driver.oem.finalrates(1);
 

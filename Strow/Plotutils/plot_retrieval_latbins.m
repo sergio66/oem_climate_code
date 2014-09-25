@@ -1,7 +1,7 @@
 ix = driver.iibin;
 %---------------------------------------------------------------------------
 % Plot Rates and Fit
-figure
+figure(1)
 g1 = driver.jacobian.chanset;
 plot(f(g1),driver.rateset.rates(g1),'k-');
 hold on;
@@ -96,7 +96,7 @@ for i=1:97
    temprate_merra_ak(ix,i)=sum_merra_temp; 
 end
 
-figure
+figure(2)
   subplot(121)
   shadedErrorBarYLog10(water,plays,watersigs,'bo-');
   hold on
