@@ -25,7 +25,11 @@ driver = get_rates(driver);
 %---------------------------------------------------------------------------
 % Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200
 driver.jacobian.filename = '../../oem_pkg/Test/M_TS_jac_all.mat';
+
+%% see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/Aux_jacs_AIRS
+%% see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/Aux_jacs_AIRS/SARTA_CLOUD_JACS
 driver.jacobian.filename = '/asl/s1/rates/Cloud/Apr2014/sarta_M_TS_jac_all_6_4_97_97_cld_replaceT.mat';
+
 driver.jacobian.varname  = 'M_TS_jac_all';
 driver.jacobian.scalar_i = 1:10;
 driver.jacobian.water_i  = 11:107;
@@ -87,8 +91,6 @@ driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
 %nc_cor = nc_rates(driver);
 % Modify with estimated error in freq + regress errors 
 driver.rateset.unc_rates = ones(2378,1)*0.001;
-%driver.rateset.unc_rates = ones(2378,1)*0.01;
-%driver.rateset.unc_rates = ones(2378,1)*0.000005;
 %driver.rateset.unc_rates = ones(2378,1)*0.001 +driver.rateset.unc_rates;%.*nc_cor;
 %driver.rateset.unc_rates = driver.rateset.unc_rates;%.*nc_cor;
 
@@ -115,38 +117,26 @@ trop_index
 
 % Relative off-diagonal
 % l_c = 2.4;
-l_c = 0.5;
 l_c = 1.25;
 mat_od = exp(-mat_od.^2./(1*l_c^2));
 
-for i=1:36
-   ct(i).stren = 0.005;
-   ct(i).trans1 = trpi(i);
-   ct(i).trans2 = trpi(i)+10;
-   ct(i).lev1 = 0.005*4;
-   ct(i).lev2 = 0.005*4;
-   ct(i).lev3 = 0.005*4;
-   ct(i).lev1 = ct(i).stren;
-   ct(i).lev2 = ct(i).stren/2;
-   ct(i).lev3 = ct(i).stren/4;
-   ct(i).width1 = 1/5;
-   ct(i).width2 = ct(i).width1;
+ct(ix).stren = 0.005;
+ct(ix).trans1 = trpi(ix);
+%ct(ix).trans2 = trpi(ix)+10;
+ct(ix).lev1 = ct(ix).stren;
+ct(ix).lev2 = ct(ix).stren/2;
+ct(ix).lev3 = ct(ix).stren/4;
+ct(ix).width1 = 1/5;
+%ct(ix).width2 = ct(ix).width1;
 
-   cw(i).stren = 0.001;
-   cw(i).trans1 = trpi(i);
-   cw(i).trans2 = trpi(i)+10;
-%    cw(i).lev1 = 0.01;
-%    cw(i).lev2 = 0.005;
-   cw(i).lev1 = 0.005*4;
-   cw(i).lev2 = 0.005*4;
-   cw(i).lev3 = 0.005*4;
-   cw(i).lev3 = cw(i).lev2;
-   cw(i).lev1 = cw(i).stren;
-   cw(i).lev2 = cw(i).stren/2;
-   cw(i).lev3 = cw(i).stren/4;
-   cw(i).width1 = 1/5;
-   cw(i).width2 = cw(i).width1;
-end
+cw(ix).stren = 0.001;
+cw(ix).trans1 = trpi(ix);
+%cw(ix).trans2 = trpi(ix)+10;
+cw(ix).lev1 = cw(ix).stren;
+cw(ix).lev2 = cw(ix).stren/2;
+cw(ix).lev3 = cw(ix).stren/4;
+cw(ix).width1 = 1/5;
+%cw(ix).width2 = cw(ix).width1;
 
 % Temperature level uncertainties, then scaled and squared
 tunc = cov2lev(ct(ix));
@@ -161,8 +151,6 @@ w_sigma = (wunc./wnorm);
 % Make cov matrix
 wmat = (w_sigma'*w_sigma).*mat_od;
 driver.oem.wunc = wunc;
-
-[tunc([1 50 90]); wunc([1 50 90])]
 
 % Scalar uncertainties
 %fmat definitions below
@@ -187,9 +175,7 @@ driver.oem.cov = blkdiag(fmat,wmat,tmat);
 %---------------------------------------------------------------------
 % Empirical regularization parameters and switches
 driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices
-
 % Separate reg weights for water, temperature profiles
 driver.oem.alpha_water = 5*10;
 driver.oem.alpha_temp = 1*10;
-
 

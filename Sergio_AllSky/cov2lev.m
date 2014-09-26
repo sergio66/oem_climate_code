@@ -10,7 +10,7 @@ pt1 = 1:97;
 pt2 = 1:97;
 
 y1 = m1*tanh(c.width1*(pt1-c.trans1)) + (c.lev2 + c.lev1)/2;
-y2 = m2*tanh(c.width2*(pt2-c.trans2)) + (c.lev3 + c.lev2)/2;
+%y2 = m2*tanh(c.width2*(pt2-c.trans2)) + (c.lev3 + c.lev2)/2;
 %plot(1:97,y1,1:97,y2,'r'); pause
 
 y = y1;

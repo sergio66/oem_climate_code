@@ -1,12 +1,14 @@
 xstartup
 f=instr_chans;
 
-input_rates = zeros(38,2378);
-calc_rates = zeros(38,2378);
-water_airs = zeros(36,97);
-water_airs_sigs = zeros(36,97);
-temp_airs = zeros(36,97);
-temp_airs_sigs = zeros(36,97);
+input_rates = zeros(36,2378);
+calc_rates  = zeros(36,2378);
+water_airs        = zeros(36,97);
+water_airs_sigs   = zeros(36,97);
+temp_airs         = zeros(36,97);
+temp_airs_sigs    = zeros(36,97);
+coljacs_airs      = zeros(36,10);
+coljacs_airs_sigs = zeros(36,10);
 
 % Plot profiles, fit and ERA, MERRA, ERA-allsky
 load('Data/allsky_rates.mat');
@@ -58,20 +60,26 @@ for ix = 1 : 36
 %---------------------------------------------------------------------------
 
     if length(driver.oem.finalrates) == 200
-      water = driver.oem.finalrates(7:103);
-      watersigs = driver.oem.finalsigs(7:103);
-      temp = driver.oem.finalrates(104:200);
-      tempsigs = driver.oem.finalsigs(104:200);
+      coljacs      = driver.oem.finalrates(1:6);
+      coljacs_sigs = driver.oem.finalsigs(1:6);
+      water        = driver.oem.finalrates(7:103);
+      watersigs    = driver.oem.finalsigs(7:103);
+      temp         = driver.oem.finalrates(104:200);
+      tempsigs     = driver.oem.finalsigs(104:200);
     elseif length(driver.oem.finalrates) == 204
-      water = driver.oem.finalrates(11:107);
-      watersigs = driver.oem.finalsigs(11:107);
-      temp = driver.oem.finalrates(108:204);
-      tempsigs = driver.oem.finalsigs(108:204);
+      coljacs      = driver.oem.finalrates(1:10);
+      coljacs_sigs = driver.oem.finalsigs(1:10);
+      water        = driver.oem.finalrates(11:107);
+      watersigs    = driver.oem.finalsigs(11:107);
+      temp         = driver.oem.finalrates(108:204);
+      tempsigs     = driver.oem.finalsigs(108:204);
     elseif length(driver.oem.finalrates) == 206
-      water = driver.oem.finalrates(13:109);
-      watersigs = driver.oem.finalsigs(13:109);
-      temp = driver.oem.finalrates(110:206);
-      tempsigs = driver.oem.finalsigs(110:206);
+      coljacs      = driver.oem.finalrates(1:12);
+      coljacs_sigs = driver.oem.finalsigs(1:12);
+      water        = driver.oem.finalrates(13:109);
+      watersigs    = driver.oem.finalsigs(13:109);
+      temp         = driver.oem.finalrates(110:206);
+      tempsigs =    driver.oem.finalsigs(110:206);
     elseif length(driver.oem.finalrates) == 103 & length(driver.jacobian.water_i) < 1
       temp = driver.oem.finalrates(7:103);
       tempsigs = driver.oem.finalsigs(7:103);
@@ -128,10 +136,12 @@ for ix = 1 : 36
        temprate_merra_ak(ix,i)=sum_merra_temp; 
     end
 
-     water_airs(ix,:)      = water;
-     water_airs_sigs(ix,:) = watersigs;
-     temp_airs(ix,:)       = temp;
-     temp_airs_sigs(ix,:)  = tempsigs;
+     water_airs(ix,:)        = water;
+     water_airs_sigs(ix,:)   = watersigs;
+     temp_airs(ix,:)         = temp;
+     temp_airs_sigs(ix,:)    = tempsigs;
+     coljacs_airs(ix,:)      = coljacs;
+     coljacs_airs_sigs(ix,:) = coljacs_sigs;
 
 %{
      figure(2); clf
@@ -175,7 +185,7 @@ for ix = 1 : 36
 end
 
 
-figure(1);
+figure(1); clf
 plot(f(g1),nanmean(input_rates(:,g1)-calc_rates(:,g1)),f(g1),nanstd(input_rates(:,g1)-calc_rates(:,g1)),'r',f(g1),nanmean(input_rates(:,g1)),'k');
 hl = legend('mean bias','std','mean obs'); set(hl,'fontsize',10)
 
@@ -185,13 +195,25 @@ latx = 0.5*(lats(1:end-1) + lats(2:end));
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 color5 = load('llsmap5');
 
-figure(2)
+figure(2); clf
   pcolor(latx,log10(plays),water_airs'); shading flat; title('d(W)/dt frac/yr')
   colormap(color5.llsmap5); caxis([-0.05 +0.05]); colorbar
   set(gca,'ydir','reverse')
   axis([-90 +90 1 3]);
-figure(3)
+figure(3); clf
   pcolor(latx,log10(plays),temp_airs'); shading flat; title('d(T)/dt K/yr')
   colormap(color5.llsmap5); caxis([-0.15 +0.15]); colorbar
   set(gca,'ydir','reverse')
   axis([-90 +90 1 3]);
+
+figure(4); clf
+  plot(coljacs_airs(:,1:5),latx,'linewidth',2); hold on
+  plot(coljacs_airs(:,6),latx,'k','linewidth',4); hold off
+  hl = legend('CO2 ppmv','O3 frac','N2O ppb','CO ppb','CFC ppb','SST K','location','northwest'); 
+  xlabel('per year'); ylabel('Latitude')
+  set(hl,'fontsize',10)
+figure(5); clf;
+  plot(coljacs_airs(:,7:10),latx,'linewidth',2);
+  hl = legend('CNG1 g/m2','CNG2 g/m2','CSZ1 um','CSZ2 um','location','northwest'); 
+  xlabel('per year'); ylabel('Latitude')
+  set(hl,'fontsize',10)
