@@ -56,8 +56,8 @@ xb = load(driver.oem.apriori_filename,'apriori');
 xb = xb.apriori;
 xb = zeros(1,204);
 
-%xb(1) = 0;  % Set CO2 apriori to zero (now at 2)
-xb(1) = 2.2;  % Set CO2 apriori to zero (now at 2)
+xb(1) = 0;  % Set CO2 apriori to zero (now at 2)
+%xb(1) = 2.2;  % Set CO2 apriori to zero (now at 2)
 
 [mm,nn] = size(xb);
 if nn > 1
@@ -120,38 +120,44 @@ l_c = 1.25;
 mat_od = exp(-mat_od.^2./(1*l_c^2));
 
 for i=1:36
+   ct(i).stren = 0.005;
    ct(i).trans1 = trpi(i);
    ct(i).trans2 = trpi(i)+10;
-   
-   ct(i).lev1 = 0.02;
-   ct(i).lev2 = 0.01*10*2;    %% for clouds
-   ct(i).lev2 = 0.01*10*0.05;  %% for clouds
-   ct(i).lev3 = ct(i).lev2*2;
-   ct(i).width1 = 1/5;    %% for clouds
+   ct(i).lev1 = 0.005*4;
+   ct(i).lev2 = 0.005*4;
+   ct(i).lev3 = 0.005*4;
+   ct(i).lev1 = ct(i).stren;
+   ct(i).lev2 = ct(i).stren/2;
+   ct(i).lev3 = ct(i).stren/4;
+   ct(i).width1 = 1/5;
    ct(i).width2 = ct(i).width1;
 
+   cw(i).stren = 0.001;
    cw(i).trans1 = trpi(i);
    cw(i).trans2 = trpi(i)+10;
-   cw(i).lev1 = 0.01*10*1;
-   cw(i).lev1 = 0.01;
-   cw(i).lev2 = 0.005*0.05;   %% for clouds
-   cw(i).lev3 = cw(i).lev2/10;
-   cw(i).width1 = 1/5;    %% for clouds
+%    cw(i).lev1 = 0.01;
+%    cw(i).lev2 = 0.005;
+   cw(i).lev1 = 0.005*4;
+   cw(i).lev2 = 0.005*4;
+   cw(i).lev3 = 0.005*4;
+   cw(i).lev3 = cw(i).lev2;
+   cw(i).lev1 = cw(i).stren;
+   cw(i).lev2 = cw(i).stren/2;
+   cw(i).lev3 = cw(i).stren/4;
+   cw(i).width1 = 1/5;
    cw(i).width2 = cw(i).width1;
 end
 
 % Temperature level uncertainties, then scaled and squared
-%tunc     = ones(1,pmat_size)*0.01;
 tunc = cov2lev(ct(ix));
-t_sigma = (tunc./tnorm);%.^2;
+t_sigma = (tunc./tnorm);
 % Make cov matrix
 tmat = (t_sigma'*t_sigma).*mat_od;
 driver.oem.tunc = tunc;
 
 % Water level uncertainties, then scaled and squared
-%wunc     = ones(1,pmat_size)*0.02;
 wunc = cov2lev(cw(ix));
-w_sigma = (wunc./wnorm);%.^2;
+w_sigma = (wunc./wnorm);
 % Make cov matrix
 wmat = (w_sigma'*w_sigma).*mat_od;
 driver.oem.wunc = wunc;
@@ -172,8 +178,8 @@ fmatd = [fmatd fmatdCLD];
 fmatd = [2 0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
 
 fmatd = [0.00001 0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
-fmatd = [2       0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
 fmatd = [0.00001 0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*0.1;
+fmatd = [2       0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
 
 fmat  = diag(fmatd./fnorm); 
 driver.oem.cov = blkdiag(fmat,wmat,tmat);
@@ -183,7 +189,7 @@ driver.oem.cov = blkdiag(fmat,wmat,tmat);
 driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices
 
 % Separate reg weights for water, temperature profiles
-driver.oem.alpha_water = 5;
-driver.oem.alpha_temp = 1;
+driver.oem.alpha_water = 5*10;
+driver.oem.alpha_temp = 1*10;
 
 
