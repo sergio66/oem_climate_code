@@ -55,11 +55,15 @@ driver.oem.apriori_filename = 'apriori_lls';
 xb = load(driver.oem.apriori_filename,'apriori');
 xb = xb.apriori;
 xb = zeros(1,204);
+
 %xb(1) = 0;  % Set CO2 apriori to zero (now at 2)
+xb(1) = 2.2;  % Set CO2 apriori to zero (now at 2)
+
 [mm,nn] = size(xb);
 if nn > 1
   xb = xb(:,driver.iibin);
 end
+
 % A Priori stored in aux.xb
 aux.xb = xb./driver.qrenorm';
 %---------------------------------------------------------------------------
@@ -82,8 +86,12 @@ driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
 % Modify rates with lag-1 correlation errors or add to above
 %nc_cor = nc_rates(driver);
 % Modify with estimated error in freq + regress errors 
-%driver.rateset.unc_rates = ones(2378,1)*0.001 +driver.rateset.unc_rates.*nc_cor;
 driver.rateset.unc_rates = ones(2378,1)*0.001;
+%driver.rateset.unc_rates = ones(2378,1)*0.01;
+%driver.rateset.unc_rates = ones(2378,1)*0.000005;
+%driver.rateset.unc_rates = ones(2378,1)*0.001 +driver.rateset.unc_rates;%.*nc_cor;
+%driver.rateset.unc_rates = driver.rateset.unc_rates;%.*nc_cor;
+
 %---------------------------------------------------------------------------
 % Do rate Q/A (empty for now)
 %---------------------------------------------------------------------------
@@ -114,24 +122,21 @@ mat_od = exp(-mat_od.^2./(1*l_c^2));
 for i=1:36
    ct(i).trans1 = trpi(i);
    ct(i).trans2 = trpi(i)+10;
-   ct(i).lev1 = 0.02*10*1;
+   
+   ct(i).lev1 = 0.02;
    ct(i).lev2 = 0.01*10*2;    %% for clouds
-   ct(i).lev3 = ct(i).lev2;
-   ct(i).width1 = 1/5*1/2;    %% for clouds
-   %ct(i).width1 = 1/5;        %% for clouds
+   ct(i).lev2 = 0.01*10*0.05;  %% for clouds
+   ct(i).lev3 = ct(i).lev2*2;
+   ct(i).width1 = 1/5;    %% for clouds
    ct(i).width2 = ct(i).width1;
 
    cw(i).trans1 = trpi(i);
    cw(i).trans2 = trpi(i)+10;
    cw(i).lev1 = 0.01*10*1;
-   cw(i).lev2 = 0.005*10*2;   %% for clouds
-   %cw(i).lev2 = 0.005;
-   %cw(i).lev2 = 0.001;
-   cw(i).lev2 = 1;
-   cw(i).lev3 = cw(i).lev2;
-   cw(i).width1 = 1/5*1/2;    %% for clouds
-   %cw(i).width1 = 1/5;
-   %cw(i).width1 = 1;
+   cw(i).lev1 = 0.01;
+   cw(i).lev2 = 0.005*0.05;   %% for clouds
+   cw(i).lev3 = cw(i).lev2/10;
+   cw(i).width1 = 1/5;    %% for clouds
    cw(i).width2 = cw(i).width1;
 end
 
@@ -151,6 +156,8 @@ w_sigma = (wunc./wnorm);%.^2;
 wmat = (w_sigma'*w_sigma).*mat_od;
 driver.oem.wunc = wunc;
 
+[tunc([1 50 90]); wunc([1 50 90])]
+
 % Scalar uncertainties
 %fmat definitions below
 %            CO2(ppm) O3(frac) N2O(ppb) CH4(ppb) CFC11(ppt) Tsurf(K)    
@@ -163,15 +170,20 @@ fmatdCLD = [0.01 0.01 0.01 0.01];
 fmatd = [fmatd fmatdCLD];
 
 fmatd = [2 0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
-fmatd = [2 0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
+
+fmatd = [0.00001 0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
+fmatd = [2       0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*1;
+fmatd = [0.00001 0.1 1 10 1 0.1 1/20 1/20 1/20 1/20]*0.1;
+
 fmat  = diag(fmatd./fnorm); 
 driver.oem.cov = blkdiag(fmat,wmat,tmat);
 
 %---------------------------------------------------------------------
 % Empirical regularization parameters and switches
 driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices
+
 % Separate reg weights for water, temperature profiles
-driver.oem.alpha_water = 200;
-driver.oem.alpha_temp = 10;
+driver.oem.alpha_water = 5;
+driver.oem.alpha_temp = 1;
 
 

@@ -38,7 +38,7 @@ driver = retrieval(driver,aux);
 %---------------------------------------------------------------------------
 % Save retrieval output
 driver.filename = ['Output/test' int2str(driver.iibin)];
-%save(driver.filename,'-struct','driver');
+save(driver.filename,'-struct','driver');
 %---------------------------------------------------------------------------
 % Close debug file
 if driver.debug
