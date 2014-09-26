@@ -122,21 +122,15 @@ mat_od = exp(-mat_od.^2./(1*l_c^2));
 
 ct(ix).stren = 0.005;
 ct(ix).trans1 = trpi(ix);
-%ct(ix).trans2 = trpi(ix)+10;
 ct(ix).lev1 = ct(ix).stren;
 ct(ix).lev2 = ct(ix).stren/2;
-ct(ix).lev3 = ct(ix).stren/4;
 ct(ix).width1 = 1/5;
-%ct(ix).width2 = ct(ix).width1;
 
 cw(ix).stren = 0.001;
 cw(ix).trans1 = trpi(ix);
-%cw(ix).trans2 = trpi(ix)+10;
 cw(ix).lev1 = cw(ix).stren;
 cw(ix).lev2 = cw(ix).stren/2;
-cw(ix).lev3 = cw(ix).stren/4;
 cw(ix).width1 = 1/5;
-%cw(ix).width2 = cw(ix).width1;
 
 % Temperature level uncertainties, then scaled and squared
 tunc = cov2lev(ct(ix));

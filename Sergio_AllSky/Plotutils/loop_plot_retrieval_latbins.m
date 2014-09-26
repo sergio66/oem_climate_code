@@ -209,7 +209,7 @@ figure(3); clf
 figure(4); clf
   plot(coljacs_airs(:,1:5),latx,'linewidth',2); hold on
   plot(coljacs_airs(:,6),latx,'k','linewidth',4); hold off
-  hl = legend('CO2 ppmv','O3 frac','N2O ppb','CO ppb','CFC ppb','SST K','location','northwest'); 
+  hl = legend('CO2 ppmv','O3 frac','N2O ppb','CH4 ppb','CFC ppb','SST K','location','northwest'); 
   xlabel('per year'); ylabel('Latitude')
   set(hl,'fontsize',10)
 figure(5); clf;
