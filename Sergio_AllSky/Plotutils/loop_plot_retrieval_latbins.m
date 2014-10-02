@@ -18,7 +18,8 @@ gas1_rate_cloud = gas1_rate(1:36,1:97);
 gas1_rate_cloud_err = gas1_rate_err(1:36,1:97); 
 
 merrarates = load('/asl/s1/rates/Clear/Merra_rates/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat');
-load Data/airsL3_v6_rates_stats_March2014.mat
+%load Data/airsL3_v6_rates_stats_March2014.mat
+load Data/airsL3_v6_rates_stats_Sept2014.mat
 
 l3temprate = thestats.ptemprate; 
 l3waterrate = thestats.waterrate; 
@@ -34,6 +35,7 @@ plays = plevs(4:100); plays = flipud(plays);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 load('/asl/s1/rates/Clear/Profile_rates/overocean_gsx_1day_clr_era_lays_spanday01_profilerates_Nov02_2012_robust_span_09_2002_08_2012.mat');
+
 for ix = 1 : 36
   clear driver
   fout = ['Output/test' num2str(ix) '.mat'];
@@ -217,3 +219,46 @@ figure(5); clf;
   hl = legend('CNG1 g/m2','CNG2 g/m2','CSZ1 um','CSZ2 um','location','northwest'); 
   xlabel('per year'); ylabel('Latitude')
   set(hl,'fontsize',10)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(2); clf
+  pcolor(latx,(plays),water_airs'); shading flat; title('d(W)/dt frac/yr')
+  colormap(color5.llsmap5); caxis([-0.05 +0.05]); colorbar
+  set(gca,'ydir','reverse')
+  set(gca,'yscale','log')  
+  axis([-90 +90 9 1000])                                                   
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})
+
+figure(3); clf
+  pcolor(latx,(plays),temp_airs'); shading flat; title('d(T)/dt K/yr')
+  colormap(color5.llsmap5); caxis([-0.15 +0.15]); colorbar
+  set(gca,'ydir','reverse')
+  set(gca,'yscale','log')  
+  axis([-90 +90 9 1000])                                                   
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})
+
+%%%%%%%%%%%%%%%%%%%%%%
+
+figure(6); clf
+  pcolor(latx,(plays),water_airs_sigs'); shading flat; title('d(W)/dt frac/yr UNCERTAINTY')
+  colormap(color5.llsmap5); caxis([0 +0.0005]); colorbar
+  set(gca,'ydir','reverse')
+  set(gca,'yscale','log')  
+  axis([-90 +90 9 1000])                                                   
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})
+
+figure(7); clf
+  pcolor(latx,(plays),temp_airs_sigs'); shading flat; title('d(T)/dt K/yr UNCERTAINTY')
+  colormap(color5.llsmap5); caxis([0 +0.005]); colorbar
+  set(gca,'ydir','reverse')
+  set(gca,'yscale','log')  
+  axis([-90 +90 9 1000])                                                   
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})
+
+
+% do_make_tons_of_plots

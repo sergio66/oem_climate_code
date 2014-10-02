@@ -21,7 +21,8 @@ gas1_rate_cloud = gas1_rate(1:36,1:97);
 gas1_rate_cloud_err = gas1_rate_err(1:36,1:97); 
 
 merrarates = load('/asl/s1/rates/Clear/Merra_rates/overocean__lays_spanday01_profilerates_Oct5_2013_robust.mat');
-load Data/airsL3_v6_rates_stats_March2014.mat
+%load Data/airsL3_v6_rates_stats_March2014.mat
+load Data/airsL3_v6_rates_stats_Sept2014.mat
 
 l3temprate = thestats.ptemprate; 
 l3waterrate = thestats.waterrate; 

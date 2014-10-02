@@ -32,8 +32,8 @@ driver.oem.doplots = false;
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Override many settings and add covariance matrix
-[driver,aux] = strow_override_defaults_latbins_AIRS_6_6_97_97(driver);  %% 6 usual jacs, 6 cld jacs
-%[driver,aux] = strow_override_defaults_latbins_AIRS_6_4_97_97(driver);  %% 6 usual jacs, 4 cld jacs
+%[driver,aux] = strow_override_defaults_latbins_AIRS_6_6_97_97(driver);  %% 6 usual jacs, 6 cld jacs
+[driver,aux] = strow_override_defaults_latbins_AIRS_6_4_97_97(driver);  %% 6 usual jacs, 4 cld jacs
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 % Do the retrieval

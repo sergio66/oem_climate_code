@@ -90,7 +90,9 @@ driver.rateset.rates = driver.rateset.rates-alldbt(ix,:)'/10;
 % Modify rates with lag-1 correlation errors or add to above
 %nc_cor = nc_rates(driver);
 % Modify with estimated error in freq + regress errors 
-driver.rateset.unc_rates = ones(2378,1)*0.001;
+
+driver.rateset.unc_rates = ones(2378,1)*0.001;   %%% <<<<<<<<<<<<<< WORKS
+
 %driver.rateset.unc_rates = ones(2378,1)*0.001 +driver.rateset.unc_rates;%.*nc_cor;
 %driver.rateset.unc_rates = driver.rateset.unc_rates;%.*nc_cor;
 
