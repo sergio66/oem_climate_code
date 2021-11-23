@@ -1,0 +1,109 @@
+1 Notes on changing fitting channels
+====================================
+
+  I've looked at many of the clear ocean scene anomaly fit residuals
+  looking for instrument offsets, etc.  Here I list channels that should
+  be deleted from the 531 good channel list Sergio has been using.
+
+  I have also added a few channels that are very useful and that do not
+  appear to have any significant radiometric changes due to A/B state
+  changes.  The 531 channel list is only channels with /no/ A/B state
+  changes.
+
+  Many channels show small offsets due to the Nov 2003 shutdown and
+  March 2014 cooler shutdown.  I've removed the really bad ones, but a
+  bunch of smaller ones remain.
+
+  We have been using a number of channels sensitive to CFC-12, so in the
+  future we need to fit it out, I don't want to remove all those
+  channels.  I believe the original CFC-11 fits were not working too
+  well because there are a bunch of channels near 855 wavenumbers (M08)
+  that are drifting (this is on the edge of the CFC-11 signature).
+  Although these are AB channels, we know from DCC trends that A and B
+  are drifting a quite differently, and they don't quite cancel out.
+  However, I think these drifts are well below 0.02K/year that we see in
+  the fit residuals, so it might just be bad CFC-11 fits as well.  There
+  are a lot of bad channels near CFC11.  I'm adding two new CFC-11
+  channels that also have A/B changes, but I think they are quite minor,
+  all due to Nov. 2003 shutdown.
+
+
+2 Added Channels
+================
+
+  CFC-11: We already have channel 627 at 843.91 wavenumbers.  I'm adding
+  channels 633, 635, and 637 that have slight A/B changes but more
+  CFC-11 sensitivity.  I'm also putting 1231.3 wavenumber channel back
+  in and
+
+  -----------------------------------------------------------
+   ID (L1c)  Wavenumber  Reason                              
+        634      846.73  CFC-11                              
+        635      847.14  CFC-11                              
+        637      847.95  CFC-11                              
+       1513     1227.71  Weak water line, ab change seems OK 
+       1520     1231.33  Good window, ab change seems OK     
+  -----------------------------------------------------------
+
+
+3 Deleted Channels
+==================
+
+  This is a first shot at getting rid of bad channels in the 531 channel
+  list.  I can't get rid of all channels that show a discontinuity, or
+  we would run out of channels.  Here I am removing ones I found to be
+  obviously bad based on the time dependence of the fit residuals.
+  Reason only filled in if something unique.  The "ab drift" channels
+  are in the M08 array as discussed above.
+
+  --------------------------------------------------
+   ID (L1c)  Wavenumber  Reason                     
+  --------------------------------------------------
+        289      726.63                             
+        647      852.02  ab drift                   
+        648      852.41  ab drift                   
+        649      852.72  ab drift                   
+        650      853.03  ab drift                   
+        652      853.64  ab drift                   
+        654      854.26  ab drift                   
+        655      854.57  ab drift                   
+        660      856.12  ab drift                   
+        663      857.05  ab drift                   
+        664      857.36  ab drift                   
+        669      858.92  ab drift                   
+        671      859.54  ab drift                   
+        673      860.17  ab drift                   
+        674      860.48  ab drift                   
+        676      861.11  ab drift                   
+        682      863.00  ab drift                   
+        685      863.95  ab drift                   
+        689      865.21  ab drift                   
+        690      865.53  ab drift                   
+       1125     1030.98                             
+       1152     1043.40  Gigantic change April 2018 
+       1184     1057.98                             
+       1194     1062.77                             
+       1563     1254.04                             
+       1194     1062.77                             
+       1563     1254.04                             
+       1586     1266.53                             
+       1587     1267.08                             
+       1588     1267.63                             
+       1591     1269.28                             
+       1592     1269.83                             
+       1596     1272.04                             
+       1619     1284.35                             
+       1627     1288.87                             
+       1633     1292.28                             
+       1635     1293.42                             
+       1636     1293.99                             
+       1638     1295.13                             
+       1642     1297.43                             
+       1643     1298.00                             
+       1659     1307.26                             
+       1694     1327.97                             
+       1701     1332.18                             
+       1702     1332.79                             
+       2035     1525.68                             
+       2102     1570.69                             
+  --------------------------------------------------

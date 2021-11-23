@@ -1,0 +1,55 @@
+
+one level up from that directory listing is
+create_airicrad_clear_day_rtp.m. Within that there is a call to
+airs_find_uniform at line 116. Obs passing that test are later tested
+for clear in airs_find_clear at line 261.
+
+currently the two tests are run separately NOT through the airs_uniform_clear wrapper (for processing speed)
+
+/home/sbuczko1/git/rtp_prod2/airs/create_airicrad_clear_day_rtp.m.
+
+[dbtun, mbt] = airs_find_uniform(head, p);
+iuniform = find(abs(dbtun) < 1.0);
+nuniform = length(iuniform);
+if nuniform > 0
+    % subset down to just the uniform pixels
+    blah
+    p = rtp_sub_prof(p, iuniform);
+    dbtun_ag = dbtun(iuniform);
+    [iflagsc, bto1232, btc1232] = airs_find_clear(head, p, 1:nobs);
+    iclear_sea    = find(iflagsc == 0 & abs(dbtun_ag) < 0.4 & p.landfrac <= 0.01);
+    iclear = iclear_sea;
+    p = rtp_sub_prof(p, iclear);
+
+end
+            
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+/home/sbuczko1/git/rtp_prod2/airs/util/airs_find_clear.m
+[iflags, wbto, wbtc, wchan] = airs_find_clear(head, prof, iobs2check);
+
+iflags - [1 x ncheck] bit flags for the following tests: 1 =
+%             abs(BTobs-BTcal) at 1232 wn > threshold 2 = cirrus detected 4 =
+%             dust/ash detected 
+
+testchans(4) = 960
+
+test 1 : dump stuff out if obs is 4 K cooler or 3 K warmer than calc
+wchan = ftest(ix);
+wbto = bto(ix,:);
+wbtc = btc(ix,:);
+wdbt = wbto - wbtc;
+ii = isea( find(wdbt(isea) > 4 | wdbt(isea) < -3) );
+iflags(ii) = iflags(ii) + 1;
+ii = inot( find(wdbt(inot) > 7 | wdbt(inot) < -7) );
+iflags(ii) = iflags(ii) + 1;
+
+test 2 : cirrus : dump stuff out if the BTbias at 820 cm-1 is too large (compared to 960 K) and
+                                 if the BTbias at 856 cm-1 is also rather large (compared to 82o cm-1 bias)
+dbt960 =  bto(ix960,:) - btc(ix960,:);
+dbt820x = bto(ix820,:) - btc(ix820,:) - dbt960;
+dbt856x = bto(ix856,:) - btc(ix856,:) - dbt960;
+ii = isea( find(dbt820x(isea) < -0.5 & dbt856x(isea) < 0.5*dbt820x(isea)) );
+iflags(ii) = iflags(ii) + 2;
+ii = inot( find(dbt820x(inot) < -1.0 & dbt856x(inot) < 0.5*dbt820x(inot)) );
+iflags(ii) = iflags(ii) + 2;

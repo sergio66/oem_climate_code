@@ -1,0 +1,18 @@
+Start with the code build of about Jan 15, 2020 (though some files were modified later, to check CRIS NSR stanility)
+  see CopyFromApr23_2020
+
+Relevant file to look at is
+  strow_override_defaults_latbins_AIRS_fewlays.m
+  
+    iChSet = 2; %% new chans
+    iChSet = 1; %% old chans (default)
+    iChSet = 3; %% new chans, but no CFC11
+    iChSet = topts.iChSet;
+
+
+topts.numchan = 2645;
+topts.chan_LW_SW =  0;  %% just LW/MW DEFAULT, keep strat T chans                       470 chans
+%% topts.chan_LW_SW = -1;  %% all chans,LW/MW and SW, keep strat T chans <<<<<<<           769 chans
+%% topts.chan_LW_SW = +1;  %% LW/MW but avoid deep 15 um                                   436 chans
+%% topts.chan_LW_SW = +2;  %% LW/MW/SW but avoid deep 15 um not yet coded                  735 chans
+%% topts.chan_LW_SW = -2;  %% SW only                                                      299 chans

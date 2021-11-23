@@ -1,0 +1,57 @@
+% /home/sergio/MATLABCODE/oem_pkg_run/AIRS_new_clear_scan_August2019/NewJacs_forAMT2020/for_amt2020_review2.mat
+
+In the submitted paper we used the ERA-Interim profiles for
+temperature, water vapor, and ozone to generate the anomaly Jacobians.
+Note that we did update the CO2, N2O, and CH4 amounts when computing
+the Jacobians for each time step.  
+
+Reviewer X asked a reasonable
+question: are the ERA-Interim T/H2O/O3 profiles accurate enough to use
+as the atmospheric state for each time step when computing Jacobians.
+To address this we retrieved the atmospheric state directly from tropical
+averaged radiance values (not the anomalies) once per year 
+over the anomaly time period.  
+
+This retrieval used essentially the same algorithm for the anomaly
+retrievals, except that the a-priori profiles for T/H2O/O3 were the
+tropical averaged ERA-Interim values; as is the case for the anomaly
+retrievals, CO2 was initialized with a (linearly) time varying
+value. Typically the retrieved values for T/WV/O3 differed from the
+ERA-Interim values (the a-priori) by 0.05 K/20%/5% in the lower
+troposphere for T(z),WV(z) and UT/LS for O3(z) respectively.  Perhaps
+the T(z) was constrained a little too tightly, but we have been
+reliable informed by the AIRS/CRIS retrieval teams that NWP models
+have excellent T(z) model fields; conversely since WV and O3 are
+highly variable, we are not surprised by those larger changes.
+
+We then computed the anomaly Jacobians using the retrieved state
+rather than using the ERA-Interim state, and found that on average the
+(column) T/H2O/O3 Jacobians changed by 0.01 K/K / 0.6 K/log(colum q)
+/0.02 K/log(colum q) on average, or in terms of percent values in the
+peak of sounding region 2/ 10 /0.3.
+
+Of more interest is how the trace gas jacobians change due to the
+above mentioned T/WV changes. The percent column jacobian changes for
+CO2/N2O/CH4 were on the order of 1/1/0.5 respectively. These are small
+changes, and when these deltas were brute force applied to all the 365
+sixteen-day time steps in our anomaly retrievals, the final CO2, N2O,
+and CH4 trends only changed by -0.01 ppm/yr/ -0.014 ppm/yr / 0.07
+ppb/yr, change that are small enough to not impact our AIRS trend
+uncertainty measurements.
+
+March 30 on our private slack channel
+>> f1 = 'nopert_jac_anomaly_0dayavg_results.mat'; f2 = 'nopert_jac_anomaly_0dayavg_cal_results.mat'; compare_anomaly_runs(f1,f2);
+  Method 2 smoothed stemp rates = 0.009748 0.007688 0.002389
+  Method 2 smoothed co2 rates = 2.079558 -0.064766 2.155173
+  Method 2 smoothed n2o rates = 0.897223 -0.064276 0.970860
+  Method 2 smoothed ch4 rates = 5.711439 -0.380513 6.141481
+  Method 2 smoothed cfc11 rates = -0.000000 -0.000000 0.000000
+  Method 2 smoothed cfc12 rates = -3.014497 0.245149 -3.247270
+> >f1 = 'pert_jac_anomaly_0dayavg_results.mat'; f2 = 'pert_jac_anomaly_0dayavg_cal_results.mat'; compare_anomaly_runs(f1,f2);
+  Method 2 smoothed stemp rates = 0.009580 0.007638 0.002307
+  Method 2 smoothed co2 rates = 2.076559 -0.056502 2.147015
+  Method 2 smoothed n2o rates = 0.892768 -0.051663 0.956825
+  Method 2 smoothed ch4 rates = 5.687684 -0.315327 6.070398
+  Method 2 smoothed cfc11 rates = 0.000000 -0.000000 0.000000
+  Method 2 smoothed cfc12 rates = -3.098099 0.254650 -3.338869
+

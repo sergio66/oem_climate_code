@@ -1,0 +1,244 @@
+1)    Nominal DOFs (average over time, latitude?  Pick one?  Include
+    CO2, N2O, CH4 as well as some T/H2O ones
+
+Run off nomainal code eg settings from SAVE_BESTRUNv1
+driver_plot_T_WV_anomaly_retrievals
+x = squeeze(cdofs(15:25,:,:)); x = squeeze(mean(x,1)); xm = mean(x,1); xs = std(x,1); whos x xm xs
+errorbar(1:66,xm,xs); grid; ax = axis; [sum(xm((1:20)+6+20*0)) sum(xm((1:20)+6+20*1)) sum(xm((1:20)+6+20*2))]
+  8.4385    7.0318    6.1018 
+errorbar(1:6,xm(1:6),xs(1:6))
+  >= 0.95 for CO2,N2O,CH4, 0.7 for CFC11,0.8 for CFC12,0.95 for stemp
+  unc for the dof is about 0.19
+
+2)    What are nominal uncertainties in retrieved quantities?  Probably
+    underestimated since no off-diag measurement error covariance
+
+whos *co2*
+plot((-5:0.1:5),hist(real(co2_sig(:))./co2(:) * 100,(-5:0.1:5)))         % peaks about 0.2%
+plot((-5:0.1:5),hist(real(ch4_sig(:))./ch4(:) * 100,(-5:0.1:5)))         % peaks about 0.3%
+plot((-5:0.1:5),hist(real(cfc11_sig(:))./cfc11(:) * 100,(-5:0.1:5)));    % peaks about -1 %
+plot((-5:0.1:5),hist(real(cfc12_sig(:))./cfc12(:) * 100,(-5:0.1:5)));    % peaks about -0.8 %
+
+scale = 10; plot(scale*(-1:0.1:5),hist(real(tz_sig(:))./abs(tz(:)) * 100,scale*(-1:0.1:5))); grid; title('T anom percent error');   % peaks about 1% +/- 5%
+scale = 10; plot(scale*(-5:0.1:5),hist(real(wv_sig(:))./abs(wv(:)) * 100,scale*(-5:0.1:5))); grid;   % peaks about 2% +/- 10%
+scale = 10; plot(scale*(-5:0.1:5),hist(real(o3_sig(:))./abs(o3(:)) * 100,scale*(-5:0.1:5))); grid;   % peaks about 7% +/- 10%
+
+3)    How well does you retrieval return ERA parameters in simulation?
+
+default, no perturbations, SW only (nov 21 am)
+  Method 2 smoothed stemp rates = 0.016001 0.006803 0.010864
+  Method 2 smoothed co2 rates = 2.041721 -0.022770 2.061632
+  Method 2 smoothed n2o rates = 0.829603 0.020195 0.810008
+  Method 2 smoothed ch4 rates = 7.375747 -0.863550 8.179299
+  Method 2 smoothed cfc11 rates = -0.000000 -0.000000 0.000000
+  Method 2 smoothed cfc12 rates = 0.000000 0.000000 -0.000000
+
+default, no perturbations, LW
+  Method 2 smoothed stemp rates = 0.014544 0.009097 0.005447
+  Method 2 smoothed co2 rates = 2.037366 -0.082809 2.120175
+  Method 2 smoothed n2o rates = 0.950985 -0.070432 1.021417
+  Method 2 smoothed ch4 rates = 5.667898 -0.379320 6.047219
+  Method 2 smoothed cfc11 rates = -3.237762 0.134343 -3.372105
+  Method 2 smoothed cfc12 rates = -3.122568 0.220118 -3.342686
+
+default, no perturbations, LW, Nov30 ...removed a handful of N2O chans and supposedly CFC11 chans
+  Method 2 smoothed stemp rates = 0.011638 0.007269 0.005223
+  Method 2 smoothed co2 rates = 2.026063 -0.079245 2.112030
+  Method 2 smoothed n2o rates = 0.894848 -0.066645 0.968105
+  Method 2 smoothed ch4 rates = 5.663973 -0.385631 6.089840
+  Method 2 smoothed cfc11 rates = -3.322247 0.161606 -3.491257
+  Method 2 smoothed cfc12 rates = -3.217935 0.219330 -3.425864
+
+Have put together plots, see
+A) figs of rates derived from obs/cal anomaly spectra are in
+/home/sergio/MATLABCODE/oem_pkg_run/AIRS_new_clear_scan_August2019/SAVE_BESTRUNv1/Figs
+
+B) figs of ERA geophysical trends are (for now, done in March 2019) are in
+/home/sergio/MATLABCODE/oem_pkg_run/AIRS_new_clear_scan_August2019/WORKS_Nov19_2019_fit_straight_spectral_rate/Figs
+
+4)    Complete description of oem tuning parameters: esp. a-priori
+    covariances, estimates, etc.
+
+%% the first few are covariance, last 3 are for L1 Tikonov (set inside rodgers.m) 
+%%         lc   ct.lev1   ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2 coz_wide  alpha_T  alpha_w  alpha_oz
+cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)
+
+>>> from build_cov_matrices (covariance)
+% Make sure re-scale to Jacobians before squaring cov matrix
+for i=1:pmat_size
+  for j=1:pmat_size
+    mat_od(i,j) = abs(i-j);
+  end
+end
+
+l_c = cov_set(1);;
+mat_od = exp(-mat_od.^2./(1*l_c^2));
+
+   ct(ix).trans1 = trpi(ix);
+   ct(ix).trans2 = trpi(ix)+10;
+   ct(ix).lev1 = cov_set(2);
+   ct(ix).lev2 = cov_set(3);
+   ct(ix).lev3 = ct(ix).lev2;
+   ct(ix).width1 = cov_set(4);
+   ct(ix).width2 = ct(ix).width1;
+
+  tunc = cov2lev(ct(ix),driver.jacobian.numlays);
+  t_sigma = (tunc./tnorm);
+  tmat = (t_sigma'*t_sigma).*mat_od;
+  driver.oem.tunc = tunc;
+
+>>> from rodgers.m (Tikonov)
+l = get_l(driver.jacobian.numlays,1);
+s = transpose(l)*l;
+rc = blkdiag(zeros(lenS,lenS),driver.oem.alpha_water*s,driver.oem.alpha_temp*s,driver.oem.alpha_ozone*s);
+
+r = rcov + rc;
+
+5)    L1-type smoothing parameters, and can you lower them or does all go to pot
+
+see results in TurnOffCov_or_Reg/RegOn
+driver.oem.reg_type = 'reg';  %% only L1 matrix
+I would say dWV/dt becomes crappy, rest remain ok (though dT/dt gets shifterd above ie strat cooling appears to happen higher in atmosphere, trop warming extends to LS)
+also stemp rates becomes crappy
+  Method 2 smoothed stemp rates = 0.011204 0.008117 0.003885
+  Method 2 smoothed co2 rates = 2.088423 -0.064018 2.162510
+  Method 2 smoothed n2o rates = 0.993445 -0.053086 1.056223
+  Method 2 smoothed ch4 rates = 5.908904 -0.238429 6.202861
+  Method 2 smoothed cfc11 rates = -4.257388 0.028740 -4.294833
+  Method 2 smoothed cfc12 rates = -3.800427 -0.140165 -3.642661
+
+driver.oem.reg_type = 'reg_and_cov';
+build_cov.m, line 75
+%% testing perturbations for paper : 
+
+reduce = [2 3 5 6 8 9];  %% cx.lev1,cx.lev2 for x=WV,T,O3
+cov_set(reduce) =  cov_set(reduce) * 0.1;    %% makes overall tracegas and thermodynamic trends            slightly smaller (eg CO2 anom in 2018 = 32 ppmv instead of 35 ppmv)
+note here I have only << perturbed params for OBS and have not perturbed params for CAL retrievals >>
+  Method 2 smoothed stemp rates = 0.014155 0.009097 0.005057
+  Method 2 smoothed co2 rates = 1.745271 -0.082809 1.828080
+  Method 2 smoothed n2o rates = 0.703816 -0.070432 0.774248
+  Method 2 smoothed ch4 rates = 4.301174 -0.379320 4.680494
+  Method 2 smoothed cfc11 rates = -3.523677 0.134343 -3.658021
+  Method 2 smoothed cfc12 rates = -3.819804 0.220118 -4.039922
+note here I have << perturbed params both for OBS and for CAL retrievals >>
+  Method 2 smoothed stemp rates = 0.014155 0.009023 0.005132
+  Method 2 smoothed co2 rates = 1.745271 -0.216073 1.961344
+  Method 2 smoothed n2o rates = 0.703816 -0.201256 0.905072
+  Method 2 smoothed ch4 rates = 4.301174 -1.263221 5.564394
+  Method 2 smoothed cfc11 rates = -3.523677 0.339746 -3.863423
+  Method 2 smoothed cfc12 rates = -3.819804 -0.081884 -3.737920
+
+xxxxxx x5 to have co2 rate go from 2.037366 (line 38)?? to 2.06???????????
+
+
+cov_set(reduce) =  cov_set(reduce) * 10.0;   %% makes overall tracegas and especially thermodynamic trends slightly larger  (eg CO2 anom in 2018 = 37 ppmv instead of 35 ppmv)
+note here I have only << perturbed params for OBS and have not perturbed params for CAL retrievals >>
+  Method 2 smoothed stemp rates = 0.014630 0.009097 0.005533
+  Method 2 smoothed co2 rates = 2.093625 -0.082809 2.176434
+  Method 2 smoothed n2o rates = 1.000769 -0.070432 1.071201
+  Method 2 smoothed ch4 rates = 5.968859 -0.379320 6.348179
+  Method 2 smoothed cfc11 rates = -3.104628 0.134343 -3.238971
+  Method 2 smoothed cfc12 rates = -3.099577 0.220118 -3.319695
+note here I have << perturbed params both for OBS and for CAL retrievals >>
+  Method 2 smoothed stemp rates = 0.014630 0.010148 0.004482
+  Method 2 smoothed co2 rates = 2.093625 -0.048238 2.141864
+  Method 2 smoothed n2o rates = 1.000769 -0.036687 1.037456
+  Method 2 smoothed ch4 rates = 5.968859 -0.150538 6.119397
+  Method 2 smoothed cfc11 rates = -3.104628 0.022370 -3.126998
+  Method 2 smoothed cfc12 rates = -3.099577 -0.096636 -3.002941
+
+6)    Same as above, keep L1-type smoothing as is, raise a-priori
+    covariances and see what happens
+
+see results in TurnOffCov_or_Reg/CovOn
+driver.oem.reg_type = 'cov';  %% only cov matrix
+I'd say results are better than 'reg'
+  Method 2 smoothed stemp rates = 0.011682 0.007728 0.004641
+  Method 2 smoothed co2 rates = 2.040709 -0.079939 2.128475
+  Method 2 smoothed n2o rates = 0.953301 -0.070290 1.030836
+  Method 2 smoothed ch4 rates = 5.671120 -0.382564 6.097475
+  Method 2 smoothed cfc11 rates = -3.226959 0.053648 -3.286151
+  Method 2 smoothed cfc12 rates = -3.238331 0.209001 -3.433833
+
+reduce = [11 12 13];  %% alphaWV alphaT alphaO3
+cov_set(reduce) =  cov_set(reduce) * 0.1; fmatd = fmatd*0.1; %% keeps overall tracegas about same, but thermodynamic trends are larger
+note here I have only << perturbed params for OBS and have not perturbed params for CAL retrievals >>
+  Method 2 smoothed stemp rates = 0.015239 0.009097 0.006142
+  Method 2 smoothed co2 rates = 2.037399 -0.082809 2.120209
+  Method 2 smoothed n2o rates = 0.953572 -0.070432 1.024005
+  Method 2 smoothed ch4 rates = 5.721539 -0.379320 6.100859
+  Method 2 smoothed cfc11 rates = -1.023771 0.134343 -1.158114
+  Method 2 smoothed cfc12 rates = -1.406832 0.220118 -1.626950
+
+xxxxxx x5 to have co2 rate go from 2.037366 (line 38)?? to 2.06????????
+
+
+cov_set(reduce) =  cov_set(reduce) * 10; fmatd = fmatd*10; %% pretty BAD spikes in trace gases and rates are HUGE.  but thermodynamic trends kinda ok
+note here I have only << perturbed params for OBS and have not perturbed params for CAL retrievals >>
+  Method 2 smoothed co2 rates = 2.606992 -0.082809 2.689801
+  Method 2 smoothed n2o rates = 1.379573 -0.070432 1.450006
+  Method 2 smoothed ch4 rates = 9.142094 -0.379320 9.521414
+  Method 2 smoothed cfc11 rates = -2.671334 0.134343 -2.805677
+  Method 2 smoothed cfc12 rates = -2.977967 0.220118 -3.198085
+
+7)    Gist of the above two bullets is can we say what is dominant in
+    regularization: a-priori covariance, or L1-type smoothing
+
+8)    Side by side figures of ERA T/Q trends (no retrieval, raw from
+    model) vs your retrieved trends, vs your retrieved trends from
+    simulation (last part same as bullet 3 above)
+
+9)    VERY IMPORTANT (start soon): Prove that SW is drifting.  Either do
+    fits that also include SW, or fits of SW along, and prove that
+    they give worse results relative to in-situ CO2, SST, etc.
+
+Using LW/SW results are not terrible if inside "read_the_anom_T_WV_retrievals.m" you do
+  bad2 = find(abs(co2) > 45);
+  bad1 = find(abs(stemp) > 1);
+  badco2 = union(bad1,bad2);
+  co2(badco2) = NaN;
+  n2o(badco2) = NaN;
+  ch4(badco2) = NaN;
+  cfc11(badco2) = NaN;
+  cfc12(badco2) = NaN;
+  stemp(badco2) = NaN;
+to get rid of TONS of spikes. This holds true for thermodynamic rates, you still see main features (though admitedly not as nice/smooth as with LW only)
+
+  Method 2 smoothed stemp rates = 0.016152 0.009097 0.011275
+  Method 2 smoothed co2 rates = 1.985990 -0.082809 2.057436
+  Method 2 smoothed n2o rates = 0.768665 -0.070432 0.830854
+  Method 2 smoothed ch4 rates = 6.157756 -0.379320 6.507561
+  Method 2 smoothed cfc11 rates = -2.647375 0.134343 -2.782235
+  Method 2 smoothed cfc12 rates = -3.208520 0.220118 -3.419909
+
+Using SW only : WV and O3 rates are awful, CFC11,CFC12 are zero (obviosly) while iothers ... are not too bad!!!
+note here I have only << run SW OBS and still have LW cal >>
+  Method 2 smoothed stemp rates = 0.016033 0.009097 0.010744
+  Method 2 smoothed co2 rates = 2.125867 -0.082809 2.197282
+  Method 2 smoothed n2o rates = 0.955516 -0.070432 1.018267
+  Method 2 smoothed ch4 rates = 7.409486 -0.379320 7.763664
+  Method 2 smoothed cfc11 rates = 0.000000 0.134343 -0.134314
+  Method 2 smoothed cfc12 rates = -0.000000 0.220118 -0.208100
+
+10)    Software: start using new repo, reproduce best fit and ERA no T_z
+    fits with it for completeness (so you can have a hashtag inside the
+    output data files 
+
+WORKING ON IT, but not able to push
+
+11)    I need a pointer to the Jacobians you actually used.  Need to
+    compare co-linearity of CO2 jacobian to some mean of the dBT/d(T_z)
+    jacobians.  
+
+DONE
+
+12) Get rid of nucal and do the fits again
+
+13) try to get O3 more damped
+
+14) fit SW better (throw out less data by getting rid of o3, CFC???)
+
+14) CO2 age of air
+
+15) Take couple bad retrievals, see if they can be improved (eg improve ERA T/WV beforehand)
+

@@ -1,0 +1,474 @@
+      JOBID PARTI:QOS        USER:ACCOUNT   NAME         ST        TIME / TIME_LIMIT  NODEn:CPUS MIN_MEM NODELIST(REASON) PRIORI PRIORITY  
+2272298_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272297_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272296_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272295_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272294_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272293_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+    2176926 high_:long+  bennettj:pi_benne  d-l-Ag2GeS3  PD        0:00 / 3-00:00:00     2n:32      500M (QOSMaxCpuPerUse 49     0.00000001
+    2189266 high_:long+  bennettj:pi_benne  rs-CTGS      PD        0:00 / 3-00:00:00     2n:32      500M (QOSMaxCpuPerUse 49     0.00000001
+    2189335 high_:long+  bennettj:pi_benne  l-CTGS       PD        0:00 / 3-00:00:00     2n:32      500M (QOSMaxCpuPerUse 49     0.00000001
+2272299_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272300_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272301_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272302_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272303_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272304_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272305_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272306_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272307_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272308_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272309_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2272310_[1- batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260211_336 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260211_337 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260211_338 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260211_339 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260211_340 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260211_341 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260211_342 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260211_343 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260213_271 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260213_272 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260213_275 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260213_276 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260213_277 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260213_278 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260214_253 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260214_254 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260218_343 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260218_344 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260222_180 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260222_181 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260222_182 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260222_183 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260222_184 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260222_185 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260222_186 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260222_187 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260224_323 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260224_324 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260224_330 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260224_331 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260224_332 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260224_333 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260226_111 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260226_112 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260226_113 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260226_114 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260226_115 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260226_116 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260226_117 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260226_118 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260231_308 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260234_175 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260234_176 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260236_146 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260236_147 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260236_148 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260236_149 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260236_150 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260236_151 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260236_152 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260236_153 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260237_136 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260237_137 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260237_138 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260237_139 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260237_140 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260237_141 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260237_142 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260237_143 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+ 2260242_38 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+ 2260242_40 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260242_272 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260242_273 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+2260244_315 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260244_316 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260244_317 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260244_318 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260244_319 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260244_320 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260244_321 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260244_322 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+ 2260246_32 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+ 2260246_33 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+ 2260246_34 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+ 2260246_35 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+ 2260246_36 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+ 2260246_37 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+ 2260246_38 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+ 2260246_39 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260247_108 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260247_109 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260247_112 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260247_113 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260250_194 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260250_195 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260250_196 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260250_197 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260250_198 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260250_199 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260250_200 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260250_201 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260254_314 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260257_179 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260257_180 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260257_187 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260257_188 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260257_189 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260257_190 batch:normal npillai1:pi_ferra  rgbFeatures- PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260260_217 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (Priority)       49     0.00000001
+2260260_218 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260260_219 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260260_220 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260260_221 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260260_222 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260260_223 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2260260_224 batch:normal npillai1:pi_ferra  shapeFeature PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 49     0.00000001
+2189466_[12 high_:medium     zuj1:pi_boot   kick_897-985 PD        0:00 / 7:06:00        1n:36    62.50G (QOSMaxCpuPerUse 49     0.00000001
+2182994_[99 high_:medium   markj1:pi_boot   kick_700-129 PD        0:00 / 7:06:00        1n:36    62.50G (QOSMaxCpuPerUse 49     0.00000001
+2284683_[17 high_:normal     zuj1:pi_boot   kick_1600-19 PD        0:00 / 4:00:00        1n:36    62.50G (QOSMaxCpuPerUse 49     0.00000001
+2272292_[14 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Resources)      49     0.00000001
+    2268176 batch:medium npoudel1:pi_mlyu   SD3D3C_Inlin PD        0:00 / 15:45:00      16n:256        0 (Priority)       48     0.00000001
+    2190580 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:1024       0 (Resources)      44     0.00000001
+    2190581 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:512        0 (Priority)       44     0.00000001
+    2190582 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:256        0 (Priority)       44     0.00000001
+    2190583 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:128        0 (Priority)       44     0.00000001
+    2190584 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:64         0 (Priority)       44     0.00000001
+    2190585 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:32         0 (Priority)       44     0.00000001
+    2190617 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:1024       0 (Priority)       44     0.00000001
+    2190618 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:512        0 (Priority)       44     0.00000001
+    2190619 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:256        0 (Priority)       44     0.00000001
+    2190620 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:128        0 (Priority)       44     0.00000001
+    2190621 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:64         0 (Priority)       44     0.00000001
+    2190622 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:32         0 (Priority)       44     0.00000001
+    2190653 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:1024       0 (Priority)       44     0.00000001
+    2190654 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:512        0 (Priority)       44     0.00000001
+    2190655 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:256        0 (Priority)       44     0.00000001
+    2190656 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:128        0 (Priority)       44     0.00000001
+    2190657 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:64         0 (Priority)       44     0.00000001
+    2190658 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:32         0 (Priority)       44     0.00000001
+    2190689 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:1024       0 (Priority)       44     0.00000001
+    2190690 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:512        0 (Priority)       44     0.00000001
+    2190691 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:256        0 (Priority)       44     0.00000001
+    2190692 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:128        0 (Priority)       44     0.00000001
+    2190693 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 55:00         32n:64         0 (Priority)       44     0.00000001
+    2190694 high_:suppor    jsun2:pi_gobbe  poisson      PD        0:00 / 3:55:00       32n:32         0 (Priority)       44     0.00000001
+2292544_[1- high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2292545_[6- high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2292546_[11 high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2292547_[16 high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2292548_[21 high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2292549_[26 high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2292550_[31 high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2292551_[36 high_:medium   sergio:pi_strow  ANOMALY      PD        0:00 / 3:59:00        1n:1      6000M (Priority)       43     0.00000001
+2272290_324 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       35     0.00000000
+2272290_325 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 35     0.00000000
+2272290_326 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 35     0.00000000
+2272290_327 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 35     0.00000000
+2272290_328 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 35     0.00000000
+2272290_329 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 35     0.00000000
+2272290_330 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 35     0.00000000
+2272290_331 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 35     0.00000000
+    2292792 batch:normal    xinh1:pi_jianw  daskJob_maxm PD        0:00 / 4:00:00        8n:8          0 (Priority)       32     0.00000000
+    2292526 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292527 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292528 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292529 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292530 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292531 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292532 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292533 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292534 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+    2292535 high_:normal  vy57456:pi_zzbat  262849_wrf2d PD        0:00 / 1:40:00        1n:1          0 (Priority)       29     0.00000000
+2272291_149 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (Priority)       28     0.00000000
+2272291_150 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 28     0.00000000
+2272291_153 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 28     0.00000000
+2272291_154 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 28     0.00000000
+2272291_155 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 28     0.00000000
+2272291_156 batch:normal npillai1:pi_ferra  objectFeatur PD        0:00 / 4:00:00        1n:1     12000M (QOSMaxCpuPerUse 28     0.00000000
+    2292742 high_:long+   nsharma:pi_gobbe  blast        PD        0:00 / 3-00:00:00     1n:36         0 (Priority)       21     0.00000000
+ 2272292_13 batch:normal npillai1:pi_ferra  objectFeatur  R        0:14 / 4:00:00        1n:1     12000M cnode223         49     0.00000001
+2284683_173 high_:normal     zuj1:pi_boot   kick_1600-19  R        0:24 / 4:00:00        1n:36    62.50G cnode041         49     0.00000001
+ 2272292_12 batch:normal npillai1:pi_ferra  objectFeatur  R        0:26 / 4:00:00        1n:1     12000M cnode220         49     0.00000001
+ 2272292_11 batch:normal npillai1:pi_ferra  objectFeatur  R        0:29 / 4:00:00        1n:1     12000M cnode216         49     0.00000001
+ 2272292_10 batch:normal npillai1:pi_ferra  objectFeatur  R        0:35 / 4:00:00        1n:1     12000M cnode230         49     0.00000001
+  2272292_9 batch:normal npillai1:pi_ferra  objectFeatur  R        0:47 / 4:00:00        1n:1     12000M cnode229         49     0.00000001
+2284683_173 high_:normal     zuj1:pi_boot   kick_1600-19  R        0:51 / 4:00:00        1n:36    62.50G cnode040         49     0.00000001
+  2272292_8 batch:normal npillai1:pi_ferra  objectFeatur  R        1:00 / 4:00:00        1n:1     12000M cnode215         49     0.00000001
+  2272292_7 batch:normal npillai1:pi_ferra  objectFeatur  R        1:10 / 4:00:00        1n:1     12000M cnode212         49     0.00000001
+  2272292_6 batch:normal npillai1:pi_ferra  objectFeatur  R        1:19 / 4:00:00        1n:1     12000M cnode277         49     0.00000001
+  2272292_5 batch:normal npillai1:pi_ferra  objectFeatur  R        1:23 / 4:00:00        1n:1     12000M cnode221         49     0.00000001
+  2272292_4 batch:normal npillai1:pi_ferra  objectFeatur  R        1:37 / 4:00:00        1n:1     12000M cnode266         49     0.00000001
+  2272292_3 batch:normal npillai1:pi_ferra  objectFeatur  R        1:43 / 4:00:00        1n:1     12000M cnode238         49     0.00000001
+  2272292_2 batch:normal npillai1:pi_ferra  objectFeatur  R        1:51 / 4:00:00        1n:1     12000M cnode278         49     0.00000001
+  2272292_1 batch:normal npillai1:pi_ferra  objectFeatur  R        1:57 / 4:00:00        1n:1     12000M cnode205         49     0.00000001
+2182994_994 high_:medium   markj1:pi_boot   kick_700-129  R        1:59 / 7:06:00        1n:36    62.50G cnode039         49     0.00000001
+2272291_350 batch:normal npillai1:pi_ferra  objectFeatur  R        2:00 / 4:00:00        1n:1     12000M cnode261         49     0.00000001
+2272291_349 batch:normal npillai1:pi_ferra  objectFeatur  R        2:10 / 4:00:00        1n:1     12000M cnode133         49     0.00000001
+2272291_348 batch:normal npillai1:pi_ferra  objectFeatur  R        2:39 / 4:00:00        1n:1     12000M cnode204         49     0.00000001
+2284683_173 high_:normal     zuj1:pi_boot   kick_1600-19  R        3:08 / 4:00:00        1n:36    62.50G cnode036         49     0.00000001
+2272291_347 batch:normal npillai1:pi_ferra  objectFeatur  R        3:20 / 4:00:00        1n:1     12000M cnode211         49     0.00000001
+2272291_346 batch:normal npillai1:pi_ferra  objectFeatur  R        3:23 / 4:00:00        1n:1     12000M cnode237         49     0.00000001
+2272291_345 batch:normal npillai1:pi_ferra  objectFeatur  R        3:29 / 4:00:00        1n:1     12000M cnode206         49     0.00000001
+2272291_344 batch:normal npillai1:pi_ferra  objectFeatur  R        3:33 / 4:00:00        1n:1     12000M cnode203         49     0.00000001
+2272291_343 batch:normal npillai1:pi_ferra  objectFeatur  R        3:37 / 4:00:00        1n:1     12000M cnode217         49     0.00000001
+2182994_993 high_:medium   markj1:pi_boot   kick_700-129  R        3:53 / 7:06:00        1n:36    62.50G cnode004         49     0.00000001
+2272291_342 batch:normal npillai1:pi_ferra  objectFeatur  R        3:56 / 4:00:00        1n:1     12000M cnode138         49     0.00000001
+2272291_341 batch:normal npillai1:pi_ferra  objectFeatur  R        4:23 / 4:00:00        1n:1     12000M cnode262         49     0.00000001
+2272291_340 batch:normal npillai1:pi_ferra  objectFeatur  R        4:37 / 4:00:00        1n:1     12000M cnode138         49     0.00000001
+2284683_173 high_:normal     zuj1:pi_boot   kick_1600-19  R        4:54 / 4:00:00        1n:36    62.50G cnode034         49     0.00000001
+2272291_339 batch:normal npillai1:pi_ferra  objectFeatur  R        5:02 / 4:00:00        1n:1     12000M cnode235         49     0.00000001
+2272291_338 batch:normal npillai1:pi_ferra  objectFeatur  R        5:04 / 4:00:00        1n:1     12000M cnode147         49     0.00000001
+2272291_337 batch:normal npillai1:pi_ferra  objectFeatur  R        5:13 / 4:00:00        1n:1     12000M cnode228         49     0.00000001
+2272291_336 batch:normal npillai1:pi_ferra  objectFeatur  R        5:20 / 4:00:00        1n:1     12000M cnode276         49     0.00000001
+2272291_335 batch:normal npillai1:pi_ferra  objectFeatur  R        5:22 / 4:00:00        1n:1     12000M cnode242         49     0.00000001
+2272291_334 batch:normal npillai1:pi_ferra  objectFeatur  R        6:10 / 4:00:00        1n:1     12000M cnode209         49     0.00000001
+2272291_333 batch:normal npillai1:pi_ferra  objectFeatur  R        6:57 / 4:00:00        1n:1     12000M cnode218         49     0.00000001
+2272291_332 batch:normal npillai1:pi_ferra  objectFeatur  R        8:06 / 4:00:00        1n:1     12000M cnode150         49     0.00000001
+2272291_331 batch:normal npillai1:pi_ferra  objectFeatur  R        8:20 / 4:00:00        1n:1     12000M cnode233         49     0.00000001
+2272291_330 batch:normal npillai1:pi_ferra  objectFeatur  R        8:59 / 4:00:00        1n:1     12000M cnode237         49     0.00000001
+2272291_329 batch:normal npillai1:pi_ferra  objectFeatur  R        9:44 / 4:00:00        1n:1     12000M cnode207         49     0.00000001
+2272291_328 batch:normal npillai1:pi_ferra  objectFeatur  R       10:07 / 4:00:00        1n:1     12000M cnode241         49     0.00000001
+2272291_327 batch:normal npillai1:pi_ferra  objectFeatur  R       10:21 / 4:00:00        1n:1     12000M cnode227         49     0.00000001
+2272291_326 batch:normal npillai1:pi_ferra  objectFeatur  R       10:30 / 4:00:00        1n:1     12000M cnode141         49     0.00000001
+2272291_325 batch:normal npillai1:pi_ferra  objectFeatur  R       10:48 / 4:00:00        1n:1     12000M cnode254         49     0.00000001
+2272291_324 batch:normal npillai1:pi_ferra  objectFeatur  R       10:49 / 4:00:00        1n:1     12000M cnode147         49     0.00000001
+2272291_323 batch:normal npillai1:pi_ferra  objectFeatur  R       11:09 / 4:00:00        1n:1     12000M cnode140         49     0.00000001
+2272291_322 batch:normal npillai1:pi_ferra  objectFeatur  R       11:17 / 4:00:00        1n:1     12000M cnode272         49     0.00000001
+2272291_321 batch:normal npillai1:pi_ferra  objectFeatur  R       11:21 / 4:00:00        1n:1     12000M cnode137         49     0.00000001
+2272291_320 batch:normal npillai1:pi_ferra  objectFeatur  R       11:31 / 4:00:00        1n:1     12000M cnode113         49     0.00000001
+2272291_319 batch:normal npillai1:pi_ferra  objectFeatur  R       11:39 / 4:00:00        1n:1     12000M cnode232         49     0.00000001
+2272291_318 batch:normal npillai1:pi_ferra  objectFeatur  R       11:50 / 4:00:00        1n:1     12000M cnode223         49     0.00000001
+2272291_317 batch:normal npillai1:pi_ferra  objectFeatur  R       11:51 / 4:00:00        1n:1     12000M cnode224         49     0.00000001
+2272291_316 batch:normal npillai1:pi_ferra  objectFeatur  R       11:56 / 4:00:00        1n:1     12000M cnode281         49     0.00000001
+2272291_315 batch:normal npillai1:pi_ferra  objectFeatur  R       11:59 / 4:00:00        1n:1     12000M cnode214         49     0.00000001
+2272291_314 batch:normal npillai1:pi_ferra  objectFeatur  R       12:29 / 4:00:00        1n:1     12000M cnode252         49     0.00000001
+2272291_313 batch:normal npillai1:pi_ferra  objectFeatur  R       12:42 / 4:00:00        1n:1     12000M cnode150         49     0.00000001
+2272291_312 batch:normal npillai1:pi_ferra  objectFeatur  R       12:55 / 4:00:00        1n:1     12000M cnode143         49     0.00000001
+2189466_122 high_:medium     zuj1:pi_boot   kick_897-985  R       13:15 / 7:06:00        1n:36    62.50G cnode007         49     0.00000001
+2272291_311 batch:normal npillai1:pi_ferra  objectFeatur  R       13:27 / 4:00:00        1n:1     12000M cnode132         49     0.00000001
+2272291_310 batch:normal npillai1:pi_ferra  objectFeatur  R       13:39 / 4:00:00        1n:1     12000M cnode255         49     0.00000001
+2272291_309 batch:normal npillai1:pi_ferra  objectFeatur  R       13:40 / 4:00:00        1n:1     12000M cnode242         49     0.00000001
+2272291_308 batch:normal npillai1:pi_ferra  objectFeatur  R       13:41 / 4:00:00        1n:1     12000M cnode210         49     0.00000001
+2272291_307 batch:normal npillai1:pi_ferra  objectFeatur  R       13:53 / 4:00:00        1n:1     12000M cnode206         49     0.00000001
+2272291_306 batch:normal npillai1:pi_ferra  objectFeatur  R       13:59 / 4:00:00        1n:1     12000M cnode246         49     0.00000001
+2272291_305 batch:normal npillai1:pi_ferra  objectFeatur  R       14:13 / 4:00:00        1n:1     12000M cnode229         49     0.00000001
+2272291_304 batch:normal npillai1:pi_ferra  objectFeatur  R       14:14 / 4:00:00        1n:1     12000M cnode144         49     0.00000001
+2272291_303 batch:normal npillai1:pi_ferra  objectFeatur  R       14:16 / 4:00:00        1n:1     12000M cnode141         49     0.00000001
+2272291_300 batch:normal npillai1:pi_ferra  objectFeatur  R       14:28 / 4:00:00        1n:1     12000M cnode217         49     0.00000001
+2272291_301 batch:normal npillai1:pi_ferra  objectFeatur  R       14:28 / 4:00:00        1n:1     12000M cnode249         49     0.00000001
+2272291_302 batch:normal npillai1:pi_ferra  objectFeatur  R       14:28 / 4:00:00        1n:1     12000M cnode137         49     0.00000001
+2272291_299 batch:normal npillai1:pi_ferra  objectFeatur  R       14:34 / 4:00:00        1n:1     12000M cnode150         49     0.00000001
+2272291_298 batch:normal npillai1:pi_ferra  objectFeatur  R       14:38 / 4:00:00        1n:1     12000M cnode209         49     0.00000001
+2272291_297 batch:normal npillai1:pi_ferra  objectFeatur  R       14:40 / 4:00:00        1n:1     12000M cnode216         49     0.00000001
+2272291_296 batch:normal npillai1:pi_ferra  objectFeatur  R       14:57 / 4:00:00        1n:1     12000M cnode212         49     0.00000001
+2272291_295 batch:normal npillai1:pi_ferra  objectFeatur  R       15:03 / 4:00:00        1n:1     12000M cnode137         49     0.00000001
+2272291_294 batch:normal npillai1:pi_ferra  objectFeatur  R       15:08 / 4:00:00        1n:1     12000M cnode150         49     0.00000001
+2272291_293 batch:normal npillai1:pi_ferra  objectFeatur  R       15:12 / 4:00:00        1n:1     12000M cnode150         49     0.00000001
+2272291_292 batch:normal npillai1:pi_ferra  objectFeatur  R       15:17 / 4:00:00        1n:1     12000M cnode254         49     0.00000001
+2284683_173 high_:normal     zuj1:pi_boot   kick_1600-19  R       15:22 / 4:00:00        1n:36    62.50G cnode037         49     0.00000001
+2272291_290 batch:normal npillai1:pi_ferra  objectFeatur  R       15:31 / 4:00:00        1n:1     12000M cnode230         49     0.00000001
+2272291_291 batch:normal npillai1:pi_ferra  objectFeatur  R       15:31 / 4:00:00        1n:1     12000M cnode273         49     0.00000001
+2272291_289 batch:normal npillai1:pi_ferra  objectFeatur  R       15:38 / 4:00:00        1n:1     12000M cnode113         49     0.00000001
+2272291_288 batch:normal npillai1:pi_ferra  objectFeatur  R       15:39 / 4:00:00        1n:1     12000M cnode144         49     0.00000001
+2272291_287 batch:normal npillai1:pi_ferra  objectFeatur  R       15:53 / 4:00:00        1n:1     12000M cnode139         49     0.00000001
+2272291_286 batch:normal npillai1:pi_ferra  objectFeatur  R       15:54 / 4:00:00        1n:1     12000M cnode149         49     0.00000001
+2272291_285 batch:normal npillai1:pi_ferra  objectFeatur  R       16:00 / 4:00:00        1n:1     12000M cnode133         49     0.00000001
+2272291_284 batch:normal npillai1:pi_ferra  objectFeatur  R       16:03 / 4:00:00        1n:1     12000M cnode113         49     0.00000001
+2272291_283 batch:normal npillai1:pi_ferra  objectFeatur  R       16:10 / 4:00:00        1n:1     12000M cnode137         49     0.00000001
+2272291_282 batch:normal npillai1:pi_ferra  objectFeatur  R       16:14 / 4:00:00        1n:1     12000M cnode138         49     0.00000001
+2272291_281 batch:normal npillai1:pi_ferra  objectFeatur  R       16:15 / 4:00:00        1n:1     12000M cnode142         49     0.00000001
+2272291_280 batch:normal npillai1:pi_ferra  objectFeatur  R       16:29 / 4:00:00        1n:1     12000M cnode142         49     0.00000001
+2284683_172 high_:normal     zuj1:pi_boot   kick_1600-19  R       16:35 / 4:00:00        1n:36    62.50G cnode038         49     0.00000001
+2272291_279 batch:normal npillai1:pi_ferra  objectFeatur  R       16:38 / 4:00:00        1n:1     12000M cnode142         49     0.00000001
+2272291_278 batch:normal npillai1:pi_ferra  objectFeatur  R       16:51 / 4:00:00        1n:1     12000M cnode228         49     0.00000001
+2272291_277 batch:normal npillai1:pi_ferra  objectFeatur  R       16:55 / 4:00:00        1n:1     12000M cnode239         49     0.00000001
+2272291_276 batch:normal npillai1:pi_ferra  objectFeatur  R       16:56 / 4:00:00        1n:1     12000M cnode143         49     0.00000001
+2272291_275 batch:normal npillai1:pi_ferra  objectFeatur  R       16:58 / 4:00:00        1n:1     12000M cnode215         49     0.00000001
+2272291_274 batch:normal npillai1:pi_ferra  objectFeatur  R       17:01 / 4:00:00        1n:1     12000M cnode251         49     0.00000001
+2272291_273 batch:normal npillai1:pi_ferra  objectFeatur  R       17:03 / 4:00:00        1n:1     12000M cnode142         49     0.00000001
+2272291_271 batch:normal npillai1:pi_ferra  objectFeatur  R       17:10 / 4:00:00        1n:1     12000M cnode204         49     0.00000001
+2272291_272 batch:normal npillai1:pi_ferra  objectFeatur  R       17:10 / 4:00:00        1n:1     12000M cnode132         49     0.00000001
+2272291_270 batch:normal npillai1:pi_ferra  objectFeatur  R       17:27 / 4:00:00        1n:1     12000M cnode132         49     0.00000001
+2272291_269 batch:normal npillai1:pi_ferra  objectFeatur  R       17:34 / 4:00:00        1n:1     12000M cnode219         49     0.00000001
+2272291_268 batch:normal npillai1:pi_ferra  objectFeatur  R       17:35 / 4:00:00        1n:1     12000M cnode143         49     0.00000001
+2272291_267 batch:normal npillai1:pi_ferra  objectFeatur  R       17:36 / 4:00:00        1n:1     12000M cnode140         49     0.00000001
+2272291_266 batch:normal npillai1:pi_ferra  objectFeatur  R       17:48 / 4:00:00        1n:1     12000M cnode235         49     0.00000001
+2272291_265 batch:normal npillai1:pi_ferra  objectFeatur  R       17:50 / 4:00:00        1n:1     12000M cnode140         49     0.00000001
+2272291_264 batch:normal npillai1:pi_ferra  objectFeatur  R       18:06 / 4:00:00        1n:1     12000M cnode238         49     0.00000001
+2272291_263 batch:normal npillai1:pi_ferra  objectFeatur  R       18:10 / 4:00:00        1n:1     12000M cnode141         49     0.00000001
+2272291_262 batch:normal npillai1:pi_ferra  objectFeatur  R       18:24 / 4:00:00        1n:1     12000M cnode133         49     0.00000001
+2272291_261 batch:normal npillai1:pi_ferra  objectFeatur  R       18:32 / 4:00:00        1n:1     12000M cnode256         49     0.00000001
+2272291_260 batch:normal npillai1:pi_ferra  objectFeatur  R       18:36 / 4:00:00        1n:1     12000M cnode139         49     0.00000001
+2272291_259 batch:normal npillai1:pi_ferra  objectFeatur  R       18:42 / 4:00:00        1n:1     12000M cnode143         49     0.00000001
+2272291_258 batch:normal npillai1:pi_ferra  objectFeatur  R       18:52 / 4:00:00        1n:1     12000M cnode138         49     0.00000001
+2272291_257 batch:normal npillai1:pi_ferra  objectFeatur  R       18:56 / 4:00:00        1n:1     12000M cnode113         49     0.00000001
+2272291_256 batch:normal npillai1:pi_ferra  objectFeatur  R       18:59 / 4:00:00        1n:1     12000M cnode148         49     0.00000001
+2272291_255 batch:normal npillai1:pi_ferra  objectFeatur  R       19:01 / 4:00:00        1n:1     12000M cnode233         49     0.00000001
+2272291_254 batch:normal npillai1:pi_ferra  objectFeatur  R       19:03 / 4:00:00        1n:1     12000M cnode138         49     0.00000001
+2272291_253 batch:normal npillai1:pi_ferra  objectFeatur  R       19:17 / 4:00:00        1n:1     12000M cnode265         49     0.00000001
+2272291_252 batch:normal npillai1:pi_ferra  objectFeatur  R       19:29 / 4:00:00        1n:1     12000M cnode133         49     0.00000001
+2272291_250 batch:normal npillai1:pi_ferra  objectFeatur  R       19:31 / 4:00:00        1n:1     12000M cnode283         49     0.00000001
+2272291_251 batch:normal npillai1:pi_ferra  objectFeatur  R       19:31 / 4:00:00        1n:1     12000M cnode131         49     0.00000001
+2272291_249 batch:normal npillai1:pi_ferra  objectFeatur  R       19:32 / 4:00:00        1n:1     12000M cnode132         49     0.00000001
+2272291_248 batch:normal npillai1:pi_ferra  objectFeatur  R       19:34 / 4:00:00        1n:1     12000M cnode144         49     0.00000001
+2272291_246 batch:normal npillai1:pi_ferra  objectFeatur  R       19:44 / 4:00:00        1n:1     12000M cnode113         49     0.00000001
+2272291_247 batch:normal npillai1:pi_ferra  objectFeatur  R       19:44 / 4:00:00        1n:1     12000M cnode141         49     0.00000001
+2272291_245 batch:normal npillai1:pi_ferra  objectFeatur  R       19:48 / 4:00:00        1n:1     12000M cnode239         49     0.00000001
+2272291_244 batch:normal npillai1:pi_ferra  objectFeatur  R       20:03 / 4:00:00        1n:1     12000M cnode221         49     0.00000001
+2272291_243 batch:normal npillai1:pi_ferra  objectFeatur  R       20:15 / 4:00:00        1n:1     12000M cnode148         49     0.00000001
+2272291_242 batch:normal npillai1:pi_ferra  objectFeatur  R       20:17 / 4:00:00        1n:1     12000M cnode145         49     0.00000001
+2272291_241 batch:normal npillai1:pi_ferra  objectFeatur  R       20:19 / 4:00:00        1n:1     12000M cnode149         49     0.00000001
+2272291_240 batch:normal npillai1:pi_ferra  objectFeatur  R       20:41 / 4:00:00        1n:1     12000M cnode149         49     0.00000001
+2272291_239 batch:normal npillai1:pi_ferra  objectFeatur  R       20:42 / 4:00:00        1n:1     12000M cnode115         49     0.00000001
+2272291_238 batch:normal npillai1:pi_ferra  objectFeatur  R       20:45 / 4:00:00        1n:1     12000M cnode136         49     0.00000001
+2272291_236 batch:normal npillai1:pi_ferra  objectFeatur  R       20:46 / 4:00:00        1n:1     12000M cnode129         49     0.00000001
+2272291_237 batch:normal npillai1:pi_ferra  objectFeatur  R       20:46 / 4:00:00        1n:1     12000M cnode141         49     0.00000001
+2272291_235 batch:normal npillai1:pi_ferra  objectFeatur  R       20:49 / 4:00:00        1n:1     12000M cnode129         49     0.00000001
+2272291_234 batch:normal npillai1:pi_ferra  objectFeatur  R       20:52 / 4:00:00        1n:1     12000M cnode132         49     0.00000001
+2272291_233 batch:normal npillai1:pi_ferra  objectFeatur  R       20:58 / 4:00:00        1n:1     12000M cnode224         49     0.00000001
+2272291_232 batch:normal npillai1:pi_ferra  objectFeatur  R       21:02 / 4:00:00        1n:1     12000M cnode145         49     0.00000001
+2272291_230 batch:normal npillai1:pi_ferra  objectFeatur  R       21:10 / 4:00:00        1n:1     12000M cnode131         49     0.00000001
+2272291_231 batch:normal npillai1:pi_ferra  objectFeatur  R       21:10 / 4:00:00        1n:1     12000M cnode149         49     0.00000001
+2272291_228 batch:normal npillai1:pi_ferra  objectFeatur  R       21:11 / 4:00:00        1n:1     12000M cnode130         49     0.00000001
+2272291_229 batch:normal npillai1:pi_ferra  objectFeatur  R       21:11 / 4:00:00        1n:1     12000M cnode139         49     0.00000001
+2272291_227 batch:normal npillai1:pi_ferra  objectFeatur  R       21:12 / 4:00:00        1n:1     12000M cnode256         49     0.00000001
+2272291_226 batch:normal npillai1:pi_ferra  objectFeatur  R       21:18 / 4:00:00        1n:1     12000M cnode139         49     0.00000001
+2272291_225 batch:normal npillai1:pi_ferra  objectFeatur  R       21:19 / 4:00:00        1n:1     12000M cnode145         49     0.00000001
+2272291_224 batch:normal npillai1:pi_ferra  objectFeatur  R       21:20 / 4:00:00        1n:1     12000M cnode144         49     0.00000001
+2272291_223 batch:normal npillai1:pi_ferra  objectFeatur  R       21:21 / 4:00:00        1n:1     12000M cnode145         49     0.00000001
+2272291_222 batch:normal npillai1:pi_ferra  objectFeatur  R       21:27 / 4:00:00        1n:1     12000M cnode131         49     0.00000001
+2272291_221 batch:normal npillai1:pi_ferra  objectFeatur  R       21:28 / 4:00:00        1n:1     12000M cnode136         49     0.00000001
+2272291_220 batch:normal npillai1:pi_ferra  objectFeatur  R       21:37 / 4:00:00        1n:1     12000M cnode119         49     0.00000001
+2272291_219 batch:normal npillai1:pi_ferra  objectFeatur  R       21:38 / 4:00:00        1n:1     12000M cnode148         49     0.00000001
+2272291_218 batch:normal npillai1:pi_ferra  objectFeatur  R       21:39 / 4:00:00        1n:1     12000M cnode136         49     0.00000001
+2272291_217 batch:normal npillai1:pi_ferra  objectFeatur  R       21:40 / 4:00:00        1n:1     12000M cnode119         49     0.00000001
+2272291_216 batch:normal npillai1:pi_ferra  objectFeatur  R       21:44 / 4:00:00        1n:1     12000M cnode225         49     0.00000001
+2272291_215 batch:normal npillai1:pi_ferra  objectFeatur  R       21:54 / 4:00:00        1n:1     12000M cnode115         49     0.00000001
+2272291_214 batch:normal npillai1:pi_ferra  objectFeatur  R       22:01 / 4:00:00        1n:1     12000M cnode250         49     0.00000001
+2272291_213 batch:normal npillai1:pi_ferra  objectFeatur  R       22:22 / 4:00:00        1n:1     12000M cnode130         49     0.00000001
+2272291_212 batch:normal npillai1:pi_ferra  objectFeatur  R       22:28 / 4:00:00        1n:1     12000M cnode135         49     0.00000001
+2272291_210 batch:normal npillai1:pi_ferra  objectFeatur  R       22:37 / 4:00:00        1n:1     12000M cnode218         49     0.00000001
+2272291_211 batch:normal npillai1:pi_ferra  objectFeatur  R       22:37 / 4:00:00        1n:1     12000M cnode135         49     0.00000001
+2272291_209 batch:normal npillai1:pi_ferra  objectFeatur  R       22:40 / 4:00:00        1n:1     12000M cnode146         49     0.00000001
+2272291_208 batch:normal npillai1:pi_ferra  objectFeatur  R       22:49 / 4:00:00        1n:1     12000M cnode146         49     0.00000001
+2272291_207 batch:normal npillai1:pi_ferra  objectFeatur  R       23:08 / 4:00:00        1n:1     12000M cnode281         49     0.00000001
+2272291_206 batch:normal npillai1:pi_ferra  objectFeatur  R       23:09 / 4:00:00        1n:1     12000M cnode119         49     0.00000001
+2272291_205 batch:normal npillai1:pi_ferra  objectFeatur  R       23:20 / 4:00:00        1n:1     12000M cnode129         49     0.00000001
+2272291_203 batch:normal npillai1:pi_ferra  objectFeatur  R       23:22 / 4:00:00        1n:1     12000M cnode146         49     0.00000001
+2272291_204 batch:normal npillai1:pi_ferra  objectFeatur  R       23:22 / 4:00:00        1n:1     12000M cnode136         49     0.00000001
+2272291_202 batch:normal npillai1:pi_ferra  objectFeatur  R       23:23 / 4:00:00        1n:1     12000M cnode129         49     0.00000001
+2272291_201 batch:normal npillai1:pi_ferra  objectFeatur  R       23:25 / 4:00:00        1n:1     12000M cnode129         49     0.00000001
+2272291_200 batch:normal npillai1:pi_ferra  objectFeatur  R       23:39 / 4:00:00        1n:1     12000M cnode131         49     0.00000001
+2272291_199 batch:normal npillai1:pi_ferra  objectFeatur  R       23:46 / 4:00:00        1n:1     12000M cnode130         49     0.00000001
+2272291_198 batch:normal npillai1:pi_ferra  objectFeatur  R       23:49 / 4:00:00        1n:1     12000M cnode148         49     0.00000001
+2272291_197 batch:normal npillai1:pi_ferra  objectFeatur  R       23:57 / 4:00:00        1n:1     12000M cnode115         49     0.00000001
+2272291_196 batch:normal npillai1:pi_ferra  objectFeatur  R       24:02 / 4:00:00        1n:1     12000M cnode263         49     0.00000001
+2272291_195 batch:normal npillai1:pi_ferra  objectFeatur  R       24:12 / 4:00:00        1n:1     12000M cnode119         49     0.00000001
+2272291_194 batch:normal npillai1:pi_ferra  objectFeatur  R       24:19 / 4:00:00        1n:1     12000M cnode203         49     0.00000001
+2272291_193 batch:normal npillai1:pi_ferra  objectFeatur  R       24:23 / 4:00:00        1n:1     12000M cnode131         49     0.00000001
+2272291_192 batch:normal npillai1:pi_ferra  objectFeatur  R       24:36 / 4:00:00        1n:1     12000M cnode142         49     0.00000001
+2272291_191 batch:normal npillai1:pi_ferra  objectFeatur  R       24:48 / 4:00:00        1n:1     12000M cnode226         49     0.00000001
+2272291_190 batch:normal npillai1:pi_ferra  objectFeatur  R       24:54 / 4:00:00        1n:1     12000M cnode135         49     0.00000001
+2272291_189 batch:normal npillai1:pi_ferra  objectFeatur  R       24:58 / 4:00:00        1n:1     12000M cnode145         49     0.00000001
+2272291_188 batch:normal npillai1:pi_ferra  objectFeatur  R       25:01 / 4:00:00        1n:1     12000M cnode220         49     0.00000001
+2272291_187 batch:normal npillai1:pi_ferra  objectFeatur  R       25:19 / 4:00:00        1n:1     12000M cnode149         49     0.00000001
+2272291_186 batch:normal npillai1:pi_ferra  objectFeatur  R       25:20 / 4:00:00        1n:1     12000M cnode136         49     0.00000001
+2272291_185 batch:normal npillai1:pi_ferra  objectFeatur  R       25:37 / 4:00:00        1n:1     12000M cnode119         49     0.00000001
+2189466_122 high_:medium     zuj1:pi_boot   kick_897-985  R       25:40 / 7:06:00        1n:36    62.50G cnode009         49     0.00000001
+2272291_184 batch:normal npillai1:pi_ferra  objectFeatur  R       25:41 / 4:00:00        1n:1     12000M cnode130         49     0.00000001
+2189466_122 high_:medium     zuj1:pi_boot   kick_897-985  R       25:45 / 7:06:00        1n:36    62.50G cnode031         49     0.00000001
+2272291_182 batch:normal npillai1:pi_ferra  objectFeatur  R       26:01 / 4:00:00        1n:1     12000M cnode213         49     0.00000001
+2272291_183 batch:normal npillai1:pi_ferra  objectFeatur  R       26:01 / 4:00:00        1n:1     12000M cnode247         49     0.00000001
+2272291_180 batch:normal npillai1:pi_ferra  objectFeatur  R       26:06 / 4:00:00        1n:1     12000M cnode208         49     0.00000001
+2272291_181 batch:normal npillai1:pi_ferra  objectFeatur  R       26:06 / 4:00:00        1n:1     12000M cnode115         49     0.00000001
+2272291_179 batch:normal npillai1:pi_ferra  objectFeatur  R       26:14 / 4:00:00        1n:1     12000M cnode264         49     0.00000001
+2272291_178 batch:normal npillai1:pi_ferra  objectFeatur  R       26:18 / 4:00:00        1n:1     12000M cnode115         49     0.00000001
+2272291_177 batch:normal npillai1:pi_ferra  objectFeatur  R       26:26 / 4:00:00        1n:1     12000M cnode146         49     0.00000001
+2272291_176 batch:normal npillai1:pi_ferra  objectFeatur  R       26:28 / 4:00:00        1n:1     12000M cnode234         49     0.00000001
+2272291_172 batch:normal npillai1:pi_ferra  objectFeatur  R       26:32 / 4:00:00        1n:1     12000M cnode213         49     0.00000001
+2272291_173 batch:normal npillai1:pi_ferra  objectFeatur  R       26:32 / 4:00:00        1n:1     12000M cnode245         49     0.00000001
+2272291_174 batch:normal npillai1:pi_ferra  objectFeatur  R       26:32 / 4:00:00        1n:1     12000M cnode250         49     0.00000001
+2272291_175 batch:normal npillai1:pi_ferra  objectFeatur  R       26:32 / 4:00:00        1n:1     12000M cnode259         49     0.00000001
+2272291_171 batch:normal npillai1:pi_ferra  objectFeatur  R       26:37 / 4:00:00        1n:1     12000M cnode130         49     0.00000001
+2272291_170 batch:normal npillai1:pi_ferra  objectFeatur  R       26:38 / 4:00:00        1n:1     12000M cnode135         49     0.00000001
+2272291_169 batch:normal npillai1:pi_ferra  objectFeatur  R       26:44 / 4:00:00        1n:1     12000M cnode135         49     0.00000001
+2272291_168 batch:normal npillai1:pi_ferra  objectFeatur  R       27:18 / 4:00:00        1n:1     12000M cnode146         49     0.00000001
+2272291_167 batch:normal npillai1:pi_ferra  objectFeatur  R       27:49 / 4:00:00        1n:1     12000M cnode241         49     0.00000001
+2272291_166 batch:normal npillai1:pi_ferra  objectFeatur  R       27:59 / 4:00:00        1n:1     12000M cnode210         49     0.00000001
+2272291_164 batch:normal npillai1:pi_ferra  objectFeatur  R       28:02 / 4:00:00        1n:1     12000M cnode247         49     0.00000001
+2272291_165 batch:normal npillai1:pi_ferra  objectFeatur  R       28:02 / 4:00:00        1n:1     12000M cnode251         49     0.00000001
+2272291_163 batch:normal npillai1:pi_ferra  objectFeatur  R       28:26 / 4:00:00        1n:1     12000M cnode148         49     0.00000001
+2272291_161 batch:normal npillai1:pi_ferra  objectFeatur  R       29:02 / 4:00:00        1n:1     12000M cnode214         49     0.00000001
+2272291_162 batch:normal npillai1:pi_ferra  objectFeatur  R       29:02 / 4:00:00        1n:1     12000M cnode246         49     0.00000001
+2272291_160 batch:normal npillai1:pi_ferra  objectFeatur  R       29:27 / 4:00:00        1n:1     12000M cnode211         49     0.00000001
+2272291_158 batch:normal npillai1:pi_ferra  objectFeatur  R       30:00 / 4:00:00        1n:1     12000M cnode245         49     0.00000001
+2272291_159 batch:normal npillai1:pi_ferra  objectFeatur  R       30:00 / 4:00:00        1n:1     12000M cnode259         49     0.00000001
+2272291_157 batch:normal npillai1:pi_ferra  objectFeatur  R       31:02 / 4:00:00        1n:1     12000M cnode249         49     0.00000001
+2272291_152 batch:normal npillai1:pi_ferra  objectFeatur  R       31:32 / 4:00:00        1n:1     12000M cnode252         49     0.00000001
+2272291_151 batch:normal npillai1:pi_ferra  objectFeatur  R       31:57 / 4:00:00        1n:1     12000M cnode225         49     0.00000001
+2189466_122 high_:medium     zuj1:pi_boot   kick_897-985  R       33:32 / 7:06:00        1n:36    62.50G cnode008         49     0.00000001
+2189466_122 high_:medium     zuj1:pi_boot   kick_897-985  R       39:12 / 7:06:00        1n:36    62.50G cnode033         49     0.00000001
+2182994_992 high_:medium   markj1:pi_boot   kick_700-129  R       39:46 / 7:06:00        1n:36    62.50G cnode043         49     0.00000001
+2182994_991 high_:medium   markj1:pi_boot   kick_700-129  R       39:54 / 7:06:00        1n:36    62.50G cnode035         49     0.00000001
+2182994_990 high_:medium   markj1:pi_boot   kick_700-129  R       40:47 / 7:06:00        1n:36    62.50G cnode042         49     0.00000001
+2189466_122 high_:medium     zuj1:pi_boot   kick_897-985  R       41:10 / 7:06:00        1n:36    62.50G cnode006         49     0.00000001
+2182994_989 high_:medium   markj1:pi_boot   kick_700-129  R       43:30 / 7:06:00        1n:36    62.50G cnode005         49     0.00000001
+2272291_144 batch:normal npillai1:pi_ferra  objectFeatur  R     1:13:46 / 4:00:00        1n:1     12000M cnode103         49     0.00000001
+2272291_145 batch:normal npillai1:pi_ferra  objectFeatur  R     1:13:46 / 4:00:00        1n:1     12000M cnode103         49     0.00000001
+2272291_146 batch:normal npillai1:pi_ferra  objectFeatur  R     1:13:46 / 4:00:00        1n:1     12000M cnode103         49     0.00000001
+2272291_147 batch:normal npillai1:pi_ferra  objectFeatur  R     1:13:46 / 4:00:00        1n:1     12000M cnode103         49     0.00000001
+2272291_148 batch:normal npillai1:pi_ferra  objectFeatur  R     1:13:46 / 4:00:00        1n:1     12000M cnode103         49     0.00000001
+2272291_143 batch:normal npillai1:pi_ferra  objectFeatur  R     1:24:17 / 4:00:00        1n:1     12000M cnode143         49     0.00000001
+2272291_142 batch:normal npillai1:pi_ferra  objectFeatur  R     1:24:18 / 4:00:00        1n:1     12000M cnode137         49     0.00000001
+2272291_141 batch:normal npillai1:pi_ferra  objectFeatur  R     1:25:03 / 4:00:00        1n:1     12000M cnode147         49     0.00000001
+2272291_140 batch:normal npillai1:pi_ferra  objectFeatur  R     1:25:12 / 4:00:00        1n:1     12000M cnode139         49     0.00000001
+2272291_139 batch:normal npillai1:pi_ferra  objectFeatur  R     1:25:42 / 4:00:00        1n:1     12000M cnode147         49     0.00000001
+2272291_138 batch:normal npillai1:pi_ferra  objectFeatur  R     1:25:46 / 4:00:00        1n:1     12000M cnode144         49     0.00000001
+2272291_137 batch:normal npillai1:pi_ferra  objectFeatur  R     1:25:49 / 4:00:00        1n:1     12000M cnode147         49     0.00000001
+2272291_136 batch:normal npillai1:pi_ferra  objectFeatur  R     1:26:28 / 4:00:00        1n:1     12000M cnode140         49     0.00000001
+2272291_135 batch:normal npillai1:pi_ferra  objectFeatur  R     1:26:34 / 4:00:00        1n:1     12000M cnode140         49     0.00000001
+2272291_134 batch:normal npillai1:pi_ferra  objectFeatur  R     1:26:35 / 4:00:00        1n:1     12000M cnode133         49     0.00000001
+ 2272291_23 batch:normal npillai1:pi_ferra  objectFeatur  R     1:53:18 / 4:00:00        1n:1     12000M cnode272         49     0.00000001
+ 2272291_22 batch:normal npillai1:pi_ferra  objectFeatur  R     2:00:47 / 4:00:00        1n:1     12000M cnode264         49     0.00000001
+ 2272291_21 batch:normal npillai1:pi_ferra  objectFeatur  R     2:02:53 / 4:00:00        1n:1     12000M cnode234         49     0.00000001
+ 2272291_20 batch:normal npillai1:pi_ferra  objectFeatur  R     2:03:04 / 4:00:00        1n:1     12000M cnode265         49     0.00000001
+ 2272291_19 batch:normal npillai1:pi_ferra  objectFeatur  R     2:03:34 / 4:00:00        1n:1     12000M cnode219         49     0.00000001
+ 2272291_18 batch:normal npillai1:pi_ferra  objectFeatur  R     2:03:38 / 4:00:00        1n:1     12000M cnode207         49     0.00000001
+ 2272291_17 batch:normal npillai1:pi_ferra  objectFeatur  R     2:04:05 / 4:00:00        1n:1     12000M cnode226         49     0.00000001
+ 2272291_16 batch:normal npillai1:pi_ferra  objectFeatur  R     2:05:00 / 4:00:00        1n:1     12000M cnode275         49     0.00000001
+ 2272291_15 batch:normal npillai1:pi_ferra  objectFeatur  R     2:05:04 / 4:00:00        1n:1     12000M cnode275         49     0.00000001
+ 2272291_14 batch:normal npillai1:pi_ferra  objectFeatur  R     2:05:49 / 4:00:00        1n:1     12000M cnode255         49     0.00000001
+ 2272291_13 batch:normal npillai1:pi_ferra  objectFeatur  R     2:05:53 / 4:00:00        1n:1     12000M cnode208         49     0.00000001
+ 2272291_12 batch:normal npillai1:pi_ferra  objectFeatur  R     2:06:28 / 4:00:00        1n:1     12000M cnode263         49     0.00000001
+2272290_333 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode227         49     0.00000001
+2272290_334 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode232         49     0.00000001
+2272290_336 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode266         49     0.00000001
+2272290_337 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode283         49     0.00000001
+2272290_346 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode261         49     0.00000001
+2272290_347 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode262         49     0.00000001
+  2272291_4 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode205         49     0.00000001
+  2272291_7 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode276         49     0.00000001
+  2272291_9 batch:normal npillai1:pi_ferra  objectFeatur  R     2:08:06 / 4:00:00        1n:1     12000M cnode277         49     0.00000001
+2272290_318 batch:normal npillai1:pi_ferra  objectFeatur  R     2:14:23 / 4:00:00        1n:1     12000M cnode278         49     0.00000001
+    2176925 high_:long+  bennettj:pi_benne  d-l-Ag2GeS3   R     2:40:46 / 3-00:00:00     2n:32      500M cnode[002-003]   49     0.00000001
+2272290_250 batch:normal npillai1:pi_ferra  objectFeatur  R     2:54:04 / 4:00:00        1n:1     12000M cnode273         49     0.00000001
+    2176924 high_:long+  bennettj:pi_benne  d-l-Ag2GeS3   R     3:33:16 / 3-00:00:00     2n:32      500M cnode[002-003]   49     0.00000001
+    2193018 batch:medium   wines1:pi_ataca  CrS-627       R     7:16:59 / 16:00:00       1n:16    60000M cnode106         49     0.00000001
+    2192997 batch:medium   wines1:pi_ataca  CrS-627       R     7:21:40 / 16:00:00       1n:16    60000M cnode114         49     0.00000001
+    2192982 batch:medium   wines1:pi_ataca  CrS-627       R     8:15:30 / 16:00:00       1n:16    60000M cnode111         49     0.00000001
+    2192966 batch:medium   wines1:pi_ataca  CrS-627       R     9:16:33 / 16:00:00       1n:16    60000M cnode122         49     0.00000001
+    2192960 batch:medium   wines1:pi_ataca  CrS-627       R     9:31:07 / 16:00:00       1n:16    60000M cnode118         49     0.00000001
+    2192952 batch:medium   wines1:pi_ataca  CrS-627       R     9:49:38 / 16:00:00       1n:16    60000M cnode123         49     0.00000001
+    2192910 batch:medium   wines1:pi_ataca  CrS-627       R    10:20:03 / 16:00:00       1n:16    60000M cnode116         49     0.00000001
+    2192907 batch:medium   wines1:pi_ataca  CrS-627       R    11:47:16 / 16:00:00       1n:16    60000M cnode126         49     0.00000001
+    2192874 batch:medium   wines1:pi_ataca  CrS-627       R    12:56:27 / 16:00:00       1n:16    60000M cnode109         49     0.00000001
+    2192855 batch:medium   wines1:pi_ataca  CrS-627       R    13:58:17 / 16:00:00       1n:16    60000M cnode128         49     0.00000001
+    2088892 batch:long+   charaj1:pi_zzbat  medium        R  9-01:12:00 / 12-00:00:00    1n:1          0 cnode274         49     0.00000001
+    2285543 high_:medium mdbadrh1:pi_mlyu   SD3D5_Stagge  R     4:45:02 / 16:00:00       4n:144     375G cnode[010-013]   45     0.00000001
+    2144150 high_:long+   vy57456:pi_zzbat  CAFIRE_narr_  R  2-17:07:10 / 5-00:00:00     1n:1          0 cnode032         45     0.00000001
+    2292573   gpu:medium rpatel12:pi_ferra  bash          R       55:28 / 16:00:00       1n:8     20000M gpunode001       19     0.00000000
+    2085377 batch:long+   charaj1:pi_zzbat  medium        R 10-11:54:04 / 12-00:00:00    1n:1          0 cnode270         19     0.00000000
+    2080557 batch:long+  zzbatmos:pi_zzbat  medium        R 11-10:41:29 / 12-00:00:00    1n:1          0 cnode271         19     0.00000000
