@@ -1,0 +1,68 @@
+wget --no-verbose -r --cut-dirs 3 -np -nH -A nc https://airsteam.jpl.nasa.gov/ftp/evan/sergio/
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Sergio,
+
+The good news on the data is that I ran my summarizing job and you can now get all the data from Sept 2002
+from the same place, https://airsteam.jpl.nasa.gov/ftp/evan/sergio/
+
+ 
+The bad news is that apparently we don’t have all of the CCR data at JPL yet, so some months are just
+placeholder empty files:
+
+   2006:  9, 11, 12   
+   2008:  8,9,11,12  
+   2020:  9
+
+probably some of the other months aren’t quite as complete as we’d like either.
+
+I’ll ask for these to be pulled from GES DISC but it could take weeks.
+
+  -- Evan
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+It’s actually running quite quickly.  Less than 3 hours per job, and I can run all 19 years of
+one month in parallel without too much competition for resources.
+
+You can find the files for January of all the years in https://airsteam.jpl.nasa.gov/ftp/evan/sergio/
+
+By morning I’ll have April, July, and October.
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I’ll fix xtrack in the next data.
+
+Cloud clearing makes one clear spectrum from 9 cloudy spectra, so there are about 10 million
+cleared spectra per month.  I’m doing QC to discard the 20% where cloud clearing got the worst scores, so 8 million
+is right about what I’d expect.
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Hi Sergio,
+
+I have a sample file ready for you at:
+   https://airsteam.jpl.nasa.gov/ftp/evan/sergio/stratrad_airs.cc.v7.2003-09.nc
+It is “aggressively self-describing” but let me know if you have any questions. 
+
+I kept the angular dimension.  I just think it’s very important for radiances.  You
+can always collapse this dim in your analyses or use the bins near nadir.  The file
+is 111 MB for one month, so it will be only about 16 GB for the whole mission.
+
+The biggest issue was QC.  The CC rads come with a radiances_QC flag which
+is {0, 1, 2} for {best, good, bad} per channel per spectrum.  they tend to give the
+best QC to the strat chans that need no cloud clearing and worse QC to
+cloudier/more uniformly cloudy scenes and also to channels that peak lower.
+ 
+So if we took that QC at face value we’d be making averaged “spectra” that
+had radically different ensembles of atmospheric states contributing.  Instead
+I looked for any spectrum that had at least 1000 of 2378 channels with QC<2,
+but then I took the whole spectrum, including channels that had QC of 2.
+
+Take a look at the sample file and let me know what you think.  If we can
+converge on the product by the end of Friday, I can generate a good deal
+of gridded data over the weekend.
+
+But I probably can’t do the whole mission in one weekend so we should
+focus.  I’m thinking one or two key months for the whole mission.  Typically
+we would use January and July.  And maybe all twelve months of one
+year so we can map out the seasonal cycle?  2009?
+
+  -- Evan

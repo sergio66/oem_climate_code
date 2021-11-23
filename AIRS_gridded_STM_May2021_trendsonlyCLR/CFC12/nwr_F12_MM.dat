@@ -1,0 +1,332 @@
+%  file: nwr_F12_MM.dat
+%  date: Mon, Mar 8, 2021 2:29:42 PM
+%  
+%  Chloroflurocarbon-12 (F12) data from hourly in situ samples analyzed on a gas chromatograph located 
+%  at Niwot Ridge (NWR), Colorado (C-1 site:  40.04 N, 105.54 W, elevation:  3018 m)
+%  
+%  Atmospheric Measurements from the NOAA/ESRL Chromatograph for Atmospheric Trace Species 
+%  (CATS) Program.  This GC replaces the RITS GCs operated during the period of 1986 through 2000.
+%  This work was funded in part by the Atmospheric Chemistry Project of NOAA's Climate and
+%  Global Change Program.
+%  
+%  (PIs) Geoffrey S. Dutton, Dr. James W. Elkins, Dr. Bradley D. Hall
+%  
+%  National Oceanic and Atmospheric Administration (NOAA)
+%  Earth System Research Laboratory (ESRL)
+%  325 Broadway, R/GML
+%  Boulder, CO 80305-3328
+%  
+%  Email:  Geoff.Dutton@noaa.gov; James.W.Elkins@noaa.gov; Bradley.Hall@noaa.gov
+%  Phone:      (303) 497-6086      (303) 497-6224        (303) 497-7011
+%  Fax:   (303) 497-6290
+%  
+%  See (http://www.esrl.noaa.gov/gmd/obop/) for station statistics and personnel.
+%  
+%  Data use policy:
+%  If you use this data in a publication or report, we would appreciate that you contact the principal
+%  investigators (PIs) first and discuss your interests.  We are trying to encourage scientific discussion.
+%  The PIs can discuss the quality of the data and any potential problems with its analysis.  Recent data (less
+%  than 1.5 years) are considered preliminary.  Please contact the PIs for more information.
+%  
+%  The data should be cited in presentations or publications as the flowing:  Chloroflurocarbon-12 data from 
+%  the NOAA/ESRL halocarbons in situ program. 
+%  
+%  DOI:  http://doi.org/10.7289/V5X0659V
+%  
+%  Calibration scale used:  NOAA 2008
+%  
+%  More information about the calibration scale can be found at: 
+%  http://www.esrl.noaa.gov/gmd/ccl/
+%  
+%  The CATS GCs sample air once an hour.  Monthly median data are provided in parts-per-trillion, ppt. 
+%  Abbreviations used:
+%  yr=year, mon=month, m=monthly data; gc=type of sample--in situ GC data, sd=standard deviation of samples,
+%  n=number of samples, brw=Pt. Barrow, Alaska, sum=Summit, Greenland, nwr= Niwot Ridge, Colorado
+%  mlo=Mauna Loa, Hawaii, smo = American Samoa, spo=South Pole, Antarctica
+%  NAN=not a number or no data, and space(s) is the delimiter.
+%  
+%  The standard deviation (unc) reported is the estimate of insturmental precision.  
+%  The standard deviation (sd) reported is the estimate of atmospheric variability.  
+%  
+%  year, month, monthly median of F12 in ppt, uncertainty (unc), std. dev. (sd), number of samples
+%
+% F12catsNWRyr F12catsNWRmon F12catsNWRm F12catsNWRunc F12catsNWRsd F12catsNWRn
+1998       1     nan        nan       nan       0
+1998       2     nan        nan       nan       0
+1998       3     nan        nan       nan       0
+1998       4     nan        nan       nan       0
+1998       5     nan        nan       nan       0
+1998       6     nan        nan       nan       0
+1998       7     nan        nan       nan       0
+1998       8     nan        nan       nan       0
+1998       9     nan        nan       nan       0
+1998      10     nan        nan       nan       0
+1998      11     nan        nan       nan       0
+1998      12     nan        nan       nan       0
+1999       1     nan        nan       nan       0
+1999       2     nan        nan       nan       0
+1999       3     nan        nan       nan       0
+1999       4     nan        nan       nan       0
+1999       5     nan        nan       nan       0
+1999       6     nan        nan       nan       0
+1999       7     nan        nan       nan       0
+1999       8     nan        nan       nan       0
+1999       9     nan        nan       nan       0
+1999      10     nan        nan       nan       0
+1999      11     nan        nan       nan       0
+1999      12     nan        nan       nan       0
+2000       1     nan        nan       nan       0
+2000       2     nan        nan       nan       0
+2000       3     nan        nan       nan       0
+2000       4     nan        nan       nan       0
+2000       5     nan        nan       nan       0
+2000       6     nan        nan       nan       0
+2000       7     nan        nan       nan       0
+2000       8     nan        nan       nan       0
+2000       9     nan        nan       nan       0
+2000      10     nan        nan       nan       0
+2000      11     nan        nan       nan       0
+2000      12     nan        nan       nan       0
+2001       1     nan        nan       nan       0
+2001       2     nan        nan       nan       0
+2001       3     nan        nan       nan       0
+2001       4     nan        nan       nan       0
+2001       5     nan        nan       nan       0
+2001       6    546.77      1.30      3.05    382
+2001       7    546.53      6.26      3.42    600
+2001       8    545.55      6.03      2.75    529
+2001       9    545.84      2.59      2.96    702
+2001      10    545.78      3.62      2.52    708
+2001      11    546.78      3.46      2.82    542
+2001      12    547.29      3.44      2.95    280
+2002       1    548.35      5.67      3.87     38
+2002       2    548.78      8.31      4.06    339
+2002       3    547.14      3.99      3.70    519
+2002       4    544.79      7.75      3.52    622
+2002       5    545.51      5.12      4.21    700
+2002       6    546.09      1.67      3.08    681
+2002       7    545.70      1.20      2.90    708
+2002       8    546.68      1.30      2.94    735
+2002       9    547.58      1.48      3.02    712
+2002      10    546.99      1.48      3.14    720
+2002      11    544.14      1.64      3.08    706
+2002      12    543.87      1.65      2.63    707
+2003       1    542.95      1.87      2.86    648
+2003       2    543.50      1.36      2.46    486
+2003       3    542.98      1.54      2.05    463
+2003       4    542.67      1.18      2.40    684
+2003       5    541.25      1.32      2.38    629
+2003       6     nan        nan       nan       0
+2003       7     nan        nan       nan       0
+2003       8    544.96      1.41      3.33    306
+2003       9    544.59      1.45      3.43    654
+2003      10    544.83      1.65      2.85    707
+2003      11    544.48      2.07      2.92    707
+2003      12    544.15      2.27      3.00    731
+2004       1    543.64      1.99      3.39    671
+2004       2    544.09      1.84      3.44    659
+2004       3    543.64      2.03      2.96    683
+2004       4    543.74      1.67      2.60    711
+2004       5    543.07      1.56      3.26    606
+2004       6     nan        nan       nan       0
+2004       7    543.63      1.75      2.55    291
+2004       8    543.30      1.93      2.69    716
+2004       9    543.25      2.67      3.44    660
+2004      10    543.47      2.31      2.35    592
+2004      11    543.02      1.38      1.36    606
+2004      12    542.83      1.67      1.64    722
+2005       1    542.79      1.67      1.42    615
+2005       2    542.74      2.30      1.81    619
+2005       3    542.30      1.73      1.52    625
+2005       4    542.26      1.32      1.92    673
+2005       5    542.36      1.75      1.87    653
+2005       6    542.23      2.31      1.66    153
+2005       7    543.08      1.25      1.75    588
+2005       8    543.02      1.69      2.09    726
+2005       9    542.35      3.34      2.74    539
+2005      10    541.77      4.63      2.76    421
+2005      11    541.46      4.57      2.40    532
+2005      12    540.66      3.03      2.15    570
+2006       1    539.82      1.49      1.32    670
+2006       2    540.26      2.15      1.36    592
+2006       3    539.97      3.08      2.05    592
+2006       4    540.38      2.45      1.77    601
+2006       5    540.65      4.35      3.02    565
+2006       6    539.74      3.57      2.99    675
+2006       7    540.47      2.75      1.08     48
+2006       8     nan        nan       nan       0
+2006       9     nan        nan       nan       0
+2006      10     nan        nan       nan       0
+2006      11     nan        nan       nan       0
+2006      12     nan        nan       nan       0
+2007       1     nan        nan       nan       0
+2007       2     nan        nan       nan       0
+2007       3     nan        nan       nan       0
+2007       4     nan        nan       nan       0
+2007       5     nan        nan       nan       0
+2007       6     nan        nan       nan       0
+2007       7     nan        nan       nan       0
+2007       8     nan        nan       nan       0
+2007       9     nan        nan       nan       0
+2007      10     nan        nan       nan       0
+2007      11    536.57      1.32      1.58    447
+2007      12    536.65      1.16      1.72    522
+2008       1    536.12      1.14      1.57    714
+2008       2    535.63      1.17      1.39    655
+2008       3    535.22      1.26      1.49    715
+2008       4    535.26      1.07      1.30    714
+2008       5    535.04      0.95      1.37    724
+2008       6    534.85      1.00      1.21    716
+2008       7    534.74      1.01      1.23    737
+2008       8    534.62      0.92      1.35    692
+2008       9    534.29      1.08      1.35    637
+2008      10    533.96      1.10      1.30    697
+2008      11    534.30      0.98      1.22    590
+2008      12    534.09      1.03      1.31    720
+2009       1    533.58      1.22      1.54    724
+2009       2    533.51      1.15      1.43    635
+2009       3    533.15      1.01      1.56    701
+2009       4    532.96      1.03      1.49    672
+2009       5    532.43      0.91      1.38    721
+2009       6    532.25      0.94      1.54    714
+2009       7    532.24      1.09      1.31    745
+2009       8    532.24      1.00      1.39    731
+2009       9    532.25      1.07      1.54    682
+2009      10    531.93      1.33      1.53    629
+2009      11    531.89      1.06      1.38    710
+2009      12    531.62      1.17      1.68    525
+2010       1    531.63      1.22      1.42    554
+2010       2    531.17      1.20      1.58    381
+2010       3    531.06      1.16      1.51    673
+2010       4    530.94      1.14      1.49    712
+2010       5    530.71      1.02      1.46    724
+2010       6    530.70      1.05      1.41    719
+2010       7    530.18      0.99      1.38    713
+2010       8    529.86      1.18      1.45    734
+2010       9    529.71      1.15      1.44    706
+2010      10    529.53      1.34      1.60    730
+2010      11    529.26      1.26      1.75    707
+2010      12    529.09      1.41      1.97    673
+2011       1    528.46      1.54      1.87    701
+2011       2    528.05      1.77      2.02    646
+2011       3    527.80      1.60      2.03    567
+2011       4    527.44      1.40      1.93    645
+2011       5    527.42      1.32      1.99    381
+2011       6    526.90      1.31      1.80    294
+2011       7    526.43      1.36      1.93    368
+2011       8    526.22      1.86      2.30    657
+2011       9    525.98      1.82      2.30    697
+2011      10    526.23      1.98      2.29    723
+2011      11    525.82      1.97      2.39    580
+2011      12    525.40      1.63      2.14    632
+2012       1    525.57      1.79      1.94    355
+2012       2     nan        nan       nan       0
+2012       3    524.45      1.35      1.41    304
+2012       4    524.46      1.11      1.50    687
+2012       5    524.12      1.01      1.61    739
+2012       6    523.99      1.25      1.65    643
+2012       7    523.92      1.26      1.72    627
+2012       8    523.84      1.22      1.68    740
+2012       9    524.06      0.88      1.14    703
+2012      10    523.65      2.12      1.57    540
+2012      11    523.49      1.89      1.15    506
+2012      12    523.06      1.69      1.35    569
+2013       1    523.90      0.84      1.11    658
+2013       2    523.55      0.64      1.16    553
+2013       3    522.58      2.93      1.50    526
+2013       4    521.83      2.03      1.56    688
+2013       5    521.74      0.78      0.78    433
+2013       6    521.90      0.85      0.75    717
+2013       7    521.80      0.94      0.73    621
+2013       8    521.47      0.80      0.65    743
+2013       9    521.19      3.46      1.87    620
+2013      10    520.70      3.53      1.74    714
+2013      11    520.55      2.05      1.23    686
+2013      12    520.27      2.37      1.63    270
+2014       1    519.58      2.46      1.57    346
+2014       2    520.60      1.98      1.29    393
+2014       3    520.62      1.86      1.21    333
+2014       4    519.38      1.74      1.12    576
+2014       5    519.04      1.56      0.82    746
+2014       6    518.76      0.97      0.77    669
+2014       7    518.63      0.91      0.57    732
+2014       8    518.37      0.70      0.55    734
+2014       9    518.26      0.80      0.57    361
+2014      10    518.02      0.88      0.86    728
+2014      11    517.73      1.15      0.68    673
+2014      12    517.35      1.24      0.70    649
+2015       1    516.89      1.01      0.72    684
+2015       2    516.32      1.00      0.75    605
+2015       3    516.39      1.10      0.60    719
+2015       4    516.19      0.90      0.65    705
+2015       5    516.03      0.78      0.60    525
+2015       6    515.71      0.81      0.67    574
+2015       7    515.38      1.62      1.22     29
+2015       8    514.64      1.82      1.18    372
+2015       9    515.05      2.08      1.11    648
+2015      10    515.29      1.38      1.02    722
+2015      11    515.33      1.45      0.90    406
+2015      12     nan        nan       nan       0
+2016       1     nan        nan       nan       0
+2016       2     nan        nan       nan       0
+2016       3    512.63      1.82      1.97    622
+2016       4    512.16      1.57      1.75    338
+2016       5     nan        nan       nan       0
+2016       6    511.74      1.07      1.76    202
+2016       7    511.11      6.43      2.17    222
+2016       8    510.54      1.28      1.76    493
+2016       9    510.58      1.86      2.26    693
+2016      10    510.80      1.67      2.20    730
+2016      11    510.00      2.16      2.38    628
+2016      12    509.63      0.90      2.32    689
+2017       1    508.86      0.94      1.97    649
+2017       2    508.78      1.12      2.13    554
+2017       3    508.12      1.31      2.30    520
+2017       4    507.89      1.37      2.28    356
+2017       5    507.87      1.51      2.13    363
+2017       6    508.45      1.37      2.41    357
+2017       7    506.83      1.12      2.52    149
+2017       8     nan        nan       nan       0
+2017       9     nan        nan       nan       0
+2017      10    507.87      0.61      0.78    119
+2017      11    507.74      0.73      0.70    684
+2017      12    507.73      0.69      0.74    651
+2018       1    507.64      0.63      0.77    707
+2018       2    507.41      0.59      0.78    626
+2018       3    507.07      0.76      0.91    701
+2018       4    506.62      0.91      0.89    707
+2018       5    506.19      1.03      0.87    745
+2018       6    505.82      1.02      0.93    688
+2018       7    505.31      1.30      1.31    352
+2018       8    504.84      1.32      1.28    196
+2018       9    504.28      1.09      0.86    528
+2018      10    504.05      2.06      0.94    136
+2018      11    504.50      1.24      0.94    247
+2018      12    504.74      1.58      1.01    115
+2019       1     nan        nan       nan       0
+2019       2     nan        nan       nan       0
+2019       3     nan        nan       nan       0
+2019       4    503.71      3.39      1.04    154
+2019       5    503.41      1.40      0.87    376
+2019       6    503.20      2.90      1.04     58
+2019       7    502.77      0.65      0.75    527
+2019       8    502.62      0.68      0.73    716
+2019       9    503.00      0.89      0.88    532
+2019      10     nan        nan       nan       0
+2019      11     nan        nan       nan       0
+2019      12     nan        nan       nan       0
+2020       1     nan        nan       nan       0
+2020       2     nan        nan       nan       0
+2020       3     nan        nan       nan       0
+2020       4     nan        nan       nan       0
+2020       5    497.46     14.06      2.54    129
+2020       6    497.67      5.34      2.10    491
+2020       7    497.50      3.58      2.12    303
+2020       8    497.12      3.81      2.16    647
+2020       9    497.42      3.00      1.69    393
+2020      10    497.69      3.51      1.55    707
+2020      11    497.25      3.87      1.57    653
+2020      12    495.98      2.57      1.70    571
+2021       1    494.90      3.73      2.22    511
+2021       2    493.89      2.58      2.79    665
+2021       3    492.65      3.79      3.07     99

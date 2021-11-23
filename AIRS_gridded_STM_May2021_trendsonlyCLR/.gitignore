@@ -1,0 +1,11 @@
+*.mat
+*.pdf
+*.fig
+*.png
+
+WORKS*
+Figs*
+UNUSED*
+TESTOLR_KCARTA
+
+PDF*

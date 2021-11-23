@@ -1,0 +1,653 @@
+diffing /umbc/xfs2/strow/asl/s1/sergio/home/MATLABCODE/oem_pkg_run/AIRS_gridded_May2021_trendsonlyCLR and /umbc/xfs2/strow/asl/s1/sergio/home/MATLABCODE/oem_pkg_run/AIRS_gridded_May2021_trendsonlyCLR/WORKS_May18_2021_Great_AIRS_STM/ 
+ ========>>>>>>>> diffing anom_T_WV_plots.m 
+ ========>>>>>>>> diffing anom_T_WV_plots_compare2sets.m 
+ ========>>>>>>>> diffing anom_T_WV_plots_onelatbin.m 
+ ========>>>>>>>> diffing build_cov_matrices.m 
+60a61
+> 
+67,71c68
+<   cov_set = [1.0  0.05          0.05            1/2       0.15/25           0.15/25           1/2      0.15/25         0.15/25             1/2        20*1E-6     20*1E-6  20*1E-6];  %worked gret AIRS STM, though WV O3 mebbe a little too tight
+< 
+<   %% after AIRS STM 2021, testing quantile 16
+< %  cov_set = [1.0  0.05          0.05            1/2       0.15/10           0.15/10           1/2      0.15/10         0.15/10             1/2        20*1E-6     20*1E-6  20*1E-6];  %
+< %  cov_set = [1.0  0.05          0.05            1/2       0.15/05           0.15/05           1/2      0.15/05         0.15/05             1/2        20*1E-6     20*1E-6  20*1E-6];  %
+---
+>   cov_set = [1.0  0.05          0.05            1/2       0.15/25           0.15/25           1/2      0.15/25         0.15/25             1/2        20*1E-6     20*1E-6  20*1E-6];  %cov_set([2 3 8 9]) = 1e-10; cov_set([11 12 13]) = 1e10;
+192,193c189
+<   fmatd(1:3) = fmatd(1:3)*1e-1;    %% gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates   *** >>>  WORKS FOR AIRS STM Oct 2020 and May 2021 <<< ****  
+<   %fmatd(1:3) = fmatd(1:3)*1.0;       %% gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates   *** >>>  WORKS FOR AIRS STM Oct 2020 and May 2021 <<< ****
+---
+>   fmatd(1:3) = fmatd(1:3)*1e-1;    %% gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates   *** >>>  WORKS FOR AIRS STM Oct 2020 <<< ****
+ ========>>>>>>>> diffing build_cov_matrices_GoodSpectralBias_BadTraceGasRates.m 
+ ========>>>>>>>> diffing build_cov_matrices_save_sept30_5pm.m 
+ ========>>>>>>>> diffing build_cov_matrices_test8.m 
+ ========>>>>>>>> diffing build_cov_matrices_worked_great_AIRS_STM_May2021.m 
+ ========>>>>>>>> diffing change_important_topts_settings.m 
+ ========>>>>>>>> diffing check_anomaly_jacs.m 
+ ========>>>>>>>> diffing check_sergio_2012_vs_2002_vs_strow_2012.m 
+ ========>>>>>>>> diffing check_sergio_2012_vs_2002_vs_strow_2012_v2A.m 
+ ========>>>>>>>> diffing check_sergio_2012_vs_2002_vs_strow_2012_v2B.m 
+ ========>>>>>>>> diffing check_sergio_2012_vs_2002_vs_strow_2012_v2C.m 
+ ========>>>>>>>> diffing check_sergio_2012_vs_2002_vs_strow_2012_v2D.m 
+ ========>>>>>>>> diffing choose_goodchans_from_2378.m 
+ ========>>>>>>>> diffing choose_goodchans_from_2645.m 
+ ========>>>>>>>> diffing clust_convert_strowrates2oemrates_anomaly.m 
+ ========>>>>>>>> diffing clust_convert_strowrates2oemrates_anomaly_11year_iasitimespan.m 
+ ========>>>>>>>> diffing clust_convert_strowrates2oemrates_anomaly_nonucal.m 
+ ========>>>>>>>> diffing clust_convert_strowrates2oemrates_anomaly_nonucal_2012.m 
+ ========>>>>>>>> diffing clust_make_sergio_anomaly_nonucal_2012.m 
+ ========>>>>>>>> diffing clust_put_together_jacs.m 
+ ========>>>>>>>> diffing clust_put_together_jacs_clr.m 
+ ========>>>>>>>> diffing clust_run_retrieval_latbins_AIRS_iasitimespan_loop_anomalyV2.m 
+ ========>>>>>>>> diffing clust_run_retrieval_latbins_AIRS_iasitimespan_loop_anomalyV2old.m 
+ ========>>>>>>>> diffing clust_run_retrieval_latbins_AIRS_loop_anomaly.m 
+ ========>>>>>>>> diffing clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m 
+30,31c30,32
+< % JOB = 32
+< % JOB = 47
+---
+> %JOB = 32
+> %JOB = 47
+> %JOB  = 47
+40,44d40
+< iQuantile = 08;  %% 50% so has clouds (hope SST jac can take care of that) and convection
+< iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
+< iQuantile = 14;  %% 
+< iQuantile = 16;  %% hottest, for AIRS STM
+< 
+88,92d83
+<   driver.NorD = -1; %% day, asc
+<   driver.NorD = +1; %% night, desc
+< 
+<   driver.iQuantile = iQuantile;
+< 
+106,125c97,102
+<   %% iNorD > 0 ==> night
+<   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0
+<     driver.outfilename = ['OutputAnomaly_OBS/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iLon,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+<   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0
+<     driver.outfilename = ['OutputAnomaly_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iLon,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+<   elseif driver.i16daytimestep < 0 & driver.NorD > 0
+<     outdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d')];
+<     driver.outfilename = [outdir  '/test' int2str(iLon) '.mat'];
+<   %% iNorD < 0 ==> day
+<   elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0
+<     driver.outfilename = ['OutputAnomaly_OBS_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iLon,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+<   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0
+<     driver.outfilename = ['OutputAnomaly_CAL_Dat/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iLon,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+<   elseif driver.i16daytimestep < 0 & driver.NorD < 0
+<     outdir = ['Output_Day/Quantile' num2str(driver.iQuantile,'%02d')];
+<     driver.outfilename = [outdir  '/test' int2str(iLon) '.mat'];
+<   end
+<   if ~exist(outdir)
+<     mker = ['!mkdir -p ' outdir];
+<     eval(mker);
+---
+>   if topts.ocb_set == 0 & driver.i16daytimestep > 0
+>     driver.outfilename = ['OutputAnomaly_OBS/' num2str(iLon,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+>   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0
+>     driver.outfilename = ['OutputAnomaly_CAL/' num2str(iLon,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+>   elseif driver.i16daytimestep < 0
+>     driver.outfilename = ['Output/test' int2str(iLon) '.mat'];
+ ========>>>>>>>> diffing combinejaclays.m 
+ ========>>>>>>>> diffing compare_BTanomalies_Q08_Q16.m 
+ ========>>>>>>>> diffing compare_anomaly_runs.m 
+ ========>>>>>>>> diffing compare_dayVSnight.m 
+ ========>>>>>>>> diffing compare_era_anomaly_from_fit_and_model.m 
+ ========>>>>>>>> diffing compare_jacs.m 
+ ========>>>>>>>> diffing compare_profile_rates_AIRSL3vsERA.m 
+ ========>>>>>>>> diffing compare_retrievals.m 
+ ========>>>>>>>> diffing compute_chisqr.m 
+ ========>>>>>>>> diffing convert_strowrates2oemrates_airs_iasitimespan.m 
+ ========>>>>>>>> diffing convert_strowrates2oemrates_allskygrid.m 
+ ========>>>>>>>> diffing convert_strowrates2oemrates_allskygrid_transpose.m 
+ ========>>>>>>>> diffing convert_strowrates2oemrates_clr.m 
+ ========>>>>>>>> diffing convert_strowrates2oemrates_clr2.m 
+ ========>>>>>>>> diffing convert_strowrates2oemrates_clr2_asc.m 
+ ========>>>>>>>> diffing convert_strowrates2oemrates_iasi2airs_iasitimespan.m 
+ ========>>>>>>>> diffing cov2lev.m 
+ ========>>>>>>>> diffing driver_gather_gridded_retrieval_results.m 
+9,16c9,10
+< iQuantile = input('clear 30 figs???? (-1 = no = default) ');
+< if length(iQuantile) == 0
+<   iQuantile = -1;
+< end
+< if iQuantile > 0
+<   for ii = 1 : 31
+<     figure(ii); colormap jet
+<   end
+---
+> for ii = 1 : 22
+>   figure(ii); colormap jet
+22,38c16
+< iNorD = input('night (+1) or day (-1)  (+1 = night = default) ');
+< if length(iNorD) == 0
+<   iNorD = +1;
+< end
+< 
+< iQuantile = 16;  %% AIRS STM 2021, hottest
+< iQuantile = 08;  %% 
+< iQuantile = input('Which quantile [(1--16) (99 for orig Q16, done for AIRS STM)]   [16 = Default] : ');
+< if length(iQuantile) == 0
+<   iQuantile = 16;
+< end
+< 
+< if iQuantile <= 16
+<   data_trends = load(['convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+< elseif iQuantile == 99
+<   data_trends = load(['convert_sergio_clearskygrid_obsonly_Q16.mat']);
+< end
+---
+> data_trends = load('convert_sergio_clearskygrid_obsonly.mat');
+50,55c28
+<   if iNorD > 0
+<     fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
+<     fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+<   elseif iNorD < 0
+<     fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+<   end
+---
+>   fname = ['Output/test' num2str(ii) '.mat'];
+137,141c110
+< if iNorD > 0
+<   figure(7); pcolor(X,Y,data_trends.b_desc(:,:,1520));  shading interp; colorbar; title('d/dt BT1231');
+< else
+<   figure(7); pcolor(X,Y,data_trends.b_asc(:,:,1520));  shading interp; colorbar; title('d/dt BT1231');
+< end
+---
+> figure(7); pcolor(X,Y,data_trends.b_desc(:,:,1520));  shading interp; colorbar; title('d/dt BT1231');
+149,153c118,119
+< if iNorD > 0
+<   figure(7); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,1520),72*64,1));  shading interp; colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+< else
+<   figure(7); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_asc(:,:,1520),72*64,1));  shading interp; colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+< end
+---
+> figure(7); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,1520),72*64,1));  shading interp; colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+> 
+160,164c126
+< if iNorD > 0
+<   figure(7); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,1520),72*64,1),5);  colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+< else
+<   figure(7); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,1520),72*64,1),5);  colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+< end
+---
+> figure(7); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,1520),72*64,1),5);  colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+166c128
+< %opts = 'mercator';
+---
+> opts = 'mercator';
+173,178c135,136
+< if iNorD > 0
+<   figure(7); aslmap(7,rlat65,rlon73,smoothn((data_trends.b_desc(:,:,1520)'),1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt BT1231'); caxis([-0.1 +0.1])
+< else
+<   figure(7); aslmap(7,rlat65,rlon73,smoothn((data_trends.b_asc(:,:,1520)'),1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt BT1231'); caxis([-0.1 +0.1])
+< end
+< for ii = 1 : 7; figure(ii); plotaxis2; end
+---
+> figure(7); aslmap(7,rlat65,rlon73,smoothn((data_trends.b_desc(:,:,1520)'),1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt BT1231'); caxis([-0.1 +0.1])
+>   for ii = 1 : 7; figure(ii); plotaxis2; end
+202,206c160
+< if iNorD > 0
+<   figure(7); plot(rlat,nanmean(data_trends.b_desc(:,:,1520),1)); title('zonal BT1231')
+< else
+<   figure(7); plot(rlat,nanmean(data_trends.b_asc(:,:,1520),1)); title('zonal BT1231')
+< end
+---
+> figure(7); plot(rlat,nanmean(data_trends.b_desc(:,:,1520),1)); title('zonal BT1231')
+234,252c188,195
+< if iNorD > 0 
+<   figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix200),72*64,1),5); colorbar; title(['WV 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+<   figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix500),72*64,1),5); colorbar; title(['WV 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+<   figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix800),72*64,1),5); colorbar; title(['WV 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+<   for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]/2); colormap(usa2); plotaxis2; end
+<   figure(25); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,ix200),72*64,1)); colorbar; title(['WV 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+<   figure(26); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,ix500),72*64,1)); colorbar; title(['WV 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+<   figure(27); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,ix800),72*64,1)); colorbar; title(['WV 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+<   for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]/2); colormap(usa2); plotaxis2; end
+< else
+<   figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix200),72*64,1),5); colorbar; title(['WV 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+<   figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix500),72*64,1),5); colorbar; title(['WV 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+<   figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix800),72*64,1),5); colorbar; title(['WV 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+<   for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]/2); colormap(usa2); plotaxis2; end
+<   figure(25); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_asc(:,:,ix200),72*64,1)); colorbar; title(['WV 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+<   figure(26); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_asc(:,:,ix500),72*64,1)); colorbar; title(['WV 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+<   figure(27); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_asc(:,:,ix800),72*64,1)); colorbar; title(['WV 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+<   for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]/2); colormap(usa2); plotaxis2; end
+< end
+---
+> figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix200),72*64,1),5); colorbar; title(['WV 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+> figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix500),72*64,1),5); colorbar; title(['WV 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+> figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix800),72*64,1),5); colorbar; title(['WV 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+> for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]/2); colormap(usa2); plotaxis2; end
+> figure(25); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,ix200),72*64,1)); colorbar; title(['WV 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+> figure(26); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,ix500),72*64,1)); colorbar; title(['WV 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+> figure(27); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,ix800),72*64,1)); colorbar; title(['WV 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+> for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]/2); colormap(usa2); plotaxis2; end
+273,283c216,220
+< if iNorD > 0
+<   figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix200),72*64,1),5); colorbar; title(['T 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+<   figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix500),72*64,1),5); colorbar; title(['T 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+<   figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix800),72*64,1),5); colorbar; title(['T 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+<   for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(usa2); plotaxis2; end
+< else
+<   figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix200),72*64,1),5); colorbar; title(['T 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+<   figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix500),72*64,1),5); colorbar; title(['T 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+<   figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix800),72*64,1),5); colorbar; title(['T 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+<   for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(usa2); plotaxis2; end
+< end
+---
+> figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix200),72*64,1),5); colorbar; title(['T 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+> figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix500),72*64,1),5); colorbar; title(['T 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+> figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix800),72*64,1),5); colorbar; title(['T 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+> for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(usa2); plotaxis2; end
+> 
+297c234
+< aslmap(27,rlat65,rlon73,smoothn((reshape(fluxX.p2x.olrclr,72,64)'),1), [-90 +90],[-180 +180]);
+---
+> slmap(27,rlat65,rlon73,smoothn((reshape(fluxX.p2x.olrclr,72,64)'),1), [-90 +90],[-180 +180]);
+302,304d238
+< %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+< %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+< 
+306c240,334
+< tons_of_aslprint_plots
+---
+> addpath /asl/matlib/plotutils
+> figure(5); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/cfc12_trends_global.pdf');
+> figure(27); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/clrOLR_trends_global.pdf');
+> 
+> %%%%%%%%%%%%%%%%%%%%%%%%%
+> load /home/sergio/MATLABCODE/COLORMAP/LLS/llsmap5.mat
+> 
+> cmax = 0.1;
+> cmax = 0.15
+> cmap = usa2;
+> cmap = llsmap5;
+> 
+> load umbc_trends.mat
+> figure(6); aslmap(6,rlat65,rlon73,smoothn(umbc_st_trend4608',1), [-90 +90],[-180 +180]);  colormap(cmap);  title('d/dt UMBC'); caxis([-cmax +cmax])
+> figure(6); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/st_trends_global.pdf');
+> 
+> figure(7); aslmap(7,rlat65,rlon73,smoothn(airs_quantile16_bt1231_trend4608',1), [-90 +90],[-180 +180]);  colormap(cmap);  title('d/dt BT1231'); caxis([-cmax +cmax])
+> figure(7); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/bt1231_trends_global.pdf');
+> 
+> %%%%%%%%%%
+> giss = load('giss_trends.mat');
+> figure(8); aslmap(8,rlat65,rlon73,smoothn(giss.giss_trend4608',1), [-90 +90],[-180 +180]);  colormap(cmap);  title('d/dt GISS'); caxis([-cmax +cmax])
+> figure(8); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/giss_trends_global.pdf');
+> 
+> plot(giss.giss_trend4608(:),results(:,6),'.'); xlabel('GISS SKT trend K/yr'); ylabel('UMBC SKT trend K/yr');
+> addpath /home/sergio/MATLABCODE/NANROUTINES
+> [r,chisqr,P,sigP,numpts] = nanlinearcorrelation(giss.giss_trend4608(:),results(:,6));
+> 
+> %%%%%%%%%%
+> airsL3 = load('airsL3_trends.mat');
+> figure(9); aslmap(9,rlat65,rlon73,smoothn(airsL3.airsL3_trend4608',1), [-90 +90],[-180 +180]);  colormap(cmap);  title('d/dt AIRSL3'); caxis([-cmax +cmax])
+> figure(9); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/airsL3_trends_global.pdf');
+> 
+> plot(airsL3.airsL3_trend4608(:),results(:,6),'.'); xlabel('AIRSL3 SKT trend K/yr'); ylabel('UMBC SKT trend K/yr');
+> addpath /home/sergio/MATLABCODE/NANROUTINES
+> [r,chisqr,P,sigP,numpts] = nanlinearcorrelation(airsL3.airsL3_trend4608(:),results(:,6));
+> 
+> %%%%%%%%%%
+> figure(7); aslmap(7,rlat65,rlon73,smoothn(airs_quantile16_bt1231_trend4608'-umbc_st_trend4608',1), [-90 +90],[-180 +180]);  
+>   colormap(cmap);  title('d/dt (BT1231-UMBC)'); caxis([-cmax +cmax]/5)
+>   figure(7); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/bt1231-umbc_st_global.pdf');
+> 
+> figure(8); aslmap(8,rlat65,rlon73,smoothn(giss.giss_trend4608'-(reshape(results(:,6),72,64)'),1), [-90 +90],[-180 +180]);  colormap(cmap);  title('d/dt GISS-UMBC'); 
+> caxis([-cmax +cmax])
+> figure(8); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/giss_VS_umbc_trends_global.pdf');
+> 
+> figure(9); aslmap(9,rlat65,rlon73,smoothn(airsL3.airsL3_trend4608'-(reshape(results(:,6),72,64)'),1), [-90 +90],[-180 +180]);  colormap(cmap);  title('d/dt AIRSL3-UMBC'); 
+> caxis([-cmax +cmax])
+> figure(9); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/airsL3_VS_umbc_trends_global.pdf');
+> 
+> %%%%%%%%%%%%%%%%%%%%%%%%%
+> 
+> %% then go to eg find_RH_trends 
+> figure(25); clf
+> pcolor(rlat,pavgLAY(1:97,1000),deltaTlat(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+> junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
+> area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);
+> hold on; plot(area_wgtT(1:97)*1000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+> ylim([1 1000]); caxis([-0.1 +0.1]); colorbar; plotaxis2;
+> 
+> figure(26); clf
+> pcolor(rlat,pavgLAY(1:97,1000),fracWVlat(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+> junk = zeros(size(fracWVlat)); junk = cos(rlat) * ones(1,101);
+> area_wgt_fracWV = nansum(fracWVlat.*junk,1)./nansum(junk,1);
+> hold on; plot(area_wgt_fracWV(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+> ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar; plotaxis2;
+> 
+> figure(27); clf
+> pcolor(rlat,pavgLAY(1:97,1000),deltaRHlat(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+> junk = zeros(size(deltaRHlat)); junk = cos(rlat) * ones(1,100);
+> area_wgtRH = nansum(deltaRHlat.*junk,1)./nansum(junk,1);
+> %hold on; plot(area_wgtRH(1:97)*100,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+> ylim([10 1000]); caxis([-0.5 +0.5]); colorbar; plotaxis2;
+> 
+> %% and to find_O3_trends
+> figure(28); clf
+> pcolor(rlat,pavgLAY(1:97,1000),fracO3lat(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+> junk = zeros(size(fracO3lat)); junk = cos(rlat) * ones(1,101);
+> area_wgt_fracO3 = nansum(fracO3lat.*junk,1)./nansum(junk,1);
+> %hold on; plot(area_wgt_fracO3(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+> ylim([1 100]); caxis([-2 +2]*1e-3); colorbar; plotaxis2; colormap(usa2)
+> 
+> figure(29); clf
+> pcolor(rlat,pavgLAY(1:97,1000),deltaO3lat(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+> junk = zeros(size(deltaO3lat)); junk = cos(rlat) * ones(1,97);
+> area_wgtO3 = nansum(deltaO3lat.*junk,1)./nansum(junk,1);
+> hold on; plot(area_wgtO3(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+> ylim([1 100]); caxis([-0.5 +0.5]*1e-2); colorbar; plotaxis2; colormap(usa2)
+> 
+> for ii=25:29; figure(ii); colormap(usa2); xlabel('Latitude'); ylabel('p(mb)'); end
+> figure(25); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/T_z_trends_zonal.pdf');
+> figure(26); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/fracWV_z_trends_zonal.pdf');
+> figure(27); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/RH_z_trends_zonal.pdf');
+> figure(28); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/fracO3_z_trends_zonal.pdf');
+> figure(29); aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/ppmO3_z_trends_zonal.pdf');
+ ========>>>>>>>> diffing driver_get_fig_image_data.m 
+ ========>>>>>>>> diffing driver_get_fig_image_data_WV.m 
+ ========>>>>>>>> diffing driver_look_at_rtp_stats_files.m 
+ ========>>>>>>>> diffing driver_plot_T_WV_anomaly_retrievals.m 
+ ========>>>>>>>> diffing driver_plot_T_WV_anomaly_retrievals_compare2sets.m 
+ ========>>>>>>>> diffing driver_plot_T_WV_anomaly_retrievals_onebin.m 
+ ========>>>>>>>> diffing driver_plot_T_WV_anomaly_retrievals_onetimestep.m 
+ ========>>>>>>>> diffing driver_put_together_QuantileChoose_trends.m 
+ ========>>>>>>>> diffing driver_put_together_clear_trends.m 
+10,18c10,14
+< % if ~exist('b_obs')
+< %   %load convert_strowrates2oemrates_allskygrid_obsonly.mat
+< %   load convert_sergio_clearskygrid_obsonly_Q16.mat
+< %   b_obs = b_desc;
+< % end
+< 
+< %% these contain Day and Night
+< %% these contain Day and Night
+< %% these contain Day and Night
+---
+> if ~exist('b_obs')
+>   %load convert_strowrates2oemrates_allskygrid_obsonly.mat
+>   load convert_sergio_clearskygrid_obsonly.mat
+>   b_obs = b_desc;
+> end
+42,46d37
+< iQuantile = 16;  %% hottest, used for AIRS STM May 221
+< iQuantile = 08;
+< iQuantile = 04;
+< iQuantile = input('Enter iQuantile to make : ');
+< 
+55,58c46,49
+<     %b_asc(iLon,iLat,:) = x.b_asc(:,iQuantile,2);
+<     %b_desc(iLon,iLat,:) = x.b_desc(:,iQuantile,2);
+<     %b_err_asc(iLon,iLat,:) = x.berr_asc(:,iQuantile,2);
+<     %b_err_desc(iLon,iLat,:) = x.berr_desc(:,iQuantile,2);
+---
+>     %b_asc(iLon,iLat,:) = x.b_asc(:,16,2);
+>     %b_desc(iLon,iLat,:) = x.b_desc(:,16,2);
+>     %b_err_asc(iLon,iLat,:) = x.berr_asc(:,16,2);
+>     %b_err_desc(iLon,iLat,:) = x.berr_desc(:,16,2);
+61,66c52,57
+<     b_asc(iLon,iLat,:) = x.dbt_asc(:,iQuantile);
+<     b_desc(iLon,iLat,:) = x.dbt_desc(:,iQuantile);
+<     b_err_asc(iLon,iLat,:) = x.dbt_err_asc(:,iQuantile);
+<     b_err_desc(iLon,iLat,:) = x.dbt_err_desc(:,iQuantile);
+<     lagcor_obs_anom_asc(iLon,iLat,:)  = x.lag_asc(:,iQuantile);
+<     lagcor_obs_anom_desc(iLon,iLat,:) = x.lag_desc(:,iQuantile);
+---
+>     b_asc(iLon,iLat,:) = x.dbt_asc(:,16);
+>     b_desc(iLon,iLat,:) = x.dbt_desc(:,16);
+>     b_err_asc(iLon,iLat,:) = x.dbt_err_asc(:,16);
+>     b_err_desc(iLon,iLat,:) = x.dbt_err_desc(:,16);
+>     lagcor_obs_anom_asc(iLon,iLat,:)  = x.lag_asc(:,16);
+>     lagcor_obs_anom_desc(iLon,iLat,:) = x.lag_desc(:,16);
+77,79c68
+< 
+< saver = ['save convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor*'];
+< eval(saver);
+---
+> save convert_sergio_clearskygrid_obsonly.mat b_* X Y landfrac salti h lagcor*
+ ========>>>>>>>> diffing driver_run_quick_stats.m 
+ ========>>>>>>>> diffing find_GISS_AIRSL3_trends.m 
+ ========>>>>>>>> diffing find_O3_trends.m 
+62c62
+< figure(31); pcolor(rlat,pavgLAY(1:97,1000),smoothn(deltaO3lat(:,1:97)',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+---
+> figure(28); pcolor(rlat,pavgLAY(1:97,1000),smoothn(deltaO3lat(:,1:97)',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+66,67c66
+< ylim([0.1 100]); caxis([-0.5 +0.5]*4e-2); title('Zonal d/dt O3 UMBC'); %colorbar; plotaxis2; title('d/dt UMBC O3(025 mb)'); 
+< colormap(cmap)
+---
+> ylim([1 100]); caxis([-0.5 +0.5]*2e-2); title('Zonal d/dt O3 UMBC'); %colorbar; plotaxis2; title('d/dt UMBC O3(025 mb)'); 
+ ========>>>>>>>> diffing find_RH_trends.m 
+1,6d0
+< load('llsmap5');
+< 
+< pjunkN = p.plevs(1:100,:)-p.plevs(2:101,:);
+< pjunkD = log(p.plevs(1:100,:)./p.plevs(2:101,:));
+< pavgLAY = pjunkN./pjunkD;
+< 
+79,83c73
+< 
+< cmap = llsmap5;
+< 
+< figure(30); 
+< pcolor(rlat,pavgLAY(1:97,1000),fracWVlat(:,1:97)'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+---
+> pcolor(rlat,pavgLAY(1:97,1000),fracWVlat(:,1:97)'); colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+86,89c76,78
+< %hold on; plot(area_wgt_fracWV(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+< ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('horizontal'); %plotaxis2;
+< title(['Zonal d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+< colormap(cmap)
+---
+> hold on; plot(area_wgt_fracWV(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+> ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar; plotaxis2;
+> 
+116c105
+< ylim([10 1000]); caxis([-0.25 +0.25]); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt RH UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+---
+> ylim([100 1000]); caxis([-0.25 +0.25]); colorbar('horizontal'); colormap(cmap); title('Zonal d/dt RH UMBC') %plotaxis2;
+138c127
+< figure(27); clf; aslmap(27,rlat65,rlon73,smoothn(reshape(deltaT(i500,:),72,64)',1), [-90 +90],[-180 +180]);
+---
+> figure(27); aslmap(27,rlat65,rlon73,smoothn(reshape(deltaT(i500,:),72,64)',1), [-90 +90],[-180 +180]);
+142d130
+< figure(29); clf
+149c137
+< ylim([10 1000]); caxis([-0.15 +0.15]); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+---
+> ylim([10 1000]); caxis([-0.05 +0.05]); colorbar('horizontal'); colormap(cmap); title('Zonal d/dt T UMBC') %plotaxis2;
+ ========>>>>>>>> diffing find_the_oem_channels.m 
+ ========>>>>>>>> diffing gather_gridded_retrieval_results32.m 
+ ========>>>>>>>> diffing gather_gridded_retrieval_results_plots.m 
+0a1,2
+> for ii = 8:24; figure(ii); clf; colormap jet; end;
+> 
+9,42d10
+< 
+<   ta = tiledlayout(2,1);
+<   % nexttile says go to the obvious, save it’s handle
+< 
+<   taHandle(1)= nexttile;
+<   plot(f,nanmean(rates'),'r',f,nanstd(rates'),'m',f,nanmean(fits'),'b',f,nanstd(fits'),'c'); 
+<   grid; hl = legend('mean(signal)','std(signal)','mean(fit)','std(fit)','location','best','fontsize',10);
+<   xlim([min(f) max(f)])
+< 
+<   taHandle(2)= nexttile;
+<   plot(f,nanmean(rates'-fits'),'b',f,nanstd(rates'-fits'),'c'); 
+<   grid; hl = legend('mean(signal-fit)','std(signal-fit)','location','best','fontsize',10);
+<   xlim([min(f) max(f)])
+< 
+<   % Get rid of all extra space I can
+<   ta.Padding = 'none';
+<   ta.TileSpacing = 'none';  %% or compact
+< 
+<   %taHandle(1).XTickLabel = '';
+<   %taHandle(1).YLabel.String = 'BT(K)';
+<   %taHandle(2).YLabel.String = 'BT(K)';
+<   %taHandle(2).XLabel.String = '\nu cm^{-1}';
+< 
+<   %% https://www.mathworks.com/help/matlab/ref/linkaxes.html
+<   %% synchronize
+<   linkaxes(taHandle,'xy')
+<   %% unsynchronize
+<   linkaxes(taHandle,'off')
+<   
+<   linkaxes(taHandle,'x');
+<   xlabel(ta,'\nu cm^{-1}');
+<   ylabel(ta,'BT(K)');
+<   xticklabels(taHandle(1),{})
+<   xlim([640 1640])
+ ========>>>>>>>> diffing get_anomaly_noise.m 
+ ========>>>>>>>> diffing get_fig_image_data.m 
+ ========>>>>>>>> diffing get_jac.m 
+ ========>>>>>>>> diffing get_jac_fast.m 
+ ========>>>>>>>> diffing get_noaa_cfc12_trends.m 
+ ========>>>>>>>> diffing get_rates.m 
+14,16c14,15
+<       error('bias')
+<       % driver.rateset.rates = real(squeeze(b_bias(ix,:,2))');
+<       % driver.rateset.unc_rates = real(squeeze(b_err_bias(ix,:,2))');
+---
+> %     driver.rateset.rates = real(squeeze(b_bias(ix,:,2))');
+> %     driver.rateset.unc_rates = real(squeeze(b_err_bias(ix,:,2))');
+18,20c17,18
+<       error('cal')
+<       % driver.rateset.rates = real(squeeze(b_cal(ix,:,2))');
+<       % driver.rateset.unc_rates = real(squeeze(b_err_cal(ix,:,2))');
+---
+> %     driver.rateset.rates = real(squeeze(b_cal(ix,:,2))');
+> %     driver.rateset.unc_rates = real(squeeze(b_err_cal(ix,:,2))');
+22,49c20,23
+<       % driver.rateset.rates = real(squeeze(b_obs(ix,:,2))');
+<       % driver.rateset.unc_rates = real(squeeze(b_err_obs(ix,:,2))');
+<      if driver.NorD > 0 
+<        driver.rateset.rates = real(squeeze(b_desc(ix,iy,:)));
+<      elseif driver.NorD < 0 
+<        driver.rateset.rates = real(squeeze(b_asc(ix,iy,:)));
+<      end
+< 
+<     iNnoise = -1;  %% use what was successfully worked for May 2021 AIRS STM
+<     iNnoise = +1;  %% use AIRS stability paper ideas
+<     if iNnoise < 0 
+<       driver.rateset.unc_rates = real(squeeze(b_err_desc(ix,iy,:)));  %% this is what was used for AIRS STM May 2021
+<     else
+<       %% use the ideas from AIRS stability paper
+<       %{
+<         %% see driver_put_together_QuantileChoose_trends.m for conversion from mean_BT to NedT(T(\nu))
+<         addpath /home/sergio/KCARTA/MATLAB
+<         airs_noise = instr_chans2645('airs',2);
+<         load h2645structure.mat
+<         junk = squeeze(mean_BT(ix,iy,:));
+<         junk = nedt_T0_T1(h.vchan,airs_noise,250*ones(h.nchan,1),real(junk));
+<       %}
+<       junk = squeeze(airs_noiseTtrue(ix,iy,:));
+<       N = 0.01 * 12000; %% assume 12000 obs per 16 day interval per tile, and d(quantile) ~ 0.01 ... 
+<       driver.rateset.unc_rates = junk/sqrt(N);
+< 
+<     end
+< 
+---
+> %     driver.rateset.rates = real(squeeze(b_obs(ix,:,2))');
+> %     driver.rateset.unc_rates = real(squeeze(b_err_obs(ix,:,2))');
+>      driver.rateset.rates = real(squeeze(b_desc(ix,iy,:)));
+>      driver.rateset.unc_rates = real(squeeze(b_err_desc(ix,iy,:)));
+ ========>>>>>>>> diffing llsplot.m 
+ ========>>>>>>>> diffing llsplot_for_STM_talk.m 
+ ========>>>>>>>> diffing look_jacs.m 
+ ========>>>>>>>> diffing loop_clust_run_retrieval_latbins_AIRS_loop_anomaly.m 
+ ========>>>>>>>> diffing make_oneyear_avg_jac_from_anomalyjacs.m 
+ ========>>>>>>>> diffing map_2834_to_2645.m 
+ ========>>>>>>>> diffing matlab_diary_sept6.m 
+ ========>>>>>>>> diffing mver_output_anom.m 
+ ========>>>>>>>> diffing nc_rates.m 
+ ========>>>>>>>> diffing nice_output.m 
+ ========>>>>>>>> diffing oops_more_bad_chans.m 
+ ========>>>>>>>> diffing oops_more_bad_chans0.m 
+ ========>>>>>>>> diffing plot_tracegas_VS_latbin_anomaly_runs.m 
+ ========>>>>>>>> diffing quick_anom_T_WV_plots.m 
+ ========>>>>>>>> diffing quick_anom_T_WV_plots_compare2sets.m 
+ ========>>>>>>>> diffing quick_anom_T_WV_plots_onelatbin.m 
+ ========>>>>>>>> diffing quick_trends_plots.m 
+11c11
+<     load convert_sergio_clearskygrid_obsonly_Q16.mat
+---
+>     load convert_sergio_clearskygrid_obsonly.mat
+ ========>>>>>>>> diffing quickanom.m 
+ ========>>>>>>>> diffing read_loop_output.m 
+ ========>>>>>>>> diffing read_the_anom_T_WV_retrievals.m 
+ ========>>>>>>>> diffing read_the_anom_T_WV_retrievals_compare2sets.m 
+ ========>>>>>>>> diffing read_the_anom_T_WV_retrievals_onelatbin.m 
+ ========>>>>>>>> diffing read_the_anom_T_WV_retrievals_onetimestep.m 
+ ========>>>>>>>> diffing read_the_anom_retrievals_spectra.m 
+ ========>>>>>>>> diffing read_the_anom_retrievals_spectra_40individual_latbins.m 
+ ========>>>>>>>> diffing replace_time_cfc11jac.m 
+ ========>>>>>>>> diffing replace_time_cfc12jac.m 
+ ========>>>>>>>> diffing replace_time_ch4jac.m 
+ ========>>>>>>>> diffing replace_time_co2_3layjac.m 
+ ========>>>>>>>> diffing replace_time_co2jac.m 
+ ========>>>>>>>> diffing replace_time_n2ojac.m 
+ ========>>>>>>>> diffing reset_plot_anom_retrievals.m 
+ ========>>>>>>>> diffing run.m 
+ ========>>>>>>>> diffing run_retrieval_latbins_AIRS.m 
+ ========>>>>>>>> diffing run_retrieval_latbins_AIRS_loop.m 
+ ========>>>>>>>> diffing save_rate_fit_spectra.m 
+ ========>>>>>>>> diffing screen_move.m 
+ ========>>>>>>>> diffing see_clust_put_together_jacs_clr.m 
+ ========>>>>>>>> diffing span_data.m 
+ ========>>>>>>>> diffing strow_override_defaults_latbins_AIRS.m 
+ ========>>>>>>>> diffing strow_override_defaults_latbins_AIRS_fewlays.m 
+45d44
+< settings.NorD = +1;                    %% [+1] night/desc   -1 : day/asc
+49c48
+<                             {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'resetnorm2one'},{'UMBCvsERAjac'},{'NorD'}];
+---
+>                             {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'resetnorm2one'},{'UMBCvsERAjac'}];
+105,113c104
+< 
+<       %% see driver_put_together_clear_trends.m
+<       %if driver.iQuantile == 16
+<       %  driver.rateset.datafile  = 'convert_sergio_clearskygrid_obsonly.mat';           
+<       %else    
+<       %  driver.rateset.datafile  = ['convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+<       %end
+<       driver.rateset.datafile  = ['convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+< 
+---
+>       driver.rateset.datafile  = 'convert_sergio_clearskygrid_obsonly.mat';           
+ ========>>>>>>>> diffing this_is_slow_jac_load.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_T.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_T_4tiles.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_T_4tiles_eradonebyCLH.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_ozone.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_rh.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_rh_4tiles.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_rh_4tiles_eradonebyCLH.m 
+ ========>>>>>>>> diffing tiledlayout_pcolor_aslmap_sst.m 
+17,20d16
+< figure(1); clf;
+< figure(2); set(gcf, 'Position',  [100, 100,  560*1.25, 420]);
+< figure(3); set(gcf, 'Position',  [100, 100,  560*1.25, 420]);
+< 
+33c29
+< figure(2);
+---
+> figure(1);
+66c62
+< title(tafov(2),'AIRS L3', 'Units', 'normalized', 'Position', [0.5, +0.9, 0]);
+---
+> title(tafov(2),'AIRS L2', 'Units', 'normalized', 'Position', [0.5, +0.9, 0]);
+83c79
+< figure(3);
+---
+> figure(2);
+ ========>>>>>>>> diffing tons_of_aslprint_plots.m 
+ ========>>>>>>>> diffing trop_index.m 
+ ========>>>>>>>> diffing try_tikhonov.m 
+ ========>>>>>>>> diffing try_tiledlayout_pcolor_aslmap.m 
+ ========>>>>>>>> diffing unused_driver_plot_anomaly_retrievals.m 
+ ========>>>>>>>> diffing unused_read_the_anom_retrievals.m 
+ ========>>>>>>>> diffing xcompute_geo_rates_ak.m 

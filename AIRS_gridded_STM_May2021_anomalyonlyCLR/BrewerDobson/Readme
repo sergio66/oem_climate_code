@@ -1,0 +1,6 @@
+ 1154  10/05/21 12:21:26 wget https://acp.copernicus.org/articles/16/15485/2016/acp-16-15485-2016.pdf
+ 1155  10/05/21 12:21:53 wget https://iopscience.iop.org/article/10.1088/1748-9326/ab4de7/pdf
+   1156  10/05/21 12:22:12 mv pdf observedchanges_BD_1980_2018.pdf
+ 1159  10/05/21 12:23:47 wget https://res.mdpi.com/d_attachment/atmosphere/atmosphere-11-01231/article_deploy/atmosphere-11-01231.pdf
+ 1160  10/05/21 12:24:00 wget http://www.meteo.psu.edu/holocene/public_html/shared/articles/Braganzaetal03.pdf
+ 1161  10/05/21 12:24:18 wget https://atmos.washington.edu/~dennis/FuLSH_JGR.2015.pdf

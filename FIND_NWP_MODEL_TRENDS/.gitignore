@@ -1,0 +1,19 @@
+*~
+.DS_Store
+
+#
+# oem_pkg_run .gitignore file
+#
+
+# archives and packages
+*.gz
+*.tgz
+*.tar
+*.zip
+*.bz2
+
+# mat files
+*.mat
+
+## Backups
+WORKS_*
