@@ -5,6 +5,10 @@
 # oem_pkg_run .gitignore file
 #
 
+slurm*
+disk_space*
+ugh*
+
 # tex work files
 *.aux
 *.bbl
@@ -25,8 +29,22 @@
 *.zip
 *.bz2
 
+# explicitly need to add in data and fig files eg .mat
+*.mat
+*.png
+*.fig
+*.pdf
+*.nc
+*.rtp
+*.jac
+jac.dat
+
 # directories
 Tangborn
+WORKS*
+Works*
+OLD_DIRS
+RHFeedBack
 
 # specific files
 Strow/.#*

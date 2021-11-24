@@ -2,3 +2,5 @@
 *.pf
 *.fig
 *.png
+*.jac
+Paper/jac.dat
