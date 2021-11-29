@@ -649,6 +649,54 @@ end      %% if exist('iFixO3_NoFit','var')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+%{
+%save -v7.3 nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat nwp_spectral_trends_cmip6_era5_airsL3_umbc
+save('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','-struct','nwp_spectral_trends_cmip6_era5_airsL3_umbc','-v7.3');
+vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+era5rates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','era5_100_layertrends');
+%}
+
+if settings.set_era5_cmip6_airsL3 == 5
+  disp(' apriori will be using ERA5 trends')
+  vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+  xrates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','era5_100_layertrends');
+  xrates = xrates.era5_100_layertrends;
+  ix = driver.iLon;
+  iy = driver.iLat;
+  iz = (iy-1)*72 + ix;
+  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),5,iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),5,iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),5,iNlays_retrieve);
+  xb = reshape(xb,length(xb),1);
+elseif settings.set_era5_cmip6_airsL3 == 6
+  disp(' apriori will be using CMIP6 trends')
+  vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+  xrates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','cmip6_100_layertrends');
+  xrates = xrates.cmip6_100_layertrends;
+  ix = driver.iLon;
+  iy = driver.iLat;
+  iz = (iy-1)*72 + ix;
+  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),5,iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),5,iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),5,iNlays_retrieve);
+  xb = reshape(xb,length(xb),1);
+elseif settings.set_era5_cmip6_airsL3 == 3
+  disp(' apriori will be using AIRS L3 trends')
+  vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+  xrates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','airsL3_100_layertrends');
+  xrates = xrates.airsL3_100_layertrends;
+  ix = driver.iLon;
+  iy = driver.iLat;
+  iz = (iy-1)*72 + ix;
+  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),5,iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),5,iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),5,iNlays_retrieve);
+  xb = reshape(xb,length(xb),1);
+end
+
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0
   disp('setting constant rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8')
   if settings.co2lays == 1

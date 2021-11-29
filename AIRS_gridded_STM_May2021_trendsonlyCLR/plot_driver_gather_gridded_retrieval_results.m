@@ -293,12 +293,12 @@ if iPlotWB > 0
   pnas2018_byrne_gorman
 end
 
-iReplot = input('Plot UMBC/AIRSL3/CMIP6/ERA5 zonal comparisons again (tiled plots) ? ');
+iReplot = input('Plot UMBC/AIRSL3/CMIP6/ERA5 zonal comparisons again (tiled plots) (-1 no default, +1 yes) ? ');
 if iReplot > 0
   re_plot_zonal_trends_umbc_airsL3_models
 end
 
-iUnc = input('do you want to do spectral uncertainties? Takes a LOOOOONG time) ?');
+iUnc = input('do you want to do spectral uncertainties? Takes a LOOOOONG time! (-1 no default, +1 yes) ?');
 if iUnc > 0
   do_spectral_closure
 end

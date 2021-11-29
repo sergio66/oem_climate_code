@@ -3,6 +3,11 @@ topts = [];
 
 topts = struct;
 
+topts.set_era5_cmip6_airsL3 = 3;  %% AIRS L3 rates for T(z). WV(z). O3(z). stemp
+topts.set_era5_cmip6_airsL3 = 6;  %% CMIP6 rates   for T(z). WV(z). O3(z). stemp
+topts.set_era5_cmip6_airsL3 = 5;  %% ERA5 rates    for T(z). WV(z). O3(z). stemp
+topts.set_era5_cmip6_airsL3 = -1; %% nothing, figure out T(z). WV(z). O3(z). stemp from zero a-priori
+
 topts.UMBCvsERAjac = +1;   %%        reset jac based on clear sky retrievals
 topts.UMBCvsERAjac = -1;   %% do not reset jac based on clear sky retrievals
 

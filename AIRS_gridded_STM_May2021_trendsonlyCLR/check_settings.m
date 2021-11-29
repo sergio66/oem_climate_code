@@ -1,3 +1,5 @@
+settings.set_era5_cmip6_airsL3 = -1; %% default, no a priori, else set to 3,5,6 for AIRS L3/ERA5/CMIP6
+
 settings.resetnorm2one = -1; %%% default, keep my scaling, set to +1 if you want to reset all to 1.00000000
 
 settings.iNoiseType = -1;   % use squeeze(b_err_desc(ix,iy,:)) since these are TRENDS
@@ -50,9 +52,9 @@ settings.iFixTG_NoFit = -1;            %% -1 means retrieve all trace gases [CO2
 settings.UMBCvsERAjac = -1;            %% do not adjust jacobian, based on handful of clear sky retrieval days
                                        %% [+1] means to adjust
 
-topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_tracegas'},{'offsetrates'},...
-			    {'addco2jacs'},{'obs_corr_matrix'},{'invtype'},{'tie_sst_lowestlayer'},{'iNlays_retrieve'},...
-                            {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'resetnorm2one'},{'UMBCvsERAjac'}];
+topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_tracegas'},{'offsetrates'},{'set_era5_cmip6_airsL3'},...
+        	       {'addco2jacs'},{'obs_corr_matrix'},{'invtype'},{'tie_sst_lowestlayer'},{'iNlays_retrieve'},...
+                       {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'resetnorm2one'},{'UMBCvsERAjac'}];
 
 %disp('settings before')
 %settings

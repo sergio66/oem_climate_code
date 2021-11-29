@@ -24,7 +24,7 @@ scatter_coast(p.rlon(junk),p.rlat(junk),50,junkx)
 
 clear h ha p pa
 
-%% this is the timestep : 1: 365 (coincidecne : there are 365 days/year and
+%% this is the timestep : 1: 365 (coincidence : there are 365 days/year and
 %% I did 16 day averages .... so 365/16 steps per year ... and 2002-2018 is
 %% 16 years so total of 365/16 * 16 = 365 steps
 
@@ -89,16 +89,16 @@ for iInd = iInd0 : iIndE
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   driver.iDebugRatesUseNWP = 32; %% use AIRS L3 reconstructed trends
   driver.iDebugRatesUseNWP = 62; %% use CMIP6    reconstructed trends
-  driver.iDebugRatesUseNWP = 52; %% use ERA      reconstructed trends
   driver.iDebugRatesUseNWP = -1; %% use AIRS observed trends
+  driver.iDebugRatesUseNWP = 52; %% use ERA      reconstructed trends
 
   iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
   iQuantile = 14;  %% 
   iQuantile = 08;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.25 - 0.50
   iQuantile = 09;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.90 - 0.75
   iQuantile = 04;  %% quite cloudy (hopefully)
-  iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
   iQuantile = 16;  %% hottest, for AIRS STM
+  iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -116,6 +116,7 @@ for iInd = iInd0 : iIndE
   driver.oem.nloop = 3;
   driver.oem.nloop = 1;
   driver.oem.doplots = false;
+
 %---------------------------------------------------------------------------
   change_important_topts_settings  % Override many settings and add covariance matrix
 %------------------------------------------------------------------------
@@ -123,8 +124,10 @@ for iInd = iInd0 : iIndE
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 
   topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 
   topts.dataset   = +3;   %% (+3) AIRS 19 year extreme  dataset, Sergio Aug 2021   2002/09-2021/08
-  topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08  AUTOMATIC USES Q00
   topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08
+  topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08  AUTOMATIC USES Q00
+
+  topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
 
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
