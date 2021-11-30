@@ -120,6 +120,40 @@ end
 iWarning = 0;
 clear fname
 
+for ii = 1 : 72 : 72*64
+  if dataset <= 2
+    if iNorD > 0
+      fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
+      fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+    elseif iNorD < 0
+      fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+    end
+  elseif dataset == 3
+    if iNorD > 0
+      fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+    elseif iNorD < 0
+      fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
+    end
+  elseif dataset == -3
+    if iNorD > 0
+      fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+    elseif iNorD < 0
+      fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
+    end
+  end
+  if exist(fname) > 0
+    junkdir = dir(fname);
+    fprintf(1,'%s %s \n',[junkdir.folder '/' fname],junkdir.date);
+  end
+end
+iJunk = input('correct dates/names etc etc???  Proceed or quit (+1 defult/-1) : ');
+if length(iJunk) == 0
+  iJunk = +1;
+end
+if iJunk < 0
+  return
+end
+
 for ii = 1 : 64*72
   if dataset <= 2
     if iNorD > 0
@@ -300,6 +334,9 @@ figure(11); plot(wvsumcflip,pflip20,tsumcflip,pflip20,o3sumcflip,pflip20,'linewi
   set(gca,'ydir','reverse'); ylim([50 1000]); hl = legend('WV','T','O3','location','best'); grid; xlabel('DOF'); ylabel('P(mb)')
 figure(11); semilogy(wvsumcflip,pflip20,tsumcflip,pflip20,o3sumcflip,pflip20,'linewidth',2)
   set(gca,'ydir','reverse'); ylim([0.050 1000]); hl = legend('WV','T','O3','location','best'); grid; xlabel('DOF'); ylabel('P(mb)')
+
+figure(12); clf; plot(f,nanmean(rates,2),'b',f,nanstd(rates,[],2),'c--',f,nanmean(rates-fits,2),'r',f,nanstd(rates-fits,[],2),'m--');
+  plotaxis2; hl = legend('mean obs','std obs','mean(obs-fits)','std(obs-fits)','linewidth',2);
 
 disp('ret to continue'); pause
 

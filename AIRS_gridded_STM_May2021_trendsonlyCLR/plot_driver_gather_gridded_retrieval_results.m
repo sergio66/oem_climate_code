@@ -256,11 +256,13 @@ caxis([-0.5 +0.5])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% now look at other model data
 
-figure(28);figure(29);figure(30);
+figure(28); ylim([100 1000]);
+figure(29);
+figure(30); ylim([100 1000]);
 if dataset == 3
   figure(29); title('Zonal d/dt T  UMBC Extreme');
-  figure(28); title('Zonal d/dt RH UMBC Extreme');
-  figure(30); title('Zonal d/dt WVfrac UMBC Extreme');
+  figure(28); title('Zonal d/dt RH UMBC Extreme');      ylim([100 1000]);
+  figure(30); title('Zonal d/dt WVfrac UMBC Extreme');  ylim([100 1000]);
 end
 
 redo_fig6_surfT_rate

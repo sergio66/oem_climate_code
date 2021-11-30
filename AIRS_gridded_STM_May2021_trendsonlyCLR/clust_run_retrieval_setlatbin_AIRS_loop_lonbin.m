@@ -89,8 +89,8 @@ for iInd = iInd0 : iIndE
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   driver.iDebugRatesUseNWP = 32; %% use AIRS L3 reconstructed trends
   driver.iDebugRatesUseNWP = 62; %% use CMIP6    reconstructed trends
-  driver.iDebugRatesUseNWP = -1; %% use AIRS observed trends
   driver.iDebugRatesUseNWP = 52; %% use ERA      reconstructed trends
+  driver.iDebugRatesUseNWP = -1; %% use AIRS observed trends
 
   iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
   iQuantile = 14;  %% 

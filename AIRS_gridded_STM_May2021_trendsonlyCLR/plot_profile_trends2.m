@@ -1,4 +1,4 @@
-xsiFig = 50;
+iFig = 50;
 iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(fracWV(1:100,mask),2),plays,'linewidth',2);         ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
                                      subplot(122); semilogy(1+nanstd(fracWV(1:100,mask),[],2),plays,'linewidth',2);     ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
 iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaRH(1:100,mask),2),plays,'linewidth',2);        ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
@@ -89,6 +89,7 @@ iFig = iFig+1; figure(iFig); subplot(121); hold on; plotaxis2; hl = legend('UMBC
                              subplot(122); hold on; plotaxis2; hl = legend('UMBC','AIRSL3','CMIP6','ERA5','location','best','fontsize',8); hold off; xlim([0 1]*0.05)
 iFig = iFig+1; figure(iFig); subplot(121); hold on; plotaxis2; hl = legend('UMBC','AIRSL3','CMIP6','ERA5','location','best','fontsize',8); hold off; xlim([-1 +1]*0.04)
                              subplot(122); hold on; plotaxis2; hl = legend('UMBC','AIRSL3','CMIP6','ERA5','location','best','fontsize',8); hold off; xlim([0 1]*0.04)
+disp('ret to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : default(+1) ');

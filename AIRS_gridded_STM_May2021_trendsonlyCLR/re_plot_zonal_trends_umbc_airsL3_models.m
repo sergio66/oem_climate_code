@@ -153,6 +153,7 @@ figure(iFig); clf
   plotaxis2; hl = legend('UMBC','AIRS L3','CMIP6','ERA5','AIRS Obs','location','best','fontsize',8); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
 
 cos2645 = ones(2645,1)*cos(p.rlat(xmask)*pi/180);
+cos2645 = ones(size(cos2645));
 mncos2645 = 1./nanmean(cos2645,2);
   plot(f,mncos2645.*nanmean(cos2645.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.umbc_spectral_rates(:,xmask),2),'x-',...
        f,mncos2645.*nanmean(cos2645.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_spectral_rates(:,xmask),2),...
