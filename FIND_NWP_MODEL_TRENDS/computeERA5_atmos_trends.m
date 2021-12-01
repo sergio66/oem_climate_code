@@ -16,7 +16,7 @@ for ii = 1 : 4608
   end
 
   if isfield(all,'nwp_plevs')
-    disp('doing N levs IP ptemp,rh trends')
+    disp('doing N levs IP ptemp,rh trends, frac, ppmv and gg trends')
     [mmmm,nnnn,oooo] = size(all.nwp_plevs);
     for ll = 1 : nnnn
       data = squeeze(all.nwp_ptemp(:,ll,ii));  
@@ -38,6 +38,41 @@ for ii = 1 : 4608
         trend_nwp_rh(ll,ii) = NaN; 
         trend_nwp_rh_err(ll,ii) = NaN;
       end
+
+      data = squeeze(all.nwp_gas_1(:,ll,ii));
+      boo = find(isfinite(data));
+      if length(boo) > 20
+        [B, stats] = Math_tsfit_lin_robust(dayOFtime(boo),data(boo),4); 
+        trend_nwp_gg(ll,ii) = B(2);  trend_nwp_gg_err(ll,ii) = stats.se(2);
+      else
+        trend_nwp_gg(ll,ii) = NaN; 
+        trend_nwp_gg_err(ll,ii) = NaN;
+      end
+
+      data  = squeeze(all.nwp_gas_1(:,ll,ii));
+      dataP = squeeze(all.nwp_plevs(:,ll,ii));
+      dataT = squeeze(all.nwp_ptemp(:,ll,ii));
+      data = toppmv(dataP,dataT,data,18,21);
+      boo = find(isfinite(data));
+      if length(boo) > 20
+        [B, stats] = Math_tsfit_lin_robust(dayOFtime(boo),data(boo),4); 
+        trend_nwp_ppmv(ll,ii) = B(2);  trend_nwp_ppmv_err(ll,ii) = stats.se(2);
+      else
+        trend_nwp_ppmv(ll,ii) = NaN; 
+        trend_nwp_ppmv_err(ll,ii) = NaN;
+      end
+
+      data = squeeze(all.nwp_gas_1(:,ll,ii));
+      data = data/nanmean(data);
+      boo = find(isfinite(data));
+      if length(boo) > 20
+        [B, stats] = Math_tsfit_lin_robust(dayOFtime(boo),data(boo),4); 
+        trend_nwp_frac(ll,ii) = B(2);  trend_nwp_frac_err(ll,ii) = stats.se(2);
+      else
+        trend_nwp_frac(ll,ii) = NaN; 
+        trend_nwp_frac_err(ll,ii) = NaN;
+      end
+
     end
   end
 

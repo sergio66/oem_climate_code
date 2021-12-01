@@ -97,8 +97,8 @@ for iInd = iInd0 : iIndE
   iQuantile = 08;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.25 - 0.50
   iQuantile = 09;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.90 - 0.75
   iQuantile = 04;  %% quite cloudy (hopefully)
-  iQuantile = 16;  %% hottest, for AIRS STM
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
+  iQuantile = 16;  %% hottest, for AIRS STM
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
