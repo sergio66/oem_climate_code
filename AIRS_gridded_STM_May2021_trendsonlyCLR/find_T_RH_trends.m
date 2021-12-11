@@ -189,6 +189,18 @@ figure(27); clf; simplemap(Y(:),X(:),deltaRH(i600,:)'.*maskLF',5); colorbar; tit
 for ii = 25 : 27; figure(ii); caxis([-1 +1]); colormap(llsmap5); plotaxis2; end
 for ii = 25 : 27; figure(ii); caxis([-0.25 +0.25]); colormap(llsmap5); plotaxis2; end
 
+iUT = find(pavgLAY(1:97,3000) >= 200 & pavgLAY(1:97,3000) <= 500);
+% Trends in Upper-Tropospheric Humidity: Expansion of the Subtropical Dry Zones? DOI: 10.1175/JCLI-D-19-0046.1
+% MIRIAM TIVIG AND VERENA GRUTZUN. J. Clim 2020
+boo = nanmean(deltaRH(iUT,:));
+figure(27); aslmap(27,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(boo,72,64)',1), [-90 +90],[-180 +180]);
+caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt UMBC RH(UT 200-500 mb) %/decade'); 
+addpath /home/sergio/MATLABCODE/COLORMAP/COLORBREWER/cbrewer/cbrewer
+ct = cbrewer('div','BrBG',8); colormap(ct);
+ct = cbrewer('div','BrBG',63,'spline');ct(ct < 0) = 0; ct(ct > 1) = 1;  colormap(ct);
+
+%% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_rh_ut_500_200mb_global_trends.pdf');
+
 figure(27); aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn(reshape(deltaRH(i600,:),72,64)',1), [-90 +90],[-180 +180]);
 caxis([-1 +1]); colormap(cmap);  title('d/dt UMBC RH(600 mb)'); 
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_rh_600mb_global_trends.pdf');

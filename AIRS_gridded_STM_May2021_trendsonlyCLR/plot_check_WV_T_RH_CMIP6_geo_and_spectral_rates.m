@@ -57,6 +57,10 @@ for jj = 1 : 19
     junk = polyfit(days,data,1);
     t2d_trendnwp(jj,ll) = junk(1);
     t2d_constnwp(jj,ll) = junk(2);
+
+    junk = Math_tsfit_lin_robust(days*365,data,4);
+    t2d_xtrendnwp(jj,ll) = junk(2);
+    t2d_xconstrnwp(jj,ll) = junk(1);
   end
 end
 
@@ -70,6 +74,11 @@ for jj = 1 : 101
     junk = polyfit(days,data,1);
     t2d_trend(jj,ll) = junk(1);
     t2d_constr(jj,ll) = junk(2);
+
+    junk = Math_tsfit_lin_robust(days*365,data,4);
+    t2d_xtrend(jj,ll) = junk(2);
+    t2d_xconstr(jj,ll) = junk(1);
+
   end
 end
 
@@ -85,6 +94,10 @@ for jj = 1 : 19
     junk = polyfit(days,data,1);
     rh2d_trendnwp(jj,ll) = junk(1);
     rh2d_constnwp(jj,ll) = junk(2);
+
+    junk = Math_tsfit_lin_robust(days*365,data,4);
+    rh2d_xtrendnwp(jj,ll) = junk(2);
+    rh2d_xconstrnwp(jj,ll) = junk(1);
   end
 end
 
@@ -98,6 +111,16 @@ for jj = 1 : 100
     junk = polyfit(days,data,1);
     rh2d_trend(jj,ll) = junk(1);
     rh2d_constr(jj,ll) = junk(2);
+
+    if length(find(isfinite(data))) > 16
+      junk = Math_tsfit_lin_robust(days*365,data,4);
+      rh2d_xtrend(jj,ll) = junk(2);
+      rh2d_xconstr(jj,ll) = junk(1);
+    else
+      rh2d_xtrend(jj,ll) = NaN;
+      rh2d_xconstr(jj,ll) = NaN;
+    end
+
   end
 end
 
@@ -112,6 +135,16 @@ for ii = 1 : 97
   junk = polyfit(days,data,1);
   rh_trend(ii) = junk(1);
   rh_constr(ii) = junk(2);
+
+  if length(find(isfinite(data))) > 16
+    junk = Math_tsfit_lin_robust(days*365,data,4);
+    rh_xtrend(ii) = junk(2);
+    rh_xconstr(ii) = junk(1);
+  else
+    rh_xtrend(ii) = NaN;
+    rh_xconstr(ii) = NaN;
+  end
+
 end
 
 figure(5); subplot(122); semilogy(rh_trend(1:97),plevsx,'r','linewidth',2); ylim([100 1000]); set(gca,'ydir','reverse'); plotaxis2;
@@ -124,6 +157,15 @@ for ii = 1 : 97
   junk = polyfit(days,data,1);
   t_trend(ii) = junk(1);
   t_constr(ii) = junk(2);
+
+  if length(find(isfinite(data))) > 16
+    junk = Math_tsfit_lin_robust(days*365,data,4);
+    t_xtrend(ii) = junk(2);
+    t_xconstr(ii) = junk(1);
+  else
+    t_xtrend(ii) = NaN;
+    t_xconstr(ii) = NaN;
+  end
 end
 
 figure(5); subplot(121); semilogy(t_trend(1:97),plevsx,'r','linewidth',2); ylim([10 1000]); set(gca,'ydir','reverse');  plotaxis2;
@@ -138,17 +180,33 @@ for ii = 1 : 64
   junk = polyfit(days,data,1);
   st_trend(ii) = junk(1);
   st_constr(ii) = junk(2);
-  junk = Math_tsfit_lin_robust(days*365,data,4);
-  xst_trend(ii) = junk(2);
-  xst_constr(ii) = junk(1);
+
+  zoo = find(isfinite(data));
+  if length(find(isfinite(data))) > 16
+    junk = Math_tsfit_lin_robust(days(zoo)*365,data(zoo),4);
+    xst_trend(ii) = junk(2);
+    xst_constr(ii) = junk(1);
+  else
+    xst_trend(ii) = NaN;
+    xst_constr(ii) = NaN;
+  end
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
 
   data = squeeze(tcalc(1520,ii,:));
   junk = polyfit(days,data,1);
   bt1231_trend(ii) = junk(1);
   bt1231_constr(ii) = junk(2);
-  junk = Math_tsfit_lin_robust(days*365,data,4);
-  xbt1231_trend(ii) = junk(2);
-  xbt1231_constr(ii) = junk(1);
+
+  if length(find(isfinite(data))) > 16
+    junk = Math_tsfit_lin_robust(days*365,data,4);
+    xbt1231_trend(ii) = junk(2);
+    xbt1231_constr(ii) = junk(1);
+  else
+    xbt1231_trend(ii) = NaN;
+    xbt1231_constr(ii) = NaN;
+  end
+
 end
 warning on
 figure(6); plot(rlatx,st_trend,rlatx,bt1231_trend); title('dST/dt and dBT1231/dt');

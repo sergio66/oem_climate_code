@@ -24,6 +24,7 @@ L3 = load('reconstruct_L3_spectra_geo.mat');
 era5 = load('reconstruct_era5_spectra_geo.mat');
 cmip6 = load('reconstruct_cmip6_spectra_geo.mat');
 
+obs = load('gather_tileCLRnight_rates_fits.mat');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); clf;
@@ -342,9 +343,9 @@ ColorOdrDefNew = ColorOdrDef0(2:7,:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(7);
-plot(L3.fchanx,L3.trend,cmip6.fchanx,cmip6.trend,era5.fchanx,era5.trend,'linewidth',2);
-plot(L3.fchanx,L3.xtrend,cmip6.fchanx,cmip6.xtrend,era5.fchanx,era5.xtrend,'linewidth',2);
-  plotaxis2; hl = legend('L3','CMIP6','ERA5','location','best','fontsize',10); ylabel('dBT/dt');
+plot(L3.fchanx,L3.trend,cmip6.fchanx,cmip6.trend,era5.fchanx,era5.trend,L3.fchanx,nanmean(obs.rates,2),'linewidth',2);
+%plot(L3.fchanx,L3.xtrend,cmip6.fchanx,cmip6.xtrend,era5.fchanx,era5.xtrend,L3.fchanx,nanmean(obs.rates,2),'linewidth',2);
+  plotaxis2; hl = legend('L3','CMIP6','ERA5','AIRS L1 obs','location','best','fontsize',10); ylabel('dBT/dt');
 axis([640 1640 -0.1 +0.05])
 set(gca,'ColorOrder',ColorOdrDefNew);
 

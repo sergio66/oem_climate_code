@@ -5,12 +5,16 @@
 # run this with   kleenslurm; sbatch  --constraint=hpcf2013       --array=1-64 sergio_matlab_jobB.sbatch            for clust_run_retrieval_setlatbin_AIRS_loop_lonbin == TRENDS
 #   or            kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
 #                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
+#                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
 #
 # run this with   kleenslurm; sbatch  --constraint=hpcf2013       --array=1-40 sergio_matlab_jobB.sbatch            for clust_run_retrieval_setlatbin_AIRS_loop_lonbinV2
 #   or            kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2
 #
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 3     for clust_convert_strowrates2oemrates_anomaly_nonucal
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 4     for clust_convert_strowrates2oemrates_anomaly_nonucal_2012
+#
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 5     for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 6     for driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
 #
 # check stats after running using eg
 # sacct --name=KCARTA_BREAKOUTS --state=CD -S 2016-05-07 --format=elapsed,maxrss
@@ -45,10 +49,10 @@
 ##SBATCH --mem-per-cpu=24000
 
 ##  This is in MB, easy peasy, 18000 works
-##SBATCH --mem-per-cpu=18000
+#SBATCH --mem-per-cpu=18000
 ##SBATCH --mem-per-cpu=8000
 ##SBATCH --mem-per-cpu=6000 
-#SBATCH --mem-per-cpu=6000 
+##SBATCH --mem-per-cpu=6000 
 
 #SBATCH --account=pi_strow
 
@@ -87,4 +91,12 @@ elif [[ "$1" -eq "4" ]]; then
   # makes spectral anomalies from 2102
   echo "cmd line arg = 4, clust_convert_strowrates2oemrates_anomaly"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "clust_convert_strowrates2oemrates_anomaly_nonucal_2012; exit"
+elif [[ "$1" -eq "5" ]]; then
+  # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+  echo "cmd line arg = 5, driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2; exit"
+elif [[ "$1" -eq "6" ]]; then
+  # makes driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
+  echo "cmd line arg = 5, driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2; exit"
 fi

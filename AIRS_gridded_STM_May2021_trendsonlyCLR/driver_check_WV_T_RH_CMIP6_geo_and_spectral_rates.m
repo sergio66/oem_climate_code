@@ -4,8 +4,10 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /asl/matlib/h4tools
+addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/TIME
-addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCOD
+addpath ../../FIND_TRENDS/
 
 load('llsmap5.mat');
 
@@ -138,6 +140,8 @@ sartaer   = ['!' sarta '   fin=simulate64binsCMIP6.op.rtp fout=simulate64binsCMI
 
 eval(klayerser);
 eval(sartaer);
+% numtimesteps = 144
+% [h64,~,p64,~] = rtpread('simulate64binsCMIP6.ip.rtp');
 [h64x,~,p64x,~] = rtpread('simulate64binsCMIP6.rp.rtp');
 p64x.rh = layeramt2RH(h64x,p64x);
 p64x.mmw = mmwater_rtp(h64x,p64x);
@@ -162,7 +166,10 @@ plot(1:numtimesteps,squeeze(tcalc(1520,:,:)),'b.-',1:numtimesteps,tcalcavg(1520,
 plot(1:numtimesteps,nanmean(squeeze(tcalc(1520,:,:))),'b.-',1:numtimesteps,tcalcavg(1520,:),'r')
   days = (1:numtimesteps)*30/365;
   polyfit(days,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
-  addpath ../../FIND_TRENDS/
   Math_tsfit_lin_robust(days*365,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
+
+  stempjunk = reshape(p64x.stemp,64,numtimesteps);
+  polyfit(days,nanmean(stempjunk,1),1); ans(1)
+  Math_tsfit_lin_robust(days*365,nanmean(stempjunk),4); ans(2)
 
 plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates
