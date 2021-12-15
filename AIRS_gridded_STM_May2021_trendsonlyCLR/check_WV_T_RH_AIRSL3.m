@@ -14,25 +14,29 @@ dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
 
 load('llsmap5.mat');
 
-%% see  FIND_NWP_MODEL_TRENDS/driver_computeCMIP6_monthly_trends.m  and do_the_AIRSL3_trends.m
-cmip6_64x72 = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08.mat');
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeAIRSL3_monthly_trends.m  and do_the_AIRSL3_trends.m
+airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
 
 addpath ../FIND_NWP_MODEL_TRENDS/
-all = cmip6_64x72.all;
+all = airsl3_64x72.thestats64x72;
 
-dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
-numtimesteps = length(dayOFtime);
+%dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
+%numtimesteps = length(dayOFtime);
 
-%computeERA5_surface_trends
+%computeAIRSL3_surface_trends
+
+origdata = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Jul2021_19yr_desc.mat');
+origtrends = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+[~,~,numtimesteps] = size(origdata.save64x72_stemp);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 stemp_all = [];
 for ii = 1 : 64
   
-  fip = [dirout '/simulate64binsCMIP6' num2str(ii) '.ip.rtp'];
-  fop = [dirout '/simulate64binsCMIP6' num2str(ii) '.op.rtp'];
-  frp = [dirout '/simulate64binsCMIP6' num2str(ii) '.rp.rtp'];
+  fip = [dirout '/simulate64binsAIRSL3' num2str(ii) '.ip.rtp'];
+  fop = [dirout '/simulate64binsAIRSL3' num2str(ii) '.op.rtp'];
+  frp = [dirout '/simulate64binsAIRSL3' num2str(ii) '.rp.rtp'];
 
   ind = (1:72) + (ii-1)*72;
   [h72x,~,p72x,~] = rtpread(frp);
@@ -42,33 +46,32 @@ end
 meanST = nanmean(stemp_all,2); pcolor(reshape(meanST,72,64)'); shading interp; colorbar
 boo = 1:4608; pcolor(reshape(boo,72,64)'); shading interp; colorbar
 
-origdata = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08.mat');
-origtrends = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat');
-
 %plot(origtrends.trend_stemp - trend_stemp)
-plot(stemp_all - cmip6_64x72.all.stemp')
+wah = permute(origdata.save64x72_stemp,[2 1 3]);
+plot(stemp_all - reshape(wah,72*64,227))
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 obsrates = load('gather_tileCLRnight_rates_fits.mat');
-zonalavg = load('reconstruct_cmip6_spectra_geo.mat');
+%zonalavg = load('reconstruct_airsl3_spectra_geo.mat');
 
-[numtimesteps,~] = size(cmip6_64x72.all.mmw);
+%[numtimesteps,~] = size(airsl3_64x72.all.mmw);
 rlat = load('latB64.mat'); rlat65 = rlat.latB2; rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon73 = (1:73); rlon73 = -180 + (rlon73-1)*5;  rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 [Y,X] = meshgrid(rlat,rlon); X = X(:); Y = Y(:);
 
 yy = []; mm = []; dd = [];
-for ii = 2002 : 2014
+for ii = 2002 : 2021
   clear yyx mmx ddx
   if ii == 2002
     inum = 4;
     yyx(1:inum) = ii;
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
-  elseif ii == 2014
-    inum = 8;
+  elseif ii == 2021
+    inum = 7;
     yyx(1:inum) = ii;
-    mmx = 1 : 8;
+    mmx = 1 : 7;
     ddx = ones(size(mmx)) * 15;
   else
     inum = 12;
@@ -99,9 +102,9 @@ rcalc = [];
 
 for ii = 1 : 64
   
-  fip = [dirout '/simulate64binsCMIP6' num2str(ii) '.ip.rtp'];
-  fop = [dirout '/simulate64binsCMIP6' num2str(ii) '.op.rtp'];
-  frp = [dirout '/simulate64binsCMIP6' num2str(ii) '.rp.rtp'];
+  fip = [dirout '/simulate64binsAIRSL3' num2str(ii) '.ip.rtp'];
+  fop = [dirout '/simulate64binsAIRSL3' num2str(ii) '.op.rtp'];
+  frp = [dirout '/simulate64binsAIRSL3' num2str(ii) '.rp.rtp'];
 
   ind = (1:72) + (ii-1)*72;
   [h72x,~,p72x,~] = rtpread(frp);
@@ -124,13 +127,13 @@ figure(4); pcolor(reshape(X,72,64)',reshape(Y,72,64)',reshape(stemp - rad2bt(123
 
 figure(5); junk = reshape(ptemp,101,72,64); junk = squeeze(nanmean(junk,2)); pcolor(junk); caxis([200 300]); colormap jet; shading interp;  colorbar
 figure(5); junk = reshape(log10(gas_1),101,72,64); junk = squeeze(nanmean(junk,2)); pcolor(junk); caxis([10 22]); colormap jet; shading interp;  colorbar
-figure(5); junk = reshape(log10(gas_3),101,72,64); junk = squeeze(nanmean(junk,2)); pcolor(junk); caxis([15 18]); colormap jet; shading interp;  colorbar
+figure(5); junk = reshape(log10(max(gas_3,1)),101,72,64); junk = squeeze(nanmean(junk,2)); pcolor(junk); caxis([15 18]); colormap jet; shading interp;  colorbar
 pause(0.1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for ii = 1 : 64
   ind = (1:72) + (ii-1)*72;
-  fmat = [dirout '/reconstruct_cmip6_spectra_geo_rlat' num2str(ii,'%02d') '.mat'];
+  fmat = [dirout '/reconstruct_airsL3_spectra_geo_rlat' num2str(ii,'%02d') '.mat'];
   x = load(fmat);
   %xtrendSpectral(:,ind) = x.thesave.xtrend72;
   xtrendSpectral(:,ind) = x.thesave.xtrendSpectral;
@@ -145,14 +148,14 @@ figure(7); clf; colormap(llsmap5); pcolor(reshape(X,72,64)',reshape(Y,72,64)',re
 figure(6); clf; aslmap(6,rlat65,rlon73,smoothn(reshape(xtrend_st,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-0.15 +0.15]);
 figure(7); clf; aslmap(7,rlat65,rlon73,smoothn(reshape(xtrend_bt1231,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-0.15 +0.15]);
 
-%old_cmip6_trends = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2021_07_trends_desc.mat');
-%figure(8); clf; aslmap(8,rlat65,rlon73,smoothn(reshape(old_cmip6_trends.trend_stemp,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-0.15 +0.15]);
+%old_airsl3_trends = load('../FIND_NWP_MODEL_TRENDS/AIRSL3_atm_data_2002_09_to_2021_07_trends_desc.mat');
+%figure(8); clf; aslmap(8,rlat65,rlon73,smoothn(reshape(old_airsl3_trends.trend_stemp,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-0.15 +0.15]);
 
 figure(9);  clf; pcolor(origdata.all.stemp'-stemp_all); shading interp; colorbar; title('ORIG STEMP - what is in the rtp files')
 figure(10); clf; plot(origtrends.trend_stemp - xtrend_st);
 
-figure(11); plot(h72x.vchan,mean(xtrendSpectral,2),h72x.vchan,mean(obsrates.rates,2)); grid; xlim([640 1640]); title('CMIP6'); plotaxis2; 
-  hl = legend('CMIP6','AIRS obs','location','best')
+figure(11); plot(h72x.vchan,nanmean(xtrendSpectral,2),h72x.vchan,mean(obsrates.rates,2)); grid; xlim([640 1640]); title('AIRSL3'); plotaxis2; 
+  hl = legend('AIRSL3','AIRS obs','location','best');
 
 pause(0.1);
 error('lgksg')

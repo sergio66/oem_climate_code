@@ -21,6 +21,7 @@ clear iaFound
 iNumYears = 12; 
 iaMax = iNumYears*12;
 
+%% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_CMIP6/clust_compute_cmip6_profile_rtpfiles.m
 for ii = 1 : iaMax
   fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/CMIP6/Tile_Center/cmip6_tile_center_monthly_timestep_' num2str(ii,'%03d') '.mat'];
 

@@ -44,12 +44,16 @@ iType = +02; %% sergio Q16 19 year trends       I  ran for me in Aug 2021, 2002/
 iType = +03; %% sergio Extreme 19 year trends   I  ran for me in Aug 2021, 2002/09 to 2020/08
 iType = -03; %% sergio Mean 19 year trends      I  ran for me in Aug 2021, 2002/09 to 2020/08
 
-disp('Choices DataSet to use (+1) Strow  Quantile Mar 2021 2002/09 to 2020/08 ');
-disp('                       (-1) Sergio Quantile Aug 2021 2002/09 to 2020/08 ');
-disp('                        (2) Sergio Quantile Aug 2021 2002/09 to 2021/08 ');
-disp('                        (3) Sergio Extreme Aug 2021 2002/09 to 2021/08 ');
-disp('                       (-3) Sergio Mean Aug 2021 2002/09 to 2021/08 ');
-iType = input('Enter DataSet to use (+1,-1,+2,+3,-3) : ');
+disp('Choices DataSet to use ')
+disp('                       (+1) Strow  Quantile Mar 2021 2002/09 to 2020/08 Full 18 years');
+disp('                       (-1) Sergio Quantile Aug 2021 2002/09 to 2020/08 Full 18 years');
+disp('                        (2) Sergio Quantile Aug 2021 2002/09 to 2021/07 ');
+disp('                        (4) Sergio Quantile Aug 2021 2002/09 to 2021/08 Full 19 years');
+disp(' <---------------------------------------------------------------------------------------> ')
+disp('                        (3) Sergio Extreme Aug 2021 2002/09 to 2021/07 ');
+disp('                       (-3) Sergio Mean Aug 2021 2002/09 to 2021/07 ');
+disp(' <---------------------------------------------------------------------------------------> ')
+iType = input('Enter DataSet to use (+1,-1,+2,+4   or +3,-3) : ');
 
 if iType ~= 3
   iQuantile = 16;  %% hottest, used for AIRS STM May 221
@@ -79,25 +83,32 @@ for iLat = 1 : 64
     % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps429.mat'];
     thedir0 = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon_v3/Mean/LatBin' num2str(iLat,'%02d') '/'];
+  elseif iType == 4
+    % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
+    %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
+    thedir0 = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
   end
 
   for iLon = 1 : 72
     fprintf(1,'+')
     if iType == +1
-      %% 18 year by Strow
+      %% full 18 year by Strow
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1.mat'];
     elseif iType == -1
-      %% 18 year by Sergio
+      %% full 18 year by Sergio
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps412.mat'];
     elseif iType == 2
-      %% 19 year by Sergio
+      %% paritally incomplete 19 year by Sergio
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps429.mat'];
     elseif iType == 3
-      %% 19 year by Sergio
+      %% paritally incomplete 19 year by Sergio
       thefilein = [thedir0 'LonBin' num2str(iLon,'%02d') '/extreme_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps429.mat'];
     elseif iType == -3
-      %% 19 year by Sergio
+      %% paritally incomplete 19 year by Sergio
       thefilein = [thedir0 'LonBin' num2str(iLon,'%02d') '/mean_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps429.mat'];
+    elseif iType == 4
+      %% full 19 year by Sergio
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps433.mat'];
     end
 
     iBoo = (iLat-1)*72 + iLon;
@@ -107,6 +118,7 @@ for iLat = 1 : 64
     x = load(thefilein);
 
     if abs(iType) ~= 3
+      %% QUANTILES QUANTILES QUANTILES
       %% these are rads
       %b_asc(iLon,iLat,:) = x.b_asc(:,iQuantile,2);
       %b_desc(iLon,iLat,:) = x.b_desc(:,iQuantile,2);
@@ -128,7 +140,7 @@ for iLat = 1 : 64
       junk = nedt_T0_T1(h.vchan,airs_noise,250*ones(h.nchan,1),real(junk));
       airs_noiseTtrue(iLon,iLat,:) = junk;
 
-    elseif iType == 3
+    elseif iType == +3
       %% these are extremes      
       b_asc(iLon,iLat,:) = x.dbt_asc;
       b_desc(iLon,iLat,:) = x.dbt_desc;
@@ -178,6 +190,10 @@ elseif iType == -1
   saver = ['save iType_-1_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 elseif iType == 2
   saver = ['save iType_2_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+elseif iType == 4
+  saver = ['save iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+%%
+%%
 elseif iType == 3
   saver = ['save iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 elseif iType == -3

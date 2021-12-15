@@ -97,8 +97,8 @@ for ii = JOB
   h72.ptype = 0;
   h72.pfields = 1;
   h72.ngas = 2;
-  h72.gunit = [21]';  %% g/g
-  h72.glist = [ 1]';
+  h72.gunit = [21 21]';  %% g/g
+  h72.glist = [ 1 3]';
   
   p72.rtime = [];
   p72.co2ppm = [];
@@ -107,7 +107,8 @@ for ii = JOB
     p72.co2ppm = [p72.co2ppm ones(1,72)*co2ppm(iii)];
   end
   
-  p72.nlevs = ones(size(p72.rtime)) * 37;
+  iNlev = 37;
+  p72.nlevs = ones(size(p72.rtime)) * iNlev;
   p72.plevs = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
   p72.rlat  = rlat(ii) * ones(1,72*numtimesteps); p72.rlat = p72.rlat(:)';
@@ -116,19 +117,21 @@ for ii = JOB
   p72.plon = p72.rlon;
   
   junk = era5_64x72.all.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
-  junk = era5_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,37,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,37,72*numtimesteps);
-  junk = era5_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,37,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,37,72*numtimesteps);
-  junk = era5_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,37,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,37,72*numtimesteps);
-  junk = era5_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,37,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,37,72*numtimesteps);
+  junk = era5_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
 
-  p72.scanang = zeros(size(p72.stemp));
-  p72.satzen = zeros(size(p72.stemp));
+%  p72.scanang = zeros(size(p72.stemp));
+%  p72.satzen = zeros(size(p72.stemp));
+  p72.zobs = 705000 * ones(size(p72.stemp));
+  p72.scanang = ones(size(p72.stemp)) * 22;
+  p72.satzen = vaconv(p72.scanang, p72.zobs, zeros(size(p72.zobs)));
   p72.solzen = 150 * ones(size(p72.stemp));
   %p72.spres = 1000 * ones(size(p72.stemp));
   %p72.salti = 0 * ones(size(p72.stemp));
   p72.spres = reshape(p.spres,72,64); p72.spres = p72.spres(:,ii) * ones(1,1*numtimesteps); p72.spres = p72.spres(:)';
   p72.salti = reshape(p.salti,72,64); p72.salti = p72.salti(:,ii) * ones(1,1*numtimesteps); p72.salti = p72.salti(:)';
-  p72.zobs = 705000 * ones(size(p72.stemp));
   
   pcolor(rlon,1:numtimesteps,reshape(p72.stemp,72,numtimesteps)'); colormap jet; colorbar
   pcolor(rlon,1:numtimesteps,reshape(p72.spres,72,numtimesteps)'); colormap jet; colorbar

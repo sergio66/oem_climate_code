@@ -134,7 +134,7 @@ for ii = 1 : 64
   x = load(fmat);
   %xtrendSpectral(:,ind) = x.thesave.xtrend72;
   xtrendSpectral(:,ind) = x.thesave.xtrendSpectral;
-  xtrend_bt1231(ind) = x.thesave.bt1231_trend;
+  xtrend_bt1231(ind) = x.thesave.xbt1231_trend;
   xtrend_st(ind) = x.thesave.xst_trend;
   xtrend_Tz(:,ind) = x.thesave.t2d_xtrend;
   xtrend_RHz(:,ind) = x.thesave.t2d_xtrend;
@@ -151,7 +151,8 @@ figure(8); clf; aslmap(8,rlat65,rlon73,smoothn(reshape(old_era5_trends.trend_ste
 figure(9);  clf; pcolor(origdata.all.stemp'-stemp_all); shading interp; colorbar; title('ORIG STEMP - what is in the rtp files')
 figure(10); clf; plot(origtrends.trend_stemp - xtrend_st);
 
-figure(11); plot(mean(xtrendSpectral,2)); grid
+figure(11); plot(h72x.vchan,mean(xtrendSpectral,2),h72x.vchan,mean(obsrates.rates,2)); grid; xlim([640 1640]); title('ERA5'); plotaxis2; 
+  hl = legend('ERA5','AIRS obs','location','best')
 
 pause(0.1);
 error('lgksg')

@@ -79,7 +79,7 @@ iOK = find(read_this_file > 0);
 if i >= abs(timespan)*12 & length(iOK) == abs(timespan)*12
   disp('ok, found the files needed for the YEAR timespan you chose')
 else
-  iStop = input('WARNING : oops need to get in more AIRS L3 data, +1 to stop????????')
+  iStop = input('WARNING : oops need to get in more AIRS L3 data, +1 to stop???????? ')
   if iStop == 1
     error('quitting')
   else
@@ -107,6 +107,10 @@ Airs_RHSurf_D = zeros(length(woo),180,360,'single');
 
 Airs_Ozone_A = zeros(length(woo),24,180,360,'single');
 Airs_Ozone_D = zeros(length(woo),24,180,360,'single');
+Airs_CO_A = zeros(length(woo),24,180,360,'single');
+Airs_CO_D = zeros(length(woo),24,180,360,'single');
+Airs_CH4_A = zeros(length(woo),24,180,360,'single');
+Airs_CH4_D = zeros(length(woo),24,180,360,'single');
 Airs_SPres_A = zeros(length(woo),180,360,'single');
 Airs_SPres_D = zeros(length(woo),180,360,'single');
 Airs_OLR_A = zeros(length(woo),180,360,'single');
@@ -168,6 +172,13 @@ if iDo < 0
 
     Airs_Ozone_A(ix,:,:,:) = hdfread(fin, 'ascending', 'Fields','O3_VMR_A');
     Airs_Ozone_D(ix,:,:,:) = hdfread(fin, 'descending','Fields','O3_VMR_D');
+
+    Airs_CH4_A(ix,:,:,:) = hdfread(fin, 'ascending', 'Fields','CH4_VMR_A');
+    Airs_CH4_D(ix,:,:,:) = hdfread(fin, 'descending','Fields','CH4_VMR_D');
+
+    Airs_CO_A(ix,:,:,:) = hdfread(fin, 'ascending', 'Fields','CO_VMR_A');
+    Airs_CO_D(ix,:,:,:) = hdfread(fin, 'descending','Fields','CO_VMR_D');
+
     %if ~exist('Airs_Lat','var')
     %  Airs_Lat = hdfread(fin, 'location', 'Fields', 'Latitude');
     %  Airs_Lon = hdfread(fin, 'location', 'Fields', 'Longitude');
@@ -211,7 +222,7 @@ if iDo < 0
 
   iSave = input('save these mega huge files (+1) or store in memory??? (-1) : ? ');
   if iSave > 0
-    saver = ['save /asl/s1/sergio/AIRS_L3/airs_L3v7_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon yy mm'];
+    saver = ['save /asl/s1/sergio/AIRS_L3/airs_L3v7_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon Airs_CO* Airs_CH4* yy mm'];
     eval(saver);
     saver = ['save /asl/s1/sergio/AIRS_L3/airs_L3v7_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Date* Airs_Cl* Airs_Ice* Airs_Lat Airs_Lon Airs_Liq*  yy mm'];
     eval(saver);

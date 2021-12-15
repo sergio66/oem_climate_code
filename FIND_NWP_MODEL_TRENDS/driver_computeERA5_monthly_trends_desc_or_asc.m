@@ -27,6 +27,7 @@ iNumYears = 18;
 iNumYears = 19; 
 iaMax = iNumYears*12;
 
+%% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
 for ii = 1 : iaMax
   if iDorA > 0
     fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];

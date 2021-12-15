@@ -15,6 +15,7 @@
 #
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 5     for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 6     for driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 7     for driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
 #
 # check stats after running using eg
 # sacct --name=KCARTA_BREAKOUTS --state=CD -S 2016-05-07 --format=elapsed,maxrss
@@ -99,4 +100,8 @@ elif [[ "$1" -eq "6" ]]; then
   # makes driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
   echo "cmd line arg = 5, driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2; exit"
+elif [[ "$1" -eq "7" ]]; then
+  # makes driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
+  echo "cmd line arg = 5, driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2; exit"
 fi

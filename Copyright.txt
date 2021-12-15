@@ -1,8 +1,8 @@
 Copyright 1996-2016, 
-L. Larrabee Strow,  Sergio DeSouza-Machado, Howard Motteler and Scott Hannon
+L. Larrabee Strow,  Sergio DeSouza-Machado
 Atmospheric Spectroscopy Laboratory
 
-kCARTA is distributed under the terms of the GNU GPL v3
+oem_pkg_run is distributed under the terms of the GNU GPL v3
 
 See Authors.txt 
 

@@ -1,4 +1,6 @@
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/TIME
+
 system_slurm_stats
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
@@ -13,32 +15,33 @@ addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCOD
-addpath ../../FIND_TRENDS/
+%addpath ../../FIND_TRENDS/
+addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
 load('llsmap5.mat');
 
 RH000 = layeramt2RH(h,p);
 
-pCMIP6 = p;
-pCMIP6.stemp          = pCMIP6.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.stemp;
-pCMIP6.ptemp(1:100,:) = pCMIP6.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp;
-pCMIP6.gas_1(1:100,:) = pCMIP6.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.gas_1);
-pCMIP6.gas_3(1:100,:) = pCMIP6.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.gas_3);
-RHCMIP6 = layeramt2RH(h,pCMIP6);
+pAIRSL3 = p;
+pAIRSL3.stemp          = pAIRSL3.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
+pAIRSL3.ptemp(1:100,:) = pAIRSL3.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp;
+pAIRSL3.gas_1(1:100,:) = pAIRSL3.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_1);
+pAIRSL3.gas_3(1:100,:) = pAIRSL3.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_3);
+RHAIRSL3 = layeramt2RH(h,pAIRSL3);
 
-RHCMIP6rate = RHCMIP6 - RH000;
-zonalRHCMIP6rate = reshape(RHCMIP6rate,100,72,64);
-zonalRHCMIP6rate = squeeze(nanmean(zonalRHCMIP6rate,2));
+RHAIRSL3rate = RHAIRSL3 - RH000;
+zonalRHAIRSL3rate = reshape(RHAIRSL3rate,100,72,64);
+zonalRHAIRSL3rate = squeeze(nanmean(zonalRHAIRSL3rate,2));
 
 zonalrlat = rlat;
 zonalplays = p.plays(1:100,3000);
-figure(1); pcolor(zonalrlat,zonalplays,zonalRHCMIP6rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+figure(1); pcolor(zonalrlat,zonalplays,zonalRHAIRSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
 
-TCMIP6rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp;
-zonalTCMIP6rate = reshape(TCMIP6rate,100,72,64);
-zonalTCMIP6rate = squeeze(nanmean(zonalTCMIP6rate,2));
-figure(2); pcolor(zonalrlat,zonalplays,zonalTCMIP6rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
+TAIRSL3rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp;
+zonalTAIRSL3rate = reshape(TAIRSL3rate,100,72,64);
+zonalTAIRSL3rate = squeeze(nanmean(zonalTAIRSL3rate,2));
+figure(2); pcolor(zonalrlat,zonalplays,zonalTAIRSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct Trate')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -46,25 +49,25 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTCMIP6rate); shading interp; colorba
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% see  FIND_NWP_MODEL_TRENDS/driver_computeCMIP6_monthly_trends.m  and do_the_AIRSL3_trends.m
-cmip6_64x72 = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08.mat');
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeAIRSL3_monthly_trends.m  and do_the_AIRSL3_trends.m
+airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Jul2021_19yr_desc.mat');
 
-[numtimesteps,~] = size(cmip6_64x72.all.mmw);
+[numtimesteps] = length(airsl3_64x72.days);
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 
 yy = []; mm = []; dd = [];
-for ii = 2002 : 2014
+for ii = 2002 : 2021
   clear yyx mmx ddx
   if ii == 2002
     inum = 4;
     yyx(1:inum) = ii;
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
-  elseif ii == 2014
-    inum = 8;
+  elseif ii == 2021
+    inum = 7;
     yyx(1:inum) = ii;
-    mmx = 1 : 8;
+    mmx = 1 : 7;
     ddx = ones(size(mmx)) * 15;
   else
     inum = 12;
@@ -93,9 +96,9 @@ for ii = JOB
   h72 = h;
   h72.ptype = 0;
   h72.pfields = 1;
-  h72.ngas = 1;
-  h72.gunit = [21]';  %% g/g
-  h72.glist = [ 1]';
+  h72.ngas = 2;
+  h72.gunit = [20 12]';  %% g/kg and VMR
+  h72.glist = [ 1 3 ]';
   
   p72.rtime = [];
   p72.co2ppm = [];
@@ -103,22 +106,28 @@ for ii = JOB
     p72.rtime  = [p72.rtime ones(1,72)*rtime(iii)];
     p72.co2ppm = [p72.co2ppm ones(1,72)*co2ppm(iii)];
   end
-
-  iNlev = 19;  
-  p72.nlevs = ones(size(p72.rtime)) * iNlev;
-  p72.plevs = squeeze(cmip6_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
-  p72.rlat  = rlat(ii) * ones(1,72*numtimesteps); p72.rlat = p72.rlat(:)';
+  iNlev = 24;
+  plevsnwp = airsl3_64x72.Tlevs;
+  p72.nlevs = ones(size(p72.rtime)) * iNlev;
+  p72.plevs = airsl3_64x72.Tlevs' * ones(1,72*numtimesteps);
+  
+  p72.rlat = rlat(ii) * ones(1,72*numtimesteps);  p72.rlat = p72.rlat(:)';
   p72.rlon = rlon' * ones(1,numtimesteps);        p72.rlon = p72.rlon(:)';
   p72.plat = p72.rlat;
   p72.plon = p72.rlon;
   
-  junk = cmip6_64x72.all.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
-  %junk = cmip6_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
+  junk = airsl3_64x72.save64x72_stemp;     junk = permute(junk,[3 2 1]);   junk = squeeze(junk(:,:,ii));    junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
+  junk = airsl3_64x72.save64x72_T;         junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
+  junk = airsl3_64x72.save64x72_Q;         junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev/2,72*numtimesteps);
+  junk = airsl3_64x72.save64x72_O3;        junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
+  junk = airsl3_64x72.save64x72_RH;        junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev/2,72*numtimesteps);
 
+  junk = p72.gas_1; p72.gas_1 = zeros(size(p72.ptemp)); p72.gas_1(1:iNlev/2,:) = junk; for jj = iNlev/2+1 : iNlev; frac = (iNlev-jj+1)/(iNlev/2+1); p72.gas_1(jj,:) = junk(iNlev/2,:) * frac; end;
+  junk = p72.rh;    p72.rh = zeros(size(p72.ptemp));    p72.rh(1:iNlev/2,:) = junk;    for jj = iNlev/2+1 : iNlev; frac = (iNlev-jj+1)/(iNlev/2+1); p72.rh(jj,:) = junk(iNlev/2,:) * frac; end;
+
+%  p72.scanang = zeros(size(p72.stemp));
+%  p72.satzen = zeros(size(p72.stemp));
   p72.zobs = 705000 * ones(size(p72.stemp));
   p72.scanang = ones(size(p72.stemp)) * 22;
   p72.satzen = vaconv(p72.scanang, p72.zobs, zeros(size(p72.zobs)));
@@ -145,9 +154,9 @@ for ii = JOB
   p72.emis(2,:) = ones(size(p72.stemp)) * 0.98;
   p72.rho = (1-p72.emis)/pi;
   
-  fip = [dirout '/simulate64binsCMIP6' num2str(ii) '.ip.rtp'];
-  fop = [dirout '/simulate64binsCMIP6' num2str(ii) '.op.rtp'];
-  frp = [dirout '/simulate64binsCMIP6' num2str(ii) '.rp.rtp'];
+  fip = [dirout '/simulate64binsAIRSL3' num2str(ii) '.ip.rtp'];
+  fop = [dirout '/simulate64binsAIRSL3' num2str(ii) '.op.rtp'];
+  frp = [dirout '/simulate64binsAIRSL3' num2str(ii) '.rp.rtp'];
 
   rtpwrite(fip,h72,[],p72,[]);
     
@@ -185,26 +194,26 @@ for ii = JOB
     days = (1:numtimesteps)*30/365;
 
     polyfit(days,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
-    Math_tsfit_lin_robust(days*365,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
+    %Math_tsfit_lin_robust(days*365,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
   
     stempjunk = reshape(p72x.stemp,72,numtimesteps);
     polyfit(days,nanmean(stempjunk,1),1); ans(1)
-    Math_tsfit_lin_robust(days*365,nanmean(stempjunk),4); ans(2)
+    %Math_tsfit_lin_robust(days*365,nanmean(stempjunk),4); ans(2)
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
     dayOFtime = change2days(yy,mm,dd,2002);
     disp('dude I just computed dayOFtime')
 
     polyfit(dayOFtime/365.25,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
-    Math_tsfit_lin_robust(dayOFtime,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
+    %Math_tsfit_lin_robust(dayOFtime,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
   
     stempjunk = reshape(p72x.stemp,72,numtimesteps);
     polyfit(dayOFtime/365.25,nanmean(stempjunk,1),1); ans(1)
-    Math_tsfit_lin_robust(dayOFtime,nanmean(stempjunk),4); ans(2)
+    %Math_tsfit_lin_robust(dayOFtime,nanmean(stempjunk),4); ans(2)
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  iType = 6;  
+  iType = 3;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
 
 end
