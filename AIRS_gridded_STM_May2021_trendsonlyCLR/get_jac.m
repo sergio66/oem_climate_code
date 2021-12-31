@@ -1,6 +1,6 @@
-function [m_ts_jac,nlays,qrenorm] = get_jac(fname,iWhichLonBin);
+function [m_ts_jac,nlays,qrenorm] = get_jac(fname,iWhichLonBin,iVersJac);
 
-fprintf(1,'loading in %s \n',fname);
+fprintf(1,'loading in %s for jacversion %4i  \n',fname,iVersJac);
 
 loader = ['load ' fname];
 eval(loader);

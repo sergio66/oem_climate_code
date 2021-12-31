@@ -1,32 +1,40 @@
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /home/sergio/MATLABCODE/
 
-disp('THIS IS ZONAL AVERAGES')
+disp('THIS IS 64x72 AVERAGES')
 
 for ii=1:10; figure(ii); clf; end;
 
 load llsmap5
 
-if ~exist('reconstruct_L3_spectra_geo.mat')
+%{
+if ~exist('reconstruct_L3_spectra_geo2.mat')
   clear all
-  driver_check_WV_T_RH_L3_geo_and_spectral_rates
+  driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2
 end
 
-if ~exist('reconstruct_era5_spectra_geo.mat')
+if ~exist('reconstruct_era5_spectra_geo2.mat')
   clear all
-  driver_check_WV_T_RH_ERA5_geo_and_spectral_rates
+  driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2
 end
 
-if ~exist('reconstruct_cmip6_spectra_geo.mat')
+if ~exist('reconstruct_cmip6_spectra_geo2.mat')
   clear all
-  driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates
+  driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
 end
 
-L3 = load('reconstruct_L3_spectra_geo.mat');
-era5 = load('reconstruct_era5_spectra_geo.mat');
-cmip6 = load('reconstruct_cmip6_spectra_geo.mat');
+L3 = load('reconstruct_L3_spectra_geo2.mat');
+era5 = load('reconstruct_era5_spectra_geo2.mat');
+cmip6 = load('reconstruct_cmip6_spectra_geo2.mat');
+%}
 
 obs = load('gather_tileCLRnight_rates_fits.mat');
+
+check_WV_T_RH_ERA5_geo
+check_WV_T_RH_AIRSL3_geo
+
+error('kjglkjdg')
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); clf;

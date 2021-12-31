@@ -127,7 +127,7 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08
   topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08  AUTOMATIC USES Q00
 
-  topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
+  %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
 
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 

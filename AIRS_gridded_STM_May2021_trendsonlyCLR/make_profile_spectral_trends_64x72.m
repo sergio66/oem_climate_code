@@ -1,4 +1,4 @@
-function nwp_spectral_trends = make_profile_spectral_trends_64(era,era5,airsL3,results,resultsWV,resultsT,resultsO3,resultsAIRS_unc,fits,rates,pavg,plays,f,iERAorCMIP6,iNPMerror,TGmult);
+function nwp_spectral_trends = make_profile_spectral_trends_64(era,era5,airsL3,results,resultsWV,resultsT,resultsO3,resultsAIRS_unc,fits,rates,pavg,plays,f,iERAorCMIP6,iNPMerror,TGmult,iERA5orERAI);
 
 %% iERAorCMIP6 = 1  : using ERA
 %% iERAorCMIP6 = 2  : using CMIP6
@@ -22,11 +22,16 @@ if nargin == 13
   iERAorCMIP6 = +1;  %% assume we are using ERA fields
   iNPMerror = 0;     %% assume no error
   TGmult = 1;
+  iERA5orERAI = 2021;
 elseif nargin == 14
   iNPMerror = 0;     %% assume no error
   TGmult = 1;
+  iERA5orERAI = 2021;
 elseif nargin == 15
   iNPMerror = 0;     %% assume no error
+  iERA5orERAI = 2021;
+elseif nargin == 16
+  iERA5orERAI = 2021;
 end
 
 wvmult.eraORcmip6 = 1;     wvmult.era5 = 1;      wvmult.airsL3 = 1;     wvmult.umbc = 1;
@@ -72,7 +77,12 @@ for ii = 1 : 64
   end
 
   for jjj = 1 : 72
-    jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    if iERA5orERAI == 2019
+      jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    elseif iERA5orERAI == 2021
+      jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_ERA5_2021_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    end
+
     jacx = load(jacfilex);    
     %% THESE ARE NORMALIZED JACS   JTRUE*RENORM
     m_ts_jac.subjac.coljacCO2(:,jjj)   = jacx.m_ts_jac(:,1);

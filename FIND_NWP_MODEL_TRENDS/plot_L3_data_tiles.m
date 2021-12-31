@@ -12,6 +12,8 @@ if iDorA > 0
   Airs_RHSurf  = Airs_RHSurf_D;
   Airs_RH      = Airs_RH_D;
   Airs_Ozone   = Airs_Ozone_D;
+  Airs_CO      = Airs_CO_D;
+  Airs_CH4     = Airs_CH4_D;
   Airs_OLR     = Airs_OLR_D;
   Airs_ClrOLR = Airs_ClrOLR_D;
   
@@ -28,6 +30,8 @@ else
   Airs_RHSurf  = Airs_RHSurf_A;
   Airs_RH      = Airs_RH_A;
   Airs_Ozone   = Airs_Ozone_A;
+  Airs_CO      = Airs_CO_A;
+  Airs_CH4     = Airs_CH4_A;
   Airs_OLR     = Airs_OLR_A;
   Airs_ClrOLR = Airs_ClrOLR_A;
   
@@ -289,7 +293,59 @@ for jj = 1 : length(rlat)-1
 end
 figure(4); pcolor(double(squeeze(mean(save64x72_O3(:,:,5,:),4)))); colorbar; colormap(jet); shading interp; pause(1)
 
+boo = Airs_CH4;
+donk = size(boo);
+for jj = 1 : length(rlat)-1
+  fprintf(1,'CH4 latbin = %3i \n',jj);
+  for ii = 1 : length(rlon)-1
+    ix = find(Airs_Lat >= rlat(jj) & Airs_Lat < rlat(jj+1) & Airs_Lon >= rlon(ii) & Airs_Lon < rlon(ii+1) & landfrac < 0.001);
+    ix = find(Airs_Lat >= rlat(jj) & Airs_Lat < rlat(jj+1) & Airs_Lon >= rlon(ii) & Airs_Lon < rlon(ii+1));
+    for ll = 1 : donk(2)
+      for tt = 1 : tmax
+        zz = boo(tt,ll,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save64x72_CH4(jj,ii,ll,tt) = nanmean(xx(good));
+        if iDebug
+          figure(3)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+        end
+      end
+    end
+  end
+end
+figure(6); pcolor(double(squeeze(mean(save64x72_CH4(:,:,5,:),4)))); colorbar; colormap(jet); shading interp; pause(1)
+
+boo = Airs_CO;
+donk = size(boo);
+for jj = 1 : length(rlat)-1
+  fprintf(1,'CO latbin = %3i \n',jj);
+  for ii = 1 : length(rlon)-1
+    ix = find(Airs_Lat >= rlat(jj) & Airs_Lat < rlat(jj+1) & Airs_Lon >= rlon(ii) & Airs_Lon < rlon(ii+1) & landfrac < 0.001);
+    ix = find(Airs_Lat >= rlat(jj) & Airs_Lat < rlat(jj+1) & Airs_Lon >= rlon(ii) & Airs_Lon < rlon(ii+1));
+    for ll = 1 : donk(2)
+      for tt = 1 : tmax
+        zz = boo(tt,ll,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save64x72_CO(jj,ii,ll,tt) = nanmean(xx(good));
+        if iDebug
+          figure(3)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+        end
+      end
+    end
+  end
+end
+figure(5); pcolor(double(squeeze(mean(save64x72_CO(:,:,5,:),4)))); colorbar; colormap(jet); shading interp; pause(1)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp('now doing scalars eg iceOD')
+
 for jj = 1 : length(rlat)-1
   for ii = 1 : length(rlon)-1
     ix = find(Airs_Lat >= rlat(jj) & Airs_Lat < rlat(jj+1) & Airs_Lon >= rlon(ii) & Airs_Lon < rlon(ii+1));
@@ -378,10 +434,10 @@ end
 Tlevs = Airs_PT;
 Qlevs = Airs_PQ;
 if iDorA > 0
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version 'desc.mat save64x72_olr save64x72_clrolr save64x72_O3 save64x72_Q save64x72_T save64x72_stemp days Tlevs Qlevs'];
+  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version 'desc.mat save64x72_olr save64x72_clrolr save64x72_O3 save64x72_CH4 save64x72_CO save64x72_Q save64x72_T save64x72_stemp days Tlevs Qlevs'];
   saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version '_desc.mat save64x72_* days Tlevs Qlevs save_l*64*72'];
 else
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version 'asc.mat save64x72_olr save64x72_clrolr save64x72_O3 save64x72_Q save64x72_T save64x72_stemp days Tlevs Qlevs'];
+  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version 'asc.mat save64x72_olr save64x72_clrolr save64x72_O3 save64x72_CH4 save64x72_CO save64x72_Q save64x72_T save64x72_stemp days Tlevs Qlevs'];
   saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version '_asc.mat save64x72_* days Tlevs Qlevs save_l*64*72'];
 end
 eval(saver)

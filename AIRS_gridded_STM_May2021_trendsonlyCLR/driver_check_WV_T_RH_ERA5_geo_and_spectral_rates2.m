@@ -50,9 +50,12 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTERA5rate); shading interp; colorbar
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
-era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+%era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
 
 [numtimesteps,~] = size(era5_64x72.all.mmw);
+fprintf(1,'driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
+
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 
@@ -65,9 +68,12 @@ for ii = 2002 : 2021
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
   elseif ii == 2021
-    inum = 7;
+    %inum = 7;
+    %yyx(1:inum) = ii;
+    %mmx = 1 : 7;
+    inum = 8;
     yyx(1:inum) = ii;
-    mmx = 1 : 7;
+    mmx = 1 : 8;
     ddx = ones(size(mmx)) * 15;
   else
     inum = 12;

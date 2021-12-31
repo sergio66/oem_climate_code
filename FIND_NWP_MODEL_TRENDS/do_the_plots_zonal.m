@@ -30,9 +30,9 @@ figure(2); clf
   caxis([-0.15 +0.15]); colorbar
 colormap(lala.llsmap5)
 
-[x,ozonelen] = size(thestats_other.ozonerate);
+[x,ozonelen] = size(thestats.ozonerate);
 figure(3); clf
-  pcolor(save_lat(iXStart:iXEnd),(Airs_PT),double(thestats_other.ozonerate(iXStart:iXEnd,:)')); 
+  pcolor(save_lat(iXStart:iXEnd),(Airs_PT),double(thestats.ozonerate(iXStart:iXEnd,:)')); 
   title('ozone rate (frac/yr)')
   set(gca,'ydir','reverse');
   set(gca,'yscale','log')
@@ -43,14 +43,40 @@ figure(3); clf
   caxis([-0.02 +0.02]); colorbar
 colormap(lala.llsmap5)
 
-figure(4); clf;
+[x,ch4len] = size(thestats.ch4rate);
+figure(4); clf
+  pcolor(save_lat(iXStart:iXEnd),(Airs_PT),double(thestats.ch4rate(iXStart:iXEnd,:)')); 
+  title('ch4 rate (frac/yr)')
+  set(gca,'ydir','reverse');
+  set(gca,'yscale','log')
+  axis([-90 +90 9 1000])
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})    
+  shading interp; colorbar
+  caxis([-0.01 +0.01]); colorbar
+colormap(lala.llsmap5)
+
+[x,colen] = size(thestats.corate);
+figure(5); clf
+  pcolor(save_lat(iXStart:iXEnd),(Airs_PT),double(thestats.corate(iXStart:iXEnd,:)')); 
+  title('co rate (frac/yr)')
+  set(gca,'ydir','reverse');
+  set(gca,'yscale','log')
+  axis([-90 +90 9 1000])
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})    
+  shading interp; colorbar
+  caxis([-0.01 +0.01]); colorbar
+colormap(lala.llsmap5)
+
+figure(6); clf;
 plot(save_lat(iXStart:iXEnd),thestats.stemprate,'k',...
      save_lat(iXStart:iXEnd),thestats_other.olrrate,'r',...
      save_lat(iXStart:iXEnd),thestats_other.clrolrrate,'b','linewidth',2); grid on
 xlabel('latitude'); hl = legend('Stemp','OLR','Clr OLR','location','north'); set(hl,'fontsize',10);
 title('rates in K/yr and W/m2/yr')
 
-figure(5); clf;
+figure(7); clf;
 plot(save_lat(iXStart:iXEnd),thestats.stemprate,'k',...
      save_lat(iXStart:iXEnd),thestats_other.olrrate,'r',...
      save_lat(iXStart:iXEnd),thestats_other.clrolrrate,'b'); hold on
@@ -61,7 +87,7 @@ xlabel('latitude'); hl = legend('Stemp','OLR','Clr OLR','location','north'); set
 title('rates in K/yr and W/m2/yr')
 
 [x,waterlen] = size(thestats.waterrate);
-figure(6); clf
+figure(8); clf
   booW = thestats.waterrate(iXStart:iXEnd,:);
   booT = thestats.ptemprate(iXStart:iXEnd,:);  
   booWT = booW .* booT(:,1:12);
@@ -76,7 +102,7 @@ figure(6); clf
   caxis([-0.001 +0.001]); colorbar
 colormap(lala.llsmap5)
 
-figure(7);
+figure(9);
   plot(save_lat(iXStart:iXEnd),thestats_other.ice_od_rate,'b',save_lat(iXStart:iXEnd),thestats_other.liq_water_rate,'r',...
        save_lat(iXStart:iXEnd),thestats_other.icesze_rate,'c','linewidth',2)
   hl = legend('ice OD frac','liq water frac','ice size frac');

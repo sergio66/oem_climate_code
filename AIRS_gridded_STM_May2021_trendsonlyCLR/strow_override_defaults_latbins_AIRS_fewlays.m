@@ -166,17 +166,26 @@ if driver.i16daytimestep < 0
     driver.jac_indexINSIDEbin = driver.iibin - (driver.jac_latbin-1)*72;     %% so this should be lonbin
 
     iKCARTAorSARTA = +1;
+    iVersJac = 2019;   %% ERA5 from 2002-2019
+    iVersJac = 2021;   %% ERA5 from 2002-2021
     if iKCARTAorSARTA < 0
       %AHA = [AHA '/subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
       AHA = [AHA '/clr_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
     else
-      %AHA = [AHA '/kcarta_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
-      AHA = [AHA '/kcarta_clr_subjacLatBin_newSARTA_' num2str(driver.jac_latbin,'%02i') '.mat'];
+      %AHA = [AHA '/kcarta_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];                                   %% 40 latbins
+      if iVersJac == 2019
+        AHA = [AHA '/kcarta_clr_subjacLatBin_newSARTA_' num2str(driver.jac_latbin,'%02i') '.mat'];                     %% ERA-I, 17 year
+      elseif iVersJac == 2021
+        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 19 year
+      else
+        iVersJac
+        error('iVersJac = 2019 or 2021 only')
+      end
     end
 
     driver.jacobian.filename = AHA;
     clear AHA
-    fprintf(1,'reading in constant kcarta jac file %s \n',driver.jacobian.filename)
+    fprintf(1,'reading in jac version %2i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)
   end
 
 elseif driver.i16daytimestep > 0
@@ -200,8 +209,8 @@ end
 
 % Get jacobians, and combine the 97 layer T(z)/WV(z)/O3(z) into N layers
 driver;
-%[m_ts_jac0,nlays,qrenorm]  = get_jac(driver.jacobian.filename,driver.jac_indexINSIDEbin);
-[m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat);
+%[m_ts_jac0,nlays,qrenorm]  = get_jac(driver.jacobian.filename,driver.jac_indexINSIDEbin,iVersJac);
+[m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac);
 m_ts_jac0 = double(m_ts_jac0);
 
 %% THIS IS DEFAULT -- 4 column trace gas (CO2/N2O/CH4/Cld1/CLd2), 1 stemp, (97x3) geo

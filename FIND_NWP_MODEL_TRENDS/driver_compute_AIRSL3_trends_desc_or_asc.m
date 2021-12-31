@@ -26,11 +26,13 @@ elseif timespan == 18
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2020; StopYM  = 8;   %% stop  08/2020
 elseif timespan == 19
+  savestr_version = 'Sept2002_Jul2021_19yr';
+  StartY = 2002; StartYM = 9;   %% start 09/2002
+  StopY  = 2021; StopYM  = 7;   %% stop  08/2021  
+
   savestr_version = 'Sept2002_Aug2021_19yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2021; StopYM  = 8;   %% stop  08/2021  
-  savestr_version = 'Sept2002_Jul2021_19yr';
-  StopY  = 2021; StopYM  = 7;   %% stop  08/2021  
 else
   error('huh check timespan')
 end

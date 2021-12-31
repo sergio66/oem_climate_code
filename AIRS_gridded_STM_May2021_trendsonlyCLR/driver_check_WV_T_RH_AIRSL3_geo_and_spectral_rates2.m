@@ -50,9 +50,11 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTAIRSL3rate); shading interp; colorb
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeAIRSL3_monthly_trends.m  and do_the_AIRSL3_trends.m
-airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Jul2021_19yr_desc.mat');
+%airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Jul2021_19yr_desc.mat');
+airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Aug2021_19yr_desc.mat');
 
 [numtimesteps] = length(airsl3_64x72.days);
+fprintf(1,'driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 
@@ -65,9 +67,12 @@ for ii = 2002 : 2021
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
   elseif ii == 2021
-    inum = 7;
+    %inum = 7;
+    %yyx(1:inum) = ii;
+    %mmx = 1 : 7;
+    inum = 8;
     yyx(1:inum) = ii;
-    mmx = 1 : 7;
+    mmx = 1 : 8;
     ddx = ones(size(mmx)) * 15;
   else
     inum = 12;
@@ -96,9 +101,14 @@ for ii = JOB
   h72 = h;
   h72.ptype = 0;
   h72.pfields = 1;
+
   h72.ngas = 2;
   h72.gunit = [20 12]';  %% g/kg and VMR
   h72.glist = [ 1 3 ]';
+
+  h72.ngas = 4;
+  h72.gunit = [20 12 12 12]';  %% g/kg and VMR
+  h72.glist = [ 1  3  5  6]';
   
   p72.rtime = [];
   p72.co2ppm = [];
@@ -121,6 +131,8 @@ for ii = JOB
   junk = airsl3_64x72.save64x72_T;         junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
   junk = airsl3_64x72.save64x72_Q;         junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev/2,72*numtimesteps);
   junk = airsl3_64x72.save64x72_O3;        junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
+  junk = airsl3_64x72.save64x72_CO;        junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_5 = reshape(junk,iNlev,72*numtimesteps);
+  junk = airsl3_64x72.save64x72_CH4;       junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_6 = reshape(junk,iNlev,72*numtimesteps);
   junk = airsl3_64x72.save64x72_RH;        junk = permute(junk,[4 3 2 1]); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev/2,72*numtimesteps);
 
   junk = p72.gas_1; p72.gas_1 = zeros(size(p72.ptemp)); p72.gas_1(1:iNlev/2,:) = junk; for jj = iNlev/2+1 : iNlev; frac = (iNlev-jj+1)/(iNlev/2+1); p72.gas_1(jj,:) = junk(iNlev/2,:) * frac; end;

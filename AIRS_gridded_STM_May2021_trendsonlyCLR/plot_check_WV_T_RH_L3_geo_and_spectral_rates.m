@@ -1,5 +1,20 @@
 addpath ../../FIND_TRENDS/
 
+if ~exist('p40')
+  [h40,~,p40,~] = rtpread('simulate40binsAIRSL3.ip.rtp');
+end
+if ~exist('p40x')
+  [h40x,~,p40x,~] = rtpread('simulate40binsAIRSL3.rp.rtp');
+  tcalc = reshape(rad2bt(h40x.vchan,p40x.rcalc),2645,40,numtimesteps);;
+  tcalcavg = squeeze(nanmean(tcalc,2));
+end
+if ~exist('airsL3zonal')
+  airsL3zonal = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_Sept2002_Jul2021_19yr_desc.mat');
+end
+if ~exist('numtimesteps','var')
+  numtimesteps = 227;
+end
+
 fchanx = h40x.vchan;
 plevsx = p40x.plevs(1:97,20);
 rlatx  = unique(p40.rlat);

@@ -6,6 +6,7 @@
 #   or            kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
 #                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
 #                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
+#                 kleenslurm; sbatch  -p cpu2021                       --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
 #
 # run this with   kleenslurm; sbatch  --constraint=hpcf2013       --array=1-40 sergio_matlab_jobB.sbatch            for clust_run_retrieval_setlatbin_AIRS_loop_lonbinV2
 #   or            kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2

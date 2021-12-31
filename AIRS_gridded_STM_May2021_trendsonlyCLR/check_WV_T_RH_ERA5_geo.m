@@ -15,7 +15,8 @@ dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
 load('llsmap5.mat');
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
-era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+%era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
 
 addpath ../FIND_NWP_MODEL_TRENDS/
 all = era5_64x72.all;
@@ -23,7 +24,7 @@ all = era5_64x72.all;
 dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
 numtimesteps = length(dayOFtime);
 
-computeERA5_surface_trends
+%computeERA5_surface_trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -42,8 +43,10 @@ end
 meanST = nanmean(stemp_all,2); pcolor(reshape(meanST,72,64)'); shading interp; colorbar
 boo = 1:4608; pcolor(reshape(boo,72,64)'); shading interp; colorbar
 
-origdata = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
-origtrends = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
+%origdata = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+%origtrends = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
+origdata = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+origtrends = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
 
 %plot(origtrends.trend_stemp - trend_stemp)
 plot(stemp_all - era5_64x72.all.stemp')
@@ -66,9 +69,12 @@ for ii = 2002 : 2021
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
   elseif ii == 2021
-    inum = 7;
+    %inum = 7;
+    %yyx(1:inum) = ii;
+    %mmx = 1 : 7;
+    inum = 8;
     yyx(1:inum) = ii;
-    mmx = 1 : 7;
+    mmx = 1 : 8;
     ddx = ones(size(mmx)) * 15;
   else
     inum = 12;
@@ -145,14 +151,15 @@ figure(7); clf; colormap(llsmap5); pcolor(reshape(X,72,64)',reshape(Y,72,64)',re
 figure(6); clf; aslmap(6,rlat65,rlon73,smoothn(reshape(xtrend_st,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-0.15 +0.15]);
 figure(7); clf; aslmap(7,rlat65,rlon73,smoothn(reshape(xtrend_bt1231,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-0.15 +0.15]);
 
-old_era5_trends = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
+%old_era5_trends = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
+old_era5_trends = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
 figure(8); clf; aslmap(8,rlat65,rlon73,smoothn(reshape(old_era5_trends.trend_stemp,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-0.15 +0.15]);
 
 figure(9);  clf; pcolor(origdata.all.stemp'-stemp_all); shading interp; colorbar; title('ORIG STEMP - what is in the rtp files')
 figure(10); clf; plot(origtrends.trend_stemp - xtrend_st);
 
 figure(11); plot(h72x.vchan,mean(xtrendSpectral,2),h72x.vchan,mean(obsrates.rates,2)); grid; xlim([640 1640]); title('ERA5'); plotaxis2; 
-  hl = legend('ERA5','AIRS obs','location','best')
+  hl = legend('ERA5','AIRS obs','location','best');
 
 pause(0.1);
 error('lgksg')

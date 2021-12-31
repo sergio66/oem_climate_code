@@ -1,4 +1,4 @@
-%% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Oct2020_startSept2002_trendsonly/clust_put_together_jacs_clr.m
+%% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
@@ -9,32 +9,43 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 miaow = load('sarta_chans_for_l1c.mat');
 ind2834to2645 = miaow.ichan;
 
-iOldORNew = +1;
+iOldORNew = +1;  %% the 17 year ERA-I
+iOldORNew = +2;  %% the 19 year ERA5
+
 if iOldORNew < 0
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  %%% NEED TO REDO
   foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin' num2str(JOB,'%02i') '.mat'];
   foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin' num2str(JOB,'%02i') '.mat'];
-else
+elseif iOldORNew == 1
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
   foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_newSARTA_' num2str(JOB,'%02i') '.mat'];
   foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_newSARTA_' num2str(JOB,'%02i') '.mat'];
+elseif iOldORNew == 2
+  SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
+  foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_Dec2021_' num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(JOB,'%02i') '.mat'];
+else
+  error('unknown iOldORNew')
 end
 
 if exist(foutsubjac)
   foutsubjac
-%  error('foutsubjac exists')
+  error('foutsubjac exists')
 end
 if exist(foutsubjac2)
   foutsubjac2
-%  error('foutsubjac2 exists')
+  error('foutsubjac2 exists')
 end
 
 sarta = load(SARTAjac);
 
-%[h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002/summary_17years_all_lat_all_lon_2002_2019_palts.rtp');  %% already has palts
-
-%[h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002/summary_17years_all_lat_all_lon_2002_2019.rtp');  %% already has palts
-[h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+if iOldORNew == 0
+  [h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002/summary_17years_all_lat_all_lon_2002_2019.rtp');  %% already has palts
+elseif iOldORNew == 1
+  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+elseif iOldORNew == 2
+  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp');
+end
 
 plot(1:72,p.stemp(sarta.subjac.indices),'b-',1:72,sarta.subjac.stemp,'r.-')
 pause(1); 
@@ -165,20 +176,34 @@ for lon = 1 : 72
 end
 fprintf(1,'\n')
 
-kcarta.subjac.rlon = sarta.subjac.rlon;
-kcarta.subjac.rlat = sarta.subjac.rlat;
-kcarta.subjac.stemp = sarta.subjac.stemp;
-kcarta.subjac.nlevs = sarta.subjac.nlevs;
-kcarta.subjac.ppmv2 = sarta.subjac.ppmv2;
-kcarta.subjac.ppmv4 = sarta.subjac.ppmv4;
-kcarta.subjac.ppmv6 = sarta.subjac.ppmv6;
+addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+i500mb = find(p.plevs(:,3000) >= 500,1);
+ppmv2 = layers2ppmv(h,p,1:length(p.stemp),2);
+ppmv4 = layers2ppmv(h,p,1:length(p.stemp),4);
+ppmv6 = layers2ppmv(h,p,1:length(p.stemp),6);
+
+%kcarta.subjac.rlon = sarta.subjac.rlon;
+%kcarta.subjac.rlat = sarta.subjac.rlat;
+%kcarta.subjac.stemp = sarta.subjac.stemp;
+%kcarta.subjac.nlevs = sarta.subjac.nlevs;
+%kcarta.subjac.ppmv2 = sarta.subjac.ppmv2;
+%kcarta.subjac.ppmv4 = sarta.subjac.ppmv4;
+%kcarta.subjac.ppmv6 = sarta.subjac.ppmv6;
+kcarta.subjac.rlon = p.rlon(ind_subset_junk);
+kcarta.subjac.rlat = p.rlat(ind_subset_junk);
+kcarta.subjac.stemp = p.stemp(ind_subset_junk);
+kcarta.subjac.nlevs = p.nlevs(ind_subset_junk);
+kcarta.subjac.ppmv2 = ppmv2(i500mb,ind_subset_junk);
+kcarta.subjac.ppmv4 = ppmv4(i500mb,ind_subset_junk);
+kcarta.subjac.ppmv6 = ppmv6(i500mb,ind_subset_junk);
 kcarta.subjac.indices = iaIndices;
 
 sum(sarta.subjac.indices - iaIndices)
   
 subjac = kcarta.subjac;
 
-kcarta.subjac.comment = 'see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Oct2020_startSept2002_trendsonly/clust_put_together_jacs_clr.m';
+kcarta.subjac.comment{1} = 'see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Oct2020_startSept2002_trendsonly/clust_put_together_jacs_clr.m     for ERAI';
+kcarta.subjac.comment{2} = 'see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m for ERA5';
 
 subjac = kcarta.subjac;
 clear sarta kcarta

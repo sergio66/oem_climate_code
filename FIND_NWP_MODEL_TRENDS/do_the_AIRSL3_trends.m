@@ -3,6 +3,8 @@ if length(iDorA) == 0
   iDorA = +1;
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iDo = input('do NATIVE 180 bins? (-1/+1) (-1 = default) : ');
 if length(iDo) == 0
   iDo = -1;
@@ -32,6 +34,7 @@ if iDo > 0
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iDo = input('do EQ AREA 40 latbins? (-1/+1) (-1 = default) : ');
 if length(iDo) == 0
   iDo = -1;
@@ -61,6 +64,7 @@ if iDo > 0
   
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iDo = input('do 64x72 TILES? (-1/+1) (-1 = default) : ');
 if length(iDo) == 0
   iDo = -1;

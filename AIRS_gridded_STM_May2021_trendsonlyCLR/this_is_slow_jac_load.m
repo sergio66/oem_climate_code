@@ -1,4 +1,4 @@
-fprintf(1,'loading in %s would be sloooooooow\n',fname);
+fprintf(1,'loading in %s for iVersJac = %4i would be sloooooooow\n',fname,iVersJac);
 
 loader = ['load ' fname];
 eval(loader);

@@ -32,23 +32,45 @@ end
 
 pert = p;
 for ii = 1 : length(p.stemp)
+  %%% CHECK THESW ARE FINITE
+  
   nlays = p.nlevs(ii)-1;
   playsjunk = p.plays(1:nlays,ii);
 
   roo = interp1(log(pavg),resultsT(ii,:),log(playsjunk),[],'extrap');
+  ohoh = find(~isfinite(roo));
+  if length(ohoh) > 0
+    fprintf(1,' OHOH profile %4i dT(z) has %3i not finite members, set to 0 \n',ii,length(ohoh));
+    roo(ohoh) = 0;
+  end
   pert.ptemp(1:nlays,ii) =  pert.ptemp(1:nlays,ii) + roo;
 
   roo = interp1(log(pavg),resultsWV(ii,:),log(playsjunk),[],'extrap');
+  ohoh = find(~isfinite(roo));
+  if length(ohoh) > 0
+    fprintf(1,' OHOH profile %4i dWV(z) has %3i not finite members, set to 0 \n',ii,length(ohoh));
+    roo(ohoh) = 0;
+  end
   pert.gas_1(1:nlays,ii) =  pert.gas_1(1:nlays,ii) .* (1+roo);
 
   roo = interp1(log(pavg),resultsO3(ii,:),log(playsjunk),[],'extrap');
+  ohoh = find(~isfinite(roo));
+  if length(ohoh) > 0
+    fprintf(1,' OHOH profile %4i dO3(z) has %3i not finite members, set to 0 \n',ii,length(ohoh));
+    roo(ohoh) = 0;
+  end
   pert.gas_3(1:nlays,ii) =  pert.gas_3(1:nlays,ii) .* (1+roo);
 
-  pert.stemp(ii) = pert.stemp(ii) + resultsST(ii);
+  if ~isfinite(resultsST(ii))
+    fprintf(1,' OHOH profile %4i dST is not finite, set to 0 \n',ii);
+  else
+    pert.stemp(ii) = pert.stemp(ii) + resultsST(ii);
+  end
 
   pert.gas_2(1:nlays,ii) =  pert.gas_2(1:nlays,ii) .* (1+2.2/385);
   pert.gas_4(1:nlays,ii) =  pert.gas_4(1:nlays,ii) .* (1+0.8/300);
   pert.gas_6(1:nlays,ii) =  pert.gas_6(1:nlays,ii) .* (1+4.5/1700);
+
 end
 
 pera = p;

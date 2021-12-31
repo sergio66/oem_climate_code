@@ -1,4 +1,4 @@
-function umbc_spectral_trends = make_profile_spectral_trends_umbc_only(results,resultsWV,resultsT,resultsO3,pavg);
+function umbc_spectral_trends = make_profile_spectral_trends_umbc_only(results,resultsWV,resultsT,resultsO3,pavg,iERA5orERAI);
 
 %% inputs 
 %%   results*     = 6 scalars, 20 layers
@@ -23,7 +23,11 @@ for ii = 1 : 64
   end
 
   for jjj = 1 : 72
-    jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    if iERA5orERAI == 2019
+      jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    elseif iERA5orERAI == 2021
+      jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_ERA5_2021_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    end
     jacx = load(jacfilex);    
     %% THESE ARE NORMALIZED JACS   JTRUE*RENORM
     m_ts_jac.subjac.coljacCO2(:,jjj)   = jacx.m_ts_jac(:,1);

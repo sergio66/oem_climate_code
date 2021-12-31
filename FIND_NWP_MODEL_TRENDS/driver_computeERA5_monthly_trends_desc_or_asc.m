@@ -43,6 +43,7 @@ end
 [sum(iaFound) length(iaFound)]
 plot(1:iaMax,iaFound,'+-')
 
+disp('reading in monthly ERA5 data in '/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
 for ii = 1 : iaMax
   if iDorA > 0
     fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
@@ -107,9 +108,11 @@ if iNumYears == 18
   end
 elseif iNumYears == 19
   if iDorA > 0
-    save -v7.3 ERA5_atm_data_2002_09_to_2021_07_desc.mat comment all
+%    save -v7.3 ERA5_atm_data_2002_09_to_2021_07_desc.mat comment all
+    save -v7.3 ERA5_atm_data_2002_09_to_2021_08_desc.mat comment all
   else
-    save -v7.3 ERA5_atm_data_2002_09_to_2021_07_asc.mat comment all
+%    save -v7.3 ERA5_atm_data_2002_09_to_2021_07_asc.mat comment all
+    save -v7.3 ERA5_atm_data_2002_09_to_2021_08_asc.mat comment all
   end
 end
 
@@ -181,9 +184,11 @@ if iNumYears == 18
   end
 elseif iNumYears == 19
   if iDorA > 0
-    save ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
+    %save ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
+    save ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat comment trend*
   else
-    save ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
+    %save ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
+    save ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat comment trend*
   end
 end
 
@@ -201,6 +206,18 @@ figure(5); junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = re
   pcolor(trend_rlat64,trend_plays,junk); title('ERA5 mean ptemp K');  caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
 figure(6); junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_plays,junk); title('ERA5 mean RH percent');  caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+
+%{
+figure(7); junk = squeeze(nanstd(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(8); junk = squeeze(nanstd(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+
+figure(7); junk = squeeze(max(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(8); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 

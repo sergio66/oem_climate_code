@@ -64,7 +64,7 @@ if iNorD > 0
     airsL3native = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
     airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
     airsL3       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
-    era5   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
+    era5   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
   end
   era   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_desc.mat');
   cmip6 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat');
@@ -75,7 +75,8 @@ else
     airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Aug2020_18yr_asc.mat');
     airsL3       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2020_18yr_asc.mat');
     %era5   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2019_08_trends_asc.matWRONGYEAREND');
-    era5   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2020_08_trends_asc.mat');
+    %era5   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2020_08_trends_asc.mat');
+    era5   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat');
   elseif iNumYears == 19  
     airsL3native = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_asc.mat');
     airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_asc.mat');

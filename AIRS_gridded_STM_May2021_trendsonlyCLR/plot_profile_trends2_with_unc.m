@@ -104,8 +104,8 @@ if ~exist('nwp_spectral_trends_umbc_only_unc_P')
 
   %nwp_spectral_trends_umbc_only     = make_profile_spectral_trends_umbc_only(results,resultsWV,resultsT,resultsO3,pavg);
   %  sum(sum(nwp_spectral_trends_cmip6_era5_airsL3_umbc.umbc_spectral_rates-nwp_spectral_trends_umbc_only.umbc_spectral_rates))
-  nwp_spectral_trends_umbc_only_unc_P = make_profile_spectral_trends_umbc_only(results+resultsunc,resultsWV+resultsWVunc,resultsT+resultsTunc,resultsO3+resultsO3unc,pavg);
-  nwp_spectral_trends_umbc_only_unc_M = make_profile_spectral_trends_umbc_only(results-resultsunc,resultsWV-resultsWVunc,resultsT-resultsTunc,resultsO3-resultsO3unc,pavg);
+  nwp_spectral_trends_umbc_only_unc_P = make_profile_spectral_trends_umbc_only(results+resultsunc,resultsWV+resultsWVunc,resultsT+resultsTunc,resultsO3+resultsO3unc,pavg,iVersJac);
+  nwp_spectral_trends_umbc_only_unc_M = make_profile_spectral_trends_umbc_only(results-resultsunc,resultsWV-resultsWVunc,resultsT-resultsTunc,resultsO3-resultsO3unc,pavg,iVersJac);
   plot(h.vchan,nanmean(rates'),'k',h.vchan,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.umbc_spectral_rates'),'b',...
        h.vchan,nanmean(nwp_spectral_trends_umbc_only_unc_P.umbc_spectral_rates'),'c',h.vchan,nanmean(nwp_spectral_trends_umbc_only_unc_M.umbc_spectral_rates'),'m')
   axis([640 1640 -0.1 +0.1]); plotaxis2; hl = legend('Obs AIRS BT trends','OEM','OEM + unc','OEM - unc','location','best','fontsize',10);

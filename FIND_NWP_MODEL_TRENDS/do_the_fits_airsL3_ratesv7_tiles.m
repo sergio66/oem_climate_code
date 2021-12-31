@@ -19,6 +19,7 @@ end
 warning on
 %}
 
+%{
 warning off
 for ii = 1 : 72
   fprintf(1,'lonbin %2i of 72 \n',ii);
@@ -70,12 +71,32 @@ for ii = 1 : 72
   thestats64x72.cld_frac_rate(ii,:,:) = xthestats_cld1.waterrate;  thestats64x72.cld_frac_ratestd(ii,:,:) = xthestats_cld1.waterrate;
   thestats64x72.cld_pres_rate(ii,:,:) = xthestats_cld1.ptemprate;  thestats64x72.cld_pres_ratestd(ii,:,:) = xthestats_cld1.ptemprate;  %% fixed Sept 31, 2018 (or Oct -1, 2018)
 end
+%}
 
 %% remember we don't have cloud stuff here so this is sorta a waste
 for ii = 1 : 72
-  xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_O3(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
+  %xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_O3(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
+  xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_CH4(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
+  thestats64x72.ch4rate(ii,:,:)        = xthestats.ozonerate;
+  thestats64x72.ch4ratestd(ii,:,:)     = xthestats.ozoneratestd;
+  thestats64x72.ch4lag(ii,:,:)         = xthestats.ozonelag;
+  thestats64x72.ch4ratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonerate');
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd');
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonelag');
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd_lag');
+
+  xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_CO(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
   junk = save64x72_ice_od(:,zonk); junk = junk ./ (nanmean(junk')' * ones(1,length(zonk))+eps);
   thestats_cld2 = do_profilerate_fit_other_fraction(squeeze(save64x72_cld_frac(:,ii,:,zonk)),squeeze(save64x72_iceT(:,ii,zonk)),junk,days(zonk),rlat);
+  thestats64x72.corate(ii,:,:)        = xthestats.ozonerate;
+  thestats64x72.coratestd(ii,:,:)     = xthestats.ozoneratestd;
+  thestats64x72.colag(ii,:,:)         = xthestats.ozonelag;
+  thestats64x72.coratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonerate');
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd');
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonelag');
+  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd_lag');
 
   thestats64x72_other.lats = xthestats64x72_other.lats;
   thestats64x72_other.olrrate(ii,:) = xthestats64x72_other.olrrate;

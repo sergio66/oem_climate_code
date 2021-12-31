@@ -1,9 +1,9 @@
-function [m_ts_jac,nlays,qrenorm,freq2645] = get_jac(fname,iWhichLatLonBin,iLonBin,iLatBin);
+function [m_ts_jac,nlays,qrenorm,freq2645] = get_jac(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac);
 
 iDoSlow = -1;
 if iDoSlow > 0
- tic;
-  this_is_slow_jac_load
+  tic;
+  this_is_slow_jac_load  %% all it needs is fname which is set in strow_override_defaults_latbins_AIRS_fewlays.m (ie does not really need iVersJac)
   'done1'
   timervalx1 = toc;
 end
@@ -11,7 +11,13 @@ end
 if iDoSlow > 0
   tic;
 end
-see_clust_put_together_jacs_clr
+
+if iVersJac == 2019
+  see_clust_put_together_jacs_clr
+elseif iVersJac == 2021
+  see_clust_put_together_jacs_clrERA5_2021
+end
+
 if iDoSlow > 0
   'done2'
   timervalx2 = toc;
@@ -85,7 +91,11 @@ qrenormACTUAL = qrenorm;
 iSaveJac = -1;
 if iSaveJac > 0
   commentJacX = 'see /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/get_jac_fast.m';
-  saverjac = ['save /asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/usethisjac_clear_reconstructcode_latbin_' num2str(iLatBin,'%02d') '_lonbin_' num2str(iLonBin,'%02d') '.mat commentJacX qrenormUSE qrenormACTUAL nlays m_ts_jac'];
+  if iVersJac == 2019
+    saverjac = ['save /asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/usethisjac_clear_reconstructcode_latbin_' num2str(iLatBin,'%02d') '_lonbin_' num2str(iLonBin,'%02d') '.mat commentJacX qrenormUSE qrenormACTUAL nlays m_ts_jac'];
+  elseif iVersJac == 2021
+    saverjac = ['save /asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/usethisjac_clear_reconstructcode_ERA5_2021_latbin_' num2str(iLatBin,'%02d') '_lonbin_' num2str(iLonBin,'%02d') '.mat commentJacX qrenormUSE qrenormACTUAL nlays m_ts_jac'];
+  end
   eval(saverjac);
 end
 

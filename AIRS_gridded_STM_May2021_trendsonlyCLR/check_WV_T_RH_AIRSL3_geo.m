@@ -15,7 +15,8 @@ dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
 load('llsmap5.mat');
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeAIRSL3_monthly_trends.m  and do_the_AIRSL3_trends.m
-airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+%airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+airsl3_64x72 = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat');
 
 addpath ../FIND_NWP_MODEL_TRENDS/
 all = airsl3_64x72.thestats64x72;
@@ -25,8 +26,10 @@ all = airsl3_64x72.thestats64x72;
 
 %computeAIRSL3_surface_trends
 
-origdata = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Jul2021_19yr_desc.mat');
-origtrends = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+%origdata = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Jul2021_19yr_desc.mat');
+%origtrends = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+origdata = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_Sept2002_Aug2021_19yr_desc.mat');
+origtrends = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat');
 [~,~,numtimesteps] = size(origdata.save64x72_stemp);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -48,7 +51,7 @@ boo = 1:4608; pcolor(reshape(boo,72,64)'); shading interp; colorbar
 
 %plot(origtrends.trend_stemp - trend_stemp)
 wah = permute(origdata.save64x72_stemp,[2 1 3]);
-plot(stemp_all - reshape(wah,72*64,227))
+plot(stemp_all - reshape(wah,72*64,numtimesteps))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -69,9 +72,12 @@ for ii = 2002 : 2021
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
   elseif ii == 2021
-    inum = 7;
+    %inum = 7;
+    %yyx(1:inum) = ii;
+    %mmx = 1 : 7;
+    inum = 8;
     yyx(1:inum) = ii;
-    mmx = 1 : 7;
+    mmx = 1 : 8;
     ddx = ones(size(mmx)) * 15;
   else
     inum = 12;
@@ -156,6 +162,13 @@ figure(10); clf; plot(origtrends.trend_stemp - xtrend_st);
 
 figure(11); plot(h72x.vchan,nanmean(xtrendSpectral,2),h72x.vchan,mean(obsrates.rates,2)); grid; xlim([640 1640]); title('AIRSL3'); plotaxis2; 
   hl = legend('AIRSL3','AIRS obs','location','best');
+
+jacCH4 = load('/asl/s1/sergio/AIRSPRODUCTS_JACOBIANS/TRP/g6_jac_new.mat');
+jacN2O = load('/asl/s1/sergio/AIRSPRODUCTS_JACOBIANS/TRP/g4_jac.mat');
+figure(11); plot(h72x.vchan,nanmean(xtrendSpectral,2),h72x.vchan,mean(obsrates.rates,2),jacN2O.fout,sum(jacN2O.jout')/200,jacCH4.fout,sum(jacCH4.jout')/200,'k','linewidth',2); grid; xlim([640 1640]); title('AIRSL3'); plotaxis2; 
+ axis([1200 1500 -0.08 +0.025])
+  hl = legend('AIRSL3','AIRS obs','N2O column jac','CH4 column jac','location','best','fontsize',8);
+
 
 pause(0.1);
 error('lgksg')

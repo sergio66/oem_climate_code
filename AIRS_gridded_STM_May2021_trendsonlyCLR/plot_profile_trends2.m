@@ -97,9 +97,13 @@ if length(junk) == 0
   junk = 1;
 end
 if junk > 0
+  iVersJac = input('Entr jac version (2019) = 2002/2019 ERAI or (2021) = 2002/2021 ERA5 default : ');
+  if length(iVersJac) == 0
+    iVersJac = 2021;
+  end
   if ~exist('nwp_spectral_trends_cmip6_era5_airsL3_umbc')
     if exist('cmip6')
-      nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2);
+      nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac);
 
 %{
 %% this is DA PLOT

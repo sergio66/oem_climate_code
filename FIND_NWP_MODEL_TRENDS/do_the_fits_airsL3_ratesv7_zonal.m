@@ -28,7 +28,26 @@ thestats_cld3 = do_profilerate_fit_other_fraction(save_cld_frac(:,:,zonk),save_i
 %}
 
 %% after Mar 2016
-thestats_other = do_profilerate_fit_other_fraction(save_O3(:,:,zonk),save_olr(:,zonk),save_clrolr(:,zonk),days(zonk),latbins);
+%thestats_other = do_profilerate_fit_other_fraction(save_O3(:,:,zonk),save_olr(:,zonk),save_clrolr(:,zonk),days(zonk),latbins);
+thestats_other = do_profilerate_fit_other_fraction(save_CH4(:,:,zonk),save_olr(:,zonk),save_clrolr(:,zonk),days(zonk),latbins);
+  thestats.ch4rate        = thestats_other.ozonerate;
+  thestats.ch4ratestd     = thestats_other.ozoneratestd;
+  thestats.ch4lag         = thestats_other.ozonelag;
+  thestats.ch4ratestd_lag = thestats_other.ozoneratestd_lag;
+  thestats_other = rmfield(thestats_other,'ozonerate');
+  thestats_other = rmfield(thestats_other,'ozoneratestd');
+  thestats_other = rmfield(thestats_other,'ozonelag');
+  thestats_other = rmfield(thestats_other,'ozoneratestd_lag');
+thestats_other = do_profilerate_fit_other_fraction(save_CO(:,:,zonk),save_olr(:,zonk),save_clrolr(:,zonk),days(zonk),latbins);
+  thestats.corate        = thestats_other.ozonerate;
+  thestats.coratestd     = thestats_other.ozoneratestd;
+  thestats.colag         = thestats_other.ozonelag;
+  thestats.coratestd_lag = thestats_other.ozoneratestd_lag;
+  thestats_other = rmfield(thestats_other,'ozonerate');
+  thestats_other = rmfield(thestats_other,'ozoneratestd');
+  thestats_other = rmfield(thestats_other,'ozonelag');
+  thestats_other = rmfield(thestats_other,'ozoneratestd_lag');
+
 junk = save_ice_od(:,zonk); junk = junk ./ (nanmean(junk')' * ones(1,length(zonk)));
 thestats_cld2 = do_profilerate_fit_other_fraction(save_cld_frac(:,:,zonk),save_iceT(:,zonk),junk,days(zonk),latbins);
   thestats_other.iceT_rate = thestats_cld2.olrrate;       thestats_other.iceT_ratestd = thestats_cld2.olrratestd;

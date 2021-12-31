@@ -1,4 +1,4 @@
-function [] = make_profile_spectral_trends_test(results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,mask);
+function [] = make_profile_spectral_trends_test(results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,mask,iERA5orERAI);
 
 [h1_4608,~,p1_4608,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp'); %% line 23 of see_clust_put_together_jacs_clr.m
 [~,kcarta.subjac.ppmv2] = layers2ppmv(h1_4608,p1_4608,1:4608,2);
@@ -20,7 +20,12 @@ for ii = iS : iE
 %  jac = load(jacfile);
 
   for jjj = 1 : 72
-    jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    if iERA5orERAI == 2019
+      jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    elseif iERA5orERAI == 2021
+      jacfilex = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//usethisjac_clear_reconstructcode_ERA5_2021_latbin_' num2str(ii,'%02d') '_lonbin_' num2str(jjj,'%02d') '.mat'];
+    end
+
     jacx = load(jacfilex);    
     %% THESE ARE NORMALIZED JACS   JTRUE*RENORM
     m_ts_jac.subjac.coljacCO2(:,jjj)   = jacx.m_ts_jac(:,1);
