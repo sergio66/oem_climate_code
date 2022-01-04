@@ -1,11 +1,23 @@
+%% this tries to do all 74x72 in one long slow gulp
+addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/TIME
+
+%system_slurm_stats
+
+%JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
+%%JOB = 1
+
 load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
 
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /asl/matlib/h4tools
+addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE
+%addpath ../../FIND_TRENDS/
+addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
 load('llsmap5.mat');
 
@@ -40,9 +52,13 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTERA5rate); shading interp; colorbar
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m  and do_the_AIRSL3_trends.m
 era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+%era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
 
 [numtimesteps,~] = size(era5_64x72.all.mmw);
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
+
+%rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
+%rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 
 yy = []; mm = []; dd = [];
 for ii = 2002 : 2021

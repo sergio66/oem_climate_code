@@ -9,17 +9,17 @@ load llsmap5
 
 if ~exist('reconstruct_L3_spectra_geo.mat')
   clear all
-  driver_check_WV_T_RH_L3_geo_and_spectral_rates
+  driver_check_WV_T_RH_L3_geo_and_spectral_rates    %% this is zonal done in one gulp
 end
 
 if ~exist('reconstruct_era5_spectra_geo.mat')
   clear all
-  driver_check_WV_T_RH_ERA5_geo_and_spectral_rates
+  driver_check_WV_T_RH_ERA5_geo_and_spectral_rates    %% this is zonal done in one gulp
 end
 
 if ~exist('reconstruct_cmip6_spectra_geo.mat')
   clear all
-  driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates
+  driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates    %% this is zonal done in one gulp
 end
 
 L3 = load('reconstruct_L3_spectra_geo.mat');

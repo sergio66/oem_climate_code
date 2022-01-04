@@ -1,4 +1,7 @@
+%% this tries to loop over the 64 zonal bins using the cluster
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/TIME
+
 system_slurm_stats
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
@@ -12,33 +15,34 @@ addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/TIME
-addpath /home/sergio/MATLABCOD
-addpath ../../FIND_TRENDS/
+addpath /home/sergio/MATLABCODE
+%addpath ../../FIND_TRENDS/
+addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
 load('llsmap5.mat');
 
 RH000 = layeramt2RH(h,p);
 
-pCMIP6 = p;
-pCMIP6.stemp          = pCMIP6.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.stemp;
-pCMIP6.ptemp(1:100,:) = pCMIP6.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp;
-pCMIP6.gas_1(1:100,:) = pCMIP6.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.gas_1);
-pCMIP6.gas_3(1:100,:) = pCMIP6.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.gas_3);
-RHCMIP6 = layeramt2RH(h,pCMIP6);
+pERA5 = p;
+pERA5.stemp          = pERA5.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.stemp;
+pERA5.ptemp(1:100,:) = pERA5.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
+pERA5.gas_1(1:100,:) = pERA5.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_1);
+pERA5.gas_3(1:100,:) = pERA5.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_3);
+RHERA5 = layeramt2RH(h,pERA5);
 
-RHCMIP6rate = RHCMIP6 - RH000;
-zonalRHCMIP6rate = reshape(RHCMIP6rate,100,72,64);
-zonalRHCMIP6rate = squeeze(nanmean(zonalRHCMIP6rate,2));
+RHERA5rate = RHERA5 - RH000;
+zonalRHERA5rate = reshape(RHERA5rate,100,72,64);
+zonalRHERA5rate = squeeze(nanmean(zonalRHERA5rate,2));
 
 zonalrlat = rlat;
 zonalplays = p.plays(1:100,3000);
-figure(1); pcolor(zonalrlat,zonalplays,zonalRHCMIP6rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+figure(1); pcolor(zonalrlat,zonalplays,zonalRHERA5rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
 
-TCMIP6rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp;
-zonalTCMIP6rate = reshape(TCMIP6rate,100,72,64);
-zonalTCMIP6rate = squeeze(nanmean(zonalTCMIP6rate,2));
-figure(2); pcolor(zonalrlat,zonalplays,zonalTCMIP6rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
+TERA5rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
+zonalTERA5rate = reshape(TERA5rate,100,72,64);
+zonalTERA5rate = squeeze(nanmean(zonalTERA5rate,2));
+figure(2); pcolor(zonalrlat,zonalplays,zonalTERA5rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct Trate')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -46,22 +50,28 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTCMIP6rate); shading interp; colorba
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% see  FIND_NWP_MODEL_TRENDS/driver_computeCMIP6_monthly_trends.m  and do_the_AIRSL3_trends.m
-cmip6_64x72 = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08.mat');
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
+%era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+era5_64x72 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
 
-[numtimesteps,~] = size(cmip6_64x72.all.mmw);
+[numtimesteps,~] = size(era5_64x72.all.mmw);
+fprintf(1,'driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
+
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 
 yy = []; mm = []; dd = [];
-for ii = 2002 : 2014
+for ii = 2002 : 2021
   clear yyx mmx ddx
   if ii == 2002
     inum = 4;
     yyx(1:inum) = ii;
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
-  elseif ii == 2014
+  elseif ii == 2021
+    %inum = 7;
+    %yyx(1:inum) = ii;
+    %mmx = 1 : 7;
     inum = 8;
     yyx(1:inum) = ii;
     mmx = 1 : 8;
@@ -93,9 +103,9 @@ for ii = JOB
   h72 = h;
   h72.ptype = 0;
   h72.pfields = 1;
-  h72.ngas = 1;
-  h72.gunit = [21]';  %% g/g
-  h72.glist = [ 1]';
+  h72.ngas = 2;
+  h72.gunit = [21 21]';  %% g/g
+  h72.glist = [ 1 3]';
   
   p72.rtime = [];
   p72.co2ppm = [];
@@ -103,22 +113,24 @@ for ii = JOB
     p72.rtime  = [p72.rtime ones(1,72)*rtime(iii)];
     p72.co2ppm = [p72.co2ppm ones(1,72)*co2ppm(iii)];
   end
-
-  iNlev = 19;  
+  
+  iNlev = 37;
   p72.nlevs = ones(size(p72.rtime)) * iNlev;
-  p72.plevs = squeeze(cmip6_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
+  p72.plevs = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
   p72.rlat  = rlat(ii) * ones(1,72*numtimesteps); p72.rlat = p72.rlat(:)';
   p72.rlon = rlon' * ones(1,numtimesteps);        p72.rlon = p72.rlon(:)';
   p72.plat = p72.rlat;
   p72.plon = p72.rlon;
   
-  junk = cmip6_64x72.all.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
-  %junk = cmip6_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.all.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
+  junk = era5_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
 
+%  p72.scanang = zeros(size(p72.stemp));
+%  p72.satzen = zeros(size(p72.stemp));
   p72.zobs = 705000 * ones(size(p72.stemp));
   p72.scanang = ones(size(p72.stemp)) * 22;
   p72.satzen = vaconv(p72.scanang, p72.zobs, zeros(size(p72.zobs)));
@@ -145,9 +157,9 @@ for ii = JOB
   p72.emis(2,:) = ones(size(p72.stemp)) * 0.98;
   p72.rho = (1-p72.emis)/pi;
   
-  fip = [dirout '/simulate64binsCMIP6' num2str(ii) '.ip.rtp'];
-  fop = [dirout '/simulate64binsCMIP6' num2str(ii) '.op.rtp'];
-  frp = [dirout '/simulate64binsCMIP6' num2str(ii) '.rp.rtp'];
+  fip = [dirout '/simulate64binsERA5_' num2str(ii) '.ip.rtp'];
+  fop = [dirout '/simulate64binsERA5_' num2str(ii) '.op.rtp'];
+  frp = [dirout '/simulate64binsERA5_' num2str(ii) '.rp.rtp'];
 
   rtpwrite(fip,h72,[],p72,[]);
     
@@ -204,7 +216,7 @@ for ii = JOB
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  iType = 6;  
+  iType = 5;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
 
 end
