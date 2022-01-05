@@ -35,11 +35,14 @@ for iLonBin = 1 : 72
 
   %% look at eg /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/make_profile_spectral_trends.m
   ix = (1:iaNlays(iLonBin));  
-  ixx1 = 6 + ix + 0*iaNlays(iLonBin); wah = squeeze(jac(iLonBin,:,ixx1)); bah = ones(2645,1) * nwp_trends.era5_100_layertrends.gas_1(ix,(iLatBin-1)*72+iLonBin)'/0.01; 
+  gas_fudge = 0.5;
+  gas_fudge = 1/log(10);  %% this is before, when I had rescaled the jacs to be log10
+  gas_fudge = 1.0;        %% this is after,  when I found that silly mistake!
+  ixx1 = 6 + ix + 0*iaNlays(iLonBin); wah = squeeze(jac(iLonBin,:,ixx1)); bah = ones(2645,1) * nwp_trends.era5_100_layertrends.gas_1(ix,(iLatBin-1)*72+iLonBin)'/0.01*gas_fudge; 
     raaReconstruct(:,iLonBin) = raaReconstruct(:,iLonBin) + sum(wah.*bah,2);
   ixxT = 6 + ix + 1*iaNlays(iLonBin); wah = squeeze(jac(iLonBin,:,ixxT)); bah = ones(2645,1) * nwp_trends.era5_100_layertrends.ptemp(ix,(iLatBin-1)*72+iLonBin)'/0.01; 
     raaReconstruct(:,iLonBin) = raaReconstruct(:,iLonBin) + sum(wah.*bah,2);
-  ixx3 = 6 + ix + 2*iaNlays(iLonBin); wah = squeeze(jac(iLonBin,:,ixx3)); bah = ones(2645,1) * nwp_trends.era5_100_layertrends.gas_3(ix,(iLatBin-1)*72+iLonBin)'/0.01; 
+  ixx3 = 6 + ix + 2*iaNlays(iLonBin); wah = squeeze(jac(iLonBin,:,ixx3)); bah = ones(2645,1) * nwp_trends.era5_100_layertrends.gas_3(ix,(iLatBin-1)*72+iLonBin)'/0.01*gas_fudge; 
     raaReconstruct(:,iLonBin) = raaReconstruct(:,iLonBin) + sum(wah.*bah,2);
 end
 
@@ -59,6 +62,6 @@ plot(1:72,nwp_trends.era5_spectral_rates(1520,ind),1:72,nwp_trends.era5_100_laye
 previousReconstruct = nwp_trends.era5_spectral_rates(:,ind);
 plot(fKc,nanmean(raaReconstruct'),fKc,nanmean(kctrendALL'),fKc,nanmean(previousReconstruct')); plotaxis2;
   hl = legend('New reconstruct','kCARTA trend','Orig reconstruct','location','best');
-plot(fKc,nanmean(raaReconstruct'),'x-',fKc,nanmean(kctrendALL'),'.-',fKc,nanmean(sartatrend'),fKc,nanmean(previousReconstruct'),fKc,ones(size(fKc))*mean(nwp_trends.era5_100_layertrends.stemp(ind))); plotaxis2;; title(['Latbin ' num2str(iLatBin)])
-  xlim([min(fKc) max(fKc)]);  hl = legend('New reconstruct','kCARTA trend','SARTA trend','Orig reconstruct','Mean ERA5 stemp','location','best','fontsize',10); 
-  xlim([640 1640]);  hl = legend('New reconstruct','kCARTA trend','SARTA trend','Orig reconstruct','Mean ERA5 stemp','location','best','fontsize',10); 
+plot(fKc,nanmean(raaReconstruct'),'x-',fKc,nanmean(previousReconstruct'),fKc,nanmean(kctrendALL'),'.-',fKc,nanmean(sartatrend'),fKc,ones(size(fKc))*mean(nwp_trends.era5_100_layertrends.stemp(ind))); plotaxis2;; title(['Latbin ' num2str(iLatBin)])
+  xlim([min(fKc) max(fKc)]);  hl = legend('New reconstruct','Orig reconstruct','kCARTA trend','SARTA trend','Mean ERA5 stemp','location','best','fontsize',10);
+  xlim([640 1640]);  hl = legend('New reconstruct','Orig reconstruct','kCARTA trend','SARTA trend','Mean ERA5 stemp','location','best','fontsize',10);

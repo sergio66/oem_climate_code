@@ -3,6 +3,15 @@ addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
+%%%%%%%% ORIG CODE %%%%%%%
+%% recall log10(X) = log(X)/log(10)
+%% kcarta does Q d(BT)/dQ == dBT/d(logQ) = dBT/dQ/Q = Q d(BT)/dQ
+%% but if we change to log10 then dBT/dlog10(Q) = dBT/d(log(Q)/log(10)) = log10 dBT/dlog(Q) = log10 Q dBT/dQ = log10 dBT/dlog(Q)
+%% disp('WARNING here we use log10 jacs ie multiply gas jacs by log_e_(10) ie jac --> jac * log(10) = 2.3026')
+%% disp('WARNING here we use log10 jacs ie multiply gas jacs by log_e_(10) ie jac --> jac * log(10) = 2.3026')
+%% disp('WARNING here we use log10 jacs ie multiply gas jacs by log_e_(10) ie jac --> jac * log(10) = 2.3026')
+%%%%%%%% ORIG CODE %%%%%%%
+
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 %JOB = 32
 
@@ -29,12 +38,12 @@ else
 end
 
 if exist(foutsubjac)
-  foutsubjac
-  error('foutsubjac exists')
+%  foutsubjac
+%  error('foutsubjac exists')
 end
 if exist(foutsubjac2)
-  foutsubjac2
-  error('foutsubjac2 exists')
+%  foutsubjac2
+%  error('foutsubjac2 exists')
 end
 
 sarta = load(SARTAjac);
@@ -50,6 +59,9 @@ end
 plot(1:72,p.stemp(sarta.subjac.indices),'b-',1:72,sarta.subjac.stemp,'r.-')
 pause(1); 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+factor_log10 = log(10); %% this changes gas jac scaling to log10
+factor_log10 = 1.0;     %% this keeps   gas jac scaling to loge
 
 ind_lat_junk = JOB;
 ind_subset_junk = (1:72) + (ind_lat_junk-1)*72;
@@ -69,7 +81,7 @@ for lon = 1 : 72
 
   arad0 = load(frad0);
   az    = load(fz);
-  acol  = load(fcol); acol.rKc(:,1:6) = acol.rKc(:,1:6) * log(10);
+  acol  = load(fcol); acol.rKc(:,1:6) = acol.rKc(:,1:6) * factor_log10;
   
   trad0 = rad2bt(az.fKc,arad0.rKc);
   %tcol  = rad2bt(az.fKc,acol.rKc);
@@ -85,9 +97,9 @@ for lon = 1 : 72
   aout.jac(:,5) = acol.rKc(:,6);     %%% CFC12
   aout.jac(:,6) = acol.rKc(:,8);     %%% ST
 
-%  aout.jac(:,1) = (tcol(:,1)-trad0)*log(10);     %%% CO2
-%  aout.jac(:,2) = (tcol(:,3)-trad0)*log(10);     %%% N2O
-%  aout.jac(:,3) = (tcol(:,4)-trad0)*log(10);     %%% CH4
+%  aout.jac(:,1) = (tcol(:,1)-trad0)*factor_log10;     %%% CO2
+%  aout.jac(:,2) = (tcol(:,3)-trad0)*factor_log10;     %%% N2O
+%  aout.jac(:,3) = (tcol(:,4)-trad0)*factor_log10;     %%% CH4
 %  aout.jac(:,4) = tcol(:,3) * 0; %%% cng1
 %  aout.jac(:,5) = tcol(:,3) * 0; %%% cng2
 %  aout.jac(:,6) = tcol(:,6)-trad0;     %%% ST
@@ -99,10 +111,10 @@ for lon = 1 : 72
   
   ind = (1:numlays);
   
-  ix = ind + numlays*0; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*log(10);  %% WV
+  ix = ind + numlays*0; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*factor_log10;  %% WV
     [an(1) an(end) ix(1) ix(end)]; 
     wvind = fliplr(an);
-    figure(2); plot(aout.fKc,sum(az.rKc(:,ix),2)*log(10),'r',...
+    figure(2); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',...
                     aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacWV(1:numlays,:,lon)),1),'g'); title('WV')
      hl = legend('sum(Kc(1:97))','sarta','location','best','fontsize',10);
 
@@ -117,13 +129,13 @@ for lon = 1 : 72
 
   figure(4); clf
   %% except we do not do col O3 in COL CLR jacs
-  ix = ind + numlays*1; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*log(10);  %% O3
+  ix = ind + numlays*1; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*factor_log10;  %% O3
     [an(1) an(end) ix(1) ix(end)];
     o3ind = fliplr(an);
 %{
-    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*log(10),'r',aout.fKc,acol.rKc(:,2),'b.-',...
+    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',aout.fKc,acol.rKc(:,2),'b.-',...
                     aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacO3(1:numlays,:,lon)),1),'g'); title('O3')
-%    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*log(10),'r',aout.fKc,(tcol(:,2)-trad0)*log(10),'b.-',...
+%    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',aout.fKc,(tcol(:,2)-trad0)*factor_log10,'b.-',...
 %                    aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacO3(1:numlays,:,lon)),1),'g'); title('O3')
      hl = legend('sum(Kc(1:97))','col Kc','sarta','location','best','fontsize',10);
 %}

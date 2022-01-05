@@ -88,7 +88,7 @@ qrenorm(4) = 1.0;         %% 1 ppt/300 ppt
 qrenorm(5) = 1.0;         %% 1 ppt/600 ppt
 qrenormACTUAL = qrenorm;
 
-iSaveJac = -1;
+iSaveJac = +1;
 if iSaveJac > 0
   commentJacX = 'see /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/get_jac_fast.m';
   if iVersJac == 2019

@@ -1,6 +1,15 @@
 %% see clust_put_together_jacs_clrERA5.m
 JOB = iLatBin;
 
+%%%%%%%% ORIG CODE %%%%%%%
+%% recall log10(X) = log(X)/log(10)
+%% kcarta does Q d(BT)/dQ == dBT/d(logQ) = dBT/dQ/Q = Q d(BT)/dQ
+%% but if we change to log10 then dBT/dlog10(Q) = dBT/d(log(Q)/log(10)) = log10 dBT/dlog(Q) = log10 Q dBT/dQ = log10 dBT/dlog(Q)
+%% disp('WARNING here we use log10 jacs ie multiply gas jacs by log_e_(10) ie jac --> jac * log(10) = 2.3026')
+%% disp('WARNING here we use log10 jacs ie multiply gas jacs by log_e_(10) ie jac --> jac * log(10) = 2.3026')
+%% disp('WARNING here we use log10 jacs ie multiply gas jacs by log_e_(10) ie jac --> jac * log(10) = 2.3026')
+%%%%%%%% ORIG CODE %%%%%%%
+
 miaow = load('sarta_chans_for_l1c.mat');
 ind2834to2645 = miaow.ichan;
 
@@ -38,6 +47,11 @@ elseif iOldORNew == 2
   fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2021.m --> iOldORNew == 2021 (ERA5) JOB = %2i   \n',JOB);
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+factor_log10 = log(10); %% this changes gas jac scaling to log10
+factor_log10 = 1.0;     %% this keeps   gas jac scaling to loge
+
 ind_lat_junk = JOB;
 ind_subset_junk = (1:72) + (ind_lat_junk-1)*72;
 
@@ -51,7 +65,7 @@ for lon = iLonBin
 
   arad0 = load(frad0);
   az    = load(fz);
-  acol  = load(fcol); acol.rKc(:,1:6) = acol.rKc(:,1:6) * log(10);
+  acol  = load(fcol); acol.rKc(:,1:6) = acol.rKc(:,1:6) * factor_log10;
   
   trad0 = rad2bt(az.fKc,arad0.rKc);
   %tcol  = rad2bt(az.fKc,acol.rKc);
@@ -76,11 +90,11 @@ for lon = iLonBin
   
   iPlot = -1;
 
-  ix = ind + numlays*0; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*log(10);  %% WV
+  ix = ind + numlays*0; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*factor_log10;  %% WV
     [an(1) an(end) ix(1) ix(end)]; 
     wvind = fliplr(an);
   if iPlot > 0
-    figure(2); plot(aout.fKc,sum(az.rKc(:,ix),2)*log(10),'r',...
+    figure(2); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',...
                     aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacWV(1:numlays,:,lon)),1),'g'); title('WV')
      hl = legend('sum(Kc(1:97))','sarta','location','best','fontsize',10);
   end
@@ -97,13 +111,13 @@ for lon = iLonBin
   end
 
    %% except we do not do col O3 in COL CLR jacs
-  ix = ind + numlays*1; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*log(10);  %% O3
+  ix = ind + numlays*1; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*factor_log10;  %% O3
     [an(1) an(end) ix(1) ix(end)];
     o3ind = fliplr(an);
 %{
-    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*log(10),'r',aout.fKc,acol.rKc(:,2),'b.-',...
+    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',aout.fKc,acol.rKc(:,2),'b.-',...
                     aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacO3(1:numlays,:,lon)),1),'g'); title('O3')
-%    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*log(10),'r',aout.fKc,(tcol(:,2)-trad0)*log(10),'b.-',...
+%    figure(4); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',aout.fKc,(tcol(:,2)-trad0)*factor_log10,'b.-',...
 %                    aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacO3(1:numlays,:,lon)),1),'g'); title('O3')
      hl = legend('sum(Kc(1:97))','col Kc','sarta','location','best','fontsize',10);
 %}
@@ -159,12 +173,12 @@ kcarta.subjac.indices = iaIndices;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 m_ts_jac_fast = [];
-%m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacCO2z/log(10)];
-m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCO2/log(10)];
-m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacN2O/log(10)];
-m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCH4/log(10)];
-m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCFC11/log(10)];
-m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCFC12/log(10)];
+%m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacCO2z/factor_log10];
+m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCO2/factor_log10];
+m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacN2O/factor_log10];
+m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCH4/factor_log10];
+m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCFC11/factor_log10];
+m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCFC12/factor_log10];
 m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacST];
 
 nlays = p.nlevs(iWhichLatLonBin)-1;
