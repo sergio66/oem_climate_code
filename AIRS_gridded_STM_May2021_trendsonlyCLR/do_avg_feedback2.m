@@ -22,11 +22,23 @@ model = 4;
   wonk43 = cmip6_spectral_olr.feedback.wv_ecRad;     wonk43(wonk43 < -05) = NaN; wonk43(wonk43 > +05) = NaN; wonk43 = reshape(wonk43,72,64); wonk43 = nanmean(wonk43,1); plot(rlat,wonk43); mean_feedback(model,3) = nanmean(wonk43); 
   wonk44 = cmip6_spectral_olr.feedback.skt_ecRad;    wonk44(wonk44 < -05) = NaN; wonk44(wonk44 > +00) = NaN; wonk44 = reshape(wonk44,72,64); wonk44 = nanmean(wonk44,1); plot(rlat,wonk44); mean_feedback(model,4) = nanmean(wonk44); 
 
+for ii = 1 : 4
+  for jj = 1 : 4
+    str = ['junk = wonk' num2str(ii) num2str(jj) ';'];
+    eval(str);
+    junk = smooth(junk,4)';
+    %junk = smooth(junk,8)';
+    str = ['swonk' num2str(ii) num2str(jj) ' = junk;'];
+    eval(str);
+  end
+end
+
+disp('<<<<<<<<<<<<< ---- do_avg_feedback2.m ----- >>>>>>>>>>>>>>')
 disp('           Planck          Lapse           WV            SKT')
-fprintf(1,'UMBC     %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(1,:))
-fprintf(1,'AIRS L3  %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(2,:))
-fprintf(1,'ERA5     %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(3,:))
-fprintf(1,'CMIP6    %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(4,:))
+fprintf(1,'UMBC     %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(1,:))
+fprintf(1,'AIRS L3  %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(2,:))
+fprintf(1,'ERA5     %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(3,:))
+fprintf(1,'CMIP6    %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(4,:))
 
 figure(2); clf
 subplot(221); plot(rlat,[wonk11; wonk21; wonk31; wonk41],'linewidth',2); ylabel('\lambda Planck'); xlabel('latitude'); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); xlim([-90 +90]);

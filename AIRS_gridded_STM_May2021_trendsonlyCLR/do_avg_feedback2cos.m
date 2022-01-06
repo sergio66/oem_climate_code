@@ -26,11 +26,23 @@ model = 4;
   wonk43 = cmip6_spectral_olr.feedback.wv_ecRad;     wonk43(wonk43 < -05) = NaN; wonk43(wonk43 > +05) = NaN; wonk43 = reshape(wonk43,72,64); wonk43 = nanmean(wonk43,1); plot(rlat,wonk43); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk43); 
   wonk44 = cmip6_spectral_olr.feedback.skt_ecRad;    wonk44(wonk44 < -05) = NaN; wonk44(wonk44 > +00) = NaN; wonk44 = reshape(wonk44,72,64); wonk44 = nanmean(wonk44,1); plot(rlat,wonk44); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk44); 
 
+for ii = 1 : 4
+  for jj = 1 : 4
+    str = ['junk = wonk' num2str(ii) num2str(jj) ';'];
+    eval(str);
+    junk = smooth(junk,4)';
+    %junk = smooth(junk,8)';
+    str = ['swonk' num2str(ii) num2str(jj) ' = junk;'];
+    eval(str);
+  end
+end
+
+disp('<<<<<<<<<<<<< ---- do_avg_feedback2cos.m ----- >>>>>>>>>>>>>>')
 disp('           Planck          Lapse           WV            SKT')
-fprintf(1,'UMBC     %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(1,:))
-fprintf(1,'AIRS L3  %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(2,:))
-fprintf(1,'ERA5     %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(3,:))
-fprintf(1,'CMIP6    %9.6f      %9.6f     %9.6f    %9.6f \n',mean_feedback(4,:))
+fprintf(1,'UMBC     %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(1,:))
+fprintf(1,'AIRS L3  %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(2,:))
+fprintf(1,'ERA5     %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(3,:))
+fprintf(1,'CMIP6    %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(4,:))
 
 figure(2); clf
 subplot(221); plot(rlat,[wonk11; wonk21; wonk31; wonk41],'linewidth',2); ylabel('\lambda Planck'); xlabel('latitude'); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); xlim([-90 +90]);
@@ -84,3 +96,51 @@ title(tafov(3),'\lambda WV', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]
 title(tafov(4),'\lambda SKT', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
 
 %% figure(2); figname = [printdir '/tiled_feedbackparams.pdf'];     aslprint(figname)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure(3); clf
+
+ta = tiledlayout(2,2);
+ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
+
+tafov(1) = nexttile; plot(rlat,[swonk11; swonk21; swonk31; swonk41],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+tafov(2) = nexttile; plot(rlat,[swonk12; swonk22; swonk32; swonk42],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+tafov(3) = nexttile; plot(rlat,[swonk13; swonk23; swonk33; swonk43],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+tafov(4) = nexttile; plot(rlat,[swonk14; swonk24; swonk34; swonk44],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+
+tafov(1).FontSize = 10;
+tafov(2).FontSize = 10;
+tafov(3).FontSize = 10;
+tafov(4).FontSize = 10;
+
+set(tafov,'Xlim',[-90 +90]);
+
+% Get rid of all extra space I can
+ta.Padding = 'none';
+ta.TileSpacing = 'none';
+ta.TileSpacing = 'compact';
+
+% Remove all ytick labels except for 1st column
+%for ii = [2 4]
+%   tafov(ii).YTickLabel = '';
+%end
+% Remove all xtick labels except for 2nd row
+for ii = [1 2]
+   tafov(ii).XTickLabel = '';
+end
+
+% Put in xlabel and ylable in the “middle”
+tafov(1).YLabel.String = 'W/m2/K';   tafov(1).YLabel.FontSize = 10;
+tafov(3).YLabel.String = '\lambda';  tafov(3).YLabel.FontSize = 10;
+tafov(3).XLabel.String = 'Latitude'; tafov(3).XLabel.FontSize = 10;
+tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
+
+%% put titles
+title(tafov(1),'\lambda Planck', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(2),'\lambda Lapse', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(3),'\lambda WV', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(4),'\lambda SKT', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+
+%% figure(2); figname = [printdir '/tiled_feedbackparams.pdf'];     aslprint(figname)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -25,7 +25,9 @@ for iLonBin = 1 : 72
   iaNlays(iLonBin) = boo.nlays;
 end
 
-nwp_trends = load('../../AIRS_gridded_STM_May2021_trendsonlyCLR/nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+nwp_trends0 = load('../../AIRS_gridded_STM_May2021_trendsonlyCLR/nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');          %% wrong jacs! used log10
+nwp_trends1 = load('../../AIRS_gridded_STM_May2021_trendsonlyCLR/nwp_spectral_trends_cmip6_era5_airsL3_umbc_fixedjac.mat'); %% correct jacs! used ln
+nwp_trends = nwp_trends1;
 raaReconstruct = zeros(2645,72);
 for iLonBin = 1 : 72
   raaReconstruct(:,iLonBin) = raaReconstruct(:,iLonBin) + squeeze(jac(iLonBin,:,1))'*2.2/2.2;

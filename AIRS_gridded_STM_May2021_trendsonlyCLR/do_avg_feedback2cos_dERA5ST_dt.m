@@ -122,3 +122,54 @@ title(tafov(4),'\lambda SKT', 'Units', 'normalized', 'Position', [0.5, +1.025, 0
 
 %% figure(1); figname = [printdir '/skt_rates_tiled.pdf'];     aslprint(figname)
 %% figure(3); figname = [printdir '/tiled_feedbackparams.pdf'];     aslprint(figname)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(4); clf
+
+ta = tiledlayout(2,2);
+ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
+
+tafov(1) = nexttile; plot(rlat,[swonk11; swonk21; swonk31; swonk41],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+tafov(2) = nexttile; plot(rlat,[swonk12; swonk22; swonk32; swonk42],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+tafov(3) = nexttile; plot(rlat,[swonk13; swonk23; swonk33; swonk43],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+tafov(4) = nexttile; plot(rlat,[swonk14; swonk24; swonk34; swonk44],'linewidth',2); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); 
+
+tafov(1).FontSize = 10;
+tafov(2).FontSize = 10;
+tafov(3).FontSize = 10;
+tafov(4).FontSize = 10;
+
+set(tafov,'Xlim',[-90 +90]);
+
+% Get rid of all extra space I can
+ta.Padding = 'none';
+ta.TileSpacing = 'none';
+ta.TileSpacing = 'compact';
+
+% Remove all ytick labels except for 1st column
+%for ii = [2 4]
+%   tafov(ii).YTickLabel = '';
+%end
+% Remove all xtick labels except for 2nd row
+for ii = [1 2]
+   tafov(ii).XTickLabel = '';
+end
+
+% Put in xlabel and ylable in the “middle”
+tafov(1).YLabel.String = 'W/m2/K';   tafov(1).YLabel.FontSize = 10;
+tafov(3).YLabel.String = '\lambda';  tafov(3).YLabel.FontSize = 10;
+tafov(3).XLabel.String = 'Latitude'; tafov(3).XLabel.FontSize = 10;
+tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
+
+%% put titles
+title(tafov(1),'\lambda Planck', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(2),'\lambda Lapse', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(3),'\lambda WV', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(4),'\lambda SKT', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+
+%% figure(1); figname = [printdir '/skt_rates_tiled.pdf'];     aslprint(figname)
+%% figure(3); figname = [printdir '/tiled_feedbackparams.pdf'];     aslprint(figname)
+%% figure(4); figname = [printdir '/smooth_tiled_feedbackparams.pdf'];     aslprint(figname)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

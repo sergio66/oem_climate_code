@@ -62,6 +62,9 @@ do_avg_feedback1cos  %% crude attempt at zonal avg with cosine(lat) wgt
 do_avg_feedback2     %% better attempt at zonal avg
 do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
-redo_feedbacks_dERA5ST_dt
-do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
-
+%%% Ryan suggested normalizing using dERASST for all, instead of the individual dXSST X=ERA or CMIP6 or UMBC or AIRSL3 
+iERAnorm = input('Do you wish to redo the feedback by using only dERA SKT instead of individual d SKT? (-1) no, default (+1) yes : ');
+if iERAnorm > 0
+  redo_feedbacks_dERA5ST_dt
+  do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
+end
