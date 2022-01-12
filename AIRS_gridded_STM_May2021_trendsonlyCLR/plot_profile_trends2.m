@@ -103,7 +103,23 @@ if junk > 0
   end
   if ~exist('nwp_spectral_trends_cmip6_era5_airsL3_umbc')
     if exist('cmip6')
+
+      %% see SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/compare_sarta_kcarta_latbin32_trends.m
+      for lll = 1 : 64
+        %% see eg plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
+        dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+        fsarta = [dirout '/reconstruct_era5_spectra_geo_rlat' num2str(lll,'%02i') '.mat'];
+        x = load(fsarta);
+        ind = (1:72) + (lll-1)*72;
+        sartaERA5trend(:,ind) = x.thesave.xtrendSpectral;
+      end
+
       nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac);
+
+      figure(1); plot(f,nanmean(sartaERA5trend'),f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates')); xlim([640 1640]); hl = legend('from SARTA trends','from jac x dX/dt','location','best');
+      figure(1); lll = 1 : 4608; plot(f,sartaERA5trend(:,lll)-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates(:,lll));
+      figure(1); plot(f,nanmean(sartaERA5trend'-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'),f,nanstd(sartaERA5trend'-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'),...
+                      f,nanmean(sartaERA5trend'),'.-',f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'))
 
 %{
 %% this is DA PLOT

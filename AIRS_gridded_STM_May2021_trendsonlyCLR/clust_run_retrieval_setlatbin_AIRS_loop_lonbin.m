@@ -121,36 +121,37 @@ for iInd = iInd0 : iIndE
   change_important_topts_settings  % Override many settings and add covariance matrix
 %------------------------------------------------------------------------
 
-  topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 
-  topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 
-  topts.dataset   = +3;   %% (+3) AIRS 19 year extreme  dataset, Sergio Aug 2021   2002/09-2021/08
-  topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08
-  topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08  AUTOMATIC USES Q00
+  topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
+  topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 FULL 18 years
+  topts.dataset   = +3;   %% (+3) AIRS 19 year extreme  dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, EXTREME
+  topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years
+  topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
+  topts.dataset   = +4;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years
 
   %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
 
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
   %% iNorD > 0 ==> night
-  if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset < 3
+  if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_OBS/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset < 3
+  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset < 3
+  elseif driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset ~= 3
     outdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset == 3
+  elseif driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
   %% iNorD < 0 ==> day
-  elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset < 3
+  elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_OBS_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset < 3
+  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_CAL_Dat/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset < 3
+  elseif driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset ~= 3
     outdir = ['Output_Day/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset == 3
+  elseif driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output_Day/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
   end

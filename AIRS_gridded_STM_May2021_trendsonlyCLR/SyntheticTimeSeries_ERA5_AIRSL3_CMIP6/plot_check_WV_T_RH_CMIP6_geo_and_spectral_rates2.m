@@ -1,4 +1,4 @@
-addpath ../../FIND_TRENDS/
+addpath ../../../FIND_TRENDS/
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
 fchanx = h72x.vchan;

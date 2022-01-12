@@ -1,11 +1,4 @@
 addpath /home/sergio/MATLABCODE
-system_slurm_stats
-
-JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
-%JOB = 1
-
-load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
-
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
@@ -13,7 +6,14 @@ addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCOD
-addpath ../../FIND_TRENDS/
+addpath ../../../FIND_TRENDS/
+
+system_slurm_stats
+
+JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
+%JOB = 1
+
+load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
 
 load('llsmap5.mat');
 
@@ -45,6 +45,10 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTCMIP6rate); shading interp; colorba
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[hkcarta_emis,~,kcarta_emis,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp');
+ind = (1:72) + (JOB-1)*72;
+[hkcarta_emis,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeCMIP6_monthly_trends.m  and do_the_AIRSL3_trends.m
 cmip6_64x72 = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08.mat');
@@ -79,11 +83,24 @@ for ii = 2002 : 2014
 end
 rtime = utc2taiSergio(yy,mm,dd,ones(size(yy))*12.0);
 co2ppm = 370 + 2.2*((yy+mm/12)-2002);
+%% see ~/MATLABCODE/CRODGERS_FAST_CLOUD/driver_stage2_ESRL_set_CO2_CH4_N2O.m
+co2ppm = 368 + 2.1*time_so_far;
+n2oppm = 315  + (332-315)/(2020-2000)*time_so_far; n2oppm = n2oppm/1000;
+ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
 
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
-dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+
+co2ppm_t = [];
+n2oppm_t = [];
+ch4ppm_t = [];
+
+nemis_t = [];
+emis_t  = [];
+efreq_t = [];
+rho_t   = [];
 
 for ii = JOB
 
@@ -100,6 +117,15 @@ for ii = JOB
   p72.rtime = [];
   p72.co2ppm = [];
   for iii = 1 : numtimesteps
+    nemis_t  = [nemis_t  kcarta_emis.nemis];
+    efreq_t  = [efreq_t  kcarta_emis.efreq];
+    emis_t   = [emis_t   kcarta_emis.emis];
+    rho_t    = [rho_t    kcarta_emis.rho];
+
+    co2ppm_t   = [co2ppm_t ones(1,72)*co2ppm(iii)];
+    n2oppm_t   = [n2oppm_t ones(1,72)*n2oppm(iii)];
+    ch4ppm_t   = [ch4ppm_t ones(1,72)*ch4ppm(iii)];
+
     p72.rtime  = [p72.rtime ones(1,72)*rtime(iii)];
     p72.co2ppm = [p72.co2ppm ones(1,72)*co2ppm(iii)];
   end
@@ -145,6 +171,11 @@ for ii = JOB
   p72.emis(2,:) = ones(size(p72.stemp)) * 0.98;
   p72.rho = (1-p72.emis)/pi;
   
+  p72.nemis = nemis_t;
+  p72.efreq = efreq_t;
+  p72.emis  = emis_t;
+  p72.rho   = rho_t;
+
   fip = [dirout '/simulate64binsCMIP6_' num2str(ii) '.ip.rtp'];
   fop = [dirout '/simulate64binsCMIP6_' num2str(ii) '.op.rtp'];
   frp = [dirout '/simulate64binsCMIP6_' num2str(ii) '.rp.rtp'];
@@ -154,8 +185,25 @@ for ii = JOB
   klayerser = ['!' klayers ' fin=' fip ' fout=' fop];
   sartaer   = ['!' sarta '   fin=' fop ' fout=' frp];
   
+  %%%%%%%%%%%%%%%%%%%%%%%%%
   eval(klayerser);
+  [h72I,ha72I,p72I,pa72I] = rtpread(fop);
+  ppmvLAY_2 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),2);
+  ppmvLAY_4 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),4);
+  ppmvLAY_6 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),6);
+  
+  i500 = find(p72I.plevs(:,1) >= 500,1);
+  p72I.gas_4 = p72I.gas_4 .* (ones(101,1)*(n2oppm_t./ppmvLAY_4(i500,:)));
+  p72I.gas_6 = p72I.gas_6 .* (ones(101,1)*(ch4ppm_t./ppmvLAY_6(i500,:)));
+
+  ppmvLAY_2 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),2);
+  ppmvLAY_4 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),4);
+  ppmvLAY_6 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),6);
+  
+  rtpwrite(fop,h72I,ha72I,p72I,pa72I);
   eval(sartaer);
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+
   % numtimesteps = 144
   % [h72,~,p72,~] = rtpread(fip);
   [h72x,~,p72x,~] = rtpread(frp);

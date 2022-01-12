@@ -38,17 +38,18 @@ quants =  [0.0100 0.0200 0.0300 0.0400 0.0500 0.1000 0.2500 0.5000 0.7500 0.9000
 b_asc = nan(72,64,2645);
 b_desc = nan(72,64,2645);
 
-iType = +01; %% strows Q16 18 year trends       he ran for me in Feb 2021, 2002/09 to 2020/08
-iType = -01; %% sergio Q16 18 year TEST trends  I  ran for me in Aug 2021, 2002/09 to 2020/08, to check I get same results as Strow +01
-iType = +02; %% sergio Q16 19 year trends       I  ran for me in Aug 2021, 2002/09 to 2021/08
-iType = +03; %% sergio Extreme 19 year trends   I  ran for me in Aug 2021, 2002/09 to 2020/08
-iType = -03; %% sergio Mean 19 year trends      I  ran for me in Aug 2021, 2002/09 to 2020/08
+iType = +01; %% strows Q16 18 year trends       Strow ran for me in Feb 2021, 2002/09 to 2020/08
+iType = -01; %% sergio Q16 18 year TEST trends  I     ran for me in Aug 2021, 2002/09 to 2020/08, to check I get same results as Strow +01
+iType = +02; %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/07
+iType = +03; %% sergio Extreme 19 year trends   I     ran for me in Aug 2021, 2002/09 to 2020/08
+iType = -03; %% sergio Mean 19 year trends      I     ran for me in Aug 2021, 2002/09 to 2020/08
+iType = +04; %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/08 FULL
 
 disp('Choices DataSet to use ')
 disp('                       (+1) Strow  Quantile Mar 2021 2002/09 to 2020/08 Full 18 years');
 disp('                       (-1) Sergio Quantile Aug 2021 2002/09 to 2020/08 Full 18 years');
 disp('                        (2) Sergio Quantile Aug 2021 2002/09 to 2021/07 ');
-disp('                        (4) Sergio Quantile Aug 2021 2002/09 to 2021/08 Full 19 years');
+disp('                        (4) Sergio Quantile Aug 2021 2002/09 to 2021/08 Full 19 years **** ');
 disp(' <---------------------------------------------------------------------------------------> ')
 disp('                        (3) Sergio Extreme Aug 2021 2002/09 to 2021/07 ');
 disp('                       (-3) Sergio Mean Aug 2021 2002/09 to 2021/07 ');

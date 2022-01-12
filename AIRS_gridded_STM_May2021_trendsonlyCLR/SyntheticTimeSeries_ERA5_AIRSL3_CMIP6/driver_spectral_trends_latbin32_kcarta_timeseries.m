@@ -1,7 +1,10 @@
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 addpath /home/sergio/MATLABCODE/TIME
 addpath /asl/matlib/aslutil
+addpath /asl/matlib/rtptools
 addpath /asl/matlib/h4tools
+addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/COLORMAP
 
 load /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/sarta_chans_for_l1c.mat
 [h,ha,p,pa] = rtpread('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/simulate64binsERA5_32.rp.rtp');
@@ -50,4 +53,4 @@ end
 
 %% now compare to sarta
 
-compare_sarta_kcarta_latbin32_trends
+main_compare_sarta_kcarta_latbin32_trends

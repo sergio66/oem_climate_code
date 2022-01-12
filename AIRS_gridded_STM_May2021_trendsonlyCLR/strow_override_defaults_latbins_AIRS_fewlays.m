@@ -33,7 +33,7 @@ if settings.dataset == -2
   disp('AIRS 16 year rates or anomalies, NO nu cal done')
   error('oops not done')
 
-elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 3
+elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
   disp('AIRS 18 or 19 year rates or anomalies, nu cal done in there')
   if settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 1    
     disp('doing Strow 18 yr gridded quantile rates')
@@ -100,6 +100,19 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 3
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcs.mat';           
+    elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'AHAH';
+    end
+
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 4    
+    disp('doing Sergio FULL 19 year gridded quantile rates')
+    driver.rateset.datafile  = [];
+    if settings.ocb_set == 0  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = ['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+
+    elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'AHAH';
+      driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcsAHAH.mat';           
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
