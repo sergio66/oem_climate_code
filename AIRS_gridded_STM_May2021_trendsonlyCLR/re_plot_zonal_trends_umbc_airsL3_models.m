@@ -8,6 +8,8 @@ T_Ylim  = 10;
 aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt CO2');  caxis([1.5 2.5])
 clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2.5]); caxis([2.0 2.5])
 
+aslmap(6,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,6),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt ST');    caxis([-0.15 +0.15])
+
 figure(9); scatter_coast(Xlon,Ylat,50,thedofs); jett = jet(64); jett(1,:) = 1; colormap(jett); title('ALL DOFS'); caxis([0 max(thedofs)]); caxis([0 30])
 figure(10); boo = find(lencdofs == 66); sumc = mean(cdofs(boo,:),1); 
   plot(cumsum(sumc)); fl = ceil(sum(sumc)); line([6 6],[0 fl],'color','k'); line([26 26],[0 fl],'color','k'); line([46 46],[0 fl],'color','k');

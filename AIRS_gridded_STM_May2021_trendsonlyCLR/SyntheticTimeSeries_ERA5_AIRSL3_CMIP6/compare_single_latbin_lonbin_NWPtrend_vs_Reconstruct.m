@@ -1,6 +1,9 @@
 iLonBin = find(chisqr(5,:) == max(chisqr(5,:)) );
 fprintf(1,'worst WV chisqr for Latbin %2i is at LonBin %2i \n',iLatBin,iLonBin);
 
+%iLonBin = find(chisqr(5,:) == min(chisqr(5,:)) );
+%fprintf(1,'best WV chisqr for Latbin %2i is at LonBin %2i \n',iLatBin,iLonBin);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% lot of this is from driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
 
@@ -76,6 +79,16 @@ co2ppm = 368 + 2.1*time_so_far;
 n2oppm = 315  + (332-315)/(2020-2000)*time_so_far; n2oppm = n2oppm/1000;
 ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
 
+iRampCO2_CH4_N2O = input('ramp up CO2/CH4/N2O (-1/+1) : ');
+if length(iRampCO2_CH4_N2O) == 0
+  iRampCO2_CH4_N2O = +1;
+end
+if iRampCO2_CH4_N2O < 0
+  co2ppm = ones(size(co2ppm)) * mean(co2ppm);
+  n2oppm = ones(size(n2oppm)) * mean(n2oppm);
+  ch4ppm = ones(size(ch4ppm)) * mean(ch4ppm);
+end
+
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
@@ -146,8 +159,8 @@ for ii = JOB
   p72.solzen = 150 * ones(size(p72.stemp));
   %p72.spres = 1000 * ones(size(p72.stemp));
   %p72.salti = 0 * ones(size(p72.stemp));
-  spres = reshape(p.spres,72,64); p72.spres = spres(iLonBin) * ones(1,1*numtimesteps);
-  salti = reshape(p.salti,72,64); p72.salti = salti(iLonBin) * ones(1,1*numtimesteps);
+  spres = reshape(p.spres,72,64); p72.spres = spres(iLonBin,iLatBin) * ones(1,1*numtimesteps);
+  salti = reshape(p.salti,72,64); p72.salti = salti(iLonBin,iLatBin) * ones(1,1*numtimesteps);
 
   plot(yy2002,p72.stemp);
   plot(yy2002,p72.spres);
@@ -248,6 +261,26 @@ for ii = JOB
   %%%%%%%%%%%%%%%%%%%%%%%%%
 end
 
-%%% now do geophysical trends and jacs
-make_single_tile_timeseries_jacs_reconstruct
+error('lklklk')
+%{
+stempjunk = p72x.stemp;
+if iRampCO2_CH4_N2O > 0
+  saver = ['save test' num2str(iLatBin,'%02i') '.mat'];
+else
+  saver = ['save test' num2str(iLatBin,'%02i') '_tracegasconst.mat'];
+end
+saver = [saver ' yy mm dd tcalc h72x p72x chisqr stempjunk ind nwp_trends fKc sartatrend iLonBin raaReconstruct fop frp  ha72I pa72I jac iaNlays iLonBin iRampCO2_CH4_N2O'];
+eval(saver);
+%}
+
+%%% now do geophysical trends and jacs for all 12x19 years
+%%% make_single_tile_timeseries_jacs_reconstruct
+
+%%% now do geophysical trends and jacs for all 12x19x4 years/seasons (spring summer fall winter)
+%%% this is more general purpose, and uses log jacs for gases d(BT)/log(1+dQ)
+make_single_tile_timeseries_jacs_reconstruct_SSFW_ln
+
+%%% now do geophysical trends and jacs for all 12x19x4 years/seasons (spring summer fall winter)
+%%% this is more general purpose, and uses abs jacs d(BT)/dQ)
+make_single_tile_timeseries_jacs_reconstruct_SSFW_noln
 

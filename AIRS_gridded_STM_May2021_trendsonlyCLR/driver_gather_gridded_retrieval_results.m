@@ -49,9 +49,14 @@ if length(iNorD) == 0
 end
 iDorA = iNorD;
 
-dataset = input('Enter (+1) Strow 2002/09-2020/08 Q1-16 (-1) Sergio 2002/09-2020/08 Q1-16  (2) Sergio 2002/09-2021/08  Q1-16 (3) Sergio 2002/09-2021/08 Extreme (-3) Sergio 2002/09-2021/08 Mean : [2 = Default] : ');
+iOCBset = input('obs cal or bias (0,+1,-1) : default 0 ');
+if length(iOCBset) == 0
+  iOCBset = 0;
+end
+
+dataset = input('Enter (+1) Strow 2002/09-2020/08 Q1-16 (-1) Sergio 2002/09-2020/08 Q1-16  (2) Sergio 2002/09-2021/07 OLD  Q1-16 (3) Sergio 2002/09-2021/08 Extreme (-3) Sergio 2002/09-2021/08 Mean (4) Sergio 2002/09-2021/08 FULL  Q1-16 : [4 = Default] : ');
 if length(dataset) == 0
-  dataset = 2;
+  dataset = 4;
 end
 
 if dataset == -3
@@ -67,31 +72,49 @@ else
   iQuantile = [];
 end
 
-if dataset == 3
-  data_trends = load(['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat']);
-elseif dataset == -3
-  data_trends = load(['iType_-3_mean_convert_sergio_clearskygrid_obsonly.mat']);
-elseif dataset == 1
-  if iQuantile >= 1 & iQuantile <= 16
-    data_trends = load(['convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
-  elseif iQuantile == 99
-    data_trends = load(['convert_sergio_clearskygrid_obsonly_Q16.mat']);
+if iOCBset == 0
+  if dataset == 3
+    data_trends = load(['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat']);
+  elseif dataset == -3
+    data_trends = load(['iType_-3_mean_convert_sergio_clearskygrid_obsonly.mat']);
+  elseif dataset == 1
+    if iQuantile >= 1 & iQuantile <= 16
+      data_trends = load(['convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    elseif iQuantile == 99
+      data_trends = load(['convert_sergio_clearskygrid_obsonly_Q16.mat']);
+    end
+  elseif dataset == -1
+    if iQuantile >= 1 & iQuantile <= 16
+      data_trends = load(['iType_-1_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    elseif iQuantile == 99
+      data_trends = load(['XYZconvert_sergio_clearskygrid_obsonly_Q16.mat']);
+    end
+  elseif dataset == 2
+    if iQuantile >= 1 & iQuantile <= 16
+      data_trends = load(['iType_2_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    elseif iQuantile == 99
+      data_trends = load(['XYZconvert_sergio_clearskygrid_obsonly_Q16.mat']);
+    end
+  elseif dataset == 4
+    if iQuantile >= 1 & iQuantile <= 16
+      data_trends = load(['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    end
+  else
+    dataset
+    error('huh unknown dataset')
   end
-elseif dataset == -1
-  if iQuantile >= 1 & iQuantile <= 16
-    data_trends = load(['iType_-1_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
-  elseif iQuantile == 99
-    data_trends = load(['XYZconvert_sergio_clearskygrid_obsonly_Q16.mat']);
+elseif iOCBset == 1
+  for iibin = 1 : 64
+    strlatbin = num2str(iibin,'%02d');
+    datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];    
+    junk = load(datafile);
+    junkind = (1:72) + (iibin-1)*72;
+    data_trends.b_desc(1:72,iibin,:)     = real(junk.thesave.xtrend)';
+    data_trends.b_err_desc(1:72,iibin,:) = real(junk.thesave.xtrendErr)';
   end
-elseif dataset == 2
-  if iQuantile >= 1 & iQuantile <= 16
-    data_trends = load(['iType_2_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
-  elseif iQuantile == 99
-    data_trends = load(['XYZconvert_sergio_clearskygrid_obsonly_Q16.mat']);
-  end
-else
-  dataset
-  error('huh unknown dataset')
+  junk = load('h2645structure.mat');
+  data_trends.h.ichan = junk.h.ichan;
+  data_trends.h.vchan = junk.h.vchan;
 end
 
 if ~exist('iaFound')
@@ -121,24 +144,32 @@ iWarning = 0;
 clear fname
 
 for ii = 1 : 72 : 72*64
-  if dataset <= 2
-    if iNorD > 0
-      fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
-      fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-    elseif iNorD < 0
-      fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+  if iOCBset == 0
+    if dataset ~= 3
+      if iNorD > 0
+        fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
+        fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      elseif iNorD < 0
+        fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      end
+    elseif dataset == 3
+      if iNorD > 0
+        fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      elseif iNorD < 0
+        fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      end
+    elseif dataset == -3
+      if iNorD > 0
+        fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      elseif iNorD < 0
+        fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      end
     end
-  elseif dataset == 3
+  elseif iOCBset == 1
     if iNorD > 0
-      fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      fname =     ['Output_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
     elseif iNorD < 0
-      fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
-    end
-  elseif dataset == -3
-    if iNorD > 0
-      fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-    elseif iNorD < 0
-      fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      fname = ['Output_Day_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
     end
   end
   if exist(fname) > 0
@@ -146,7 +177,7 @@ for ii = 1 : 72 : 72*64
     fprintf(1,'%s %s \n',[junkdir.folder '/' fname],junkdir.date);
   end
 end
-iJunk = input('correct dates/names etc etc???  Proceed or quit (+1 defult/-1) : ');
+iJunk = input('correct dates/names etc etc???  Proceed or quit (+1 default/-1) : ');
 if length(iJunk) == 0
   iJunk = +1;
 end
@@ -155,26 +186,35 @@ if iJunk < 0
 end
 
 for ii = 1 : 64*72
-  if dataset <= 2
-    if iNorD > 0
-      fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
-      fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-    elseif iNorD < 0
-      fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+  if iOCBset == 0
+    if dataset ~= 3
+      if iNorD > 0
+        fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
+        fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      elseif iNorD < 0
+        fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      end
+    elseif dataset == 3
+      if iNorD > 0
+        fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      elseif iNorD < 0
+        fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      end
+    elseif dataset == -3
+      if iNorD > 0
+        fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      elseif iNorD < 0
+        fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      end
     end
-  elseif dataset == 3
+  elseif iOCBset == 1
     if iNorD > 0
-      fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      fname =     ['Output_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
     elseif iNorD < 0
-      fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
-    end
-  elseif dataset == -3
-    if iNorD > 0
-      fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-    elseif iNorD < 0
-      fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      fname = ['Output_Day_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
     end
   end
+
   existfname(ii) = exist(fname);
   %fprintf(1,'%5i    %s \n',existfname(ii),fname)
   if exist(fname) > 0 & iaFound(ii) == 0

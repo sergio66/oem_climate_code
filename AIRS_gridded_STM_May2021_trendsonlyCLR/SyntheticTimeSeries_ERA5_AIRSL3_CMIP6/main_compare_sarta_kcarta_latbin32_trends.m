@@ -1,27 +1,28 @@
 %% see eg plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
-iLatBin = 32;
-iLatBin = input('Enter latbin (1:64), default = 32 : ');
-if length(iLatBin) == 0
-  iLatBin = 32;
-end
+%iLatBin = 32;
+%iLatBin = input('Enter latbin (1:64), default = 32 : ');
+%if length(iLatBin) == 0
+%  iLatBin = 32;
+%end
 
 JOB = iLatBin;
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
-fsarta = [dirout '/reconstruct_era5_spectra_geo_rlat' num2str(JOB,'%02i') '.mat'];
+fsarta = [dirout '/reconstruct_era5_spectra_geo_rlat' num2str(iLatBin,'%02i') '.mat'];
+fprintf(1,'loading in %s \n',fsarta);
 x = load(fsarta);
 sartatrend = x.thesave.xtrendSpectral;
 
 for JOB = 1 : 72
-  x = load(['KCARTA_latbin32_spectral_trends/kcarta_spectraltrends_latbin32_lonbin' num2str(JOB,'%02d') '.mat']);
+  %x = load(['KCARTA_latbin32_spectral_trends/kcarta_spectraltrends_latbin32_lonbin' num2str(JOB,'%02d') '.mat']);
+  x = load(['KCARTA_latbin' num2str(iLatBin,'%02i') '_spectral_trends/kcarta_spectraltrends_latbin' num2str(iLatBin,'%02i') '_lonbin' num2str(JOB,'%02d') '.mat']);
   kctrendALL(:,JOB) = x.kctrend;
   fKc = x.fKc;
 end
 
-if iLatBin == 32
-  plot(fKc,nanmean(kctrendALL'),fKc,nanmean(kctrendALL'-sartatrend'),fKc,nanstd(kctrendALL'-sartatrend')); xlim([640 1640])
-  hl = legend('kCARTA trends','mean(kcata-sarta) trends','std(kcarta-sarta) trends','location','best','fontsize',8);
-  disp('ret to continue'); pause
-end
+plot(fKc,nanmean(kctrendALL'),fKc,nanmean(kctrendALL'-sartatrend'),fKc,nanstd(kctrendALL'-sartatrend')); xlim([640 1640])
+hl = legend('kCARTA trends','mean(kcata-sarta) trends','std(kcarta-sarta) trends','location','best','fontsize',8);
+disp('ret to continue'); pause
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/
@@ -34,6 +35,8 @@ for iLonBin = 1 : 72
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+addpath /umbc/xfs2/strow/asl/matlib/maps/
+
 nwp_trends0 = load('../../AIRS_gridded_STM_May2021_trendsonlyCLR/nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');          %% wrong jacs! used log10
 nwp_trends1 = load('../../AIRS_gridded_STM_May2021_trendsonlyCLR/nwp_spectral_trends_cmip6_era5_airsL3_umbc_fixedjac.mat'); %% correct jacs! used ln
 nwp_trends = nwp_trends1;
@@ -49,9 +52,13 @@ end
 era5   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat'); 
 
 obs_rates_all = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat','rates');
+junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat','results'); stemp_rate = junk.results(:,6);
+
+obs_rates_all = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_correctscaling_start_withERA5rates.mat','rates');
+junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_correctscaling_start_withERA5rates.mat','results'); stemp_rate = junk.results(:,6);
+
 rlon_all = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat','rlon');
 rlat_all = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat','rlat');
-junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat','results'); stemp_rate = junk.results(:,6);
 [Rlat ,Rlon] = meshgrid(rlat_all.rlat,rlon_all.rlon);
 plot(fKc,nanmean(obs_rates_all.rates'-sartatrend_all'),fKc,nanstd(obs_rates_all.rates'-sartatrend_all')); xlim([640 1640])
 pcolor(Rlon',Rlat',reshape(obs_rates_all.rates(1520,:),72,64)'); caxis([-0.15 +0.15]); colormap(usa2); shading interp
@@ -60,7 +67,17 @@ figure(1); scatter_coast(Rlon(:),Rlat(:),50,obs_rates_all.rates(1520,:));       
 figure(2); scatter_coast(Rlon(:),Rlat(:),50,stemp_rate);                             caxis([-0.15 +0.15]); colormap(usa2); shading interp; title('retr dST/dt')
 figure(3); scatter_coast(Rlon(:),Rlat(:),50,sartatrend_all(1520,:));                 caxis([-0.15 +0.15]); colormap(usa2); shading interp; title('ERA5-->SARTA dBT1231/dt')
 figure(4); scatter_coast(Rlon(:),Rlat(:),50,nwp_trends.era5_100_layertrends.stemp);  caxis([-0.15 +0.15]); colormap(usa2); shading interp; title('ERA5 dST/dt')
-disp('pause to continue');
+
+%load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat
+load latB64.mat
+rlat65 = latB2; rlon73 = -180 : 5 : +180;
+
+load('llsmap5.mat');
+figure(1); aslmap(1,rlat65,rlon73,smoothn((reshape(obs_rates_all.rates(1520,:),72,64)'),1),[-90 +90],[-180 +180]);            caxis([-0.15 +0.15]); colormap(llsmap5); shading interp; title('dBT1231/dt obs');
+figure(2); aslmap(2,rlat65,rlon73,smoothn((reshape(stemp_rate,72,64)'),1),[-90 +90],[-180 +180]);                             caxis([-0.15 +0.15]); colormap(llsmap5); shading interp; title('retr dST/dt')
+figure(3); aslmap(3,rlat65,rlon73,smoothn((reshape(sartatrend_all(1520,:),72,64)'),1),[-90 +90],[-180 +180]);                 caxis([-0.15 +0.15]); colormap(llsmap5); shading interp; title('ERA5-->SARTA dBT1231/dt')
+figure(4); aslmap(4,rlat65,rlon73,smoothn((reshape(nwp_trends.era5_100_layertrends.stemp,72,64)'),1),[-90 +90],[-180 +180]);  caxis([-0.15 +0.15]); colormap(llsmap5); shading interp; title('ERA5 dST/dt')
+disp('return to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

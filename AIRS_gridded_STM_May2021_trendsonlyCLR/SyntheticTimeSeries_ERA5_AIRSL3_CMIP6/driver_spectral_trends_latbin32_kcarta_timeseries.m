@@ -7,10 +7,12 @@ addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/COLORMAP
 
 load /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/sarta_chans_for_l1c.mat
-[h,ha,p,pa] = rtpread('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/simulate64binsERA5_32.rp.rtp');
+iLatBin = input('enter which latbin (1:64) : ');  %% see driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+  %[h,ha,p,pa] = rtpread(['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/simulate64binsERA5_32.rp.rtp');
+  [h,ha,p,pa] = rtpread(['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/simulate64binsERA5_' num2str(iLatBin,'%2i') '.rp.rtp']);
 
 for JOB = 1:72;
-  fprintf(1,'JOB = %2i \n',JOB)
+  fprintf(1,'JOB = %2i ',JOB)
 
   ind = (1:72:16416);
   ind = (ind) + (JOB-1);
@@ -18,7 +20,10 @@ for JOB = 1:72;
   [yy,mm,dd,hh] = tai2utcSergio(p.rtime(ind));
   dayOFtime = change2days(yy,mm,dd,2002);
   
-  loader = ['load /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/ERA5_LATBIN32_72lonbinsx228timesteps/timeseries_latbin32_lonbin' num2str(JOB,'%02d') '.mat'];
+  %% remember these are RADIANCES/Ts and NOT NOT NOT NOT NOT NOT JACS!!!!
+  loader = ['load /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/'];
+  %% loader = [loader 'ERA5_LATBIN32_72lonbinsx228timesteps/timeseries_latbin32_lonbin' num2str(JOB,'%02d') '.mat'];
+  loader = [loader 'ERA5_LATBIN' num2str(iLatBin,'%2i') '_72lonbinsx228timesteps/timeseries_latbin' num2str(iLatBin,'%2i') '_lonbin' num2str(JOB,'%02d') '.mat'];
   eval(loader);
   fKc = fKc(ichan);
   raaData = raaData(ichan,:);
@@ -44,7 +49,8 @@ for JOB = 1:72;
   end
   
   kctrend = thesave.xtrendSpectral;
-  saver = ['save KCARTA_latbin32_spectral_trends/kcarta_spectraltrends_latbin32_lonbin' num2str(JOB,'%02d') '.mat fKc kctrend'];
+  %saver = ['save KCARTA_latbin32_spectral_trends/kcarta_spectraltrends_latbin32_lonbin' num2str(JOB,'%02d') '.mat fKc kctrend'];
+  saver = ['save KCARTA_latbin' num2str(iLatBin,'%2i') '_spectral_trends/kcarta_spectraltrends_latbin' num2str(iLatBin,'%02d') '_lonbin' num2str(JOB,'%02d') '.mat fKc kctrend'];
   eval(saver);
   plot(fKc,thesave.xtrendSpectral); title(num2str(JOB)); pause(0.1);
 end
@@ -52,5 +58,4 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% now compare to sarta
-
 main_compare_sarta_kcarta_latbin32_trends

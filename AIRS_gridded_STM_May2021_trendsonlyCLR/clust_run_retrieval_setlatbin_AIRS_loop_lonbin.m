@@ -129,18 +129,23 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +4;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years
 
   %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
-
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
+
+  topts.ocb_set = 0; %% try AIRS Obs
+  topts.ocb_set = 1; %% try ERA5 synthetic rates
 
   %% iNorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_OBS/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset ~= 3
+  elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset ~= 3
     outdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset == 3 %% EXTREME
+  elseif topts.ocb_set == 1 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset ~= 3
+    outdir = ['Output_CAL/Quantile' num2str(driver.iQuantile,'%02d')];
+    driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+  elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
   %% iNorD < 0 ==> day
@@ -148,10 +153,13 @@ for iInd = iInd0 : iIndE
     driver.outfilename = ['OutputAnomaly_OBS_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_CAL_Dat/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset ~= 3
+  elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset ~= 3
     outdir = ['Output_Day/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
-  elseif driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset == 3 %% EXTREME
+  elseif topts.ocb_set == 1 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset ~= 3
+    outdir = ['Output_Day_CAL/Quantile' num2str(driver.iQuantile,'%02d')];
+    driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+  elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output_Day/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
   end
@@ -184,6 +192,7 @@ for iInd = iInd0 : iIndE
  end
 
 %---------------------------------------------------------------------------
+  fprintf(1,'A outdir,outname = %s \n',driver.outfilename)
   % Do the retrieval
   if ~exist(driver.outfilename)     
      driver = retrieval(driver,aux);
@@ -193,13 +202,15 @@ for iInd = iInd0 : iIndE
      end
      figure(3); plot(1:2645,driver.rateset.rates,'b',1:2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
   else
-    fprintf(1,'%s already exists \n',driver.outfilename)
+    disp(' ')
+    fprintf(1,'%s after all that, already exists \n',driver.outfilename)
+    fprintf(1,'%s after all that, already exists \n',driver.outfilename)
+    fprintf(1,'%s after all that, already exists \n',driver.outfilename)
     driver.rateset.rates = zeros(2645,1);
+    disp(' ')
   end
 driver
   
-%error('the end IRS_gridded_Oct2020_trendsonly')
-
 %---------------------------------------------------------------------------
   % Save retrieval output from this loop
 

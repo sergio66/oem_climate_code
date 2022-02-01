@@ -1,12 +1,18 @@
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/PLOTTER
 
-iDir = 0;
+iDir = topts.ocb_set;
 if iDir == 0
   if driver.NorD == +1
     outputdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d') '/'];
   elseif driver.NorD == -1
     outputdir = ['Output_Day/Quantile' num2str(driver.iQuantile,'%02d') '/'];
+  end
+elseif iDir == 1
+  if driver.NorD == +1
+    outputdir = ['Output_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/'];
+  elseif driver.NorD == -1
+    outputdir = ['Output_Day_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/'];
   end
 end
 
@@ -30,9 +36,11 @@ for ii = 1 : length(driver.jacobian.wvjaclays_used)
 end
 
 if driver.NorD == +1
-  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
+  %era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
+  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
 elseif driver.NorD == -1
-  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat');
+  %era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat');
+  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat');
 end
 
 for ii = 1

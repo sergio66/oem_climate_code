@@ -12,7 +12,6 @@ else
   iDebugRatesUseNWP = driver.iDebugRatesUseNWP;
 end
 
-
 %ix = driver.iibin;
 ix = driver.iLon;
 iy = driver.iLat;
@@ -27,17 +26,23 @@ if driver.i16daytimestep < 0
       % driver.rateset.rates = real(squeeze(b_bias(ix,:,2))');
       % driver.rateset.unc_rates = real(squeeze(b_err_bias(ix,:,2))');
     case 'cal'
-      error('cal')
+      % error('cal')   
       % driver.rateset.rates = real(squeeze(b_cal(ix,:,2))');
       % driver.rateset.unc_rates = real(squeeze(b_err_cal(ix,:,2))');
+
+      % this is assuming I am reading in  
+      %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];
+      driver.rateset.rates = real(thesave.xtrend(:,ix));
+      driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
+
     case {'obs','tracegas'}
       % driver.rateset.rates = real(squeeze(b_obs(ix,:,2))');
       % driver.rateset.unc_rates = real(squeeze(b_err_obs(ix,:,2))');
-     if driver.NorD > 0 
-       driver.rateset.rates = real(squeeze(b_desc(ix,iy,:)));
-     elseif driver.NorD < 0 
-       driver.rateset.rates = real(squeeze(b_asc(ix,iy,:)));
-     end
+      if driver.NorD > 0 
+        driver.rateset.rates = real(squeeze(b_desc(ix,iy,:)));
+      elseif driver.NorD < 0 
+        driver.rateset.rates = real(squeeze(b_asc(ix,iy,:)));
+      end
 
     iNnoise = +1;  %% use AIRS stability paper ideas
     iNnoise = -1;  %% use what successfully worked for May 2021 AIRS STM, and still works

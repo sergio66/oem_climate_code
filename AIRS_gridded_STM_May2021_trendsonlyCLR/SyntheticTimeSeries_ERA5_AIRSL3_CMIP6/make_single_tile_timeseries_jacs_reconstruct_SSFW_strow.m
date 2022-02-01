@@ -1,62 +1,146 @@
+%% load test32.mat
 addpath /home/sergio/MATLABCODE/TIME
+addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+%addpath /asl/matlib/rtptoolsV201/
+addpath /asl/matlib/h4tools
+addpath /asl/matlib/aslutil/
 
-iNtermsFit = 4; %% default
-iNtermsFit = input('enter how many terms for math-tsfit? (4 = default) : ');
-if length(iNtermsFit) == 0
-  iNtermsFit = 4;
+[h72avg,p72avg] = subset_rtp(h72x,p72x,[],[],1); %% aslo see below
+
+iDoHHT = input('do hilver huang? (-1/+1) : ');
+if iDoHHT > 0
+ hilberthuangT
+ waveletT
 end
+
+iSeason = input('Enter season 1=Spring MAM 2=Summer JJA 3=Fall SON 4 = Winter DJF : ');
+ 
+iNtermsFit = 1; %% default, only need linear!!!
+iNtermsFit = input('enter how many terms for math-tsfit? (0 = linear only! +N sfor sin(Nwt)    -N for sin(1/N wt)  1 = default) : ');
+if length(iNtermsFit) == 0
+  iNtermsFit = 1;
+end
+
+iLinOrQuad = -1;
+if iNtermsFit > 0
+  iLinOrQuad = input('Enter (1) linear or (2) quad fit : ');
+  if length(iLinOrQuad) == 0
+    iLinOrQuad = 1;
+  end  
+end
+
+iNtermsFit4 = 4;
+usethesemonths = 1 : 228;
+for ic = 1 : 2645
+  [x_anom,b] = generic_compute_anomaly(dayOFtime(usethesemonths),tcalc(ic,usethesemonths));
+  anomBT(ic,:) = x_anom;
+  quickBTtrend(ic) = b(2);
+  junk = Math_tsfit_lin_robust(dayOFtime(usethesemonths),anomBT(ic,usethesemonths),iNtermsFit4); 
+  residBTtrend(ic,:) = junk(2);
+end
+
+plot(1:228,tcalc(1520,:),1:228,anomBT(ic,:))
+
+plot(fKc,quickBTtrend,fKc,residBTtrend)
 
 dayOFtime = change2days(yy,mm,dd,2002);
+if iSeason == 1
+  usethesemonths = find(mm >= 3 & mm <= 5);
+elseif iSeason == 2
+  usethesemonths = find(mm >= 6 & mm <= 8);
+elseif iSeason == 3
+  usethesemonths = find(mm >= 9 & mm <= 11);
+elseif iSeason == 4
+  usethesemonths = find(mm == 1 | mm == 2 | mm == 12);
+end
+fprintf(1,'of the %4i yy/mm here, use %4i of them \n',length(yy),length(usethesemonths))
+
 for ic = 1 : 2645
-  [junk err] = Math_tsfit_lin_robust(dayOFtime,tcalc(ic,:),iNtermsFit); 
-  quickBTtrend(ic) = junk(2);
-  errBTtrend(ic) = err.se(2);
+  if iNtermsFit >= 0
+    if iLinOrQuad == 1
+      junk = Math_tsfit_lin_robust(dayOFtime(usethesemonths),residBTtrend(ic,usethesemonths),iNtermsFit); 
+    else
+      junk = Math_tsfit_quad_robust(dayOFtime(usethesemonths),residBTtrend(ic,usethesemonths),iNtermsFit); 
+    end
+  else
+    junk = Math_tsfit_lin_robust_lowfreq(dayOFtime(usethesemonths),residBTtrend(ic,usethesemonths),iNtermsFit); 
+  end
+  quickresidBTtrend(ic) = junk(2);
 end
 
-clear quick*rate err*rate
+plot(fKc,quickBTtrend,fKc,quickresidBTtrend))
+xlim([640 1640]); plotaxis2;
+clear quick*rate
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 warning off
-[junk err] = Math_tsfit_lin_robust(dayOFtime,stempjunk,iNtermsFit); 
-quickstemprate = junk(2);
-errstemprate = err.se(2);
+if iNtermsFit >= 0
+  if iLinOrQuad == 1
+    junk = Math_tsfit_lin_robust(dayOFtime(usethesemonths),stempjunk(usethesemonths),iNtermsFit); quickstemprate = junk(2);
+    
+  else
+    junk = Math_tsfit_quad_robust(dayOFtime(usethesemonths),stempjunk(usethesemonths),iNtermsFit); quickstemprate = junk(2);
+  end
+else
+  junk = Math_tsfit_lin_robust_lowfreq(dayOFtime(usethesemonths),stempjunk(usethesemonths),iNtermsFit); quickstemprate = junk(2);
+end
+clf; plot(dayOFtime(usethesemonths),stempjunk(usethesemonths),'.'); pause(0.1)
 fprintf(1,'stemp rates : old vs new %8.6f %8.6f \n',[nwp_trends.era5_100_layertrends.stemp(ind) quickstemprate])
 
 for ic = 1 : p72avg.nlevs-1
-  junk = p72x.ptemp(ic,:);
-  [junk err] = Math_tsfit_lin_robust(dayOFtime,junkjunk,iNtermsFit); 
-  quickptemprate(ic) = junk(2);
-  errptemprate(ic) = err.se(2);
+  junkjunk = p72x.ptemp(ic,usethesemonths);
+  if iNtermsFit >= 0
+    if iLinOrQuad == 1
+      junk = Math_tsfit_lin_robust(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickptemprate(ic) = junk(2);
+    else
+      junk = Math_tsfit_quad_robust(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickptemprate(ic) = junk(2);
+    end
+  else
+    junk = Math_tsfit_lin_robust_lowfreq(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickptemprate(ic) = junk(2);
+  end
 end
 quickptemprate = quickptemprate';
-errptemprate = errptemprate';
 subplot(121); plot(nwp_trends.era5_100_layertrends.ptemp(1 : p72avg.nlevs-1,ind),1 : p72avg.nlevs-1,'o-',quickptemprate(1 : p72avg.nlevs-1),1 : p72avg.nlevs-1); set(gca,'ydir','reverse'); title('T(z) rates : old vs new');
 subplot(122); plot(nwp_trends.era5_100_layertrends.ptemp(1 : p72avg.nlevs-1,ind) - quickptemprate(1 : p72avg.nlevs-1),1 : p72avg.nlevs-1); set(gca,'ydir','reverse'); title('T(z) rates : old vs new');
 %disp('ret to continue'); pause;
-pause(0.1)
+pause(0.1);
 
 for ic = 1 : p72avg.nlevs-1
-  junkjunk = p72x.gas_1(ic,:); junkjunk = junkjunk/mean(junkjunk);
-  [junk err] = Math_tsfit_lin_robust(dayOFtime,junkjunk,iNtermsFit); 
-  quickgas_1rate(ic) = junk(2);
-  errgas_1rate(ic) = err.se(2);
+  junkjunk = p72x.gas_1(ic,usethesemonths); junkjunk = junkjunk/mean(junkjunk);
+  if iNtermsFit >= 0
+    if iLinOrQuad == 1
+      junk = Math_tsfit_lin_robust(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickgas_1rate(ic) = junk(2); donk = Math_timeseries_2(dayOFtime(usethesemonths),junk);
+    else
+      junk = Math_tsfit_quad_robust(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickgas_1rate(ic) = junk(2); donk = Math_timeseries_quad(dayOFtime(usethesemonths),junk);
+    end
+  else
+    junk = Math_tsfit_lin_robust_lowfreq(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickgas_1rate(ic) = junk(2);
+  end
+  clf; plot(dayOFtime(usethesemonths),junkjunk,'.-',dayOFtime(usethesemonths),donk,'x-'); title(['WV ' num2str(ic)]); xlim([min(dayOFtime(usethesemonths)) max(dayOFtime(usethesemonths))]); pause(0.1)
 end
 quickgas_1rate = quickgas_1rate';
-errgas_1rate = errgas_1rate';
 subplot(121); plot(nwp_trends.era5_100_layertrends.gas_1(1 : p72avg.nlevs-1,ind),1 : p72avg.nlevs-1,'o-',quickgas_1rate(1 : p72avg.nlevs-1),1 : p72avg.nlevs-1); set(gca,'ydir','reverse'); title('frac WV(z) rates : old vs new');
 subplot(122); plot(nwp_trends.era5_100_layertrends.gas_1(1 : p72avg.nlevs-1,ind) ./ quickgas_1rate(1 : p72avg.nlevs-1),1 : p72avg.nlevs-1); set(gca,'ydir','reverse'); title('frac WV(z) rates : old vs new');
   xlim([0.75 1.25]);
 %disp('ret to continue'); pause;
 pause(0.1)
-
 for ic = 1 : p72avg.nlevs-1
-  junkjunk = p72x.gas_3(ic,:); junkjunk = junkjunk/mean(junkjunk);
-  [junk err] = Math_tsfit_lin_robust(dayOFtime,junkjunk,iNtermsFit); 
-  quickgas_3rate(ic) = junk(2);
-  errgas_3rate(ic) = err.se(2);
+  junkjunk = p72x.gas_3(ic,usethesemonths); junkjunk = junkjunk/mean(junkjunk);
+  if iNtermsFit >= 0
+    if iLinOrQuad == 1
+      junk = Math_tsfit_lin_robust(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickgas_3rate(ic) = junk(2);
+    else
+      junk = Math_tsfit_quad_robust(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickgas_3rate(ic) = junk(2);
+    end
+  else
+    junk = Math_tsfit_lin_robust_lowfreq(dayOFtime(usethesemonths),junkjunk,iNtermsFit); quickgas_3rate(ic) = junk(2);
+  end
 end
 quickgas_3rate = quickgas_3rate';
-errgas_3rate = errgas_3rate';
 subplot(121); plot(nwp_trends.era5_100_layertrends.gas_3(1 : p72avg.nlevs-1,ind),1 : p72avg.nlevs-1,'o-',quickgas_3rate(1 : p72avg.nlevs-1),1 : p72avg.nlevs-1); set(gca,'ydir','reverse'); title('frac O3(z) rates : old vs new');
 subplot(122); plot(nwp_trends.era5_100_layertrends.gas_3(1 : p72avg.nlevs-1,ind) ./ quickgas_3rate(1 : p72avg.nlevs-1),1 : p72avg.nlevs-1); set(gca,'ydir','reverse'); title('frac O3(z) rates : old vs new');
   xlim([0.75 1.25]);
@@ -70,7 +154,7 @@ calcsx = obs.oem.fit;
 
 figure(1); clf
 plot(fKc,sartatrend(:,iLonBin),'b.-',fKc,raaReconstruct(:,iLonBin),'r',fKc,quickBTtrend,'k',fKc,obsx,fKc,calcsx); 
-  hl = legend('SARTA NWP 12monthx19yr trend','Reconstructed jac x dX/dt 12monthsx19yr','quicktrend','ACTUAL AIRS OBS','OEM FITS','location','best','fontsize',10);
+  hl = legend('SARTA NWP 12monthx19yr trend','Reconstructed jac x dX/dt 12monthsx19yr','quicktrend','ACTUAL AIRS OBS','location','best','fontsize',10);
   xlim([640 1640])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,11 +178,11 @@ p72avg.gas_12 = nanmean(p72x.gas_12,2);
 if ~exist('yy2002')
   yy2002 = yy + (mm)/12;
 end
-figure(2); clf;  plot(yy2002,p72x.stemp); title('stemp timeseries'); xlim([min(yy2002) max(yy2002)]); plotaxis2;
+figure(2); clf;  plot(yy2002,p72x.stemp,yy2002(usethesemonths),p72x.stemp(usethesemonths),'r.'); title('stemp timeseries'); xlim([min(yy2002) max(yy2002)]); plotaxis2;
 
-icc = input('find weighted avg profile??? (-1 = N, +1 = Y, +2 = Y^2, 2002-2021 = specific year) : ');
-if icc > 2000
-  boo = find(yy == icc);
+icc = 1;
+if icc > 0;
+  boo = usethesemonths;
   p72avg.stemp = nanmean(p72x.stemp(boo));
   p72avg.ptemp = nanmean(p72x.ptemp(:,boo),2);
   p72avg.gas_1 = nanmean(p72x.gas_1(:,boo),2);
@@ -109,57 +193,6 @@ if icc > 2000
   p72avg.gas_6 = nanmean(p72x.gas_6(:,boo),2);
   p72avg.gas_9 = nanmean(p72x.gas_9(:,boo),2);
   p72avg.gas_12 = nanmean(p72x.gas_12(:,boo),2);
-  
-elseif icc > 0 & icc < 2000
-  dt = 295:0.5:305; y = histc(p72x.stemp,dt); meany = sum(y.^icc.*dt)/sum(y.^icc);
-  plot(dt,histc(p72x.stemp,dt)); line([mean(p72x.stemp) mean(p72x.stemp)],[0 50],'color','k'); line([meany meany],[0 50],'color','r');
-  [mean(p72x.stemp) meany]
-  newavgST = meany;
-  
-  mmw = mmwater_rtp(h72x,p72x);
-  dt = 4:2:30; y = histc(mmw,dt); meany = sum(y.^icc.*dt)/sum(y.^icc);
-  plot(dt,histc(mmw,dt)); line([mean(mmw) mean(mmw)],[0 60],'color','k'); line([meany meany],[0 60],'color','r');
-  [mean(mmw) meany]
-  newavgMMW = meany;
-  
-  newavgT = zeros(101,1);
-  for ic = 1 : p72avg.nlevs-1
-    boo = p72x.ptemp(ic,:);
-    mn = floor(min(boo)); mx = ceil(max(boo)); dx = (mx-mn)/51;
-    dt = mn : dx : mx;  y = histc(boo,dt); meany = sum(y.^icc.*dt)/sum(y.^icc); 
-    newavgT(ic) = meany;
-  end
-  semilogx(p72avg.ptemp(1:p72avg.nlevs-1),1:p72avg.nlevs-1,newavgT(1:p72avg.nlevs-1),1:p72avg.nlevs-1); set(gca,'ydir','reverse');
-  plot(p72avg.ptemp(1:p72avg.nlevs-1)-newavgT(1:p72avg.nlevs-1),1:p72avg.nlevs-1); set(gca,'ydir','reverse');
-  
-  newavgWV = zeros(101,1);
-  for ic = 1 : p72avg.nlevs-1
-    boo = p72x.gas_1(ic,:);
-    boo = log10(boo);
-    mn = floor(min(boo)); mx = ceil(max(boo)); dx = (mx-mn)/51;
-    dt = mn : dx : mx;  y = histc(boo,dt); meany = sum(y.^icc.*dt)/sum(y.^icc); meany = exp10(meany);
-    newavgWV(ic) = meany;
-  end
-  semilogx(p72avg.gas_1(1:p72avg.nlevs-1),1:p72avg.nlevs-1,newavgWV(1:p72avg.nlevs-1),1:p72avg.nlevs-1); set(gca,'ydir','reverse');
-  plot(p72avg.gas_1(1:p72avg.nlevs-1)./newavgWV(1:p72avg.nlevs-1),1:p72avg.nlevs-1); set(gca,'ydir','reverse');
-  
-  newavgO3 = zeros(101,1);
-  for ic = 1 : p72avg.nlevs-1
-    boo = p72x.gas_3(ic,:);
-    boo = log10(boo);
-    mn = floor(min(boo)); mx = ceil(max(boo)); dx = (mx-mn)/51;
-    dt = mn : dx : mx;  y = histc(boo,dt); meany = sum(y.^icc.*dt)/sum(y.^icc); meany = exp10(meany);
-    newavgO3(ic) = meany;
-  end
-  semilogx(p72avg.gas_3(1:p72avg.nlevs-1),1:p72avg.nlevs-1,newavgO3(1:p72avg.nlevs-1),1:p72avg.nlevs-1); set(gca,'ydir','reverse');
-  plot(p72avg.gas_3(1:p72avg.nlevs-1)./newavgO3(1:p72avg.nlevs-1),1:p72avg.nlevs-1); set(gca,'ydir','reverse');
-  
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  p72avg.stemp = newavgST;
-  p72avg.ptemp = newavgT;
-  p72avg.gas_1 = newavgWV;
-  p72avg.gas_3 = newavgO3;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -298,11 +331,57 @@ plot(fKc,tTestWVT-t0,fKc,xraReconstruct)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TESTING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-make_the_SSFW_trends_ln
+ixN = 1 : p72avg.nlevs-1;
+raReconstruct = zeros(1,2645);
+raReconstruct = raReconstruct + jCO2';
+raReconstruct = raReconstruct + jN2O';
+raReconstruct = raReconstruct + jCH4';
 
 %{
-sartatrendX = sartatrend(:,iLonBin);
-saver = ['save reconstruct_allseasons.mat fKc sartatrendX raReconstruct'];
-eval(saver);
+%% orig
+raReconstruct = raReconstruct + jST'*nwp_trends.era5_100_layertrends.stemp(ind);
+bah = ones(2645,1) * nwp_trends.era5_100_layertrends.gas_1(ixN,ind)'); raReconstruct = raReconstruct + sum(bah.*jWV(:,ixN),2)';
+bah = ones(2645,1) * nwp_trends.era5_100_layertrends.gas_3(ixN,ind)'); raReconstruct = raReconstruct + sum(bah.*jO3(:,ixN),2)';
+bah = ones(2645,1) * nwp_trends.era5_100_layertrends.ptemp(ixN,ind)'; raReconstruct = raReconstruct + sum(bah.*jT(:,ixN),2)';
 %}
 
+%{
+%% very similar if rates are tiny
+raReconstruct = raReconstruct + jST'*nwp_trends.era5_100_layertrends.stemp(ind);
+bah = ones(2645,1) * (exp(nwp_trends.era5_100_layertrends.gas_1(ixN,ind)')-1); raReconstruct = raReconstruct + sum(bah.*jWV(:,ixN),2)';
+bah = ones(2645,1) * (exp(nwp_trends.era5_100_layertrends.gas_3(ixN,ind)')-1); raReconstruct = raReconstruct + sum(bah.*jO3(:,ixN),2)';
+bah = ones(2645,1) * nwp_trends.era5_100_layertrends.ptemp(ixN,ind)'; raReconstruct = raReconstruct + sum(bah.*jT(:,ixN),2)';
+%}
+
+raReconstruct = raReconstruct + jST'*quickstemprate;
+bah = ones(2645,1) * (exp(quickgas_1rate(ixN)')-1); raReconstruct = raReconstruct + sum(bah.*jWV(:,ixN),2)';
+bah = ones(2645,1) * (exp(quickgas_3rate(ixN)')-1); raReconstruct = raReconstruct + sum(bah.*jO3(:,ixN),2)';
+bah = ones(2645,1) * quickptemprate(ixN)'; raReconstruct = raReconstruct + sum(bah.*jT(:,ixN),2)';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+plot(quickptemprate(ixN)',ixN); set(gca,'ydir','reverse'); plotaxis2;
+plot((exp(quickgas_1rate(ixN)')-1),ixN); set(gca,'ydir','reverse'); plotaxis2;
+
+plot(fKc,quickBTtrend,'b.-',fKc,raReconstruct,'r-'); 
+   plotaxis2;
+   hl = legend('SARTA QUICKTREND','RECONSTRUCT','location','best','fontsize',10);
+   xlim([640 1640])
+title(['Using all 19yrs Season ' num2str(iSeason)])
+
+saver = ['save reconstruct_SSFW_season' num2str(iSeason) '.mat fKc quickBTtrend raReconstruct'];
+eval(saver);
+
+%{
+ax = load('reconstruct_SSFW_season1.mat'); quickBTx(:,1) = ax.quickBTtrend; raReconx(:,1) = ax.raReconstruct;
+ax = load('reconstruct_SSFW_season2.mat'); quickBTx(:,2) = ax.quickBTtrend; raReconx(:,2) = ax.raReconstruct;
+ax = load('reconstruct_SSFW_season3.mat'); quickBTx(:,3) = ax.quickBTtrend; raReconx(:,3) = ax.raReconstruct;
+ax = load('reconstruct_SSFW_season4.mat'); quickBTx(:,4) = ax.quickBTtrend; raReconx(:,4) = ax.raReconstruct;
+ax = load('reconstruct_allseasons.mat');
+figure(1); clf; plot(ax.fKc,quickBTx,'b.-',ax.fKc,raReconx,'r-');
+figure(2); clf; plot(ax.fKc,mean(quickBTx'),'b.-',ax.fKc,mean(raReconx'),'r-'); plotaxis2; xlim([640 1640]);
+
+figure(3); clf; plot(ax.fKc,mean(quickBTx'),'b.-',ax.fKc,ax.sartatrendX,'r-'); plotaxis2; xlim([640 1640]); title('Verifying the sarta trends \newline (linear season vs annual 4term')
+figure(4); clf; plot(ax.fKc,mean(raReconx'),'b.-',ax.fKc,ax.raReconstruct,'r-'); plotaxis2; xlim([640 1640]); title('Ooopsing the reconstruction \newline (linear season vs annual 4term)')
+figure(5); clf; plot(ax.fKc,mean(quickBTx'),'b.-',ax.fKc,mean(raReconx'),'r.-',ax.fKc,ax.raReconstruct,'k-'); plotaxis2; xlim([640 1640]); 
+%}

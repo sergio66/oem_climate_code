@@ -99,10 +99,14 @@ elif [[ "$1" -eq "5" ]]; then
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2; exit"
 elif [[ "$1" -eq "6" ]]; then
   # makes driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
-  echo "cmd line arg = 5, driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2"
+  echo "cmd line arg = 6, driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2; exit"
 elif [[ "$1" -eq "7" ]]; then
   # makes driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
-  echo "cmd line arg = 5, driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2"
+  echo "cmd line arg = 7, driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2; exit"
+elif [[ "$1" -eq "8" ]]; then
+  ## makes driver_spectral_trends_latbin_1_64_sarta.m
+  echo "cmd line arg = 8, driver_spectral_trends_latbin_1_64_sarta"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta; exit"
 fi

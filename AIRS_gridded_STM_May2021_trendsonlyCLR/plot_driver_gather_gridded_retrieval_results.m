@@ -150,6 +150,7 @@ for ii = 1 : 2378;
 end
 plot(junk.fout,peak,'x-'); set(gca,'ydir','reverse'); xlim([min(junk.fout) max(junk.fout)]); grid on
 %}
+
 ix200 = find(data_trends.h.vchan >= 1419,1);
 ix500 = find(data_trends.h.vchan >= 1365,1);
 ix800 = find(data_trends.h.vchan >= 0900,1);

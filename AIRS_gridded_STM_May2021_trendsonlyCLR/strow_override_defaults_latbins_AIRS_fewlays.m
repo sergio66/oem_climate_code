@@ -44,8 +44,8 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
       driver.rateset.datafile  = ['convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
 
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
-      driver.rateset.datafile  = 'AHAH';
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcs.mat';           
+      driver.rateset.datafile  = 'AHAH';
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
@@ -59,8 +59,8 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
       driver.rateset.datafile  = ['iType_-1_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
 
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
-      driver.rateset.datafile  = 'AHAH';
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcs.mat';           
+      driver.rateset.datafile  = 'AHAH';
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
@@ -72,8 +72,8 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
       driver.rateset.datafile  = ['iType_2_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
 
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
-      driver.rateset.datafile  = 'AHAH';
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcs.mat';           
+      driver.rateset.datafile  = 'AHAH';
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
@@ -85,8 +85,8 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
       driver.rateset.datafile  = ['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat'];           
 
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
-      driver.rateset.datafile  = 'AHAH';
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcs.mat';           
+      driver.rateset.datafile  = 'AHAH';
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
@@ -98,8 +98,8 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
       driver.rateset.datafile  = ['iType_-3_mean_convert_sergio_clearskygrid_obsonly.mat'];           
 
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
-      driver.rateset.datafile  = 'AHAH';
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcs.mat';           
+      driver.rateset.datafile  = 'AHAH';
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
@@ -111,8 +111,10 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
       driver.rateset.datafile  = ['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
 
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
-      driver.rateset.datafile  = 'AHAH';
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcsAHAH.mat';           
+      driver.rateset.datafile  = 'AHAH';
+      strlatbin                = num2str(floor((driver.iibin-1)/72)+1,'%02d');
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
