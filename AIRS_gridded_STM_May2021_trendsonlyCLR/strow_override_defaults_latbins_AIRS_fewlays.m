@@ -506,7 +506,7 @@ if exist('iFixTz_NoFit','var')
         era_anom = load(era_model_file);
         figure(1); pcolor(era_anom.p16anomaly.ptempanomaly); shading flat; colorbar; colormap jet; caxis([-5 5])
         junk = era_anom.p16anomaly.ptempanomaly;
-        for iiii = 1 : 20
+        for iiii = 1 : iNlays_retrieve   %% before we had 1 : 20
           ixix = xx.jacobian.wvjaclays_used{iiii}-6;  %% 6 = xx.jacobian.scalar_i below
           if max(ixix) <= 98
             era_ptempanom(iiii,:) = mean(junk(ixix,:));
@@ -610,7 +610,7 @@ if exist('iFixO3_NoFit','var')
         era_anom = load(era_model_file);
         figure(1); pcolor(era_anom.p16anomaly.gas_3anomaly); shading flat; colorbar; colormap jet; caxis([-5 5])
         junk = era_anom.p16anomaly.ozoneanomaly;
-        for iiii = 1 : 20
+        for iiii = 1 : iNlays_retrieve   %% before we had 1 : 20
           ixix = xx.jacobian.wvjaclays_used{iiii}-6;  %% 6 = xx.jacobian.scalar_i below
           if max(ixix) <= 98
             era_ozoneanom(iiii,:) = mean(junk(ixix,:));
@@ -689,9 +689,9 @@ if settings.set_era5_cmip6_airsL3 == 5
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
   boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),5,iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),5,iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),5,iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 elseif settings.set_era5_cmip6_airsL3 == 6
   disp(' apriori will be using CMIP6 trends')
@@ -702,9 +702,9 @@ elseif settings.set_era5_cmip6_airsL3 == 6
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
   boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),5,iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),5,iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),5,iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 elseif settings.set_era5_cmip6_airsL3 == 3
   disp(' apriori will be using AIRS L3 trends')
@@ -715,9 +715,9 @@ elseif settings.set_era5_cmip6_airsL3 == 3
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
   boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),5,iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),5,iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),5,iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 end
 

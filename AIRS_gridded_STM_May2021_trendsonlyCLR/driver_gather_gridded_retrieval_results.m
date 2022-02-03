@@ -40,16 +40,23 @@ else
   figure(30); clf; %% this puts d/dt ST plot with correct title
 end
 
-iNumLay = 33;
 iNumLay = 20;
+iNumLay = input('Enter number of expected fat layers (default 20) : ');
+if length(iNumLay) == 0
+  iNumLay = 20;
+end
+iNavgLay = floor(100/iNumLay);
+iWVind = 07:26; iWVind = (1:iNumLay)+6+0*iNumLay;
+iTind  = 27:46; iTind  = (1:iNumLay)+6+1*iNumLay;
+iO3ind = 47:66; iO3ind = (1:iNumLay)+6+2*iNumLay;
 
-iNorD = input('night (+1) or day (-1)  (+1 = night = default) ');
+iNorD = input('night (+1) or day (-1)  [+1 = night = default] ');
 if length(iNorD) == 0
   iNorD = +1;
 end
 iDorA = iNorD;
 
-iOCBset = input('obs cal or bias (0,+1,-1) : default 0 ');
+iOCBset = input('obs cal or bias (0,+1,-1) [default 0] : ');
 if length(iOCBset) == 0
   iOCBset = 0;
 end
@@ -143,6 +150,7 @@ end
 iWarning = 0;
 clear fname
 
+iCnt = 0;
 for ii = 1 : 72 : 72*64
   if iOCBset == 0
     if dataset ~= 3
@@ -173,10 +181,12 @@ for ii = 1 : 72 : 72*64
     end
   end
   if exist(fname) > 0
+    iCnt = iCnt + 1;
     junkdir = dir(fname);
     fprintf(1,'%s %s \n',[junkdir.folder '/' fname],junkdir.date);
   end
 end
+fprintf(1,'found %4i of 64 (subset) files \n',iCnt);
 iJunk = input('correct dates/names etc etc???  Proceed or quit (+1 default/-1) : ');
 if length(iJunk) == 0
   iJunk = +1;
@@ -228,7 +238,7 @@ for ii = 1 : 64*72
 
     nlays(ii) = nn;
     nn0 = min(nn,iNumLay);
-    if nn0 == nn
+    if nn0 == iNumLay
       thedofs(ii) = oem.dofs;
       lencdofs(ii) = length(oem.cdofs);
       cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
@@ -241,8 +251,20 @@ for ii = 1 : 64*72
       resultsO3unc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*2);
 
     else
-      iWarning = iWarning + 1
+      iWarning = iWarning + 1;
       iaWarning(iWarning) = ii;
+
+      thedofs(ii) = oem.dofs;
+      lencdofs(ii) = length(oem.cdofs);
+      cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
+
+      resultsWV(ii,:) = NaN;
+      resultsT(ii,:)  = NaN;
+      resultsO3(ii,:) = NaN;
+      resultsWVunc(ii,:) = NaN;
+      resultsTunc(ii,:)  = NaN;
+      resultsO3unc(ii,:) = NaN;
+
       wah = oem.finalrates((1:nn)+6+nn*0);   resultsWV(ii,1:nn0) = wah(1:nn0);
       wah = oem.finalrates((1:nn)+6+nn*1);   resultsT(ii,1:nn0)  = wah(1:nn0);
       wah = oem.finalrates((1:nn)+6+nn*2);   resultsO3(ii,1:nn0) = wah(1:nn0);
@@ -351,25 +373,26 @@ figure(10); boo = find(lencdofs == 66); sumc = mean(cdofs(boo,:),1);
   plot(cumsum(sumc)); fl = ceil(sum(sumc)); line([6 6],[0 fl],'color','k'); line([26 26],[0 fl],'color','k'); line([46 46],[0 fl],'color','k');
   text(2,10,'TG','fontsize',10);   text(16,10,'WV','fontsize',10);   text(36,10,'T','fontsize',10);   text(56,10,'O3','fontsize',10); xlim([0 66])
 
-for ii = 1 : 20
-  ind = (1:5) + (ii-1)*5;
+for ii = 1 : iNumLay
+  ind = (1:iNavgLay) + (ii-1)*iNavgLay;
   pjunk20(ii) = mean(plays(ind));
 end
 cssumc = cumsum(sumc);
-figure(11); semilogy(cssumc(7:26)-cssumc(7),pjunk20,cssumc(27:46)-cssumc(27),pjunk20,cssumc(47:66)-cssumc(47),pjunk20,'linewidth',2)
+
+figure(11); semilogy(cssumc(iWVind)-cssumc(7),pjunk20,cssumc(iTind)-cssumc(27),pjunk20,cssumc(iO3ind)-cssumc(47),pjunk20,'linewidth',2)
   set(gca,'ydir','reverse'); ylim([0.1 1000]); hl = legend('WV','T','O3','location','best'); grid; xlabel('DOF'); ylabel('P(mb)')
-figure(11); plot(cssumc(7:26)-cssumc(7),pjunk20,cssumc(27:46)-cssumc(27),pjunk20,cssumc(47:66)-cssumc(47),pjunk20,'linewidth',2)
+figure(11); plot(cssumc(iWVind)-cssumc(7),pjunk20,cssumc(iTind)-cssumc(27),pjunk20,cssumc(iO3ind)-cssumc(47),pjunk20,'linewidth',2)
   set(gca,'ydir','reverse'); ylim([50 1000]); hl = legend('WV','T','O3','location','best'); grid; xlabel('DOF'); ylabel('P(mb)')
-figure(11); plot(cssumc(7:26)-cssumc(7),fliplr(pjunk20),cssumc(27:46)-cssumc(27),fliplr(pjunk20),cssumc(47:66)-cssumc(47),fliplr(pjunk20),'linewidth',2)
+figure(11); plot(cssumc(iWVind)-cssumc(7),fliplr(pjunk20),cssumc(iTind)-cssumc(27),fliplr(pjunk20),cssumc(iO3ind)-cssumc(47),fliplr(pjunk20),'linewidth',2)
   set(gca,'ydir','reverse'); ylim([50 1000]); hl = legend('WV','T','O3','location','best'); grid; xlabel('DOF'); ylabel('P(mb)')
 
 pflip20 = fliplr(pjunk20);
-wvsumc     = sumc(07:26);         semilogy(wvsumc,pjunk20); set(gca,'ydir','reverse'); ylim([0.01 1000])
-wvsumcflip = fliplr(sumc(07:26)); semilogy(wvsumc,pjunk20,'o-',wvsumcflip,pflip20,cumsum(wvsumcflip),pflip20); set(gca,'ydir','reverse'); ylim([0.01 1000])
+wvsumc     = sumc(iWVind);         semilogy(wvsumc,pjunk20); set(gca,'ydir','reverse'); ylim([0.01 1000])
+wvsumcflip = fliplr(sumc(iWVind)); semilogy(wvsumc,pjunk20,'o-',wvsumcflip,pflip20,cumsum(wvsumcflip),pflip20); set(gca,'ydir','reverse'); ylim([0.01 1000])
 
-wvsumcflip = cumsum(fliplr(sumc(07:26)));
-tsumcflip  = cumsum(fliplr(sumc(27:46)));
-o3sumcflip = cumsum(fliplr(sumc(47:66)));
+wvsumcflip = cumsum(fliplr(sumc(iWVind)));
+tsumcflip  = cumsum(fliplr(sumc(iTind)));
+o3sumcflip = cumsum(fliplr(sumc(iO3ind)));
 figure(11); plot(wvsumcflip,pflip20,tsumcflip,pflip20,o3sumcflip,pflip20,'linewidth',2)
   set(gca,'ydir','reverse'); ylim([50 1000]); hl = legend('WV','T','O3','location','best'); grid; xlabel('DOF'); ylabel('P(mb)')
 figure(11); semilogy(wvsumcflip,pflip20,tsumcflip,pflip20,o3sumcflip,pflip20,'linewidth',2)

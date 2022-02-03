@@ -48,7 +48,7 @@ figure(20); pcolor(rlat,pavg,resultsT(ind,:)');  xlabel('latitude'); title('GMT 
 figure(21); pcolor(rlat,pavg,resultsO3(ind,:)'); xlabel('latitude'); title('GMT line O3'); caxis([-0.01 +0.01]*0.25); 
 for ii = 19:21; figure(ii); colorbar; shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); end
 
-boo = zeros(20,72,64); for ijunk = 1 : 20; boo(ijunk,:,:) = maskLFmatr'; end
+boo = zeros(iNumLay,72,64); for ijunk = 1 : iNumLay; boo(ijunk,:,:) = maskLFmatr'; end
 xresultsWV = resultsWV'; xresultsWV = boo .* reshape(xresultsWV,iNumLay,72,64);
 xresultsT  = resultsT';   xresultsT = boo .* reshape(xresultsT,iNumLay,72,64);
 xresultsO3 = resultsO3'; xresultsO3 = boo .* reshape(xresultsO3,iNumLay,72,64);

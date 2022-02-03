@@ -3,6 +3,12 @@
 WV_Ylim = 100;
 T_Ylim  = 10;
 
+if iOCBset == 0
+  ocbstr = 'UMBC';
+elseif iOCBset == 1
+  ocbstr = 'ERA5 synthetic';
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt CO2');  caxis([1.5 2.5])
@@ -146,13 +152,13 @@ figure(iFig); clf
                                       f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_spectral_rates(:,xmask),2),...
                                       f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_spectral_rates(:,xmask),2),...
                                       f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates(:,xmask),2),'linewidth',2)
-  plotaxis2; hl = legend('AIRS Obs','UMBC','AIRS L3','CMIP6','ERA5','location','best'); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
+  plotaxis2; hl = legend('AIRS Obs',ocbstr,'AIRS L3','CMIP6','ERA5','location','best'); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
 
   plot(f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.umbc_spectral_rates(:,xmask),2),'x-',...
        f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_spectral_rates(:,xmask),2),...
        f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_spectral_rates(:,xmask),2),...
        f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates(:,xmask),2),f,nanmean(rates(:,xmask),2),'linewidth',1)
-  plotaxis2; hl = legend('UMBC','AIRS L3','CMIP6','ERA5','AIRS Obs','location','best','fontsize',8); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
+  plotaxis2; hl = legend(ocbstr,'AIRS L3','CMIP6','ERA5','AIRS Obs','location','best','fontsize',8); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
 
 cos2645 = ones(2645,1)*cos(p.rlat(xmask)*pi/180);
 cos2645 = ones(size(cos2645));
@@ -162,7 +168,7 @@ mncos2645 = 1./nanmean(cos2645,2);
        f,mncos2645.*nanmean(cos2645.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_spectral_rates(:,xmask),2),...
        f,mncos2645.*nanmean(cos2645.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates(:,xmask),2),...
        f,mncos2645.*nanmean(cos2645.*rates(:,xmask),2),'linewidth',1)
-  plotaxis2; hl = legend('UMBC','AIRS L3','CMIP6','ERA5','AIRS Obs','location','best','fontsize',8); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
+  plotaxis2; hl = legend(ocbstr,'AIRS L3','CMIP6','ERA5','AIRS Obs','location','best','fontsize',8); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

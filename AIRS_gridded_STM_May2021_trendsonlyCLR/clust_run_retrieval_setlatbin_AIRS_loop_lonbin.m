@@ -87,10 +87,10 @@ for iInd = iInd0 : iIndE
                                   %% on top JOB = 1000, in change_important_topts_settings.m also set topts.set_tracegas = -1;
   end
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
-  driver.iDebugRatesUseNWP = 32; %% use AIRS L3 reconstructed trends
-  driver.iDebugRatesUseNWP = 62; %% use CMIP6    reconstructed trends
-  driver.iDebugRatesUseNWP = 52; %% use ERA      reconstructed trends
-  driver.iDebugRatesUseNWP = -1; %% use AIRS observed trends
+  driver.iDebugRatesUseNWP = 32; %% use AIRS L3 constructed spectral trends from SARTA
+  driver.iDebugRatesUseNWP = 62; %% use CMIP6   constructed spectral trends from SARTA
+  driver.iDebugRatesUseNWP = 52; %% use ERA     constructed spectral trends from SARTA
+  driver.iDebugRatesUseNWP = -1; %% use AIRS observed spectral trends >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
   iQuantile = 14;  %% 
@@ -128,11 +128,15 @@ for iInd = iInd0 : iIndE
   topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
   topts.dataset   = +4;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years
 
-  %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
+  topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
+
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
   topts.ocb_set = 0; %% try AIRS Obs
   topts.ocb_set = 1; %% try ERA5 synthetic rates
+
+  topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
+  topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
 
   %% iNorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3

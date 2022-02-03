@@ -6,7 +6,7 @@ cmap = llsmap5;
 cmax = 0.15;
 
 tafov(1) = nexttile;
-pcolor(rlat,pavgLAY(1:97,3000),smoothn(xdeltaTlat(:,1:97)',1)); %title('UMBC','Fontsize',12);
+pcolor(rlat,pavgLAY(1:97,3000),smoothn(xdeltaTlat(:,1:97)',1)); %title(ocbstr,'Fontsize',12);
 shading interp;
 
 tafov(2) = nexttile;
@@ -64,7 +64,7 @@ tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
 %ylabel(tafov(1),'P(mb)','fontsize',10)
 
 %% put titles
-title(tafov(1),'UMBC', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
+title(tafov(1),ocbstr, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(2),'AIRS L3', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(3),'ERA5', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(4),'CMIP6', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
@@ -83,7 +83,7 @@ cmap = llsmap5;
 cmax = 0.0125;
 
 tafov(1) = nexttile;
-pcolor(rlat,pavgLAY(1:97,3000),smoothn(xfracWVlat(:,1:97)',1)); %title('UMBC','Fontsize',12);
+pcolor(rlat,pavgLAY(1:97,3000),smoothn(xfracWVlat(:,1:97)',1)); %title(ocbstr,'Fontsize',12);
 shading interp;
 
 tafov(2) = nexttile;
@@ -141,7 +141,7 @@ tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
 %ylabel(tafov(1),'P(mb)','fontsize',10)
 
 %% put titles
-title(tafov(1),'UMBC', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
+title(tafov(1),ocbstr, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(2),'AIRS L3', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(3),'ERA5', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(4),'CMIP6', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
@@ -161,7 +161,7 @@ cmax = 0.15;
 cmax = 0.25;
 
 tafov(1) = nexttile;
-pcolor(rlat,pavgLAY(1:97,3000),smoothn(xdeltaRHlat(:,1:97)',1)); %title('UMBC','Fontsize',12);
+pcolor(rlat,pavgLAY(1:97,3000),smoothn(xdeltaRHlat(:,1:97)',1)); %title(ocbstr,'Fontsize',12);
 shading interp;
 
 tafov(2) = nexttile;
@@ -219,7 +219,7 @@ tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
 %ylabel(tafov(1),'P(mb)','fontsize',10)
 
 %% put titles
-title(tafov(1),'UMBC', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
+title(tafov(1),ocbstr, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(2),'AIRS L3', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(3),'ERA5', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(4),'CMIP6', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);

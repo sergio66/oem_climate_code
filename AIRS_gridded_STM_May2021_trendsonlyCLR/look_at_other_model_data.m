@@ -20,18 +20,27 @@ figure(8); plot_profile_trends2_with_unc %% redo UMBC with unc
 
 do_regressions
 
-iFeedback = input('compute feedbacks? (-1 no, default, +1 yes) ? ');
+iFeedback = input('compute feedbacks? (-1/+1) [default -1] ? ');
+if length(iFeedback) == 0
+  iFeedback = 0;
+end
 if iFeedback > 0
   do_feedbacks
 end
 
 %plot_HadSurf_trends_36x72
 iConvert = input('compare HadSurf to UMBC by converting from 36x72 to 4608(=64x72) (-1 no, default, +1 yes) ? ');
+if length(iConvert) == 0
+  iConvert = -1;
+end
 if iConvert > 0
   plot_HadSurf_trends_convert_to_64x72
 end
 
 iPlotWB = input('Plot wet bulb trends and PNAS2018 paper? (-1 no default, +1 yes) : ');
+if length(iPlotWB) == 0
+  iPlotWB = 1;
+end
 if iPlotWB > 0
   %% wetbulb bad life
   addpath ../FIND_NWP_MODEL_TRENDS/
@@ -40,6 +49,9 @@ if iPlotWB > 0
 end
 
 iReplot = input('Plot UMBC/AIRSL3/CMIP6/ERA5 zonal comparisons again (tiled plots) (-1 no default, +1 yes) ? ');
+if length(iReplot) == 0
+  iReplot = 1;
+end
 if iReplot > 0
   re_plot_zonal_trends_umbc_airsL3_models
 end
