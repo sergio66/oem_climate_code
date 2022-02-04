@@ -58,6 +58,9 @@ figure(24); pcolor(rlat,pavg,squeeze(nanmean(xresultsO3,2))); xlabel('latitude')
 for ii = 22:24; figure(ii); ylim([10 1000]); xlim([-90 +90]); colorbar; shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); end; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iSave = -1;
 if iSave > 0
   %% figs 17,18,5
@@ -94,6 +97,7 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iPrint = -1;
 if iPrint > 0
 

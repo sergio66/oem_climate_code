@@ -8,6 +8,7 @@ addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MATLAB/
 

@@ -139,6 +139,7 @@ mncos024 = 1./nanmean(coswgt024,2);
 
 clear ta taHandle tafov; mean_wgt_trends_umbc_airsL3_models_figures
 clear ta taHandle tafov; mean_wgt_trends_umbc_airsL3_models_tiles
+clear ta taHandle tafov; mean_wgt_trends_umbc_airsL3_models_tiles_unc
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,85 +1,85 @@
 %% see plot_profile_trends2.m
 
-figure(40); clf
+figure(41); clf
 ta = tiledlayout(1,3);
 ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 tafov(1) = nexttile;
-semilogy(mncos100.*nanmean(coswgt100.*deltaT(1:100,xmask),2),plays,'linewidth',2);
+semilogy(mncos100.*nanmean(coswgt100.*deltaTunc(1:100,xmask),2),plays,'linewidth',2);
 hold on
 
 Tlevs = airsL3.Tlevs;
   boo = zeros(72,64,24); for ijunk = 1 : 24; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.ptemprate.*boo; junk = reshape(junk,72*64,24);  
+  junk = airsL3.thestats64x72.ptempratestd.*boo; junk = reshape(junk,72*64,24);  
   semilogy(mncos024.*nanmean(coswgt024'.*junk(xmask,:),1)',Tlevs,'linewidth',2);
 
 Tlevs = plays;
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
-  junk = cmip6.trend_ptemp; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
+  junk = cmip6.trend_ptemp_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Tlevs,'linewidth',2);   
 
 Tlevs = plays;
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
-  junk = era5.trend_ptemp; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
+  junk = era5.trend_ptemp_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Tlevs,'linewidth',2);   
 
 plotaxis2; 
 hl = legend(ocbstr,'AIRSL3','CMIP6','ERA5','location','north','fontsize',8);
-xlim([-1 +1]*0.05)
+xlim([0 +1]*0.10)
 hold off; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 tafov(2) = nexttile;
-semilogy(mncos100.*nanmean(coswgt100.*fracWV(1:100,xmask),2),plays,'linewidth',2); 
+semilogy(mncos100.*nanmean(coswgt100.*fracWVunc(1:100,xmask),2),plays,'linewidth',2); 
 hold on
 
 Qlevs = airsL3.Qlevs;
   boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.waterrate.*boo; junk = reshape(junk,72*64,12);  
+  junk = airsL3.thestats64x72.waterratestd.*boo; junk = reshape(junk,72*64,12);  
   semilogy(mncos012.*nanmean(coswgt012'.*junk(xmask,:),1)',Qlevs,'linewidth',2); 
 
 Qlevs = plays;
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
-  junk = cmip6.trend_gas_1; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
+  junk = cmip6.trend_gas_1_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Qlevs,'linewidth',2);   
 
 Qlevs = plays;
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
-  junk = era5.trend_gas_1; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
+  junk = era5.trend_gas_1_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Qlevs,'linewidth',2);         
 
 plotaxis2; 
 %hl = legend(ocbstr,'AIRSL3','CMIP6','ERA5','location','north','fontsize',8);
-xlim([-1 +1]*0.01)
+xlim([0 +1]*0.01)
 hold off; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 tafov(3) = nexttile;
-semilogy(mncos100.*nanmean(coswgt100.*deltaRH(1:100,xmask),2),plays,'linewidth',2);
+semilogy(mncos100.*nanmean(coswgt100.*abs(deltaRHunc(1:100,xmask)),2),plays,'linewidth',2);
 hold on
 
 Qlevs = airsL3.Qlevs;
   boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.RHrate.*boo; junk = reshape(junk,72*64,12);  
+  junk = airsL3.thestats64x72.RHratestd.*boo; junk = reshape(junk,72*64,12);  
   semilogy(mncos012.*nanmean(coswgt012'.*junk(xmask,:),1)',Qlevs,'linewidth',2); 
 
 Qlevs = plays;
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
-  junk = cmip6.trend_RH; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
+  junk = cmip6.trend_RH_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Qlevs,'linewidth',2);   
 
 Qlevs = plays;
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
-  junk = era5.trend_RH; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
+  junk = era5.trend_RH_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Qlevs,'linewidth',2);   
 
 plotaxis2; 
 %hl = legend(ocbstr,'AIRSL3','CMIP6','ERA5','location','north','fontsize',8);
-xlim([-1 +1]*0.25)
+xlim([0 +1]*0.25)
 hold off; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,7 +127,7 @@ tafov(1).YLabel.String = 'P(mb)'; tafov(1).YLabel.FontSize = 10;
 %tafov(3).YLabel.String = 'P(mb)'; tafov(3).YLabel.FontSize = 10;
 
 %% put titles
-title(tafov(1),'Tz',     'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
-title(tafov(2),'WVfrac', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
-title(tafov(3),'RH',     'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(1),'Tz_{unc}',     'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(2),'WVfrac_{unc}', 'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
+title(tafov(3),'RH_{unc}',     'Units', 'normalized', 'Position', [0.5, +1.025, 0]);
 

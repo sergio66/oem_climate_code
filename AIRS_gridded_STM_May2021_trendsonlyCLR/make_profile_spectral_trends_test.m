@@ -7,6 +7,11 @@ function [] = make_profile_spectral_trends_test(results,resultsWV,resultsT,resul
 
 xtest_fit_spectral_rates = zeros(2645,4608);
 
+[mmUMBC,nnUMBC] = size(resultsWV);    
+if nnUMBC ~= 20
+  fprintf(1,' <<<<<<<<<<< WARNING make_profile_spectral_trends_test.m has length of WV,T,O3 retrievals as %3i and not 20 \n',nnUMBC);
+end
+
 iS = 31; iE = 31;
 for ii = iS : iE
   if mod(ii,10) == 0
@@ -58,9 +63,9 @@ for ii = iS : iE
 
   % forget the renorm
   m_ts_jac.subjac.jacST = m_ts_jac.subjac.jacST * 1;
-  m_ts_jac.subjac.jacWV = quick_combinejaclays_make_profile_spectral_trends(x100m_ts_jac.subjac.jacWV * 1.00,1:100,20);
-  m_ts_jac.subjac.jacT  = quick_combinejaclays_make_profile_spectral_trends(x100m_ts_jac.subjac.jacT  * 1.00,1:100,20);
-  m_ts_jac.subjac.jacO3 = quick_combinejaclays_make_profile_spectral_trends(x100m_ts_jac.subjac.jacO3 * 1.00,1:100,20);
+  m_ts_jac.subjac.jacWV = quick_combinejaclays_make_profile_spectral_trends(x100m_ts_jac.subjac.jacWV * 1.00,1:100,nnUMBC);
+  m_ts_jac.subjac.jacT  = quick_combinejaclays_make_profile_spectral_trends(x100m_ts_jac.subjac.jacT  * 1.00,1:100,nnUMBC);
+  m_ts_jac.subjac.jacO3 = quick_combinejaclays_make_profile_spectral_trends(x100m_ts_jac.subjac.jacO3 * 1.00,1:100,nnUMBC);
 
   ind = (ii-1)*72 + (1:72);
 
@@ -80,13 +85,13 @@ for ii = iS : iE
 
   xjunkrate = resultsWV(ind,:); clear junkrate
     junkrate = xjunkrate; 
-    junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : 100/5; xtest_fit_spectral_rates(:,ind) = xtest_fit_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacWV(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
+    junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; xtest_fit_spectral_rates(:,ind) = xtest_fit_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacWV(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
   xjunkrate = resultsT(ind,:); clear junkrate
     junkrate = xjunkrate; 
-    junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : 100/5; xtest_fit_spectral_rates(:,ind) = xtest_fit_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacT(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
+    junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; xtest_fit_spectral_rates(:,ind) = xtest_fit_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacT(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
   xjunkrate = resultsO3(ind,:); clear junkrate
     junkrate = xjunkrate;
-    junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : 100/5; xtest_fit_spectral_rates(:,ind) = xtest_fit_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacO3(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
+    junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; xtest_fit_spectral_rates(:,ind) = xtest_fit_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacO3(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
 
 end
 

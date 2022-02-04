@@ -14,9 +14,17 @@ redo_fig8_spectralrates_with_mask
 
 addpath ../FIND_NWP_MODEL_TRENDS
 figure(8); plot_ERA_ERA5_AIRSL3_CMIP6_trends
-%figure(8); plot_profile_trends          %% ERA_ERA5_AIRSL3,   with mas
-figure(8); plot_profile_trends2          %% CMIP6_ERA5_AIRSL3, with mask
-figure(8); plot_profile_trends2_with_unc %% redo UMBC with unc
+%figure(8); plot_ERA_ERA5_AIRSL3_AMIP6_trends
+%figure(8); plot_profile_trends          %% ERA_ERA5_AIRSL3,   with mask
+figure(8); plot_profile_trends2         %% CMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as std(profile)
+%figure(8); plot_profile_trends3_amip6    %% AMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as mean(unc_profile)
+iX = input('Do you want to also see profile/spectral trends with uncertainty??? (-1/+1) [-1 default] : ');
+if length(iX) == 0
+  iX = -1;
+end
+if iX > 0
+  figure(8); plot_profile_trends2_with_unc %% redo UMBC with unc
+end
 
 do_regressions
 
@@ -37,9 +45,9 @@ if iConvert > 0
   plot_HadSurf_trends_convert_to_64x72
 end
 
-iPlotWB = input('Plot wet bulb trends and PNAS2018 paper? (-1 no default, +1 yes) : ');
+iPlotWB = input('Plot wet bulb trends and PNAS2018 paper? (-/+1) [-1 default] : ');
 if length(iPlotWB) == 0
-  iPlotWB = 1;
+  iPlotWB = -1;
 end
 if iPlotWB > 0
   %% wetbulb bad life
@@ -48,7 +56,7 @@ if iPlotWB > 0
   pnas2018_byrne_gorman
 end
 
-iReplot = input('Plot UMBC/AIRSL3/CMIP6/ERA5 zonal comparisons again (tiled plots) (-1 no default, +1 yes) ? ');
+iReplot = input('Plot UMBC/AIRSL3/CMIP6/ERA5 zonal comparisons again (tiled plots) (-1/+1) [+1 default] ? ');
 if length(iReplot) == 0
   iReplot = 1;
 end
