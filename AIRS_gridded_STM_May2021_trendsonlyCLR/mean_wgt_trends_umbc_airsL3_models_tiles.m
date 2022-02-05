@@ -26,7 +26,7 @@ Tlevs = plays;
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Tlevs,'linewidth',2);   
 
 plotaxis2; 
-hl = legend(ocbstr,'AIRSL3','CMIP6','ERA5','location','north','fontsize',8);
+hl = legend(ocbstr,'AIRSL3',mip6str,'ERA5','location','north','fontsize',8);
 xlim([-1 +1]*0.05)
 hold off; 
 
@@ -52,7 +52,7 @@ Qlevs = plays;
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Qlevs,'linewidth',2);         
 
 plotaxis2; 
-%hl = legend(ocbstr,'AIRSL3','CMIP6','ERA5','location','north','fontsize',8);
+%hl = legend(ocbstr,'AIRSL3',mip6str,'ERA5','location','north','fontsize',8);
 xlim([-1 +1]*0.01)
 hold off; 
 
@@ -78,7 +78,7 @@ Qlevs = plays;
   semilogy(mncos100'.*nanmean(coswgt100.*junk(:,xmask),2)',Qlevs,'linewidth',2);   
 
 plotaxis2; 
-%hl = legend(ocbstr,'AIRSL3','CMIP6','ERA5','location','north','fontsize',8);
+%hl = legend(ocbstr,'AIRSL3',mip6str,'ERA5','location','north','fontsize',8);
 xlim([-1 +1]*0.25)
 hold off; 
 

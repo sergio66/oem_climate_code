@@ -38,10 +38,15 @@ figure(26); simplemap(Y(:),X(:),deltaO3'.*maskLF',5); colorbar; title(['d(O3)/dt
 
 %% https://acp.copernicus.org/articles/19/3257/2019/   tropospheric column O3
 
+plot(nanmean(abs(resultsO3)),1:iNumLay,nanmean(resultsO3unc),1:iNumLay); set(gca,'ydir','reverse');
 fracO3 = pert.gas_3 ./ p.gas_3 - 1;
 fracO3 = fracO3 .* (ones(101,1) * maskLF);
 
 fracO3unc = pert_unc.gas_3 ./ p.gas_3 - 1;
+fracO3unc = pert.gas_3_unc ./ p.gas_3;
+plot(pert.gas_3 ./ p.gas_3 - 1,1:101,'b',pert.gas_3_unc./p.gas_3,1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101])
+plot(nanmean(abs(pert.gas_3' ./ p.gas_3' - 1)),1:101,nanmean(pert.gas_3_unc'./p.gas_3'),1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101]); grid; plotaxis2;
+
 fracO3unc = fracO3unc .* (ones(101,1) * maskLF);
 
 figure(25); simplemap(Y(:),X(:),100*fracO3(i050,:)'.*maskLF',5); colorbar; title(['percent d(fracO3)/dt yr-1 050 mb'])

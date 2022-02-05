@@ -67,7 +67,7 @@ tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
 title(tafov(1),ocbstr, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(2),'AIRS L3', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(3),'ERA5', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
-title(tafov(4),'CMIP6', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
+title(tafov(4),mip6str, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 
 %% assign colorbar to one tile
 cbh = colorbar(tafov(3));
@@ -144,7 +144,7 @@ tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
 title(tafov(1),ocbstr, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(2),'AIRS L3', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(3),'ERA5', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
-title(tafov(4),'CMIP6', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
+title(tafov(4),mip6str, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 
 %% assign colorbar to one tile
 cbh = colorbar(tafov(3));
@@ -222,7 +222,7 @@ tafov(4).XLabel.String = 'Latitude'; tafov(4).XLabel.FontSize = 10;
 title(tafov(1),ocbstr, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(2),'AIRS L3', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 title(tafov(3),'ERA5', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
-title(tafov(4),'CMIP6', 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
+title(tafov(4),mip6str, 'Units', 'normalized', 'Position', [0.5, +1.05, 0]);
 
 %% assign colorbar to one tile
 cbh = colorbar(tafov(3));

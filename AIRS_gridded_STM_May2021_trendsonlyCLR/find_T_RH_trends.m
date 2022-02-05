@@ -44,21 +44,28 @@ for ii = 1 : length(p.stemp)
   playsjunk = p.plays(1:nlays,ii);
 
   roo = interp1(log(pavg),resultsT(ii,:),log(playsjunk),[],'extrap');
-  pert.ptemp(1:nlays,ii) =  pert.ptemp(1:nlays,ii) + roo;
-  roounc = interp1(log(pavg),resultsTunc(ii,:),log(playsjunk),[],'extrap');
-  pert_unc.ptemp(1:nlays,ii) =  pert_unc.ptemp(1:nlays,ii) + roo + roounc;
+    pert.ptemp(1:nlays,ii)     = pert.ptemp(1:nlays,ii) + roo;
+    pert.ptemp_unc(:,ii)       = 0 * pert.ptemp(:,ii);
+    roounc = interp1(log(pavg),resultsTunc(ii,:),log(playsjunk),[],'extrap');  
+    pert.ptemp_unc(1:nlays,ii) = roounc;
+    pert_unc.ptemp(1:nlays,ii) = pert_unc.ptemp(1:nlays,ii) + roo + roounc;
 
   roo = interp1(log(pavg),resultsWV(ii,:),log(playsjunk),[],'extrap');
-  pert.gas_1(1:nlays,ii) =  pert.gas_1(1:nlays,ii) .* (1+roo);
-  roounc = interp1(log(pavg),resultsWVunc(ii,:),log(playsjunk),[],'extrap');
-  pert_unc.gas_1(1:nlays,ii) =  pert_unc.gas_1(1:nlays,ii) .* (1+roo+roounc);
+    pert.gas_1(1:nlays,ii)     = pert.gas_1(1:nlays,ii) .* (1+roo);
+    pert.gas_1_unc(:,ii)       = 0 * pert.gas_1(:,ii);
+    roounc = interp1(log(pavg),resultsWVunc(ii,:),log(playsjunk),[],'extrap');
+    pert.gas_1_unc(1:nlays,ii) = pert.gas_1(1:nlays,ii) .* (0+roounc);
+    pert_unc.gas_1(1:nlays,ii) = pert_unc.gas_1(1:nlays,ii) .* (1+roo+roounc);
 
   roo = interp1(log(pavg),resultsO3(ii,:),log(playsjunk),[],'extrap');
-  pert.gas_3(1:nlays,ii) =  pert.gas_3(1:nlays,ii) .* (1+roo);
-  roounc = interp1(log(pavg),resultsO3unc(ii,:),log(playsjunk),[],'extrap');
-  pert_unc.gas_3(1:nlays,ii) =  pert_unc.gas_3(1:nlays,ii) .* (1+roo+roounc);
+    pert.gas_3(1:nlays,ii)     = pert.gas_3(1:nlays,ii) .* (1+roo);
+    pert.gas_3_unc(:,ii)       = 0 * pert.gas_3(:,ii);
+    roounc = interp1(log(pavg),resultsO3unc(ii,:),log(playsjunk),[],'extrap');
+    pert.gas_3_unc(1:nlays,ii) = pert.gas_3(1:nlays,ii) .* (0+roounc);
+    pert_unc.gas_3(1:nlays,ii) =  pert_unc.gas_3(1:nlays,ii) .* (1+roo+roounc);
 
   pert.stemp(ii) = pert.stemp(ii) + results(ii,6);
+  pert.stemp_unc(ii) = results(ii,6);
   pert_unc.stemp(ii) = pert_unc.stemp(ii) + resultsunc(ii,6);
 
   pert.gas_2(1:nlays,ii) =  pert.gas_2(1:nlays,ii) .* (1+2.2/385);
@@ -147,10 +154,16 @@ figure(67); junk = pert.ptemp(56,:)-p.ptemp(56,:);      aslmap(67,rlat65,rlon73,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+plot(nanmean(abs(resultsWV)),1:iNumLay,nanmean(resultsWVunc),1:iNumLay); set(gca,'ydir','reverse');
 fracWV = pert.gas_1 ./ p.gas_1 - 1;
 fracWV = fracWV .* (ones(101,1)*maskLF);
 
 fracWVunc = pert_unc.gas_1 ./ p.gas_1 - 1;
+fracWVunc = pert.gas_1_unc ./ p.gas_1;
+plot(pert.gas_1 ./ p.gas_1 - 1,1:101,'b',pert.gas_1_unc./p.gas_1,1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101])
+plot(nanmean(abs(pert.gas_1' ./ p.gas_1' - 1)),1:101,nanmean(pert.gas_1_unc'./p.gas_1'),1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101]); grid; plotaxis2;
+plot(nanmean(abs(pert.gas_1' ./ p.gas_1' - 1)),pert.plevs(:,2345),nanmean(pert.gas_1_unc'./p.gas_1'),pert.plevs(:,2345),'r'); set(gca,'ydir','reverse'); ylim([100 1000]); grid; plotaxis2;
+
 fracWVunc = fracWVunc .* (ones(101,1)*maskLF);
 
 figure(25); simplemap(Y(:),X(:),100*fracWV(i050,:)'.*maskLF',5); colorbar; title(['percent d(fracWV)/dt yr-1 050 mb'])
@@ -172,8 +185,6 @@ area_wgt_fracWV = nansum(fracWVlat.*junk,1)./nansum(junk,1);
 ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('horizontal'); %plotaxis2;
 title(['Zonal d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 colormap(cmap)
-
-figure(41); clf; plot(mean(fracWV'),1:101,mean(fracWVunc'),1:101,'b--'); ; plotaxis2; set(gca,'ydir','reverse'); ylim([0 100])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -230,12 +241,17 @@ save umbc_RH_zonal_trends.mat rlat p97 data dataMap rlat65 rlon73
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+plot(nanmean(abs(resultsT)),1:iNumLay,nanmean(resultsTunc),1:iNumLay); set(gca,'ydir','reverse');
 deltaT = pert.ptemp-p.ptemp;
 deltaT = deltaT .* (ones(101,1) * maskLF);
 
 deltaTunc = pert_unc.ptemp-p.ptemp;
-deltaTunc = deltaTunc .* (ones(101,1) * maskLF);
+deltaTunc = pert.ptemp_unc;
+plot(pert.ptemp-p.ptemp,1:101,'b',pert.ptemp_unc,1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101])
+plot(nanmean(abs(pert.ptemp'-p.ptemp')),1:101,nanmean(pert.ptemp_unc'),1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101]); grid; plotaxis2;
+semilogy(nanmean(abs(pert.ptemp'-p.ptemp')),p.plevs(:,2345),nanmean(pert.ptemp_unc'),p.plevs(:,2345),'r'); set(gca,'ydir','reverse'); ylim([10 1000]); grid; plotaxis2;
 
+deltaTunc = deltaTunc .* (ones(101,1) * maskLF);
 figure(41); clf; plot(nanmean(deltaT'),1:101,nanmean(deltaTunc'),1:101,'b--'); plotaxis2; set(gca,'ydir','reverse'); ylim([0 100])
 
 figure(25); simplemap(Y(:),X(:),deltaT(i200,:)'.*maskLF',5); colorbar; title(['d(T)/dt yr-1 200 mb'])

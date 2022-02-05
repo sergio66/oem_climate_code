@@ -13,11 +13,21 @@ redo_fig6_surfT_rate
 redo_fig8_spectralrates_with_mask
 
 addpath ../FIND_NWP_MODEL_TRENDS
-figure(8); plot_ERA_ERA5_AIRSL3_CMIP6_trends
-%figure(8); plot_ERA_ERA5_AIRSL3_AMIP6_trends
+iAorC = input('CMIP6 (-1) or AMIP6 (+1, default) : ');
+if length(iAorC) == 0
+  iAorC = +1;
+end
+if iAorC < 0
+  figure(8); plot_ERA_ERA5_AIRSL3_CMIP6_trends
+else
+  figure(8); plot_ERA_ERA5_AIRSL3_AMIP6_trends
+  cmip6 = amip6; clear amip6; disp('copying amip6 = cmip6 .. so remember all your plots with title CMIP6 should really be AMIP6')
+end
+
 %figure(8); plot_profile_trends          %% ERA_ERA5_AIRSL3,   with mask
-figure(8); plot_profile_trends2         %% CMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as std(profile)
-%figure(8); plot_profile_trends3_amip6    %% AMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as mean(unc_profile)
+%figure(8); plot_profile_trends2         %% CMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as std(profile)
+figure(8); plot_profile_trends3_cmip6    %% CMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as mean(unc_profile),,,, I could call plot_profile_trends3_amip6 but I have cleared the variable
+
 iX = input('Do you want to also see profile/spectral trends with uncertainty??? (-1/+1) [-1 default] : ');
 if length(iX) == 0
   iX = -1;
@@ -26,46 +36,52 @@ if iX > 0
   figure(8); plot_profile_trends2_with_unc %% redo UMBC with unc
 end
 
-do_regressions
-
-iFeedback = input('compute feedbacks? (-1/+1) [default -1] ? ');
-if length(iFeedback) == 0
-  iFeedback = 0;
+iX = input('DO regressions of retrievals vs models? (-1/+1) [-1 default] ');
+if length(iY) == 0
+  iX = -1;
 end
-if iFeedback > 0
+if iX > 0
+  do_regressions
+end
+
+iX = input('compute feedbacks? (-1/+1) [default -1] ? ');
+if length(iX) == 0
+  iX = 0;
+end
+if iX > 0
   do_feedbacks
 end
 
 %plot_HadSurf_trends_36x72
-iConvert = input('compare HadSurf to UMBC by converting from 36x72 to 4608(=64x72) (-1 no, default, +1 yes) ? ');
-if length(iConvert) == 0
-  iConvert = -1;
+iX = input('compare HadSurf to UMBC by converting from 36x72 to 4608(=64x72) (-1 no, default, +1 yes) ? ');
+if length(iX) == 0
+  iX = -1;
 end
-if iConvert > 0
+if iX > 0
   plot_HadSurf_trends_convert_to_64x72
 end
 
-iPlotWB = input('Plot wet bulb trends and PNAS2018 paper? (-/+1) [-1 default] : ');
-if length(iPlotWB) == 0
-  iPlotWB = -1;
+iX = input('Plot wet bulb trends and PNAS2018 paper? (-/+1) [-1 default] : ');
+if length(iX) == 0
+  iX = -1;
 end
-if iPlotWB > 0
+if iX > 0
   %% wetbulb bad life
   addpath ../FIND_NWP_MODEL_TRENDS/
   find_wet_bulb_trends
   pnas2018_byrne_gorman
 end
 
-iReplot = input('Plot UMBC/AIRSL3/CMIP6/ERA5 zonal comparisons again (tiled plots) (-1/+1) [+1 default] ? ');
-if length(iReplot) == 0
-  iReplot = 1;
+iX = input('Plot UMBC/AIRSL3/CMIP6/ERA5 zonal comparisons again (tiled plots) (-1/+1) [+1 default] ? ');
+if length(iX) == 0
+  iX = 1;
 end
-if iReplot > 0
+if iX > 0
   re_plot_zonal_trends_umbc_airsL3_models
 end
 
-iUnc = input('do you want to do spectral uncertainties? Takes a LOOOOONG time! (-1 no default, +1 yes) ?');
-if iUnc > 0
+iX = input('do you want to do spectral uncertainties? Takes a LOOOOONG time! (-1 no default, +1 yes) ?');
+if iX > 0
   do_spectral_closure
 end
 

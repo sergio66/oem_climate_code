@@ -84,10 +84,9 @@ elseif driver.i16daytimestep < 0
 %  cov_set = [1.0  0.2          0.2            1/2       0.15           0.15           1/2      0.15         0.15             1/2        20*1E-12     20*1E-12  20*1E-12];  
 
   %% reduce T,WV,O3 uncertainty in covariances, makes WV DOF too small?????
-  %% trend for T ~ 0.01 K/yr, WVfrac and O3frac ~ 1e-3/yr while uncertainties for T ~ 0.03K/yr, WVfrac and O3frac ~ 1e-3/yr -- so unc ~ x3 the retrieved value, actually pretty good, Oct 16, 2021 
-  %%                                                                                     and Feb 4, 2022 (very good simulated ERA5 results)
+  %% trend for T ~ 0.01 K/yr, WVfrac and O3frac ~ 1e-3/yr while uncertainties for T ~ 0.03K/yr, WVfrac and O3frac ~ 1e-3/yr -- so unc ~ x3 the retrieved value, actually pretty good, Oct 16, 2021
   %% works well with sticking CO2 to 2.2 ppm/yr, no spikes
-  cov_set = [1.0  0.05          0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  
+%  cov_set = [1.0  0.05          0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  
 
 %%% after AIRS STM 2021, testing quantile 16
 %%%  cov_set = [1.0  0.05          0.05            1/2       0.15/10           0.15/10           1/2      0.15/10         0.15/10             1/2        20*1E-6     20*1E-6  20*1E-6];  %

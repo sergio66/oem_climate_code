@@ -61,7 +61,7 @@ iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.ptemprate
 
 boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
 iFig = iFig + 1; figure(iFig); clf;  junk = boo.* reshape(cmip6.trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); pcolor(rlat,pavgLAY(1:97,3000),smoothn(junk(1:97,:),1)); colorbar('southoutside'); colormap(llsmap5)
- shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([T_Ylim 1000]); title(['D/N dT/dt CMIP6  K/yr']);
+ shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([T_Ylim 1000]); title(['D/N dT/dt ' mip6str ' K/yr']);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -79,7 +79,7 @@ iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.RHrate; j
 
 boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
 iFig = iFig + 1; figure(iFig); clf;  junk = boo.*reshape(cmip6.trend_RH,100,72,64); junk = squeeze(nanmean(junk,2)); pcolor(rlat,pavgLAY(1:97,3000),smoothn(junk(1:97,:),1)); colorbar('southoutside'); colormap(llsmap5)
- shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([WV_Ylim 1000]); title(['D/N dRH/dt CMIP6 percent/yr']);
+ shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([WV_Ylim 1000]); title(['D/N dRH/dt ' mip6str ' percent/yr']);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -97,6 +97,6 @@ iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.waterrate
 
 boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
 iFig = iFig + 1; figure(iFig); clf;  junk = boo.*reshape(cmip6.trend_gas_1,100,72,64); junk = squeeze(nanmean(junk,2)); pcolor(rlat,pavgLAY(1:97,3000),smoothn(junk(1:97,:),1)); colorbar('southoutside'); colormap(llsmap5)
- shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.01,0.01/100); ylim([WV_Ylim 1000]); title(['D/N d(fracWV)/dt CMIP6 1/yr']);
+ shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.01,0.01/100); ylim([WV_Ylim 1000]); title(['D/N d(fracWV)/dt ' mip6str ' 1/yr']);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
