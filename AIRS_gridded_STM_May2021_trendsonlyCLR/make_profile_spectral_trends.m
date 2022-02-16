@@ -44,6 +44,18 @@ if nnUMBC ~= 20
   fprintf(1,' <<<<<<<<<<< WARNING make_profile_spectral_trends.m has length of WV,T,O3 retrievals as %3i and not 20 \n',nnUMBC);
 end
 
+%% see get_rates.m
+for ii = 1 : 64
+  ind = (ii-1)*72 + (1:72);
+  % this is assuming I am reading in  
+  strlatbin = num2str(ii,'%02d');
+  xdriver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];
+  load(xdriver.rateset.datafile)
+  xdriver.rateset.rates(:,ind) = real(thesave.xtrend);
+  xdriver.rateset.unc_rates(:,ind) = real(thesave.xtrendErr);
+end
+% plot(nanmean(xdriver.rateset.rates,2)); error('lskjglskjgs')
+
 for ii = 1 : 64
   if mod(ii,10) == 0
     fprintf(1,'+')
@@ -129,6 +141,7 @@ for ii = 1 : 64
     junkrate = era5.trend_gas_3(:,ind); junkrate(isnan(junkrate)) = 0; for jjj = 1 : 100; era5_spectral_rates(:,ind) = era5_spectral_rates(:,ind) + squeeze(x100m_ts_jac.subjac.jacO3(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
       era5_100_layertrends.gas_3(:,ind) = junkrate;
   
+   
     %%%%%%%%%%%%%%%%%%%%%%%%%
     Qlevs = airsL3.Qlevs;
     Tlevs = airsL3.Tlevs;
@@ -221,3 +234,10 @@ plot(f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.rates(:,mask),2),'b',f
   plotaxis2; hl = legend('AIRS Obs','AIRS L3','ERA','ERA5','quick test','location','best'); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
 %}
 
+disp('swapping ERA5 reconstructed spectral rates with SARTA spectral rates');
+plot(f,nanmean(xdriver.rateset.rates,2),f,nanmean(nwp_spectral_trends.era5_spectral_rates - xdriver.rateset.rates,2),f,nanstd(nwp_spectral_trends.era5_spectral_rates - xdriver.rateset.rates,[],2)); xlim([640 1640]); grid
+  hl = legend('from SARTA','SARTA-reconstruction mean','SARTA-reconstruction std','location','best','fontsize',10);
+nwp_spectral_trends.era5_spectral_rates = xdriver.rateset.rates;
+%plot(nanmean(nwp_spectral_trends.era5_spectral_rates - xdriver.rateset.rates,2)
+
+keyboard_nowindow

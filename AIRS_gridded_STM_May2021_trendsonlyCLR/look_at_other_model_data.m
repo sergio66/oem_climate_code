@@ -28,6 +28,14 @@ end
 %figure(8); plot_profile_trends2         %% CMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as std(profile)
 figure(8); plot_profile_trends3_cmip6    %% CMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as mean(unc_profile),,,, I could call plot_profile_trends3_amip6 but I have cleared the variable
 
+iX = input('DO you want to do atmospheric amplification (-1/+1) [-1 : default] : ');
+if length(iX) == 0
+  iX = -1;
+end
+if iX > 0
+  atmospheric_amplification_plots2
+end
+
 iX = input('Do you want to also see profile/spectral trends with uncertainty??? (-1/+1) [-1 default] : ');
 if length(iX) == 0
   iX = -1;
@@ -36,8 +44,8 @@ if iX > 0
   figure(8); plot_profile_trends2_with_unc %% redo UMBC with unc
 end
 
-iX = input('DO regressions of retrievals vs models? (-1/+1) [-1 default] ');
-if length(iY) == 0
+iX = input('Do regressions of retrievals vs models? (-1/+1) [-1 default] ');
+if length(iX) == 0
   iX = -1;
 end
 if iX > 0

@@ -1,3 +1,15 @@
+%% works great for testing synthetic ERA5 spectral rates, but you have to make sure that 
+%% clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m has the following settings
+%{
+  topts.set_era5_cmip6_airsL3 = 5;  %% use ERA5 a priori
+  topts.ocb_set               = 1;  %% try ERA5 synthetic rates
+  topts.iNlays_retrieve       = 50; %% 2 AIRS lays thick, so this actually makes 49 layers
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 % Build covariance matrices; fixed, water, temperature
 pmat_size = driver.jacobian.numlays;
 
@@ -88,9 +100,7 @@ elseif driver.i16daytimestep < 0
   %%                                                                                     and Feb 4, 2022 (very good simulated ERA5 results)
   %% works well with sticking CO2 to 2.2 ppm/yr, no spikes
   cov_set = [1.0  0.025         0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  %% ok   excellent simulated ERA5 spectral rates Feb 4, 2022
-  cov_set = [1.0  0.05          0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  %% very excellent simulated ERA5 spectral rates Feb 4, 2022 till Feb 15, 2022
-
-  cov_set = [1.0  0.05*3        0.05*3          1/2       0.15/50*3         0.15/50*3         1/2      0.15/50*3       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x3 unc, Feb 16 2022
+  cov_set = [1.0  0.05          0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  %% very excellent simulated ERA5 spectral rates Feb 4, 2022
 
 %%% after AIRS STM 2021, testing quantile 16
 %%%  cov_set = [1.0  0.05          0.05            1/2       0.15/10           0.15/10           1/2      0.15/10         0.15/10             1/2        20*1E-6     20*1E-6  20*1E-6];  %

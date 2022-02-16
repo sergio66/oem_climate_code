@@ -17,10 +17,28 @@ disp('make sure you do this before starting Matlab, if you want to run ecRad!!!'
 disp('module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('  ')
 
-compute_feedbacks_umbc_ecRad   ; pause(0.1)
-compute_feedbacks_airsL3_ecRad ; pause(0.1)
-compute_feedbacks_era5_ecRad   ; pause(0.1)
-compute_feedbacks_cmip6_ecRad  ; pause(0.1)
+if ~exist('umbc_spectral_olr')
+  compute_feedbacks_umbc_ecRad   ; pause(0.1)
+end
+
+if ~exist('airsL3_spectral_olr')
+  junkx = input('load in airsL3, era5, cmip6 flux calcs from earlier (-1/+1 default) : ? ');
+  if length(junk) == 0
+    junkx = 1;
+  end
+  if junkx > 0
+    disp('loading in flux calcs from earlier');
+    junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
+    junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','era5_spectral_olr'); era5_spectral_olr = junk.era5_spectral_olr;
+    junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','cmip6_spectral_olr'); cmip6_spectral_olr = junk.cmip6_spectral_olr;
+  end
+end
+
+if ~exist('airsL3_spectral_olr')
+  compute_feedbacks_airsL3_ecRad ; pause(0.1)
+  compute_feedbacks_era5_ecRad   ; pause(0.1)
+  compute_feedbacks_cmip6_ecRad  ; pause(0.1)
+end
 
 ns0 = 500;
 ns0 = 50;

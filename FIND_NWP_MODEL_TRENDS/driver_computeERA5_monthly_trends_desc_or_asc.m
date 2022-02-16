@@ -42,8 +42,12 @@ for ii = 1 : iaMax
 end
 [sum(iaFound) length(iaFound)]
 plot(1:iaMax,iaFound,'+-')
+if sum(iaFound) < length(iaFound)
+  find(iaFound == 0)
+  error('not enough')
+end
 
-disp('reading in monthly ERA5 data in '/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
+disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
 for ii = 1 : iaMax
   if iDorA > 0
     fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];

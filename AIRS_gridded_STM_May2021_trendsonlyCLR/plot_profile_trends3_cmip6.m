@@ -198,6 +198,8 @@ plot(f,nanmean(rates(:,mask),2),...
   plotaxis2; hl = legend('UMBC','AIRS L3','CMIP6','ERA5','AIRS Obs','location','best','fontsize',8); axis([640 1640 -0.1 0.05]); title('Spectral Rates');
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 disp('making d/dtRH = 0 calcs')
 %deltaTT = deltaT;
 %for ii = 1 : 4608
@@ -352,4 +354,4 @@ figure(5); subplot(122);
            xlabel('<T>'); ylabel('p(mb)'); xlim([200 280]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-atmospheric_amplification_plots2
+

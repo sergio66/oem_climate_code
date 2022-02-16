@@ -351,4 +351,3 @@ figure(5); subplot(122);
            xlabel('<T>'); ylabel('p(mb)'); xlim([200 280]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-atmospheric_amplification_plots2

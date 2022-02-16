@@ -41,7 +41,7 @@ else
 end
 
 iNumLay = 20;
-iNumLay = input('Enter number of expected fat layers (default 20) : ');
+iNumLay = input('Enter number of expected fat layers (default 20 [5 thick AIRS layers], having good luck with 49 [2 thick AIRS layers]) : ');
 if length(iNumLay) == 0
   iNumLay = 20;
 end

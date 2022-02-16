@@ -187,6 +187,9 @@ end
 addpath /asl/matlib/plotutils
 if iPrint > 0
   printdir = 'Figs_STMOct2021/';
+  printdir = 'Figs_JPL_YukYung2022/';
+  printdir = 'Figs_JPL_YukYung2022_startwithERA5/';
+  printdir = 'Figs_JPL_YukYung2022_startwithERA5_x3unc/';
 
 %{
 
@@ -207,19 +210,21 @@ if iPrint > 0
   figure(55); figname = [printdir '/era5' xstrmaskLF 'WVfrac_trend.pdf'];   aslprint(figname)
   figure(56); figname = [printdir '/airsL3' xstrmaskLF 'WVfrac_trend.pdf']; aslprint(figname)
   figure(57); figname = [printdir '/cmip6' xstrmaskLF 'WVfrac_trend.pdf'];  aslprint(figname)
-%}
-
 
   figure(33); figname = [printdir '/tiled' xstrmaskLF 'WVfrac_trend.pdf'];     aslprint(figname)
   figure(34); figname = [printdir '/tiled' xstrmaskLF 'RH_trend.pdf'];         aslprint(figname)
-
-%{
-  figure(32); figname = [printdir '/tiled' xstrmaskLF 'T_trend.pdf'];          aslprint(figname)
-  figure(33); figname = [printdir '/tiled' xstrmaskLF 'WVfrac_trend.pdf'];     aslprint(figname)
-  figure(34); figname = [printdir '/tiled' xstrmaskLF 'RH_trend.pdf'];         aslprint(figname)
-  figure(39); figname = [printdir '/spectral' xstrmaskLF 'rates.pdf'];         aslprint(figname)
-  figure(40); figname = [printdir '/tiled' xstrmaskLF 'T_RH_WVfracrates.pdf']; aslprint(figname)
 %}
 
+  figure(32); figname = [printdir '/tiled' xstrmaskLF 'T_trend.pdf'];              aslprint(figname)
+  figure(33); figname = [printdir '/tiled' xstrmaskLF 'WVfrac_trend.pdf'];         aslprint(figname)
+  figure(34); figname = [printdir '/tiled' xstrmaskLF 'RH_trend.pdf'];             aslprint(figname)
+  figure(39); figname = [printdir '/spectral' xstrmaskLF 'rates.pdf'];             aslprint(figname)
+  figure(40); figname = [printdir '/tiled' xstrmaskLF 'T_RH_WVfracrates.pdf'];     aslprint(figname)
+  figure(41); figname = [printdir '/tiled' xstrmaskLF 'T_RH_WVfracrates_unc.pdf']; aslprint(figname)
+  figure(42); figname = [printdir '/tiled' xstrmaskLF 'troposphere_RH_trends.pdf']; aslprint(figname)
+
+  if exist('umbc_spectral_olr')
+    figure(2);  figname = [printdir '/tiled' xstrmaskLF 'feedback_params.pdf'];       aslprint(figname)
+  end
 end
 
