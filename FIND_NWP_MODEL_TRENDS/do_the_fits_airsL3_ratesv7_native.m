@@ -54,12 +54,22 @@ thestats_cld3 = do_profilerate_fit_other_fraction(save_cld_frac(:,:,zonk),junk,j
 
 comment = 'see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compute_AIRSL3_trends.m';
 
-if iDorA > 0
-  %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_desc.mat thestats thestats_other Tlevs Qlevs latbins save_lat zonk comment'];
-else
-  %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_asc.mat thestats thestats_other Tlevs Qlevs latbins save_lat zonk comment'];
+if iL3orCLIMCAPS == +1
+  if iDorA > 0
+    %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_desc.mat thestats thestats_other Tlevs Qlevs latbins save_lat zonk comment'];
+  else
+    %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_' savestr_version '_asc.mat thestats thestats_other Tlevs Qlevs latbins save_lat zonk comment'];
+  end
+elseif iL3orCLIMCAPS == -1
+  if iDorA > 0
+    %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_native_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_native_rates_stats_' savestr_version '_desc.mat thestats thestats_other Tlevs Qlevs latbins save_lat zonk comment'];
+  else
+    %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_native_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_native_rates_stats_' savestr_version '_asc.mat thestats thestats_other Tlevs Qlevs latbins save_lat zonk comment'];
+  end
 end
 eval(saver)
 
@@ -100,7 +110,11 @@ if iAnom > 0
   quick_junk_anom
   anom_thestats = do_profilerate_fit_anom3(save_Q(:,:,zonk),save_O3(:,:,zonk),save_T(:,:,zonk),save_stemp(:,zonk),days(zonk),latbins);  
   anom_thestats.days = days;
-  saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsL3_v7_zonal_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+  if iL3orCLIMCAPS == +1
+    saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsL3_v7_zonal_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+  elseif iL3orCLIMCAPS == -1
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/fixedanomO3_airsclimcaps_zonal_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+  end
   eval(saver)
   
   warning on

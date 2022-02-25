@@ -40,7 +40,7 @@ for ii = 1 : iaMax
     iaFound(ii) = 0;
   end
 end
-[sum(iaFound) length(iaFound)]
+fprintf(1,'found %3i of expected %3i files \n', [sum(iaFound) length(iaFound)])
 plot(1:iaMax,iaFound,'+-')
 if sum(iaFound) < length(iaFound)
   find(iaFound == 0)
@@ -226,7 +226,7 @@ figure(8); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshap
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(7); junk = reshape(trend_nwp_ptemp,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
 figure(8); junk = reshape(trend_nwp_rh,37,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
@@ -236,6 +236,8 @@ figure(10); junk = reshape(trend_nwp_ppmv,37,72,64); junk = squeeze(nanmean(junk
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend PPMV /yr');  caxis([0 40]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 figure(11); junk = reshape(trend_nwp_frac,37,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 frac /yr');  caxis([-10 +10]*1e-3); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+
+pause(0.1);
 
 junk1 = squeeze(nanmean(all.nwp_gas_1,1)); junk1 = reshape(junk1,37,72,64); junk1 = squeeze(nanmean(junk1,2)); 
 junk2 = reshape(trend_nwp_frac,37,72,64); junk2 = squeeze(nanmean(junk2,2)); 
@@ -247,6 +249,7 @@ junk2 = reshape(trend_nwp_frac,37,72,64); junk2 = squeeze(nanmean(junk2,2));
 figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1);
 figure(13); loglog(nanmean(junk1,2),trend_nwp_plevs_mean);  set(gca,'ydir','reverse'); xlim([1 1e4]); grid
 figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 PPMV/yr VERS2');  caxis([0 40]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{

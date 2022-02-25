@@ -19,17 +19,24 @@ end
 warning on
 %}
 
-%{
 warning off
 for ii = 1 : 72
   fprintf(1,'lonbin %2i of 72 \n',ii);
   %xthestats       = do_profilerate_fit(squeeze(save64x72_Q(:,ii,:,zonk)),squeeze(save64x72_T(:,ii,:,zonk)),squeeze(save64x72_stemp(:,ii,zonk)),...
   %                                 days(zonk),rlat);
-  xthestats       = do_profilerate_fit_WV_T_O3_RH_ST(squeeze(save64x72_Q(:,ii,:,zonk)),squeeze(save64x72_T(:,ii,:,zonk)),squeeze(save64x72_RH(:,ii,:,zonk)),squeeze(save64x72_O3(:,ii,:,zonk)),...
-                                   squeeze(save64x72_stemp(:,ii,zonk)),squeeze(save64x72_RHSurf(:,ii,zonk)),squeeze(save64x72_TWetSurf(:,ii,zonk)),...
+  if iL3orCLIMCAPS == +1
+    xthestats       = do_profilerate_fit_WV_T_O3_RH_ST(squeeze(save64x72_Q(:,ii,:,zonk)),squeeze(save64x72_T(:,ii,:,zonk)),squeeze(save64x72_RH(:,ii,:,zonk)),squeeze(save64x72_O3(:,ii,:,zonk)),...
+                                     squeeze(save64x72_stemp(:,ii,zonk)),squeeze(save64x72_RHSurf(:,ii,zonk)),squeeze(save64x72_TWetSurf(:,ii,zonk)),...
+                                     days(zonk),rlat);
+
+    xthestats_cld1  = do_profilerate_fit(squeeze(save64x72_cld_frac(:,ii,:,zonk)),squeeze(save64x72_cld_pres(:,ii,:,zonk)),squeeze(save64x72_stemp(:,ii,zonk)),...
                                    days(zonk),rlat);
-  xthestats_cld1  = do_profilerate_fit(squeeze(save64x72_cld_frac(:,ii,:,zonk)),squeeze(save64x72_cld_pres(:,ii,:,zonk)),squeeze(save64x72_stemp(:,ii,zonk)),...
-                                   days(zonk),rlat);
+
+  else
+    xthestats       = do_profilerate_fit_WV_T_O3_RH_ST(squeeze(save64x72_Q(:,ii,:,zonk)),squeeze(save64x72_T(:,ii,:,zonk)),squeeze(save64x72_RH(:,ii,:,zonk)),squeeze(save64x72_RH(:,ii,:,zonk)),...
+                                     squeeze(save64x72_stemp(:,ii,zonk)),squeeze(save64x72_RHSurf(:,ii,zonk)),squeeze(save64x72_TWetSurf(:,ii,zonk)),...
+                                     days(zonk),rlat);
+  end
 
   thestats64x72.lats = xthestats.lats;
 
@@ -38,10 +45,21 @@ for ii = 1 : 72
   thestats64x72.waterlag(ii,:,:) = xthestats.waterlag;
   thestats64x72.waterratestd_lag(ii,:,:) = xthestats.waterratestd_lag;
 
-  thestats64x72.ozonerate(ii,:,:) = xthestats.ozonerate;
-  thestats64x72.ozoneratestd(ii,:,:) = xthestats.ozoneratestd;
-  thestats64x72.ozonelag(ii,:,:) = xthestats.ozonelag;
-  thestats64x72.ozoneratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
+  if iL3orCLIMCAPS == +1
+    thestats64x72.ozonerate(ii,:,:) = xthestats.ozonerate;
+    thestats64x72.ozoneratestd(ii,:,:) = xthestats.ozoneratestd;
+    thestats64x72.ozonelag(ii,:,:) = xthestats.ozonelag;
+    thestats64x72.ozoneratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
+
+    thestats64x72.cld_frac_rate(ii,:,:) = xthestats_cld1.waterrate;  thestats64x72.cld_frac_ratestd(ii,:,:) = xthestats_cld1.waterrate;
+    thestats64x72.cld_pres_rate(ii,:,:) = xthestats_cld1.ptemprate;  thestats64x72.cld_pres_ratestd(ii,:,:) = xthestats_cld1.ptemprate;  %% fixed Sept 31, 2018 (or Oct -1, 2018)
+
+  else
+    thestats64x72.ozonerate(ii,:,:) = xthestats.ozonerate * 0;
+    thestats64x72.ozoneratestd(ii,:,:) = xthestats.ozoneratestd * 0;
+    thestats64x72.ozonelag(ii,:,:) = xthestats.ozonelag * 0;
+    thestats64x72.ozoneratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag * 0;
+  end
 
   thestats64x72.RHrate(ii,:,:) = xthestats.RHrate;
   thestats64x72.RHratestd(ii,:,:) = xthestats.RHratestd;
@@ -68,54 +86,53 @@ for ii = 1 : 72
   thestats64x72.RHSurflag(ii,:) = xthestats.RHSurflag;
   thestats64x72.RHSurfratestd_lag(ii,:) = xthestats.RHSurfratestd_lag;
 
-  thestats64x72.cld_frac_rate(ii,:,:) = xthestats_cld1.waterrate;  thestats64x72.cld_frac_ratestd(ii,:,:) = xthestats_cld1.waterrate;
-  thestats64x72.cld_pres_rate(ii,:,:) = xthestats_cld1.ptemprate;  thestats64x72.cld_pres_ratestd(ii,:,:) = xthestats_cld1.ptemprate;  %% fixed Sept 31, 2018 (or Oct -1, 2018)
 end
-%}
 
-%% remember we don't have cloud stuff here so this is sorta a waste
-for ii = 1 : 72
-  %xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_O3(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
-  xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_CH4(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
-  thestats64x72.ch4rate(ii,:,:)        = xthestats.ozonerate;
-  thestats64x72.ch4ratestd(ii,:,:)     = xthestats.ozoneratestd;
-  thestats64x72.ch4lag(ii,:,:)         = xthestats.ozonelag;
-  thestats64x72.ch4ratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonerate');
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd');
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonelag');
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd_lag');
-
-  xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_CO(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
-  junk = save64x72_ice_od(:,zonk); junk = junk ./ (nanmean(junk')' * ones(1,length(zonk))+eps);
-  thestats_cld2 = do_profilerate_fit_other_fraction(squeeze(save64x72_cld_frac(:,ii,:,zonk)),squeeze(save64x72_iceT(:,ii,zonk)),junk,days(zonk),rlat);
-  thestats64x72.corate(ii,:,:)        = xthestats.ozonerate;
-  thestats64x72.coratestd(ii,:,:)     = xthestats.ozoneratestd;
-  thestats64x72.colag(ii,:,:)         = xthestats.ozonelag;
-  thestats64x72.coratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonerate');
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd');
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozonelag');
-  xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd_lag');
-
-  thestats64x72_other.lats = xthestats64x72_other.lats;
-  thestats64x72_other.olrrate(ii,:) = xthestats64x72_other.olrrate;
-  thestats64x72_other.olrratestd(ii,:) = xthestats64x72_other.olrratestd;
-  thestats64x72_other.clrolrrate(ii,:) = xthestats64x72_other.clrolrrate;
-  thestats64x72_other.clrolrratestd(ii,:) = xthestats64x72_other.clrolrratestd;
- 
-  thestats64x72_other.iceT_rate(ii,:) = thestats_cld2.olrrate;       thestats64x72_other.iceT_ratestd(ii,:) = thestats_cld2.olrratestd;
-  thestats64x72_other.ice_od_rate(ii,:) = thestats_cld2.clrolrrate;  thestats64x72_other.ice_od_ratestd(ii,:) = thestats_cld2.clrolrratestd;
-
-  junk = squeeze(save64x72_icesze(:,ii,zonk));    junk = junk ./ (nanmean(junk')' * ones(1,length(zonk)));
-  punk = squeeze(save64x72_liq_water(:,ii,zonk)); junk = junk ./ (nanmean(junk')' * ones(1,length(zonk)));    %% all NANS
-  %thestats_cld3 = do_profilerate_fit_other_fraction(save64x72_cld_frac(:,:,zonk),junk,punk,days(zonk),rlat);
-  %  thestats64x72_other.liq_water_rate = thestats_cld3.clrolrrate;  thestats64x72_other.liq_water_ratestd = thestats_cld3.clrolrratestd;
-  thestats_cld3 = do_profilerate_fit_other_fraction(save64x72_cld_frac(:,:,zonk),junk,junk,days(zonk),rlat);
-  thestats64x72_other.icesze_rate(ii,:)    = thestats_cld3.olrrate;      thestats64x72_other.icesze_ratestd(ii,:) = thestats_cld3.olrratestd;
-  thestats64x72_other.liq_water_rate(ii,:) = nan*thestats_cld3.olrrate;  thestats64x72_other.liq_water_ratestd(ii,:) = nan*thestats_cld3.clrolrratestd;
+if iL3orCLIMCAPS > 0
+  %% remember we don't have cloud stuff here so this is sorta a waste
+  for ii = 1 : 72
+    %xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_O3(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
+    xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_CH4(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
+    thestats64x72.ch4rate(ii,:,:)        = xthestats.ozonerate;
+    thestats64x72.ch4ratestd(ii,:,:)     = xthestats.ozoneratestd;
+    thestats64x72.ch4lag(ii,:,:)         = xthestats.ozonelag;
+    thestats64x72.ch4ratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozonerate');
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd');
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozonelag');
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd_lag');
+  
+    xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_CO(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat);
+    junk = save64x72_ice_od(:,zonk); junk = junk ./ (nanmean(junk')' * ones(1,length(zonk))+eps);
+    thestats_cld2 = do_profilerate_fit_other_fraction(squeeze(save64x72_cld_frac(:,ii,:,zonk)),squeeze(save64x72_iceT(:,ii,zonk)),junk,days(zonk),rlat);
+    thestats64x72.corate(ii,:,:)        = xthestats.ozonerate;
+    thestats64x72.coratestd(ii,:,:)     = xthestats.ozoneratestd;
+    thestats64x72.colag(ii,:,:)         = xthestats.ozonelag;
+    thestats64x72.coratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozonerate');
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd');
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozonelag');
+    xthestats64x72_other = rmfield(xthestats64x72_other,'ozoneratestd_lag');
+  
+    thestats64x72_other.lats = xthestats64x72_other.lats;
+    thestats64x72_other.olrrate(ii,:) = xthestats64x72_other.olrrate;
+    thestats64x72_other.olrratestd(ii,:) = xthestats64x72_other.olrratestd;
+    thestats64x72_other.clrolrrate(ii,:) = xthestats64x72_other.clrolrrate;
+    thestats64x72_other.clrolrratestd(ii,:) = xthestats64x72_other.clrolrratestd;
+   
+    thestats64x72_other.iceT_rate(ii,:) = thestats_cld2.olrrate;       thestats64x72_other.iceT_ratestd(ii,:) = thestats_cld2.olrratestd;
+    thestats64x72_other.ice_od_rate(ii,:) = thestats_cld2.clrolrrate;  thestats64x72_other.ice_od_ratestd(ii,:) = thestats_cld2.clrolrratestd;
+  
+    junk = squeeze(save64x72_icesze(:,ii,zonk));    junk = junk ./ (nanmean(junk')' * ones(1,length(zonk)));
+    punk = squeeze(save64x72_liq_water(:,ii,zonk)); junk = junk ./ (nanmean(junk')' * ones(1,length(zonk)));    %% all NANS
+    %thestats_cld3 = do_profilerate_fit_other_fraction(save64x72_cld_frac(:,:,zonk),junk,punk,days(zonk),rlat);
+    %  thestats64x72_other.liq_water_rate = thestats_cld3.clrolrrate;  thestats64x72_other.liq_water_ratestd = thestats_cld3.clrolrratestd;
+    thestats_cld3 = do_profilerate_fit_other_fraction(save64x72_cld_frac(:,:,zonk),junk,junk,days(zonk),rlat);
+    thestats64x72_other.icesze_rate(ii,:)    = thestats_cld3.olrrate;      thestats64x72_other.icesze_ratestd(ii,:) = thestats_cld3.olrratestd;
+    thestats64x72_other.liq_water_rate(ii,:) = nan*thestats_cld3.olrrate;  thestats64x72_other.liq_water_ratestd(ii,:) = nan*thestats_cld3.clrolrratestd;
+  end
+  warning on
 end
-warning on
 
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
@@ -143,12 +160,22 @@ figure(4); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(save64x72_Q,[2 4]))'); sha
 figure(4); pcolor(save_lat64x72,Qlevs,log10(squeeze(nanmean(save64x72_Q,[2 4]))')); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
 
 comment = 'see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compute_AIRSL3_trends.m';
-if iDorA > 0
-  %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
-else
-  %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+if iL3orCLIMCAPS == +1
+  if iDorA > 0
+    %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+  else
+    %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+  end
+elseif iL3orCLIMCAPS == -1
+  if iDorA > 0
+    %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+  else
+    %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+  end
 end
 eval(saver)
 
@@ -163,7 +190,11 @@ if iAnom > 0
   quick_junk_anom64x72
   anom_thestats64x72 = do_profilerate_fit_anom3(save64x72_Q(:,:,zonk),save64x72_O3(:,:,zonk),save64x72_T(:,:,zonk),save64x72_stemp(:,zonk),days(zonk),rlat);  
   anom_thestats64x72.days = days;
-  saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsL3_v7_64x72_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+  if iL3orCLIMCAPS == +1
+    saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsL3_v7_64x72_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+  elseif iL3orCLIMCAPS == -1
+    saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsclimcaps_64x72_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+  end
   eval(saver)
   
   warning on

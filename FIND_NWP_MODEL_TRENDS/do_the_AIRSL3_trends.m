@@ -1,3 +1,32 @@
+%% see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/re_plot_zonal_trends_umbc_airsL3_models.m
+disp('Enter (-7) polar    L/O')
+disp('      (-6) midlat   L/O')
+disp('      (-5) tropical L/O')
+disp('      (-4) polar land    (+4) polar ocean')
+disp('      (-3) midlat land   (+3) midlat ocean')
+disp('      (-2) tropical land (+2) tropical ocean')
+disp('      (-1) land          (+1) ocean');
+disp('      [0,default] ALL trends : ');
+
+ixAorOorL = 0;  %% +1 = ocean, -1 = Land, 0 = both
+
+ixAorOorL = input('Enter region : ');
+if length(ixAorOorL) == 0 
+  ixAorOorL = 0;
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if ~exist('iL3orCLIMCAPS')
+  error('iL3orCLIMCAPS DNE')
+end
+
+if iL3orCLIMCAPS == -1
+  Airs_Lat0 = Airs_Lat;
+  Airs_Lon0 = Airs_Lon;
+  [Airs_Lon,Airs_Lat] = meshgrid(Airs_Lon0,Airs_Lat0);
+end
+
 iDorA = input('Enter Asc(-1) or Desc (+1) : ');
 if length(iDorA) == 0
   iDorA = +1;

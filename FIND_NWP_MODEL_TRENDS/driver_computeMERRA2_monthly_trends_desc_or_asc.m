@@ -44,7 +44,7 @@ for ii = 1 : iaMax
     iaFound(ii) = 0;
   end
 end
-[sum(iaFound) length(iaFound)]
+fprintf(1,'found %3i of expected %3i files \n', [sum(iaFound) length(iaFound)])
 plot(1:iaMax,iaFound,'+-')
 if sum(iaFound) < length(iaFound)
   find(iaFound == 0)
@@ -153,6 +153,7 @@ figure(10); junk = reshape(a.pnew_op.RH,100,72,64); junk = squeeze(nanmean(junk,
   caxis([00 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar; title('Mean RH');
 figure(11); junk = reshape(log10(a.pnew_op.gas_1),101,72,64); junk = squeeze(nanmean(junk,2)); junk = junk(1:100,:); pcolor(rlat,plays,junk);
   caxis([13 23]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar; title('Mean log10(SH)');
+pause(0.1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
@@ -234,20 +235,20 @@ figure(8); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshap
 iNlev = 42;
 trend_nwp_rh = real(trend_nwp_rh);
 figure(7); junk = reshape(trend_nwp_ptemp,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
 figure(8); junk = reshape(trend_nwp_rh,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 figure(9); junk = reshape(trend_nwp_gg,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend SH g/g/yr');  caxis([0 +2.5]*1e-5); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend SH g/g/yr');  caxis([-2.5 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 figure(10); junk = reshape(trend_nwp_ppmv,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend PPMV /yr');  caxis([0 40]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend PPMV /yr');  caxis([-40 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 figure(11); junk = reshape(trend_nwp_frac,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 frac /yr');  caxis([-10 +10]*1e-3); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 frac /yr');  caxis([-10 +10]*1e-3); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 junk1 = squeeze(nanmean(all.nwp_gas_1,1)); junk1 = reshape(junk1,iNlev,72,64); junk1 = squeeze(nanmean(junk1,2)); 
 junk2 = reshape(trend_nwp_frac,iNlev,72,64); junk2 = squeeze(nanmean(junk2,2)); 
-figure(12); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('MERRA2 SH g/g/yr VERS2');  caxis([0 +2.5]*1e-5); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(12); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('MERRA2 SH g/g/yr VERS2');  caxis([-2.5 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 junk1 = toppmv(all.nwp_plevs,all.nwp_ptemp,all.nwp_gas_1,18,21); junk1 = squeeze(nanmean(junk1,1));
 junk1 = reshape(junk1,iNlev,72,64); junk1 = squeeze(nanmean(junk1,2));

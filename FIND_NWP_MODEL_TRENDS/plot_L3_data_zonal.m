@@ -1,47 +1,4 @@
-%Airs_Temp    = (Airs_Temp_A + Airs_Temp_D)/2;
-%Airs_STemp   = (Airs_STemp_A + Airs_STemp_D)/2;
-%Airs_H2OVap  = (Airs_H2OVap_A + Airs_H2OVap_D)/2;
-%Airs_Ozone   = (Airs_Ozone_A + Airs_Ozone_D)/2;
-%Airs_OLR     = (Airs_OLR_A + Airs_OLR_D)/2;
-%Airs_Clr_OLR = (Airs_ClrOLR_A + Airs_ClrOLR_D)/2;
-
-if iDorA > 0
-  Airs_Temp    = Airs_Temp_D;
-  Airs_STemp   = Airs_STemp_D;
-  Airs_H2OVap  = Airs_H2OVap_D;
-  Airs_RHSurf  = Airs_RHSurf_D;
-  Airs_RH      = Airs_RH_D;
-  Airs_Ozone   = Airs_Ozone_D;
-  Airs_CO      = Airs_CO_D;
-  Airs_CH4     = Airs_CH4_D;
-  Airs_OLR     = Airs_OLR_D;
-  Airs_ClrOLR = Airs_ClrOLR_D;
-  
-  Airs_LiqWater = Airs_LiqWater_D;
-  Airs_IceT     = Airs_IceT_D;
-  Airs_IceSze   = Airs_IceSze_D;
-  Airs_IceOD    = Airs_IceOD_D;
-  Airs_CldPres  = Airs_CldPres_D;
-  Airs_CldFrac  = Airs_CldFrac_D;
-else
-  Airs_Temp    = Airs_Temp_A;
-  Airs_STemp   = Airs_STemp_A;
-  Airs_H2OVap  = Airs_H2OVap_A;
-  Airs_RHSurf  = Airs_RHSurf_A;
-  Airs_RH      = Airs_RH_A;
-  Airs_Ozone   = Airs_Ozone_A;
-  Airs_CO      = Airs_CO_A;
-  Airs_CH4     = Airs_CH4_A;
-  Airs_OLR     = Airs_OLR_A;
-  Airs_ClrOLR = Airs_ClrOLR_A;
-  
-  Airs_LiqWater = Airs_LiqWater_A;
-  Airs_IceT     = Airs_IceT_A;
-  Airs_IceSze   = Airs_IceSze_A;
-  Airs_IceOD    = Airs_IceOD_A;
-  Airs_CldPres  = Airs_CldPres_A;
-  Airs_CldFrac  = Airs_CldFrac_A;
-end
+set_A_or_D_toneeded
 
 Airs_TwetSurf     = real(get_wet_bulb_temperature(Airs_STemp,Airs_RHSurf));
 figure(1);  pcolor(flipud(squeeze(nanmean(double(Airs_RHSurf),1)))); shading interp; colorbar; caxis([0 120]); title('mean RH Surf'); colormap(jet)
@@ -60,7 +17,10 @@ days = days(woo);
 
 figure(1)
 for ii = 1 : 1
-  simplemap(Airs_Lat,Airs_Lon,squeeze(Airs_STemp(ii,:,:))); caxis([200 350]); colorbar
+  boo = squeeze(Airs_STemp(ii,:,:));
+  zoo = find(isnan(boo)); boo(zoo) = 250;
+  simplemap(Airs_Lat,Airs_Lon,boo); caxis([200 350]); colorbar
+  %simplemap(boo); caxis([200 350]); colorbar
   pause(1)
 end
 
@@ -261,29 +221,55 @@ for ii = 1 : length(latbins)-1
 end
 figure(6); pcolor(double(squeeze(save_T(:,5,:)))); colorbar; shading interp;  title('T(5)'); pause(1)
 
-for ii = 1 : length(latbins)-1
-  fprintf(1,'O3 latbin = %3i \n',ii);
-  ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
-              landfrac < 0.001);
-  ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
-  boo = Airs_Ozone;
-  donk = size(boo);
-  for jj = 1 : donk(2)
-    for tt = 1 : tmax
-      zz = boo(tt,jj,:,:); zz = squeeze(zz);
-      xx = zz(ix); xx = xx(:);
-      good = find(xx > 0);
-      save_O3(ii,jj,tt) = nanmean(xx(good));
-      if iDebug
-        figure(8)
-        simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
-        caxis([220 310]); colorbar
-        title(num2str(latbins(ii))); colorbar; pause(1);
+if iL3orCLIMCAPS == +1
+  for ii = 1 : length(latbins)-1
+    fprintf(1,'O3 latbin = %3i \n',ii);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
+                landfrac < 0.001);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
+    boo = Airs_Ozone;
+    donk = size(boo);
+    for jj = 1 : donk(2)
+      for tt = 1 : tmax
+        zz = boo(tt,jj,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save_O3(ii,jj,tt) = nanmean(xx(good));
+        if iDebug
+          figure(8)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; pause(1);
+        end
       end
     end
   end
+  figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
+else
+  for ii = 1 : length(latbins)-1
+    fprintf(1,'O3 latbin = %3i \n',ii);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
+                landfrac < 0.001);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
+    boo = Airs_Ozone;
+    donk = size(boo);
+    for jj = 1 : 1
+      for tt = 1 : tmax
+        zz = boo(tt,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save_O3(ii,jj,tt) = nanmean(xx(good));
+        if iDebug
+          figure(8)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; pause(1);
+        end
+      end
+    end
+  end
+  figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
 end
-figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
 
 for ii = 1 : length(latbins)-1
   fprintf(1,'CO latbin = %3i \n',ii);
@@ -458,12 +444,23 @@ for ii = 1 : 7
   figure(ii); colormap jet
 end
 
-if iDorA > 0
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_desc.mat save_olr save_clrolr save_O3 save_CH4 save_CO save_Q save_T save_RH save_stemp days Tlevs Qlevs latbins'];
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_desc.mat save_* days Tlevs Qlevs latbins'];
-else
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_asc.mat save_olr save_clrolr save_O3 save_CH4 save_CO save_Q save_T save_RH save_stemp days Tlevs Qlevs latbins'];
-  saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_asc.mat save_* days Tlevs Qlevs latbins'];
+if iL3orCLIMCAPS == +1
+  if iDorA > 0
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_desc.mat save_olr save_clrolr save_O3 save_CH4 save_CO save_Q save_T save_RH save_stemp days Tlevs Qlevs latbins'];
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_desc.mat save_* days Tlevs Qlevs latbins'];
+  else
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_asc.mat save_olr save_clrolr save_O3 save_CH4 save_CO save_Q save_T save_RH save_stemp days Tlevs Qlevs latbins'];
+    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_' savestr_version '_asc.mat save_* days Tlevs Qlevs latbins'];
+  end
+elseif iL3orCLIMCAPS == -1
+  if iDorA > 0
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_zonal_rates_' savestr_version '_desc.mat save_olr save_clrolr save_O3 save_CH4 save_CO save_Q save_T save_RH save_stemp days Tlevs Qlevs latbins'];
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_zonal_rates_' savestr_version '_desc.mat save_* days Tlevs Qlevs latbins'];
+  else
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_zonal_rates_' savestr_version '_asc.mat save_olr save_clrolr save_O3 save_CH4 save_CO save_Q save_T save_RH save_stemp days Tlevs Qlevs latbins'];
+    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_zonal_rates_' savestr_version '_asc.mat save_* days Tlevs Qlevs latbins'];
+  end
 end
+
 eval(saver)
 
