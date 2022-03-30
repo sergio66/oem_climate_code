@@ -405,4 +405,10 @@ disp('ret to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% look at current AIRS UMBC trend retrievals
 plot_driver_gather_gridded_retrieval_results
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% then look at model data
+look_at_other_model_data

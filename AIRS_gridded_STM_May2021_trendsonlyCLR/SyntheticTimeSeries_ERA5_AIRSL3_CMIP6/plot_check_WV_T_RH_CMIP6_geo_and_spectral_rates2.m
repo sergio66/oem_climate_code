@@ -252,7 +252,10 @@ warning on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('here I am doing this save')
-if iType == 6
+if iType == 7
+  saver = ['save ' dirout '/reconstruct_merra2_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHMERRA2rate zonalTMERRA2rate '];
+elseif iType == 6
   saver = ['save ' dirout '/reconstruct_cmip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate '];
 elseif iType == 5

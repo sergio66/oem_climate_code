@@ -1,4 +1,3 @@
-
 iFig = 50;
 iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(fracWV(1:100,mask),2),plays,'linewidth',2);          ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
                                      subplot(122); semilogy(1+nanmean(fracWVunc(1:100,mask),2),plays,'linewidth',2);     ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
@@ -11,31 +10,31 @@ iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaO3(1:97
 
 if exist('airsL3')
   iFig = 50;
-  Tlevs = airsL3.Tlevs;
-  Qlevs = airsL3.Qlevs;
+  Tlevs = airsL3.Tlevs; lenTlevs = length(Tlevs);
+  Qlevs = airsL3.Qlevs; lenQlevs = length(Qlevs);
 
-  boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = maskLFmatr'; end
-  junk = airsL3.thestats64x72.waterrate.*boo; junk = reshape(junk,72*64,12);  
+  boo = zeros(72,64,lenQlevs); for ijunk = 1 : lenQlevs; boo(:,:,ijunk) = maskLFmatr'; end
+  junk = airsL3.thestats64x72.waterrate.*boo; junk = reshape(junk,72*64,lenQlevs);  
   iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,1)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
-  junk = airsL3.thestats64x72.waterratestd.*boo; junk = reshape(junk,72*64,12);  
+  junk = airsL3.thestats64x72.waterratestd.*boo; junk = reshape(junk,72*64,lenQlevs);  
                                    subplot(122); hold on; semilogy(1+nanmean(junk,1)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
 
-  boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = maskLFmatr'; end
-  junk = airsL3.thestats64x72.RHrate.*boo; junk = reshape(junk,72*64,12);  
+  boo = zeros(72,64,lenQlevs); for ijunk = 1 : lenQlevs; boo(:,:,ijunk) = maskLFmatr'; end
+  junk = airsL3.thestats64x72.RHrate.*boo; junk = reshape(junk,72*64,lenQlevs);  
   iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,1)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
-  junk = airsL3.thestats64x72.RHratestd.*boo; junk = reshape(junk,72*64,12);  
+  junk = airsL3.thestats64x72.RHratestd.*boo; junk = reshape(junk,72*64,lenQlevs);  
                                    subplot(122); hold on; semilogy(nanmean(junk,1)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
 
-  boo = zeros(72,64,12); for ijunk = 1 : 24; boo(:,:,ijunk) = maskLFmatr'; end
-  junk = airsL3.thestats64x72.ptemprate.*boo; junk = reshape(junk,72*64,24);  
+  boo = zeros(72,64,lenTlevs); for ijunk = 1 : lenTlevs; boo(:,:,ijunk) = maskLFmatr'; end
+  junk = airsL3.thestats64x72.ptemprate.*boo; junk = reshape(junk,72*64,lenTlevs);  
   iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,1)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
-  junk = airsL3.thestats64x72.ptempratestd.*boo; junk = reshape(junk,72*64,24);  
+  junk = airsL3.thestats64x72.ptempratestd.*boo; junk = reshape(junk,72*64,lenTlevs);  
                                    subplot(122); hold on; semilogy(nanmean(junk,1)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
 
-  boo = zeros(72,64,12); for ijunk = 1 : 24; boo(:,:,ijunk) = maskLFmatr'; end
-  junk = airsL3.thestats64x72.ozonerate.*boo; junk = reshape(junk,72*64,24);  
+  boo = zeros(72,64,lenTlevs); for ijunk = 1 : lenTlevs; boo(:,:,ijunk) = maskLFmatr'; end
+  junk = airsL3.thestats64x72.ozonerate.*boo; junk = reshape(junk,72*64,lenTlevs);  
   iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,1)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
-  junk = airsL3.thestats64x72.ozoneratestd.*boo; junk = reshape(junk,72*64,24);  
+  junk = airsL3.thestats64x72.ozoneratestd.*boo; junk = reshape(junk,72*64,lenTlevs);  
                                    subplot(122); hold on; semilogy(nanmean(junk,1)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 end
 

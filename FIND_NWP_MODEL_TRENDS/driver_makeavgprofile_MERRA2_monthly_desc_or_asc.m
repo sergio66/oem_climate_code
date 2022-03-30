@@ -10,13 +10,14 @@ topts.klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 topts.sarta = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';
 
 if ~exist('all')
-  load ERA5_atm_data_2002_09_to_2021_08_desc.mat
+  %load ERA5_atm_data_2002_09_to_2021_08_desc.mat
+  load MERRA2_atm_data_2002_09_to_2021_08_desc.mat
 end
 
 %% these are actually DESC
-foutNyearaverageIP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.ip.rtp'];
-foutNyearaverageOP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.op.rtp'];
-foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp'];
+foutNyearaverageIP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.ip.rtp'];
+foutNyearaverageOP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.op.rtp'];
+foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.rp.rtp'];
 if ~exist(foutNyearaverageIP)
   pNyearaverage = [];
   for ii = 1 : 4608
@@ -114,21 +115,21 @@ if ~exist(foutNyearaverageIP)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% compare pnew profiles with pERAI
   addpath /home/sergio/MATLABCODE/COLORMAP/
-  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.stemp-pERAI.stemp); title('stemp : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/1)
+  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.stemp-pERAI.stemp); title('stemp : MERRA2 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/1)
 
-  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i500mb,:)-pERAI.ptemp(i500mb,:)); title('500 mb T(z) : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
-  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i850mb,:)-pERAI.ptemp(i850mb,:)); title('850 mb T(z) : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
+  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i500mb,:)-pERAI.ptemp(i500mb,:)); title('500 mb T(z) : MERRA2 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
+  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i850mb,:)-pERAI.ptemp(i850mb,:)); title('850 mb T(z) : MERRA2 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
 
   mmwI = mmwater_rtp(hERAI,pERAI);
   mmw5 = mmwater_rtp(hnew,pnew);
-  scatter_coast(yavg.rlon,yavg.rlat,50,mmw5-mmwI); title('mmw : ERA5 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/1)
+  scatter_coast(yavg.rlon,yavg.rlat,50,mmw5-mmwI); title('mmw : MERRA2 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/1)
 
   mmwI_300 = mmwater_rtp(hERAI,pERAI,300);
   mmw5_300 = mmwater_rtp(hnew,pnew,300);
-  scatter_coast(yavg.rlon,yavg.rlat,50,mmw5_300-mmwI_300); title('mmw to 300 mb : ERA5 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/100)
+  scatter_coast(yavg.rlon,yavg.rlat,50,mmw5_300-mmwI_300); title('mmw to 300 mb : MERRA2 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/100)
 
 end
 
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrMERRA2.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrMERRA2.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrMERRA2.m')

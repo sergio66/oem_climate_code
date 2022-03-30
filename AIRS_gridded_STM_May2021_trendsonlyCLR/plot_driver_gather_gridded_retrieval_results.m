@@ -254,6 +254,3 @@ aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn((reshape(fluxX.p2x.olrclr,72,64)'),1
 aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn((reshape(fluxX.p2x.olrclr-flux0.p2x.olrclr,72,64)'),1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt clrOLR W/m2/yr'); 
 caxis([-0.5 +0.5])
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% now look at other model data
-look_at_other_model_data

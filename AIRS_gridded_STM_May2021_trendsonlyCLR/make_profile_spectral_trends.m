@@ -7,7 +7,7 @@ function nwp_spectral_trends = make_profile_spectral_trends(era,era5,airsL3,resu
 %% inputs 
 %%   era_or_cmip6 = 100 layers
 %%   era5         = 100 layers
-%%   airsL3       = 20 (T,O3) or 10 (WV) layers
+%%   airsL3       = JOEL : 24 (T,O3) or 12 (WV) layers  CHRIS : 100 (T,O3) or 66 (WV) layers
 %%   results*     = 6 scalars, default T(z),WV(z),O3(z), typically 20 layers but could be eg 10 or 25 or 50 or 97
 %%
 %% note "mask" is not part of argument list, this routine computes spectral rates for all 4608 profiles

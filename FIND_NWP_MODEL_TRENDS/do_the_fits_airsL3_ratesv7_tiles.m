@@ -132,20 +132,26 @@ if iL3orCLIMCAPS > 0
     thestats64x72_other.liq_water_rate(ii,:) = nan*thestats_cld3.olrrate;  thestats64x72_other.liq_water_ratestd(ii,:) = nan*thestats_cld3.clrolrratestd;
   end
   warning on
+else
+  thestats64x72_other = 'nothing';
 end
 
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 load llsmap5
-figure(1); pcolor(save_lat64x72,Tlevs,squeeze(nanmean(thestats64x72.ptemprate,1))'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+figure(1); pcolor(save_lat64x72,Tlevs/100,squeeze(nanmean(thestats64x72.ptemprate,1))'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
   title('AIRS L3 dT/dt K/yr');
-figure(2); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(thestats64x72.waterrate,1))'); shading interp; colorbar; caxis([-0.1 +0.1]/5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+figure(2); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.waterrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
   title('AIRS L3 d(WV)/<WV>/dt /yr');
-figure(3); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(thestats64x72.RHrate,1))'); shading interp; colorbar; caxis([-1 +1]/2); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+figure(3); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.RHrate*100,1))'); shading interp; colorbar; caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
   title('AIRS L3 d(RH)/dt /yr');
+
+figure(1); ylim([10 1000]);
+figure(2); ylim([100 1000]);
+figure(3); ylim([100 1000]);
+
 figure(4); pcolor(save_lon64x72,save_lat64x72,thestats64x72.stemprate'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5);
 figure(4); simplemap(thestats64x72.stemprate'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5);
-
 addpath /home/sergio/MATLABCODE/
 addpath /asl/matlib/maps/
 load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
@@ -155,6 +161,7 @@ rlat65 = latB2; rlon73 = -180 : 5 : +180;
 %rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 figure(4); aslmap(4,rlat65,rlon73,smoothn(thestats64x72.stemprate',1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt AIRS L3 K/yr'); colormap(llsmap5);
   title('AIRS L3 d(stemp)/dt /yr');
+caxis([-1 +1]*0.15)
 
 figure(4); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(save64x72_Q,[2 4]))'); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
 figure(4); pcolor(save_lat64x72,Qlevs,log10(squeeze(nanmean(save64x72_Q,[2 4]))')); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')

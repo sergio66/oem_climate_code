@@ -149,6 +149,8 @@ rtpwrite('simulate64binsERA5.ip.rtp',h64,[],p64,[]);
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
+dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries'; %%%% ????
+
 klayerser = ['!' klayers ' fin=simulate64binsERA5.ip.rtp fout=simulate64binsERA5.op.rtp'];
 sartaer   = ['!' sarta '   fin=simulate64binsERA5.op.rtp fout=simulate64binsERA5.rp.rtp'];
 

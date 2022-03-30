@@ -13,16 +13,7 @@ redo_fig6_surfT_rate
 redo_fig8_spectralrates_with_mask
 
 addpath ../FIND_NWP_MODEL_TRENDS
-iAorC = input('CMIP6 (-1) or AMIP6 (+1, default) : ');
-if length(iAorC) == 0
-  iAorC = +1;
-end
-if iAorC < 0
-  figure(8); plot_ERA_ERA5_AIRSL3_CMIP6_trends
-else
-  figure(8); plot_ERA_ERA5_AIRSL3_AMIP6_trends
-  cmip6 = amip6; clear amip6; disp('copying amip6 = cmip6 .. so remember all your plots with title CMIP6 should really be AMIP6')
-end
+driver_get_the_model_trends
 
 %figure(8); plot_profile_trends          %% ERA_ERA5_AIRSL3,   with mask
 %figure(8); plot_profile_trends2         %% CMIP6_ERA5_AIRSL3, with mask, but uses mean as mean(profile) and unc as std(profile)
