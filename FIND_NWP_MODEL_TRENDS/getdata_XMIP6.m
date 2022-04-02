@@ -1,5 +1,10 @@
 function xmip6Choice = getdata_XMIP6(iXMIP6,iNorD,iAorOrL);
 
+addpath /asl/matlib/maps/
+addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
+addpath /home/sergio/MATLABCODE/PLOTTER
+
 %   iXMIP6 = CMIP -1 default
 %            AMIP +1
 

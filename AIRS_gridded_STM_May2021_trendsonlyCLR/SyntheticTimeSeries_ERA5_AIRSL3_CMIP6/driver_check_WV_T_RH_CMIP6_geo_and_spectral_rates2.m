@@ -5,7 +5,7 @@ addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/TIME
-addpath /home/sergio/MATLABCOD
+addpath /home/sergio/MATLABCODE
 addpath ../../../FIND_TRENDS/
 
 system_slurm_stats
@@ -30,6 +30,9 @@ RHCMIP6rate = RHCMIP6 - RH000;
 zonalRHCMIP6rate = reshape(RHCMIP6rate,100,72,64);
 zonalRHCMIP6rate = squeeze(nanmean(zonalRHCMIP6rate,2));
 
+kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
+rlat = kaboom.rlat; 
+
 zonalrlat = rlat;
 zonalplays = p.plays(1:100,3000);
 figure(1); pcolor(zonalrlat,zonalplays,zonalRHCMIP6rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
@@ -51,7 +54,7 @@ ind = (1:72) + (JOB-1)*72;
 [hkcarta_emis,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeCMIP6_monthly_trends.m  and do_the_AIRSL3_trends.m
-cmip6_64x72 = load('../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08.mat');
+cmip6_64x72 = load('../../FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08.mat');
 
 [numtimesteps,~] = size(cmip6_64x72.all.mmw);
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
@@ -84,6 +87,7 @@ end
 rtime = utc2taiSergio(yy,mm,dd,ones(size(yy))*12.0);
 co2ppm = 370 + 2.2*((yy+mm/12)-2002);
 %% see ~/MATLABCODE/CRODGERS_FAST_CLOUD/driver_stage2_ESRL_set_CO2_CH4_N2O.m
+time_so_far = (yy-2000) + ((mm-1)+1)/12;
 co2ppm = 368 + 2.1*time_so_far;
 n2oppm = 315  + (332-315)/(2020-2000)*time_so_far; n2oppm = n2oppm/1000;
 ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
@@ -92,6 +96,7 @@ klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+dirout = 'SimulateTimeSeries/CMIP6/';
 
 co2ppm_t = [];
 n2oppm_t = [];
@@ -131,6 +136,7 @@ for ii = JOB
   end
 
   iNlev = 19;  
+  plevsnwp = squeeze(cmip6_64x72.all.nwp_plevs(1,:,3000))';  
   p72.nlevs = ones(size(p72.rtime)) * iNlev;
   p72.plevs = squeeze(cmip6_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
@@ -139,11 +145,11 @@ for ii = JOB
   p72.plat = p72.rlat;
   p72.plon = p72.rlon;
   
-  junk = cmip6_64x72.all.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
+  junk = cmip6_64x72.all.stemp;      junk = reshape(junk,numtimesteps,72,64);       junk = squeeze(junk(:,:,ii));   junk = junk';                 p72.stemp = reshape(junk,1,72*numtimesteps);
+  junk = cmip6_64x72.all.nwp_ptemp;  junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
+  junk = cmip6_64x72.all.nwp_gas_1;  junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
   %junk = cmip6_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
-  junk = cmip6_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
+  junk = cmip6_64x72.all.nwp_rh;     junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
 
   p72.zobs = 705000 * ones(size(p72.stemp));
   p72.scanang = ones(size(p72.stemp)) * 22;

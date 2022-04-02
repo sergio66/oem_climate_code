@@ -128,7 +128,7 @@ for jj = 1 : iNlev
 end
 
 figure(3); pcolor(rlon,plevsnwp,thesave.t2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates straight from CMIP6 or ERA5 zonal levels')
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates straight from CMIP6 or ERA5 zonal levels')
 
 t = p72x.ptemp; t = reshape(t,101,72,numtimesteps); 
 for jj = 1 : 101
@@ -151,7 +151,7 @@ for jj = 1 : 101
 end
 
 figure(4); pcolor(rlon,plevsx,thesave.t2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -175,8 +175,9 @@ for jj = 1 : iNlev
   end
 end
 
+thesave.rh2d_xtrendnwp = real(thesave.rh2d_xtrendnwp);
 figure(3); pcolor(rlon,plevsnwp,thesave.rh2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('RH rates straight from CMIP6 or ERA5 zonal levels')
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('RH rates straight from CMIP6 or ERA5 zonal levels')
 
 rh = p72x.rh; rh = reshape(rh,100,72,numtimesteps); 
 for jj = 1 : 100
@@ -189,7 +190,7 @@ for jj = 1 : 100
     zoo = find(isfinite(data));
     if length(zoo) > 20    
       junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
-      thesave.rh2d_xtrend(jj,ll) = junk(2);
+      thesave.rh2d_xtrend(jj,ll) = real(junk(2));
       rh2d_xconstr(jj,ll) = junk(1);
     else
       thesave.rh2d_xtrend(jj,ll) = NaN;
@@ -199,8 +200,9 @@ for jj = 1 : 100
   end
 end
 
+thesave.rh2d_xtrendnwp = real(thesave.rh2d_xtrendnwp);
 figure(4); pcolor(rlon,plevsx,thesave.rh2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('RH rates from rtp after klayers')
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('RH rates from rtp after klayers')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -252,18 +254,27 @@ warning on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('here I am doing this save')
-if iType == 7
+if iType == 2
   saver = ['save ' dirout '/reconstruct_merra2_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHMERRA2rate zonalTMERRA2rate '];
-elseif iType == 6
-  saver = ['save ' dirout '/reconstruct_cmip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate '];
 elseif iType == 5
   saver = ['save ' dirout '/reconstruct_era5_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate '];
+
+elseif iType == 6
+  saver = ['save ' dirout '/reconstruct_cmip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate '];
+elseif iType == 7
+  saver = ['save ' dirout '/reconstruct_amip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHAMIP6rate zonalTAMIP6rate '];
+
 elseif iType == 3
   saver = ['save ' dirout '/reconstruct_airsL3_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHAIRSL3rate zonalTAIRSL3rate '];
+elseif iType == 4
+  saver = ['save ' dirout '/reconstruct_climcapsL3_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHAIRSCLIMCAPSL3rate zonalTAIRSCLIMCAPSL3rate '];
+
 end
 saver = [saver ' plevsnwp plevsx dayOFtime'];
 eval(saver)

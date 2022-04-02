@@ -1,4 +1,6 @@
-function airsChoice  = getdata_AIRS_L3vsCLIMCAPS(iA,iNorD,iAorOrL);
+function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);
+
+%% function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);   iA = +1 (AIRS L3) or -1 CLIMCAPS
 
 addpath /asl/matlib/maps/
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS

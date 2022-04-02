@@ -1,4 +1,5 @@
 %% this tries to loop over the 64 zonal bins using the cluster
+
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
@@ -8,11 +9,12 @@ addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE
 %addpath ../../../FIND_TRENDS/
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 
 system_slurm_stats
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
-%JOB = 31
+%JOB = 21
 
 %load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
 wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','h');
@@ -25,22 +27,34 @@ load('llsmap5.mat');
 RH000 = layeramt2RH(h,p);
 
 pMERRA2 = p;
+nwptrend = getdata_NWP(2);
+pMERRA2.stemp          = pMERRA2.stemp          + nwptrend.trend_stemp;
+pMERRA2.ptemp(1:100,:) = pMERRA2.ptemp(1:100,:) + nwptrend.trend_ptemp;
+pMERRA2.gas_1(1:100,:) = pMERRA2.gas_1(1:100,:).*(1 + nwptrend.trend_gas_1);
+pMERRA2.gas_3(1:100,:) = pMERRA2.gas_3(1:100,:).*(1 + nwptrend.trend_gas_3);
+%{
 pMERRA2.stemp          = pMERRA2.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.stemp;
 pMERRA2.ptemp(1:100,:) = pMERRA2.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.ptemp;
 pMERRA2.gas_1(1:100,:) = pMERRA2.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.gas_1);
 pMERRA2.gas_3(1:100,:) = pMERRA2.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.gas_3);
+%}
+
 RHMERRA2 = layeramt2RH(h,pMERRA2);
 
 RHMERRA2rate = RHMERRA2 - RH000;
 zonalRHMERRA2rate = reshape(RHMERRA2rate,100,72,64);
 zonalRHMERRA2rate = squeeze(nanmean(zonalRHMERRA2rate,2));
 
+kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
+rlat = kaboom.rlat; 
+
 zonalrlat = rlat;
 zonalplays = p.plays(1:100,3000);
 figure(1); pcolor(zonalrlat,zonalplays,zonalRHMERRA2rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
 
-TMERRA2rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.ptemp;
+%TMERRA2rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.ptemp;
+TMERRA2rate = nwptrend.trend_ptemp;
 zonalTMERRA2rate = reshape(TMERRA2rate,100,72,64);
 zonalTMERRA2rate = squeeze(nanmean(zonalTMERRA2rate,2));
 figure(2); pcolor(zonalrlat,zonalplays,zonalTMERRA2rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
@@ -51,12 +65,12 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTMERRA2rate); shading interp; colorb
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[hkcarta_emis,~,kcarta_emis,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.rp.rtp');
+[hkcarta_emis,~,kcarta_emis,~] = rtpread('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.rp.rtp');
 ind = (1:72) + (JOB-1)*72;
 [hkcarta_emis,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeMERRA2_monthly_trends.m  and do_the_AIRSL3_trends.m
-%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_07_desc.mat');
+%merra2_64x72 = load('../../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_07_desc.mat');
 merra2_64x72 = load('../../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_desc.mat');
 
 [numtimesteps,~] = size(merra2_64x72.all.mmw);
@@ -104,6 +118,7 @@ klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+dirout = 'SimulateTimeSeries/MERRA2/';
 
 co2ppm_t = [];
 n2oppm_t = [];
@@ -122,7 +137,7 @@ for ii = JOB
   h72 = h;
   h72.ptype = 0;
   h72.pfields = 1;
-  h72.ngas = 2;
+  h72.ngas  = 2;
   h72.gunit = [21 21]';  %% g/g
   h72.glist = [ 1 3]';
   
@@ -143,6 +158,8 @@ for ii = JOB
   end
   
   iNlev = 37;
+  iNlev = 42;
+  plevsnwp  = squeeze(merra2_64x72.all.nwp_plevs(1,:,3000))';
   p72.nlevs = ones(size(p72.rtime)) * iNlev;
   p72.plevs = squeeze(merra2_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
@@ -195,6 +212,8 @@ for ii = JOB
   fop = [dirout '/simulate64binsMERRA2_' num2str(ii) '.op.rtp'];
   frp = [dirout '/simulate64binsMERRA2_' num2str(ii) '.rp.rtp'];
 
+  p72_0 = p72;
+  p72 = fix_merraL3(p72);
   rtpwrite(fip,h72,[],p72,[]);
     
   klayerser = ['!' klayers ' fin=' fip ' fout=' fop];
@@ -267,7 +286,7 @@ for ii = JOB
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  iType = 7;
+  iType = 2;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
 
 end

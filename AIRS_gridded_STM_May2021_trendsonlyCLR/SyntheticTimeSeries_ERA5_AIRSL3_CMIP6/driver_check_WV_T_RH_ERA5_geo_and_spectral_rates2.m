@@ -8,6 +8,7 @@ addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE
 %addpath ../../../FIND_TRENDS/
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 
 system_slurm_stats
 
@@ -25,6 +26,9 @@ load('llsmap5.mat');
 RH000 = layeramt2RH(h,p);
 
 pERA5 = p;
+%{
+nwptrend = getdata_NWP(5);
+%}
 pERA5.stemp          = pERA5.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.stemp;
 pERA5.ptemp(1:100,:) = pERA5.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
 pERA5.gas_1(1:100,:) = pERA5.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_1);
@@ -34,6 +38,9 @@ RHERA5 = layeramt2RH(h,pERA5);
 RHERA5rate = RHERA5 - RH000;
 zonalRHERA5rate = reshape(RHERA5rate,100,72,64);
 zonalRHERA5rate = squeeze(nanmean(zonalRHERA5rate,2));
+
+kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
+rlat = kaboom.rlat; 
 
 zonalrlat = rlat;
 zonalplays = p.plays(1:100,3000);
@@ -104,6 +111,7 @@ klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+dirout = 'SimulateTimeSeries/ERA5/';
 
 co2ppm_t = [];
 n2oppm_t = [];
@@ -143,6 +151,7 @@ for ii = JOB
   end
   
   iNlev = 37;
+  plevsnwp  = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))';
   p72.nlevs = ones(size(p72.rtime)) * iNlev;
   p72.plevs = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
@@ -197,7 +206,7 @@ for ii = JOB
 
   rtpwrite(fip,h72,[],p72,[]);
     
-  klayerser = ['!' klayers ' fin=' fip ' fout=' fop];
+  klayerser = ['!' klayers ' fin=' fip ' fout=' fop ' >& ugh'];
   sartaer   = ['!' sarta '   fin=' fop ' fout=' frp];
   
   %%%%%%%%%%%%%%%%%%%%%%%%%

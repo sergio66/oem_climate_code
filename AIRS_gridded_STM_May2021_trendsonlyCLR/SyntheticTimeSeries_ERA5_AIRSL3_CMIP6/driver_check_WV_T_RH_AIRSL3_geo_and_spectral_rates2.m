@@ -4,7 +4,7 @@ addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /home/sergio/MATLABCODE/TIME
-addpath /home/sergio/MATLABCOD
+addpath /home/sergio/MATLABCODE
 %addpath ../../../FIND_TRENDS/
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
@@ -32,6 +32,9 @@ RHAIRSL3 = layeramt2RH(h,pAIRSL3);
 RHAIRSL3rate = RHAIRSL3 - RH000;
 zonalRHAIRSL3rate = reshape(RHAIRSL3rate,100,72,64);
 zonalRHAIRSL3rate = squeeze(nanmean(zonalRHAIRSL3rate,2));
+
+kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
+rlat = kaboom.rlat; 
 
 zonalrlat = rlat;
 zonalplays = p.plays(1:100,3000);
@@ -98,6 +101,7 @@ klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+dirout = 'SimulateTimeSeries/AIRSL3/';
 
 co2ppm_t = [];
 n2oppm_t = [];
