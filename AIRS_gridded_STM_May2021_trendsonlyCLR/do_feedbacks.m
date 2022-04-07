@@ -21,6 +21,8 @@ if ~exist('umbc_spectral_olr')
   compute_feedbacks_umbc_ecRad   ; pause(0.1)
 end
 
+fprintf(1,'models string = %s \n',strMODELS);
+
 if ~exist('airsL3_spectral_olr')
   junkx = input('load in airsL3, era5, cmip6 flux calcs from earlier (-1/+1 default) : ? ');
   if length(junk) == 0
@@ -28,9 +30,50 @@ if ~exist('airsL3_spectral_olr')
   end
   if junkx > 0
     disp('loading in flux calcs from earlier');
-    junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
-    junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','era5_spectral_olr'); era5_spectral_olr = junk.era5_spectral_olr;
-    junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','cmip6_spectral_olr'); cmip6_spectral_olr = junk.cmip6_spectral_olr;
+    %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
+    %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','era5_spectral_olr'); era5_spectral_olr = junk.era5_spectral_olr;
+    %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','cmip6_spectral_olr'); cmip6_spectral_olr = junk.cmip6_spectral_olr;
+
+    if ~exist('iJorC')
+      iJorC = +1;  %% do Jool L3
+    end
+    if ~exist('iEorM')
+      iEorM = +5;  %% do ERA5
+    end
+    if ~exist('iAorC')
+      iAorC = -1;  %% do CMIP6
+    end
+
+    iLoadJorC = -1;
+    iLoadEorM = -1;
+    iLoadAorC = -1;
+
+    if iJorC == +1
+      iLoadJorC = +1;
+      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
+    end
+    if iEorM == +5
+      iLoadEorM = +1;
+      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat','era5_spectral_olr');   era5_spectral_olr = junk.era5_spectral_olr;
+    end
+    if iAorC == -1
+      iLoadAorC = +1;
+      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat','cmip6_spectral_olr');  cmip6_spectral_olr = junk.cmip6_spectral_olr;
+    end
+
+    if iJorC == -1
+      iLoadJorC = +1;
+      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
+    end
+    if iEorM == +2
+      iLoadEorM = +1;
+      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat','era5_spectral_olr');   era5_spectral_olr = junk.era5_spectral_olr;
+    end
+    if iAorC == +1
+      iLoadAorC = +1;
+      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat','cmip6_spectral_olr');  cmip6_spectral_olr = junk.cmip6_spectral_olr;
+    end
+
   end
 end
 
@@ -86,3 +129,13 @@ if iERAnorm > 0
   redo_feedbacks_dERA5ST_dt
   do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+junk = input('save the OLR feedbacks??? (-1/+1) : ');
+if junk > 0
+  feedbackname = ['olr_feedbacks_' strMODELS '.mat'];
+  saver = ['save ' feedbackname ' umbc_spectral_olr airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6 results resultsWV resultsT resultsO3 pavg plays'];
+  eval(saver);
+end
+

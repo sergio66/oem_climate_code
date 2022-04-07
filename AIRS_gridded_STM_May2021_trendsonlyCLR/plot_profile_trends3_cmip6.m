@@ -230,6 +230,7 @@ if ~exist('compute_deltaRH')
   [nansum(compute_deltaRH.cmip6.BT_orig(:)-compute_deltaRH.era5.BT_orig(:)) nansum(compute_deltaRH.cmip6.BT_orig(:)-compute_deltaRH.airsL3.BT_orig(:)) nansum(compute_deltaRH.cmip6.BT_orig(:)-compute_deltaRH.umbc.BT_orig(:))]
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 comment = 'see plot_profile_trends2.m';
 the_nwp_trends.airsL3 = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_spectral_rates;

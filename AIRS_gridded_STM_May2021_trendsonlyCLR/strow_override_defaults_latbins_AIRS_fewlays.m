@@ -719,6 +719,36 @@ elseif settings.set_era5_cmip6_airsL3 == 3
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
+elseif settings.set_era5_cmip6_airsL3 == 2
+  disp(' apriori will be using MERRA2 trends')
+  zrates = load('../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_trends.mat');
+  xrates.stemp = zrates.trend_stemp;
+  xrates.ptemp = zrates.trend_ptemp;
+  xrates.gas_1 = zrates.trend_gas_1;
+  xrates.gas_3 = zrates.trend_gas_3;
+  ix = driver.iLon;
+  iy = driver.iLat;
+  iz = (iy-1)*72 + ix;
+  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  xb = reshape(xb,length(xb),1);
+elseif settings.set_era5_cmip6_airsL3 == 8
+  disp(' apriori will be using MLS trends')
+  zrates = load('../FIND_NWP_MODEL_TRENDS/MLS_atm_data_2004_09_to_2020_08_trends.mat');
+  xrates.stemp = zrates.trend_stemp;
+  xrates.ptemp = zrates.trend_ptemp;
+  xrates.gas_1 = zrates.trend_gas_1;
+  xrates.gas_3 = zrates.trend_gas_3;
+  ix = driver.iLon;
+  iy = driver.iLat;
+  iz = (iy-1)*72 + ix;
+  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  xb = reshape(xb,length(xb),1);
 end
 
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0

@@ -1,4 +1,8 @@
-%% now look at other model data
+%% now look at other model data; also look at simple_get_the_model_trends_do_feedbacks if you just want model profiles/feedbacks
+%% now look at other model data; also look at simple_get_the_model_trends_do_feedbacks if you just want model profiles/feedbacks
+%% now look at other model data; also look at simple_get_the_model_trends_do_feedbacks if you just want model profiles/feedbacks
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(28); ylim([100 1000]);
 figure(29);

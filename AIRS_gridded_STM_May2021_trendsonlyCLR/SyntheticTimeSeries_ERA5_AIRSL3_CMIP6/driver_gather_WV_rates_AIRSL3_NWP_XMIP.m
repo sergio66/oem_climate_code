@@ -1,9 +1,16 @@
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/COLORMAP
+addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
 
 %% see driver_gather_spectralrates_AIRSL3_NWP_XMIP6.m
+
+load('llsmap5');
+if length(llsmap5) == 64
+  %% need to center the white 1.0 1.0 1.0 .. right now it is at position 33, so need 65 points, or remove first ... choose that
+  llsmap5 = llsmap5(2:64,:);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -18,9 +25,11 @@ merra2_geo_rates         = merra2_geo_rates.trend_gas_1;
 era5_geo_rates           = era5_geo_rates.trend_gas_1;
 amip6_geo_rates          = amip6_geo_rates.trend_gas_1;
 cmip6_geo_rates          = cmip6_geo_rates.trend_gas_1;
+junk = load('../../FIND_NWP_MODEL_TRENDS/MLS_atm_data_2004_09_to_2020_08_trends.mat');
+mls_geo_rates = junk.trend_gas_1;
+rlat = junk.trend_rlat64;
 
-savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5_uncX3.mat';
-savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat';
+set_gather_savename_rates_AIRSL3_NWP_XMIP
 
 plays = load(savename,'plays'); plays = plays.plays;
 pavg  = load(savename,'pavg');  pavg = pavg.pavg;
@@ -93,23 +102,12 @@ for ii = 1 : 64
     %  umbc_20_layertrends.gas_3(:,ind) = junkrate;
   end
 end
+fprintf(1,'\n');
 
 umbc_geo_rates     = umbc_20_layertrends.gas_1;
 airsL3_geo_rates   = airsL3_100_layertrends.gas_1;
 climcaps_geo_rates = airsCLIMCAPSL3_100_layertrends.gas_1;
 
-junk = load('../../FIND_NWP_MODEL_TRENDS/MLS_atm_data_2004_09_to_2020_08_trends.mat');
-mls_geo_rates = junk.trend_gas_1;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-addpath /home/sergio/MATLABCODE/COLORMAP/LLS
-load('llsmap5');
-if length(llsmap5) == 64
-  %% need to center the white 1.0 1.0 1.0 .. right now it is at position 33, so need 65 points, or remove first ... choose that
-  llsmap5 = llsmap5(2:64,:);
-end
-
-rlat = junk.trend_rlat64;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear plotoptions;
 plotoptions.cx = [-1 +1]*0.15/10; plotoptions.maintitle = 'dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
@@ -131,6 +129,10 @@ era5_geo_ratesXY     = squeeze(nanmean(reshape(era5_geo_rates,100,72,64),2));
 umbc_geo_ratesXY     = squeeze(nanmean(reshape(umbc_geo_rates,100,72,64),2));
 mls_geo_ratesXY      = squeeze(nanmean(reshape(mls_geo_rates,100,72,64),2));
 
-iFig = 1; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_ratesXY,merra2_geo_ratesXY,airsL3_geo_ratesXY,climcaps_geo_ratesXY,cmip6_geo_ratesXY,amip6_geo_ratesXY,umbc_geo_ratesXY,mls_geo_ratesXY,iFig,plotoptions);
-%save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_WVrates.mat era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY
+iFig = 23; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_ratesXY,merra2_geo_ratesXY,airsL3_geo_ratesXY,climcaps_geo_ratesXY,cmip6_geo_ratesXY,amip6_geo_ratesXY,umbc_geo_ratesXY,mls_geo_ratesXY,iFig,plotoptions);
+if iSave > 0
+  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_WVrates'  savestr '..mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY'];
+  eval(saver)
+end
+
 
