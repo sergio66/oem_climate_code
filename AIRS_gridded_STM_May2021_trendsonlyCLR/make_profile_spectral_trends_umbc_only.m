@@ -71,11 +71,11 @@ for ii = 1 : 64
   xjunkrate = resultsWV(ind,:); clear junkrate
     junkrate = xjunkrate; 
     junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacWV(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
-    umbc_20_layertrends.gas_3(:,ind) = junkrate;
+    umbc_20_layertrends.gas_1(:,ind) = junkrate;
   xjunkrate = resultsT(ind,:); clear junkrate
     junkrate = xjunkrate; 
     junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacT(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
-    umbc_20_layertrends.gas_3(:,ind) = junkrate;
+    umbc_20_layertrends.ptemp(:,ind) = junkrate;
   xjunkrate = resultsO3(ind,:); clear junkrate
     junkrate = xjunkrate;
     junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacO3(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end

@@ -141,7 +141,6 @@ for ii = 1 : 64
     junkrate = era5.trend_gas_3(:,ind); junkrate(isnan(junkrate)) = 0; for jjj = 1 : 100; era5_spectral_rates(:,ind) = era5_spectral_rates(:,ind) + squeeze(x100m_ts_jac.subjac.jacO3(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
       era5_100_layertrends.gas_3(:,ind) = junkrate;
   
-   
     %%%%%%%%%%%%%%%%%%%%%%%%%
     Qlevs = airsL3.Qlevs;
     Tlevs = airsL3.Tlevs;
@@ -164,7 +163,7 @@ for ii = 1 : 64
       for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Tlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Tlevs) | plays >= max(Tlevs)); junkrate(:,jjj) = 0;
       junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : 100; airsL3_spectral_rates(:,ind) = airsL3_spectral_rates(:,ind) + squeeze(x100m_ts_jac.subjac.jacO3(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
       airsL3_100_layertrends.gas_3(:,ind) = junkrate;
-  
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%  
     Qlevs = pavg;
     Tlevs = pavg;
@@ -175,14 +174,14 @@ for ii = 1 : 64
     umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + m_ts_jac.subjac.coljacCFC12 * (0);
     umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + m_ts_jac.subjac.jacST .* (ones(2645,1)*results(ind,6)'/0.1);
       umbc_20_layertrends.stemp(ind) = results(ind,6);
-    xjunkrate = resultsWV(ind,:); clear junkrate
-      junkrate = xjunkrate; 
-      junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacWV(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
-      umbc_20_layertrends.gas_3(:,ind) = junkrate;
     xjunkrate = resultsT(ind,:); clear junkrate
       junkrate = xjunkrate; 
       junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacT(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
-      umbc_20_layertrends.gas_3(:,ind) = junkrate;
+      umbc_20_layertrends.ptemp(:,ind) = junkrate;
+    xjunkrate = resultsWV(ind,:); clear junkrate
+      junkrate = xjunkrate; 
+      junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacWV(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end
+      umbc_20_layertrends.gas_1(:,ind) = junkrate;
     xjunkrate = resultsO3(ind,:); clear junkrate
       junkrate = xjunkrate;
       junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; for jjj = 1 : nnUMBC; umbc_spectral_rates(:,ind) = umbc_spectral_rates(:,ind) + squeeze(m_ts_jac.subjac.jacO3(jjj,:,:)) .* (ones(2645,1)*junkrate(jjj,:)/0.01); end

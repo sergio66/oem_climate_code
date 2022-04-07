@@ -21,14 +21,24 @@ if exist('airsL3')
   iFig = 34;
   Tlevs = airsL3.Tlevs;
   Qlevs = airsL3.Qlevs;
+  [~,~,OZlevs] = size(airsL3.thestats64x72.ozonerate);
+  if OZlevs == length(Qlevs)
+    airsL3.OZlevs = Qlevs;
+    mncos024OZ = mncos012;
+    coswgt024OZ = coswgt012;
+  elseif OZlevs == length(Tlevs)
+    airsL3.OZlevs = Tlevs;
+    mncos024OZ = mncos024;
+    coswgt024OZ = coswgt024;
+  end
 
-  boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.waterrate.*boo; junk = reshape(junk,72*64,12);  
+  boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+  junk = airsL3.thestats64x72.waterrate.*boo; junk = reshape(junk,72*64,length(airsL3.Qlevs));  
   iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(mncos012.*nanmean(coswgt012'.*junk(xmask,:),1)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
                                    subplot(122); hold on; semilogy(1+mncos012.*nanstd(coswgt012'.*junk(xmask,:),[],1)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
 
-  boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.RHrate.*boo; junk = reshape(junk,72*64,12);  
+  boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+  junk = airsL3.thestats64x72.RHrate.*boo; junk = reshape(junk,72*64,length(airsL3.Qlevs));  
   iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(mncos012.*nanmean(coswgt012'.*junk(xmask,:),1)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
                                    subplot(122); hold on; semilogy(mncos012.*nanstd(coswgt012'.*junk(xmask,:),[],1)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
   for ijunk = 1 : 4608
@@ -37,15 +47,15 @@ if exist('airsL3')
   end
   % scatter_coast(p.rlon,p.rlat,50,meanAIRSL3rhtrend_trop); colormap jet; caxis([-1 +1]/10); colormap(llsmap5); title('AIRSL3 trop RH rate')
 
-  boo = zeros(72,64,12); for ijunk = 1 : 24; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.ptemprate.*boo; junk = reshape(junk,72*64,24);  
+  boo = zeros(72,64,length(airsL3.Tlevs)); for ijunk = 1 : length(airsL3.Tlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+  junk = airsL3.thestats64x72.ptemprate.*boo; junk = reshape(junk,72*64,length(airsL3.Tlevs));  
   iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(mncos024.*nanmean(coswgt024'.*junk(xmask,:),1)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
                                    subplot(122); hold on; semilogy(mncos024.*nanstd(coswgt024'.*junk(xmask,:),[],1)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
 
-  boo = zeros(72,64,24); for ijunk = 1 : 24; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.ozonerate.*boo; junk = reshape(junk,72*64,24);  
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(mncos024.*nanmean(coswgt024'.*junk(xmask,:),1)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
-                                   subplot(122); hold on; semilogy(mncos024.*nanstd(coswgt024'.*junk(xmask,:),[],1)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+  boo = zeros(72,64,length(airsL3.OZlevs)); for ijunk = 1 : length(airsL3.OZlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+  junk = airsL3.thestats64x72.ozonerate.*boo; junk = reshape(junk,72*64,length(airsL3.OZlevs));  
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(mncos024OZ.*nanmean(coswgt024OZ'.*junk(xmask,:),1)',OZlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+                                   subplot(122); hold on; semilogy(mncos024OZ.*nanstd(coswgt024OZ'.*junk(xmask,:),[],1)',OZlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 
 
 end

@@ -11,8 +11,8 @@ semilogy(mncos100.*nanmean(coswgt100.*deltaT(1:100,xmask),2),plays,'linewidth',2
 hold on
 
 Tlevs = airsL3.Tlevs;
-  boo = zeros(72,64,24); for ijunk = 1 : 24; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.ptemprate.*boo; junk = reshape(junk,72*64,24);  
+  boo = zeros(72,64,length(airsL3.Tlevs)); for ijunk = 1 : length(airsL3.Tlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+  junk = airsL3.thestats64x72.ptemprate.*boo; junk = reshape(junmean_wgt_trends_umbc_airsL3_models_tilesk,72*64,length(airsL3.Tlevs));  
   semilogy(mncos024.*nanmean(coswgt024'.*junk(xmask,:),1)',Tlevs,'linewidth',2);
 
 Tlevs = plays;
@@ -37,8 +37,8 @@ semilogy(mncos100.*nanmean(coswgt100.*fracWV(1:100,xmask),2),plays,'linewidth',2
 hold on
 
 Qlevs = airsL3.Qlevs;
-  boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.waterrate.*boo; junk = reshape(junk,72*64,12);  
+  boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+  junk = airsL3.thestats64x72.waterrate.*boo; junk = reshape(junk,72*64,length(airsL3.Qlevs));  
   semilogy(mncos012.*nanmean(coswgt012'.*junk(xmask,:),1)',Qlevs,'linewidth',2); 
 
 Qlevs = plays;
@@ -63,8 +63,8 @@ semilogy(mncos100.*nanmean(coswgt100.*deltaRH(1:100,xmask),2),plays,'linewidth',
 hold on
 
 Qlevs = airsL3.Qlevs;
-  boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-  junk = airsL3.thestats64x72.RHrate.*boo; junk = reshape(junk,72*64,12);  
+  boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+  junk = airsL3.thestats64x72.RHrate.*boo; junk = reshape(junk,72*64,length(airsL3.Qlevs));  
   semilogy(mncos012.*nanmean(coswgt012'.*junk(xmask,:),1)',Qlevs,'linewidth',2); 
 
 Qlevs = plays;

@@ -131,7 +131,7 @@ for iInd = iInd0 : iIndE
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
   topts.ocb_set = 0; %% try AIRS Obs
-  topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
+  %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
   %topts.ocb_set = 1; %% try ERA5 synthetic rates
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick

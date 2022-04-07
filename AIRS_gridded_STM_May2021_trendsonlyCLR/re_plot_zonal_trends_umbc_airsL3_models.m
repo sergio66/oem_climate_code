@@ -135,6 +135,8 @@ coswgt100 = ones(100,1) * cos(p.rlat(xmask)*pi/180);
 coswgt097 = ones(097,1) * cos(p.rlat(xmask)*pi/180);
 coswgt012 = ones(012,1) * cos(p.rlat(xmask)*pi/180);
 coswgt024 = ones(024,1) * cos(p.rlat(xmask)*pi/180);
+coswgt012 = ones(length(airsL3.Qlevs),1) * cos(p.rlat(xmask)*pi/180);
+coswgt024 = ones(length(airsL3.Tlevs),1) * cos(p.rlat(xmask)*pi/180);
 
 mncos101 = 1./nanmean(coswgt101,2);
 mncos100 = 1./nanmean(coswgt100,2);

@@ -95,7 +95,9 @@ fprintf(1,' done \n');
 figure(1); imagesc(foundfile); colorbar; title('foundfile'); colormap jet
 sum(foundfile,2)
 
-x = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5_uncX3.mat','rates');
+x  = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5_uncX3.mat','rates');
+st = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5_uncX3.mat','results');
+  umbcst = st.results(:,6);
 
 %disp('merra2 --> nan'); merra2 = merra2 * 0;
 %disp('merra2 --> some nan'); ix = 4608-260+1:4608; merra2(:,ix) = merra2(:,ix) * 0;
@@ -104,8 +106,6 @@ figure(2); clf;   plot(fchanx,nanmean(era5'),'b',fchanx,nanmean(merra2'),'r',fch
 figure(3); clf;   plot(fchanx,nanmean(airsL3'),'b',fchanx,nanmean(airsclimcapsL3'),'r',fchanx,nanmean(x.rates'),'k'); plotaxis2;  hl = legend('airsL3','airsclimcapsL3','AIRS obs','location','best'); ylim([-0.1 +0.1])
 figure(4); clf;   plot(fchanx,nanmean(amip6'),'b',fchanx,nanmean(cmip6'),'r',fchanx,nanmean(x.rates'),'k');           plotaxis2;  hl = legend('amip6','cmip6','AIRS obs','location','best'); ylim([-0.1 +0.1])
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 load('llsmap5');
 if length(llsmap5) == 64
@@ -113,16 +113,39 @@ if length(llsmap5) == 64
   llsmap5 = llsmap5(2:64,:);
 end
 
-plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dBT1231/dt'; plotoptions.plotcolors = llsmap5;
-plotoptions.str1 = 'ERA5';    plotoptions.str2 = 'MERRA2';    figure(5); clf; aslmap_2tiledlayout(era5(1520,:),merra2(1520,:),5,plotoptions);
-plotoptions.str1 = 'AIRS L3'; plotoptions.str2 = 'CLIMCAPS2'; figure(6); clf; aslmap_2tiledlayout(airsL3(1520,:),airsclimcapsL3(1520,:),6,plotoptions);
-plotoptions.str1 = 'AMIP6';   plotoptions.str2 = 'CMIP6';     figure(7); clf; aslmap_2tiledlayout(amip6(1520,:),cmip6(1520,:),7,plotoptions);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear plotoptions;
+plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'MERRA2';    
+plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS2'; 
+plotoptions.str31 = 'UMBC';    plotoptions.str32 = 'CMIP6';     
+plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+figure(5); clf; aslmap_6tiledlayout(era5_geo_rates,merra2_geo_rates,airsL3_geo_rates,airsCLIMCAPSL3_geo_rates,umbcst,cmip6_geo_rates,5,plotoptions);
+%save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_sstrates era5_geo_rates merra2_geo_rates airsL3_geo_rates airsCLIMCAPSL3_geo_rates cmip6_geo_rates umbcst
 
-plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = '(top) dBT1231/dt (bot) dST/dt'; plotoptions.plotcolors = llsmap5;
-plotoptions.str1 = 'ERA5';    plotoptions.str2 = 'MERRA2';    plotoptions.str3 = 'ERA5';    plotoptions.str4 = 'MERRA2';    
-  figure(5); clf; aslmap_4tiledlayout(era5(1520,:),merra2(1520,:),era5_geo_rates,merra2_geo_rates,5,plotoptions);
-plotoptions.str1 = 'AIRS L3'; plotoptions.str2 = 'CLIMCAPS'; plotoptions.str3 = 'AIRS L3'; plotoptions.str4 = 'CLIMCAPS'; 
-  figure(6); clf; aslmap_4tiledlayout(airsL3(1520,:),airsclimcapsL3(1520,:),airsL3_geo_rates,airsCLIMCAPSL3_geo_rates,6,plotoptions);
-plotoptions.str1 = 'AMIP6';   plotoptions.str2 = 'CMIP6';     plotoptions.str3 = 'AMIP6';   plotoptions.str4 = 'CMIP6';     
-  figure(7); clf; aslmap_4tiledlayout(amip6(1520,:),cmip6(1520,:),amip6_geo_rates,cmip6_geo_rates,7,plotoptions);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clear plotoptions;
+plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dBT1231/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'MERRA2';    figure(6); clf; aslmap_2tiledlayout(era5(1520,:),merra2(1520,:),6,plotoptions);
+plotoptions.str11 = 'AIRS L3'; plotoptions.str12 = 'CLIMCAPS2'; figure(7); clf; aslmap_2tiledlayout(airsL3(1520,:),airsclimcapsL3(1520,:),7,plotoptions);
+plotoptions.str11 = 'AMIP6';   plotoptions.str12 = 'CMIP6';     figure(8); clf; aslmap_2tiledlayout(amip6(1520,:),cmip6(1520,:),8,plotoptions);
+
+clear plotoptions;
+plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = '(L) dBT1231/dt (R) dST/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.str11 = 'ERA5'; plotoptions.str12 = 'ERA5';        plotoptions.str21 = 'MERRA2'; plotoptions.str22 = 'MERRA2';    
+  figure(6); clf; aslmap_4tiledlayout(era5(1520,:),era5_geo_rates,merra2(1520,:),merra2_geo_rates,6,plotoptions);
+plotoptions.str11 = 'AIRS L3'; plotoptions.str12 = 'AIRS L3';  plotoptions.str21 = 'CLIMCAPS'; plotoptions.str22 = 'CLIMCAPS'; 
+  figure(7); clf; aslmap_4tiledlayout(airsL3(1520,:),airsL3_geo_rates,airsclimcapsL3(1520,:),airsCLIMCAPSL3_geo_rates,7,plotoptions);
+plotoptions.str11 = 'AMIP6'; plotoptions.str12 = 'AMIP6';      plotoptions.str21 = 'CMIP6';  plotoptions.str22 = 'CMIP6';     
+  figure(8); clf; aslmap_4tiledlayout(amip6(1520,:),amip6_geo_rates,cmip6(1520,:),cmip6_geo_rates,8,plotoptions);
+
+clear plotoptions;
+plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = '(L) dBT1231/dt (R) dST/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.str11 = 'ERA5'; plotoptions.str12 = 'ERA5';  plotoptions.str21 = 'MERRA2'; plotoptions.str22 = 'MERRA2';   plotoptions.str31 = 'UMBC'; plotoptions.str32 = 'UMBC';    
+  figure(6); clf; aslmap_6tiledlayout(era5(1520,:),era5_geo_rates,merra2(1520,:),merra2_geo_rates,x.rates(1520,:),umbcst,6,plotoptions);
+plotoptions.str11 = 'AIRS L3'; plotoptions.str12 = 'AIRS L3';      plotoptions.str21 = 'CLIMCAPS'; plotoptions.str22 = 'CLIMCAPS';   plotoptions.str31 = 'UMBC'; plotoptions.str32 = 'UMBC';    
+  figure(7); clf; aslmap_6tiledlayout(airsL3(1520,:),airsL3_geo_rates,airsclimcapsL3(1520,:),airsCLIMCAPSL3_geo_rates,x.rates(1520,:),umbcst,7,plotoptions);
+plotoptions.str11 = 'AMIP6'; plotoptions.str12 = 'AMIP6';       plotoptions.str21 = 'CMIP6'; plotoptions.str22 = 'CMIP6';   plotoptions.str31 = 'UMBC'; plotoptions.str32 = 'UMBC';    
+  figure(8); clf; aslmap_6tiledlayout(amip6(1520,:),amip6_geo_rates,cmip6(1520,:),cmip6_geo_rates,x.rates(1520,:),umbcst,8,plotoptions);
 

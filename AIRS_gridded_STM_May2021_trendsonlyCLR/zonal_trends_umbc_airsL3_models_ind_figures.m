@@ -47,6 +47,15 @@ colormap(cmap)
 
 iFig = 45;
 
+if ~exist('era')
+  disp('WARNING : era does not exist, just set it equal to era5')
+  era = era5;
+end
+if ~exist('strNorD')
+  disp('WARNING : strNorD does not exist, just set it equal to N')
+  strNorD = 'N';
+end
+
 boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
 iFig = iFig + 1; figure(iFig); clf;  junk = boo.*reshape(era.trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); pcolor(rlat,pavgLAY(1:97,3000),smoothn(junk(1:97,:),1)); colorbar('southoutside'); colormap(llsmap5)
  shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([T_Ylim 1000]); title([strNorD ' dT/dt ERA K/yr']);
@@ -55,8 +64,8 @@ boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
 iFig = iFig + 1; figure(iFig); clf;  junk = boo.*reshape(era5.trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); pcolor(rlat,pavgLAY(1:97,3000),smoothn(junk(1:97,:),1)); colorbar('southoutside'); colormap(llsmap5)
  shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([T_Ylim 1000]); title([strNorD ' dT/dt ERA5 K/yr']);
 
-boo = zeros(72,64,24); for ijunk = 1 : 24; boo(:,:,ijunk) = xmaskLFmatr'; end
-iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.ptemprate; junk = squeeze(nanmean(junk,1))'; pcolor(rlat,airsL3.Tlevs,smoothn(junk(1:24,:),1)); colorbar('southoutside'); colormap(llsmap5)
+boo = zeros(72,64,length(airsL3.Tlevs)); for ijunk = 1 : length(airsL3.Tlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.ptemprate; junk = squeeze(nanmean(junk,1))'; pcolor(rlat,airsL3.Tlevs,smoothn(junk(1:length(airsL3.Tlevs),:),1)); colorbar('southoutside'); colormap(llsmap5)
  shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([T_Ylim 1000]); title([strNorD ' dT/dt AIRS L3 K/yr']);
 
 boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
@@ -73,8 +82,8 @@ boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
 iFig = iFig + 1; figure(iFig); clf;  junk = boo.*reshape(era5.trend_RH,100,72,64); junk = squeeze(nanmean(junk,2)); pcolor(rlat,pavgLAY(1:97,3000),smoothn(junk(1:97,:),1)); colorbar('southoutside'); colormap(llsmap5)
  shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([WV_Ylim 1000]); title([strNorD ' dRH/dt ERA5 percent/yr']);
 
-boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.RHrate; junk = squeeze(nanmean(junk,1))'; pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:12,:),1)); colorbar('southoutside'); colormap(llsmap5)
+boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.RHrate; junk = squeeze(nanmean(junk,1))'; pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:length(airsL3.Qlevs),:),1)); colorbar('southoutside'); colormap(llsmap5)
  shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.15,0.1/100); ylim([WV_Ylim 1000]); title([strNorD ' dRH/dt AIRS L3 percent/yr']);
 
 boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
@@ -91,8 +100,8 @@ boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end
 iFig = iFig + 1; figure(iFig); clf;  junk = boo.*reshape(era5.trend_gas_1,100,72,64); junk = squeeze(nanmean(junk,2)); pcolor(rlat,pavgLAY(1:97,3000),smoothn(junk(1:97,:),1)); colorbar('southoutside'); colormap(llsmap5)
  shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.01,0.01/100); ylim([WV_Ylim 1000]); title([strNorD ' d(fracWV)/dt ERA5 1/yr']);
 
-boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
-iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.waterrate; junk = squeeze(nanmean(junk,1))'; pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:12,:),1)); colorbar('southoutside'); colormap(llsmap5)
+boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
+iFig = iFig + 1; figure(iFig); clf;  junk = boo.* airsL3.thestats64x72.waterrate; junk = squeeze(nanmean(junk,1))'; pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:length(airsL3.Qlevs),:),1)); colorbar('southoutside'); colormap(llsmap5)
  shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ccaxis([-1 +1]*0.01,0.01/100); ylim([WV_Ylim 1000]); title([strNorD ' d(fracWV)/dt AIRS L3 1/yr']);
 
 boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = xmaskLFmatr'; end

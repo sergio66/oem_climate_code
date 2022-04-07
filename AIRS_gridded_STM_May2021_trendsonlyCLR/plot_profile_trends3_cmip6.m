@@ -31,11 +31,19 @@ if exist('airsL3')
   junk = airsL3.thestats64x72.ptempratestd.*boo; junk = reshape(junk,72*64,lenTlevs);  
                                    subplot(122); hold on; semilogy(nanmean(junk,1)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
 
-  boo = zeros(72,64,lenTlevs); for ijunk = 1 : lenTlevs; boo(:,:,ijunk) = maskLFmatr'; end
-  junk = airsL3.thestats64x72.ozonerate.*boo; junk = reshape(junk,72*64,lenTlevs);  
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,1)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
-  junk = airsL3.thestats64x72.ozoneratestd.*boo; junk = reshape(junk,72*64,lenTlevs);  
-                                   subplot(122); hold on; semilogy(nanmean(junk,1)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+  [~,~,lenO3levs] = size(airsL3.thestats64x72.ozonerate);
+  if lenO3levs == lenTlevs
+    %% AIRS L3
+    O3levs = Tlevs;
+  elseif lenO3levs == lenQlevs
+    %% CLIMCAPS
+    O3levs = Qlevs;
+  end
+  boo = zeros(72,64,lenO3levs); for ijunk = 1 : lenO3levs; boo(:,:,ijunk) = maskLFmatr'; end
+  junk = airsL3.thestats64x72.ozonerate.*boo; junk = reshape(junk,72*64,lenO3levs);  
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,1)',O3levs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+  junk = airsL3.thestats64x72.ozoneratestd.*boo; junk = reshape(junk,72*64,lenO3levs);  
+                                   subplot(122); hold on; semilogy(nanmean(junk,1)',O3levs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 end
 
 if exist('cmip6')
@@ -118,7 +126,7 @@ if junk > 0
       %% see SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/compare_sarta_kcarta_latbin32_trends.m
       for lll = 1 : 64
         %% see eg plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
-        dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+        dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/';
         fsarta = [dirout '/reconstruct_era5_spectra_geo_rlat' num2str(lll,'%02i') '.mat'];
         x = load(fsarta);
         ind = (1:72) + (lll-1)*72;

@@ -10,10 +10,10 @@ pcolor(rlat,pavgLAY(1:97,3000),smoothn(xdeltaTlat(:,1:97)',1)); %title(ocbstr,'F
 shading interp;
 
 tafov(2) = nexttile;
-boo = zeros(72,64,24); for ijunk = 1 : 24; boo(:,:,ijunk) = xmaskLFmatr'; end
+boo = zeros(72,64,length(airsL3.Tlevs)); for ijunk = 1 : length(airsL3.Tlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
 junk = boo.* airsL3.thestats64x72.ptemprate; 
 junk = squeeze(nanmean(junk,1))'; 
-pcolor(rlat,airsL3.Tlevs,smoothn(junk(1:24,:),1)); %title('AIRSL3','Fontsize',12);
+pcolor(rlat,airsL3.Tlevs,smoothn(junk(1:length(airsL3.Tlevs),:),1)); %title('AIRSL3','Fontsize',12);
 shading interp;
 
 tafov(3) = nexttile;
@@ -87,10 +87,10 @@ pcolor(rlat,pavgLAY(1:97,3000),smoothn(xfracWVlat(:,1:97)',1)); %title(ocbstr,'F
 shading interp;
 
 tafov(2) = nexttile;
-boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
+boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
 junk = boo.* airsL3.thestats64x72.waterrate; 
 junk = squeeze(nanmean(junk,1))'; 
-pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:12,:),1)); %title('AIRSL3','Fontsize',12);
+pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:length(airsL3.Qlevs),:),1)); %title('AIRSL3','Fontsize',12);
 shading interp;
 
 tafov(3) = nexttile;
@@ -165,10 +165,10 @@ pcolor(rlat,pavgLAY(1:97,3000),smoothn(xdeltaRHlat(:,1:97)',1)); %title(ocbstr,'
 shading interp;
 
 tafov(2) = nexttile;
-boo = zeros(72,64,12); for ijunk = 1 : 12; boo(:,:,ijunk) = xmaskLFmatr'; end
+boo = zeros(72,64,length(airsL3.Qlevs)); for ijunk = 1 : length(airsL3.Qlevs); boo(:,:,ijunk) = xmaskLFmatr'; end
 junk = boo.* airsL3.thestats64x72.RHrate; 
 junk = squeeze(nanmean(junk,1))'; 
-pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:12,:),1)); %title('AIRSL3','Fontsize',12);
+pcolor(rlat,airsL3.Qlevs,smoothn(junk(1:length(airsL3.Qlevs),:),1)); %title('AIRSL3','Fontsize',12);
 shading interp;
 
 tafov(3) = nexttile;

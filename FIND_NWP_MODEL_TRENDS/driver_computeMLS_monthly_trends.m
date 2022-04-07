@@ -19,12 +19,13 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MAT
 
 clear iaFound
 
-iNumYears = 12; %% 2002-2014, even though XMIP6 data is Jan 1979-Dec 2014
+iNumYears = 17;  %% 2004-2021
+iNumYears = 16;  %% 2004-2020
 iaMax = iNumYears*12;
 
-%% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_CMIP6/clust_compute_cmip6_profile_rtpfiles.m
+%% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_MLS/clust_compute_mls_profile_rtpfiles.m
 for ii = 1 : iaMax
-  fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/CMIP6/Tile_Center/cmip6_tile_center_monthly_timestep_' num2str(ii,'%03d') '.mat'];
+  fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/MLS/Tile_Center/mls_tile_center_monthly_timestep_' num2str(ii,'%03d') '.mat'];
 
   if exist(fin)
     iaFound(ii) = 1;
@@ -36,7 +37,7 @@ end
 plot(1:iaMax,iaFound,'+-')
 
 for ii = 1 : iaMax
-  fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/CMIP6/Tile_Center/cmip6_tile_center_monthly_timestep_' num2str(ii,'%03d') '.mat'];
+  fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/MLS/Tile_Center/mls_tile_center_monthly_timestep_' num2str(ii,'%03d') '.mat'];
   if exist(fin)
     if mod(ii,100) == 0
       fprintf(1,'+ \n')
@@ -49,7 +50,7 @@ for ii = 1 : iaMax
 
     a = load(fin);
 
-    %% already done this in /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_CMIP6/clust_compute_cmip6_profile_rtpfiles.m
+    %% already done this in /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_MLS/clust_compute_mls_profile_rtpfiles.m
     %%a.pnew_ip.rh = convert_humidity(a.pnew_ip.plevs*100,a.pnew_ip.ptemp,a.pnew_ip.gas_1,'mixing ratio','relative humidity');
     if ~isfield(a.pnew_ip,'rh')
       a.pnew_ip.rh = convert_humidity(a.pnew_ip.plevs*100,a.pnew_ip.ptemp,a.pnew_ip.gas_1,'specific humidity','relative humidity');
@@ -84,20 +85,20 @@ all.rlat = a.pnew_op.rlat;
 
 monitor_memory_whos
 
-comment = 'see driver_computeCMIP6_monthly_trends.m';
-if iNumYears == 12
-  save -v7.3 CMIP6_atm_data_2002_09_to_2014_08.mat comment all
+comment = 'see driver_computeMLS_monthly_trends.m';
+if iNumYears == 16
+  save -v7.3 MLS_atm_data_2004_09_to_2020_08.mat comment all
 end
 
-figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('CMIP6 mean stemp')
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('CMIP6 mean RHsurf')
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('CMIP6 mean TWSurf')
-figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(all.mmw,1)); colormap(jet); title('CMIP6 mean mmw')
+figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('MLS mean stemp')
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('MLS mean RHsurf')
+figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('MLS mean TWSurf')
+figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(all.mmw,1)); colormap(jet); title('MLS mean mmw')
 
-figure(5); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.stemp); colormap(jet); title('CMIP6 mean stemp')
-figure(6); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('CMIP6 mean RHsurf')
-figure(7); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('CMIP6 mean TWSurf')
-figure(8); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('CMIP6 mean mmw')
+figure(5); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.stemp); colormap(jet); title('MLS mean stemp')
+figure(6); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('MLS mean RHsurf')
+figure(7); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('MLS mean TWSurf')
+figure(8); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('MLS mean mmw')
 
 plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
 pN = plevs(1:end-1)-plevs(2:end);
@@ -122,15 +123,15 @@ dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
 
 computeERA5_surface_trends
 
-figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('CMIP6 trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('CMIP6 trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('CMIP6 trend  TWSurf K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
-figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('CMIP6 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('MLS trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MLS trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('MLS trend  TWSurf K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('MLS trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
 
-figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('CMIP6 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('CMIP6 trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('CMIP6 trend  TWSurf K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
-figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('CMIP6 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('MLS trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MLS trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('MLS trend  TWSurf K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
+figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('MLS trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
 pause(0.1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -146,23 +147,23 @@ trend_rlat = all.rlat;
 trend_rlon = all.rlon;
 trend_rlat64 = rlat; trend_rlon72 = rlon;
 
-if iNumYears == 12
-  save CMIP6_atm_data_2002_09_to_2014_08_trends.mat comment trend*
+if iNumYears == 16
+  save MLS_atm_data_2004_09_to_2020_08_trends.mat comment trend*
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 load('llsmap5.mat');
-figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('CMIP6 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('CMIP6 trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('MLS trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MLS trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
 
 figure(3); junk = reshape(trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('CMIP6 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
+  pcolor(trend_rlat64,trend_plays,junk); title('MLS trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
 figure(4); junk = reshape(trend_RH,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('CMIP6 trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
+  pcolor(trend_rlat64,trend_plays,junk); title('MLS trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
 
 figure(5); junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('CMIP6 mean ptemp K');  caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+  pcolor(trend_rlat64,trend_plays,junk); title('MLS mean ptemp K');  caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
 figure(6); junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('CMIP6 mean RH percent');  caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+  pcolor(trend_rlat64,trend_plays,junk); title('MLS mean RH percent');  caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 

@@ -19,7 +19,7 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MAT
 
 clear iaFound
 
-iNumYears = 12; 
+iNumYears = 12; %% 2002-2014, even though XMIP6 data is Jan 1979-Dec 2014
 iaMax = iNumYears*12;
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_AMIP6/clust_compute_amip6_profile_rtpfiles.m
@@ -112,8 +112,10 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 
 figure(9); junk = reshape(a.pnew_op.ptemp,101,72,64); junk = squeeze(nanmean(junk,2)); junk = junk(1:100,:); pcolor(rlat,plays,junk);
   caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+  title('Mean T')
 figure(10); junk = reshape(a.pnew_op.RH,100,72,64); junk = squeeze(nanmean(junk,2)); junk = junk(1:100,:); pcolor(rlat,plays,junk);
   caxis([00 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+  title('Mean RH')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
