@@ -34,8 +34,14 @@ if ~exist('airsL3_spectral_olr')
     %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','era5_spectral_olr'); era5_spectral_olr = junk.era5_spectral_olr;
     %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','cmip6_spectral_olr'); cmip6_spectral_olr = junk.cmip6_spectral_olr;
 
+    %savename1 = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat';      %% oops this is wrong
+    %savename2 = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat';  %% oops this is wrong
+
+    savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_AIRSL3_ERA5_CMIP6.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6
+    savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6
+
     if ~exist('iJorC')
-      iJorC = +1;  %% do Jool L3
+      iJorC = +1;  %% do Joel L3
     end
     if ~exist('iEorM')
       iEorM = +5;  %% do ERA5
@@ -50,34 +56,43 @@ if ~exist('airsL3_spectral_olr')
 
     if iJorC == +1
       iLoadJorC = +1;
-      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
+      junk = load(savename1,'airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
     end
     if iEorM == +5
       iLoadEorM = +1;
-      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat','era5_spectral_olr');   era5_spectral_olr = junk.era5_spectral_olr;
+      junk = load(savename1,'era5_spectral_olr');   era5_spectral_olr = junk.era5_spectral_olr;
     end
     if iAorC == -1
       iLoadAorC = +1;
-      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat','cmip6_spectral_olr');  cmip6_spectral_olr = junk.cmip6_spectral_olr;
+      junk = load(savename1,'cmip6_spectral_olr');  cmip6_spectral_olr = junk.cmip6_spectral_olr;
     end
 
     if iJorC == -1
       iLoadJorC = +1;
-      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
+      junk = load(savename2,'airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
     end
     if iEorM == +2
       iLoadEorM = +1;
-      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat','era5_spectral_olr');   era5_spectral_olr = junk.era5_spectral_olr;
+      junk = load(savename2,'era5_spectral_olr');   era5_spectral_olr = junk.era5_spectral_olr;
     end
     if iAorC == +1
       iLoadAorC = +1;
-      junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat','cmip6_spectral_olr');  cmip6_spectral_olr = junk.cmip6_spectral_olr;
+      junk = load(savename2,'cmip6_spectral_olr');  cmip6_spectral_olr = junk.cmip6_spectral_olr;
     end
 
   end
 end
 
 if ~exist('airsL3_spectral_olr')
+  disp('WARNING : computing feedbacks needs an UP-TO-DATE nwp_spectral_trends_cmip6_era5_airsL3_umbc so make sure you have re-run make_profile_spectral_trends');
+  junk = input('(+1/default) Go ahead with the calcs, you have run make_profile_spectral_trends or (-1) oops, re-run it here : ');
+  if length(junk) == 0
+    junk == 1;
+  end
+  if junk < 0
+    clear nwp_spectral_trends_cmip6_era5_airsL3_umbc
+    nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
+  end
   compute_feedbacks_airsL3_ecRad ; pause(0.1)
   compute_feedbacks_era5_ecRad   ; pause(0.1)
   compute_feedbacks_cmip6_ecRad  ; pause(0.1)
@@ -135,6 +150,7 @@ end
 junk = input('save the OLR feedbacks??? (-1/+1) : ');
 if junk > 0
   feedbackname = ['olr_feedbacks_' strMODELS '.mat'];
+  fprintf(1,'saving to %s \n',feedbackname);
   saver = ['save ' feedbackname ' umbc_spectral_olr airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6 results resultsWV resultsT resultsO3 pavg plays'];
   eval(saver);
 end

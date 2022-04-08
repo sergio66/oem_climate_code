@@ -115,7 +115,12 @@ junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : [defa
 if length(junk) == 0
   junk = 1;
 end
-if junk > 0
+
+if junk < 0
+  iVersJac = 2021;
+  disp('just chaning AIRS L3 24/12 Tlevs/Qlevs to 100 layers .. or CLIMCAPS 100/66 Tlevs/Qlevs to 100 layers')
+  nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
+elseif junk > 0
   iVersJac = input('Enter jac version (2019) = 2002/2019 ERAI or (2021) = 2002/2021 ERA5 default : ');
   if length(iVersJac) == 0
     iVersJac = 2021;
@@ -133,7 +138,7 @@ if junk > 0
         sartaERA5trend(:,ind) = x.thesave.xtrendSpectral;
       end
 
-      nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac);
+      nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,+1);
 
       figure(1); plot(f,nanmean(sartaERA5trend'),f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates')); xlim([640 1640]); hl = legend('from SARTA trends','from jac x dX/dt','location','best');
       figure(1); lll = 1 : 4608; plot(f,sartaERA5trend(:,lll)-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates(:,lll));

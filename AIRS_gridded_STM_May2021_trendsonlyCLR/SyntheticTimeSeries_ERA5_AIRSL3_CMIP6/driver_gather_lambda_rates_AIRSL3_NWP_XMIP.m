@@ -19,13 +19,16 @@ rlat = junk.trend_rlat64;
 
 set_gather_savename_rates_AIRSL3_NWP_XMIP
 
-%% see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/do_avg_feedback2cos.m
-junk = load(savename,'umbc_spectral_olr');    umbc_spectral_olr = junk.umbc_spectral_olr;
-junk = load(savename,'cmip6_spectral_olr');   cmip6_spectral_olr = junk.cmip6_spectral_olr;
-junk = load(savename,'era5_spectral_olr');    era5_spectral_olr = junk.era5_spectral_olr;
-junk = load(savename,'airsL3_spectral_olr');  airsL3_spectral_olr = junk.airsL3_spectral_olr;
+savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_AIRSL3_ERA5_CMIP6.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6
+savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6
 
-junk = load(savename2,'umbc_spectral_olr');   umbc2_spectral_olr = junk.umbc_spectral_olr;
+%% see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/do_avg_feedback2cos.m
+junk = load(savename, 'umbc_spectral_olr');    umbc_spectral_olr = junk.umbc_spectral_olr;
+junk = load(savename1,'cmip6_spectral_olr');   cmip6_spectral_olr = junk.cmip6_spectral_olr;
+junk = load(savename1,'era5_spectral_olr');    era5_spectral_olr = junk.era5_spectral_olr;
+junk = load(savename1,'airsL3_spectral_olr');  airsL3_spectral_olr = junk.airsL3_spectral_olr;
+
+junk = load(savename, 'umbc_spectral_olr');   umbc2_spectral_olr = junk.umbc_spectral_olr;
 junk = load(savename2,'cmip6_spectral_olr');  amip6_spectral_olr = junk.cmip6_spectral_olr;
 junk = load(savename2,'era5_spectral_olr');   merra2_spectral_olr = junk.era5_spectral_olr;
 junk = load(savename2,'airsL3_spectral_olr'); climcaps_spectral_olr = junk.airsL3_spectral_olr;
@@ -105,13 +108,13 @@ fprintf(1,'UMBC     %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(7,:))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear plotoptions;
-iFig = 21; figure(iFig); clf; plot(rlat,swonk11,rlat,swonk21,rlat,swonk31,rlat,swonk41,rlat,swonk51,rlat,swonk61,rlat,swonk71,'linewidth',2); title('Planck Feedback W/m2/K');
+iFig = 21; figure(iFig); clf; plot(rlat,swonk11,'b',rlat,swonk21,'c',rlat,swonk31,'r',rlat,swonk41,'m',rlat,swonk51,'g',rlat,swonk61,'ys',rlat,swonk71,'k','linewidth',2); title('Planck Feedback W/m2/K');
  plotaxis2; hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS','CMIP6','AMIP6','UMBC','location','best','fontsize',8); xlabel('Latitude'); ylabel('\lambda');
-iFig = 22; figure(iFig); clf; plot(rlat,swonk12,rlat,swonk22,rlat,swonk32,rlat,swonk42,rlat,swonk52,rlat,swonk62,rlat,swonk72,'linewidth',2); title('Lapse Feedback W/m2/K');
+iFig = 22; figure(iFig); clf; plot(rlat,swonk12,'b',rlat,swonk22,'c',rlat,swonk32,'r',rlat,swonk42,'m',rlat,swonk52,'g',rlat,swonk62,'ys',rlat,swonk72,'k','linewidth',2); title('Lapse Feedback W/m2/K');
  plotaxis2; hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS','CMIP6','AMIP6','UMBC','location','best','fontsize',8); xlabel('Latitude'); ylabel('\lambda');
-iFig = 23; figure(iFig); clf; plot(rlat,swonk13,rlat,swonk23,rlat,swonk33,rlat,swonk43,rlat,swonk53,rlat,swonk63,rlat,swonk73,'linewidth',2); title('WV Feedback W/m2/K');
+iFig = 23; figure(iFig); clf; plot(rlat,swonk13,'b',rlat,swonk23,'c',rlat,swonk33,'r',rlat,swonk43,'m',rlat,swonk53,'g',rlat,swonk63,'ys',rlat,swonk73,'k','linewidth',2); title('WV Feedback W/m2/K');
  plotaxis2; hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS','CMIP6','AMIP6','UMBC','location','best','fontsize',8); xlabel('Latitude'); ylabel('\lambda');
-iFig = 24; figure(iFig); clf; plot(rlat,swonk14,rlat,swonk24,rlat,swonk34,rlat,swonk44,rlat,swonk54,rlat,swonk64,rlat,swonk74,'linewidth',2); title('SKT Feedback W/m2/K');
+iFig = 24; figure(iFig); clf; plot(rlat,swonk14,'b',rlat,swonk24,'c',rlat,swonk34,'r',rlat,swonk44,'m',rlat,swonk54,'g',rlat,swonk64,'ys',rlat,swonk74,'k','linewidth',2); title('SKT Feedback W/m2/K');
  plotaxis2; hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS','CMIP6','AMIP6','UMBC','location','best','fontsize',8); xlabel('Latitude'); ylabel('\lambda');
 
 if iSave > 0

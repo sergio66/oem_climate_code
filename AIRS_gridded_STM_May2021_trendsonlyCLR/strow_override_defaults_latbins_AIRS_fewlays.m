@@ -737,10 +737,10 @@ elseif settings.set_era5_cmip6_airsL3 == 2
 elseif settings.set_era5_cmip6_airsL3 == 8
   disp(' apriori will be using MLS trends')
   zrates = load('../FIND_NWP_MODEL_TRENDS/MLS_atm_data_2004_09_to_2020_08_trends.mat');
-  xrates.stemp = zrates.trend_stemp;
-  xrates.ptemp = zrates.trend_ptemp;
-  xrates.gas_1 = zrates.trend_gas_1;
-  xrates.gas_3 = zrates.trend_gas_3;
+  xrates.stemp = zrates.trend_stemp * 0;
+  xrates.ptemp = zrates.trend_ptemp * 0;
+  xrates.gas_1 = zrates.trend_gas_1; xrates.gas_1(65:100,:) = 0;  %% about 250 mb to GND
+  xrates.gas_3 = zrates.trend_gas_3 * 0;
   ix = driver.iLon;
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
