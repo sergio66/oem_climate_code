@@ -140,7 +140,7 @@ do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
 %%% Ryan suggested normalizing using dERASST for all, instead of the individual dXSST X=ERA or CMIP6 or UMBC or AIRSL3 
 iERAnorm = input('Do you wish to redo the feedback by using only dERA SKT instead of individual d SKT? (-1/default) no (+1) yes : ');
-if length(iERAnorm) =0 0
+if length(iERAnorm) == 0
   iERAnorm = -1;
 end
 if iERAnorm > 0

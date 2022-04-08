@@ -139,7 +139,7 @@ umbc_geo_ratesXY_unc = squeeze(nanmean(reshape(umbc_geo_rates_unc,100,72,64),2))
 
 iFig = 23; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_ratesXY,merra2_geo_ratesXY,airsL3_geo_ratesXY,climcaps_geo_ratesXY,cmip6_geo_ratesXY,amip6_geo_ratesXY,umbc_geo_ratesXY,mls_geo_ratesXY,iFig,plotoptions);
 
-iFig = 26; figure(iFig); subplot(222); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('WV unc')
+iFig = 26; figure(iFig); subplot(222); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('WV frac unc')
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
 
 if iSave > 0

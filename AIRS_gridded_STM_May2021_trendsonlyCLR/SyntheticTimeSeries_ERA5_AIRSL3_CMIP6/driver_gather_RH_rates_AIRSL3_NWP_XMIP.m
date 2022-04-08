@@ -171,10 +171,40 @@ umbc_geo_ratesWV_unc = umbc_20_layertrends.gas_1unc;
 perty = p;
 perty.ptemp = pert.ptemp(1:100,:) + umbc_20_layertrends.ptemp + umbc_geo_ratesT_unc;
 perty.gas_1 = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1 + umbc_geo_ratesWV_unc);
-
 [yRHpert,yRH1kmpert,ycolwaterpert] = layeramt2RH(h,perty);
+RHunc1 = abs(yRHpert - xRH0);
 
-umbc_20_layertrends.RHunc = yRHpert - xRH0;
+perty = p;
+perty.ptemp = pert.ptemp(1:100,:) + umbc_20_layertrends.ptemp - umbc_geo_ratesT_unc;
+perty.gas_1 = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1 - umbc_geo_ratesWV_unc);
+[yRHpert,yRH1kmpert,ycolwaterpert] = layeramt2RH(h,perty);
+RHunc2 = yRHpert - xRH0;
+
+perty = p;
+perty.ptemp = pert.ptemp(1:100,:) + umbc_20_layertrends.ptemp + umbc_geo_ratesT_unc;
+perty.gas_1 = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1 - umbc_geo_ratesWV_unc);
+[yRHpert,yRH1kmpert,ycolwaterpert] = layeramt2RH(h,perty);
+RHunc3 = yRHpert - xRH0;
+
+perty = p;
+perty.ptemp = pert.ptemp(1:100,:) + umbc_20_layertrends.ptemp - umbc_geo_ratesT_unc;
+perty.gas_1 = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1 + umbc_geo_ratesWV_unc);
+[yRHpert,yRH1kmpert,ycolwaterpert] = layeramt2RH(h,perty);
+RHunc4 = yRHpert - xRH0;
+
+RHunc = sqrt(RHunc1.^2 + RHunc2.^2 + RHunc3.^2 + RHunc4.^2)/4;
+RHunc = nanmax(RHunc1,nanmax(RHunc2,nanmax(RHunc3,RHunc4)));
+
+umbc_20_layertrends.RHunc = RHunc;
+
+%{
+umbc_20_layertrends.RHunc = RHunc;
+umbc_geo_rates_unc = umbc_20_layertrends.RHunc;
+plotoptions.yLimits = [100 1000];
+  umbc_geo_ratesXY_unc = abs(umbc_geo_ratesXY_unc);  
+iFig = 26; figure(iFig); subplot(223); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('RH unc')
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 umbc_geo_rates_unc = umbc_20_layertrends.RHunc;
@@ -211,8 +241,19 @@ iFig = 24; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_rat
 iFig = 26; figure(iFig); subplot(223); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('RH unc')
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
 
+iFig = 27; figure(iFig); clf
+subplot(221); zT = p.ptemp(1:100,:);                                                                     zT = squeeze(nanmean(reshape(zT,100,72,64),2));  pcolor(rlat,plays,zT); colormap jet; colorbar; title('T (K)'); caxis([200 300])
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); shading interp
+subplot(222); zWV = layers2ppmv(h,p,1:length(p.stemp),1); zWV(99,:) = zWV(98,:); zWV(100,:) = zWV(98,:); zWV = squeeze(nanmean(reshape(zWV,100,72,64),2));  pcolor(rlat,plays,zWV); colormap jet; colorbar; title('WV ppmv'); caxis([0 3e4])
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); shading interp
+subplot(223); zRH = xRH0;                                                                                zRH = squeeze(nanmean(reshape(zRH,100,72,64),2));  pcolor(rlat,plays,zRH); colormap jet; colorbar; title('RH'); caxis([0 100])
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); shading interp
+subplot(224); zO3 = layers2ppmv(h,p,1:length(p.stemp),3); zO3(99,:) = zO3(98,:); zO3(100,:) = zO3(98,:); zO3 = squeeze(nanmean(reshape(zO3,100,72,64),2));  pcolor(rlat,plays,zO3); colormap jet; colorbar; title('O3 ppmv'); caxis([0 10])
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([0.1 200]); shading interp
+
 if iSave > 0
-  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_RHrates' savestr '.mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
+  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_RHrates' savestr '.mat rlat plays'];
+  saver = [saver ' era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc zT zWV zRH zO3'];
   eval(saver)
 end
 

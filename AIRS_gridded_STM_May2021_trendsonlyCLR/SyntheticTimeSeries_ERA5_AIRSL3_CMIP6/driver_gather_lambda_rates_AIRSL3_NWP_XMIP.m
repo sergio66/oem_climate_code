@@ -6,6 +6,8 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
 
 %% see driver_gather_spectralrates_AIRSL3_NWP_XMIP6.m
 
+figure(11);
+
 load('llsmap5');
 if length(llsmap5) == 64
   %% need to center the white 1.0 1.0 1.0 .. right now it is at position 33, so need 65 points, or remove first ... choose that
