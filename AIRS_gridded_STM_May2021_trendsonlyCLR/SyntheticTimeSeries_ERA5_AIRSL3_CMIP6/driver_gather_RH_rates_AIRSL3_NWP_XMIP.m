@@ -35,10 +35,14 @@ set_gather_savename_rates_AIRSL3_NWP_XMIP
 
 plays = load(savename,'plays'); plays = plays.plays;
 pavg  = load(savename,'pavg');  pavg = pavg.pavg;
-junk    = load(savename,'resultsWV');
+junk  = load(savename,'resultsWV');
   resultsWV = junk.resultsWV;
-junk    = load(savename,'resultsT');
+junk  = load(savename,'resultsWVunc');
+  resultsWVunc = junk.resultsWVunc;
+junk  = load(savename,'resultsT');
   resultsT = junk.resultsT;
+junk  = load(savename,'resultsTunc');
+  resultsTunc = junk.resultsTunc;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for ii = 1 : 64
@@ -104,6 +108,10 @@ for ii = 1 : 64
       for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Tlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Tlevs) | plays >= max(Tlevs)); junkrate(:,jjj) = 0;
       junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
       umbc_20_layertrends.ptemp(:,ind) = junkrate;
+    xjunkrate = resultsTunc(ind,:); clear junkrate
+      for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Tlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Tlevs) | plays >= max(Tlevs)); junkrate(:,jjj) = 0;
+      junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
+      umbc_20_layertrends.ptempunc(:,ind) = junkrate;
     %xjunkrate = resultsRH(ind,:); clear junkrate
     %  for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Qlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Tlevs) | plays >= max(Tlevs)); junkrate(:,jjj) = 0;
     %  junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
@@ -112,6 +120,10 @@ for ii = 1 : 64
       for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Qlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Qlevs) | plays >= max(Qlevs)); junkrate(:,jjj) = 0;
       junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
       umbc_20_layertrends.gas_1(:,ind) = junkrate;
+    xjunkrate = resultsWVunc(ind,:); clear junkrate
+      for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Qlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Qlevs) | plays >= max(Qlevs)); junkrate(:,jjj) = 0;
+      junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
+      umbc_20_layertrends.gas_1unc(:,ind) = junkrate;
     %xjunkrate = resultsO3(ind,:); clear junkrate
     %  junkrate = xjunkrate;
     %  junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
@@ -151,7 +163,21 @@ pert.gas_1 = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1);
 
 umbc_20_layertrends.RH = xRHpert - xRH0;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+umbc_geo_ratesT_unc  = umbc_20_layertrends.ptempunc;
+umbc_geo_ratesWV_unc = umbc_20_layertrends.gas_1unc;
+
+perty = p;
+perty.ptemp = pert.ptemp(1:100,:) + umbc_20_layertrends.ptemp + umbc_geo_ratesT_unc;
+perty.gas_1 = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1 + umbc_geo_ratesWV_unc);
+
+[yRHpert,yRH1kmpert,ycolwaterpert] = layeramt2RH(h,perty);
+
+umbc_20_layertrends.RHunc = yRHpert - xRH0;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+umbc_geo_rates_unc = umbc_20_layertrends.RHunc;
 umbc_geo_rates     = umbc_20_layertrends.RH;
 airsL3_geo_rates   = airsL3_100_layertrends.RH;
 climcaps_geo_rates = airsCLIMCAPSL3_100_layertrends.RH;
@@ -177,10 +203,16 @@ merra2_geo_ratesXY   = squeeze(nanmean(reshape(merra2_geo_rates,100,72,64),2));
 era5_geo_ratesXY     = squeeze(nanmean(reshape(era5_geo_rates,100,72,64),2));
 umbc_geo_ratesXY     = squeeze(nanmean(reshape(umbc_geo_rates,100,72,64),2));
 mls_geo_ratesXY      = squeeze(nanmean(reshape(mls_geo_rates,100,72,64),2));
+umbc_geo_ratesXY_unc = squeeze(nanmean(reshape(umbc_geo_rates_unc,100,72,64),2))/sqrt(72);
+  umbc_geo_ratesXY_unc = abs(umbc_geo_ratesXY_unc);  
 
 iFig = 24; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_ratesXY,merra2_geo_ratesXY,airsL3_geo_ratesXY,climcaps_geo_ratesXY,cmip6_geo_ratesXY,amip6_geo_ratesXY,umbc_geo_ratesXY,mls_geo_ratesXY,iFig,plotoptions);
+
+iFig = 26; figure(iFig); subplot(223); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('RH unc')
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
+
 if iSave > 0
-  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_RHrates' savestr '.mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY'];
+  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_RHrates' savestr '.mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
   eval(saver)
 end
 

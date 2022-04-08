@@ -63,10 +63,10 @@ end
 % plot(nanmean(xdriver.rateset.rates,2)); error('lskjglskjgs')
 
 if iDoSpectralRates == +1
-  display('calling compute_jac_spectral_rates_N_put_airs24_cris66_to_100layers')
+  display('  calling compute_jac_spectral_rates_N_put_airs24_cris66_to_100layers')
   compute_jac_spectral_rates_N_put_airs24_cris66_to_100layers
 elseif iDoSpectralRates == -1
-  display('calling compute_put_airs24_cris66_to_100layers')
+  display('  calling compute_put_airs24_cris66_to_100layers')
   compute_put_airs24_cris66_to_100layers
 end
 

@@ -33,8 +33,10 @@ set_gather_savename_rates_AIRSL3_NWP_XMIP
 
 plays = load(savename,'plays'); plays = plays.plays;
 pavg  = load(savename,'pavg');  pavg = pavg.pavg;
-junk     = load(savename,'resultsO3');
+junk  = load(savename,'resultsO3');
   resultsO3 = junk.resultsO3;
+junk  = load(savename,'resultsO3unc');
+  resultsO3unc = junk.resultsO3unc;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for ii = 1 : 64
@@ -100,11 +102,16 @@ for ii = 1 : 64
       for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Qlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Qlevs) | plays >= max(Qlevs)); junkrate(:,jjj) = 0;
       junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
       umbc_20_layertrends.gas_3(:,ind) = junkrate;
+    xjunkrate = resultsO3unc(ind,:); clear junkrate
+      for jjj = 1 : 72; junkrate(jjj,:) = interp1(log(Qlevs),xjunkrate(jjj,:),log(plays),[],'extrap'); end; jjj = find(plays <= min(Qlevs) | plays >= max(Qlevs)); junkrate(:,jjj) = 0;
+      junkrate = junkrate'; junkrate(isnan(junkrate)) = 0; 
+      umbc_20_layertrends.gas_3unc(:,ind) = junkrate;
   end
 end
 fprintf(1,'\n');
 
 umbc_geo_rates     = umbc_20_layertrends.gas_3;
+umbc_geo_rates_unc = umbc_20_layertrends.gas_3unc;
 airsL3_geo_rates   = airsL3_100_layertrends.gas_3;
 climcaps_geo_rates = airsCLIMCAPSL3_100_layertrends.gas_3;
 
@@ -128,10 +135,15 @@ merra2_geo_ratesXY   = squeeze(nanmean(reshape(merra2_geo_rates,100,72,64),2));
 era5_geo_ratesXY     = squeeze(nanmean(reshape(era5_geo_rates,100,72,64),2));
 umbc_geo_ratesXY     = squeeze(nanmean(reshape(umbc_geo_rates,100,72,64),2));
 mls_geo_ratesXY      = squeeze(nanmean(reshape(mls_geo_rates,100,72,64),2));
+umbc_geo_ratesXY_unc = squeeze(nanmean(reshape(umbc_geo_rates_unc,100,72,64),2))/sqrt(72);
 
-iFig = 26; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_ratesXY,merra2_geo_ratesXY,airsL3_geo_ratesXY,climcaps_geo_ratesXY,cmip6_geo_ratesXY,amip6_geo_ratesXY,umbc_geo_ratesXY,mls_geo_ratesXY,iFig,plotoptions);
+iFig = 25; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_ratesXY,merra2_geo_ratesXY,airsL3_geo_ratesXY,climcaps_geo_ratesXY,cmip6_geo_ratesXY,amip6_geo_ratesXY,umbc_geo_ratesXY,mls_geo_ratesXY,iFig,plotoptions);
+
+iFig = 26; figure(iFig); subplot(224); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('O3 unc')
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
+
 if iSave > 0
-  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_O3rates'  savestr '..mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY'];
+  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_O3rates'  savestr '..mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
   eval(saver)
 end
 

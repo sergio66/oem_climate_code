@@ -140,6 +140,9 @@ figure(79); clf
 ylim([-10 +10]/2); plotaxis2; title('UMBC \lambda'); xlabel('Latitude'); hl = legend('Planck','Lapse','WV','SKT','location','best','fontsize',8);
 
 junk = umbc_spectral_olr.feedback.planck_ecRad; junk(bad) = NaN;
+if ~exist('lps0')
+  [mmw0,lps0] = mmwater_rtp(h,p);
+end
 figure(79); clf; plot(mean(lps0.lapse1(80:97,:),1),junk,'.');
 figure(79); clf; scatter(mean(lps0.lapse1(80:97,:),1),junk,10,p.rlat,'filled');      colorbar; colormap jet; axis([0 10 -5 -3])
 figure(79); clf; scatter(mean(lps0.lapse1(80:97,:),1),junk,10,abs(p.rlat),'filled'); colorbar; colormap jet; axis([0 10 -5 -3])

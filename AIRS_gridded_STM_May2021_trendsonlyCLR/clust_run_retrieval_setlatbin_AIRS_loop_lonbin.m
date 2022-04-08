@@ -134,7 +134,7 @@ for iInd = iInd0 : iIndE
   %topts.ocb_set = 1; %% try ERA5 synthetic rates
 
   %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
-  topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori
+  %topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick

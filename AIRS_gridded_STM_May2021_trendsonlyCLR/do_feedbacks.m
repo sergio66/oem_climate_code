@@ -37,8 +37,8 @@ if ~exist('airsL3_spectral_olr')
     %savename1 = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat';      %% oops this is wrong
     %savename2 = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat';  %% oops this is wrong
 
-    savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_AIRSL3_ERA5_CMIP6.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6
-    savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6
+    savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6
+    savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6
 
     if ~exist('iJorC')
       iJorC = +1;  %% do Joel L3
@@ -139,7 +139,10 @@ do_avg_feedback2     %% better attempt at zonal avg
 do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
 %%% Ryan suggested normalizing using dERASST for all, instead of the individual dXSST X=ERA or CMIP6 or UMBC or AIRSL3 
-iERAnorm = input('Do you wish to redo the feedback by using only dERA SKT instead of individual d SKT? (-1) no, default (+1) yes : ');
+iERAnorm = input('Do you wish to redo the feedback by using only dERA SKT instead of individual d SKT? (-1/default) no (+1) yes : ');
+if length(iERAnorm) =0 0
+  iERAnorm = -1;
+end
 if iERAnorm > 0
   redo_feedbacks_dERA5ST_dt
   do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
@@ -149,9 +152,15 @@ end
 
 junk = input('save the OLR feedbacks??? (-1/+1) : ');
 if junk > 0
-  feedbackname = ['olr_feedbacks_' strMODELS '.mat'];
+  %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
+  %%%% feedbackname = ['olr_feedbacks_' strMODELS '_save.mat'];
+  %%%% saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
+  %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
+
+  feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '.mat'];
+  saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];
+
   fprintf(1,'saving to %s \n',feedbackname);
-  saver = ['save ' feedbackname ' umbc_spectral_olr airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6 results resultsWV resultsT resultsO3 pavg plays'];
   eval(saver);
 end
 
