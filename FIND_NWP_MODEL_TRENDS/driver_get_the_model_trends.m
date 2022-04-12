@@ -1,5 +1,5 @@
 %% superceded driver_get_the_model_trends_orig
-iJorC = input('(-1) Chris Barnet NUCAPS or (+1, default) Joel Susskind AIRS L2 : ');
+iJorC = input('(+1, default) J.Susskind AIRS L3  or (-1) C.Barnet CLIMCAPS  : ');
 if length(iJorC) == 0
   iJorC = +1;
 end
@@ -10,7 +10,7 @@ else
   iJorCstr = 'AIRSL3';
 end
 
-iEorM = input('(1) ERA-I (2) MERRA2 or (5,default) ERA5 : ');
+iEorM = input('(5,default) ERA5                  or (2) MERRA2 or (1) ERA-I  : ');
 if length(iEorM) == 0
   iEorM = +5;
 end
@@ -24,7 +24,7 @@ elseif iEorM == 5
   iEorMstr = 'ERA5';
 end
 
-iAorC = input('(-1,default) CMIP6  or (+1) AMIP6 : ');
+iAorC = input('(-1,default) CMIP6                or (+1) AMIP6 : ');
 if length(iAorC) == 0
   iAorC = -1;
 end

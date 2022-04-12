@@ -448,6 +448,6 @@ end
 
 numretlayers_str = [num2str(topts.iNlays_retrieve) 'fatlayers'];
 
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith' start_apriori_str '_'         numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX1   %s \n',genericoutname);
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith' start_apriori_str '_uncX3_'   numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX3   %s \n',genericoutname);
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX100 %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_'         numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX1   %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX3_'   numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX3   %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX100 %s \n',genericoutname);

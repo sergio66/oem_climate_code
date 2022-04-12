@@ -7,6 +7,11 @@ cdRRTMback = ['cd ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCL
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+if ~exist('iLambda_UseGlobalSST')
+  iLambda_UseGlobalSST = +1;   %% new way, use global avg SST, much safer (less likely to be 0)
+  iLambda_UseGlobalSST = -1;   %% old way till March 2022, using computed SST per tile instead of glabal average; dangerous because if dSST = 0 oopie when dividing
+end
+
 addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RobinHoganECMWF/ECRAD_ECMWF_version_of_flux/ecRad/create_ecrad_inputSergio/
 addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RRTM/v3.3/rrtm_lw/DRIVER_CODE_RRTM_Band17/
 
@@ -19,11 +24,15 @@ eval(cdRRTMback);
 %% trying a faster method see     jaja = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);    driver_run_ecRad_rtp_loop_over_profiles.m iMethod = -1
 %% scatter_coast(p.rlon,p.rlat,50,(umbc_spectral_olr.olr0_ecRad.clr-jaja.clr)./umbc_spectral_olr.olr0_ecRad.clr*100); colormap(usa2); caxis([-1 +1])
 %% scatter_coast(p.rlon,p.rlat,50,(umbc_spectral_olr.olr0_rrtm-jaja.clr)./umbc_spectral_olr.olr0_rrtm*100); colormap(usa2); caxis([-1 +1])
-eval(cdRRTMback);
+%% eval(cdRRTMback);
 
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-px.stemp = px.stemp + results(:,6)';
+if iLambda_UseGlobalSST == -1
+  px.stemp = px.stemp + results(:,6)';
+else
+  px.stemp = px.stemp + nanmean(results(:,6));
+end
 umbc_spectral_olr.skt = compute_olr(h,px);
 %umbc_spectral_olr.skt_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 umbc_spectral_olr.skt_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
@@ -31,8 +40,13 @@ eval(cdRRTMback);
 
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-px.stemp = px.stemp + results(:,6)';
-px.ptemp = px.ptemp + ones(101,1)*results(:,6)';
+if iLambda_UseGlobalSST == -1
+  px.stemp = px.stemp + results(:,6)';
+  px.ptemp = px.ptemp + ones(101,1)*results(:,6)';
+else
+  px.stemp = px.stemp + nanmean(results(:,6));
+  px.ptemp = px.ptemp + ones(101,4608)*nanmean(results(:,6));
+end
 umbc_spectral_olr.planck = compute_olr(h,px);
 %umbc_spectral_olr.planck_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 umbc_spectral_olr.planck_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
@@ -40,8 +54,15 @@ eval(cdRRTMback);
 
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-px.stemp = px.stemp + results(:,6)';
-px.ptemp = px.ptemp + deltaT;
+if iLambda_UseGlobalSST == -1
+  %% need the final state
+  px.stemp = px.stemp + results(:,6)';
+  px.ptemp = px.ptemp + deltaT;
+else
+  %% need the final state
+  px.stemp = px.stemp + results(:,6)';
+  px.ptemp = px.ptemp + deltaT;
+end
 umbc_spectral_olr.lapse = compute_olr(h,px);   
 %umbc_spectral_olr.lapse_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 umbc_spectral_olr.lapse_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
@@ -51,7 +72,11 @@ px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
 %% px.gas_1 = px.gas_1 .* (1 + fracWV);
 fracJUNK = fracWV; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
-px.gas_1 = px.gas_1 .* (1 + fracJUNK);
+if iLambda_UseGlobalSST == -1
+  px.gas_1 = px.gas_1 .* (1 + fracJUNK);
+else
+  px.gas_1 = px.gas_1 .* (1 + fracJUNK);
+end
 umbc_spectral_olr.wv = compute_olr(h,px);
 %umbc_spectral_olr.wv_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 umbc_spectral_olr.wv_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
@@ -69,7 +94,11 @@ ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
 junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.planck(ix1,:) - umbc_spectral_olr.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.planck(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  junk = -junk./results(:,6)';
+else
+  junk = -junk/nanmean(results(:,6));
+end
 umbc_spectral_olr.feedback.planck = junk;
 
 %% note Eq 8b of Jevanjee paper shows we need to use 
@@ -79,19 +108,31 @@ umbc_spectral_olr.feedback.planck = junk;
 junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.lapse(ix1,:) - umbc_spectral_olr.planck(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.lapse(ix2,:) - umbc_spectral_olr.planck(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  junk = -junk./results(:,6)';
+else
+  junk = -junk/nanmean(results(:,6));
+end
 umbc_spectral_olr.feedback.lapse = junk;
 
 junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.wv(ix1,:) - umbc_spectral_olr.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.wv(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  junk = -junk./results(:,6)';
+else
+  junk = -junk/nanmean(results(:,6));
+end
 umbc_spectral_olr.feedback.wv = junk;
 
 junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.skt(ix1,:) - umbc_spectral_olr.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.skt(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  junk = -junk./results(:,6)';
+else
+  junk = -junk/nanmean(results(:,6));
+end
 umbc_spectral_olr.feedback.skt = junk;
 
 figure(71); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.planck); caxis([-4 0]*1);  colormap(jet);  title('UMBC \lambda_{Planck}')

@@ -35,6 +35,8 @@ set_gather_savename_rates_AIRSL3_NWP_XMIP
 
 plays = load(savename,'plays'); plays = plays.plays;
 pavg  = load(savename,'pavg');  pavg = pavg.pavg;
+junk    = load(savename,'results');
+  resultsSST = junk.results(:,6);
 junk  = load(savename,'resultsWV');
   resultsWV = junk.resultsWV;
 junk  = load(savename,'resultsWVunc');
@@ -147,21 +149,27 @@ iLoad = 1;
   hTimeStep1 = era_prof.hnew_op;
   pTimeStep1 = era_prof.pnew_op;
 %% now see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/find_T_RH_trends.m
-h = hMean17years; p = pMean17years;
-h = hTimeStep1; p = pTimeStep1;
+h = hTimeStep1; p = pTimeStep1;      %% I been using this in eg /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/driver_gather_gridded_retrieval_results
+h = hMean17years; p = pMean17years;  %% I think I should use this
 
 pjunkN = p.plevs(1:100,:)-p.plevs(2:101,:);
 pjunkD = log(p.plevs(1:100,:)./p.plevs(2:101,:));
 pavgLAY = pjunkN./pjunkD;
 
 pert = p;
-pert.ptemp = pert.ptemp(1:100,:) + umbc_20_layertrends.ptemp;
-pert.gas_1 = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1);
-
+pert.ptemp(1:100,:) = pert.ptemp(1:100,:) + umbc_20_layertrends.ptemp(1:100,:);
+pert.gas_1(1:100,:) = pert.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1(1:100,:));
 [xRH0,xRH1km0,xcolwater0] = layeramt2RH(h,p);
 [xRHpert,xRH1kmpert,xcolwaterpert] = layeramt2RH(h,pert);
-
 umbc_20_layertrends.RH = xRHpert - xRH0;
+
+pertLLS = p;
+pertLLS.ptemp(1:95,:) = pertLLS.ptemp(1:95,:) + umbc_20_layertrends.ptemp(1:95,:);
+pertLLS.ptemp(96:100,:) = pertLLS.ptemp(96:100,:) + ones(5,1)*resultsSST';
+pertLLS.gas_1(1:100,:) = pertLLS.gas_1(1:100,:).*(1 + umbc_20_layertrends.gas_1(1:100,:));
+[xRH0,xRH1km0,xcolwater0] = layeramt2RH(h,p);
+[xRHpertLLS,xRH1kmpertLLS,xcolwaterpertLLS] = layeramt2RH(h,pertLLS);
+umbc_20_layertrends.RH = xRHpertLLS - xRH0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -212,6 +220,10 @@ umbc_geo_rates     = umbc_20_layertrends.RH;
 airsL3_geo_rates   = airsL3_100_layertrends.RH;
 climcaps_geo_rates = airsCLIMCAPSL3_100_layertrends.RH;
 
+boo = min(airsCLIMCAPSL3.Qlevs); boo = find(plays <= boo); climcaps_geo_rates(boo,:) = 0;
+boo = min(airsL3.Qlevs);         boo = find(plays <= boo); airsL3_geo_rates(boo,:) = 0;
+fprintf(1,'min AIRS WV Qlevs = %8.6f  min CLIMCAPS WV Qlev = %8.6f \n',min(airsL3.Qlevs),min(airsCLIMCAPSL3.Qlevs))
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear plotoptions;
@@ -222,6 +234,7 @@ plotoptions.str31 = 'CMIP6';   plotoptions.str32 = 'AMIP6';
 plotoptions.str41 = 'UMBC';    plotoptions.str42 = 'MLS L3';     
 plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
 plotoptions.yLinearOrLog = -1;
+%plotoptions.yLinearOrLog = +1;
 plotoptions.yReverseDir = +1;
 plotoptions.yLimits = [100 1000];
 
@@ -244,12 +257,26 @@ iFig = 26; figure(iFig); subplot(223); pcolor(rlat,plays,umbc_geo_ratesXY_unc); 
 iFig = 27; figure(iFig); clf
 subplot(221); zT = p.ptemp(1:100,:);                                                                     zT = squeeze(nanmean(reshape(zT,100,72,64),2));  pcolor(rlat,plays,zT); colormap jet; colorbar; title('T (K)'); caxis([200 300])
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); shading interp
-subplot(222); zWV = layers2ppmv(h,p,1:length(p.stemp),1); zWV(99,:) = zWV(98,:); zWV(100,:) = zWV(98,:); zWV = squeeze(nanmean(reshape(zWV,100,72,64),2));  pcolor(rlat,plays,zWV); colormap jet; colorbar; title('WV ppmv'); caxis([0 3e4])
+subplot(222); zWV = layers2ppmv(h,p,1:length(p.stemp),1); 
+  [mm,nn] = size(zWV);
+  for jj = mm+1:100
+    zWV(jj,:) = zWV(mm,:);
+    zWV(jj,:) = NaN;
+  end
+  zWV = squeeze(nanmean(reshape(zWV,100,72,64),2));  pcolor(rlat,plays,zWV); colormap jet; colorbar; title('WV ppmv'); caxis([0 3e4])
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); shading interp
 subplot(223); zRH = xRH0;                                                                                zRH = squeeze(nanmean(reshape(zRH,100,72,64),2));  pcolor(rlat,plays,zRH); colormap jet; colorbar; title('RH'); caxis([0 100])
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); shading interp
-subplot(224); zO3 = layers2ppmv(h,p,1:length(p.stemp),3); zO3(99,:) = zO3(98,:); zO3(100,:) = zO3(98,:); zO3 = squeeze(nanmean(reshape(zO3,100,72,64),2));  pcolor(rlat,plays,zO3); colormap jet; colorbar; title('O3 ppmv'); caxis([0 10])
+subplot(224); zO3 = layers2ppmv(h,p,1:length(p.stemp),3); 
+  [mm,nn] = size(zO3);
+  for jj = mm+1:100
+    zO3(jj,:) = zO3(mm,:);
+    zO3(jj,:) = NaN;
+  end  
+  zO3 = squeeze(nanmean(reshape(zO3,100,72,64),2));  pcolor(rlat,plays,zO3); colormap jet; colorbar; title('O3 ppmv'); caxis([0 10])
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([0.1 200]); shading interp
+
+ind_layer_rates
 
 if iSave > 0
   saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_RHrates' savestr '.mat rlat plays'];

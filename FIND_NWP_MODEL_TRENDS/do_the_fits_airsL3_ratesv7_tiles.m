@@ -33,6 +33,7 @@ for ii = 1 : 72
                                    days(zonk),rlat);
 
   else
+    %% wierdly, CLIMCAPS L3 does not have O3 so call RH twice, second time as a dummy
     xthestats       = do_profilerate_fit_WV_T_O3_RH_ST(squeeze(save64x72_Q(:,ii,:,zonk)),squeeze(save64x72_T(:,ii,:,zonk)),squeeze(save64x72_RH(:,ii,:,zonk)),squeeze(save64x72_RH(:,ii,:,zonk)),...
                                      squeeze(save64x72_stemp(:,ii,zonk)),squeeze(save64x72_RHSurf(:,ii,zonk)),squeeze(save64x72_TWetSurf(:,ii,zonk)),...
                                      days(zonk),rlat);

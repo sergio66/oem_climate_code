@@ -1,3 +1,8 @@
+% me thinks these are incorrect because have to perturb by global SST
+% redo_feedbacks_dERA5ST_dt
+% do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!!')
 disp('module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('  ')
@@ -7,6 +12,8 @@ disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!!')
 disp('module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('  ')
+
+iLambda_UseGlobalSST = +1;
 
 if ~exist('umbc_spectral_olr')
   compute_feedbacks_umbc_ecRad   ; pause(0.1)
@@ -21,15 +28,8 @@ if ~exist('airsL3_spectral_olr')
   end
   if junkx > 0
     disp('loading in flux calcs from earlier');
-    %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','airsL3_spectral_olr'); airsL3_spectral_olr = junk.airsL3_spectral_olr;
-    %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','era5_spectral_olr'); era5_spectral_olr = junk.era5_spectral_olr;
-    %junk = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5','cmip6_spectral_olr'); cmip6_spectral_olr = junk.cmip6_spectral_olr;
-
-    %savename1 = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat';      %% oops this is wrong
-    %savename2 = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat';  %% oops this is wrong
-
-    savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6
-    savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6
+    savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_AIRSL3_ERA5_CMIP6_save_globalSST.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6, globalSST
+    savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save_globalSST.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6, globalSST
 
     if ~exist('iJorC')
       iJorC = +1;  %% do Joel L3
@@ -84,9 +84,9 @@ if ~exist('airsL3_spectral_olr')
     clear nwp_spectral_trends_cmip6_era5_airsL3_umbc
     nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
   end
-  compute_feedbacks_airsL3_ecRad ; pause(0.1)
-  compute_feedbacks_era5_ecRad   ; pause(0.1)
-  compute_feedbacks_cmip6_ecRad  ; pause(0.1)
+  compute_feedbacks_airsL3_ecRadT ; pause(0.1)
+  compute_feedbacks_era5_ecRad    ; pause(0.1)
+  compute_feedbacks_cmip6_ecRad   ; pause(0.1)
 end
 
 ns0 = 500;
@@ -148,7 +148,7 @@ if junk > 0
   %%%% saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
   %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
 
-  feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '.mat'];
+  feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_globalSST_' strMODELS '.mat'];
   saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];
 
   fprintf(1,'saving to %s \n',feedbackname);

@@ -52,7 +52,8 @@ if length(iX) == 0
   iX = 0;
 end
 if iX > 0
-  do_feedbacks
+  %do_feedbacks
+  do_feedbacks_wrt_globalSST
 end
 
 %plot_HadSurf_trends_36x72

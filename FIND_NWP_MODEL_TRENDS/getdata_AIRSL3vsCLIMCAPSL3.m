@@ -108,13 +108,14 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 if iA == 1
   iT = 24;
   iW = 12;
+  %% pressure units already in mb, RH units already in percent
 else
   iT = 100;
   iW = 66;
   airsChoice.Tlevs = airsChoice.Tlevs/100;  %% Pa --> mb
   airsChoice.Qlevs = airsChoice.Qlevs/100;  %% Pa --> mb
-  airsChoice.thestats64x72.RHrate = airsChoice.thestats64x72.RHrate * 100; 
-  airsChoice.thestats64x72.RHSurfrate = airsChoice.thestats64x72.RHSurfrate * 100;
+  airsChoice.thestats64x72.RHrate = airsChoice.thestats64x72.RHrate * 100;           %% fraction --> percent
+  airsChoice.thestats64x72.RHSurfrate = airsChoice.thestats64x72.RHSurfrate * 100;   %% fraction --> percent
 end
 
 load llsmap5;

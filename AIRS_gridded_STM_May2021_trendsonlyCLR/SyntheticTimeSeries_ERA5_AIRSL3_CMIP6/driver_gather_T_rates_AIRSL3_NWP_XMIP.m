@@ -127,6 +127,7 @@ plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
 plotoptions.yLinearOrLog = -1;
 plotoptions.yReverseDir = +1;
 plotoptions.yLimits = [10 1000];
+plotoptions.yLimits = [1 1000];
 
 airsL3_geo_ratesXY   = squeeze(nanmean(reshape(airsL3_geo_rates,100,72,64),2));
 climcaps_geo_ratesXY = squeeze(nanmean(reshape(climcaps_geo_rates,100,72,64),2));
@@ -143,7 +144,9 @@ iFig = 22; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_rat
 iFig = 26; figure(iFig); subplot(221); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('T unc')
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
 
+ind_layer_rates
+
 if iSave > 0
-  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_Trates'  savestr '..mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
+  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_Trates'  savestr '.mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
   eval(saver);
 end

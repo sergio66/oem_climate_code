@@ -115,6 +115,10 @@ umbc_geo_rates_unc = umbc_20_layertrends.gas_1unc;
 airsL3_geo_rates   = airsL3_100_layertrends.gas_1;
 climcaps_geo_rates = airsCLIMCAPSL3_100_layertrends.gas_1;
 
+boo = min(airsCLIMCAPSL3.Qlevs); boo = find(plays <= boo); climcaps_geo_rates(boo,:) = 0;
+boo = min(airsL3.Qlevs);         boo = find(plays <= boo); airsL3_geo_rates(boo,:) = 0;
+fprintf(1,'min AIRS WV Qlevs = %8.6f  min CLIMCAPS WV Qlev = %8.6f \n',min(airsL3.Qlevs),min(airsCLIMCAPSL3.Qlevs))
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear plotoptions;
 plotoptions.cx = [-1 +1]*0.15/10; plotoptions.maintitle = 'dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
@@ -124,6 +128,7 @@ plotoptions.str31 = 'CMIP6';   plotoptions.str32 = 'AMIP6';
 plotoptions.str41 = 'UMBC';    plotoptions.str42 = 'MLS L3';     
 plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
 plotoptions.yLinearOrLog = -1;
+plotoptions.yLinearOrLog = +1;
 plotoptions.yReverseDir = +1;
 plotoptions.yLimits = [100 1000];
 
@@ -142,8 +147,10 @@ iFig = 23; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_rat
 iFig = 26; figure(iFig); subplot(222); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('WV frac unc')
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
 
+ind_layer_rates
+
 if iSave > 0
-  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_WVrates'  savestr '..mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
+  saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_WVrates'  savestr '.mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
   eval(saver)
 end
 

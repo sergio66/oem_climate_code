@@ -18,5 +18,6 @@ if junk > 0
     addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/
     [mmw0,lps0] = mmwater_rtp(h,p);
   end
-  do_feedbacks
+  %do_feedbacks
+  do_feedbacks_wrt_globalSST
 end
