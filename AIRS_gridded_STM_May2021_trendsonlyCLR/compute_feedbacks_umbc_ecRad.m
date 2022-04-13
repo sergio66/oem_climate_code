@@ -24,14 +24,16 @@ eval(cdRRTMback);
 %% trying a faster method see     jaja = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);    driver_run_ecRad_rtp_loop_over_profiles.m iMethod = -1
 %% scatter_coast(p.rlon,p.rlat,50,(umbc_spectral_olr.olr0_ecRad.clr-jaja.clr)./umbc_spectral_olr.olr0_ecRad.clr*100); colormap(usa2); caxis([-1 +1])
 %% scatter_coast(p.rlon,p.rlat,50,(umbc_spectral_olr.olr0_rrtm-jaja.clr)./umbc_spectral_olr.olr0_rrtm*100); colormap(usa2); caxis([-1 +1])
-%% eval(cdRRTMback);
+
+indSST    = results(:,6)';
+globalSST = nanmean(results(:,6));
 
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
 if iLambda_UseGlobalSST == -1
-  px.stemp = px.stemp + results(:,6)';
+  px.stemp = px.stemp + indSST;
 else
-  px.stemp = px.stemp + nanmean(results(:,6));
+  px.stemp = px.stemp + globalSST;
 end
 umbc_spectral_olr.skt = compute_olr(h,px);
 %umbc_spectral_olr.skt_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
@@ -41,11 +43,11 @@ eval(cdRRTMback);
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
 if iLambda_UseGlobalSST == -1
-  px.stemp = px.stemp + results(:,6)';
-  px.ptemp = px.ptemp + ones(101,1)*results(:,6)';
+  px.stemp = px.stemp + indSST;
+  px.ptemp = px.ptemp + ones(101,1)*indSST;
 else
-  px.stemp = px.stemp + nanmean(results(:,6));
-  px.ptemp = px.ptemp + ones(101,4608)*nanmean(results(:,6));
+  px.stemp = px.stemp + globalSST;
+  px.ptemp = px.ptemp + ones(101,4608)*globalSST;
 end
 umbc_spectral_olr.planck = compute_olr(h,px);
 %umbc_spectral_olr.planck_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
@@ -56,11 +58,11 @@ px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
 if iLambda_UseGlobalSST == -1
   %% need the final state
-  px.stemp = px.stemp + results(:,6)';
+  px.stemp = px.stemp + indSST;
   px.ptemp = px.ptemp + deltaT;
 else
   %% need the final state
-  px.stemp = px.stemp + results(:,6)';
+  px.stemp = px.stemp + indSST;
   px.ptemp = px.ptemp + deltaT;
 end
 umbc_spectral_olr.lapse = compute_olr(h,px);   
@@ -88,16 +90,16 @@ eval(cdRRTMback);
 ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
 
 %junk = pi/1000*sum(umbc_spectral_olr.planck - umbc_spectral_olr.olr0,1);
-%junk = -junk./results(:,6)';
+%junk = -junk./indSST;
 %umbc_spectral_olr.feedback.planck = junk;
 
 junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.planck(ix1,:) - umbc_spectral_olr.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.planck(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
 if iLambda_UseGlobalSST == -1
-  junk = -junk./results(:,6)';
+  junk = -junk./indSST;
 else
-  junk = -junk/nanmean(results(:,6));
+  junk = -junk/globalSST;
 end
 umbc_spectral_olr.feedback.planck = junk;
 
@@ -109,9 +111,9 @@ junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.lapse(ix1,:) - umbc_spectra
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.lapse(ix2,:) - umbc_spectral_olr.planck(ix2,:));
 junk = junk1 + junk2;
 if iLambda_UseGlobalSST == -1
-  junk = -junk./results(:,6)';
+  junk = -junk./indSST;
 else
-  junk = -junk/nanmean(results(:,6));
+  junk = -junk/globalSST;
 end
 umbc_spectral_olr.feedback.lapse = junk;
 
@@ -119,9 +121,9 @@ junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.wv(ix1,:) - umbc_spectral_o
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.wv(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
 if iLambda_UseGlobalSST == -1
-  junk = -junk./results(:,6)';
+  junk = -junk./indSST;
 else
-  junk = -junk/nanmean(results(:,6));
+  junk = -junk/globalSST;
 end
 umbc_spectral_olr.feedback.wv = junk;
 
@@ -129,9 +131,9 @@ junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.skt(ix1,:) - umbc_spectral_
 junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.skt(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
 if iLambda_UseGlobalSST == -1
-  junk = -junk./results(:,6)';
+  junk = -junk./indSST;
 else
-  junk = -junk/nanmean(results(:,6));
+  junk = -junk/globalSST;
 end
 umbc_spectral_olr.feedback.skt = junk;
 
@@ -141,27 +143,46 @@ figure(73); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.wv);     c
 figure(74); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.skt);    caxis([-2 0]*1);  colormap(jet);  title('UMBC \lambda_{Skt}')
 
 umbc_spectral_olr.feedback.planck_ecRad = umbc_spectral_olr.planck_ecRad.clr-umbc_spectral_olr.olr0_ecRad.clr; 
-  umbc_spectral_olr.feedback.planck_ecRad = -umbc_spectral_olr.feedback.planck_ecRad./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.planck_ecRad = -umbc_spectral_olr.feedback.planck_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.planck_ecRad = -umbc_spectral_olr.feedback.planck_ecRad/globalSST;
+end
 umbc_spectral_olr.feedback.lapse_ecRad = umbc_spectral_olr.lapse_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr;
-  umbc_spectral_olr.feedback.lapse_ecRad = -umbc_spectral_olr.feedback.lapse_ecRad./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.lapse_ecRad = -umbc_spectral_olr.feedback.lapse_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.lapse_ecRad = -umbc_spectral_olr.feedback.lapse_ecRad/globalSST;
+end
 umbc_spectral_olr.feedback.wv_ecRad = umbc_spectral_olr.wv_ecRad.clr-umbc_spectral_olr.olr0_ecRad.clr;
-  umbc_spectral_olr.feedback.wv_ecRad = -umbc_spectral_olr.feedback.wv_ecRad./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.wv_ecRad = -umbc_spectral_olr.feedback.wv_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.wv_ecRad = -umbc_spectral_olr.feedback.wv_ecRad/globalSST;
+end
 umbc_spectral_olr.feedback.skt_ecRad = umbc_spectral_olr.skt_ecRad.clr-umbc_spectral_olr.olr0_ecRad.clr;
-  umbc_spectral_olr.feedback.skt_ecRad = -umbc_spectral_olr.feedback.skt_ecRad./results(:,6)';
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.skt_ecRad = -umbc_spectral_olr.feedback.skt_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.skt_ecRad = -umbc_spectral_olr.feedback.skt_ecRad/globalSST;
+end
 
-figure(75); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.planck_ecRad); caxis([-4 0]*1.5);  colormap(jet);  title('UMBC \lambda_{Planck}')
-figure(76); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.lapse_ecRad);  caxis([-5 +5]*2); colormap(usa2); title('UMBC \lambda_{Lapse}')
-figure(77); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.wv_ecRad);     caxis([-2 +2]*2); colormap(usa2); title('UMBC \lambda_{WV}')
-figure(78); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.skt_ecRad);    caxis([-2 0]*1);  colormap(jet);  title('UMBC \lambda_{Skt}')
+figure(75); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.planck_ecRad); caxis([-4 0]*1.5); colormap(jet);  title('UMBC \lambda_{Planck}')
+figure(76); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.lapse_ecRad);  caxis([-5 +5]*2);  colormap(usa2); title('UMBC \lambda_{Lapse}')
+figure(77); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.wv_ecRad);     caxis([-2 +2]*2);  colormap(usa2); title('UMBC \lambda_{WV}')
+figure(78); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.skt_ecRad);    caxis([-2 0]*1);   colormap(jet);  title('UMBC \lambda_{Skt}')
+
+figure(75); colormap(colormap_soden_held_jclim2007); caxis([-4 -3])
+figure(77); colormap(colormap_soden_held_jclim2007); caxis([-1 +1])
 
 wonk = umbc_spectral_olr.feedback.planck_ecRad; wonk(wonk < -10) = NaN; wonk(wonk > 0) = NaN; 
-  ns = 500; aslmap(75,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]); colormap(jet);  caxis([-4 0]*1.5);  title('UMBC \lambda_{Planck}')
+  ns = 500; aslmap(75,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-4 0]*1.5);  title('UMBC \lambda_{Planck}')
 wonk = umbc_spectral_olr.feedback.lapse_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
   ns = 500; aslmap(76,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-5 5]*1);    title('UMBC \lambda_{Lapse}')
 wonk = umbc_spectral_olr.feedback.wv_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
-  ns = 500; aslmap(77,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);     colormap(usa2); caxis([-2 2]*1);    title('UMBC \lambda_{WV}')
+  ns = 500; aslmap(77,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-2 2]*1);    title('UMBC \lambda_{WV}')
 wonk = umbc_spectral_olr.feedback.skt_ecRad; wonk(wonk < -3) = NaN; wonk(wonk > +3) = NaN; 
-  ns = 500; aslmap(78,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);    colormap(jet);  caxis([-2 0]*1.5);  title('UMBC \lambda_{Skt}')
+  ns = 500; aslmap(78,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-2 0]*1.5);  title('UMBC \lambda_{Skt}')
 
 figure(75); colormap(colormap_soden_held_jclim2007); caxis([-6.5 -1])
 figure(76); colormap(colormap_soden_held_jclim2007); caxis([-2 +2])
@@ -171,7 +192,11 @@ figure(78); colormap(colormap_soden_held_jclim2007); caxis([-2 0])
 figure(75); colormap(colormap_soden_held_jclim2007); caxis([-4 -3])
 figure(77); colormap(colormap_soden_held_jclim2007); caxis([-1 +1])
 
-bad = find(abs(results(:,6)) < 1e-4);
+if iLambda_UseGlobalSST == -1
+  bad = find(abs(indSST) < 1e-4);
+else
+  bad = [];
+end
 junklat = reshape(p.rlat,72,64); junklat = mean(junklat,1);
 figure(79); clf
   junk = umbc_spectral_olr.feedback.planck_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);  junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'b','linewidth',2); hold on
@@ -191,4 +216,3 @@ figure(79); clf; scatter(mean(lps0.lapse1(80:97,:),1),junk,10,abs(p.rlat),'fille
 addpath /home/sergio/MATLABCODE/SHOWSTATS
 [n,nx,ny,nmean,nstd] = myhist2d(mean(lps0.lapse1(80:97,:),1),junk,0:0.25:10,-6:0.1:-3); errorbar(0:0.25:10,nmean,nstd); xlabel('Lower Trop Lapse Rate K/km'); ylabel('\lambda_{Planck}'); plotaxis2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-

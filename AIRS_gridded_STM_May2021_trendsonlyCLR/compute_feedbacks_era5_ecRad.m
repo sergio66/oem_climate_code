@@ -21,9 +21,20 @@ era5_spectral_olr.olr0 = compute_olr(h,px);
 era5_spectral_olr.olr0_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);                
 eval(cdRRTMback);
 
+%% trying a faster method see     jaja = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);    driver_run_ecRad_rtp_loop_over_profiles.m iMethod = -1
+%% scatter_coast(p.rlon,p.rlat,50,(era5_spectral_olr.olr0_ecRad.clr-jaja.clr)./era5_spectral_olr.olr0_ecRad.clr*100); colormap(usa2); caxis([-1 +1])
+%% scatter_coast(p.rlon,p.rlat,50,(era5_spectral_olr.olr0_rrtm-jaja.clr)./era5_spectral_olr.olr0_rrtm*100); colormap(usa2); caxis([-1 +1])
+
+indSST    = era5.trend_stemp;
+globalSST = nanmean(era5.trend_stemp);
+
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-px.stemp = px.stemp + era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  px.stemp = px.stemp + indSST;
+else
+  px.stemp = px.stemp + globalSST;
+end
 era5_spectral_olr.skt = compute_olr(h,px);
 %era5_spectral_olr.skt_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 era5_spectral_olr.skt_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);              
@@ -31,8 +42,13 @@ eval(cdRRTMback);
 
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-px.stemp = px.stemp + era5.trend_stemp;
-px.ptemp = px.ptemp + ones(101,1)*era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  px.stemp = px.stemp + indSST;
+  px.ptemp = px.ptemp + ones(101,1)*indSST;
+else
+  px.stemp = px.stemp + globalSST;
+  px.ptemp = px.ptemp + ones(101,4608)*globalSST;
+end
 era5_spectral_olr.planck = compute_olr(h,px);
 %era5_spectral_olr.planck_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 era5_spectral_olr.planck_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);              
@@ -40,8 +56,15 @@ eval(cdRRTMback);
 
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-px.stemp = px.stemp + era5.trend_stemp;
-px.ptemp(1:100,:) = px.ptemp(1:100,:) + era5.trend_ptemp(1:100,:);
+if iLambda_UseGlobalSST == -1
+  %% need the final state
+  px.stemp = px.stemp + indSST;
+  px.ptemp(1:100,:) = px.ptemp(1:100,:) + era5.trend_ptemp(1:100,:);
+else
+  %% need the final state
+  px.stemp = px.stemp + indSST;
+  px.ptemp(1:100,:) = px.ptemp(1:100,:) + era5.trend_ptemp(1:100,:);
+end
 era5_spectral_olr.lapse = compute_olr(h,px);   
 %era5_spectral_olr.lapse_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 era5_spectral_olr.lapse_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);              
@@ -52,8 +75,12 @@ eval(cdRRTMback);
 %px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + era5.trend_gas_1(1:100,:));
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-junk = era5.trend_gas_1(1:100,:); junk(isnan(junk)) = 1; 
-  px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + junk(1:100,:));
+fracJUNK = era5.trend_gas_1(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+if iLambda_UseGlobalSST == -1
+  px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + fracJUNK);
+else
+  px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + fracJUNK);
+end
 era5_spectral_olr.wv = compute_olr(h,px);
 %era5_spectral_olr.wv_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 era5_spectral_olr.wv_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);              
@@ -65,13 +92,17 @@ eval(cdRRTMback);
 ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
 
 %junk = pi/1000*sum(era5_spectral_olr.planck - era5_spectral_olr.olr0,1);
-%junk = -junk./era5.trend_stemp;
+%junk = -junk./indSST;
 %era5_spectral_olr.feedback.planck = junk;
 
 junk1 = pi/1000*trapz(h.vchan(ix1),era5_spectral_olr.planck(ix1,:) - era5_spectral_olr.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),era5_spectral_olr.planck(ix2,:) - era5_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
 era5_spectral_olr.feedback.planck = junk;
 
 %% note Eq 8b of Jevanjee paper shows we need to use 
@@ -81,19 +112,31 @@ era5_spectral_olr.feedback.planck = junk;
 junk1 = pi/1000*trapz(h.vchan(ix1),era5_spectral_olr.lapse(ix1,:) - era5_spectral_olr.planck(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),era5_spectral_olr.lapse(ix2,:) - era5_spectral_olr.planck(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
 era5_spectral_olr.feedback.lapse = junk;
 
 junk1 = pi/1000*trapz(h.vchan(ix1),era5_spectral_olr.wv(ix1,:) - era5_spectral_olr.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),era5_spectral_olr.wv(ix2,:) - era5_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
 era5_spectral_olr.feedback.wv = junk;
 
 junk1 = pi/1000*trapz(h.vchan(ix1),era5_spectral_olr.skt(ix1,:) - era5_spectral_olr.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),era5_spectral_olr.skt(ix2,:) - era5_spectral_olr.olr0(ix2,:));
 junk = junk1 + junk2;
-junk = -junk./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
 era5_spectral_olr.feedback.skt = junk;
 
 figure(71); scatter_coast(p.rlon,p.rlat,50,era5_spectral_olr.feedback.planck); caxis([-4 0]*1);  colormap(jet);  title('ERA5 \lambda_{Planck}')
@@ -102,18 +145,41 @@ figure(73); scatter_coast(p.rlon,p.rlat,50,era5_spectral_olr.feedback.wv);     c
 figure(74); scatter_coast(p.rlon,p.rlat,50,era5_spectral_olr.feedback.skt);    caxis([-2 0]*1);  colormap(jet);  title('ERA5 \lambda_{Skt}')
 
 era5_spectral_olr.feedback.planck_ecRad = era5_spectral_olr.planck_ecRad.clr-era5_spectral_olr.olr0_ecRad.clr; 
-  era5_spectral_olr.feedback.planck_ecRad = -era5_spectral_olr.feedback.planck_ecRad./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  era5_spectral_olr.feedback.planck_ecRad = -era5_spectral_olr.feedback.planck_ecRad./indSST;
+else
+  era5_spectral_olr.feedback.planck_ecRad = -era5_spectral_olr.feedback.planck_ecRad/globalSST;
+end
 era5_spectral_olr.feedback.lapse_ecRad = era5_spectral_olr.lapse_ecRad.clr-era5_spectral_olr.planck_ecRad.clr;
-  era5_spectral_olr.feedback.lapse_ecRad = -era5_spectral_olr.feedback.lapse_ecRad./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  era5_spectral_olr.feedback.lapse_ecRad = -era5_spectral_olr.feedback.lapse_ecRad./indSST;
+else
+  era5_spectral_olr.feedback.lapse_ecRad = -era5_spectral_olr.feedback.lapse_ecRad/globalSST;
+end
 era5_spectral_olr.feedback.wv_ecRad = era5_spectral_olr.wv_ecRad.clr-era5_spectral_olr.olr0_ecRad.clr;
-  era5_spectral_olr.feedback.wv_ecRad = -era5_spectral_olr.feedback.wv_ecRad./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  era5_spectral_olr.feedback.wv_ecRad = -era5_spectral_olr.feedback.wv_ecRad./indSST;
+else
+  era5_spectral_olr.feedback.wv_ecRad = -era5_spectral_olr.feedback.wv_ecRad/globalSST;
+end
 era5_spectral_olr.feedback.skt_ecRad = era5_spectral_olr.skt_ecRad.clr-era5_spectral_olr.olr0_ecRad.clr;
-  era5_spectral_olr.feedback.skt_ecRad = -era5_spectral_olr.feedback.skt_ecRad./era5.trend_stemp;
+if iLambda_UseGlobalSST == -1
+  era5_spectral_olr.feedback.skt_ecRad = -era5_spectral_olr.feedback.skt_ecRad./indSST;
+else
+  era5_spectral_olr.feedback.skt_ecRad = -era5_spectral_olr.feedback.skt_ecRad/globalSST;
+end
 
 figure(75); scatter_coast(p.rlon,p.rlat,50,era5_spectral_olr.feedback.planck_ecRad); caxis([-4 0]*1.5);  colormap(jet);  title('ERA5 \lambda_{Planck}')
 figure(76); scatter_coast(p.rlon,p.rlat,50,era5_spectral_olr.feedback.lapse_ecRad);  caxis([-5 +5]*2); colormap(usa2); title('ERA5 \lambda_{Lapse}')
 figure(77); scatter_coast(p.rlon,p.rlat,50,era5_spectral_olr.feedback.wv_ecRad);     caxis([-2 +2]*2); colormap(usa2); title('ERA5 \lambda_{WV}')
 figure(78); scatter_coast(p.rlon,p.rlat,50,era5_spectral_olr.feedback.skt_ecRad);    caxis([-2 0]*1);  colormap(jet);  title('ERA5 \lambda_{Skt}')
+
+if iLambda_UseGlobalSST == -1
+  bad = find(abs(indSST) < 1e-4);
+else
+  bad = [];
+end
+junklat = reshape(p.rlat,72,64); junklat = mean(junklat,1);
 
 wonk = era5_spectral_olr.feedback.planck_ecRad; wonk(wonk < -10) = NaN; wonk(wonk > 0) = NaN; 
   ns = 500; aslmap(75,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]); colormap(jet);  caxis([-4 0]*1.5);  title('ERA5 \lambda_{Planck}')
@@ -132,7 +198,11 @@ figure(78); colormap(colormap_soden_held_jclim2007); caxis([-2 0])
 figure(75); colormap(colormap_soden_held_jclim2007); caxis([-4 -3])
 figure(77); colormap(colormap_soden_held_jclim2007); caxis([-1 +1])
 
-bad = find(abs(era5.trend_stemp) < 1e-4);
+if iLambda_UseGlobalSST == -1
+  bad = find(abs(indSST) < 1e-4);
+else
+  bad = [];
+end
 junklat = reshape(p.rlat,72,64); junklat = mean(junklat,1);
 figure(79); clf
   junk = era5_spectral_olr.feedback.planck_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);  junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'b','linewidth',2); hold on

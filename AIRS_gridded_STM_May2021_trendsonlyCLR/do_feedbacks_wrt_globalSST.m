@@ -84,7 +84,7 @@ if ~exist('airsL3_spectral_olr')
     clear nwp_spectral_trends_cmip6_era5_airsL3_umbc
     nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
   end
-  compute_feedbacks_airsL3_ecRadT ; pause(0.1)
+  compute_feedbacks_airsL3_ecRad  ; pause(0.1)
   compute_feedbacks_era5_ecRad    ; pause(0.1)
   compute_feedbacks_cmip6_ecRad   ; pause(0.1)
 end
@@ -143,10 +143,13 @@ do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
 junk = input('save the OLR feedbacks??? (-1/+1) : ');
 if junk > 0
-  %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
-  %%%% feedbackname = ['olr_feedbacks_' strMODELS '_save.mat'];
-  %%%% saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
-  %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
+  %{
+  %%%% this is how I made  olr_feedbacks_globalSST_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
+  feedbackname = ['olr_feedbacks_globalSST_' strMODELS '_save.mat'];
+  saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
+  saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
+  %%%% this is how I made  olr_feedbacks_globalSST_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
+  %}
 
   feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_globalSST_' strMODELS '.mat'];
   saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];

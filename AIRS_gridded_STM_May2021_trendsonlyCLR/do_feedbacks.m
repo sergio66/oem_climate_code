@@ -143,10 +143,12 @@ do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
 junk = input('save the OLR feedbacks??? (-1/+1) : ');
 if junk > 0
+  %{
   %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
-  %%%% feedbackname = ['olr_feedbacks_' strMODELS '_save.mat'];
-  %%%% saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
+  feedbackname = ['olr_feedbacks_' strMODELS '_save.mat'];
+  saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
   %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
+  %}
 
   feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '.mat'];
   saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];
