@@ -1,5 +1,0 @@
-% me thinks these are incorrect because have to perturb by global SST
-% redo_feedbacks_dERA5ST_dt
-% do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

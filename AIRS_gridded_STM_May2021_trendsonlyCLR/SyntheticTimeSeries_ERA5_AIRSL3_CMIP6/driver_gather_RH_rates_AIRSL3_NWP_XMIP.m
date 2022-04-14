@@ -2,8 +2,8 @@ addpath /asl/matlib/h4tools
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
 
 %% see driver_gather_spectralrates_AIRSL3_NWP_XMIP6.m

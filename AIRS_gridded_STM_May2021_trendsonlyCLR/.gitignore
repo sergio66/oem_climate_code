@@ -10,3 +10,10 @@ UNUSED*
 TESTOLR_KCARTA
 
 PDF*
+
+# symbolic links
+driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
+driver_check_WV_T_RH_AMIP6_geo_and_spectral_rates2.m
+driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
+driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2.m

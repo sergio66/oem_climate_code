@@ -1,7 +1,9 @@
+addpath /asl/matlib/h4tools
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
 
 %% see driver_gather_spectralrates_AIRSL3_NWP_XMIP6.m
@@ -146,6 +148,41 @@ iFig = 23; figure(iFig); clf; profile_plots_8tiledlayout(rlat,plays,era5_geo_rat
 
 iFig = 26; figure(iFig); subplot(222); pcolor(rlat,plays,umbc_geo_ratesXY_unc); colormap jet; colorbar; title('WV frac unc')
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim(plotoptions.yLimits); shading interp
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+[hMean17years,ha,pMean17years,pa]     = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+iLoad = 1;
+  iDorA = 1;
+  if iDorA > 0
+    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/DESC/era_tile_center_timestep_' num2str(iLoad,'%03d') '.mat'];
+  else
+    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/ASC/era_tile_center_timestep_' num2str(iLoad,'%03d') '.mat'];
+  end
+  era_prof = load(fin);
+  hTimeStep1 = era_prof.hnew_op;
+  pTimeStep1 = era_prof.pnew_op;
+%% now see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/find_T_RH_trends.m
+h = hTimeStep1; p = pTimeStep1;      %% I been using this in eg /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/driver_gather_gridded_retrieval_results
+h = hMean17years; p = pMean17years;  %% I think I should use this
+zWV = layers2ppmv(h,p,1:length(p.stemp),1); 
+  [mm,nn] = size(zWV);
+  for jj = mm+1:100
+    zWV(jj,:) = zWV(mm,:);
+    zWV(jj,:) = NaN;
+  end
+figure(30); clf
+  zWV0 = zWV; zWV = squeeze(nanmean(reshape(zWV,100,72,64),2));  pcolor(rlat,plays,zWV); colormap jet; colorbar; title('WV ppmv'); caxis([0 3e4])
+  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); shading interp
+
+iFig = 30; figure(iFig); clf; 
+plotoptions.cx = [-1 +1]*100; plotoptions.maintitle = 'dWV(ppmv)/dt'; plotoptions.plotcolors = llsmap5;
+profile_plots_8tiledlayout(rlat,plays,era5_geo_ratesXY.*zWV,merra2_geo_ratesXY.*zWV,airsL3_geo_ratesXY.*zWV,...
+                           climcaps_geo_ratesXY.*zWV,cmip6_geo_ratesXY.*zWV,amip6_geo_ratesXY.*zWV,umbc_geo_ratesXY.*zWV,mls_geo_ratesXY.*zWV,iFig,plotoptions);
+
+iFig = 31; figure(iFig); clf; 
+plotoptions.cx = [-1 +1]*4; plotoptions.maintitle = 'dWV(ppmv)/dt'; plotoptions.plotcolors = llsmap5;
+profile_plots_8tiledlayout(rlat,plays,abslog(era5_geo_ratesXY.*zWV),abslog(merra2_geo_ratesXY.*zWV),abslog(airsL3_geo_ratesXY.*zWV),...
+                                      abslog(climcaps_geo_ratesXY.*zWV),abslog(cmip6_geo_ratesXY.*zWV),abslog(amip6_geo_ratesXY.*zWV),abslog(umbc_geo_ratesXY.*zWV),abslog(mls_geo_ratesXY.*zWV),iFig,plotoptions);
 
 ind_layer_rates
 
