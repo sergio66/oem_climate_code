@@ -72,36 +72,36 @@ if iSpectra == 1
 
   %% see plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
   for ii = 1 : 64
-    fname = ['SimulateTimeSeries/' iJorCstrSPECTRA '/' iJorCFstr num2str(ii,'%02i') '.mat'];
+    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iJorCstrSPECTRA '/' iJorCFstr num2str(ii,'%02i') '.mat'];
     junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
     junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
     ind = (ii-1)*72 + (1:72);
-    airsL3.spectraltrend(:,ind) = thesave;
+    airsL3.airsL3_spectral_rates(:,ind) = thesave;
   end
 
   %% see plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
   for ii = 1 : 64
-    fname = ['SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '.mat'];
+    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '.mat'];
     junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
     junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
     ind = (ii-1)*72 + (1:72);
-    era5.spectraltrend(:,ind) = thesave;
+    era5.era5_spectral_rates(:,ind) = thesave;
   end
 
   %% see plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
   for ii = 1 : 64
-    fname = ['SimulateTimeSeries/' iAorCstrSPECTRA '/' iAorCFstr num2str(ii,'%02i') '.mat'];
+    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iAorCstrSPECTRA '/' iAorCFstr num2str(ii,'%02i') '.mat'];
     junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
     junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
     ind = (ii-1)*72 + (1:72);
-    cmip6.spectraltrend(:,ind) = thesave;
+    cmip6.cmip6_spectral_rates(:,ind) = thesave;
   end
 
   airsL3.fchanx = fchanx;
   era5.fchanx = fchanx;
   cmip6.fchanx = fchanx;
 
-  figure(5); plot(fchanx,nanmean(airsL3.spectraltrend'),'b',fchanx,nanmean(era5.spectraltrend'),'r',fchanx,nanmean(cmip6.spectraltrend'),'k');
+  figure(5); plot(fchanx,nanmean(airsL3.airsL3_spectral_rates'),'b',fchanx,nanmean(era5.era5_spectral_rates'),'r',fchanx,nanmean(cmip6.cmip6_spectral_rates'),'k');
    xlim([640 1640]); ylim([-0.08 +0.04])
     plotaxis2;
    hl = legend(iJorCstrSPECTRA,iEorMstrSPECTRA,iAorCstrSPECTRA,'location','best','fontsize',8);

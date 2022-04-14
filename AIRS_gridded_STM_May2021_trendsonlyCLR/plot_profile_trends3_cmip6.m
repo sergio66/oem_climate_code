@@ -118,10 +118,27 @@ if length(junkk) == 0
   junkk = 1;
 end
 
+if junkk == -1
+  display(' ')
+  display('in plot_profile_trends3_cmip6.m --> make_profile_spectral_trends.m  we have iDoSpectralRates = -1 .. but you may have AIRSL3/ERA5/CMIP6 spectral model trends from the call to ../FIND_NWP_MODEL_TRENDS/driver_get_the_model_trends')
+  display('in plot_profile_trends3_cmip6.m --> make_profile_spectral_trends.m  we have iDoSpectralRates = -1 .. but you may have AIRSL3/ERA5/CMIP6 spectral model trends from the call to ../FIND_NWP_MODEL_TRENDS/driver_get_the_model_trends')
+  display('in plot_profile_trends3_cmip6.m --> make_profile_spectral_trends.m  we have iDoSpectralRates = -1 .. but you may have AIRSL3/ERA5/CMIP6 spectral model trends from the call to ../FIND_NWP_MODEL_TRENDS/driver_get_the_model_trends')
+  display(' ')
+end
+
 if junkk < 0
   iVersJac = 2021;
   disp('just changing AIRS L3 24/12 Tlevs/Qlevs to 100 layers .. or CLIMCAPS 100/66 Tlevs/Qlevs to 100 layers')
   nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
+  if isfield(era5,'era5_spectral_rates')
+    nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates = era5.era5_spectral_rates;
+  end
+  if isfield(cmip6,'cmip6_spectral_rates')
+    nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_spectral_rates = cmip6.cmip6_spectral_rates;
+  end
+  if isfield(airsL3,'airsL3_spectral_rates')
+    nwp_spectral_trends_airsL3_era5_airsL3_umbc.airsL3_spectral_rates = airsL3.airsL3_spectral_rates;
+  end
 elseif junkk > 0
   iVersJac = input('Enter jac version (2019) = 2002/2019 ERAI or (2021) = 2002/2021 ERA5 default : ');
   if length(iVersJac) == 0
@@ -141,6 +158,15 @@ elseif junkk > 0
       end
 
       nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,+1);
+      if isfield(era5,'era5_spectral_rates')
+        nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates = era5.era5_spectral_rates;
+      end
+      if isfield(cmip6,'cmip6_spectral_rates')
+        nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_spectral_rates = cmip6.cmip6_spectral_rates;
+      end
+      if isfield(airsL3,'airsL3_spectral_rates')
+        nwp_spectral_trends_airsL3_era5_airsL3_umbc.airsL3_spectral_rates = airsL3.airsL3_spectral_rates;
+      end
 
       figure(1); plot(f,nanmean(sartaERA5trend'),f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates')); xlim([640 1640]); hl = legend('from SARTA trends','from jac x dX/dt','location','best');
       figure(1); lll = 1 : 4608; plot(f,sartaERA5trend(:,lll)-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates(:,lll));

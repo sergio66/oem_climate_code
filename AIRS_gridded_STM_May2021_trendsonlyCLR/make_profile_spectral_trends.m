@@ -28,6 +28,18 @@ elseif nargin == 14
   iDoSpectralRates = +1; %% compute (sum(jac x dX/dt)
 end
 
+if (isfield(era,'era_spectral_rates') | isfield(era5,'era5_spectral_rates') | isfield(airsL3,'airsL3_spectral_rates')) & iDoSpectralRates == +1
+  disp('in plot_profile_trends3_cmip6.m -> make_profile_spectral_trends.m  we have iDoSpectralRates = +1 but input era/era5/airsL3 already have spectral rates .. sp set iDoSpectralRates = -1')
+end
+
+if iDoSpectralRates == -1
+  display(' ')
+  display('in plot_profile_trends3_cmip6.m -> make_profile_spectral_trends.m  we have iDoSpectralRates = -1 .. but you may have AIRSL3/ERA5/CMIP6 spectral model trends from the call to ../FIND_NWP_MODEL_TRENDS/driver_get_the_model_trends')
+  display('in plot_profile_trends3_cmip6.m -> make_profile_spectral_trends.m  we have iDoSpectralRates = -1 .. but you may have AIRSL3/ERA5/CMIP6 spectral model trends from the call to ../FIND_NWP_MODEL_TRENDS/driver_get_the_model_trends')
+  display('in plot_profile_trends3_cmip6.m -> make_profile_spectral_trends.m  we have iDoSpectralRates = -1 .. but you may have AIRSL3/ERA5/CMIP6 spectral model trends from the call to ../FIND_NWP_MODEL_TRENDS/driver_get_the_model_trends')
+  display(' ')
+end
+
 umbc_spectral_rates     = zeros(2645,4608);
 era_spectral_rates      = zeros(2645,4608);
 era5_spectral_rates     = zeros(2645,4608);
