@@ -27,9 +27,10 @@ if ~exist('airsL3_spectral_olr')
     junkx = 1;
   end
   if junkx > 0
+
     disp('loading in flux calcs from earlier');
-    savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_AIRSL3_ERA5_CMIP6_save_globalSST.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6, globalSST
-    savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save_globalSST.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6, globalSST
+    savename1 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_globalSST_AIRSL3_ERA5_CMIP6_save.mat';     %% this is base lambda for AIRSL3_ERA5_CMIP6, globalSST
+    savename2 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/olr_feedbacks_globalSST_CLIMCAPS_MERRA2_AMIP6_save.mat'; %% this is base lambda for CLIMCAPS_MERRA2_AMIP6, globalSST
 
     if ~exist('iJorC')
       iJorC = +1;  %% do Joel L3
@@ -158,3 +159,8 @@ if junk > 0
   eval(saver);
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
+disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
+disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
