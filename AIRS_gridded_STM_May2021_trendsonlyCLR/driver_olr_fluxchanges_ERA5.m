@@ -11,12 +11,14 @@ if length(iClearMem) == 0
 end
 if iClearMem > 0
   clear all
+  iClearMem = 1;
   load('llsmap5');
 end
 
 if ~exist('results')
   disp('WARNING : using saved results,resultsWV,resultsT')
   savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithMLSL3_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_globalSSTfeedback.mat';
+  savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat';
 
   fprintf(1,'savename = %s \n',savename);
   load(savename);  
@@ -45,45 +47,55 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% compute OLR
 
-clear umbcOLR_spectral_olr
+clear era5_OLR_spectral_olr
+
+fracWV = era5.trend_gas_1; fracWV(101,:) = 0;
+fracO3 = era5.trend_gas_3; fracO3(101,:) = 0;
+deltaT = era5.trend_ptemp; deltaT(101,:) = 0;
+results(:,6) = era5.trend_stemp;
+
+fracWVunc = era5.trend_gas_1_err; fracWVunc(101,:) = 0;
+fracO3unc = era5.trend_gas_3_err; fracO3unc(101,:) = 0;
+deltaTunc = era5.trend_ptemp_err; deltaTunc(101,:) = 0;
+resultsunc(:,6) = era5.trend_stemp_err;
 
 if iClearMem > 0
   px = p;
-  umbcOLR_spectral_olr.olr0       = compute_olr(h,px);
-  umbcOLR_spectral_olr.olr0_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);    
+  era5_OLR_spectral_olr.olr0       = compute_olr(h,px);
+  era5_OLR_spectral_olr.olr0_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);    
         
   px = p;
   fracJUNK = fracWV; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
   px.gas_1 = px.gas_1 .* (1 + fracJUNK);
-  umbcOLR_spectral_olr.wv = compute_olr(h,px);
-  umbcOLR_spectral_olr.wv_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-  figure(1); plot(h.vchan,nanmean(umbcOLR_spectral_olr.olr0 - umbcOLR_spectral_olr.wv,2)); title('water vapor change')
-  figure(2); plot(px.rlat,umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.wv_ecRad.clr); title('water vapor change')
+  era5_OLR_spectral_olr.wv = compute_olr(h,px);
+  era5_OLR_spectral_olr.wv_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+  figure(1); plot(h.vchan,nanmean(era5_OLR_spectral_olr.olr0 - era5_OLR_spectral_olr.wv,2)); title('water vapor change')
+  figure(2); plot(px.rlat,era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.wv_ecRad.clr); title('water vapor change')
 
 elseif iClearMem < 0
-  umbcOLR_spectral_olr.olr0       = umbc_spectral_olr.olr0;
-  umbcOLR_spectral_olr.olr0_ecRad = umbc_spectral_olr.olr0_ecRad;
+  era5_OLR_spectral_olr.olr0       = era5_spectral_olr.olr0;
+  era5_OLR_spectral_olr.olr0_ecRad = era5_spectral_olr.olr0_ecRad;
 
-  umbcOLR_spectral_olr.wv         = umbc_spectral_olr.wv;
-  umbcOLR_spectral_olr.olr0_ecRad = umbc_spectral_olr.wv_ecRad;
+  era5_OLR_spectral_olr.wv         = era5_spectral_olr.wv;
+  era5_OLR_spectral_olr.olr0_ecRad = era5_spectral_olr.wv_ecRad;
 end
 
 %% these all need to be freshly brewed
 px = p;
 px.gas_2 = px.gas_2*(1+2.2/400);
 px.gas_6 = px.gas_6*(1+5/1860);
-umbcOLR_spectral_olr.tracegas       = compute_olr(h,px);
-umbcOLR_spectral_olr.tracegas_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1); 
-figure(1); plot(h.vchan,nanmean(umbcOLR_spectral_olr.olr0 - umbcOLR_spectral_olr.tracegas,2)); title('tracegas change')
-figure(2); plot(px.rlat,umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.tracegas_ecRad.clr); title('tracegas change')
+era5_OLR_spectral_olr.tracegas       = compute_olr(h,px);
+era5_OLR_spectral_olr.tracegas_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1); 
+figure(1); plot(h.vchan,nanmean(era5_OLR_spectral_olr.olr0 - era5_OLR_spectral_olr.tracegas,2)); title('tracegas change')
+figure(2); plot(px.rlat,era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.tracegas_ecRad.clr); title('tracegas change')
 
 px = p;
 fracJUNK = fracO3; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
 px.gas_3 = px.gas_3 .* (1 + fracJUNK);
-umbcOLR_spectral_olr.o3 = compute_olr(h,px);
-umbcOLR_spectral_olr.o3_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-figure(1); plot(h.vchan,nanmean(umbcOLR_spectral_olr.olr0 - umbcOLR_spectral_olr.o3,2)); title('Ozone change')
-figure(2); plot(px.rlat,umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.o3_ecRad.clr); title('Ozone change')
+era5_OLR_spectral_olr.o3 = compute_olr(h,px);
+era5_OLR_spectral_olr.o3_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+figure(1); plot(h.vchan,nanmean(era5_OLR_spectral_olr.olr0 - era5_OLR_spectral_olr.o3,2)); title('Ozone change')
+figure(2); plot(px.rlat,era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.o3_ecRad.clr); title('Ozone change')
 
 %% remember for feedbacks this was part of lapse rate so SST was also perturbed in addition to T(z)
 %% so redo it cleanly
@@ -92,11 +104,11 @@ plays101 = plays; plays101(101) = plays(100)+25;
 figure(3); clf; pcolor(rlat,plays101,squeeze(nanmean(reshape(deltaTx,101,72,64),2))); colorbar; set(gca,'ydir','reverse'); colormap(llsmap5); caxis([-1 +1]*0.125); shading interp; set(gca,'yscale','log'); ylim([1 1000])
 px = p;
 px.ptemp = px.ptemp + deltaTx;
-umbcOLR_spectral_olr.ptemp = compute_olr(h,px);   
-umbcOLR_spectral_olr.ptemp_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-figure(1); plot(h.vchan,nanmean(umbcOLR_spectral_olr.olr0 - umbcOLR_spectral_olr.ptemp,2)); title('T(z) change')
-figure(2); plot(px.rlat,umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.ptemp_ecRad.clr); title('T(z) change')
-dfluxT = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.ptemp_ecRad.clr; dfluxT(abs(dfluxT) > 2) = NaN;
+era5_OLR_spectral_olr.ptemp = compute_olr(h,px);   
+era5_OLR_spectral_olr.ptemp_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+figure(1); plot(h.vchan,nanmean(era5_OLR_spectral_olr.olr0 - era5_OLR_spectral_olr.ptemp,2)); title('T(z) change')
+figure(2); plot(px.rlat,era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.ptemp_ecRad.clr); title('T(z) change')
+dfluxT = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.ptemp_ecRad.clr; dfluxT(abs(dfluxT) > 2) = NaN;
 figure(2); plot(px.rlat,dfluxT)
 
 %% remember for feedbacks SST used global SST
@@ -104,10 +116,10 @@ figure(2); plot(px.rlat,dfluxT)
 px = p;
 indSST    = results(:,6)';
 px.stemp = px.stemp + indSST;
-umbcOLR_spectral_olr.skt = compute_olr(h,px);   
-umbcOLR_spectral_olr.skt_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-figure(1); plot(h.vchan,nanmean(umbcOLR_spectral_olr.olr0 - umbcOLR_spectral_olr.skt,2)); title('SST change')
-figure(2); plot(px.rlat,umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.skt_ecRad.clr); title('SST change')
+era5_OLR_spectral_olr.skt = compute_olr(h,px);   
+era5_OLR_spectral_olr.skt_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+figure(1); plot(h.vchan,nanmean(era5_OLR_spectral_olr.olr0 - era5_OLR_spectral_olr.skt,2)); title('SST change')
+figure(2); plot(px.rlat,era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.skt_ecRad.clr); title('SST change')
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -127,10 +139,10 @@ px.gas_1 = px.gas_1 .* (1 + fracJUNK);
 fracJUNK = fracO3; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
 px.gas_3 = px.gas_3 .* (1 + fracJUNK);
 
-umbcOLR_spectral_olr.ALL = compute_olr(h,px);
-umbcOLR_spectral_olr.ALL_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-figure(1); plot(h.vchan,nanmean(umbcOLR_spectral_olr.olr0 - umbcOLR_spectral_olr.ALL,2)); title('ALL change')
-figure(2); plot(px.rlat,umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.ALL_ecRad.clr); title('ALL change')
+era5_OLR_spectral_olr.ALL = compute_olr(h,px);
+era5_OLR_spectral_olr.ALL_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+figure(1); plot(h.vchan,nanmean(era5_OLR_spectral_olr.olr0 - era5_OLR_spectral_olr.ALL,2)); title('ALL change')
+figure(2); plot(px.rlat,era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.ALL_ecRad.clr); title('ALL change')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -150,20 +162,20 @@ px.gas_1 = px.gas_1 .* (1 + fracJUNK);
 fracJUNK = fracO3 + sign(fracO3).*fracO3unc; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
 px.gas_3 = px.gas_3 .* (1 + fracJUNK);
 
-umbcOLR_spectral_olr.ALLunc = compute_olr(h,px);
-umbcOLR_spectral_olr.ALLunc_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-figure(1); plot(h.vchan,nanmean(umbcOLR_spectral_olr.olr0 - umbcOLR_spectral_olr.ALLunc,2)); title('ALLunc change')
-figure(2); plot(px.rlat,umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.ALLunc_ecRad.clr); title('ALLunc change')
+era5_OLR_spectral_olr.ALLunc = compute_olr(h,px);
+era5_OLR_spectral_olr.ALLunc_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+figure(1); plot(h.vchan,nanmean(era5_OLR_spectral_olr.olr0 - era5_OLR_spectral_olr.ALLunc,2)); title('ALLunc change')
+figure(2); plot(px.rlat,era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.ALLunc_ecRad.clr); title('ALLunc change')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-olr_delta_tracegas      = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.tracegas_ecRad.clr;
-olr_delta_wv            = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.wv_ecRad.clr;
-olr_delta_o3            = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.o3_ecRad.clr;
-olr_delta_skt           = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.skt_ecRad.clr;
-olr_delta_ptemp         = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.ptemp_ecRad.clr;
-olr_delta_ALL           = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.ALL_ecRad.clr;
-olr_delta_ALLunc        = umbcOLR_spectral_olr.olr0_ecRad.clr - umbcOLR_spectral_olr.ALLunc_ecRad.clr;
+olr_delta_tracegas      = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.tracegas_ecRad.clr;
+olr_delta_wv            = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.wv_ecRad.clr;
+olr_delta_o3            = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.o3_ecRad.clr;
+olr_delta_skt           = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.skt_ecRad.clr;
+olr_delta_ptemp         = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.ptemp_ecRad.clr;
+olr_delta_ALL           = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.ALL_ecRad.clr;
+olr_delta_ALLunc        = era5_OLR_spectral_olr.olr0_ecRad.clr - era5_OLR_spectral_olr.ALLunc_ecRad.clr;
 
 plot(rlat,nanmean(reshape(olr_delta_tracegas,72,64),1))
 
@@ -181,8 +193,13 @@ plot(rlat,nanmean(reshape(olr_delta_skt,72,64),1)*iNumYears,'g',rlat,nanmean(res
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% now load in CERES
-ceres_fname = '/asl/s1/sergio/CERES_OLR_15year/CERES_EBAF-TOA_Ed4.1_Subset_200209-202108.nc';
-ceres = load_ceres_data(ceres_fname);
+ceres_fnameS = '/asl/s1/sergio/CERES_OLR_15year/CERES_EBAF-TOA_Ed4.1_Subset_200209-202108.nc';  %% what I brought
+ceresS = load_ceres_data(ceres_fnameS,+1);
+
+ceres_fnameR = '/asl/s1/sergio/CERES_OLR_15year/CERES_EBAF_Ed4.1_Subset_200209-202108.nc';      %% what Ryan suggests
+ceresR = load_ceres_data(ceres_fnameR,-1);
+
+ceres = ceresR;
 
 addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies
@@ -265,13 +282,13 @@ iNumYears = 19;
 plot(rlat,nanmean(reshape(olr_delta_skt,72,64),1)*iNumYears,'g',rlat,nanmean(reshape(olr_delta_ptemp,72,64),1)*iNumYears,'r',rlat,nanmean(reshape(olr_delta_wv,72,64),1)*iNumYears,'c',...
      rlat,nanmean(reshape(olr_delta_tracegas,72,64),1)*iNumYears,'m',rlat,nanmean(reshape(olr_delta_o3,72,64),1)*iNumYears,'k',rlat,nanmean(reshape(olr_delta_ALL,72,64),1)*iNumYears,'yx-','linewidth',2)
   plotaxis2; hl = legend('SKT','T(z)','WV(z)','CO2/CH4','O3','ALL','location','best','fontsize',8);
-  title('UMBC FORCING = ORIG-NEW'); ylabel('W/m2'); xlabel('Latitude');
+  title('ERA5 FORCING = ORIG-NEW'); ylabel('W/m2'); xlabel('Latitude');
 
 figure(2); clf
 iNumYears = 19;
 plot(rlat,-nanmean(reshape(olr_delta_ALL,72,64),1)*iNumYears,'yo-',ceres.lat,trend_ceres_lw*iNumYears,'c--',ceres.lat,trend_ceres_lw_clr*iNumYears,'b',...
      rlat,nanmean(airsChoice.thestats64x72_other.olrrate,1)*iNumYears,'m--',rlat,nanmean(airsChoice.thestats64x72_other.clrolrrate,1)*iNumYears,'r','linewidth',2)
-  plotaxis2; hl = legend('UMBC','CERES cld','CERES clr','AIRS L3 cld','AIRS L3 clr','location','best','fontsize',8);
+  plotaxis2; hl = legend('ERA5','CERES cld','CERES clr','AIRS L3 cld','AIRS L3 clr','location','best','fontsize',8);
   title('\delta Flux = Final-Orig'); ylabel('W/m2'); xlabel('Latitude');
 
 figure(3); clf; plot(ceres.lat,trend_ceres_lw*iNumYears,'c--',ceres.lat,trend_ceres_lw_clr*iNumYears,'b',ceres.lat,trend_ceres_sw*iNumYears,'m--',ceres.lat,trend_ceres_sw_clr*iNumYears,'r','linewidth',2)
@@ -291,7 +308,7 @@ figure(5); clf;
   hold on; errorbar(rlat,nanmean(airsChoice.thestats64x72_other.olrrate,1)*iNumYears,airs_unc64*iNumYears,'color','m','linewidth',2);
   hold on; errorbar(rlat,nanmean(airsChoice.thestats64x72_other.clrolrrate,1)*iNumYears,airsclr_unc64*iNumYears,'color','r','linewidth',2);
   hold off  
-  plotaxis2; hl = legend('UMBC','CERES cld','CERES clr','AIRS L3 cld','AIRS L3 clr','location','best','fontsize',8);
+  plotaxis2; hl = legend('ERA5','CERES cld','CERES clr','AIRS L3 cld','AIRS L3 clr','location','best','fontsize',8);
   title('\delta Flux = Final-Orig'); ylabel('W/m2'); xlabel('Latitude');
 
 figure(6); clf;
@@ -299,7 +316,7 @@ figure(6); clf;
   hold on; errorbar(ceres.lat,trend_ceres_lw*iNumYears,trend_ceres_lw_err*iNumYears,'color','c','linewidth',2);
   hold on; errorbar(ceres.lat,trend_ceres_lw_clr*iNumYears,trend_ceres_lw_clr_err*iNumYears,'color','b','linewidth',2);
   hold off  
-  plotaxis2; hl = legend('UMBC','CERES cld','CERES clr','location','best','fontsize',8);
+  plotaxis2; hl = legend('ERA5','CERES cld','CERES clr','location','best','fontsize',8);
   title('\delta Flux = Final-Orig'); ylabel('W/m2'); xlabel('Latitude');
 %% figure(6); aslprint('fluxOLR_witherrorbars.pdf')
 
@@ -308,7 +325,7 @@ figure(7); clf;
   hold on; plot(ceres.lat,trend_ceres_lw*iNumYears,'c','linewidth',2);
   hold on; plot(ceres.lat,trend_ceres_lw_clr*iNumYears,'b','linewidth',2);
   hold off  
-  plotaxis2; hl = legend('UMBC','CERES cld','CERES clr','location','best','fontsize',8);
+  plotaxis2; hl = legend('ERA5','CERES cld','CERES clr','location','best','fontsize',8);
   title('\delta Flux = Final-Orig'); ylabel('W/m2'); xlabel('Latitude');
 %% figure(7); aslprint('fluxOLR.pdf')
 
@@ -331,26 +348,26 @@ airsL3_trends.airsL3_clr     = nanmean(airsChoice.thestats64x72_other.clrolrrate
 airsL3_trends.airsL3_unc     = airs_unc64;
 airsL3_trends.airsL3_clr_unc = airsclr_unc64;
 
-umbc_trends.rlat         = rlat;
-umbc_trends.umbc_all     = -nanmean(reshape(olr_delta_ALL,72,64),1);
-umbc_trends.umbc_all_err = olr_unc64;
-umbc_trends.umbc_skt     = nanmean(reshape(olr_delta_skt,72,64),1);
-umbc_trends.umbc_ptemp   = nanmean(reshape(olr_delta_ptemp,72,64),1);
-umbc_trends.umbc_wv      = nanmean(reshape(olr_delta_wv,72,64),1);
-umbc_trends.umbc_o3      = nanmean(reshape(olr_delta_o3,72,64),1);
-umbc_trends.umbc_co2_ch4 = nanmean(reshape(olr_delta_tracegas,72,64),1);
+era5_trends.rlat         = rlat;
+era5_trends.era5_all     = -nanmean(reshape(olr_delta_ALL,72,64),1);
+era5_trends.era5_all_err = olr_unc64;
+era5_trends.era5_skt     = nanmean(reshape(olr_delta_skt,72,64),1);
+era5_trends.era5_ptemp   = nanmean(reshape(olr_delta_ptemp,72,64),1);
+era5_trends.era5_wv      = nanmean(reshape(olr_delta_wv,72,64),1);
+era5_trends.era5_o3      = nanmean(reshape(olr_delta_o3,72,64),1);
+era5_trends.era5_co2_ch4 = nanmean(reshape(olr_delta_tracegas,72,64),1);
 
 outflux.ceres_trends  = ceres_trends;
 outflux.airsL3_trends = airsL3_trends;
-outflux.umbc_trends   = umbc_trends;
+outflux.era5_trends   = era5_trends;
 
 fprintf(1,'CERES LW area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[sum(cos(ceres.lat*pi/180).*trend_ceres_lw'*iNumYears)   sum(cos(ceres.lat*pi/180).*trend_ceres_lw_clr'*iNumYears)]/sum(cos(ceres.lat*pi/180)))
 fprintf(1,'CERES SW area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[sum(cos(ceres.lat*pi/180).*trend_ceres_sw'*iNumYears)   sum(cos(ceres.lat*pi/180).*trend_ceres_sw_clr'*iNumYears)]/sum(cos(ceres.lat*pi/180)))
 fprintf(1,'AIRS L3  area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[sum(cos(rlat*pi/180).*airsL3_trends.airsL3'*iNumYears)  sum(cos(rlat*pi/180).*airsL3_trends.airsL3_clr'*iNumYears)]/sum(cos(rlat*pi/180)))
-fprintf(1,'UMBC     area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[NaN  sum(cos(rlat*pi/180).*umbc_trends.umbc_all'*iNumYears)]/sum(cos(rlat*pi/180)))
+fprintf(1,'ERA5     area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[NaN  sum(cos(rlat*pi/180).*era5_trends.era5_all'*iNumYears)]/sum(cos(rlat*pi/180)))
 
 %{
-saveOLRname = [savename(1:end-4) '_olr_ceres.mat'];
+saveOLRname = [savename(1:end-4) '_olr_era5_vs_ceres.mat'];
 saver = ['save ' saveOLRname ' outflux'];
 eval(saver);
 %}

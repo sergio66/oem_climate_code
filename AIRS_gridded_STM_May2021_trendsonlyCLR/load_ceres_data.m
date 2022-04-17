@@ -1,4 +1,4 @@
-function ceres = load_ceres_data(ceres_fname)
+function ceres = load_ceres_data(ceres_fname,iCorT)
 
 addpath /home/sergio/MATLABCODE
 %% see /asl/s1/sergio/CERES_OLR_15year/Readme
@@ -9,6 +9,38 @@ addpath /home/sergio/MATLABCODE
 %  CERES_EBAF-TOA_Ed4.1 Order
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ryan suggested this
+ 
+%% Interesting. I agree it often looks closer to the all-sky CERES but I
+%% can’t think of a reason why. CERES does have biases of ~ 5W/m2 but
+%% that’s for the raw values, not anomalies, where the errors are
+%% believed to be much much smaller (and in line with ocean heat content
+%% measurements) owing to the good stability of the instrument.  I wonder
+%% if this is just a coincidence that your calculations match up with the
+%% all-sky. Another possibility is it has to do with the clear-sky CERES
+%% fluxes you are using. As of CERES EBAF version 4.1 they have a
+%% traditional clear-sky product that uses clear-sky scenes, but they
+%% also have a new clear-filled product where the total region is
+%% clear-sky. I’m not sure how they do it, but it’s more lkike how AIRS
+%% OLR and climate models define clear-sky, where there are no clouds at
+%% all.  They must be doing some sort of correction using a radiative
+%% transfer model or something.
+%% 
+%% Anyways, it may be worth comparing with that clear-filled version if
+%% you aren’t already.  I’m not sure if it will improve things, but worth
+%% a shot I think. You can download it from the CERES EBAF product rather
+%% than the CERES EBAF TOA product on the CERES website. Here is a direct
+%% link. Just click the little down arrow next to “TOA Fluxes” to see the
+%% two clear-sky options.
+%% https://ceres-tool.larc.nasa.gov/ord-tool/jsp/EBAF41Selection.jsp
+
+%% https://ceres-tool.larc.nasa.gov/ord-tool/jsp/EBAF41Selection.jsp
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if nargin == 1
+  iCorT = 1;  %% just get down the clear filled region in a pixel .. rather than em[irically filed "Total" clear sky
+end
 
 a = read_netcdf_lls(ceres_fname)
 index = 1 : 228;
@@ -28,18 +60,34 @@ ceres.lat = a.lat;
   data = squeeze(mean(data,1));
   ceres.netdata = data;
 
-  data = a.toa_lw_clr_c_mon(:,:,index);
-  data = squeeze(mean(data,1));
-  ceres.lwdata_clr = data;
-
-  data = a.toa_sw_clr_c_mon(:,:,index);
-  data = squeeze(mean(data,1));
-  ceres.swdata_clr = data;
-
-  data = a.toa_net_clr_c_mon(:,:,index);
-  data = squeeze(mean(data,1));
-  ceres.netdata_clr = data;
-
+  if iCorT == 1
+    disp('getting _c_ == partially clear observed pixels') 
+    data = a.toa_lw_clr_c_mon(:,:,index);
+    data = squeeze(mean(data,1));
+    ceres.lwdata_clr = data;
+  
+    data = a.toa_sw_clr_c_mon(:,:,index);
+    data = squeeze(mean(data,1));
+    ceres.swdata_clr = data;
+  
+    data = a.toa_net_clr_c_mon(:,:,index);
+    data = squeeze(mean(data,1));
+    ceres.netdata_clr = data;
+   else
+    disp('getting _t_ == empirically/astonishingly totally clear observed pixels') 
+    data = a.toa_lw_clr_t_mon(:,:,index);
+    data = squeeze(mean(data,1));
+    ceres.lwdata_clr = data;
+  
+    data = a.toa_sw_clr_t_mon(:,:,index);
+    data = squeeze(mean(data,1));
+    ceres.swdata_clr = data;
+  
+    data = a.toa_net_clr_t_mon(:,:,index);
+    data = squeeze(mean(data,1));
+    ceres.netdata_clr = data;
+   end
+  
 %  data = a.solar_mon(:,:,index);
 %  data = squeeze(mean(data,1));
 %  ceres.solardata = data;
