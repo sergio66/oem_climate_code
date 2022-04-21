@@ -2,7 +2,8 @@ function ch = find_the_oem_channels(f,lenrates,settings_numchan,settings_chan_LW
 
 %iChSet = 1; %% till  August 20, 2019
 %iChSet = 2; %% after August 20, 2019, uses CFC11/CFC12 chans
-%iChSet = 3; %% after August 20, 2019, does not use CFC11 chans
+%iChSet = 3; %% after August 20, 2019, does not use CFC11 chans  STROW PRISTINE SET AMT 2019
+%iChSet = 4; %% new set + Tonga (high alt)
 
 if nargin == 4
   iChSet = 1;
@@ -86,7 +87,7 @@ if settings_chan_LW_SW ~= -2
     ch = [ch; addCFC11_weakWV'];
     ch = setdiff(ch,rmBadChan);
   
-  elseif iChSet == 3
+  elseif iChSet == 3 | iChSet == 4
     %% after August 21, 2019
     %% see Channel_changes_for_anomaly_fits.txt
     disp('find_the_oem_channels.m iChSet == 3 (new chans w/o CFC)')
@@ -111,6 +112,12 @@ if settings_chan_LW_SW ~= -2
     rmCFC11 = [[600:680] [1189:1280]];
     ch = setdiff(ch,rmCFC11);  
   
+    if iChSet == 4
+      load('iaTongaChans.mat');
+      disp('loading in Tonga high alt chans')
+      ch = union(ch,iaTongaChans);
+    end
+
   else
     iChSet
     error('iChSet = 1,2,3 only')

@@ -48,15 +48,15 @@ end
 
 clear merra2_OLR_spectral_olr
 
-fracWV = merra2.trend_gas_1; fracWV(101,:) = 0;
-fracO3 = merra2.trend_gas_3; fracO3(101,:) = 0;
-deltaT = merra2.trend_ptemp; deltaT(101,:) = 0;
-results(:,6) = merra2.trend_stemp;
+fracWV = era5.trend_gas_1; fracWV(101,:) = 0;
+fracO3 = era5.trend_gas_3; fracO3(101,:) = 0;
+deltaT = era5.trend_ptemp; deltaT(101,:) = 0;
+results(:,6) = era5.trend_stemp;
 
-fracWVunc = merra2.trend_gas_1_err; fracWVunc(101,:) = 0;
-fracO3unc = merra2.trend_gas_3_err; fracO3unc(101,:) = 0;
-deltaTunc = merra2.trend_ptemp_err; deltaTunc(101,:) = 0;
-resultsunc(:,6) = merra2.trend_stemp_err;
+fracWVunc = era5.trend_gas_1_err; fracWVunc(101,:) = 0;
+fracO3unc = era5.trend_gas_3_err; fracO3unc(101,:) = 0;
+deltaTunc = era5.trend_ptemp_err; deltaTunc(101,:) = 0;
+resultsunc(:,6) = era5.trend_stemp_err;
 
 if iClearMem > 0
   px = p;
@@ -366,7 +366,58 @@ fprintf(1,'AIRS L3  area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n
 fprintf(1,'MERRA2     area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[NaN  sum(cos(rlat*pi/180).*merra2_trends.merra2_all'*iNumYears)]/sum(cos(rlat*pi/180)))
 
 %{
-saveOLRname = [savename(1:end-4) '_olr_merra2_vs_ceres.mat'];
+saveOLRname = [savename(1:end-4) '_olr_ceres_MEERA2.mat'];
 saver = ['save ' saveOLRname ' outflux'];
 eval(saver);
 %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat
+load latB64.mat
+rlat65 = latB2; rlon73 = -180 : 5 : +180;
+rlon = -180 : 5 : +180;  rlat = latB2;
+rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+[Y,X] = meshgrid(rlat,rlon);
+X = X; Y = Y;
+
+addpath /asl/matlib/maps
+figure(8); clf;  aslmap(8 ,rlat65,rlon73,-iNumYears*smoothn((reshape(olr_delta_tracegas,72,64)'),ns),[-90 +90],[-180 +180]);    colormap(llsmap5);  caxis([-2 2]*1.5);  title('MERRA2 OLR_{TraceGas}')
+figure(9); clf;  aslmap(9 ,rlat65,rlon73,-iNumYears*smoothn((reshape(olr_delta_wv,72,64)'),ns),[-90 +90],[-180 +180]);          colormap(llsmap5);  caxis([-2 2]*1.5);  title('MERRA2 OLR_{Wv}')
+figure(10); clf; aslmap(10,rlat65,rlon73,-iNumYears*smoothn((reshape(olr_delta_o3,72,64)'),ns),[-90 +90],[-180 +180]);          colormap(llsmap5);  caxis([-2 2]*1.5);  title('MERRA2 OLR_{O3}')
+figure(11); clf; aslmap(11,rlat65,rlon73,-iNumYears*smoothn((reshape(olr_delta_skt,72,64)'),ns),[-90 +90],[-180 +180]);         colormap(llsmap5);  caxis([-2 2]*1.5);  title('MERRA2 OLR_{Skt}')
+figure(12); clf; aslmap(12,rlat65,rlon73,-iNumYears*smoothn((reshape(olr_delta_ptemp,72,64)'),ns),[-90 +90],[-180 +180]);       colormap(llsmap5);  caxis([-2 2]*1.5);  title('MERRA2 OLR_{Ptemp}')
+figure(13); clf; aslmap(13,rlat65,rlon73,-iNumYears*smoothn((reshape(olr_delta_ALL,72,64)'),ns),[-90 +90],[-180 +180]);         colormap(llsmap5);  caxis([-2 2]*1.5);  title('MERRA2 OLR_{ALL}')
+
+ceresRlatlon = load_ceres_data_latlon(ceres_fnameR,-1);
+for ii = 1:360/5
+  for jj = 1:180/5
+    indii = (1:5) + (ii-1)*5;
+    indjj = (1:5) + (jj-1)*5;
+    data = ceresRlatlon.lwdata_clr(indii,indjj,:);
+    data = nanmean(squeeze(nanmean(data,1)),1);
+    boo = find(isfinite(data));
+    if length(boo) > 20
+      [B, stats] = Math_tsfit_lin_robust(dayOFtime(boo),data(boo),4);
+      trend_grid_ceres_lw(ii,jj) = B(2);  
+      trend_grid_ceres_lw_err(ii,jj) = stats.se(2);
+    else
+      trend_grid_ceres_lw(ii,jj) = NaN;
+      trend_grid_ceres_lw_err(ii,jj) = NaN;
+    end
+  end
+end   
+rlatCERES = ceresRlatlon.lat; 
+rlonCERES = ceresRlatlon.lon; 
+clear rxlonCERES rxlatCERES
+for ii = 1:360/5
+  indii = (1:5) + (ii-1)*5;
+  rxlonCERES(ii) = mean(rlonCERES(indii));
+end
+for jj = 1:180/5
+  indjj = (1:5) + (jj-1)*5;
+  rxlatCERES(jj) = mean(rlatCERES(indjj));
+end
+rxlonCERES = [rxlonCERES rxlonCERES(end) + mean(diff(rxlonCERES))] - mean(diff(rxlonCERES))/2;
+rxlatCERES = [rxlatCERES rxlatCERES(end) + mean(diff(rxlatCERES))] - mean(diff(rxlatCERES))/2;
+figure(14); clf; aslmap(14,double(rxlatCERES),double(rxlonCERES),iNumYears*smoothn(double(trend_grid_ceres_lw'),ns),[-90 +90],[-180 +180]);    colormap(llsmap5);  caxis([-2 2]*1.5);  title('CERES OLR_{ALL}')

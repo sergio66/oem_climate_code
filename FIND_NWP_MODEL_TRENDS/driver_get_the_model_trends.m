@@ -62,7 +62,7 @@ strMODELS = [iJorCstr '_' iEorMstr '_' iAorCstr];
 [airsL3,era5,cmip6] = driverchoose_AIRSvsNWPvsXMIP6(iJorC,iEorM,iAorC);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iSpectra = input('get spectral rates???? (-1/+1 default) : ');
+iSpectra = input('  now get model/L3 spectral rates???? (-1/+1 default) : ');
 if length(iSpectra) == 0
   iSpectra = +1;
 end

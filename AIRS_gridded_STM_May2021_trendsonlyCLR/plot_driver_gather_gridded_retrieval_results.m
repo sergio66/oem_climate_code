@@ -246,6 +246,7 @@ gather_gridded_retrieval_results_plots
 find_T_RH_trends
 find_O3_trends
 
+%{
 %% OLR trends
 fluxX = load('../FIND_NWP_MODEL_TRENDS/olr_PERTv1.mat');
 flux0 = load('../FIND_NWP_MODEL_TRENDS/olr_CLEAR_UNPERT.mat');
@@ -253,4 +254,5 @@ figure(27); simplemap(Y(:),X(:),(fluxX.p2x.olrclr'-flux0.p2x.olrclr').*maskLF',5
 aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn((reshape(fluxX.p2x.olrclr,72,64)'),1), [-90 +90],[-180 +180]);
 aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn((reshape(fluxX.p2x.olrclr-flux0.p2x.olrclr,72,64)'),1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt clrOLR W/m2/yr'); 
 caxis([-0.5 +0.5])
+%}
 

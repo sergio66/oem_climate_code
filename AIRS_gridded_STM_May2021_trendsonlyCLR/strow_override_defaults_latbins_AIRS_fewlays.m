@@ -415,6 +415,7 @@ lenrates = length(driver.rateset.rates);
 iChSet = 2; %% new chans
 iChSet = 1; %% old chans (default)
 iChSet = 3; %% new chans, but no CFC11
+iChSet = 4; %% new set + Tonga (high alt)
 iChSet = topts.iChSet;
 
 ch = find_the_oem_channels(f,lenrates,settings.numchan,settings.chan_LW_SW,iChSet);

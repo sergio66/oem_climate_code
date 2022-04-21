@@ -99,7 +99,6 @@ for iInd = iInd0 : iIndE
   iQuantile = 04;  %% quite cloudy (hopefully)
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
   iQuantile = 16;  %% hottest, for AIRS STM
-  iQuantile = 08;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.25 - 0.50
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -143,6 +142,13 @@ for iInd = iInd0 : iIndE
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
+
+  iChSet = topts.iChSet;
+  iChSet = 2; %% new chans
+  iChSet = 1; %% old chans (default)
+  iChSet = 3; %% new chans, but no CFC11   STROW PRISTIBNE SET, AMT 2019
+  iChSet = 4; %% new set + Tonga (high alt)
+  topts.iChSet = iChSet;
 
   %% iNorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
