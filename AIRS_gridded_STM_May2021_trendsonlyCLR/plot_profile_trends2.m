@@ -1,12 +1,12 @@
 iFig = 50;
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(fracWV(1:100,mask),2),plays,'linewidth',2);         ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
-                                     subplot(122); semilogy(1+nanstd(fracWV(1:100,mask),[],2),plays,'linewidth',2);     ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaRH(1:100,mask),2),plays,'linewidth',2);        ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
-                                     subplot(122); semilogy(nanstd(deltaRH(1:100,mask),[],2),plays,'linewidth',2);      ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaT(1:100,mask),2),plays,'linewidth',2);         ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
-                                     subplot(122); semilogy(nanstd(deltaT(1:100,mask),[],2),plays,'linewidth',2);       ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaO3(1:97,mask),2),plays(1:97),'linewidth',2);   ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
-                                     subplot(122); semilogy(nanstd(deltaO3(1:97,mask),[],2),plays(1:97),'linewidth',2); ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom100.*fracWV(1:100,mask),2),plays,'linewidth',2);         ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
+                                     subplot(122); semilogy(1+nanstd(nan_bottom100.*fracWV(1:100,mask),[],2),plays,'linewidth',2);     ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom100.*deltaRH(1:100,mask),2),plays,'linewidth',2);        ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
+                                     subplot(122); semilogy(nanstd(nan_bottom100.*deltaRH(1:100,mask),[],2),plays,'linewidth',2);      ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom100.*deltaT(1:100,mask),2),plays,'linewidth',2);         ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
+                                     subplot(122); semilogy(nanstd(nan_bottom100.*deltaT(1:100,mask),[],2),plays,'linewidth',2);       ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom097.*deltaO3(1:97,mask),2),plays(1:97),'linewidth',2);   ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+                                     subplot(122); semilogy(nanstd(nan_bottom097.*deltaO3(1:97,mask),[],2),plays(1:97),'linewidth',2); ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 
 if exist('airsL3')
   iFig = 50;
@@ -41,20 +41,20 @@ if exist('cmip6')
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = maskLFmatr'; end
 
   junk = cmip6.trend_gas_1; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
-                                   subplot(122); hold on; semilogy(1+nanstd(junk,[],2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
+                                   subplot(122); hold on; semilogy(1+nanstd(nan_bottom100.*junk,[],2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
 
   junk = cmip6.trend_RH; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
-                                   subplot(122); hold on; semilogy(nanstd(junk,[],2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
+                                   subplot(122); hold on; semilogy(nanstd(nan_bottom100.*junk,[],2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
 
   junk = cmip6.trend_ptemp; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
-                                   subplot(122); hold on; semilogy(nanstd(junk,[],2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
+                                   subplot(122); hold on; semilogy(nanstd(nan_bottom100.*junk,[],2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
 
   junk = cmip6.trend_gas_3; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
-                                   subplot(122); hold on; semilogy(nanstd(junk,[],2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+                                   subplot(122); hold on; semilogy(nanstd(nan_bottom100.*junk,[],2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 end
 
 if exist('era5')
@@ -64,20 +64,20 @@ if exist('era5')
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = maskLFmatr'; end
 
   junk = era5.trend_gas_1; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
-                                   subplot(122); hold on; semilogy(1+nanstd(junk,[],2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
+                                   subplot(122); hold on; semilogy(1+nanstd(nan_bottom100.*junk,[],2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
 
   junk = era5.trend_RH; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
-                                   subplot(122); hold on; semilogy(nanstd(junk,[],2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
+                                   subplot(122); hold on; semilogy(nanstd(nan_bottom100.*junk,[],2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
 
   junk = era5.trend_ptemp; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
-                                   subplot(122); hold on; semilogy(nanstd(junk,[],2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
+                                   subplot(122); hold on; semilogy(nanstd(nan_bottom100.*junk,[],2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
 
   junk = era5.trend_gas_3; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
-                                   subplot(122); hold on; semilogy(nanstd(junk,[],2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+                                   subplot(122); hold on; semilogy(nanstd(nan_bottom100.*junk,[],2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 end
 
 iFig = 50;
@@ -91,9 +91,9 @@ iFig = iFig+1; figure(iFig); subplot(121); hold on; plotaxis2; hl = legend('UMBC
                              subplot(122); hold on; plotaxis2; hl = legend('UMBC','AIRSL3','CMIP6','ERA5','location','best','fontsize',8); hold off; xlim([0 1]*0.04)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : [default = +1] ');
+junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : [default = -1] ');
 if length(junk) == 0
-  junk = 1;
+  junk = -1;
 end
 if junk > 0
   iVersJac = input('Enter jac version (2019) = 2002/2019 ERAI or (2021) = 2002/2021 ERA5 default : ');
@@ -115,10 +115,10 @@ if junk > 0
 
       nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac);
 
-      figure(1); plot(f,nanmean(sartaERA5trend'),f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates')); xlim([640 1640]); hl = legend('from SARTA trends','from jac x dX/dt','location','best');
+      figure(1); plot(f,nanmean(nan_bottom100.*sartaERA5trend'),f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates')); xlim([640 1640]); hl = legend('from SARTA trends','from jac x dX/dt','location','best');
       figure(1); lll = 1 : 4608; plot(f,sartaERA5trend(:,lll)-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates(:,lll));
-      figure(1); plot(f,nanmean(sartaERA5trend'-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'),f,nanstd(sartaERA5trend'-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'),...
-                      f,nanmean(sartaERA5trend'),'.-',f,nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'))
+      figure(1); plot(f,nanmean(nan_bottom100.*sartaERA5trend'-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'),f,nanstd(sartaERA5trend'-nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'),...
+                      f,nanmean(nan_bottom100.*sartaERA5trend'),'.-',f,nanmean(nan_bottom100.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_spectral_rates'))
 
 %{
 %% this is DA PLOT
@@ -156,7 +156,7 @@ plot(f,nanmean(rates(:,mask),2),...
       boo101   = maskLFmatr.*smoothn((reshape(lps0.trp_z/1000,72,64)'),1); 
       booScott = maskLFmatr.*smoothn((reshape(lps0.scott_trp_z/1000,72,64)'),1); 
         plot(rlat,nanmean(booHI,2),rlat,nanmean(boo101,2),rlat,nanmean(booScott,2),'linewidth',2); title('Tropopause Height'); hl = legend('201 levels','101 levels','Scott','location','best');
-      booT     = reshape(p.ptemp(1:97,:),97,72,64); booT = squeeze(nanmean(booT,2)); pcolor(ones(97,1)*rlat',p.palts(1:97,2000)*ones(1,64)/1000,booT); shading interp; colormap jet; colorbar; caxis([200 300])
+      booT     = reshape(nan_bottom097.*p.ptemp(1:97,:),97,72,64); booT = squeeze(nanmean(booT,2)); pcolor(ones(97,1)*rlat',p.palts(1:97,2000)*ones(1,64)/1000,booT); shading interp; colormap jet; colorbar; caxis([200 300])
         hold on; plot(rlat,nanmean(booHI,2),'kx-'); hold off; title('T(z,lat)'); ylim([0 30]); ylabel('Hgt(km)'); %set(gca,'yscale','log'); set(gca,'ydir','reverse'); axis([0 90 0 25])
       %% compare to Fig 1 of https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2011RG000355 by 
       %%  THE EXTRATROPICAL UPPER TROPOSPHERE AND LOWER STRATOSPHERE
@@ -262,18 +262,18 @@ figure(2); clf
 
 figure(3); clf
 figure(3); subplot(121);
-           semilogy(nanmean(compute_deltaRH.umbc.final(1:97,mask)'-compute_deltaRH.umbc.orig(1:97,mask)'),playsjunk,...
-                    nanmean(compute_deltaRH.airsL3.final(1:97,mask)'-compute_deltaRH.airsL3.orig(1:97,mask)'),playsjunk,...
-                    nanmean(compute_deltaRH.cmip6.final(1:97,mask)'-compute_deltaRH.cmip6.orig(1:97,mask)'),playsjunk,...
-                    nanmean(compute_deltaRH.era5.final(1:97,mask)'-compute_deltaRH.era5.orig(1:97,mask)'),playsjunk,...
+           semilogy(nanmean((nan_bottom097.*compute_deltaRH.umbc.final(1:97,mask))'-(nan_bottom097.*compute_deltaRH.umbc.orig(1:97,mask))'),playsjunk,...
+                    nanmean((nan_bottom097.*compute_deltaRH.airsL3.final(1:97,mask))'-(nan_bottom097.*compute_deltaRH.airsL3.orig(1:97,mask))'),playsjunk,...
+                    nanmean((nan_bottom097.*compute_deltaRH.cmip6.final(1:97,mask))'-(nan_bottom097.*compute_deltaRH.cmip6.orig(1:97,mask))'),playsjunk,...
+                    nanmean((nan_bottom097.*compute_deltaRH.era5.final(1:97,mask))'-(nan_bottom097.*compute_deltaRH.era5.orig(1:97,mask))'),playsjunk,...
                     'linewidth',2);
   plotaxis2; set(gca,'ydir','reverse'); ylim([10 1000])
   hl = legend('UMBC reconstruct','AIRS L3 reconstruct','CMIP6 reconstruct','ERA5 reconstruct','location','best','fontsize',8); xlabel('d(RH)/dt'); ylabel('p(mb)'); xlim([-0.5 +0.5]);
 figure(3); subplot(122);
-           semilogy(nanmean(deltaT(1:97,mask)'),playsjunk,...
-                    nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp(1:97,mask)'),playsjunk,...
-                    nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp(1:97,mask)'),playsjunk,...
-                    nanmean(nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp(1:97,mask)'),playsjunk,...
+           semilogy(nanmean((nan_bottom097.*deltaT(1:97,mask))'),playsjunk,...
+                    nanmean((nan_bottom097.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp(1:97,mask))'),playsjunk,...
+                    nanmean((nan_bottom097.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp(1:97,mask))'),playsjunk,...
+                    nanmean((nan_bottom097.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp(1:97,mask))'),playsjunk,...
                     'linewidth',2);
   plotaxis2; set(gca,'ydir','reverse'); ylim([10 1000])
   hl = legend('UMBC reconstruct','AIRS L3 reconstruct','CMIP6 reconstruct','ERA5 reconstruct','location','best','fontsize',8); xlabel('d(T)/dt'); ylabel('p(mb)'); xlim([-0.05 +0.05])
@@ -285,19 +285,29 @@ columnSST.airsL3 = ones(101,1)*reshape(airsL3.thestats64x72.stemprate,1,72*64);
 columnSST.cmip6  = ones(101,1)*cmip6.trend_stemp;
 columnSST.era5   = ones(101,1)*era5.trend_stemp;;
 
+figure(4)
+junk1A = nan_bottom097.*compute_deltaRH.umbc.final(1:97,mask); junk1B = nan_bottom097.*compute_deltaRH.umbc.orig(1:97,mask); 
+semilogy(nanmedian((compute_deltaRH.umbc.final(1:97,mask)'-compute_deltaRH.umbc.orig(1:97,mask)')./(columnSST.umbc(1:97,mask)')),playsjunk,'bx-',...
+         nanmedian( (compute_deltaRH.umbc.final(1:97,mask)-compute_deltaRH.umbc.orig(1:97,mask))./(columnSST.umbc(1:97,mask)),2),playsjunk,'r')
+semilogy(nanmedian((compute_deltaRH.umbc.final(1:97,mask)'-compute_deltaRH.umbc.orig(1:97,mask)')./(columnSST.umbc(1:97,mask)')),playsjunk,'bx-',...
+         nanmedian( (compute_deltaRH.umbc.final(1:97,mask)-compute_deltaRH.umbc.orig(1:97,mask))./(columnSST.umbc(1:97,mask)),2),playsjunk,'ro-',...
+         nanmedian( (nan_bottom097.*compute_deltaRH.umbc.final(1:97,mask)-nan_bottom097.*compute_deltaRH.umbc.orig(1:97,mask))./(nan_bottom097.*columnSST.umbc(1:97,mask)),2),playsjunk,'k')
+semilogy(nanmedian((compute_deltaRH.umbc.final(1:97,mask)'-compute_deltaRH.umbc.orig(1:97,mask)')./(columnSST.umbc(1:97,mask)'))' - ...
+ nanmedian( (nan_bottom097.*compute_deltaRH.umbc.final(1:97,mask)-nan_bottom097.*compute_deltaRH.umbc.orig(1:97,mask))./(nan_bottom097.*columnSST.umbc(1:97,mask)),2),playsjunk,'k')
+
 figure(4); subplot(121);
-           semilogy(nanmedian((compute_deltaRH.umbc.final(1:97,mask)'-compute_deltaRH.umbc.orig(1:97,mask)')./(columnSST.umbc(1:97,mask)')),playsjunk,...
-                    nanmedian((compute_deltaRH.airsL3.final(1:97,mask)'-compute_deltaRH.airsL3.orig(1:97,mask)')./(columnSST.airsL3(1:97,mask)')),playsjunk,...
-                    nanmedian((compute_deltaRH.cmip6.final(1:97,mask)'-compute_deltaRH.cmip6.orig(1:97,mask)')./(columnSST.cmip6(1:97,mask)')),playsjunk,...
-                    nanmedian((compute_deltaRH.era5.final(1:97,mask)'-compute_deltaRH.era5.orig(1:97,mask)')./(columnSST.era5(1:97,mask)')),playsjunk,...
+           semilogy(nanmedian((nan_bottom097.*compute_deltaRH.umbc.final(1:97,mask)  -nan_bottom097.*compute_deltaRH.umbc.orig(1:97,mask))  ./(nan_bottom097.*columnSST.umbc(1:97,mask)),2),playsjunk,...
+                    nanmedian((nan_bottom097.*compute_deltaRH.airsL3.final(1:97,mask)-nan_bottom097.*compute_deltaRH.airsL3.orig(1:97,mask))./(nan_bottom097.*columnSST.airsL3(1:97,mask)),2),playsjunk,...
+                    nanmedian((nan_bottom097.*compute_deltaRH.cmip6.final(1:97,mask) -nan_bottom097.*compute_deltaRH.cmip6.orig(1:97,mask)) ./(nan_bottom097.*columnSST.cmip6(1:97,mask)),2),playsjunk,...
+                    nanmedian((nan_bottom097.*compute_deltaRH.era5.final(1:97,mask)  -nan_bottom097.*compute_deltaRH.era5.orig(1:97,mask))  ./(nan_bottom097.*columnSST.era5(1:97,mask)),2),playsjunk,...
                     'linewidth',2);
   plotaxis2; set(gca,'ydir','reverse'); ylim([10 1000])
   hl = legend('UMBC reconstruct','AIRS L3 reconstruct','CMIP6 reconstruct','ERA5 reconstruct','location','best','fontsize',8); xlabel('d(RH)/dSKT'); ylabel('p(mb)'); xlim([-10 +10]);
 figure(4); subplot(122);
-           semilogy(nanmedian((deltaT(1:97,mask)')./(columnSST.umbc(1:97,mask)')),playsjunk,...
-                    nanmedian((nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp(1:97,mask)')./(columnSST.airsL3(1:97,mask)')),playsjunk,...
-                    nanmedian((nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp(1:97,mask)')./(columnSST.cmip6(1:97,mask)')),playsjunk,...
-                    nanmedian((nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp(1:97,mask)')./(columnSST.era5(1:97,mask)')),playsjunk,...
+           semilogy(nanmedian((nan_bottom097.*deltaT(1:97,mask))./(nan_bottom097.*columnSST.umbc(1:97,mask)),2),playsjunk,...
+                    nanmedian((nan_bottom097.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp(1:97,mask))./(nan_bottom097.*columnSST.airsL3(1:97,mask)),2),playsjunk,...
+                    nanmedian((nan_bottom097.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp(1:97,mask)) ./(nan_bottom097.*columnSST.cmip6(1:97,mask)),2),playsjunk,...
+                    nanmedian((nan_bottom097.*nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp(1:97,mask))  ./(nan_bottom097.*columnSST.era5(1:97,mask)),2),playsjunk,...
                     'linewidth',2);
   plotaxis2; set(gca,'ydir','reverse'); ylim([10 1000])
   hl = legend('UMBC reconstruct','AIRS L3 reconstruct','CMIP6 reconstruct','ERA5 reconstruct','location','best','fontsize',8); xlabel('d(T)/dSKT'); ylabel('p(mb)'); xlim([-2 +2])
@@ -310,18 +320,18 @@ oo3 = find(abs(cmip6.trend_stemp(mask)) > epsx);
 oo4 = find(abs(era5.trend_stemp(mask)) > epsx);
 
 figure(4); subplot(121);
-           semilogy(nanmean((compute_deltaRH.umbc.final(1:97,mask(oo1))'-compute_deltaRH.umbc.orig(1:97,mask(oo1))')./(columnSST.umbc(1:97,mask(oo1))')),playsjunk,...
-                    nanmean((compute_deltaRH.airsL3.final(1:97,mask(oo2))'-compute_deltaRH.airsL3.orig(1:97,mask(oo2))')./(columnSST.airsL3(1:97,mask(oo2))')),playsjunk,...
-                    nanmean((compute_deltaRH.cmip6.final(1:97,mask(oo3))'-compute_deltaRH.cmip6.orig(1:97,mask(oo3))')./(columnSST.cmip6(1:97,mask(oo3))')),playsjunk,...
-                    nanmean((compute_deltaRH.era5.final(1:97,mask(oo4))'-compute_deltaRH.era5.orig(1:97,mask(oo4))')./(columnSST.era5(1:97,mask(oo4))')),playsjunk,...
+           semilogy(nanmean((nan_bottom097(1:97,mask(oo1)).*compute_deltaRH.umbc.final(1:97,mask(oo1))  -nan_bottom097(1:97,mask(oo1)).*compute_deltaRH.umbc.orig(1:97,mask(oo1)))  ./(nan_bottom097(1:97,mask(oo1)).*columnSST.umbc(1:97,mask(oo1)))  ,2),playsjunk,...
+                    nanmean((nan_bottom097(1:97,mask(oo2)).*compute_deltaRH.airsL3.final(1:97,mask(oo2))-nan_bottom097(1:97,mask(oo2)).*compute_deltaRH.airsL3.orig(1:97,mask(oo2)))./(nan_bottom097(1:97,mask(oo2)).*columnSST.airsL3(1:97,mask(oo2))),2),playsjunk,...
+                    nanmean((nan_bottom097(1:97,mask(oo3)).*compute_deltaRH.cmip6.final(1:97,mask(oo3)) -nan_bottom097(1:97,mask(oo3)).*compute_deltaRH.cmip6.orig(1:97,mask(oo3))) ./(nan_bottom097(1:97,mask(oo3)).*columnSST.cmip6(1:97,mask(oo3))) ,2),playsjunk,...
+                    nanmean((nan_bottom097(1:97,mask(oo4)).*compute_deltaRH.era5.final(1:97,mask(oo4))  -nan_bottom097(1:97,mask(oo4)).*compute_deltaRH.era5.orig(1:97,mask(oo4)))  ./(nan_bottom097(1:97,mask(oo4)).*columnSST.era5(1:97,mask(oo4)))  ,2),playsjunk,...
                     'linewidth',2);
   plotaxis2; set(gca,'ydir','reverse'); ylim([10 1000])
   hl = legend('UMBC reconstruct','AIRS L3 reconstruct','CMIP6 reconstruct','ERA5 reconstruct','location','best','fontsize',8); xlabel('d(RH)/dSKT'); ylabel('p(mb)'); xlim([-10 +10]);
 figure(4); subplot(122);
-           semilogy(nanmean((deltaT(1:97,mask(oo1))')./(columnSST.umbc(1:97,mask(oo1))')),playsjunk,...
-                    nanmean((nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp(1:97,mask(oo2))')./(columnSST.airsL3(1:97,mask(oo2))')),playsjunk,...
-                    nanmean((nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp(1:97,mask(oo3))')./(columnSST.cmip6(1:97,mask(oo3))')),playsjunk,...
-                    nanmean((nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp(1:97,mask(oo4))')./(columnSST.era5(1:97,mask(oo4))')),playsjunk,...
+           semilogy(nanmean((nan_bottom097(1:97,mask(oo1)).*deltaT(1:97,mask(oo1)))./(nan_bottom097(1:97,mask(oo1)).*nan_bottom097(1:97,mask(oo1)).*columnSST.umbc(1:97,mask(oo1))),2),playsjunk,...
+                    nanmean((nan_bottom097(1:97,mask(oo2)).*nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp(1:97,mask(oo2)))./(nan_bottom097(1:97,mask(oo2)).*nan_bottom097(1:97,mask(oo2)).*columnSST.airsL3(1:97,mask(oo2))),2),playsjunk,...
+                    nanmean((nan_bottom097(1:97,mask(oo3)).*nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp(1:97,mask(oo3))) ./(nan_bottom097(1:97,mask(oo3)).*nan_bottom097(1:97,mask(oo3)).*columnSST.cmip6(1:97,mask(oo3))),2),playsjunk,...
+                    nanmean((nan_bottom097(1:97,mask(oo4)).*nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp(1:97,mask(oo4)))  ./(nan_bottom097(1:97,mask(oo4)).*nan_bottom097(1:97,mask(oo4)).*columnSST.era5(1:97,mask(oo4))),2),playsjunk,...
                     'linewidth',2);
   plotaxis2; set(gca,'ydir','reverse'); ylim([10 1000])
   hl = legend('UMBC reconstruct','AIRS L3 reconstruct','CMIP6 reconstruct','ERA5 reconstruct','location','best','fontsize',8); xlabel('d(T)/dSKT'); ylabel('p(mb)'); xlim([-2 +2])

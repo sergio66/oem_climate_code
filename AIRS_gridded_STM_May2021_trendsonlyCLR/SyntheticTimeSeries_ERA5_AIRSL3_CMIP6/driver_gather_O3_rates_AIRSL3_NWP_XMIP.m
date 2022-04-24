@@ -144,6 +144,10 @@ iFig = 26; figure(iFig); subplot(224); pcolor(rlat,plays,umbc_geo_ratesXY_unc); 
 
 ind_layer_rates
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+addpath /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/
+get_the_mean_profiles  %% this is if you want to change from fracWV or fracO3 to eg ppmv
+
 if iSave > 0
   saver = ['save FIGS/Figs_JPL_Apr2022/strow_jpl_Apr2022_O3rates'  savestr '.mat rlat plays era5_geo_ratesXY merra2_geo_ratesXY airsL3_geo_ratesXY climcaps_geo_ratesXY cmip6_geo_ratesXY amip6_geo_ratesXY umbc_geo_ratesXY mls_geo_ratesXY umbc_geo_ratesXY_unc'];
   eval(saver)

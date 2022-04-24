@@ -412,9 +412,9 @@ plot_driver_gather_gridded_retrieval_results
 
 %% then look at model data
 disp('if you really only want feedbacks then all you have to do is run "simple_look_at_other_model_data.m" which gets the model trends, then runs do_feedbacks');
-iX = input('do all the complicated stuff (default, +1) or just the simple stuff/feedbacks (-1) : ');
+iX = input('do all the complicated stuff (+1) or just the simple stuff/feedbacks (defaault, -1) : ');
 if length(iX) == 0
-  iX = 1;
+  iX = -1;
 end
 
 if iX == +1
@@ -425,29 +425,4 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('suggested final save names ...')
-if topts.set_era5_cmip6_airsL3 == 5
-  start_apriori_str = 'ERA5';
-elseif topts.set_era5_cmip6_airsL3 == 2
-  start_apriori_str = 'MERRA2';
-elseif topts.set_era5_cmip6_airsL3 == 1
-  start_apriori_str = 'ERA-I';
-elseif topts.set_era5_cmip6_airsL3 == 6
-  start_apriori_str = 'CMIP6';
-elseif topts.set_era5_cmip6_airsL3 == -6
-  start_apriori_str = 'AMIP6';
-elseif topts.set_era5_cmip6_airsL3 == 3
-  start_apriori_str = 'AIRSL3';
-elseif topts.set_era5_cmip6_airsL3 == -3
-  start_apriori_str = 'CLIMCAPS';
-elseif topts.set_era5_cmip6_airsL3 == 8
-  start_apriori_str = 'MLSL3';
-else
-  start_apriori_str = '0';
-end
-
-numretlayers_str = [num2str(topts.iNlays_retrieve) 'fatlayers'];
-
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_'         numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX1   %s \n',genericoutname);
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX3_'   numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX3   %s \n',genericoutname);
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX100 %s \n',genericoutname);
+savebigFATfile

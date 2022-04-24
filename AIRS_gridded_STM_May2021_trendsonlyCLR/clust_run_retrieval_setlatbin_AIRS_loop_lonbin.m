@@ -146,8 +146,8 @@ for iInd = iInd0 : iIndE
   iChSet = topts.iChSet;
   iChSet = 2; %% new chans
   iChSet = 1; %% old chans (default)
-  iChSet = 3; %% new chans, but no CFC11   STROW PRISTIBNE SET, AMT 2019
-  iChSet = 4; %% new set + Tonga (high alt)
+  iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019
+%  iChSet = 4; %% new set + Tonga (high alt)
   topts.iChSet = iChSet;
 
   %% iNorD > 0 ==> night

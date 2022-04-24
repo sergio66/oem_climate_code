@@ -1,12 +1,12 @@
 iFig = 50;
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(fracWV(1:100,mask),2),plays,'linewidth',2);          ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
-                                     subplot(122); semilogy(1+nanmean(fracWVunc(1:100,mask),2),plays,'linewidth',2);     ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaRH(1:100,mask),2),plays,'linewidth',2);         ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
-                                     subplot(122); semilogy(nanmean(abs(deltaRHunc(1:100,mask)),2),plays,'linewidth',2);      ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaT(1:100,mask),2),plays,'linewidth',2);          ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
-                                     subplot(122); semilogy(nanmean(deltaTunc(1:100,mask),2),plays,'linewidth',2);       ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
-iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(deltaO3(1:97,mask),2),plays(1:97),'linewidth',2);    ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
-                                     subplot(122); semilogy(nanmean(deltaO3unc(1:97,mask),2),plays(1:97),'linewidth',2); ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom100.*fracWV(1:100,mask),2),plays,'linewidth',2);          ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
+                                     subplot(122); semilogy(1+nanmean(nan_bottom100.*fracWVunc(1:100,mask),2),plays,'linewidth',2);     ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom100.*deltaRH(1:100,mask),2),plays,'linewidth',2);         ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
+                                     subplot(122); semilogy(nanmean(nan_bottom100.*abs(deltaRHunc(1:100,mask)),2),plays,'linewidth',2);      ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom100.*deltaT(1:100,mask),2),plays,'linewidth',2);          ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
+                                     subplot(122); semilogy(nanmean(nan_bottom100.*deltaTunc(1:100,mask),2),plays,'linewidth',2);       ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
+iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom097.*deltaO3(1:97,mask),2),plays(1:97),'linewidth',2);    ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+                                     subplot(122); semilogy(nanmean(nan_bottom097.*deltaO3unc(1:97,mask),2),plays(1:97),'linewidth',2); ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 
 if exist('airsL3')
   iFig = 50;
@@ -53,24 +53,24 @@ if exist('cmip6')
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = maskLFmatr'; end
 
   junk = cmip6.trend_gas_1; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
   junk = cmip6.trend_gas_1_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(1+nanmean(junk,2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
+                                   subplot(122); hold on; semilogy(1+nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
 
   junk = cmip6.trend_RH; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
   junk = cmip6.trend_RH_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
+                                   subplot(122); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
 
   junk = cmip6.trend_ptemp; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
   junk = cmip6.trend_ptemp_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
+                                   subplot(122); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
 
   junk = cmip6.trend_gas_3; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
   junk = cmip6.trend_gas_3_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+                                   subplot(122); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 end
 
 if exist('era5')
@@ -80,24 +80,24 @@ if exist('era5')
   boo = zeros(100,72,64); for ijunk = 1 : 100; boo(ijunk,:,:) = maskLFmatr'; end
 
   junk = era5.trend_gas_1; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
   junk = era5.trend_gas_1_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(1+nanmean(junk,2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
+                                   subplot(122); hold on; semilogy(1+nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);     hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
 
   junk = era5.trend_RH; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);        hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
   junk = era5.trend_RH_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(nanmean(junk,2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
+                                   subplot(122); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Qlevs,'linewidth',2);      hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
 
   junk = era5.trend_ptemp; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);         hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
   junk = era5.trend_ptemp_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
+                                   subplot(122); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);       hold off; ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
 
   junk = era5.trend_gas_3; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+  iFig = iFig + 1; figure(iFig);   subplot(121); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2);   hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
   junk = era5.trend_gas_3_err; junk = reshape(junk,100,72,64); junk = junk.*boo; junk = reshape(junk,100,72*64);
-                                   subplot(122); hold on; semilogy(nanmean(junk,2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+                                   subplot(122); hold on; semilogy(nanmean(nan_bottom100.*junk,2)',Tlevs,'linewidth',2); hold off; ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 end
 
 iFig = 50;
@@ -113,9 +113,9 @@ iFig = iFig+1; figure(iFig); subplot(121); hold on; plotaxis2; hl = legend('UMBC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp(' ')
 disp(' ')
-junkk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : [default = +1] ');
+junkk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : [default = -1] ');
 if length(junkk) == 0
-  junkk = 1;
+  junkk = -1;
 end
 
 if junkk == -1
@@ -209,7 +209,7 @@ plot(f,nanmean(rates(:,mask),2),...
       boo101   = maskLFmatr.*smoothn((reshape(lps0.trp_z/1000,72,64)'),1); 
       booScott = maskLFmatr.*smoothn((reshape(lps0.scott_trp_z/1000,72,64)'),1); 
         plot(rlat,nanmean(booHI,2),rlat,nanmean(boo101,2),rlat,nanmean(booScott,2),'linewidth',2); title('Tropopause Height'); hl = legend('201 levels','101 levels','Scott','location','best');
-      booT     = reshape(p.ptemp(1:97,:),97,72,64); booT = squeeze(nanmean(booT,2)); pcolor(ones(97,1)*rlat',p.palts(1:97,2000)*ones(1,64)/1000,booT); shading interp; colormap jet; colorbar; caxis([200 300])
+      booT     = reshape(nan_bottom097.*p.ptemp(1:97,:),97,72,64); booT = squeeze(nanmean(booT,2)); pcolor(ones(97,1)*rlat',p.palts(1:97,2000)*ones(1,64)/1000,booT); shading interp; colormap jet; colorbar; caxis([200 300])
         hold on; plot(rlat,nanmean(booHI,2),'kx-'); hold off; title('T(z,lat)'); ylim([0 30]); ylabel('Hgt(km)'); %set(gca,'yscale','log'); set(gca,'ydir','reverse'); axis([0 90 0 25])
       %% compare to Fig 1 of https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2011RG000355 by 
       %%  THE EXTRATROPICAL UPPER TROPOSPHERE AND LOWER STRATOSPHERE

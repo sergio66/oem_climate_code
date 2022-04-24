@@ -209,24 +209,14 @@ else
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%[h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019_palts.rtp');
-[hMean17years,ha,pMean17years,pa]     = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
-% see FIND_NWP_MODEL_TRENDS/driver_computeERA_16day_trends_desc_or_asc.m
-iLoad = 1; 
-  if iDorA > 0
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/DESC/era_tile_center_timestep_' num2str(iLoad,'%03d') '.mat'];
-  else
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/ASC/era_tile_center_timestep_' num2str(iLoad,'%03d') '.mat'];
-  end
-  era_prof = load(fin);
-  hTimeStep1 = era_prof.hnew_op;
-  pTimeStep1 = era_prof.pnew_op;
+get_the_mean_profiles
 
 if dataset == 3
   disp(' ')
   disp('Extremes, so augment stemp!!!')
-  h = hTimeStep1;
-  p = pTimeStep1;
+
+  %h = hTimeStep1;  p = pTimeStep1;
+
   gev = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/GEVresults.mat');
   scatter_coast(reshape(p.rlon,72,64)',reshape(p.rlat,72,64)',30,squeeze(gev.paramE16(:,:,3)));
   scatter_coast(reshape(p.rlon,72,64)',reshape(p.rlat,72,64)',30,squeeze(gev.paramE16(:,:,3)-gev.paramQ16(:,:,3))); caxis([-5 +5])
@@ -239,6 +229,8 @@ if dataset == 3
   pTimeStep1.stemp = pTimeStep1.stemp + junk';
   p.stemp = p.stemp + junk';
 end
+
+get_nan_bottom_layer
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 gather_gridded_retrieval_results_plots

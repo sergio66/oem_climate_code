@@ -16,7 +16,7 @@ fprintf(1,'models string = %s \n',strMODELS);
 
 if ~exist('airsL3_spectral_olr')
   junkx = input('load in airsL3, era5, cmip6 flux calcs from earlier (-1/+1 default) : ? ');
-  if length(junk) == 0
+  if length(junkx) == 0
     junkx = 1;
   end
   if junkx > 0

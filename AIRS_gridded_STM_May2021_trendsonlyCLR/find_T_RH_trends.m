@@ -1,7 +1,8 @@
 load('llsmap5');
 
-h = hMean17years; p = pMean17years;
-h = hTimeStep1; p = pTimeStep1;
+get_the_mean_profiles
+%h = hMean17years; p = pMean17years;
+%h = hTimeStep1; p = pTimeStep1;
 
 pjunkN = p.plevs(1:100,:)-p.plevs(2:101,:);
 pjunkD = log(p.plevs(1:100,:)./p.plevs(2:101,:));

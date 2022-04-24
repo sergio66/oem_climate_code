@@ -91,9 +91,9 @@ iFig = iFig+1; figure(iFig); subplot(121); hold on; plotaxis2; hl = legend('UMBC
                              subplot(122); hold on; plotaxis2; hl = legend('UMBC','AIRSL3','ERA','ERA5','location','best','fontsize',8); hold off; xlim([0 0.04])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : default(+1) ');
+junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : default(-1) ');
 if length(junk) == 0
-  junk = 1;
+  junk = -1;
 end
 if junk > 0
   if ~exist('nwp_spectral_trends_era_era5_airsL3_umbc')

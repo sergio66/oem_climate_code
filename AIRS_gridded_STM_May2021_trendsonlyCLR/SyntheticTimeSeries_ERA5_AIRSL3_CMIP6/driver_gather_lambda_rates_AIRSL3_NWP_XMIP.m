@@ -132,7 +132,7 @@ plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3';
 plotoptions.str31 = 'CMIP6';   plotoptions.str32 = 'AMIP6';     
 plotoptions.str41 = 'UMBC';    plotoptions.str42 = 'MLS L3';     
 plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
-iFig = 31; figure(iFig); clf; aslmap_8tiledlayout(wx11,wx21,wx31,wx41,wx51,wx61,wx71,wx71*0,iFig,plotoptions);
+iFig = 41; figure(iFig); clf; aslmap_8tiledlayout(wx11,wx21,wx31,wx41,wx51,wx61,wx71,wx71*0,iFig,plotoptions);
 
 clear plotoptions;
 jet64 = jet;
@@ -142,7 +142,7 @@ plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3';
 plotoptions.str31 = 'CMIP6';   plotoptions.str32 = 'AMIP6';     
 plotoptions.str41 = 'UMBC';    plotoptions.str42 = 'MLS L3';     
 plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
-iFig = 32; figure(iFig); clf; aslmap_8tiledlayout(wx12,wx22,wx32,wx42,wx52,wx62,wx72,wx71*0,iFig,plotoptions);
+iFig = 42; figure(iFig); clf; aslmap_8tiledlayout(wx12,wx22,wx32,wx42,wx52,wx62,wx72,wx71*0,iFig,plotoptions);
 
 clear plotoptions;
 jet64 = jet;
@@ -152,7 +152,7 @@ plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3';
 plotoptions.str31 = 'CMIP6';   plotoptions.str32 = 'AMIP6';     
 plotoptions.str41 = 'UMBC';    plotoptions.str42 = 'MLS L3';     
 plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
-iFig = 33; figure(iFig); clf; aslmap_8tiledlayout(wx13,wx23,wx33,wx43,wx53,wx63,wx73,wx71*0,iFig,plotoptions);
+iFig = 43; figure(iFig); clf; aslmap_8tiledlayout(wx13,wx23,wx33,wx43,wx53,wx63,wx73,wx71*0,iFig,plotoptions);
 
 clear plotoptions;
 jet64 = jet;
@@ -162,12 +162,12 @@ plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3';
 plotoptions.str31 = 'CMIP6';   plotoptions.str32 = 'AMIP6';     
 plotoptions.str41 = 'UMBC';    plotoptions.str42 = 'MLS L3';     
 plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
-iFig = 34; figure(iFig); clf; aslmap_8tiledlayout(wx14,wx24,wx34,wx44,wx54,wx64,wx74,wx74*0,iFig,plotoptions);
+iFig = 44; figure(iFig); clf; aslmap_8tiledlayout(wx14,wx24,wx34,wx44,wx54,wx64,wx74,wx74*0,iFig,plotoptions);
 
-disp('Fig 31 : Planck feedback')
-disp('Fig 32 : Lapse  feedback')
-disp('Fig 33 : WV     feedback')
-disp('Fig 34 : ST     feedback')
+disp('Fig 41 : Planck feedback')
+disp('Fig 42 : Lapse  feedback')
+disp('Fig 43 : WV     feedback')
+disp('Fig 44 : ST     feedback')
 
 if iSave > 0
   comment1 = 'variables are wonkXY, swonkXY where  wonk* = raw lambda, swonk* = smoothed lambda';

@@ -103,9 +103,9 @@ iFig = iFig+1; figure(iFig); subplot(121); hold on; plotaxis2; hl = legend('UMBC
                              subplot(122); hold on; plotaxis2; hl = legend('UMBC','AIRSL3','AMIP6','ERA5','location','best','fontsize',8); hold off; xlim([0 1]*0.04)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : [default = +1] ');
+junk = input('make_profile_spectral_trends, can take a while!!!! (-1/+1) : [default = -1] ');
 if length(junk) == 0
-  junk = 1;
+  junk = -1;
 end
 if junk > 0
   iVersJac = input('Enter jac version (2019) = 2002/2019 ERAI or (2021) = 2002/2021 ERA5 default : ');
