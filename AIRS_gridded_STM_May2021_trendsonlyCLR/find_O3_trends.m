@@ -7,7 +7,7 @@ duO3_300mbpert = dobson_gas_rtp(h, pert, 3, 300);
 [ppmvLAYpert,ppmvAVGpert,ppmvMAXpert,pavgLAYpert,tavgLAYpert,ppmv500pert,ppmv75pert,ppmvSURFpert] = layers2ppmv(h,pert,1:length(p.stemp),3);
 [ppmvLAYpert_unc,ppmvAVGpert_unc,ppmvMAXpert_unc,pavgLAYpert_unc,tavgLAYpert_unc,ppmv500pert_unc,ppmv75pert_unc,ppmvSURFpert_unc] = layers2ppmv(h,pert_unc,1:length(p.stemp),3);
 
-figure(25); simplemap(Y(:),X(:),duO3_col0'.*maskLF',5); colorbar; title(['O3 column du']); caxis([250 350]); colormap jet; plotaxis2;
+figure(25); clf; simplemap(Y(:),X(:),duO3_col0'.*maskLF',5); colorbar; title(['O3 column du']); caxis([250 350]); colormap jet; plotaxis2;
 [nlayO3,~] = size(ppmvLAY);
 if nlayO3 > 97
   ppmvLAY     = ppmvLAY(1:97,:);
@@ -24,17 +24,17 @@ pcolor(unique(Y(:)),playsjunk,squeeze(nanmean(junk0,2))); shading flat; colorbar
 pcolor(unique(Y(:)),p2h(playsjunk)/1000,squeeze(nanmean(junk0,2))); shading flat; colorbar; title('O3 ppmv'); xlabel('Latitude'); ylabel('h(km)')
   ylim([16 48]); ylim([10 60]); 
 
-figure(26); pcolor(unique(Y(:)),p2h(playsjunk)/1000,squeeze(nanmean(junkpert-junk0,2))); shading flat; colorbar; title('\delta O3 ppmv/yr'); xlabel('Latitude'); ylabel('h(km)')
+figure(26); clf; pcolor(unique(Y(:)),p2h(playsjunk)/1000,squeeze(nanmean(junkpert-junk0,2))); shading flat; colorbar; title('\delta O3 ppmv/yr'); xlabel('Latitude'); ylabel('h(km)')
   ylim([16 48]); ylim([10 60]); colormap(llsmap5); caxis([-5 +5]*1e-3)
 
-figure(27); pcolor(unique(Y(:)),p2h(playsjunk)/1000,100*squeeze(nanmean(junkpert-junk0,2))./squeeze(nanmean(junk0,2))); 
+figure(27); clf; pcolor(unique(Y(:)),p2h(playsjunk)/1000,100*squeeze(nanmean(junkpert-junk0,2))./squeeze(nanmean(junk0,2))); 
   shading flat; colorbar; title('\delta O3 percent/yr'); xlabel('Latitude'); ylabel('h(km)')
   ylim([16 48]); ylim([10 60]); colormap(llsmap5); caxis([-2 +2]*1e-1)
 
 deltaO3 = (duO3_colpert - duO3_col0).*maskLF;
-figure(25); simplemap(Y(:),X(:),deltaO3'.*maskLF',5); colorbar; title(['d(O3)/dt column du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
+figure(25); clf; simplemap(Y(:),X(:),deltaO3'.*maskLF',5); colorbar; title(['d(O3)/dt column du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
 deltaO3 = (duO3_300mbpert - duO3_300mb0).*maskLF;
-figure(26); simplemap(Y(:),X(:),deltaO3'.*maskLF',5); colorbar; title(['d(O3)/dt TOA->300mb  du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
+figure(26); clf; simplemap(Y(:),X(:),deltaO3'.*maskLF',5); colorbar; title(['d(O3)/dt TOA->300mb  du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
 
 %% https://acp.copernicus.org/articles/19/3257/2019/   tropospheric column O3
 
@@ -49,9 +49,9 @@ plot(nanmean(abs(pert.gas_3' ./ p.gas_3' - 1)),1:101,nanmean(pert.gas_3_unc'./p.
 
 fracO3unc = fracO3unc .* (ones(101,1) * maskLF);
 
-figure(25); simplemap(Y(:),X(:),100*fracO3(i050,:)'.*maskLF',5); colorbar; title(['percent d(fracO3)/dt yr-1 050 mb'])
-figure(26); simplemap(Y(:),X(:),100*fracO3(i100,:)'.*maskLF',5); colorbar; title(['percent d(fracO3)/dt yr-1 100 mb'])
-figure(27); simplemap(Y(:),X(:),100*fracO3(i200,:)'.*maskLF',5); colorbar; title(['percent d(fracO3)/dt yr-1 200 mb'])
+figure(25); clf; simplemap(Y(:),X(:),100*fracO3(i050,:)'.*maskLF',5); colorbar; title(['percent d(fracO3)/dt yr-1 050 mb'])
+figure(26); clf; simplemap(Y(:),X(:),100*fracO3(i100,:)'.*maskLF',5); colorbar; title(['percent d(fracO3)/dt yr-1 100 mb'])
+figure(27); clf; simplemap(Y(:),X(:),100*fracO3(i200,:)'.*maskLF',5); colorbar; title(['percent d(fracO3)/dt yr-1 200 mb'])
 for ii = 25 : 27; figure(ii); caxis([-0.25 +0.25]); colormap(llsmap5); plotaxis2; end
 for ii = 1 : length(rlat)
   boo = find(abs(p.rlat - rlat(ii)) < 0.5); findlat(ii) = length(boo);
@@ -69,11 +69,11 @@ deltaO3 = deltaO3 .* (ones(nlayO3,1) * maskLF);
 deltaO3unc = ppmvLAYpert_unc - ppmvLAY;
 deltaO3unc = deltaO3unc .* (ones(nlayO3,1) * maskLF);
 
-figure(25); simplemap(Y(:),X(:),deltaO3(i050,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 050 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
-figure(26); simplemap(Y(:),X(:),deltaO3(i100,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 100 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
-figure(27); simplemap(Y(:),X(:),deltaO3(i200,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 200 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
+figure(25); clf; simplemap(Y(:),X(:),deltaO3(i050,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 050 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
+figure(26); clf; simplemap(Y(:),X(:),deltaO3(i100,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 100 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
+figure(27); clf; simplemap(Y(:),X(:),deltaO3(i200,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 200 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
 
-figure(27); aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn(reshape(deltaO3(i025,:),72,64)',1), [-90 +90],[-180 +180]);
+figure(27); clf; aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn(reshape(deltaO3(i025,:),72,64)',1), [-90 +90],[-180 +180]);
 caxis([-1 +1]/100); colormap(cmap);  title('d/dt UMBC O3(025 mb)'); 
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_o3_025mb_global_trends.pdf');
 
@@ -82,7 +82,7 @@ for ii = 1 : length(rlat)
   deltaO3lat(ii,:) = nanmean(deltaO3(:,boo),2);
 end
 
-figure(31); pcolor(rlat,pavgLAY(1:nlayO3,1000),smoothn(deltaO3lat(:,1:nlayO3)',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+figure(31); clf; pcolor(rlat,pavgLAY(1:nlayO3,1000),smoothn(deltaO3lat(:,1:nlayO3)',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaO3lat)); junk = cos(rlat) * ones(1,nlayO3);
 area_wgtO3 = nansum(deltaO3lat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgtO3(1:nlayO3)*10000,pavgLAY(1:nlayO3,1000),'color','r','linewidth',2); hold off

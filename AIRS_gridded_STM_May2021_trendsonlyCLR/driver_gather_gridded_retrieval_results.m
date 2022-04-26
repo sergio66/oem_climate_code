@@ -145,7 +145,17 @@ if ~exist('iaFound')
 
   rates = nan(2645,4608);
   fits  = nan(2645,4608);
+  nedt  = nan(2645,4608);
+
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','b_err_desc');
+b_err_desc = moonoise.b_err_desc; clear moonoise;
+b_err_desc = permute(b_err_desc,[3 1 2]);
+b_err_desc = reshape(b_err_desc,2645,72*64);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iWarning = 0;
 clear fname
@@ -274,8 +284,12 @@ for ii = 1 : 64*72
       wah = oem.finalsigs((1:nn)+6+nn*2);   resultsO3unc(ii,1:nn0) = wah(1:nn0);
     end
 
+    junknoise = nan(2645,1);
+    junknoise(jacobian.chanset) = diag(oem.se);
+
     rates(:,ii) = rateset.rates;
     fits(:,ii)  = oem.fit';
+    nedt(:,ii)  = sqrt(junknoise);
   else
     iExist = -1;
     iaFound(ii) = 0;
@@ -291,6 +305,7 @@ for ii = 1 : 64*72
 
     rates(:,ii) = NaN;
     fits(:,ii) = NaN;
+    nedt(:,ii) = NaN;
   end
   if mod(ii,72) == 0
     fprintf(1,'+ %2i\n',ii/72);
@@ -300,6 +315,7 @@ for ii = 1 : 64*72
     fprintf(1,' ');
   end
 end
+
 fprintf(1,'\n');
 resultsunc = real(resultsunc);
 resultsWVunc = real(resultsWVunc);
@@ -401,7 +417,28 @@ figure(11); semilogy(wvsumcflip,pflip20,tsumcflip,pflip20,o3sumcflip,pflip20,'li
 figure(12); clf; plot(f,nanmean(rates,2),'b',f,nanstd(rates,[],2),'c--',f,nanmean(rates-fits,2),'r',f,nanstd(rates-fits,[],2),'m--');
   plotaxis2; hl = legend('mean obs','std obs','mean(obs-fits)','std(obs-fits)','linewidth',2);
 
-disp('ret to continue'); pause
+disp('ret to continue to spectral chisqr'); pause
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fprintf(1,'checking noise : nansum(nansum(nedt(jacobian.chanset,:)-b_err_desc(jacobian.chanset,:))) = %8.6f \n',nansum(nansum(nedt(jacobian.chanset,:)-b_err_desc(jacobian.chanset,:))))
+
+% iIgnoreChans_N2O = -1; %% retrieve using N2O chans
+% iIgnoreChans_N2O = +1; %% ignore using N2O chans
+settings.iIgnoreChans_CH4 = -1;
+settings.iIgnoreChans_N2O = -1;
+settings.iIgnoreChans_SO2 = -1;
+chanset = jacobian.chanset;
+[hMean17years,ha,pMean17years,pa]     = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+plotopt.iUpperWavenumLimit = 1620;
+plotopt.rlon = pMean17years.rlon;
+plotopt.rlat = pMean17years.rlat;
+[raaBadFov,indBadFov] = plot_spectral_region_chisqr(rates(chanset,:),0*rates(chanset,:),0*rates(chanset,:),fits(chanset,:),f(chanset,:),nedt(chanset,:),-1,settings,plotopt);
+figure(11); ylim([-1 +1]*0.1/2)
+figure(12); ylim([-1 +1]*5)
+for ii = 15:20; figure(ii); colormap jet; caxis([0 1]*10); end
+
+disp('ret to continue to gridded results'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

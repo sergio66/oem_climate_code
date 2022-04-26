@@ -50,7 +50,8 @@ tCCR = rad2bt(a.l1b_airs.wnum,saverads);
 tglobalCCR = squeeze(nanmean(tCCR,2));
 iCntMax = iCnt;
 
-error('lkjglksjg')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+error(';kzgj')
 days = (1:iCntMax)/12 * 001; %% so this is years
 days = (1:iCntMax)/12 * 365; %% so this is days
 good = find(iaFound > 0);

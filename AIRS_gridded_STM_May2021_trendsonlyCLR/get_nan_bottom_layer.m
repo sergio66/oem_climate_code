@@ -10,5 +10,9 @@ end
 nan_bottom100 = nan_bottom(1:100,:);
 nan_bottom097 = nan_bottom(1:097,:);
 
+figure(27); clf; aslmap(27,rlat65,rlon73,reshape(p.nlevs,72,64)', [-90 +90],[-180 +180]);
+  title('Nlevs')
+
+figure(28); 
 junk = squeeze(nanmean(reshape(nan_bottom,101,72,64),2)); whos junk
-imagesc(junk); colorbar
+imagesc(junk); colorbar; title('NAN or not for SURFACE')
