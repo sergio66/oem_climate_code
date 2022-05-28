@@ -173,7 +173,10 @@ figure(4);  aslmap(4,rlat19,rlon19,smoothn((reshape(ccrtrend_18x18(i1419,:),18,1
 figure(21); plot(f,nanmean(b_desc,2),wnum,nanmean(rates2378_18x18,2))
 figure(21); plot(wnum,rates2378_18x18(:,9*18+9),wnum,ccrtrend_18x18(:,9*18+9)); ylim([-1 +1]/10)
 damean = mean(ccrtrend_18x18');
-good = find(abs(damean) < 0.1);
+dastd  = std(ccrtrend_18x18');
+plot(wnum2378,damean,wnum2378,dastd,'.'); ylim([-1 +1]*0.05); plotaxis2;
+good = find(abs(damean) < 0.1); whos good
+good = find(abs(damean) < 0.1 & dastd < 0.042); whos good
 
 % this compares 72x64 tiles --> 18x18 tiles versus CCR
 plotopt.scatterORaslmap = -2;

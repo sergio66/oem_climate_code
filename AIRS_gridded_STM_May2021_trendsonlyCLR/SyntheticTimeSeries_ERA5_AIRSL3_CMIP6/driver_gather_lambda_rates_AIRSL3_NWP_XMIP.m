@@ -126,6 +126,7 @@ iFig = 14; figure(iFig); clf; plot(rlat,swonk14,'b',rlat,swonk24,'c',rlat,swonk3
 
 clear plotoptions;
 jet64 = jet;
+plotoptions.shift180 = +1;
 plotoptions.cx = [-5 -3]; plotoptions.maintitle = 'Planck'; plotoptions.plotcolors = jet64;
 plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'MERRA2';    
 plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3'; 
@@ -136,6 +137,7 @@ iFig = 41; figure(iFig); clf; aslmap_8tiledlayout(wx11,wx21,wx31,wx41,wx51,wx61,
 
 clear plotoptions;
 jet64 = jet;
+plotoptions.shift180 = +1;
 plotoptions.cx = [-1 +1]*20; plotoptions.maintitle = 'Lapse'; plotoptions.plotcolors = llsmap5;
 plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'MERRA2';    
 plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3'; 
@@ -146,7 +148,8 @@ iFig = 42; figure(iFig); clf; aslmap_8tiledlayout(wx12,wx22,wx32,wx42,wx52,wx62,
 
 clear plotoptions;
 jet64 = jet;
-plotoptions.cx = [-1 +1]*20; plotoptions.maintitle = 'WV'; plotoptions.plotcolors = llsmap5;
+plotoptions.shift180 = +1;
+plotoptions.cx = [-1 +1]*10; plotoptions.maintitle = 'WV'; plotoptions.plotcolors = llsmap5;
 plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'MERRA2';    
 plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3'; 
 plotoptions.str31 = 'CMIP6';   plotoptions.str32 = 'AMIP6';     
@@ -156,6 +159,7 @@ iFig = 43; figure(iFig); clf; aslmap_8tiledlayout(wx13,wx23,wx33,wx43,wx53,wx63,
 
 clear plotoptions;
 jet64 = jet;
+plotoptions.shift180 = +1;
 plotoptions.cx = [-1 +1]*5; plotoptions.maintitle = 'ST'; plotoptions.plotcolors = llsmap5;
 plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'MERRA2';    
 plotoptions.str21 = 'AIRS L3'; plotoptions.str22 = 'CLIMCAPS L3'; 

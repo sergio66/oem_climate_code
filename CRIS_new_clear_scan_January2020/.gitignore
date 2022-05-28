@@ -1,0 +1,12 @@
+*.mat
+*.pf
+*.fig
+*.png
+*.jac
+
+Output*
+WORKS*
+SAVE*
+sergio_airs2cris_decon
+diff_kcarta_results.txt
+outputrun85

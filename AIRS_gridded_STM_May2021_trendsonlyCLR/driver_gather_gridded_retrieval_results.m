@@ -459,6 +459,7 @@ if iX == +1
 elseif iX == -1
   simple_get_the_model_trends_do_feedbacks
 end
+disp('if you save a big fat file, you can then look at SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/wrapper_driver_gather_ALL_rates_AIRSL3_NWP_XMIP.m to make the global plots');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
