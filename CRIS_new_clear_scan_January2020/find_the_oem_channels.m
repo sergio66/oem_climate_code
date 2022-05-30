@@ -135,4 +135,4 @@ disp('just in case, getting rid of SW chans ..... ')
 newbad_sw_list_dec5_2019 = [2247 2248 2249 2250 2251 2624];
   ch = setdiff(ch,newbad_sw_list_dec5_2019);
 
-fprintf(1,'final number of chans being used = %4i \n',length(ch))
+fprintf(1,'final number of AIRS chans being used = %4i \n',length(ch))

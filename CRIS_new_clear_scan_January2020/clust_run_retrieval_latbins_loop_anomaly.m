@@ -24,6 +24,7 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 
 %---------------------------------------------------------------------------
 addpath /home/sergio/MATLABCODE/oem_pkg
+addpath /home/sergio/MATLABCODE/TIME
 addpath Plotutils
 %---------------------------------------------------------------------------
 % Doing debug?

@@ -14,7 +14,7 @@ t1x = tic;
 %% 16 years so total of 365/16 * 16 = 365 steps
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
-JOB = 20
+%JOB = 20
 
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 %JOB = 20   %%% uncomment this when trying to fit for linear rates!!! fix change_important_topts_settings, and set <<< driver.i16daytimestep = -1 >>>;  below
@@ -22,6 +22,7 @@ JOB = 20
 
 %---------------------------------------------------------------------------
 addpath /home/sergio/MATLABCODE/oem_pkg
+addpath /home/sergio/MATLABCODE/TIME
 addpath Plotutils
 %---------------------------------------------------------------------------
 % Doing debug?
@@ -41,6 +42,7 @@ iTimeStep0 = 21; iTimeStepE = 21;
 iTimeStep0 =  1; iTimeStepE = 157;
 
 iTimeStep0 =  1; iTimeStepE = 157;
+%iTimeStep0 =  88; iTimeStepE = 157;  %% start in early 2016 where I see issues
 
 %JOB = 30; iTimeStep0 =  1; iTimeStepE = 157;
 
@@ -137,7 +139,7 @@ for iTimeStep = iTimeStep0 : iTimeStepE
 
 %---------------------------------------------------------------------------
 % Some simple output
-   if sum(abs(driver.rateset.rates)) > 0
+   if nansum(abs(driver.rateset.rates)) > 0
      fprintf('Scalar Retrievals from OEM latbin %2i timestep %3i \n',JOB,iTimeStep)
      if topts.co2lays == 1
        fprintf(1,'CO2   (ppm)   %5.3f  +- %5.3f \n',driver.oem.finalrates(1),driver.oem.finalsigs(1));
@@ -187,15 +189,16 @@ for iTimeStep = iTimeStep0 : iTimeStepE
    end
 
    % Plot Results
+
 %{
   if topts.iNlays_retrieve >= 97
     plot_retrieval_latbins
   else
     plot_retrieval_latbins_fewlays
   end
-   %disp('Hit return for next latitude'); pause
-   pause(0.1)
 %}
+%   disp('Hit return for next timestep'); pause
+   pause(0.1)
 
 end % end of latbin loop  
 %---------------------------------------------------------------------------

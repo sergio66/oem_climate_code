@@ -62,7 +62,7 @@ if nargin == 3
 end
 
 %disp('settings after')
-settings
+%settings
 
 aux.invtype = settings.invtype;
 
@@ -101,53 +101,6 @@ if settings.dataset == -1
     driver.rateset.datafile = ['ANOM_16dayavg_nonucal/latbin_0dayavg_' num2str(driver.iibin) '_cal.mat'];  
   end
 
-elseif settings.dataset == 1   %% AIRS DEFAULT
-  disp('AIRS 16 year rates or anomalies, nu cal done in there')
-  if settings.descORasc == +1 & driver.i16daytimestep < 0
-    disp('doing descending latbin rates')
-    driver.rateset.datafile  = 'convert_strowrates2oemrates_random_16_year_v32_clear_nucal.mat';
-    %%%% driver.rateset.datafile  = 'convert_strowrates2oemrates_random_16_year_v32_clear_nucal_obs_cal_bias.mat'; %%% try this ....
-    if settings.ocb_set == +1  & driver.i16daytimestep < 0
-      %% convert_strowrates2oemrates_random_16_year_v32_clear_nucal.mat does not have cal,bias so have to do this
-      %% convert_strowrates2oemrates_random_16_year_v32_clear_nucal_obs_cal_bias.mat is complete so really no need for this
-      driver.rateset.datafile  = 'convert_strowrates2oemrates_random_16_year_v32_clear.mat';
-    elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
-      %% convert_strowrates2oemrates_random_16_year_v32_clear_nucal.mat does not have cal,bias so have to do this
-      %% convert_strowrates2oemrates_random_16_year_v32_clear_nucal_obs_cal_bias.mat is complete so really no need for this
-      driver.rateset.datafile  = 'convert_strowrates2oemrates_random_16_year_v32_clear_nucal.mat';
-      %%%% driver.rateset.datafile  = 'convert_strowrates2oemrates_random_16_year_v32_clear_nucal_obs_cal_bias.mat';  %% try this ..
-    end
-  elseif settings.descORasc == -1 & driver.i16daytimestep < 0
-    disp('doing ascending latbin rates')
-    driver.rateset.datafile  = 'convert_strowrates2oemrates_random_16_year_v32_clearasc_nucal.mat'; %% note bias/cal are from "usual" not nucal
-  elseif driver.i16daytimestep > 0 & settings.ocb_set == 0
-    disp('doing descending OBS ANOMALY')
-    driver.rateset.datafile = ['ANOM_16dayavg/latbin_180dayavg_' num2str(driver.iibin) '.mat'];  
-    driver.rateset.datafile = ['ANOM_16dayavg/latbin_0dayavg_' num2str(driver.iibin) '.mat'];  
-  elseif driver.i16daytimestep > 0 & settings.ocb_set == 1
-    disp('doing descending CAL ANOMALY')
-    driver.rateset.datafile = ['ANOM_16dayavg/latbin_180dayavg_' num2str(driver.iibin) '_cal.mat'];  
-    driver.rateset.datafile = ['ANOM_16dayavg/latbin_0dayavg_' num2str(driver.iibin) '_cal.mat'];  
-  end
-
-elseif settings.dataset == 2
-  disp('AIRS 11 year rates or anomalies, overlaopping from 2007 with IASI')
-  if settings.descORasc == +1 & driver.i16daytimestep < 0
-    disp('doing descending latbin rates')
-    driver.rateset.datafile  = 'convert_strowrates2oemrates_clear_11year_iasitimespan_obs_cal_bias.mat';
-  elseif driver.i16daytimestep > 0 & settings.ocb_set == 0 & settings.descORasc == +1
-    disp('doing descending OBS ANOMALY')
-    driver.rateset.datafile = ['IASI_ANOM_16dayavg/latbin_180dayavg_' num2str(driver.iibin) '.mat'];  
-    driver.rateset.datafile = ['IASI_ANOM_16dayavg/latbin_0dayavg_' num2str(driver.iibin) '.mat'];  
-  end
-
-elseif settings.dataset == 3
-  disp('IASI2AIRS 11 year rates or anomalies, overlaopping from 2007 with IASI')
-  if settings.descORasc == +1 & driver.i16daytimestep < 0
-    disp('doing descending latbin rates')
-    driver.rateset.datafile  = 'convert_strowrates2oemrates_clear_11_year_iasi2airs_obs.mat';
-  end
-
 elseif settings.dataset == 5   %% CRIS LORES DEFAULT
   disp('CRIS 6 years 2012/05 - 2018/04 6 year rates or anomalies')
   if settings.descORasc == +1 & driver.i16daytimestep < 0
@@ -164,9 +117,12 @@ elseif settings.dataset == 5   %% CRIS LORES DEFAULT
   elseif driver.i16daytimestep > 0 & settings.ocb_set == 0
     disp('doing descending OBS ANOMALY')
     driver.rateset.datafile = ['ANOM_16dayavg/latbin_0dayavg_' num2str(driver.iibin) '.mat'];  
+    driver.rateset.datafile = ['ANOM_16dayavgDEBUG/latbin_0dayavg_' num2str(driver.iibin) '.mat'];  
+    driver.rateset.datafile = ['ANOM_16dayavgDEBUG/sergio_latbin_0dayavg_' num2str(driver.iibin) '.mat'];  
   elseif driver.i16daytimestep > 0 & settings.ocb_set == 1
     disp('doing descending CAL ANOMALY')
     driver.rateset.datafile = ['ANOM_16dayavg/latbin_0dayavg_' num2str(driver.iibin) '_cal.mat'];  
+    driver.rateset.datafile = ['ANOM_16dayavgDEBUG/sergio_latbin_0dayavg_' num2str(driver.iibin) '_cal.mat'];  
   end
 
 end
@@ -179,7 +135,7 @@ driver.rateset.ncfile   = driver.rateset.datafile;
 
 % Get rate data, do Q/A elsewhere
 driver = get_rates(driver);  %% this gets spectral rates (driver.rateset.rates), and uncertainty (driver.rateset.unc_rates)
-keyboard_nowindow
+%keyboard_nowindow
 
 %---------------------------------------------------------------------------
 % Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200
@@ -214,6 +170,7 @@ if driver.i16daytimestep < 0
   end
 elseif driver.i16daytimestep > 0
   junk = num2str(driver.i16daytimestep,'%03d');
+  %junk = num2str(150,'%03d');    %% testing
   if iXJac == 1
     %% sarta time vary jacs
     %asarta  = load('../MakeJacsSARTA/SARTA_AIRSL1c_CLO_Anomaly137_16/RESULTS/sarta_182_fixCFC_M_TS_jac_all_5_97_97_97_2235.mat');
@@ -237,7 +194,7 @@ elseif driver.i16daytimestep > 0
   end
 end
 
-driver.jacobian.filename
+%% driver.jacobian.filename
 
 %% THIS IS DEFAULT -- 4 column trace gas (CO2/N2O/CH4/CFC11/CFC12), 1 stemp, (97x3) geo
 driver.jacobian.varname  = 'M_TS_jac_all';
@@ -249,6 +206,8 @@ driver.jacobian.numlays  = 97;
 
 % Get jacobians, and combine the 97 layer T(z)/WV(z)/O3(z) into N layers
 jac               = load(driver.jacobian.filename);
+jac.qrenorm(6 + 97 + 97 + (1:97)) = 0.1;                                           %% bump up T jac
+jac.M_TS_jac_all(:,:,6 + 97 + (1:97)) = 10*jac.M_TS_jac_all(:,:,6 + 97 + (1:97));  %% bump up T jac
 
 %% add in extra column for CFC12 >>>>>>
 if iXJac == 0 | iXJac == 1
@@ -402,6 +361,8 @@ else
   qWV = (1:iNlays_retrieve) + 6;
 end
 
+%keyboard_nowindow
+
 bad = find(isnan(m_ts_jac) | isinf(m_ts_jac));
 if length(bad) > 0
   fprintf('oopsy foound %5i NaN or Inf in jacobian, resetting to 0 \n',length(bad))
@@ -478,12 +439,13 @@ finitech = find(isfinite(driver.rateset.rates));
 
 %keyboard_nowindow
 %ch = find_the_oem_channels(f,lenrates,settings.numchan,settings.chan_LW_SW,iChSet);
-load ../../AIRS_new_clear_scan_August2019_AMT2020PAPER/f2645.mat
+load ../AIRS_new_clear_scan_August2019_AMT2020PAPER/f2645.mat
 ch = find_the_oem_channels(f2645,2645,2645,settings.chan_LW_SW,iChSet);
 ch = find_closest_airs2cris_chans(ch);
 ch = intersect(finitech,ch);
 
-guardchan = [1 713 714 1146 1147 1305];
+guardchan = [1 3 716 717 718 719 1153 1154 1155 1156 1316 1317];   %% these are guard chans for 1 : 1307
+guardchan = [1 713 714 1146 1147 1305];                            %% loading in eg ANOM_16dayavg/latbin_0dayavg_20.mat can see in latter times these are the NaN channels for 1:1305
 ch = setdiff(ch,guardchan);
 
 f1305 = load('f1305.mat');
@@ -494,6 +456,9 @@ ch = union(ch,ch1600);
 ch700 = find(f1305.f1305 > 700 & f1305.f1305 < 800);
 ch700 = ch700(1:1:length(ch700));
 ch = union(ch,ch700);
+
+chLWMW = find(f1305.f1305 < 1800);
+ch = intersect(ch,chLWMW);
 
 driver.topts.iChSet = iChSet;
 driver.jacobian.chanset = ch;
@@ -514,7 +479,7 @@ if (abs(settings.set_tracegas) ~= 1) & (settings.set_tracegas ~= 2)
 end
 
 if settings.iFixTG_NoFit(1) > 0
-  disp('oh oh you wanna get rid of a trace gas')
+  fprintf(1,'oh oh you wanna get rid of a trace gas GID(1) = %2i \n',settings.iFixTG_NoFit(1))
   junk = settings.iFixTG_NoFit;
   badjunk = find(junk < 1 | junk > max(driver.jacobian.scalar_i) - 1);
   if length(badjunk) > 0 

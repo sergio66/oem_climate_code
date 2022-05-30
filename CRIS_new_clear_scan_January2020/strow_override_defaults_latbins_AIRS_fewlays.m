@@ -62,7 +62,7 @@ if nargin == 3
 end
 
 %disp('settings after')
-settings
+%settings
 
 aux.invtype = settings.invtype;
 
@@ -468,7 +468,7 @@ if (abs(settings.set_tracegas) ~= 1) & (settings.set_tracegas ~= 2)
 end
 
 if settings.iFixTG_NoFit(1) > 0
-  disp('oh oh you wanna get rid of a trace gas')
+  fprintf(1,'oh oh you wanna get rid of a trace gas GID(1) = %2i \n',settings.iFixTG_NoFit(1))
   junk = settings.iFixTG_NoFit;
   badjunk = find(junk < 1 | junk > max(driver.jacobian.scalar_i) - 1);
   if length(badjunk) > 0 

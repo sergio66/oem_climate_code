@@ -1,8 +1,45 @@
+if ~exist('C')
+  file1C = 'SAVE_LW_noCFC11_Feb14_2020/anomaly_0dayavg_results.mat';
+  file2C = 'SAVE_LW_noCFC11_Feb14_2020/anomaly_0dayavg_cal_results.mat';
+  fileC  = 'SAVE_LW_noCFC11_Feb14_2020/anomaly_0dayavg_results_spectra.mat';
+  
+  file1A = '../AIRS_new_clear_scan_August2019_AMT2020PAPER/SAVE_LW_noCFC11/anomaly_0dayavg_results.mat';
+  file2A = '../AIRS_new_clear_scan_August2019_AMT2020PAPER/SAVE_LW_noCFC11/anomaly_0dayavg_cal_results.mat';
+  fileA  = '../AIRS_new_clear_scan_August2019_AMT2020PAPER/SAVE_LW_noCFC11/anomaly_0dayavg_results_spectra.mat';
+  
+  for ii = 1 : 8
+    figure(ii); clf
+  end
+  
+  %[A,C] = compare_anomaly_runs2datasets(file1A,file2A,file1C,file2C);
+  [C] = compare_anomaly_runs(file1C,file2C);
+  btC = load(fileC);
+
+  load f1305.mat
+  iC791 = find(f1305 >= 791-0.5,1);
+  iC792 = find(f1305 >= 792-0.5,1);
+  
+  iOffSet = 10;
+  figure(iOffSet+5); clf
+      plot(C.okdates,btC.raaObs(iC791-1,:)-btC.raaObs(iC792+1,:),'r',C.okdates,btC.raaCal(iC791-1,:)-btC.raaCal(iC792+1,:),'b')
+      hl = legend('CRIS obs','CRIS cal','location','best');  set(hl,'fontsize',8);
+      xlabel('time'); ylabel('BT791-792 cal'); grid
+
+end
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %hdffile = '/home/sergio/MATLABCODE/airs_l1c_srf_tables_lls_20181205.hdf';   % what he gave in Dec 2018
 %vchan2834 = hdfread(hdffile,'freq');
 %f = vchan2834;
 %load sarta_chans_for_l1c.mat
 %f = f(ichan);
+
+%load f1305.mat
+%iC791 = find(f1305 >= 791-0.5,1);
+%iC792 = find(f1305 >= 792-0.5,1);
 
 xyz = load('f1305.mat');
 f = xyz.f1305;
@@ -249,8 +286,37 @@ if co2lays == 1
   pause(0.1)
 
   figure(1); plot(okdates,nanmean(save_dat_1231(:,15:25),2),'b.-',okdates,nanmean(stemp(15:25,:),1),'r.-','linewidth',2)
-      hold on; plot(okdates,save_dat_1231(:,20),'b',okdates,stemp(20,:),'r'); hold off
+      hold on; plot(okdates,save_dat_1231(:,20),'b',okdates,stemp(20,:),'r'); hold off; plotaxis2;
     hl = legend('mean tropical BT1231','mean tropical stemp retr','bin20 BT1231','bin20 stemp','location','best');
+    ylabel('BT1231 or stemp'); xlabel('time');
+
+  figure(15); plot(C.okdates,(btC.raaObs(iC791-1,:)-btC.raaObs(iC792+1,:))*75,'b',C.okdates,(btC.raaCal(iC791-1,:)-btC.raaCal(iC792+1,:))*75,'c',okdates,nanmean(co2(15:25,:),1),'r.-','linewidth',2)
+    plotaxis2;   hl = legend('tropical CRIS obs','tropical CRIS cal','tropical co2','location','best');
+    ylabel('BT791-BT792 or CO2'); xlabel('time');
+
+%{
+>> find(nanmean(co2(15:25,:),1) < -5)
+
+ans =
+
+    88
+
+>> co2(15:25,88)
+
+ans =
+
+    0.0502
+   -3.7647
+   -3.6618
+  -13.2533
+  -16.2625
+  -18.7802
+  -17.8091
+  -13.4267
+   -6.8157
+   -4.5503
+   -2.1514
+%}
 
   [mmbad,nnbad] = find(co2orig < -5 | co2orig > 25 | stemporig < -2 | stemporig > 2);
   if length(mmbad) > 0
@@ -265,7 +331,7 @@ if co2lays == 1
   meancfc12 = nanmean(cfc12(iaTropics,:));
   meanstemp = nanmean(stemp(iaTropics,:));
 
-  figure(4); plot(okdates,smooth(meanco2,2*5),'b','linewidth',2); 
+  figure(4); plot(okdates,smooth(meanco2,2*5),'b',okdates,meanco2,'c','linewidth',2); 
   ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CO2 smoothed over 10 years')
 
   figure(5); plot(okdates,smooth(meann2o,2*5),'b','linewidth',2); 

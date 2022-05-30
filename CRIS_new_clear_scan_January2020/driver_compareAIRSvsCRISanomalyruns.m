@@ -1,8 +1,9 @@
-% see clust_convert_cris_strowrates2oemrates_anomaly.m
-wah = load('/home/strow/Work/Cris/Stability/Data/Desc_fits/fit_robs_lat20.mat');
+% see clust_convert_cris_strowrates2oemrates_anomaly.m hich makes eg junk = load(['ANOM_16dayavg/latbin_0dayavg_' num2str(iii) '.mat']);
+load f1305.mat
+junk = load('/home/strow/Work/Cris/Stability/Data/Desc_fits/fit_robs_lat20.mat');
 iC791 = find(f1305 >= 791-0.5,1);
 iC792 = find(f1305 >= 792-0.5,1);
-plot(f1305,wah.dbt,f1305([iC791 iC792]),wah.dbt([iC791 iC792]),'ro'); xlim([790 795])
+plot(f1305,junk.dbt,f1305([iC791 iC792]),junk.dbt([iC791 iC792]),'ro'); xlim([790 795])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -86,8 +87,25 @@ if iCheckJac > 0
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-junk = load('ANOM_16dayavg/latbin_0dayavg_20.mat');
-figure(10); pcolor(C.okdates,f1305,junk.avg16_btanom'); shading flat; colorbar; colormap jet; title('rtp CrIS : <btAnom>'); ylabel('f1305'); xlabel('time')
-figure(11); plot(C.okdates,junk.avg16_btanom(:,iC1231));                           title('rtp CrIS : <btAnom>'); ylabel('btnanom 1231 cm-1');  plotaxis2;
-figure(12); plot(C.okdates,junk.avg16_btanom(:,iC791)-junk.avg16_btanom(:,iC792)); title('rtp CrIS : <btAnom>'); ylabel('btnanom 791-792 cm-1'); plotaxis2;
+latbinsx = equal_area_spherical_bands(20);
+latbinsx = meanvaluebin(latbinsx);
+trop = find(abs(latbinsx) <= 30);
+junkkk = zeros(157,1305);
+for iii = 1 : length(trop)
+  junk = load(['ANOM_16dayavg/latbin_0dayavg_' num2str(trop(ii)) '.mat']);
+  junkkk = junkkk + junk.avg16_btanom;
+end
+junkkk = junkkk/length(trop);
+
+iii = 20;  junk = load(['ANOM_16dayavg/latbin_0dayavg_' num2str(iii) '.mat']);
+figure(10); clf; pcolor(C.okdates,f1305,junk.avg16_btanom'); shading flat; colorbar; colormap jet; title('rtp CrIS : <btAnom>'); ylabel('f1305'); xlabel('time')
+  disp('blanks are where hi2lo puts nan for guard channels etc')
+figure(11); clf; plot(C.okdates,junk.avg16_btanom(:,iC1231));                           title('rtp CrIS : <btAnom>'); ylabel('btnanom 1231 cm-1');  plotaxis2;
+figure(12); clf; plot(C.okdates,junk.avg16_btanom(:,iC791)-junk.avg16_btanom(:,iC792)); title('rtp CrIS : <btAnom>'); ylabel('btnanom 791-792 cm-1'); plotaxis2;
 [mmbad,nnbad] = find(isnan(junk.avg16_btanom)); unique(nnbad)
+
+figure(10); clf; pcolor(C.okdates,f1305,junkkk'); shading flat; colorbar; colormap jet; title('rtp CrIS : <btAnom>'); ylabel('f1305'); xlabel('time')
+  disp('blanks are where hi2lo puts nan for guard channels etc')
+figure(11); clf; plot(C.okdates,junkkk(:,iC1231));                           title('rtp CrIS : <btAnom>'); ylabel('btnanom 1231 cm-1');  plotaxis2;
+figure(12); clf; plot(C.okdates,junkkk(:,iC791)-junkkk(:,iC792)); title('rtp CrIS : <btAnom>'); ylabel('btnanom 791-792 cm-1'); plotaxis2;
+[mmbad,nnbad] = find(isnan(junkkk)); unique(nnbad)

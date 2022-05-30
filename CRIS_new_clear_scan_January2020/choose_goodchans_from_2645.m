@@ -109,7 +109,7 @@ elseif chan_LW_SW == -1
   chacha = find(fairs2645(chSW) > 1910);  %% somehow a few LW chans still get in
   chSW = chSW(chacha);
 
-  ch = union(chLW,chSW)
+  ch = union(chLW,chSW);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 elseif chan_LW_SW == -2
@@ -156,7 +156,7 @@ elseif chan_LW_SW == +2
   chacha = find(fairs2645(chSW) > 1910);  %% somehow a few LW chans still get in
   chSW = chSW(chacha);
 
-  ch = union(chLW,chSW)
+  ch = union(chLW,chSW);
 
 else
   error('unknown option')  
@@ -186,4 +186,3 @@ g_l1b = channel id’s for good l1b chans
 g_l1c = l1c_ind_for_l1b(ib)
 g_l1c are the l1c indices of the good l1b channels
 %}
-

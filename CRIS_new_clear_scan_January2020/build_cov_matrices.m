@@ -41,16 +41,6 @@ end
 %%               sigT_t    sigT_s                sigWV_t   sigWV_s             sigO3_t   sigO3_s
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2    coz_wide  alpha_T  alpha_w  alpha_oz
 
-%%         lc   ct.lev1   ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2 coz_wide  alpha_T  alpha_w  alpha_oz
-
-%%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
-cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.05/25      0.05/25    1/2      0.005/2   0.005/0.75     1/2        1E-5     1E-5  1E-5]; %works pretty well for topts.obs_corr_matrix = -1;
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.01/25      0.01/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, water not very wiggly
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.1/25       0.1/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly more wiggly)
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.5/25       0.5/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
-
 %{
 %%% topts.obs_corr_matrix = +1, 10 lays, topts.invtype = 4
 %cov_set = [1.0  1e-6      1e-6      1/2       1e-11         1e-11       1/2      1e-6      1e-6           1/2        1E+16     1E+16  1E+16]; %works pretty well for topts.obs_corr_matrix = +1  and 10 lays, OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly more wiggly)
@@ -86,13 +76,29 @@ cov_set = [1.0  0.25    0.25    1/2       0.06        0.06      1/2      0.25   
 %%% >>>>>>>>>>>>>>>>>>> testing qrenorm = 1 and multiply x1 ......
 %}
 
+
+%%         lc   ct.lev1   ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2 coz_wide  alpha_T  alpha_w  alpha_oz
+
+%%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
+cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
+cov_set = [1.0  0.05/2    0.05/2    1/2       0.05/25      0.05/25    1/2      0.005/2   0.005/0.75     1/2        1E-5     1E-5  1E-5]; %works pretty well for topts.obs_corr_matrix = -1;
+cov_set = [1.0  0.05/2    0.05/2    1/2       0.01/25      0.01/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, water not very wiggly
+cov_set = [1.0  0.05/2    0.05/2    1/2       0.1/25       0.1/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+                                                                                                                                         %(great for ERA calcs T and O3 need to slightly improve WV make it slightly more wiggly)
+cov_set = [1.0  0.05/2    0.05/2    1/2       0.5/25       0.5/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+                                                                                                                                         %(great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)
+cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+                                                                                                                                         %(great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  
+                                                                                                                                         %<<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
+
 %% testing perturbations for paper, see PAPER/questions.txt Q4
 reduceCOV = [2 3 5 6 8 9];  %% cx.lev1,cx.lev2 for x=WV,T,O3
 RAcov_sf = [0.0001 0.001 0.01 0.1 1 10 100 1000];   %% smaller cov makes retrieval stick to apriori; ; smaller makes it wiggle
 % cov_sf = 0.01; 
 % cov_sf = 0.1; 
 % cov_sf = 1.0;
-cov_sf = 1.0; cov_set(2:3) = cov_set(2:3) *1000;  cov(11) = cov(11)/1000;  %% T looks too tighly constraimed
+%cov_sf = 1e-2; cov_set(2:3) = cov_set(2:3) * cov_sf;  cov(11) = cov(11)/cov_sf;  %% T looks too tighly constraimed
+cov_sf = 1.0; cov_set(2:3) = cov_set(2:3) *1000;  cov(11) = cov(11)/1000;  %% T looks too tighly constraimed         TILL MAY 2022
 % cov_sf = 1.0; cov_set(2:3) = cov_set(2:3)*0.000000;  cov_set(11) = cov_set(11)*1e10;  %% T looks too tighly constraimed
 %                cov_set(reduceCOV) = 0.001;  cov_set([11 12 13]) = cov_set([11 12 13]) * 1;
 %                cov_set(reduceCOV) = 0.000;  cov_set([11 12 13]) = 1.0e9;

@@ -1,5 +1,11 @@
 function driver = get_rates(driver)
 
+if driver.i16daytimestep > 0
+  junk = load(driver.rateset.datafile,'avg16_rtime');
+  [yy,mm,dd] = tai2utcSergio(junk.avg16_rtime(driver.i16daytimestep));
+  fprintf(1,'    <<<<< get_rates  fname=%s timestep=%3i %4i/%2i/%2i \n',driver.rateset.datafile,driver.i16daytimestep,yy,mm,dd)
+end
+  
 ix = driver.iibin;
 if driver.i16daytimestep < 0
   %% usual data
@@ -15,12 +21,13 @@ if driver.i16daytimestep < 0
      driver.rateset.rates = real(squeeze(b_obs(ix,:,2))');
      driver.rateset.unc_rates = real(squeeze(b_err_obs(ix,:,2))');
   end
+
 elseif driver.i16daytimestep > 0
   anom = load(driver.rateset.datafile);
   [mmjunk,nnjunk] = size(anom.avg16_btanom);
   if driver.i16daytimestep > mmjunk
     fprintf(1,'oh oh looking for timestep %3i but there are only %3i data points in anomdata file for latbin %2i \n',driver.i16daytimestep,mmjunk,ix)
-    driver.rateset.rates = zeros(2645,1);
+    driver.rateset.rates = zeros(1305,1);
     driver.rateset.unc_rates = 0.01*ones(size(driver.rateset.rates));
     return
   else
