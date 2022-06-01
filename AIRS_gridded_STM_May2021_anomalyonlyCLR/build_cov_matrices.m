@@ -25,6 +25,9 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %% MATLABCODE/oem_pkg_run/AIRS_AllSky_97_O3jacs_Apr2017/strow_build_cov_matrix.m
+%% recall Sa-1 = Sconv-1 + alpha T'T where T are the tikonov matrices = no units
+%% so units of alpha = Sconv-1 == eg 1/K2 etc
+%% 
 %%         lc   ct.lev1  ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide alpha_T  alpha_w  alpha_oz
 %%               TROP    STRAT               TROP     STRAT
 %% if lc is tiny, mat_od ~ diagnol; if lc is large, mat_od is very broad

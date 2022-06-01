@@ -61,7 +61,7 @@ iLat0 =  1; iLatE = 40;
 %JOB = 85; iLat0 =  20; iLatE = 20;  %% seem to be having NaNs in CO2 possibly because OBS has NaNs, do latbin 19, timestep 90
 %JOB = 125; iLat0 =  20; iLatE = 20;  %% seem to be having NaNs in CO2 possibly because OBS has NaNs, do latbin 19, timestep 90
 
-%JOB = 85; iLat0 =  20; iLatE = 20;  %% seem to be having NaNs in CO2 possibly because OBS has NaNs, do latbin 19, timestep 90
+%JOB = 88; iLat0 =  20; iLatE = 20;  %% seem to be having NaNs in CO2 possibly because OBS has NaNs, do latbin 19, timestep 90
 
 %for iLat = iLatE : -1 : iLatE
 for iLat = iLat0 : iLatE
@@ -75,7 +75,10 @@ for iLat = iLat0 : iLatE
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   driver.i16daytimestep = -1;   %% for the rates, not anomalies, RUN BY HAND BY UN-COMMENTING THIS LINE and 
                                 %% on top JOB = 20, in change_important_topts_settings.m also set topts.set_tracegas = -1;
+  iDoAnomalyOrRates = -1;
+  %%%%%%%%%%%%%%%%%%%%%%%%% >>>>>>>>>>>>>>>>>>>>>>>>>
   driver.i16daytimestep = JOB;  %% this is when doing anomaly
+  iDoAnomalyOrRates = +1;
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 
   ix = iLat;

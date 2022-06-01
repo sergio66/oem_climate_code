@@ -43,7 +43,8 @@ plot(f,nanmean(strow.all_bt_anom,1)*sf,f,strow.dbt*sf); xlim([640 840]); title([
 
 %oo0 = load('ANOM_16dayavg/latbin_0dayavg_20.mat');
 %if iSergioORStrow == -1
-%  oo1 = load('ANOM_16dayavgDEBUG/latbin_0dayavg_20.mat');
+%  oo1 = load('ANOM_16dayavgDEBUG/latbin_0dayavg_20.mat');  %% this is me mucking around
+%  oo1 = load('ANOM_16dayavg/latbin_0dayavg_20.mat');       %% this is true Strow
 %else
 %  oo1 = load('ANOM_16dayavgDEBUG/sergio_latbin_0dayavg_20.mat');
 %end
@@ -54,7 +55,8 @@ plot(f,nanmean(strow.all_bt_anom,1)*sf,f,strow.dbt*sf); xlim([640 840]); title([
 
 fnamex = ['ANOM_16dayavg/latbin_0dayavg_' num2str(iLatbin) '.mat'];
 if iSergioORStrow == -1
-  fnamex = ['ANOM_16dayavgDEBUG/latbin_0dayavg_' num2str(iLatbin) '.mat'];
+  fnamex = ['ANOM_16dayavgDEBUG/latbin_0dayavg_' num2str(iLatbin) '.mat'];  %% this is me mucking around
+  fnamex = ['ANOM_16dayavg/latbin_0dayavg_' num2str(iLatbin) '.mat'];
 else
   fnamex = ['ANOM_16dayavgDEBUG/sergio_latbin_0dayavg_' num2str(iLatbin) '.mat'];
 end
@@ -86,12 +88,14 @@ title('(2600 days --> 157 16days)-157 days'); rett
 [yyx,mmx,ddx,hhx] = tai2utcSergio(dtime2tai(nanmean(strow.all_times,2)));
 days_since_2012x = change2days(yyx,mmx,ddx,2012);
 
-for ii = 1 : 10
+for ii = 1 : 5
   figure(1); clf; plot(f,strow.all_bt_anom_16(ii,:),'b.-',f,sergio.avg16_btanom(ii,:),'r'); xlim([640 1640]);  plotaxis2; ylim([-1 +1]*0.5);   title(['loopy loop ' num2str(ii)])
   figure(2); clf; plot(f,strow.all_bt_anom_16(ii,:)-sergio.avg16_btanom(ii,:),'r'); xlim([640 1640]);  plotaxis2;   title(['loopy loop ' num2str(ii)])
   rett
 end
 
+figure(1); plot(days_since_2012x);       title('days since 2012')
+figure(2); plot(diff(days_since_2012x)); title('diff(days since 2012)')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% this is just to check times, no need to do
 return

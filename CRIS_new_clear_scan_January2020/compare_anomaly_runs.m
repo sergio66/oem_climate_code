@@ -1,5 +1,9 @@
 function A = compare_anomaly_runs(file1,file2,file3);
 
+%% file1 = 'anomaly_0dayavg_results.mat'; file2 = 'anomaly_0dayavg_cal_results.mat'; compare_anomaly_runs(file1,file2);
+
+for ii=1:8; figure(ii); clf; end
+
 %{
 
 crisL1c = load('/home/strow/Work/Cris/Stability/Data/Desc_fits/fit_robs_lat20.mat');
@@ -76,6 +80,9 @@ iMaxTimeStepsM1 = abs(iMaxTimeSteps)-1;
 if nargin < 2
   error('need at least 2 input files, at most 3')
 end
+%if nargin == 0
+%  file1 = 'anomaly_0dayavg_results.mat'; file2 = 'anomaly_0dayavg_cal_results.mat'; 
+%end
 
 iSmooth = input('Enter how many timesteps to smooth over (each timestep = 16 days = 0.0438 yr; default = 11 timesteps = 0.5 yr) : ');
 if length(iSmooth) == 0
@@ -181,7 +188,10 @@ if nargin == 2
   end
 end
 
-[mmbad,nnbad] = find(abs(a1.stemp) > 5 | abs(a2.stemp) > 5 |abs(a3.stemp) > 5 | abs(a1.co2 > 50) | abs(a2.co2 > 50) | abs(a3.co2 > 50)); 
+if exist('a3')
+  [mmbad,nnbad] = find(abs(a1.stemp) > 5 | abs(a2.stemp) > 5 |abs(a3.stemp) > 5 | abs(a1.co2 > 50) | abs(a2.co2 > 50) | abs(a3.co2 > 50)); 
+end
+
 [mmbad,nnbad] = find(abs(a1.stemp) > 5);  %% what was used in Sep 11, 2019
 if length(mmbad) > 0
   for zz = 1 : length(mmbad)
@@ -270,8 +280,8 @@ else
 end
 
 if nargin == 2 & iYes < 0
-  junk = [sum(sum(a1.co2(tropics,usethese)-a2.co2(tropics,usethese))) sum(sum(a1.stemp(tropics,usethese)-a2.stemp(tropics,usethese)))];
-  fprintf(1,'sum(diff co2 and stemp) = %8.6f %8.6f \n',junk)
+  junk = [nansum(nansum(a1.co2(tropics,usethese)-a2.co2(tropics,usethese))) nansum(nansum(a1.stemp(tropics,usethese)-a2.stemp(tropics,usethese)))];
+  fprintf(1,'nansum(diff co2 and stemp) = %8.6f %8.6f \n',junk)
   fprintf(1,'co2   at timestep iMaxTimeStepsM1, latbin 21 = %8.6f %8.6f \n',[a1.co2(21,iMaxTimeStepsM1) a2.co2(21,iMaxTimeStepsM1)])
   fprintf(1,'stemp at timestep iMaxTimeStepsM1, latbin 21 = %8.6f %8.6f \n',[a1.stemp(21,iMaxTimeStepsM1) a2.stemp(21,iMaxTimeStepsM1)])
   fprintf(1,'nloop at timestep iMaxTimeStepsM1, latbin 21 = %8.6f %8.6f \n',[a1.topts.nloop a2.topts.nloop])
@@ -351,16 +361,16 @@ if nargin == 2 & iYes < 0
     plotaxis2; title('obs-cal retr : difference in tropical co2'); grid
 
 else
-  junk = [sum(sum(a1.co2(tropics,usethese)-a2.co2(tropics,usethese))) sum(sum(a1.stemp(tropics,usethese)-a2.stemp(tropics,usethese)))];
-  fprintf(1,'sum(diff 1,2 co2 and stemp) = %8.6f %8.6f \n',junk(1:2))
-  junk = [sum(sum(a1.co2(tropics,usethese)-a3.co2(tropics,usethese))) sum(sum(a1.stemp(tropics,usethese)-a3.stemp(tropics,usethese)))];
-  fprintf(1,'sum(diff 1,3 co2 and stemp) = %8.6f %8.6f \n',junk(1:2))
-  junk = [sum(sum(a2.co2(tropics,usethese)-a3.co2(tropics,usethese))) sum(sum(a2.stemp(tropics,usethese)-a3.stemp(tropics,usethese)))];
-  fprintf(1,'sum(diff 2,3 co2 and stemp) = %8.6f %8.6f \n',junk(1:2))
+  junk = [nansum(nansum(a1.co2(tropics,usethese)-a2.co2(tropics,usethese))) nansum(nansum(a1.stemp(tropics,usethese)-a2.stemp(tropics,usethese)))];
+  fprintf(1,'nansum(diff 1,2 co2 and stemp) = %8.6f %8.6f \n',junk(1:2))
+  junk = [nansum(nansum(a1.co2(tropics,usethese)-a3.co2(tropics,usethese))) nansum(nansum(a1.stemp(tropics,usethese)-a3.stemp(tropics,usethese)))];
+  fprintf(1,'nansum(diff 1,3 co2 and stemp) = %8.6f %8.6f \n',junk(1:2))
+  junk = [nansum(nansum(a2.co2(tropics,usethese)-a3.co2(tropics,usethese))) nansum(nansum(a2.stemp(tropics,usethese)-a3.stemp(tropics,usethese)))];
+  fprintf(1,'nansum(diff 2,3 co2 and stemp) = %8.6f %8.6f \n',junk(1:2))
 
   fprintf(1,'co2   at timestep iMaxTimeStepsM1, latbin 21 = %8.6f %8.6f %8.6f \n',[a1.co2(21,iMaxTimeStepsM1) a2.co2(21,iMaxTimeStepsM1) a3.co2(21,iMaxTimeStepsM1)])
   fprintf(1,'stemp at timestep iMaxTimeStepsM1, latbin 21 = %8.6f %8.6f %8.6f \n',[a1.stemp(21,iMaxTimeStepsM1) a2.stemp(21,iMaxTimeStepsM1) a3.stemp(21,iMaxTimeStepsM1)])
-  fprintf(1,'nloop at timestep iMaxTimeStepsM1, latbin 21 = %8.6f %8.6f %8.6f \n',[a1.topts.nloop a2.topts.nloop a3.topts.nloop])
+  %fprintf(1,'nloop at timestep iMaxTimeStepsM1, latbin 21 = %8.6f %8.6f %8.6f \n',[a1.topts.nloop a2.topts.nloop a3.topts.nloop])
 
   figure(1); plot(a1.okdates(usethese),smooth(nanmean(a1.stemp(tropics,usethese)),iSmooth),'b.-',a1.okdates(usethese),smooth(nanmean(a2.stemp(tropics,usethese)),iSmooth),'g.-',...
                   a1.okdates(usethese),smooth(nanmean(a3.stemp(tropics,usethese)),iSmooth),'r.-'); plotaxis2; title('stemp');
@@ -476,6 +486,10 @@ else
     figure(8); plot(a1.okdates(usethese),smooth(mean(a1.co2(tropics,usethese)-a2.co2(tropics,usethese)),iSmooth),'b',...
    	            a1.okdates(usethese),smooth(mean(a1.co2(tropics,usethese)-a3.co2(tropics,usethese)),iSmooth),'r','linewidth',2)
     plotaxis2; title('obs-cal retr : difference in tropical co2'); hl = legend('1-2','1-3','location','best'); grid
+
+    figure(8); plot(a1.okdates(usethese),smooth(mean(a1.co2(tropics,usethese)-a2.co2(tropics,usethese)),iSmooth),'r',...
+   	            a1.okdates(usethese),smooth(mean(a1.co2(tropics,usethese)),iSmooth),'b',a1.okdates(usethese),smooth(mean(a2.co2(tropics,usethese)),iSmooth),'c','linewidth',2)
+    plotaxis2; title('obs-cal retr : difference in tropical co2'); hl = legend('1-2','1','2','location','best'); grid
 
 end
 

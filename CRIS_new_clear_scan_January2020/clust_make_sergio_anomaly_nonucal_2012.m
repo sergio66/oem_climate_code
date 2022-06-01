@@ -4,7 +4,7 @@ addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
-%JOB = 20
+JOB = 20
 
 yyStart = 2012; yyEnd = 2019;
 
@@ -71,7 +71,7 @@ for ii = JOB
   count = ones(size(xtime)) * 1000;
   fit_robust_one_lat_genericradiances(fout,foutsm,latid,fit_type,xtime,xobs,xclr,count,inst,saveopt);
 
-  iC1231 = find(fairs >= 1231,1)
+  iC1231 = find(fairs >= 1231,1);
   iC791 = find(fairs >= 791,1);
   iC792 = find(fairs >= 792,1);
   iC791 = find(fairs >= 791-0.5,1);

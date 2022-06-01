@@ -1,5 +1,7 @@
 %% now plot all results
+addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/TIME
+addpath /home/sergio/MATLABCODE/PLOTTER
 
 clear all
 
@@ -8,8 +10,10 @@ i1231 = 731; % from Larrabee
 iOBSorCAL = 0;  %% OBS
 iOBSorCAL = 1;  %% CAL
 
+iDoAnomalyOrRates = 1;
 change_important_topts_settings;
 iOBSorCAL = topts.ocb_set;
+%fprintf(1,'iOBSorCAL = %2i \n',iOBSorCAL)
 clear topts
 
 iMaxTimeSteps = 157;
@@ -99,4 +103,11 @@ iaaFound = zeros(size(save_dat_1231))';
 
 disp('now keep running read_the_anom_retrievals  (and/or read_the_anom_retrievals_spectra)')
 read_the_anom_T_WV_retrievals
-%read_the_anom_retrievals_spectra
+
+junk = input('read the spectra (and save)? : ');
+if length(junk == 0)
+  junk = -1;
+end
+if junk > 0
+  read_the_anom_retrievals_spectra
+end

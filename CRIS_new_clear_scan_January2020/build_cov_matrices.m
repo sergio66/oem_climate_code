@@ -2,9 +2,9 @@
 pmat_size = driver.jacobian.numlays;
 
 % Normalization depends on parameter
-fnorm = driver.qrenorm(driver.jacobian.scalar_i);
-wnorm = driver.qrenorm(driver.jacobian.water_i);
-tnorm = driver.qrenorm(driver.jacobian.temp_i);
+fnorm  = driver.qrenorm(driver.jacobian.scalar_i);
+wnorm  = driver.qrenorm(driver.jacobian.water_i);
+tnorm  = driver.qrenorm(driver.jacobian.temp_i);
 oznorm = driver.qrenorm(driver.jacobian.ozone_i);
 
 % Make sure re-scale to Jacobians before squaring cov matrix
@@ -25,6 +25,9 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %% MATLABCODE/oem_pkg_run/AIRS_AllSky_97_O3jacs_Apr2017/strow_build_cov_matrix.m
+%% recall Sa-1 = Sconv-1 + alpha T'T where T are the tikonov matrices = no units
+%% so units of alpha = Sconv-1 == eg 1/K2 etc
+%% 
 %%         lc   ct.lev1  ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide alpha_T  alpha_w  alpha_oz
 %%               TROP    STRAT               TROP     STRAT
 %% if lc is tiny, mat_od ~ diagnol; if lc is large, mat_od is very broad
@@ -91,20 +94,36 @@ cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0
                                                                                                                                          %(great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  
                                                                                                                                          %<<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
 
+%%               sigT_t    sigT_s                sigWV_t   sigWV_s/2             sigO3_t/2   sigO3_s
+%%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2    coz_wide  alpha_T  alpha_w  alpha_oz
+uncT = 1; uncWV = 0.2; uncO3 = 0.2;
+cov_set = [1.0  uncT    uncT/100    1/2       uncWV       uncWV  1/2      uncWV    uncWV     1/2        1/uncT/uncT    1/uncWV/uncWV  1/uncO3/uncO3]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% testing perturbations for paper, see PAPER/questions.txt Q4
-reduceCOV = [2 3 5 6 8 9];  %% cx.lev1,cx.lev2 for x=WV,T,O3
+reduceCOV = [2 3 5 6 8 9];  %% cx.lev1,cx.lev2 for x=WV,T,O3 covariance
+increaseCOV = [11 12 13];   %% tikonov
+
 RAcov_sf = [0.0001 0.001 0.01 0.1 1 10 100 1000];   %% smaller cov makes retrieval stick to apriori; ; smaller makes it wiggle
+
+cov_sf = 1.0;
+
 % cov_sf = 0.01; 
 % cov_sf = 0.1; 
 % cov_sf = 1.0;
 %cov_sf = 1e-2; cov_set(2:3) = cov_set(2:3) * cov_sf;  cov(11) = cov(11)/cov_sf;  %% T looks too tighly constraimed
-cov_sf = 1.0; cov_set(2:3) = cov_set(2:3) *1000;  cov(11) = cov(11)/1000;  %% T looks too tighly constraimed         TILL MAY 2022
+%cov_sf = 1.0; cov_set(2:3) = cov_set(2:3) *1000;  cov(11) = cov(11)/1000;  %% T looks too tighly constraimed         TILL MAY 2022
 % cov_sf = 1.0; cov_set(2:3) = cov_set(2:3)*0.000000;  cov_set(11) = cov_set(11)*1e10;  %% T looks too tighly constraimed
 %                cov_set(reduceCOV) = 0.001;  cov_set([11 12 13]) = cov_set([11 12 13]) * 1;
 %                cov_set(reduceCOV) = 0.000;  cov_set([11 12 13]) = 1.0e9;
 %                cov_set(reduceCOV) = cov_set(reduceCOV) * 10000000;  cov_set([11 12 13]) = cov_set([11 12 13]) / 10000000;
 
-% cov_set(reduceCOV) =  cov_set(reduceCOV) * cov_sf; str = [' >>>> WARNING : build_cov_matrices.m : multiplied cov unc x ' num2str(cov_sf)]; disp(str)
+%cov_sf = 10000; 
+  cov_sf = 100;
+  cov_sf = 1;
+  cov_set(reduceCOV)   =  cov_set(reduceCOV) * cov_sf;   str = [' >>>> WARNING : build_cov_matrices.m : multiplied cov unc x ' num2str(cov_sf)]; disp(str)
+  cov_set(increaseCOV) =  cov_set(increaseCOV) / cov_sf; str = [' >>>> WARNING : build_cov_matrices.m : multiplied cov unc x ' num2str(cov_sf)]; disp(str)
 
 fprintf(1,'cov_set lc = %8.6f \n',cov_set(1));
 junk = cov_set([2 3 4  11]); fprintf(1,'      T  : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
@@ -226,6 +245,9 @@ elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimeste
   fmatd(1:7) = fmatd(1:7)*0.0000001;   %% have put in xb(1:3) so we should not change those values
 end
 
+%%% fmatd = fmatd * 0.0000000001
+fmatd = fmatd * 0.01  %% works decently
+
 if settings.iFixTG_NoFit(1) > 0
   disp('setting uncertainties for some tracegases to be 0, setting a priori xb for these gases also to be 0')
   xb(settings.iFixTG_NoFit) = 0.0;
@@ -238,6 +260,7 @@ if settings.iFixTG_NoFit(1) > 0
 end
 
 fmat  = diag(fmatd./fnorm); 
+fmatd = fmatd.*fmatd; %% need sig^2   %% JUNE 1, 2022
 if exist('tmat','var') & exist('ozmat','var')
   driver.oem.cov = blkdiag(fmat,wmat,tmat,ozmat);
 elseif exist('ozmat','var')

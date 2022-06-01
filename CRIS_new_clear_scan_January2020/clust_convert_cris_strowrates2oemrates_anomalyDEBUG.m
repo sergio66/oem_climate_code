@@ -4,8 +4,8 @@ addpath /home/sergio/MATLABCODE/TIME
 iPlot = -1;
 iDebug = -1;
 
-i_obsORcal = -1; %% cal
 i_obsORcal = +1; %% obs
+i_obsORcal = -1; %% cal
 
 iAvgNumDays = 180;
 iAvgNumDays = 000;

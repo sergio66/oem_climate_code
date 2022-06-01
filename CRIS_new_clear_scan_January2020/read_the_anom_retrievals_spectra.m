@@ -65,7 +65,13 @@ elseif iOBSorCAL == 1
   saver = ['save anomaly_' num2str(iAvgNumDays) 'dayavg_results_spectra_cal.mat okdates okrtime iaTropics raaObs raaCal chanset topts'];
 end
 
-%eval(saver)
+iSave = input('save the output (-1 default/+1) : ');
+if length(iSave == 0)
+  iSave = -1;
+end
+if iSave > 0
+  eval(saver)
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% this is to see bad points

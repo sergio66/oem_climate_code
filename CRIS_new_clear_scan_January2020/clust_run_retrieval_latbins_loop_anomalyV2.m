@@ -14,7 +14,7 @@ t1x = tic;
 %% 16 years so total of 365/16 * 16 = 365 steps
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
-%JOB = 20
+%JOB = 20;  %% look at iDesperateDebug below for testing
 
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 %JOB = 20   %%% uncomment this when trying to fit for linear rates!!! fix change_important_topts_settings, and set <<< driver.i16daytimestep = -1 >>>;  below
@@ -46,6 +46,13 @@ iTimeStep0 =  1; iTimeStepE = 157;
 
 %JOB = 30; iTimeStep0 =  1; iTimeStepE = 157;
 
+iDesperateDebug = -1;
+iDesperateDebug = +1;
+if iDesperateDebug > 0
+  JOB = 20;
+  iTimeStep0 = 88;
+end
+
 for iTimeStep = iTimeStep0 : iTimeStepE
   disp(' ')
   fprintf(1,'timestep = %3i latbin = %2i \n',iTimeStep,JOB);
@@ -57,7 +64,10 @@ for iTimeStep = iTimeStep0 : iTimeStepE
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   driver.i16daytimestep = -1;         %% for the rates, not anomalies, RUN BY HAND BY UN-COMMENTING THIS LINE and 
                                       %% on top JOB = 20, in change_important_topts_settings.m also set topts.set_tracegas = -1;
+  iDoAnomalyOrRates = -1;
+  %%%%%%%%%%%%%%%%%%%%%%%%% >>>>>>>>>>>>>>>>>>>>>>>>>
   driver.i16daytimestep = iTimeStep;  %% this is when doing anomaly
+  iDoAnomalyOrRates = +1;
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 
   iLat = driver.iibin;
@@ -70,6 +80,9 @@ for iTimeStep = iTimeStep0 : iTimeStepE
   driver.oem.nloop = 1;
   driver.oem.doplots = false;
 %---------------------------------------------------------------------------
+  topts.ocb_set = 0;        %% obs  DEFAULT >>>>>>>>
+  topts.ocb_set = +1;       %% cal
+
   change_important_topts_settings  % Override many settings and add covariance matrix
 
   if topts.ocb_set == 0 & driver.i16daytimestep > 0
@@ -197,8 +210,11 @@ for iTimeStep = iTimeStep0 : iTimeStepE
     plot_retrieval_latbins_fewlays
   end
 %}
-%   disp('Hit return for next timestep'); pause
-   pause(0.1)
+  if iDesperateDebug > 0
+    disp('Hit return for next timestep'); pause
+  else
+    pause(0.1)
+  end
 
 end % end of latbin loop  
 %---------------------------------------------------------------------------

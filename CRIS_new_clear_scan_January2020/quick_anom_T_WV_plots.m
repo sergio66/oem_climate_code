@@ -98,7 +98,7 @@ if iLoadERAanom > 0
   figure(11); pcolor(latbins,playsN,10*trend_era_ptempanom'); shading interp; colorbar
   ax = axis; ax(1) = min(latbins); ax(2) = max(latbins); ax(3) = 10; ax(4) = 1000;; grid; set(gca,'ydir','reverse'); title('decadal Tz trends for ERA')
   caxis([-0.05 +0.05]*10); colorbar
-  caxis([-0.1  +0.1 ]*10); colorbar
+  caxis([-0.15  +0.15 ]*10); colorbar
   colormap(jett)
   colormap(usa2)
   colormap(llsmap4.llsmap4);
@@ -125,15 +125,15 @@ disp('ret to see T(z),WV(z),O3(z) decadal trends'); pause
 
   figure(8); pcolor(latbins,playsN,10*trendwv2'); shading interp; colorbar
   ax = axis; ax(1) = min(latbins); ax(2) = max(latbins); ax(3) = 10; ax(4) = 1000;; grid; set(gca,'ydir','reverse'); title('decadal WV trends')
-  caxis([-0.01 +0.01]*10); colorbar; 
+  caxis([-0.015 +0.015]*10); colorbar; 
 
   figure(9); pcolor(latbins,playsN,10*trendtz2'); shading interp; colorbar
   ax = axis; ax(1) = min(latbins); ax(2) = max(latbins); ax(3) = 10; ax(4) = 1000;; grid; set(gca,'ydir','reverse'); title('decadal Tz trends')
-  caxis([-0.05 +0.05]*10); colorbar
+  caxis([-0.15 +0.15]*10); colorbar
 
   figure(10); pcolor(latbins,playsN,10*trendo32'); shading interp; colorbar
   ax = axis; ax(1) = min(latbins); ax(2) = max(latbins); ax(3) = 10; ax(4) = 1000;; grid; set(gca,'ydir','reverse'); title('decadal O3 trends')
-  caxis([-0.02 +0.02]*10); colorbar
+  caxis([-0.03 +0.03]*10); colorbar
 
 for ii = 7 : 10
   figure(ii)

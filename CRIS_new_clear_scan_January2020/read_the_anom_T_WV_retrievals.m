@@ -2,6 +2,10 @@ if ~exist('C')
   file1C = 'SAVE_LW_noCFC11_Feb14_2020/anomaly_0dayavg_results.mat';
   file2C = 'SAVE_LW_noCFC11_Feb14_2020/anomaly_0dayavg_cal_results.mat';
   fileC  = 'SAVE_LW_noCFC11_Feb14_2020/anomaly_0dayavg_results_spectra.mat';
+
+  file1C = 'anomaly_0dayavg_results.mat';
+  file2C = 'anomaly_0dayavg_cal_results.mat';
+  fileC  = 'anomaly_0dayavg_results_spectra.mat';
   
   file1A = '../AIRS_new_clear_scan_August2019_AMT2020PAPER/SAVE_LW_noCFC11/anomaly_0dayavg_results.mat';
   file2A = '../AIRS_new_clear_scan_August2019_AMT2020PAPER/SAVE_LW_noCFC11/anomaly_0dayavg_cal_results.mat';
@@ -24,7 +28,7 @@ if ~exist('C')
       plot(C.okdates,btC.raaObs(iC791-1,:)-btC.raaObs(iC792+1,:),'r',C.okdates,btC.raaCal(iC791-1,:)-btC.raaCal(iC792+1,:),'b')
       hl = legend('CRIS obs','CRIS cal','location','best');  set(hl,'fontsize',8);
       xlabel('time'); ylabel('BT791-792 cal'); grid
-
+  disp('ret to continue'); pause
 end
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -256,7 +260,7 @@ fprintf(1,'sum(iaaFound) at start = %6i \n',sum0);
 fprintf(1,'sum(iaaFound) at end   = %6i \n',sum(sum(iaaFound)));
 fprintf(1,'expect about iMaxTimeSteps*40 = 6280 files (shoot for >= 5966 in case not doing latbin 39,40) \n');
 
-disp('now keep running read_the_anom_T_WV_retrievals  (and/or read_the_anom_retrievals_spectra)')
+disp('if necessary, hit <Ctrl C> and then keep re-running read_the_anom_T_WV_retrievals  (and/or read_the_anom_retrievals_spectra)')
 
 if co2lays == 1
   %disp('ret to see all co2'); pause;
@@ -280,31 +284,26 @@ if co2lays == 1
   cfc12(badco2) = NaN;
   stemp(badco2) = NaN;
 
-  figure(1); plot(okdates,nanmean(save_dat_1231(:,15:25),2),'b.-',okdates,nanmean(co2(15:25,:),1),'r.-',...
+  figure(1); plot(okdates,nanmean(save_dat_1231(:,iaTropics),2),'b.-',okdates,nanmean(co2(iaTropics,:),1),'r.-',...
                   okdates,save_dat_1231(:,20),'c',okdates,co2(20,:),'m')
     hl = legend('mean tropical BT1231','mean tropical CO2 retr','bin20 BT1231','bin20 CO2','location','best');
   pause(0.1)
 
-  figure(1); plot(okdates,nanmean(save_dat_1231(:,15:25),2),'b.-',okdates,nanmean(stemp(15:25,:),1),'r.-','linewidth',2)
+  figure(1); plot(okdates,nanmean(save_dat_1231(:,iaTropics),2),'b.-',okdates,nanmean(stemp(iaTropics,:),1),'r.-','linewidth',2)
       hold on; plot(okdates,save_dat_1231(:,20),'b',okdates,stemp(20,:),'r'); hold off; plotaxis2;
     hl = legend('mean tropical BT1231','mean tropical stemp retr','bin20 BT1231','bin20 stemp','location','best');
     ylabel('BT1231 or stemp'); xlabel('time');
 
-  figure(15); plot(C.okdates,(btC.raaObs(iC791-1,:)-btC.raaObs(iC792+1,:))*75,'b',C.okdates,(btC.raaCal(iC791-1,:)-btC.raaCal(iC792+1,:))*75,'c',okdates,nanmean(co2(15:25,:),1),'r.-','linewidth',2)
+  figure(15); plot(C.okdates,(btC.raaObs(iC791-1,:)-btC.raaObs(iC792+1,:))*75,'b',C.okdates,(btC.raaCal(iC791-1,:)-btC.raaCal(iC792+1,:))*75,'c',okdates,nanmean(co2(iaTropics,:),1),'r.-','linewidth',2)
     plotaxis2;   hl = legend('tropical CRIS obs','tropical CRIS cal','tropical co2','location','best');
     ylabel('BT791-BT792 or CO2'); xlabel('time');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
->> find(nanmean(co2(15:25,:),1) < -5)
-
-ans =
-
+>> find(nanmean(co2(iaTropics,:),1) < -5)  %% iaTropics = 11:30
+>> find(nanmean(co2(15:26,:),1) < -5)
     88
-
 >> co2(15:25,88)
-
-ans =
-
     0.0502
    -3.7647
    -3.6618
@@ -317,6 +316,7 @@ ans =
    -4.5503
    -2.1514
 %}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   [mmbad,nnbad] = find(co2orig < -5 | co2orig > 25 | stemporig < -2 | stemporig > 2);
   if length(mmbad) > 0
@@ -331,23 +331,25 @@ ans =
   meancfc12 = nanmean(cfc12(iaTropics,:));
   meanstemp = nanmean(stemp(iaTropics,:));
 
-  figure(4); plot(okdates,smooth(meanco2,2*5),'b',okdates,meanco2,'c','linewidth',2); 
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CO2 smoothed over 10 years')
+  %% 12 timesteps = 12 x 16 days = 12*16/365 = 0.526 days
 
-  figure(5); plot(okdates,smooth(meann2o,2*5),'b','linewidth',2); 
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical N2O smoothed over 10 years')
+  figure(4); plot(okdates,smooth(meanco2,12),'b',okdates,meanco2,'c','linewidth',2); 
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CO2 smoothed over 0.5 years')
 
-  figure(6); plot(okdates,smooth(meanch4,2*5),'b','linewidth',2); 
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CH4 smoothed over 10 years')
+  figure(5); plot(okdates,smooth(meann2o,12),'b','linewidth',2); 
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical N2O smoothed over 0.5 years')
 
-  figure(7); plot(okdates,smooth(meancfc11,2*5),'b','linewidth',2); 
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CFC11 smoothed over 10 years')
+  figure(6); plot(okdates,smooth(meanch4,12),'b','linewidth',2); 
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CH4 smoothed over 0.5 years')
 
-  figure(8); plot(okdates,smooth(meancfc12,2*5),'b','linewidth',2); 
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CFC12 smoothed over 10 years')
+  figure(7); plot(okdates,smooth(meancfc11,12),'b','linewidth',2); 
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CFC11 smoothed over 0.5 years')
 
-  figure(9); plot(okdates,smooth(meanstemp,2*5),'b','linewidth',2); 
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical stemp smoothed over 10 years')
+  figure(8); plot(okdates,smooth(meancfc12,12),'b','linewidth',2); 
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CFC12 smoothed over 0.5 years')
+
+  figure(9); plot(okdates,smooth(meanstemp,12),'b','linewidth',2); 
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical stemp smoothed over 0.5 years')
 
   figure(10); clf; pcolor(okdates,latbins,dofs);   caxis([15 20]);  colorbar; title('DOFS'); shading flat  
 
@@ -376,12 +378,12 @@ elseif co2lays == 3
   meancfc12 = nanmean(cfc12(iaTropics,:));
   meanstemp = nanmean(stemp(iaTropics,:));
 
-  figure(4); plot(okdates,smooth(ameanco2,2*5),'b',okdates,smooth(bmeanco2,2*5),'r',okdates,smooth(cmeanco2,2*5),'g','linewidth',2); 
+  figure(4); plot(okdates,smooth(ameanco2,12),'b',okdates,smooth(bmeanco2,12),'r',okdates,smooth(cmeanco2,12),'g','linewidth',2); 
   hl = legend('a mean tropical co2','b mean tropical co2','c mean tropical co2','location','best'); set(hl,'fontsize',10);
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CO2 smoothed over 10 years')
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical CO2 smoothed over 0.5 years')
 
-  figure(5); plot(okdates,smooth(meanstemp,2*5),'b','linewidth',2); 
-  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical stemp smoothed over 10 years')
+  figure(5); plot(okdates,smooth(meanstemp,12),'b','linewidth',2); 
+  ax = axis; ax(1) = min(okdates); ax(2) = max(okdates); axis(ax); grid; title('tropical stemp smoothed over 0.5 years')
 
   figure(6); clf; pcolor(okdates,latbins,dofs);   caxis([15 20]);  colorbar; title('DOFS'); shading flat  
 
@@ -409,11 +411,13 @@ if iDoDOFS > 0
   junkdof = squeeze(nanmean(scalardof,2));
   figure(3)
   plot(1:40,junkdof,'+-')
+   ylabel('DOFs'); xlabel('Latitude bin');
   hl = legend('CO2','N2O','CH4','CFC11','CFC12','Stemp','location','best');
   grid
 
   figure(3)
   plot(1:40,junkdof(:,[1 2 3 5 6]),'+-','linewidth',2)
+  ylabel('DOFs'); xlabel('Latitude bin');
   hl = legend('CO2','N2O','CH4','CFC12','Stemp','location','best');
   grid
 

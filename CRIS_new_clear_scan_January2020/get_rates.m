@@ -48,7 +48,7 @@ elseif driver.i16daytimestep > 0
     if iSetType == 2
       disp('  get_rates : unc iSetType = 2')
       %% this is next step : spectral, but for any time step scale by sqrt(average counts x 16)
-	anom_noise = load('noise_16day_avg_mission.mat');
+      anom_noise = load('noise_16day_avg_mission.mat');
       anom_noise = anom_noise.btn_av(ix,:);
     elseif iSetType == 3
       disp('  get_rates : unc iSetType = 3')
@@ -67,7 +67,7 @@ elseif driver.i16daytimestep > 0
         iJunkTimeStep = driver.i16daytimestep;
       end
       %% this is harder :  spectra and for individual timesteps scale by sqrt(average counts x 16)
-      %% note the relevant code (MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfsclust_make_lats40_16dayavg_noseasonal_16daybdry_cris.m) already accounts for average counts x 16 ,, so we have to appropriately divide by NeDT given by LLS
+      %% note the relevant code (MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/clust_make_lats40_16dayavg_noseasonal_16daybdry_cris.m) already accounts for average counts x 16 ,, so we have to appropriately divide by NeDT given by LLS
       snpp_noise = load('/home/sergio/MATLABCODE/oem_pkg_run/CRIS_new_clear_scan_January2020//snpp_cris_mean_noise_per40_lats.mat');
       counts_noise = load(['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/BDRY16INFO_CLR_CLO/bdry16info_' num2str(driver.iibin) '.mat']);
       anom_noise = snpp_noise.nedt(driver.iibin,:)/sqrt(counts_noise.p16.count(iJunkTimeStep));      

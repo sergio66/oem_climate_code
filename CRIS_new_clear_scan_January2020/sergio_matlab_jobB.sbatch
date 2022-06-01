@@ -2,11 +2,11 @@
 #
 # /bin/rm OutputAnomaly_OBS/*/anomtest*.mat as needed
 #
-# run this with   sbatch --constraint=hpcf2013       --array=1-365 sergio_matlab_jobB.sbatch 1         for clust_run_retrieval_latbins_loop_anomaly
-#   or            sbatch --exclude=cnode[204,225,260,267] --array=1-365 sergio_matlab_jobB.sbatch 1            JOB=TIMESTEP,loop over 40 latbins
+# run this with   sbatch --constraint=hpcf2013       --array=1-157 sergio_matlab_jobB.sbatch 1         for clust_run_retrieval_latbins_loop_anomaly
+#   or            sbatch --exclude=cnode[204,225,260,267] --array=1-157 sergio_matlab_jobB.sbatch 1            JOB=TIMESTEP,loop over 40 latbins
 #
 # run this with   sbatch --constraint=hpcf2013       --array=1-40 sergio_matlab_jobB.sbatch  2         for clust_run_retrieval_latbins_loop_anomalyV2
-#   or            sbatch --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2             JOB=LATBIN,loop over 365 timesteps
+#   or            sbatch --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2             JOB=LATBIN,loop over 157 timesteps
 #
 # run this with   sbatch --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 3 for clust_convert_cris_strowrates2oemrates_anomaly
 # run this with   sbatch --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 4 for clust_convert_cris_strowrates2oemrates_anomaly_testsergio
@@ -25,7 +25,7 @@
 #available for parallel jobs
 #SBATCH --cpus-per-task 1
 
-#  Specify the desired partition develop : use batch/short for 365, time = 1 hr
+#  Specify the desired partition develop : use batch/short for 157, time = 1 hr
 #SBATCH --partition=batch
 #SBATCH --qos=short+
 #SBATCH --time=0:59:00 
@@ -65,14 +65,14 @@ fi
 
 if [[ "$1" -eq "" ]]; then
   # this is fixed timestep, loop over 40 latbins 
-  echo "cmd line arg = DNE, clust_run_retrieval_latbins_loop_anomaly => JOB = timestep ==> need 365 processors"
+  echo "cmd line arg = DNE, clust_run_retrieval_latbins_loop_anomaly => JOB = timestep ==> need 157 processors"
   srun matlab -nodisplay -nosplash -r "clust_run_retrieval_latbins_loop_anomaly; exit"
 elif [[ "$1" -eq "1" ]]; then
   # this is fixed timestep, loop over 40 latbins 
-  echo "cmd line arg = 1, clust_run_retrieval_latbins_loop_anomaly => JOB = timestep ==> need 365 processors"
+  echo "cmd line arg = 1, clust_run_retrieval_latbins_loop_anomaly => JOB = timestep ==> need 157 processors"
   srun matlab -nodisplay -nosplash -r "clust_run_retrieval_latbins_loop_anomaly; exit"
 elif [[ "$1" -eq "2" ]]; then
-  # this fixed latbin, loop over 365 timesteps
+  # this fixed latbin, loop over 157 timesteps
   echo "cmd line arg = 2, clust_run_retrieval_latbins_loop_anomalyV2 => JOB = latbin ==> need 40 processors"
   srun matlab -nodisplay -nosplash -r "clust_run_retrieval_latbins_loop_anomalyV2; exit"
 elif [[ "$1" -eq "3" ]]; then

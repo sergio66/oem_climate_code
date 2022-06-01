@@ -187,6 +187,7 @@ elseif driver.i16daytimestep > 0
     driver.jacobian.filename = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/CLO_Anomaly137_16_12p8/RESULTS/kcarta_' junk '_M_TS_jac_all_5_97_97_97_2235.mat']; 
 
     fprintf(1,'iXJac == 2 reading in timestep kcarta jac file %s \n',driver.jacobian.filename)
+
   elseif iXJac == 0
     %% constant kcarta jacs
     driver.jacobian.filename = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/JUNK_CRIS/kcarta_M_TS_jac_all_5_97_97_97_2235.mat';
@@ -206,8 +207,8 @@ driver.jacobian.numlays  = 97;
 
 % Get jacobians, and combine the 97 layer T(z)/WV(z)/O3(z) into N layers
 jac               = load(driver.jacobian.filename);
-jac.qrenorm(6 + 97 + 97 + (1:97)) = 0.1;                                           %% bump up T jac
-jac.M_TS_jac_all(:,:,6 + 97 + (1:97)) = 10*jac.M_TS_jac_all(:,:,6 + 97 + (1:97));  %% bump up T jac
+jac.qrenorm(driver.jacobian.temp_i)          = 0.1;                                              %% bump up T jac
+jac.M_TS_jac_all(:,:,driver.jacobian.temp_i) = 10*jac.M_TS_jac_all(:,:,driver.jacobian.temp_i);  %% bump up T jac
 
 %% add in extra column for CFC12 >>>>>>
 if iXJac == 0 | iXJac == 1
@@ -272,21 +273,23 @@ if driver.i16daytimestep > 0
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,1);
     m_ts_jac_coljac = replace_time_cfc11jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,1);
     m_ts_jac_coljac = replace_time_cfc12jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,1);
+
   elseif iXJac == 2 & iDoStrowFiniteJac == 2
     fprintf(1,'updating time varying kCARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs -1,+2 for testing 6/24-27/2019...\n');
     fprintf(1,'  note before July2, the tracegas profile (CO2/N2O/CH4) was US Std shoehorned and multiplied, so ppm was quite wonky except at 500 mb');
-    fprintf(1,'else turned off \n')
+    fprintf(1,'  else turned off \n')
     %% const kCARTA jacs, update the trace gases
     m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% only used this on 6/26
     m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% added this on 6/27
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% added this on 6/27
     m_ts_jac_coljac = replace_time_cfc11jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% added this on 8/21
     m_ts_jac_coljac = replace_time_cfc12jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% added this on 8/29 ---> comment this out if iUgh == 4
+
   elseif iXJac == 2 & iDoStrowFiniteJac == 3
     fprintf(1,'updating time varying kCARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs3 for testing 6/24-27/2019...\n');
     fprintf(1,'  note before July2, the tracegas profile (CO2/N2O/CH4) was US Std shoehorned and multiplied, so ppm was quite wonky except at 500 mb');
     fprintf(1,'  note after July2, have improved the tracegas profile (CO2/N2O/CH4) so they are the same shape as glatm.dat');
-    fprintf(1,'else turned off \n')
+    fprintf(1,'  else turned off \n')
     %% const kCARTA jacs, update the trace gases
     %% kcarta strow finite jacs
     m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,3); %% only used this on 6/26
@@ -294,11 +297,12 @@ if driver.i16daytimestep > 0
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,3); %% added this on 6/27
     m_ts_jac_coljac = replace_time_cfc11jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,3); %% added this on 8/21
     m_ts_jac_coljac = replace_time_cfc12jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,3); %% added this on 8/29 ---> comment this out if iUgh == 4 <<<>>><<<>>><<<>>>
+
   elseif iXJac == 1 & iDoStrowFiniteJac == 3
     fprintf(1,'updating time varying SARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs3 for testing 6/24-27/2019...\n');
     fprintf(1,'  note before July2, the tracegas profile (CO2/N2O/CH4) was US Std shoehorned and multiplied, so ppm was quite wonky except at 500 mb');
     fprintf(1,'  note after July2, have improved the tracegas profile (CO2/N2O/CH4) so they are the same shape as glatm.dat');
-    fprintf(1,'else turned off \n')
+    fprintf(1,'  else turned off \n')
     %% sarta strow finite jacs
     iVarType = -3; %% this uses SARTA  finitediff jacs, which I have shown are bad?? or good??
     iVarType = +3; %% this uses kCARTA finitediff jacs, which I have shown are good, just want to test
@@ -307,11 +311,12 @@ if driver.i16daytimestep > 0
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/3
     m_ts_jac_coljac = replace_time_cfc11jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/21
     m_ts_jac_coljac = replace_time_cfc12jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/21 --> comment this out if iUgh == 4
+
   elseif iXJac == 2 & iDoStrowFiniteJac == 4
     fprintf(1,'updating time varying kCARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs3 for testing 12/08/2019 ... age of air\n');
     fprintf(1,'  note before July2, the tracegas profile (CO2/N2O/CH4) was US Std shoehorned and multiplied, so ppm was quite wonky except at 500 mb');
     fprintf(1,'  note after July2, have improved the tracegas profile (CO2/N2O/CH4) so they are the same shape as glatm.dat');
-    fprintf(1,'else turned off \n')
+    fprintf(1,'  else turned off \n')
     %% const kCARTA jacs, update the trace gases
     %% kcarta strow finite jacs
     m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,4); %% only used this on 6/26
@@ -319,11 +324,12 @@ if driver.i16daytimestep > 0
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,4); %% added this on 6/27
     m_ts_jac_coljac = replace_time_cfc11jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,4); %% added this on 8/21
     m_ts_jac_coljac = replace_time_cfc12jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,4); %% added this on 8/29 ---> comment this out if iUgh == 4 <<<>>><<<>>><<<>>>
+
   elseif iXJac == 1 & iDoStrowFiniteJac == 3
     fprintf(1,'updating time varying SARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs3 for testing 12/08/2019...\n');
     fprintf(1,'  note before July2, the tracegas profile (CO2/N2O/CH4) was US Std shoehorned and multiplied, so ppm was quite wonky except at 500 mb');
     fprintf(1,'  note after July2, have improved the tracegas profile (CO2/N2O/CH4) so they are the same shape as glatm.dat');
-    fprintf(1,'else turned off \n')
+    fprintf(1,'  else turned off \n')
     %% sarta strow finite jacs
     iVarType = -3; %% this uses SARTA  finitediff jacs, which I have shown are bad?? or good??
     iVarType = +3; %% this uses kCARTA finitediff jacs, which I have shown are good, just want to test
@@ -360,8 +366,6 @@ else
   m_ts_jac = m_ts_jac0;
   qWV = (1:iNlays_retrieve) + 6;
 end
-
-%keyboard_nowindow
 
 bad = find(isnan(m_ts_jac) | isinf(m_ts_jac));
 if length(bad) > 0
@@ -424,6 +428,9 @@ aux.m_ts_jac = m_ts_jac;
 %save f1305.mat f1305
 %error(';kjgs')
 
+%keyboard_nowindow
+%plot(f,m_ts_jac(:,1))
+
 clear jac fout jacout
 %---------------------------------------------------------------------------
 % Good channel set
@@ -444,7 +451,7 @@ ch = find_the_oem_channels(f2645,2645,2645,settings.chan_LW_SW,iChSet);
 ch = find_closest_airs2cris_chans(ch);
 ch = intersect(finitech,ch);
 
-guardchan = [1 3 716 717 718 719 1153 1154 1155 1156 1316 1317];   %% these are guard chans for 1 : 1307
+guardchan = [1 3 716 717 718 719 1153 1154 1155 1156 1316 1317];   %% these are guard chans for 1 : 1317
 guardchan = [1 713 714 1146 1147 1305];                            %% loading in eg ANOM_16dayavg/latbin_0dayavg_20.mat can see in latter times these are the NaN channels for 1:1305
 ch = setdiff(ch,guardchan);
 
@@ -457,7 +464,11 @@ ch700 = find(f1305.f1305 > 700 & f1305.f1305 < 800);
 ch700 = ch700(1:1:length(ch700));
 ch = union(ch,ch700);
 
-chLWMW = find(f1305.f1305 < 1800);
+ch725 = find(f1305.f1305 > 725 & f1305.f1305 < 800);
+ch725 = ch725(1:1:length(ch725));
+ch = union(ch,ch725);
+
+chLWMW = find(f1305.f1305 > 725 & f1305.f1305 < 1800);
 ch = intersect(ch,chLWMW);
 
 driver.topts.iChSet = iChSet;
@@ -715,7 +726,9 @@ end      %% if exist('iFixO3_NoFit','var')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-if settings.set_tracegas == +1 & driver.i16daytimestep < 0
+%% driver.settings = settings;   %% no need to do this since topts == settings == topts
+
+if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 0
   disp('setting constant rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25')
   if settings.co2lays == 1
     xb(1) = 2.2;  % Set CO2 apriori
@@ -741,7 +754,7 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0
     xb(7) = -1.25 * 0;  % set CFC12, before Aug 23 the mult was 1
   end
 
-elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0
+elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_set == 0
   junk = 365/16; %% days per timestep 
   junk = (driver.i16daytimestep-1)/junk;
   str = ['setting time varying rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25 for ' num2str(junk) ' years']; 
@@ -755,6 +768,8 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0
     xb(3) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
     xb(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC11, before Aug 23 the mult was 1
     xb(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC12, before Aug 23 the mult was 1
+    xb(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;    % set CFC11, before May 2022  the mult was 1
+    xb(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;    % set CFC12, before May 2022 the mult was 1
 
   elseif settings.co2lays == 3
     deltaT = 365/16; %% days per timestep
@@ -767,9 +782,11 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0
     xb(5) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;        % set CH4
     xb(6) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC11, before Aug 23 the mult was 1
     xb(7) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC12, before Aug 23 the mult was 1
+    xb(6) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;  % set CFC11, before May 2022 the mult was 1
+    xb(7) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;  % set CFC12, before May 2022 the mult was 1
   end
 
-elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1
+elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1 & settings.ocb_set == 0
   junk = 365/16; %% days per timestep 
   junk = (driver.i16daytimestep-1);
   str = ['setting bootstrap time varying rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25 based on previous timestep'];
@@ -787,6 +804,8 @@ elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1
       xb0(3) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
       xb0(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC11, before Aug 23 the mult was 1
       xb0(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC12, before Aug 23 the mult was 1
+      xb0(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;    % set CFC11, before May 2022  the mult was 1
+      xb0(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;    % set CFC12, before May 2022 the mult was 1
 
       %% overwrite!!!
       xb(1) = prev.oem.finalrates(1);
