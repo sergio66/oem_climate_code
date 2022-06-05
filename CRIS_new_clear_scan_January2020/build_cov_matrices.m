@@ -97,7 +97,12 @@ cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0
 %%               sigT_t    sigT_s                sigWV_t   sigWV_s/2             sigO3_t/2   sigO3_s
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2    coz_wide  alpha_T  alpha_w  alpha_oz
 uncT = 1; uncWV = 0.2; uncO3 = 0.2;
+%uncT = 2; uncWV = 0.5; uncO3 = 0.5;
 cov_set = [1.0  uncT    uncT/100    1/2       uncWV       uncWV  1/2      uncWV    uncWV     1/2        1/uncT/uncT    1/uncWV/uncWV  1/uncO3/uncO3]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+
+%%% this is from ~/MATLABCODE/oem_pkg_run/AIRS_new_clear_scan_August2019_AMT2020PAPER/build_cov_matrices.m
+cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+                                                                                      %% great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -229,6 +234,9 @@ if settings.co2lays == 1
   fmatd = [2     1.0       5      2     2            0.1];       %% try loosening  so all gases have unc ~ 1.0 year growth : files 8/30/19  *newchans_newkcartajacs_finitediffV3_5_allTraceGasUnc_1yearrate.mat
   fmatd = [2     1.0       5      2     2            0.1]/10;    %% try tightening so all gases have unc ~ 0.1 year growth : files 9/03/19  *newchans_newkcartajacs_finitediffV3_5_allTraceGasUnc_0p1yearrate.mat
   fmatd = [2     0.1       2      1     1            0.1];       %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
+
+  fmatd = [2     1       5.5      1     1            1];       %% try this
+
 elseif settings.co2lays == 3
   fmatd = [2 2 2 0.1       2      1     1            0.1];
 end
@@ -246,7 +254,8 @@ elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimeste
 end
 
 %%% fmatd = fmatd * 0.0000000001
-fmatd = fmatd * 0.01  %% works decently
+%%% fmatd = fmatd * 0.01  %% works decently on June 3, 2022
+%%% fmatd = fmatd * 0.1
 
 if settings.iFixTG_NoFit(1) > 0
   disp('setting uncertainties for some tracegases to be 0, setting a priori xb for these gases also to be 0')

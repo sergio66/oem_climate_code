@@ -3,9 +3,10 @@ addpath /home/sergio/MATLABCODE/TIME
 
 clear all
 
-iOBSorCAL = 0;  %% OBS
 iOBSorCAL = 1;  %% CAL
+iOBSorCAL = 0;  %% OBS
 
+iDoAnomalyOrRates = +1
 change_important_topts_settings;
 iOBSorCAL = topts.ocb_set;
 clear topts

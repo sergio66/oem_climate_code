@@ -12,8 +12,8 @@ t1x = tic;
 %% I did 16 day averages .... so 365/16 steps per year ... and 2002-2018 is
 %% 16 years so total of 365/16 * 16 = 365 steps
 
-iDoAnomalyOrRates = +1;  %% do the anomalies
 iDoAnomalyOrRates = -1;  %% do the rates
+iDoAnomalyOrRates = +1;  %% do the anomalies
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 %JOB = 20
@@ -40,8 +40,8 @@ addpath Plotutils
 %---------------------------------------------------------------------------
 iLat0 = 11; iLatE = 31;
 iLat0 = 21; iLatE = 21;
-iLat0 =  1; iLatE = 40;
 iLat0 = 21; iLatE = 21;
+iLat0 =  1; iLatE = 40;
 
 %JOB =  83; iLat0 = 30; iLatE = iLat0;  %% works fine
 %JOB =  83; iLat0 = 29; iLatE = iLat0;  %% big bad voodoo daddy
@@ -55,6 +55,12 @@ iLat0 = 21; iLatE = 21;
 
 if iDoAnomalyOrRates == -1
   JOB = 20
+end
+
+iDebugDesperate = -1;
+if iDebugDesperate > 0
+  JOB = 21;
+  iLat0 =  21; iLatE = 21;
 end
 
 %for iLat = iLatE : -1 : iLatE
@@ -110,7 +116,7 @@ for iLat = iLat0 : iLatE
   end
 driver
 figure(3); clf; plot(1:2645,driver.rateset.rates,'b',1:2645,driver.oem.fit,'r'); title('the end AIRS_new_clear_scan_August2019');
-error('the end AIRS_new_clear_scan_August2019')
+%% error('the end AIRS_new_clear_scan_August2019')
 
 %---------------------------------------------------------------------------
   % Save retrieval output from this loop
@@ -145,6 +151,7 @@ error('the end AIRS_new_clear_scan_August2019')
   end
 
   if sum(abs(driver.rateset.rates)) > 0 & ~exist(driver.outfilename)
+    fprintf(1,'saving to %s \n',driver.outfilename)
     save(driver.outfilename,'-struct','driver');
   elseif sum(abs(driver.rateset.rates)) < eps & ~exist(driver.outfilename)
     fprintf(1,'not saving %s since sum(abs(driver.rateset.rates)) = 0 \n',driver.outfilename);

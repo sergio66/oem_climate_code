@@ -63,6 +63,8 @@ iLat0 =  1; iLatE = 40;
 
 %JOB = 88; iLat0 =  20; iLatE = 20;  %% seem to be having NaNs in CO2 possibly because OBS has NaNs, do latbin 19, timestep 90
 
+%iLat0 =  20; iLatE = 20;
+
 %for iLat = iLatE : -1 : iLatE
 for iLat = iLat0 : iLatE
   disp(' ')

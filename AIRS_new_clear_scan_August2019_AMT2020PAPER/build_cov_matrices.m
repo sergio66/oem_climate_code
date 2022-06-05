@@ -97,7 +97,6 @@ elseif driver.i16daytimestep < 0
   cov_set = [1.0  0.05/2/20    0.05/2/20   1/2       0.15/25/20      0.15/25/20    1/2      0.05/2/20    0.05/0.75/20      1/2        20*1E-1     20*1E-1  20*1E-1]; 
   cov_set = [1.0  0.05/2*2    0.05/2*2    1/2       0.15/25*2      0.15/25*2    1/2      0.05/2*2    0.05/0.75*2      1/2        2*1E-1     2*1E-1  2*1E-1]; 
 end
-
   
 %% testing perturbations for paper, see PAPER/questions.txt Q4
 reduce = [2 3 5 6 8 9];  %% cx.lev1,cx.lev2 for x=WV,T,O3
@@ -200,8 +199,6 @@ w_sigma = (wunc./wnorm);
 wmat = (w_sigma'*w_sigma).*mat_od;
 driver.oem.wunc = wunc;
 
-%keyboard_nowindow
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Scalar uncertainties
@@ -219,12 +216,12 @@ end
 
 %% testing perturbations for paper, see PAPER/questions.txt Q5
 %reduce = [11 12 13];  %% alphaWV alphaT alphaO3
-%cov_set(reduce) =  cov_set(reduce) * 10.0; fmatd = fmatd*10; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x10')
-%cov_set(reduce) =  cov_set(reduce) * 0.1; fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
-%cov_set(reduce) =  cov_set(reduce) * 0.1; %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
-%cov_set(reduce) =  cov_set(reduce) * 0.001; %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
-%cov_set(reduce) =  cov_set(reduce) * 1.0e6; %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
-%cov_set(reduce) =  cov_set(reduce) * 1.0e10; %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
+%cov_set(reduce) =  cov_set(reduce) * 10.0;    fmatd = fmatd*10;     disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x10')
+%cov_set(reduce) =  cov_set(reduce) * 0.1;     fmatd = fmatd*0.1;    disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
+%cov_set(reduce) =  cov_set(reduce) * 0.1;     %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
+%cov_set(reduce) =  cov_set(reduce) * 0.001;   %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
+%cov_set(reduce) =  cov_set(reduce) * 1.0e6;   %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
+%cov_set(reduce) =  cov_set(reduce) * 1.0e10;  %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
 %cov_set(reduce) =  cov_set(reduce) * 1.0e-10; %% fmatd = fmatd*0.1; disp(' >>>> WARNING : build_cov_matrices.m : multiplied fmatd x0.1')
 
 if settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep < 0
@@ -250,6 +247,8 @@ if settings.iFixTG_NoFit(1) > 0
 end
 
 fmat  = diag(fmatd./fnorm); 
+fmat = fmat.*fmat;             %% new, June 2022 since we need covariance so we have to square the uncertainties
+
 if exist('tmat','var') & exist('ozmat','var')
   driver.oem.cov = blkdiag(fmat,wmat,tmat,ozmat);
 elseif exist('ozmat','var')

@@ -40,6 +40,12 @@ iTimeStep0 =  1; iTimeStepE = 365;
 
 %JOB = 30; iTimeStep0 =  1; iTimeStepE = 365;
 
+iDebugDesperate = -1;
+if iDebugDesperate > 0
+  JOB = 21;
+  iTimeStep0 =  123;
+end
+
 for iTimeStep = iTimeStep0 : iTimeStepE
   disp(' ')
   fprintf(1,'timestep = %3i latbin = %2i \n',iTimeStep,JOB);
