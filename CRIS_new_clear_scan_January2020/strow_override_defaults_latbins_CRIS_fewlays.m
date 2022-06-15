@@ -7,6 +7,7 @@ settings.co2lays = 1;       % assume column jac for CO2, or 3 lays (gnd-500,500-
 
 settings.ocb_set = 0;       % 0 = obs, 1 = cal, -1 = bias
 settings.numchan = 2645;    % L1b = 2378, L1c = 2645
+settings.numchan = 1305;    % NSR
 settings.chan_LW_SW = 0;    % 0 is 640 to 1640, 1 is 700 to 1640, -1 is 640 to 2740
 
 settings.set_tracegas = -1;            %% do we leave apriori as 0 or set CO2/N2o/CH4/CFC to be 2.2, 1, 4.5, -1             
@@ -455,8 +456,9 @@ guardchan = [1 3 716 717 718 719 1153 1154 1155 1156 1316 1317];   %% these are 
 guardchan = [1 713 714 1146 1147 1305];                            %% loading in eg ANOM_16dayavg/latbin_0dayavg_20.mat can see in latter times these are the NaN channels for 1:1305
 ch = setdiff(ch,guardchan);
 
-iUseMoreChans = -1;
-iUseMoreChans = +1;  %% gave really good results, June 4, 2022
+iUseMoreChans = -1;  %% use the AIRS list only, about 400 chans
+iUseMoreChans = +2;  %% use all chans betwen 65- and 1800 cm=1 except for guard chans, abut 1100 chans
+iUseMoreChans = +1;  %% gave really good results, June 4, 2022, about 657 chans
 
 if iUseMoreChans > 0
   %% get great results
@@ -474,9 +476,16 @@ if iUseMoreChans > 0
   ch725 = ch725(1:1:length(ch725));
   ch = union(ch,ch725);
   
-  chLWMW = find(f1305.f1305 > 725 & f1305.f1305 < 1800);
-  chLWMW = find(f1305.f1305 > 650 & f1305.f1305 < 1800);
-  ch = intersect(ch,chLWMW);
+  if iUseMoreChans == 1
+    chLWMW = find(f1305.f1305 > 725 & f1305.f1305 < 1800);
+    chLWMW = find(f1305.f1305 > 650 & f1305.f1305 < 1800);
+    ch = intersect(ch,chLWMW);
+  elseif iUseMoreChans == 2
+    chLWMW = find(f1305.f1305 > 725 & f1305.f1305 < 1800);
+    chLWMW = find(f1305.f1305 > 650 & f1305.f1305 < 1800);
+    ch = union(ch,chLWMW); 
+    ch = setdiff(ch,guardchan);
+  end
 end
 
 driver.topts.iChSet = iChSet;
@@ -947,6 +956,8 @@ finitechnoise = find(isfinite(driver.rateset.unc_rates));
 %driver.rateset.unc_rates = 0.001 * ones(size(driver.rateset.unc_rates));   %% THIS IS AN ARRAY
 
 %%%%%%%%%%%%%%%%%%%%%%%%% >>>>>>
+%{
+OLD!!!!
 if settings.obs_corr_matrix > 0
   addpath /home/sergio/MATLABCODE
   thecov = load('/home/sergio/MATLABCODE/oem_pkg_run/Simulate_Calcs/thecov_clear');
@@ -964,6 +975,46 @@ if settings.obs_corr_matrix > 0
 
   driver.rateset.unc_rates = junk;  %% THIS IS A SQUARE MATRTIX
 end
+%}
+
+%% NEW
+iCovSe_OffDiag = +1;  %% send in off-diag matrix strow
+iCovSe_OffDiag = 0;   %% send in diag matrix sergio which should be equivalent to iCovSe_OffDiag = -1 ???????
+iCovSe_OffDiag = -1;  %% do usual in rodgers.m          <<< DEFAULT >>>
+
+iCovSe_OffDiag = -1;  %% do usual in rodgers.m          <<< DEFAULT >>>
+iCovSe_OffDiag = 0;   %% send in diag matrix sergio which should be equivalent to iCovSe_OffDiag = -1 ???????!
+iCovSe_OffDiag = +1;  %% send in off-diag matrix strow
+iCovSe_OffDiag = +2;  %% send in off-diag matrix serio
+iCovSe_OffDiag = topts.obs_corr_matrix;
+
+fprintf(1,'strow_override_defaults_latbins_CRIS_fewlays.m : iCovSe_OffDiag = %2i \n',iCovSe_OffDiag)
+if iCovSe_OffDiag >= 0
+  %% now turn driver.rateset.unc_rates into cov matrix
+  %% var(i) = sig(i) sig(i)   where sig(i) = std dev (i)
+  %% rij = cov(ij)/sqrt(var(i) var(j))
+  %% so cov(ij) = rij sqrt(var(i) var(j))  = rij sqrt(sig(i) sig(i)  sig(j) sig(j)) = rij sig(i) sig(j) 
+  %%    cov(ii) = 1.0 sqrt(var(i) var(i))  = var(i) = sig(i) sig(i)
+  
+  junk = driver.rateset.unc_rates;  %% sig(i)
+  junk0 = junk' * junk;             %% sig(i) sig(j)
+  junknew = diag(diag(junk0));      %% sig(i) sig(i) on diag, everything else zeros == "AIRS" normal cov matrix
+
+  junkP1 = diag(junk0,+1);
+  junkM1 = diag(junk0,-1);
+  
+  if iCovSe_OffDiag == 2
+    % Characterization of the Observational Covariance Matrix of Hyper-Spectral Infrared Satellite Sensors Directly from Measured Earth Views
+    % Carmine Serio 1 , Guido Masiello 1,∗ , Pietro Mastro 1 and David C. Tobin 2
+    junknew = junknew + -0.3*(diag(junkP1,1) + diag(junkM1,-1)); %% see Fig 11
+  elseif iCovSe_OffDiag == 1
+    %% strow slide https://www.star.nesdis.noaa.gov/star/documents/meetings/2016JPSSAnnual/S4/S4_04_cris_strow.pdf
+    junknew = junknew + 0.02*(diag(junkP1,1) + diag(junkM1,-1)); %% see Slide 7
+  end
+
+  driver.rateset.unc_rates = junknew;
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%% >>>>>>
 
 % Modify with estimated error in freq + regress errors 
@@ -995,38 +1046,3 @@ end
 build_cov_matrices
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iCovSe_OffDiag = +1;  %% send in off-diag matrix strow
-iCovSe_OffDiag = 0;   %% send in diag matrix sergio which should be equivalent to iCovSe_OffDiag = -1 ???????
-iCovSe_OffDiag = -1;  %% do usual in rodgers.m          <<< DEFAULT >>>
-
-iCovSe_OffDiag = -1;  %% do usual in rodgers.m          <<< DEFAULT >>>
-iCovSe_OffDiag = 0;   %% send in diag matrix sergio which should be equivalent to iCovSe_OffDiag = -1 ???????!
-iCovSe_OffDiag = +1;  %% send in off-diag matrix strow
-iCovSe_OffDiag = +2;  %% send in off-diag matrix serio
-
-fprintf(1,'strow_override_defaults_latbins_CRIS_fewlays.m : iCovSe_OffDiag = %2i \n',iCovSe_OffDiag)
-if iCovSe_OffDiag >= 0
-  %% now turn driver.rateset.unc_rates into cov matrix
-  %% var(i) = sig(i) sig(i)   where sig(i) = std dev (i)
-  %% rij = cov(ij)/sqrt(var(i) var(j))
-  %% so cov(ij) = rij sqrt(var(i) var(j))  = rij sqrt(sig(i) sig(i)  sig(j) sig(j)) = rij sig(i) sig(j) 
-  %%    cov(ii) = 1.0 sqrt(var(i) var(i))  = var(i) = sig(i) sig(i)
-  
-  junk = driver.rateset.unc_rates;  %% sig(i)
-  junk0 = junk' * junk;             %% sig(i) sig(j)
-  junknew = diag(diag(junk0));      %% sig(i) sig(i) on diag, everything else zeros == "AIRS" normal cov matrix
-
-  junkP1 = diag(junk0,+1);
-  junkM1 = diag(junk0,-1);
-  
-  if iCovSe_OffDiag == 2
-    % Characterization of the Observational Covariance Matrix of Hyper-Spectral Infrared Satellite Sensors Directly from Measured Earth Views
-    % Carmine Serio 1 , Guido Masiello 1,∗ , Pietro Mastro 1 and David C. Tobin 2
-    junknew = junknew + -0.3*(diag(junkP1,1) + diag(junkM1,-1)); %% see Fig 11
-  elseif iCovSe_OffDiag == 1
-    %% strow slide https://www.star.nesdis.noaa.gov/star/documents/meetings/2016JPSSAnnual/S4/S4_04_cris_strow.pdf
-    junknew = junknew + 0.02*(diag(junkP1,1) + diag(junkM1,-1)); %% see Slide 7
-  end
-
-  driver.rateset.unc_rates = junknew;
-end

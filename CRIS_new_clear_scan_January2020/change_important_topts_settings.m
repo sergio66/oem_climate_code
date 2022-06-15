@@ -4,7 +4,7 @@ topts = [];
 topts = struct;
 
 topts.resetnorm2one = -1; %%% DEFAULT, keep my scaling
-%topts.resetnorm2one = +1; %%% new, reset stuff to 1.00000000
+topts.resetnorm2one = +1; %%% new, reset stuff to 1.00000000
 
 %% topts.dataset = 3; %% AIRS 11 year
 %% topts.dataset = 2; %% IASI2AIRS 11 year
@@ -52,7 +52,7 @@ topts.offsetrates = -1; %% DEFAULT do NOT offset!!!!!
 %topts.set_tracegas = +1;   %% set   a priori for trace gas as eg 2.2/1.0/4.5/0.0/0.0 for CO2/N2O/CH4/CFC11/CFC12; if anomaly, adjust according to timestep!!!!!  
 %                           %% DEFAULT for anom
 % topts.set_tracegas = +2;   %% set   a priori for trace gas as eg 2.2/1.0/4.5/0.0/0.0 for CO2/N2O/CH4/CFC11/CFC12; if anomaly, adjust according to PREVIOUS timestep!!!!!  BOOTSTRAP
-                             %% can only run with  sbatch --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2    since depends on previous timestep
+%                            %% can only run with  sbatch --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2    since depends on previous timestep
 
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 if iDoAnomalyOrRates == +2
@@ -100,8 +100,10 @@ topts.iChSet = 1;  %% old chans, ORIG, CRIS DEFAULT >>>>
 %%%% <<<<<<< this is what I typically change >>>>>>>>>>>>>>
 %%%% <<<<<<< this is what I typically change >>>>>>>>>>>>>>   
 
-topts.obs_corr_matrix = -1; %% use diagnol obs uncertainty, gives nice 2.0 ppmv/yr CO2 for all latbins, after fixed the channel uncdrtainty DEFAULT
-%% topts.obs_corr_matrix = +1; %% instead of diagnol obs cov, use full cov matrix
+%% topts.obs_corr_matrix = -1; %% use diagnol obs uncertainty, gives nice 2.0 ppmv/yr CO2 for all latbins, after fixed the channel uncdrtainty ORIG DEFAULT
+%% topts.obs_corr_matrix = 0;  %% instead of diagnol obs cov, send in diag matrix sergio which should be equivalent to iCovSe_OffDiag = -1
+%% topts.obs_corr_matrix = +1; %% instead of diagnol obs cov, use diag cov matrix strow
+topts.obs_corr_matrix = +2; %% instead of diagnol obs cov, use diag cov matrix serio
 
 %% topts.tie_sst_lowestlayer = -1;  %% no  cross cov between SST and lowest layer
 topts.tie_sst_lowestlayer = +1;  %% yes cross cov between SST and lowest layer DEFAULT

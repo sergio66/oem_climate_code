@@ -48,6 +48,8 @@ end
 xyz = load('f1305.mat');
 f = xyz.f1305;
 
+i900 = find(f >= 900,1);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('checking number of running ANOM jobs')
@@ -74,6 +76,9 @@ disp('can reset things by saying     iaaFound = zeros(size(iaaFound)); clear co2
 disp('can reset things by saying     iaaFound = zeros(size(iaaFound)); clear co2 wv* t* o3*')
 
 if ~exist('co2')
+  obs900 = zeros(40,iMaxTimeSteps);
+  cal900 = zeros(40,iMaxTimeSteps);
+
   co2 = zeros(40,iMaxTimeSteps);
   n2o = zeros(40,iMaxTimeSteps);
   ch4 = zeros(40,iMaxTimeSteps);
@@ -95,6 +100,18 @@ if ~exist('co2')
   end
 end
 
+if iOBSorCAL == 0
+  wah = dir(['OutputAnomaly_OBS/*/anomtest_timestep*.mat']);
+elseif iOBSorCAL == 1
+  wah = dir(['OutputAnomaly_CAL/*/anomtest_timestep*.mat']);
+end
+wahtime = 0;
+for ii = 1 : length(wah)
+  wahtime = wahtime + wah(ii).datenum;
+end
+wahtime = wahtime/length(wah);
+fprintf(1,'datestr === mean datenum over %5i files is %s \n',length(wah),datestr(wahtime))
+
 for ii = 1 : 40
   fprintf(1,'reading in data for latbin %2i ',ii);
   mapp = save_days_map(:,ii);
@@ -110,7 +127,19 @@ for ii = 1 : 40
       fname = ['OutputAnomaly_CAL/' num2str(ii,'%02d') '/anomtest_timestep' num2str(iTime) '.mat'];
     end
 
+    samesize = -1;
     if exist(fname) & iaaFound(ii,mapp(iTime)) == 0
+      %% make sure file is not being created while reading
+      wah = dir(fname);
+      zdiff = (datenum(datetime('now'))-wah.datenum)*86400;  %% approx time in seconds
+      if zdiff > 30
+        samesize = +1;
+      else
+        fprintf(1,'%s is being created right now, not reading .. will do that on another pass of read_the_anom_T_WV_retrievals.m \n',fname)
+      end
+    end
+
+    if exist(fname) & iaaFound(ii,mapp(iTime)) == 0 & samesize > 0
       loader = ['a = load(''' fname ''');'];
 
       eval(loader)
@@ -129,6 +158,9 @@ for ii = 1 : 40
         tzind = (1:nlays) + 1*nlays + indoffset;
         o3ind = (1:nlays) + 2*nlays + indoffset;
       end
+
+      obs900(ii,mapp(iTime))    = a.rateset.rates(i900);
+      cal900(ii,mapp(iTime))    = a.oem.fit(i900);
 
       if co2lays == 1
         dofs(ii,mapp(iTime))      = a.oem.dofs;
@@ -287,6 +319,11 @@ if co2lays == 1
   figure(1); plot(okdates,nanmean(save_dat_1231(:,iaTropics),2),'b.-',okdates,nanmean(co2(iaTropics,:),1),'r.-',...
                   okdates,save_dat_1231(:,20),'c',okdates,co2(20,:),'m')
     hl = legend('mean tropical BT1231','mean tropical CO2 retr','bin20 BT1231','bin20 CO2','location','best');
+  pause(0.1)
+
+  figure(1); plot(okdates,nanmean(save_dat_1231(:,iaTropics),2),'b.-',okdates,nanmean(obs900(iaTropics,:),1),'r.-',...
+                  okdates,save_dat_1231(:,20),'c',okdates,obs900(20,:),'m')
+    hl = legend('mean tropical BT1231','mean tropical BT900','bin20 BT1231','bin20 BT900','location','best');
   pause(0.1)
 
   figure(1); plot(okdates,nanmean(save_dat_1231(:,iaTropics),2),'b.-',okdates,nanmean(stemp(iaTropics,:),1),'r.-','linewidth',2)

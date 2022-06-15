@@ -6,6 +6,7 @@ addpath /home/sergio/MATLABCODE/PLOTTER
 clear all
 
 i1231 = 731; % from Larrabee
+i0900 = 401; % from Larrabee
 
 iOBSorCAL = 0;  %% OBS
 iOBSorCAL = 1;  %% CAL
@@ -54,6 +55,7 @@ load(fin)
 save_days = avg_doy_since2012;
 save_rtime = avg16_rtime;
 save_dat_1231 = zeros(length(save_days),40);
+save_dat_0900 = zeros(length(save_days),40);
 save_days_map = zeros(length(save_days),40);
 
 for iLatbin = 1 : 40
@@ -78,6 +80,7 @@ for iLatbin = 1 : 40
 
   if length(avg_doy_since2012) == length(save_days)
     save_dat_1231(:,iLatbin) = avg16_btanom(:,i1231);
+    save_dat_0900(:,iLatbin) = avg16_btanom(:,i0900);
     save_days_map(:,iLatbin) = 1 : iMaxTimeSteps;
   else
     for dd = 1 : length(avg_doy_since2012)
@@ -85,6 +88,7 @@ for iLatbin = 1 : 40
       moo = find(moo == min(moo));
       save_days_map(moo,iLatbin) = moo;
       save_dat_1231(moo,iLatbin) = avg16_btanom(dd,i1231);
+      save_dat_0900(moo,iLatbin) = avg16_btanom(dd,i0900);
     end
   end
   pause(0.1);
@@ -111,3 +115,4 @@ end
 if junk > 0
   read_the_anom_retrievals_spectra
 end
+

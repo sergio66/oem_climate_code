@@ -4,6 +4,8 @@ f = vchan2834;
 load sarta_chans_for_l1c.mat
 f = f(ichan);
 
+i900 = find(f >= 900,1);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('checking number of running ANOM jobs')
@@ -18,6 +20,9 @@ iDoDOFS = -1;
 iDoDOFS = +1;
 
 if ~exist('co2')
+  obs900 = zeros(40,iMaxTimeSteps);
+  cal900 = zeros(40,iMaxTimeSteps);
+
   co2 = zeros(40,365);
   n2o = zeros(40,365);
   ch4 = zeros(40,365);
@@ -39,6 +44,18 @@ if ~exist('co2')
   end
 end
 
+if iOBSorCAL == 0
+  wah = dir(['OutputAnomaly_OBS/*/anomtest_timestep*.mat']);
+elseif iOBSorCAL == 1
+  wah = dir(['OutputAnomaly_CAL/*/anomtest_timestep*.mat']);
+end
+wahtime = 0;
+for ii = 1 : length(wah)
+  wahtime = wahtime + wah(ii).datenum;
+end
+wahtime = wahtime/length(wah);
+fprintf(1,'datestr === mean datenum over %5i files is %s \n',length(wah),datestr(wahtime))
+
 for ii = 1 : 40
   fprintf(1,'reading in data for latbin %2i ',ii);
   mapp = save_days_map(:,ii);
@@ -54,7 +71,19 @@ for ii = 1 : 40
       fname = ['OutputAnomaly_CAL/' num2str(ii,'%02d') '/anomtest_timestep' num2str(iTime) '.mat'];
     end
 
+    samesize = -1;
     if exist(fname) & iaaFound(ii,mapp(iTime)) == 0
+      %% make sure file is not being created while reading
+      wah = dir(fname);
+      zdiff = (datenum(datetime('now'))-wah.datenum)*86400;  %% approx time in seconds
+      if zdiff > 30
+        samesize = +1;
+      else
+        fprintf(1,'%s is being created right now, not reading .. will do that on another pass of read_the_anom_T_WV_retrievals.m \n',fname)
+      end
+    end
+
+    if exist(fname) & iaaFound(ii,mapp(iTime)) == 0 & samesize > 0
       loader = ['a = load(''' fname ''');'];
 
       eval(loader)
@@ -73,6 +102,9 @@ for ii = 1 : 40
         tzind = (1:nlays) + 1*nlays + indoffset;
         o3ind = (1:nlays) + 2*nlays + indoffset;
       end
+
+      obs900(ii,mapp(iTime))    = a.rateset.rates(i900);
+      cal900(ii,mapp(iTime))    = a.oem.fit(i900);
 
       if co2lays == 1
         dofs(ii,mapp(iTime))      = a.oem.dofs;
