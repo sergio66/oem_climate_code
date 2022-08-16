@@ -33,7 +33,7 @@ if settings.dataset == -2
   disp('AIRS 16 year rates or anomalies, NO nu cal done')
   error('oops not done')
 
-elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
+elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 5
   disp('AIRS 18 or 19 year rates or anomalies, nu cal done in there')
   if settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 1    
     disp('doing Strow 18 yr gridded quantile rates')
@@ -109,12 +109,28 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 4
     driver.rateset.datafile  = [];
     if settings.ocb_set == 0  & driver.i16daytimestep < 0
       driver.rateset.datafile  = ['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
-
     elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcsAHAH.mat';           
       driver.rateset.datafile  = 'AHAH';
       strlatbin                = num2str(floor((driver.iibin-1)/72)+1,'%02d');
-      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                 %% co2/n2o/ch4 change in time
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
+    elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'AHAH';
+    end
+
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 5
+    disp('doing Sergio FULL 13 year gridded quantile rates')
+    driver.rateset.datafile  = [];
+    if settings.ocb_set == 0  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = ['iType_5_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcsAHAH.mat';           
+      driver.rateset.datafile  = 'AHAH';
+      strlatbin                = num2str(floor((driver.iibin-1)/72)+1,'%02d');
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                 %% co2/n2o/ch4 change in time
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
+      driver.rateset.datafile  = 'AHAH';
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
@@ -133,6 +149,7 @@ end
 
 settings
 driver
+fprintf(1,'[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i %3i \n',[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset])
 fprintf(1,' <<< driver.rateset.datafile >>> = %s \n',driver.rateset.datafile)
 
 % Lag-1 correlation file; if using rate least-squares errors
@@ -777,7 +794,7 @@ elseif settings.set_era5_cmip6_airsL3 == 8
   xb = reshape(xb,length(xb),1);
 end
 
-if settings.set_tracegas == +1 & driver.i16daytimestep < 0
+if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
   disp('setting constant rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8')
   if settings.co2lays == 1
     xb(1) = 2.2;  % Set CO2 apriori
@@ -806,7 +823,7 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0
 
   end
 
-elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0
+elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_set ~= 1
   junk = 365/16; %% days per timestep 
   junk = (driver.i16daytimestep-1)/junk;
   str = ['setting time varying rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25 for ' num2str(junk) ' years']; 
@@ -834,7 +851,7 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0
     xb(7) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC12, before Aug 23 the mult was 1
   end
 
-elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1
+elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1 & settings.ocb_set ~= 1
   junk = 365/16; %% days per timestep 
   junk = (driver.i16daytimestep-1);
   str = ['setting bootstrap time varying rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25 based on previous timestep'];
@@ -872,6 +889,17 @@ elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1
   else
     error('oops previous file DNE');
   end
+end
+
+iSergioCO2 = +1;
+iSergioCO2 = -1;
+if iSergioCO2 > 0 & settings.ocb_set == 1
+  disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
+  xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+elseif iSergioCO2 > 0 & settings.ocb_set == 0
+  disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
+  xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  xb(1) = 2.2;
 end
 
 [mm,nn] = size(xb);

@@ -26,8 +26,10 @@ end
 iNorD = 1;
 iAorOrL = 0;
 
+iNumYears = 19;
+
 airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);
-nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL);
+nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL,iNumYears);
 xmip6Choice = getdata_XMIP6(iXMIP6,iNorD,iAorOrL);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

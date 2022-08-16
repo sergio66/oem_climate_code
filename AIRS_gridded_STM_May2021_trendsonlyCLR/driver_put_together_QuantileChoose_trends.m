@@ -38,12 +38,13 @@ quants =  [0.0100 0.0200 0.0300 0.0400 0.0500 0.1000 0.2500 0.5000 0.7500 0.9000
 b_asc = nan(72,64,2645);
 b_desc = nan(72,64,2645);
 
-iType = +01; %% strows Q16 18 year trends       Strow ran for me in Feb 2021, 2002/09 to 2020/08
-iType = -01; %% sergio Q16 18 year TEST trends  I     ran for me in Aug 2021, 2002/09 to 2020/08, to check I get same results as Strow +01
-iType = +02; %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/07
-iType = +03; %% sergio Extreme 19 year trends   I     ran for me in Aug 2021, 2002/09 to 2020/08
-iType = -03; %% sergio Mean 19 year trends      I     ran for me in Aug 2021, 2002/09 to 2020/08
-iType = +04; %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/08 FULL
+iType = +01;   %% strows Q16 18 year trends       Strow ran for me in Feb 2021, 2002/09 to 2020/08
+iType = -01;   %% sergio Q16 18 year TEST trends  I     ran for me in Aug 2021, 2002/09 to 2020/08, to check I get same results as Strow +01
+iType = +02;   %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/07
+iType = +03;   %% sergio Extreme 19 year trends   I     ran for me in Aug 2021, 2002/09 to 2020/08
+iType = -03;   %% sergio Mean 19 year trends      I     ran for me in Aug 2021, 2002/09 to 2020/08
+iType = +04;   %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/08 FULL
+iType = +05;   %% sergio Q16 12 year trends       I     ran for me in Aug 2022, 2002/09 to 2014/08 FULL
 
 disp('Choices DataSet to use ')
 disp('                       (+1) Strow  Quantile Mar 2021 2002/09 to 2020/08 Full 18 years');
@@ -54,6 +55,7 @@ disp(' <------------------------------------------------------------------------
 disp('                        (3) Sergio Extreme Aug 2021 2002/09 to 2021/07 ');
 disp('                       (-3) Sergio Mean Aug 2021 2002/09 to 2021/07 ');
 disp(' <---------------------------------------------------------------------------------------> ')
+disp('                        (5) Sergio Quantile Aug 2022 2002/09 to 2014/08 Full 12 years **** ');
 iType = input('Enter DataSet to use (+1,-1,+2,+4   or +3,-3) : ');
 
 if iType ~= 3
@@ -88,6 +90,10 @@ for iLat = 1 : 64
     % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0 = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
+  elseif iType == 5
+    % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
+    %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
+    thedir0 = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
   end
 
   for iLon = 1 : 72
@@ -110,6 +116,9 @@ for iLat = 1 : 64
     elseif iType == 4
       %% full 19 year by Sergio
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps433.mat'];
+    elseif iType == 5
+      %% full 19 year by Sergio
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200500010001_201400120031_TimeStepsX228.mat'];
     end
 
     iBoo = (iLat-1)*72 + iLon;
@@ -186,21 +195,33 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if iType == 1
-  saver = ['save convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+  fnamePROCESS = ['convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 elseif iType == -1
-  saver = ['save iType_-1_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+  fnamePROCESS = ['iType_-1_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 elseif iType == 2
-  saver = ['save iType_2_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+  fnamePROCESS = ['iType_2_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 elseif iType == 4
-  saver = ['save iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
-%%
-%%
+  fnamePROCESS = ['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+elseif iType == 5
+  fnamePROCESS = ['iType_5_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+%%%%
 elseif iType == 3
-  saver = ['save iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+  fnamePROCESS = ['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 elseif iType == -3
-  saver = ['save iType_-3_mean_convert_sergio_clearskygrid_obsonly.mat b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+  fnamePROCESS = ['iType_-3_mean_convert_sergio_clearskygrid_obsonly.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 end
-eval(saver);
+if ~exist(fnamePROCESS)
+  eval(saver);
+else 
+  fprintf(1,'%s already exists \n',fnamePROCESS);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

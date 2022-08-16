@@ -110,11 +110,16 @@ co2ppm = 368 + 2.1*time_so_far;
 n2oppm = 315  + (332-315)/(2020-2000)*time_so_far; n2oppm = n2oppm/1000;
 ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
 
+co2ppm = 385 * ones(size(co2ppm));
+n2oppm = 323 * ones(size(co2ppm))/1000;
+ch4ppm = 1813 * ones(size(co2ppm))/1000;
+
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
-dirout = 'SimulateTimeSeries/ERA5/';
+%% dirout = 'SimulateTimeSeries/ERA5/';
+dirout = 'SimulateTimeSeries/ERA5_ConstTracegas/';
 
 co2ppm_t = [];
 n2oppm_t = [];
@@ -279,7 +284,7 @@ for ii = JOB
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  iType = 5;
+  iType = 51;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
 
 end

@@ -15,19 +15,29 @@ for ii = 1 : 6
 end
 
 timespan = 19;
+timespan = 19;
+timespan = 12;
 fprintf(1,'timespan = %2i years \n',timespan)
 
 if timespan == 19
   savestr_version = 'Sept2002_Aug2021_19yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
-  StopY  = 2021; StopYM  = 8;   %% stop  08/2021  
+  StopY  = 2021; StopYM  = 8;   %% stop  08/2021
+elseif timespan == 18
+  savestr_version = 'Sept2002_Aug2020_18yr';
+  StartY = 2002; StartYM = 9;   %% start 09/2002
+  StopY  = 2020; StopYM  = 8;   %% stop  08/2020
+elseif timespan == 12
+  savestr_version = 'Sept2002_Aug2014_12yr';
+  StartY = 2002; StartYM = 9;   %% start 09/2002
+  StopY  = 2014; StopYM  = 8;   %% stop  08/2014  
 else
   error('huh check timespan')
 end
 
 %%% TEMPERATURE
 
-a = read_netcdf_lls('/asl/models/CLIMCAPS_SNDR_AIRS_L3/2002/SNDR.AQUA.AIRS.20021001.M01.L3_CLIMCAPS_QCC.std.v02_38.G.210413175740.nc');
+a = read_netcdf_lls('/asl/airs/CLIMCAPS_SNDR_AIRS_L3/2002/SNDR.AQUA.AIRS.20021001.M01.L3_CLIMCAPS_QCC.std.v02_38.G.210413175740.nc');
 
 Airs_PT = a.air_pres;
 Airs_PQ = a.air_pres_h2o;
@@ -35,6 +45,7 @@ Airs_PQ = a.air_pres_h2o;
 %%%%%%%%%%%%%%%%%%%%%%%%%
 maindir = '/asl/airs/AIRS3STM/v7/';
 maindir = '/asl/models/CLIMCAPS_SNDR_AIRS_L3/'; %% https://acdisc.gesdisc.eosdis.nasa.gov/data/Aqua_AIRS_Level3/AIRS3STM.006/2018/
+maindir = '/asl/airs/CLIMCAPS_SNDR_AIRS_L3/'; %% https://acdisc.gesdisc.eosdis.nasa.gov/data/Aqua_AIRS_Level3/AIRS3STM.006/2018/
 Airs_files = findfiles([maindir '/*/*.nc']);
 
 Airs_Date_Start = datenum(StartY,09+(1:length(Airs_files))-1,01);
@@ -66,6 +77,7 @@ end
 
 iOK = find(read_this_file > 0);
 if i >= abs(timespan)*12 & length(iOK) == abs(timespan)*12
+  fprintf(1,'%4i/%2i to %4i/%2i %s \n',[StartY StartYM StopY StopYM],savestr_version)  
   disp('ok, found the files needed for the YEAR timespan you chose')
 else
   iStop = input('WARNING : oops need to get in more AIRS L3 data, +1 to stop???????? ')
@@ -77,6 +89,37 @@ else
 end
 
 disp('ret to continue'); pause
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% this is suppose we save 2002/09 to 2021/08 but only want eg AMIP/CMIP time = 2002/09 to 2014/08
+iSkipTo_64x72_trend = input('Skip directly to trends by reading in earlier files????? (-1 default /+1) : ');
+if length(iSkipTo_64x72_trend) == 0
+  iSkipTo_64x72_trend = -1;
+end
+if iSkipTo_64x72_trend == +1
+
+  load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
+  drlon = 5; 
+  rlon = -180 : drlon : +180;      %% 73 edges, so 72 bins
+  rlat = latB2;                    %% 65 edges, so 64 bins
+  %save_lat64x72 = 0.5*(rlat(1:end-1)+rlat(2:end));
+  %save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
+
+  iDorA = input('Enter Asc(-1) or Desc (+1) : ');
+  if length(iDorA) == 0
+    iDorA = +1;
+  end
+  iL3orCLIMCAPS = -1;
+  savestr_version_big = 'Sept2002_Aug2021_19yr_';
+  if iDorA > 0
+    loader = ['load /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_' savestr_version_big 'desc.mat'];
+  else
+    loader = ['load /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_' savestr_version_big 'asc.mat'];
+  end
+  eval(loader)
+  do_the_fits_airsL3_ratesv7_tiles
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -205,9 +248,9 @@ if iDo < 0
 
   iSave = input('save these mega huge files (+1) or store in memory??? (-1) : ? ');
   if iSave > 0
-    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon Airs_CO* Airs_CH4* yy mm'];
+    saver = ['save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon Airs_CO* Airs_CH4* yy mm'];
     eval(saver);
-    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Date* Airs_Cl* Airs_Lat Airs_Lon yy mm'];
+    saver = ['save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Date* Airs_Cl* Airs_Lat Airs_Lon yy mm'];
     eval(saver);
   end
   
@@ -229,24 +272,30 @@ error('ooo')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); pcolor((squeeze(mean(double(Airs_STemp_D),1)))); shading interp; colorbar; caxis([220 320]); title('Surf Temp'); colormap(jet);
-for ii = 1 : 180
+warning off
+iX = 0;
+for ii = 1 : 3 : 180
+  iX = iX + 1;
   if mod(ii,100) == 0
     fprintf(1,'+')
   elseif mod(ii,10) == 0
     fprintf(1,'.')
   end
-  for jj = 1 : 360
+  iY = 0;
+  for jj = 1 : 3 : 360
+    iY = iY + 1;
     junk = squeeze(Airs_STemp_D(:,ii,jj));
-    boo = Math_tsfit_lin_robust((1:228)*30,junk,4);
-    quickSTrate(ii,jj) = boo(2);
+    boo = Math_tsfit_lin_robust((1:length(junk))*30,junk,4);
+    quickSTrate(iX,iY) = boo(2);
   end
 end
+warning on
 fprintf(1,'\n');
 figure(2); pcolor(quickSTrate); shading interp; colorbar; caxis([-1 +1]*0.15); title('Surf Temp Rate'); colormap(usa2);
 addpath /umbc/xfs2/strow/asl/matlib/maps/aslmap.m
 addpath /home/sergio/MATLABCODE/COLORMAP/LLSMAPS
 load llsmap5
-figure(2); aslmap(2,-90:1:+90,-180:1:+180,quickSTrate,[-90 +90],[-180 +180]);  colormap(llsmap5); caxis([-0.15 +0.15]);
+%figure(2); aslmap(2,-90:1:+90,-180:1:+180,quickSTrate,[-90 +90],[-180 +180]);  colormap(llsmap5); caxis([-0.15 +0.15]);
 
 iL3orCLIMCAPS = -1;
 do_the_AIRSL3_trends

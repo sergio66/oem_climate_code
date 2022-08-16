@@ -77,7 +77,7 @@ for ii = 1 : 4608
   end
 
   for ll = 1 : 100    
-    disp('doing 100 layers OP ptemp,rh,gas_1,gas_3 trends')
+    fprintf(1,'doing 100 layers OP ptemp,rh,gas_1,gas_3 trends ii = %4i of 4608, ll = %3i of 100 \n',ii,ll)
     data = squeeze(all.ptemp(:,ll,ii));  
     boo = find(isfinite(data));
     if length(boo) > 20

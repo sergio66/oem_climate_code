@@ -41,9 +41,10 @@ else
 end
 
 iNumLay = 20;
-iNumLay = input('Enter number of expected fat layers (default 20 [5 thick AIRS layers], having good luck with 49 [2 thick AIRS layers]) : ');
+iNumLay = input('Enter number of expected fat layers (20 [5 thick AIRS layers], having good luck with (default 49 [2 thick AIRS layers]) : ');
 if length(iNumLay) == 0
   iNumLay = 20;
+  iNumLay = 49;
 end
 iNavgLay = floor(100/iNumLay);
 iWVind = 07:26; iWVind = (1:iNumLay)+6+0*iNumLay;
@@ -61,7 +62,7 @@ if length(iOCBset) == 0
   iOCBset = 0;
 end
 
-dataset = input('Enter (+1) Strow 2002/09-2020/08 Q1-16 (-1) Sergio 2002/09-2020/08 Q1-16  (2) Sergio 2002/09-2021/07 OLD  Q1-16 (3) Sergio 2002/09-2021/08 Extreme (-3) Sergio 2002/09-2021/08 Mean (4) Sergio 2002/09-2021/08 FULL  Q1-16 : [4 = Default] : ');
+dataset = input('Enter (+1) Strow 2002/09-2020/08 Q1-16 (-1) Sergio 2002/09-2020/08 Q1-16  (2) Sergio 2002/09-2021/07 OLD  Q1-16 (3) Sergio 2002/09-2021/08 Extreme (-3) Sergio 2002/09-2021/08 Mean (4) Sergio 2002/09-2021/08 FULL  Q1-16 (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 : [4 = Default] : ');
 if length(dataset) == 0
   dataset = 4;
 end
@@ -106,6 +107,10 @@ if iOCBset == 0
     if iQuantile >= 1 & iQuantile <= 16
       data_trends = load(['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     end
+  elseif dataset == 5
+    if iQuantile >= 1 & iQuantile <= 16
+      data_trends = load(['iType_5_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    end
   else
     dataset
     error('huh unknown dataset')
@@ -124,6 +129,7 @@ elseif iOCBset == 1
   data_trends.h.vchan = junk.h.vchan;
 end
 
+fnamelastloaded = 'none';
 if ~exist('iaFound')
   clear results*
   iaFound = zeros(1,4608);
@@ -205,127 +211,142 @@ if iJunk < 0
   return
 end
 
-for ii = 1 : 64*72
-  if iOCBset == 0
-    if dataset ~= 3
-      if iNorD > 0
-        fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
-        fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-      elseif iNorD < 0
-        fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+iDoAgain = +1;
+while iDoAgain > 0
+  for ii = 1 : 64*72
+    if iOCBset == 0
+      if dataset ~= 3
+        if iNorD > 0
+          fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
+          fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+        elseif iNorD < 0
+          fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+        end
+      elseif dataset == 3
+        if iNorD > 0
+          fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+        elseif iNorD < 0
+          fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
+        end
+      elseif dataset == -3
+        if iNorD > 0
+          fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+        elseif iNorD < 0
+          fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
+        end
       end
-    elseif dataset == 3
+    elseif iOCBset == 1
       if iNorD > 0
-        fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+        fname =     ['Output_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
       elseif iNorD < 0
-        fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
-      end
-    elseif dataset == -3
-      if iNorD > 0
-        fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-      elseif iNorD < 0
-        fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
+        fname = ['Output_Day_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
       end
     end
-  elseif iOCBset == 1
-    if iNorD > 0
-      fname =     ['Output_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-    elseif iNorD < 0
-      fname = ['Output_Day_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
-    end
-  end
-
-  existfname(ii) = exist(fname);
-  %fprintf(1,'%5i    %s \n',existfname(ii),fname)
-  if exist(fname) > 0 & iaFound(ii) == 0
-    iExist = +1;
-    loader = ['load ' fname];
-    eval(loader);
-    iaFound(ii) = +1;
-    results(ii,1:6)    = oem.finalrates(1:6);
-    resultsunc(ii,1:6) = oem.finalsigs(1:6);
-    [mmn,nn] = size(oem.ak_water);
-
-    nlays(ii) = nn;
-    nn0 = min(nn,iNumLay);
-    if nn0 == iNumLay
-      thedofs(ii) = oem.dofs;
-      lencdofs(ii) = length(oem.cdofs);
-      cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
-      resultsWV(ii,1:nn) = oem.finalrates((1:nn)+6+nn*0);
-      resultsT(ii,1:nn)  = oem.finalrates((1:nn)+6+nn*1);
-      resultsO3(ii,1:nn) = oem.finalrates((1:nn)+6+nn*2);
-
-      resultsWVunc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*0);
-      resultsTunc(ii,1:nn)  = oem.finalsigs((1:nn)+6+nn*1);
-      resultsO3unc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*2);
-
+  
+    existfname(ii) = exist(fname);
+    %fprintf(1,'%5i    %s \n',existfname(ii),fname)
+    if exist(fname) > 0 & iaFound(ii) == 0
+      fnamelastloaded = fname;
+      iExist = +1;
+      loader = ['load ' fname];
+      eval(loader);
+      iaFound(ii) = +1;
+      results(ii,1:6)    = oem.finalrates(1:6);
+      resultsunc(ii,1:6) = oem.finalsigs(1:6);
+      [mmn,nn] = size(oem.ak_water);
+  
+      nlays(ii) = nn;
+      nn0 = min(nn,iNumLay);
+      if nn0 == iNumLay
+        thedofs(ii) = oem.dofs;
+        lencdofs(ii) = length(oem.cdofs);
+        cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
+        resultsWV(ii,1:nn) = oem.finalrates((1:nn)+6+nn*0);
+        resultsT(ii,1:nn)  = oem.finalrates((1:nn)+6+nn*1);
+        resultsO3(ii,1:nn) = oem.finalrates((1:nn)+6+nn*2);
+  
+        resultsWVunc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*0);
+        resultsTunc(ii,1:nn)  = oem.finalsigs((1:nn)+6+nn*1);
+        resultsO3unc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*2);
+  
+      else
+        iWarning = iWarning + 1;
+        iaWarning(iWarning) = ii;
+  
+        thedofs(ii) = oem.dofs;
+        lencdofs(ii) = length(oem.cdofs);
+        cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
+  
+        resultsWV(ii,:) = NaN;
+        resultsT(ii,:)  = NaN;
+        resultsO3(ii,:) = NaN;
+        resultsWVunc(ii,:) = NaN;
+        resultsTunc(ii,:)  = NaN;
+        resultsO3unc(ii,:) = NaN;
+  
+        wah = oem.finalrates((1:nn)+6+nn*0);   resultsWV(ii,1:nn0) = wah(1:nn0);
+        wah = oem.finalrates((1:nn)+6+nn*1);   resultsT(ii,1:nn0)  = wah(1:nn0);
+        wah = oem.finalrates((1:nn)+6+nn*2);   resultsO3(ii,1:nn0) = wah(1:nn0);
+  
+        wah = oem.finalsigs((1:nn)+6+nn*0);   resultsWVunc(ii,1:nn0) = wah(1:nn0);
+        wah = oem.finalsigs((1:nn)+6+nn*1);   resultsTunc(ii,1:nn0)  = wah(1:nn0);
+        wah = oem.finalsigs((1:nn)+6+nn*2);   resultsO3unc(ii,1:nn0) = wah(1:nn0);
+      end
+  
+      junknoise = nan(2645,1);
+      junknoise(jacobian.chanset) = diag(oem.se);
+  
+      rates(:,ii) = rateset.rates;
+      fits(:,ii)  = oem.fit';
+      nedt(:,ii)  = sqrt(junknoise);
+    elseif exist(fname) > 0 & iaFound(ii) == 1
+      %% do nothing, things are cool
     else
-      iWarning = iWarning + 1;
-      iaWarning(iWarning) = ii;
-
-      thedofs(ii) = oem.dofs;
-      lencdofs(ii) = length(oem.cdofs);
-      cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
-
+      iExist = -1;
+      iaFound(ii) = 0;
+      results(ii,1:6) = NaN;
       resultsWV(ii,:) = NaN;
       resultsT(ii,:)  = NaN;
       resultsO3(ii,:) = NaN;
+  
+      resultsunc(ii,1:6) = NaN;
       resultsWVunc(ii,:) = NaN;
       resultsTunc(ii,:)  = NaN;
       resultsO3unc(ii,:) = NaN;
-
-      wah = oem.finalrates((1:nn)+6+nn*0);   resultsWV(ii,1:nn0) = wah(1:nn0);
-      wah = oem.finalrates((1:nn)+6+nn*1);   resultsT(ii,1:nn0)  = wah(1:nn0);
-      wah = oem.finalrates((1:nn)+6+nn*2);   resultsO3(ii,1:nn0) = wah(1:nn0);
-
-      wah = oem.finalsigs((1:nn)+6+nn*0);   resultsWVunc(ii,1:nn0) = wah(1:nn0);
-      wah = oem.finalsigs((1:nn)+6+nn*1);   resultsTunc(ii,1:nn0)  = wah(1:nn0);
-      wah = oem.finalsigs((1:nn)+6+nn*2);   resultsO3unc(ii,1:nn0) = wah(1:nn0);
+  
+      rates(:,ii) = NaN;
+      fits(:,ii) = NaN;
+      nedt(:,ii) = NaN;
     end
-
-    junknoise = nan(2645,1);
-    junknoise(jacobian.chanset) = diag(oem.se);
-
-    rates(:,ii) = rateset.rates;
-    fits(:,ii)  = oem.fit';
-    nedt(:,ii)  = sqrt(junknoise);
-  else
-    iExist = -1;
-    iaFound(ii) = 0;
-    results(ii,1:6) = NaN;
-    resultsWV(ii,:) = NaN;
-    resultsT(ii,:)  = NaN;
-    resultsO3(ii,:) = NaN;
-
-    resultsunc(ii,1:6) = NaN;
-    resultsWVunc(ii,:) = NaN;
-    resultsTunc(ii,:)  = NaN;
-    resultsO3unc(ii,:) = NaN;
-
-    rates(:,ii) = NaN;
-    fits(:,ii) = NaN;
-    nedt(:,ii) = NaN;
+    if mod(ii,72) == 0
+      fprintf(1,'+ %2i\n',ii/72);
+    elseif iExist == 1
+      fprintf(1,'.');
+    elseif iExist == -1
+      fprintf(1,' ');
+    end
   end
-  if mod(ii,72) == 0
-    fprintf(1,'+ %2i\n',ii/72);
-  elseif iExist == 1
-    fprintf(1,'.');
-  elseif iExist == -1
-    fprintf(1,' ');
+  
+  fprintf(1,'\n');
+  resultsunc = real(resultsunc);
+  resultsWVunc = real(resultsWVunc);
+  resultsTunc  = real(resultsTunc);
+  resultsO3unc = real(resultsO3unc);
+  
+  display('Trying to look at atributes of the last file that should have been read in .... ')
+  lser = ['!ls -lt ' fname]; eval(lser)
+  
+  fprintf(1,'found %4i of %4i \n',sum(iaFound),64*72)
+  iDoAgain = -1;
+  if sum(iaFound) < 64*72
+    iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
+    if length(iDoAgain) == 0
+      iDoAgain = +1;
+    end
   end
 end
-
-fprintf(1,'\n');
-resultsunc = real(resultsunc);
-resultsWVunc = real(resultsWVunc);
-resultsTunc  = real(resultsTunc);
-resultsO3unc = real(resultsO3unc);
-
-display('Trying to look at atributes of the last file that should have been read in .... ')
-lser = ['!ls -lt ' fname]; eval(lser)
-
-fprintf(1,'found %4i of %4i \n',sum(iaFound),64*72)
+a = load(fnamelastloaded);
+fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f \n',fnamelastloaded,a.oem.xb(1:6))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
@@ -375,13 +396,15 @@ i1419 = find(f >= 1419,1);
 i1231 = find(f >= 1231,1);
 i0900 = find(f >= 0900,1);
 
+load llsmap5
+
 aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt CO2');  caxis([1.5 2.5])
 clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2.5]); caxis([2.0 2.5])
 
-aslmap(5,rlat65,rlon73,smoothn((reshape(rates(i1231,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1231/dt'); caxis([-0.1 +0.1]); colormap(usa2)
-aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-0.1 +0.1]); colormap(usa2)
+aslmap(5,rlat65,rlon73,smoothn((reshape(rates(i1231,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1231/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
+aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 
-aslmap(7,rlat65,rlon73,smoothn((reshape(rates(i1419,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1419/dt'); caxis([-0.1 +0.1]); colormap(usa2)
+aslmap(7,rlat65,rlon73,smoothn((reshape(rates(i1419,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1419/dt'); caxis([-1 +1]*0.15); colormap(llspamp5)
 figure(8); junk = smoothn((reshape(rates(i1419,:),72,64)')); junk = reshape(rates(i1419,:),72,64)'; plot(rlat,nanmean(junk,2)); title('Zonal dBT1419/dt'); grid; xlim([-90 +90])
 
 figure(9); scatter_coast(Xlon,Ylat,50,thedofs); jett = jet(64); jett(1,:) = 1; colormap(jett); title('ALL DOFS'); caxis([0 max(thedofs)]); caxis([0 30])

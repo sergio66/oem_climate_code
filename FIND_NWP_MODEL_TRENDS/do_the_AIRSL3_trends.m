@@ -51,7 +51,7 @@ if iDo > 0
   
   disp(' ')
   disp('turning AIRS L3 data from gridded Lat/Lon bins to Zonal Lat bins');
-  plot_L3_data_native               %% copied from /home/sergio/MATLABCODE/AIRS_L3/plot_L3_data.m
+  plot_L3_data_native               %% copied from /home/sergio/MATLABCODE/AIRS_L3/plot_L3_data.m; need to modify this so I save it and can reuse it for eg shorter time spans!!!!
   
   disp(' ')
   disp('doing the geophysical rates (do_profilerate_fit includes lag1) and anoms')

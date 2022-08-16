@@ -254,9 +254,6 @@ end
 %  fmatd = 1*[2     0.1       2      1     1            0.1];       %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
 %end
 
-fmatd
-%keyboard_nowindow
-
 %{
 %% before Oct 21, 2021
 if settings.iFixTG_NoFit(1) > 0
@@ -270,6 +267,7 @@ if settings.iFixTG_NoFit(1) > 0
   aux.m_ts_jac(:,settings.iFixTG_NoFit) = eps;
 end
 %}
+
 %% after Oct 21, 2021
 if settings.iFixTG_NoFit(1) > 0
   disp('setting uncertainties for some tracegases to be 0, NOT setting a priori xb, or jac, for these gases also to be 0')
@@ -282,7 +280,22 @@ if settings.iFixTG_NoFit(1) > 0
   %aux.m_ts_jac(:,settings.iFixTG_NoFit) = eps;
 end
 
+%% new July 2022
+if settings.ocb_set == 1
+  fmatd = [2     0.1       2      1     1            1];
+end
+if iSergioCO2 > 0
+  disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
+  fmatd = [2     0.1       2      1     1            1];
+  fmatd = [2     0.1       2      1     1            1]*0.001;
+end
+
+fmatd
+%keyboard_nowindow
+
 fmat  = diag(fmatd./fnorm); 
+fmat = fmat .* fmat;   %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022
+
 if exist('tmat','var') & exist('ozmat','var')
   driver.oem.cov = blkdiag(fmat,wmat,tmat,ozmat);
 elseif exist('ozmat','var')

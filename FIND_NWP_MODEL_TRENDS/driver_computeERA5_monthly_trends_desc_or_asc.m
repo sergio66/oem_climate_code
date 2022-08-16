@@ -1,5 +1,6 @@
 %% monthly, 18 years x 12 months/year = 216
 %% monthly, 19 years x 12 months/year = 228
+%% monthly, 12 years x 12 months/year = 144
 
 addpath /home/sergio/MATLABCODE/
 addpath /home/sergio/MATLABCODE/TIME
@@ -20,11 +21,12 @@ if ~exist('iDorA')
 end
 
 clear iaFound
-iaMax = 18*12; %% 18 year
-iaMax = 19*12; %% 19 year
+%iaMax = 18*12; %% 18 year
+%iaMax = 19*12; %% 19 year
 
-iNumYears = 18; 
-iNumYears = 19; 
+iNumYears = 18; %% 2002/09-2020/08
+iNumYears = 19; %% 2002/09-2021/08
+iNumYears = 12; %% 2002/09-2014/08
 iaMax = iNumYears*12;
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
@@ -118,6 +120,15 @@ elseif iNumYears == 19
 %    save -v7.3 ERA5_atm_data_2002_09_to_2021_07_asc.mat comment all
     save -v7.3 ERA5_atm_data_2002_09_to_2021_08_asc.mat comment all
   end
+elseif iNumYears == 12
+  if iDorA > 0
+    save -v7.3 ERA5_atm_data_2002_09_to_2014_08_desc.mat comment all
+  else
+    save -v7.3 ERA5_atm_data_2002_09_to_2014_08_asc.mat comment all
+  end
+else
+  iNumYears
+  error('unknown iNumYears .. accepting 12,18,19')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -196,6 +207,15 @@ elseif iNumYears == 19
     %save ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
     save ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat comment trend*
   end
+elseif iNumYears == 12
+  if iDorA > 0
+    save ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat comment trend*
+  else
+    save ERA5_atm_data_2002_09_to_2014_08_trends_asc.mat comment trend*
+  end
+else
+  iNumYears
+  error('unknown iNumYears .. accepting 12,18,19')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -204,59 +224,61 @@ figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ER
 figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
 
 figure(3); junk = reshape(trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend ptemp K/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
 figure(4); junk = reshape(trend_RH,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend RH percent/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(5); junk = reshape(trend_gas_1,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend WVfrac /yr');  caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
-figure(5); junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 mean ptemp K');  caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
-figure(6); junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 mean RH percent');  caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+figure(6); junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer mean ptemp K');  caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(7); junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer mean RH percent');  caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 
 %{
-figure(7); junk = squeeze(nanstd(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
-figure(8); junk = squeeze(nanstd(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+figure(8); junk = squeeze(nanstd(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(9); junk = squeeze(nanstd(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 
-figure(7); junk = squeeze(max(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
-figure(8); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 std RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+figure(10); junk = squeeze(max(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(11); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(7); junk = reshape(trend_nwp_ptemp,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
-figure(8); junk = reshape(trend_nwp_rh,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(8); junk = reshape(trend_nwp_ptemp,37,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend ptemp K/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
+figure(9); junk = reshape(trend_nwp_rh,37,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend RH percent/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
-figure(9); junk = reshape(trend_nwp_gg,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend SH g/g/yr');  caxis([0 +2.5]*1e-5); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
-figure(10); junk = reshape(trend_nwp_ppmv,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 trend PPMV /yr');  caxis([0 40]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
-figure(11); junk = reshape(trend_nwp_frac,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 frac /yr');  caxis([-10 +10]*1e-3); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(10); junk = reshape(trend_nwp_gg,37,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend SH g/g/yr');  caxis([0 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(11); junk = reshape(trend_nwp_ppmv,37,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend PPMV /yr');  caxis([0 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(12); junk = reshape(trend_nwp_frac,37,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  frac /yr');  caxis([-10 +10]*1e-3); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 pause(0.1);
 
 junk1 = squeeze(nanmean(all.nwp_gas_1,1)); junk1 = reshape(junk1,37,72,64); junk1 = squeeze(nanmean(junk1,2)); 
 junk2 = reshape(trend_nwp_frac,37,72,64); junk2 = squeeze(nanmean(junk2,2)); 
-figure(12); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 SH g/g/yr VERS2');  caxis([0 +2.5]*1e-5); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 37 lvl  SH g/g/yr VERS2');  caxis([0 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 junk1 = toppmv(all.nwp_plevs,all.nwp_ptemp,all.nwp_gas_1,18,21); junk1 = squeeze(nanmean(junk1,1));
 junk1 = reshape(junk1,37,72,64); junk1 = squeeze(nanmean(junk1,2));
 junk2 = reshape(trend_nwp_frac,37,72,64); junk2 = squeeze(nanmean(junk2,2)); 
-figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1);
-figure(13); loglog(nanmean(junk1,2),trend_nwp_plevs_mean);  set(gca,'ydir','reverse'); xlim([1 1e4]); grid
-figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 PPMV/yr VERS2');  caxis([0 40]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(14); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1);
+figure(14); loglog(nanmean(junk1,2),trend_nwp_plevs_mean);  set(gca,'ydir','reverse'); xlim([1 1e4]); grid
+figure(14); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 37 lvl  PPMV/yr VERS2');  caxis([0 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 %% this is MLS comparisons, Frank Werner JPL
-figure(11); ylim([1 300]); colormap usa2
+figure(11); ylim([1 300]); colormap(usa2)
 figure(07); ylim([1 300]);
 figure(09); ylim([1 300]); caxis([-1 1]*1e-7); colormap(usa2)
 figure(12); ylim([1 300]); caxis([-1 1]*1e-7); colormap(usa2)

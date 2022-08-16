@@ -186,6 +186,7 @@ area_wgt_fracWV = nansum(fracWVlat.*junk,1)./nansum(junk,1);
 ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('horizontal'); %plotaxis2;
 title(['Zonal d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 colormap(cmap)
+caxis([-1 +1]*0.015); ylim([100 1000])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -230,7 +231,7 @@ pcolor(rlat,pavgLAY(1:97,3000),deltaRHlat(:,1:97)'); shading interp; set(gca,'yd
 junk = zeros(size(deltaRHlat)); junk = cos(rlat) * ones(1,100);
 area_wgtRH = nansum(deltaRHlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgtRH(1:97)*100,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
-ylim([10 1000]); caxis([-0.15 +0.15]); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt RH UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+ylim([100 1000]); caxis([-0.15 +0.15]); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt RH UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_rh_zonal_trends.pdf');
 
 %{
@@ -242,6 +243,7 @@ save umbc_RH_zonal_trends.mat rlat p97 data dataMap rlat65 rlon73
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+figure(29)
 plot(nanmean(abs(resultsT)),1:iNumLay,nanmean(resultsTunc),1:iNumLay); set(gca,'ydir','reverse');
 deltaT = pert.ptemp-p.ptemp;
 deltaT = deltaT .* (ones(101,1) * maskLF);
@@ -286,4 +288,7 @@ dataMap = maskLFmatr.*smoothn(reshape(deltaT(i500,:),72,64)',1);
 save umbc_T_zonal_trends.mat rlat p97 data dataMap rlat65 rlon73
 %}
 
+figure(28); figure(29); figure(30); 
+aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+disp('ret to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%

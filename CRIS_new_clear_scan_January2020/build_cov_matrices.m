@@ -269,7 +269,8 @@ if settings.iFixTG_NoFit(1) > 0
 end
 
 fmat  = diag(fmatd./fnorm); 
-fmatd = fmatd.*fmatd; %% need sig^2   %% JUNE 1, 2022
+fmat = fmat.*fmat; %% need sig^2   %% JUNE 1, 2022
+
 if exist('tmat','var') & exist('ozmat','var')
   driver.oem.cov = blkdiag(fmat,wmat,tmat,ozmat);
 elseif exist('ozmat','var')

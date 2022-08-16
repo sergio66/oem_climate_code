@@ -15,6 +15,7 @@ end
 
 timespan = 18;
 timespan = 19;
+timespan = 12;
 fprintf(1,'timespan = %2i years \n',timespan)
 
 if timespan == 16
@@ -25,11 +26,14 @@ elseif timespan == 18
   savestr_version = 'Sept2002_Aug2020_18yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2020; StopYM  = 8;   %% stop  08/2020
+elseif timespan == 12
+  savestr_version = 'Sept2002_Aug2014_12yr';
+  StartY = 2002; StartYM = 9;   %% start 09/2002
+  StopY  = 2014; StopYM  = 8;   %% stop  08/2014
 elseif timespan == 19
   savestr_version = 'Sept2002_Jul2021_19yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2021; StopYM  = 7;   %% stop  08/2021  
-
   savestr_version = 'Sept2002_Aug2021_19yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2021; StopYM  = 8;   %% stop  08/2021  
@@ -79,6 +83,7 @@ end
 
 iOK = find(read_this_file > 0);
 if i >= abs(timespan)*12 & length(iOK) == abs(timespan)*12
+  fprintf(1,'%4i/%2i to %4i/%2i %s \n',[StartY StartYM StopY StopYM],savestr_version)  
   disp('ok, found the files needed for the YEAR timespan you chose')
 else
   iStop = input('WARNING : oops need to get in more AIRS L3 data, +1 to stop???????? ')
@@ -90,6 +95,37 @@ else
 end
 
 disp('ret to continue'); pause
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% this is suppose we save 2002/09 to 2021/08 but only want eg AMIP/CMIP time = 2002/09 to 2014/08
+iSkipTo_64x72_trend = input('Skip directly to trends by reading in earlier files????? (-1 default /+1) : ');
+if length(iSkipTo_64x72_trend) == 0
+  iSkipTo_64x72_trend = -1;
+end
+if iSkipTo_64x72_trend == +1
+
+  load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
+  drlon = 5; 
+  rlon = -180 : drlon : +180;      %% 73 edges, so 72 bins
+  rlat = latB2;                    %% 65 edges, so 64 bins
+  %save_lat64x72 = 0.5*(rlat(1:end-1)+rlat(2:end));
+  %save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
+
+  iDorA = input('Enter Asc(-1) or Desc (+1) : ');
+  if length(iDorA) == 0
+    iDorA = +1;
+  end
+  iL3orCLIMCAPS = +1;
+  savestr_version_big = 'Sept2002_Aug2021_19yr_';
+  if iDorA > 0
+    loader = ['load /asl/s1/sergio/AIRS_L3S/airsL3_v7_64x72_rates_' savestr_version_big 'desc.mat'];
+  else
+    loader = ['load /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version_big 'asc.mat'];
+  end
+  eval(loader)
+  do_the_fits_airsL3_ratesv7_tiles
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -224,9 +260,9 @@ if iDo < 0
 
   iSave = input('save these mega huge files (+1) or store in memory??? (-1) : ? ');
   if iSave > 0
-    saver = ['save /asl/s1/sergio/AIRS_L3/airs_L3v7_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon Airs_CO* Airs_CH4* yy mm'];
+    saver = ['save -v7.3 /asl/s1/sergio/AIRS_L3/airs_L3v7_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon Airs_CO* Airs_CH4* yy mm'];
     eval(saver);
-    saver = ['save /asl/s1/sergio/AIRS_L3/airs_L3v7_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Date* Airs_Cl* Airs_Ice* Airs_Lat Airs_Lon Airs_Liq*  yy mm'];
+    saver = ['save -v7.3 /asl/s1/sergio/AIRS_L3/airs_L3v7_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Date* Airs_Cl* Airs_Ice* Airs_Lat Airs_Lon Airs_Liq*  yy mm'];
     eval(saver);
   end
   

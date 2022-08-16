@@ -24,11 +24,12 @@ if iDorA == -1
 end
 
 clear iaFound
-iaMax = 18*12; %% 18 year
-iaMax = 19*12; %% 19 year
+%iaMax = 18*12; %% 18 year
+%iaMax = 19*12; %% 19 year
 
-iNumYears = 18; 
-iNumYears = 19; 
+iNumYears = 18; %% 2002/09 to 2020/08 
+iNumYears = 19; %% 2002/09 to 2021/08 
+iNumYears = 12; %% 2002/09 to 2014/08 
 iaMax = iNumYears*12;
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
@@ -122,6 +123,17 @@ elseif iNumYears == 19
 %    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_asc.mat comment all
     save -v7.3 MERRA2_atm_data_2002_09_to_2021_08_asc.mat comment all
   end
+elseif iNumYears == 12
+  if iDorA > 0
+%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_desc.mat comment all
+    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_desc.mat comment all
+  else
+%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_asc.mat comment all
+    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_asc.mat comment all
+  end
+else
+  iNumYears
+  error('unknown iNumYears .. accepting 12,18,19')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -205,6 +217,14 @@ elseif iNumYears == 19
     %save MERRA2_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
     save MERRA2_atm_data_2002_09_to_2021_08_trends_asc.mat comment trend*
   end
+elseif iNumYears == 12
+  if iDorA > 0
+    %save MERRA2_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
+    save MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat comment trend*
+  else
+    %save MERRA2_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
+    save MERRA2_atm_data_2002_09_to_2014_08_trends_asc.mat comment trend*
+  end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -215,11 +235,13 @@ figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('M
 figure(3); junk = reshape(trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
 figure(4); junk = reshape(trend_RH,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
+  pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 trend RH percent/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
+figure(5); junk = reshape(trend_gas_1,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 100 layer trend WVfrac /yr');  caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
-figure(5); junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(6); junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 mean ptemp K');  caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
-figure(6); junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(7); junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 mean RH percent');  caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 
 %{
@@ -238,28 +260,28 @@ figure(8); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshap
 
 iNlev = 42;
 trend_nwp_rh = real(trend_nwp_rh);
-figure(7); junk = reshape(trend_nwp_ptemp,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(8); junk = reshape(trend_nwp_ptemp,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
-figure(8); junk = reshape(trend_nwp_rh,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(9); junk = reshape(trend_nwp_rh,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend RH percent/yr');  caxis([-0.25 +0.25]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
-figure(9); junk = reshape(trend_nwp_gg,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(10); junk = reshape(trend_nwp_gg,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend SH g/g/yr');  caxis([-2.5 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
-figure(10); junk = reshape(trend_nwp_ppmv,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(11); junk = reshape(trend_nwp_ppmv,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 trend PPMV /yr');  caxis([-40 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
-figure(11); junk = reshape(trend_nwp_frac,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(12); junk = reshape(trend_nwp_frac,iNlev,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('MERRA2 frac /yr');  caxis([-10 +10]*1e-3); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 junk1 = squeeze(nanmean(all.nwp_gas_1,1)); junk1 = reshape(junk1,iNlev,72,64); junk1 = squeeze(nanmean(junk1,2)); 
 junk2 = reshape(trend_nwp_frac,iNlev,72,64); junk2 = squeeze(nanmean(junk2,2)); 
-figure(12); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('MERRA2 SH g/g/yr VERS2');  caxis([-2.5 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('MERRA2 SH g/g/yr VERS2');  caxis([-2.5 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 junk1 = toppmv(all.nwp_plevs,all.nwp_ptemp,all.nwp_gas_1,18,21); junk1 = squeeze(nanmean(junk1,1));
 junk1 = reshape(junk1,iNlev,72,64); junk1 = squeeze(nanmean(junk1,2));
 junk2 = reshape(trend_nwp_frac,iNlev,72,64); junk2 = squeeze(nanmean(junk2,2)); 
-figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1);
-figure(13); loglog(nanmean(junk1,2),trend_nwp_plevs_mean);  set(gca,'ydir','reverse'); xlim([1 1e4]); grid
-figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('MERRA2 PPMV/yr VERS2');  caxis([0 40]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(14); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1);
+figure(14); loglog(nanmean(junk1,2),trend_nwp_plevs_mean);  set(gca,'ydir','reverse'); xlim([1 1e4]); grid
+figure(14); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('MERRA2 PPMV/yr VERS2');  caxis([0 40]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{

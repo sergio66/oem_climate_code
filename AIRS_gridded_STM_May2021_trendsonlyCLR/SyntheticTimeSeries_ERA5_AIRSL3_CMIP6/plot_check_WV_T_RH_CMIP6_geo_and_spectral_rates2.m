@@ -4,10 +4,10 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 fchanx = h72x.vchan;
 plevsx = p72x.plevs(1:97,20);
 rlatx  = unique(p72.rlat);
-if iType == 6
+if iType == 6 | iType == 61
   plevsnwp = squeeze(cmip6_64x72.all.nwp_plevs(1,:,3000));
   iNlev = 19;
-elseif iType == 5
+elseif iType == 5 | iType == 51
   plevsnwp = squeeze(era5_64x72.all.nwp_plevs(1,:,3000));
   iNlev = 37;
 end
@@ -260,9 +260,15 @@ if iType == 2
 elseif iType == 5
   saver = ['save ' dirout '/reconstruct_era5_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate '];
+elseif iType == 51
+  saver = ['save ' dirout '/reconstruct_era5_const_tracegas_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate '];
 
 elseif iType == 6
   saver = ['save ' dirout '/reconstruct_cmip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate '];
+elseif iType == 61
+  saver = ['save ' dirout '/reconstruct_cmip6_const_tracegas_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate '];
 elseif iType == 7
   saver = ['save ' dirout '/reconstruct_amip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
@@ -276,6 +282,14 @@ elseif iType == 4
   saver = [saver ' zonalrlat zonalplays zonalRHAIRSCLIMCAPSL3rate zonalTAIRSCLIMCAPSL3rate '];
 
 end
-saver = [saver ' plevsnwp plevsx dayOFtime'];
-eval(saver)
-fprintf(1,'%s \n',saver');
+
+foutname = findstr(saver,'.mat');
+foutname = [saver(6:foutname) 'mat'];
+
+if ~exist(foutname)
+  saver = [saver ' plevsnwp plevsx dayOFtime'];
+  fprintf(1,'%s \n',saver');
+  eval(saver)
+else
+  fprintf(1,'%s alewady exists, not saving \n',foutname)
+end

@@ -1,4 +1,4 @@
-function nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL);
+function nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL,iNumYears);
 
 addpath /asl/matlib/maps/
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
@@ -13,11 +13,16 @@ if nargin == 0
   iNWP = 5; %% ERA5
   iNorD = 1;
   iAorOrL = 0;
+  iNumYears  = 19;
 elseif nargin == 1
   iNorD = 1;
   iAorOrL = 0;
+  iNumYears  = 19;
 elseif nargin == 2
   iAorOrL = 0;
+  iNumYears  = 19;
+elseif nargin == 3
+  iNumYears  = 19;
 end
 
 if length(intersect(iNWP,[1 2 5])) == 0
@@ -66,26 +71,34 @@ if ~exist('maskLF')
   maskLFmatr = reshape(maskLF,72,64)';
 end
 
-%iNumYears = 18;
-%iNumYears = 19;
-%iNumYears = input('ERA-I always 17 years (2002/09 -2019/08) --- Enter Number of Years for ERA5/AIRSL3 (18 or 19) [19 = default] : ');
-%if length(iNumYears) == 0
-%  iNumYears = 19;
-%end
-iNumYears = 19;
+% iNumYears = 18;
+% iNumYears = 19;
+% iNumYears = input('ERA-I always 17 years (2002/09 -2019/08) --- Enter Number of Years for ERA5/AIRSL3 (18 or 19, or 14 for AMPI/CMIP overlap) [19 = default] : ');
+% if length(iNumYears) == 0
+%   iNumYears = 19;
+% end
+% iNumYears = 19;
 
 %% airsL3 : 'native' = 180 bins from L3, 'zonal' = 40 equal area latbins, [] = 64x72
 if iNorD > 0
   strNorD = 'NIGHT';
   if iNWP == 5
     %nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat');
-    nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
+    if iNumYears == 19
+      nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
+    elseif iNumYears == 12
+      nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat');
+    end
     strChoice  = 'ERA5';
   elseif iNWP == 1
     nwpChoice   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_desc.mat');
     strChoice  = 'ERA-I';
   elseif iNWP == 2
-    nwpChoice = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_trends_desc.mat');
+    if iNumYears == 19
+      nwpChoice = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_trends_desc.mat');
+    elseif iNumYears == 12
+      nwpChoice = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat');
+    end
     strChoice  = 'MERRA2';
   else
     error('unknown NWP choice')
@@ -96,13 +109,21 @@ else
   strNorD = 'DAY';
   if iNWP == 5
     nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat');
-    %nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat');   %%% OOER may not have run this off yet
+    %if iNumYears == 19
+    %  nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat'); %%% OOER may not have run this off yet
+    %elseif iNumYears == 12
+    %  nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_asc.mat'); %%% OOER may not have run this off yet
+    %end
     strChoice  = 'ERA5';
   elseif iNWP == 1
     nwpChoice   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_asc.mat');
     strChoice  = 'ERA-I';
   elseif iNWP == 2
-    nwpChoice = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_trends_desc.mat');
+    if iNumYears == 19
+      nwpChoice = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_trends_desc.mat');
+    elseif iNumYears == 12
+      nwpChoice = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat');
+    end
     strChoice  = 'MERRA2';
   else
     error('unknown NWP choice')

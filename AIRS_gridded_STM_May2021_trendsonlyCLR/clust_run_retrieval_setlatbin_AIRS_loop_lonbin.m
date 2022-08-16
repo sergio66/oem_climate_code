@@ -9,7 +9,7 @@ addpath /asl/matlib/h4tools
 addpath /asl/matlib/rtptools
 addpath /asl/matlib/aslutil
 
-%system_slurm_stats
+system_slurm_stats
 
 t1x = tic;
 
@@ -127,6 +127,7 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years
   topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
   topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years
+  topts.dataset   = +5;   %% (+5) AIRS 12 year quantile dataset, Sergio Aug 2022   2002/09-2014/08 FULL 12 years
 
   if iQuantile == 8
     topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, too lazy to make full 19 years
@@ -134,8 +135,8 @@ for iInd = iInd0 : iIndE
 
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
+  topts.ocb_set = 1; %% try ERA5 synthetic rates
   topts.ocb_set = 0; %% AIRS Obs
-  %topts.ocb_set = 1; %% try ERA5 synthetic rates
 
   %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
   %topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori

@@ -1,4 +1,4 @@
-function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);
+function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
 
 %% function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);   iA = +1 (AIRS L3) or -1 CLIMCAPS
 
@@ -67,7 +67,7 @@ if ~exist('maskLF')
 end
 
 %iNumYears = 18;
-iNumYears = 19;
+%iNumYears = 19;
 %iNumYears = input('ERA-I always 17 years (2002/09 -2019/08) --- Enter Number of Years for ERA5/AIRSL3 (18 or 19) [19 = default] : ');
 %if length(iNumYears) == 0
 %  iNumYears = 19;
@@ -82,9 +82,19 @@ if iNorD > 0
       %airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
       %airsL3       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
       airsChoice    = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat');
+    elseif iNumYears == 12
+      airsChoice    = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat');
+    else
+      error('need 12 or 19 years')
     end
   else
-    airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat');
+    if iNumYears == 19
+      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat');
+    elseif iNumYears == 12
+      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat');
+    else
+      error('need 12 or 19 years')
+    end    
   end
 else
   strNorD = 'DAY';
@@ -93,9 +103,19 @@ else
       %airsL3native = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_asc.mat');
       %airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_asc.mat');
       airsChoice       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_asc.mat');
+    elseif iNumYears == 12
+      airsChoice       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_asc.mat');
+    else
+      error('need 12 or 19 years')
     end
   else
-    airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_asc.mat');
+    if iNumYears == 19  
+      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_asc.mat');
+    elseif iNumYears == 12
+      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2014_12yr_asc.mat');
+    else
+      error('need 12 or 19 years')
+    end
   end
 end
 
