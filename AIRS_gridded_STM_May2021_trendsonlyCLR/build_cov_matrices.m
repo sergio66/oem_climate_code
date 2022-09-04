@@ -102,9 +102,21 @@ elseif driver.i16daytimestep < 0
 
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x100 unc, Feb 16 2022-Apr7,2022 :  great JPLMay 2022 talk!!!
 
+  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% 19 year rates, init try 2002/09-2014/08
+  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, * used this for Princeton iQuant=50 **
+
+  cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, 
+%  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-1     20*1E-1  20*1E-1];  %% new try 2002/09-2014/08, lousy std dev in window regions
+%  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-3     20*1E-3  20*1E-3];  %% new try 2002/09-2014/08, lousy std dev in window regions
+
 %%% after AIRS STM 2021, testing quantile 16
 %%%  cov_set = [1.0  0.05          0.05            1/2       0.15/10           0.15/10           1/2      0.15/10         0.15/10             1/2        20*1E-6     20*1E-6  20*1E-6];  %
 %%%  cov_set = [1.0  0.05          0.05            1/2       0.15/05           0.15/05           1/2      0.15/05         0.15/05             1/2        20*1E-6     20*1E-6  20*1E-6];  %
+
+%%   if sig_q -> 0   then you say you are VERY sure about a-priori ==> do not change ==> delta(param) --> 0
+%%      sig_q -> INF then you say you are DO NOT TRUST    a-priori ==>        change ==> delta(param) --> bigly wigly
+%%   if alpha -> 0   then you say you are DO NOT TRUST    a-priori ==>        change ==> delta(param) --> bigly wigly
+%%      alpha -> INF then you say you are VERY sure about a-priori ==> do not change ==> delta(param) --> 0
 
 end
 
@@ -286,8 +298,8 @@ if settings.ocb_set == 1
 end
 if iSergioCO2 > 0
   disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
-  fmatd = [2     0.1       2      1     1            1];
   fmatd = [2     0.1       2      1     1            1]*0.001;
+  fmatd = [2     0.1       2      1     1            1];
 end
 
 fmatd

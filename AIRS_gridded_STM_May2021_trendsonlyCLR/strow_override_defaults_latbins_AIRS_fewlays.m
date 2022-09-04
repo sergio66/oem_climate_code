@@ -200,6 +200,10 @@ if driver.i16daytimestep < 0
     iKCARTAorSARTA = +1;
     iVersJac = 2019;   %% ERA5 from 2002-2019
     iVersJac = 2021;   %% ERA5 from 2002-2021
+    if settings.dataset == 5
+      iVersJac = 2014;
+    end
+
     if iKCARTAorSARTA < 0
       %AHA = [AHA '/subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
       AHA = [AHA '/clr_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
@@ -209,6 +213,8 @@ if driver.i16daytimestep < 0
         AHA = [AHA '/kcarta_clr_subjacLatBin_newSARTA_' num2str(driver.jac_latbin,'%02i') '.mat'];                     %% ERA-I, 17 year
       elseif iVersJac == 2021
         AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 19 year
+      elseif iVersJac == 2014
+        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 12 year
       else
         iVersJac
         error('iVersJac = 2019 or 2021 only')
@@ -217,7 +223,7 @@ if driver.i16daytimestep < 0
 
     driver.jacobian.filename = AHA;
     clear AHA
-    fprintf(1,'reading in jac version %2i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)
+    fprintf(1,'reading in jac version %4i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)
   end
 
 elseif driver.i16daytimestep > 0
@@ -431,8 +437,8 @@ lenrates = length(driver.rateset.rates);
 
 iChSet = 2; %% new chans
 iChSet = 1; %% old chans (default)
-iChSet = 3; %% new chans, but no CFC11
 iChSet = 4; %% new set + Tonga (high alt)
+iChSet = 3; %% new chans, but no CFC11
 iChSet = topts.iChSet;
 
 ch = find_the_oem_channels(f,lenrates,settings.numchan,settings.chan_LW_SW,iChSet);
@@ -894,12 +900,14 @@ end
 iSergioCO2 = +1;
 iSergioCO2 = -1;
 if iSergioCO2 > 0 & settings.ocb_set == 1
-  disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
+  disp('iSergioCO2 = +1 so RETRIEVE trace gases from ERA clas!!!!')
   xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 elseif iSergioCO2 > 0 & settings.ocb_set == 0
-  disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
+  disp('iSergioCO2 = +1 so RETRIEVE trace gases from obs!!!!')
   xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   xb(1) = 2.2;
+  xb(2) = 0.8;
+  xb(3) = 5.0;
 end
 
 [mm,nn] = size(xb);

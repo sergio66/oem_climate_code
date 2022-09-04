@@ -16,6 +16,8 @@ if iVersJac == 2019
   see_clust_put_together_jacs_clr
 elseif iVersJac == 2021
   see_clust_put_together_jacs_clrERA5_2021
+elseif iVersJac == 2014
+  see_clust_put_together_jacs_clrERA5_2014
 end
 
 if iDoSlow > 0
@@ -88,13 +90,15 @@ qrenorm(4) = 1.0;         %% 1 ppt/300 ppt
 qrenorm(5) = 1.0;         %% 1 ppt/600 ppt
 qrenormACTUAL = qrenorm;
 
-iSaveJac = +1;
+iSaveJac = -1;
 if iSaveJac > 0
   commentJacX = 'see /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/get_jac_fast.m';
   if iVersJac == 2019
     saverjac = ['save /asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/usethisjac_clear_reconstructcode_latbin_' num2str(iLatBin,'%02d') '_lonbin_' num2str(iLonBin,'%02d') '.mat commentJacX qrenormUSE qrenormACTUAL nlays m_ts_jac'];
   elseif iVersJac == 2021
     saverjac = ['save /asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/usethisjac_clear_reconstructcode_ERA5_2021_latbin_' num2str(iLatBin,'%02d') '_lonbin_' num2str(iLonBin,'%02d') '.mat commentJacX qrenormUSE qrenormACTUAL nlays m_ts_jac'];
+  elseif iVersJac == 2014
+    saverjac = ['save /asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/usethisjac_clear_reconstructcode_ERA5_2014_latbin_' num2str(iLatBin,'%02d') '_lonbin_' num2str(iLonBin,'%02d') '.mat commentJacX qrenormUSE qrenormACTUAL nlays m_ts_jac'];
   end
   eval(saverjac);
 end

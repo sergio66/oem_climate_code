@@ -278,9 +278,10 @@ shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
 %area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgtT(1:97)*1000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
-ylim([10 1000]); caxis([-0.15 +0.15]); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+ylim([1 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 clear data dataMap
 data = maskLFmatr.*smoothn(deltaTlat(:,1:97)',1); p97 = pavgLAY(1:97,1000); 
@@ -292,3 +293,44 @@ figure(28); figure(29); figure(30);
 aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 disp('ret to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%
+%{
+dirout = 'PrincetonPCTS/';
+xumbc.trend_ST = results(:,6);
+xumbc.trend_T  = deltaTlat(:,1:97);
+xumbc.trend_RH  = deltaRHlat(:,1:97);
+xumbc.trend_WV  = fracWVlat(:,1:97);
+
+xumbc.pavgLAY = pavgLAY(1:97,3000);
+xumbc.rlat65   = rlat65;
+xumbc.rlat     = rlat;
+xumbc.rlon73   = rlon73;
+
+xcomment = 'see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/find_T_RH_trends.m';
+saver = ['save PrincetonPCTS/umbc_trends_iQuantile' num2str(iQuantile) '.mat xumbc xcomment iQuantile'];
+eval(saver);
+
+aslmap(6,xumbc.rlat65,xumbc.rlon73,smoothn((reshape(xumbc.trend_ST,72,64)') ,1), [-90 +90],[-180 +180]); title('UMBC dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+
+figure(29); 
+pcolor(xumbc.rlat,xumbc.pavgLAY,smoothn(xumbc.trend_T',1)); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+ylim([10 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); %plotaxis2;
+title(['Zonal d/dt T UMBC'])
+colormap(cmap); ylim([1 1000])
+
+figure(28); 
+pcolor(xumbc.rlat,xumbc.pavgLAY,xumbc.trend_RH'); 
+pcolor(xumbc.rlat,xumbc.pavgLAY,smoothn(xumbc.trend_RH',1)); 
+shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+ylim([10 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); %plotaxis2;
+title(['Zonal d/dt RH UMBC'])
+colormap(cmap); ylim([100 1000])
+
+figure(30); 
+pcolor(xumbc.rlat,xumbc.pavgLAY,xumbc.trend_WV'); 
+pcolor(xumbc.rlat,xumbc.pavgLAY,smoothn(xumbc.trend_WV',1)); 
+shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+ylim([10 1000]); caxis([-1 +1]*0.015); colorbar('horizontal'); %plotaxis2;
+title(['Zonal d/dt WVfrac UMBC'])
+colormap(cmap); ylim([100 1000])
+
+%}

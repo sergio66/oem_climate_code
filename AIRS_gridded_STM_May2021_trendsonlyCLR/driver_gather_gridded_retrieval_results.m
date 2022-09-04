@@ -104,11 +104,11 @@ if iOCBset == 0
       data_trends = load(['XYZconvert_sergio_clearskygrid_obsonly_Q16.mat']);
     end
   elseif dataset == 4
-    if iQuantile >= 1 & iQuantile <= 16
+    if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     end
   elseif dataset == 5
-    if iQuantile >= 1 & iQuantile <= 16
+    if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_5_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     end
   else
@@ -321,7 +321,7 @@ while iDoAgain > 0
     if mod(ii,72) == 0
       fprintf(1,'+ %2i\n',ii/72);
     elseif iExist == 1
-      fprintf(1,'.');
+      fprintf(1,'o');
     elseif iExist == -1
       fprintf(1,' ');
     end
@@ -334,11 +334,21 @@ while iDoAgain > 0
   resultsO3unc = real(resultsO3unc);
   
   display('Trying to look at atributes of the last file that should have been read in .... ')
-  lser = ['!ls -lt ' fname]; eval(lser)
+  lser = ['!ls -lt ' fnamelastloaded]; eval(lser)
   
   fprintf(1,'found %4i of %4i \n',sum(iaFound),64*72)
   iDoAgain = -1;
   if sum(iaFound) < 64*72
+    figure(6)
+    pcolor(reshape(results(:,6),72,64)); colorbar; caxis([-1 +1]*0.15); colormap(llsmap5);
+
+    load latB64.mat
+    rlat65 = latB2; rlon73 = -180 : 5 : +180;
+    rlon = -180 : 5 : +180;  rlat = latB2; 
+    rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+    rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+    aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
+    
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
       iDoAgain = +1;
@@ -404,7 +414,7 @@ clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2
 aslmap(5,rlat65,rlon73,smoothn((reshape(rates(i1231,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1231/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
 aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 
-aslmap(7,rlat65,rlon73,smoothn((reshape(rates(i1419,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1419/dt'); caxis([-1 +1]*0.15); colormap(llspamp5)
+aslmap(7,rlat65,rlon73,smoothn((reshape(rates(i1419,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1419/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
 figure(8); junk = smoothn((reshape(rates(i1419,:),72,64)')); junk = reshape(rates(i1419,:),72,64)'; plot(rlat,nanmean(junk,2)); title('Zonal dBT1419/dt'); grid; xlim([-90 +90])
 
 figure(9); scatter_coast(Xlon,Ylat,50,thedofs); jett = jet(64); jett(1,:) = 1; colormap(jett); title('ALL DOFS'); caxis([0 max(thedofs)]); caxis([0 30])

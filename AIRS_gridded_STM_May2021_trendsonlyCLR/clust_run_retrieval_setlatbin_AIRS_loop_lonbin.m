@@ -100,6 +100,9 @@ for iInd = iInd0 : iIndE
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
   iQuantile = 16;  %% hottest, for AIRS STM
 
+  iQuantile = 10;  %% 
+  iQuantile = 50;  %% 
+
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
 

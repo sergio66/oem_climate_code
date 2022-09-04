@@ -24,6 +24,7 @@ if ~exist('results')
   savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithMLSL3_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_globalSSTfeedback.mat';
   savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat';
   savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_feedback_TongaChans.mat';
+  savename = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback_TongaChans.mat';
 
   fprintf(1,'savename = %s \n',savename);
   load(savename);  
@@ -256,7 +257,8 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
 iA    = 1;
 iNorD = 1;
 iAorOrL = 0;
-airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);
+iNumYears = 19;
+airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
 
 figure(1); clf
 iNumYears = 19;
@@ -342,16 +344,17 @@ outflux.ceres_trends  = ceres_trends;
 outflux.airsL3_trends = airsL3_trends;
 outflux.umbc_trends   = umbc_trends;
 
-fprintf(1,'CERES LW area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[sum(cos(ceres.lat*pi/180).*trend_ceres_lw'*iNumYears)   sum(cos(ceres.lat*pi/180).*trend_ceres_lw_clr'*iNumYears)]/sum(cos(ceres.lat*pi/180)))
-fprintf(1,'CERES SW area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[sum(cos(ceres.lat*pi/180).*trend_ceres_sw'*iNumYears)   sum(cos(ceres.lat*pi/180).*trend_ceres_sw_clr'*iNumYears)]/sum(cos(ceres.lat*pi/180)))
-fprintf(1,'AIRS L3  area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[sum(cos(rlat*pi/180).*airsL3_trends.airsL3'*iNumYears)  sum(cos(rlat*pi/180).*airsL3_trends.airsL3_clr'*iNumYears)]/sum(cos(rlat*pi/180)))
-fprintf(1,'UMBC     area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[NaN  sum(cos(rlat*pi/180).*umbc_trends.umbc_all'*iNumYears)]/sum(cos(rlat*pi/180)))
+fprintf(1,'CERES LW area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[nansum(cos(ceres.lat*pi/180).*trend_ceres_lw'*iNumYears)   nansum(cos(ceres.lat*pi/180).*trend_ceres_lw_clr'*iNumYears)]/nansum(cos(ceres.lat*pi/180)))
+fprintf(1,'CERES SW area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[nansum(cos(ceres.lat*pi/180).*trend_ceres_sw'*iNumYears)   nansum(cos(ceres.lat*pi/180).*trend_ceres_sw_clr'*iNumYears)]/nansum(cos(ceres.lat*pi/180)))
+fprintf(1,'AIRS L3  area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[nansum(cos(rlat*pi/180).*airsL3_trends.airsL3'*iNumYears)  nansum(cos(rlat*pi/180).*airsL3_trends.airsL3_clr'*iNumYears)]/nansum(cos(rlat*pi/180)))
+fprintf(1,'UMBC     area weighted 19 year flux   cld = %8.6f clr = %8.6f W/m2 \n',[NaN  nansum(cos(rlat*pi/180).*umbc_trends.umbc_all'*iNumYears)]/nansum(cos(rlat*pi/180)))
 
-%{
-saveOLRname = [savename(1:end-4) '_olr_ceres_UMBC.mat'];
-saver = ['save ' saveOLRname ' outflux'];
-eval(saver);
-%}
+iSave = input('Save the OLR data (-1/+1) : ');
+if iSave > 0
+  saveOLRname = [savename(1:end-4) '_olr_ceres_UMBC.mat'];
+  saver = ['save ' saveOLRname ' outflux'];
+  eval(saver);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat

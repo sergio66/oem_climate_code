@@ -4,12 +4,28 @@ THIS SQUISHES DOWN THE *h0* monthly files from 1.9 G to 87 M by saving of only t
 ## make sure you do    module load nco/5.0.7
 for file in /glade/scratch/aherring/archive/cam.clubbmf.bsort_FHIST_ne30pg2_ne30pg2_mg17_L58dev_3600pes_220720_run76_Nx2yrs/atm/hist/*.cam.h0.*; do
    echo $file
-   ncks -v lat,lon,lev,time,date,co2vmr,ch4vmr,n2ovmr,CLDTOT,CLOUD,CLDICE,CLDLIQ,IWC,LANDFRAC,TS,T,Q,O3,PS,U10 $file -o /glade/scratch/sergio/adam_1998_2022/reduced_$(basename $file)
+   ncks -v hyam,hybm,lat,lon,lev,time,date,co2vmr,ch4vmr,n2ovmr,CLDTOT,CLOUD,CLDICE,CLDLIQ,IWC,LANDFRAC,TS,T,Q,O3,PS,U10,PMID $file -o /glade/scratch/sergio/adam_1998_2022/reduced_$(basename $file)
 done
 %}
 
 %{
 see https://project.cgd.ucar.edu/projects/CLUBB-MF/runs/ for description of runs 91/92
+see https://www.cesm.ucar.edu/projects/community-projects/LENS2/variable-list/  for variable names
+
+ncdump -h /umbc/xfs2/strow/asl/s1/sergio/JUNK/cam.clubbmf.bsort_FHIST_ne30pg2_ne30pg2_mg17_L58dev_3600pes_220720_run76_Nx2yrs.cam.h0.2010-03.nc >& /home/sergio/ugh ells you everything you wanna know
+
+
+https://bb.cgd.ucar.edu/cesm/threads/pressure-coordinates.3530/
+lev is 1000.*(hyam + hybm) where hyam and hybm are the hybrid coordinate A and B values at the layer midpoints. 
+You can compute pressure from hyam and hybm. At each latitude, longitude and level (lev[k]) pressures are computed using: p(k) = hyam(k)*PO + hybm(k)*PS
+
+https://www.ncl.ucar.edu/Document/Functions/Built-in/pres_hybrid_ccm.shtml
+Let hyam(klev), hybm(klev), ps(ntim,nlat,mlon) in units of pascals. pm will be returned as a four-dimensional array of size (ntim,klev,nlat,nlon).
+  hyam = f->hyam ; read from a file the mid-layer coef
+  hybm = f->hybm ; read from a file
+  ps   = f->PS   ; surface pressure [Pa]
+  p0   = 100000. ; since ps is in Pa or [ f->P0]
+   p(k) = a(k)*p0 + b(k)*ps.
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

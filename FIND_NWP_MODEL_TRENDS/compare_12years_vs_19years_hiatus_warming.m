@@ -25,6 +25,51 @@ if ~exist('era5_12')
   merra2_warming.trend_RH = (merra2_19.trend_RH * 19 - merra2_12.trend_RH * 12)/(19-12);
   merra2_warming.trend_ptemp = (merra2_19.trend_ptemp * 19 - merra2_12.trend_ptemp * 12)/(19-12);
   merra2_warming.trend_stemp = (merra2_19.trend_stemp * 19 - merra2_12.trend_stemp * 12)/(19-12);
+
+  giss = load('giss_hadcrut_cmip6_stemp_trends_2002_09_to_2014_08_CMIP6.mat');
+
+  xamip6_12 = struct;  
+    xamip6_12.trend_RH = amip6_12.trend_RH;
+    xamip6_12.trend_gas_1 = amip6_12.trend_gas_1;
+    xamip6_12.trend_ptemp = amip6_12.trend_ptemp;
+    xamip6_12.trend_stemp = amip6_12.trend_stemp;
+  xcmip6_12 = struct;  
+    xcmip6_12.trend_RH = cmip6_12.trend_RH;
+    xcmip6_12.trend_gas_1 = cmip6_12.trend_gas_1;
+    xcmip6_12.trend_ptemp = cmip6_12.trend_ptemp;
+    xcmip6_12.trend_stemp = cmip6_12.trend_stemp;
+
+  xmerra2_12 = struct;  
+    xmerra2_12.trend_RH = merra2_12.trend_RH;
+    xmerra2_12.trend_gas_1 = merra2_12.trend_gas_1;
+    xmerra2_12.trend_ptemp = merra2_12.trend_ptemp;
+    xmerra2_12.trend_stemp = merra2_12.trend_stemp;
+  xera5_12 = struct;  
+    xera5_12.trend_RH = era5_12.trend_RH;
+    xera5_12.trend_gas_1 = era5_12.trend_gas_1;
+    xera5_12.trend_ptemp = era5_12.trend_ptemp;
+    xera5_12.trend_stemp = era5_12.trend_stemp;
+
+  xairsV7_12 = struct;
+    xairsV7_12.trend_RH = airsV7_12.thestats64x72.RHrate;
+    xairsV7_12.trend_gas_1 = airsV7_12.thestats64x72.waterrate;
+    xairsV7_12.trend_ptemp = airsV7_12.thestats64x72.ptemprate;
+    xairsV7_12.trend_stemp = airsV7_12.thestats64x72.stemprate;
+    xairsV7_12.Tlevs = airsV7_12.Tlevs;
+    xairsV7_12.Qlevs = airsV7_12.Qlevs;
+  xclimcaps_12 = struct;
+    xclimcaps_12.trend_RH = climcaps_12.thestats64x72.RHrate;
+    xclimcaps_12.trend_gas_1 = climcaps_12.thestats64x72.waterrate;
+    xclimcaps_12.trend_ptemp = climcaps_12.thestats64x72.ptemprate;
+    xclimcaps_12.trend_stemp = climcaps_12.thestats64x72.stemprate;
+    xclimcaps_12.Tlevs = climcaps_12.Tlevs;
+    xclimcaps_12.Qlevs = climcaps_12.Qlevs;
+
+  xgiss.giss_trend4608 = giss.giss_trend4608;
+  comment = 'see/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/compare_12years_vs_19years_hiatus_warming.m';
+  save ../AIRS_gridded_STM_May2021_trendsonlyCLR/PrincetonPCTS/giss_airsV7_climcps_xmip_era5_merra2.mat x*
+
+error('kldjlkjd')
 end
 
 addpath /home/sergio/MATLABCODE/PLOTTER
@@ -52,6 +97,8 @@ if ~exist('rlat')
   rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
   rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 end
+
+aslmap(6,rlat65,rlon73,maskLFmatr.*smoothn(giss.giss_trend4608',1),[-90 +90],[-180 +180]);   colormap(llsmap5); caxis([-0.15 +0.15]); title(['GISS stemp d/dt K/yr']); 
 
 if ~exist('pavgLAY')
   boo = load('/home/sergio/MATLABCODE/airslevels.dat');

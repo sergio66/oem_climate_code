@@ -182,6 +182,12 @@ m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.coljacCFC12/factor_log10];
 m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacST];
 
 nlays = p.nlevs(iWhichLatLonBin)-1;
+[~,nlaysx] = size(m_ts_jac_fast);
+nlaysx = (nlays-6)/3;
+if nlaysx ~= nlays
+  fprintf(1,'<<<<<<<<<<<<< warning see_clust_put_together_jacs_clrERA5_2021.m nlaysx ~= nlays %3i %3i >>>>>>>>>>>>>> \n',nlaysx,nlays);
+  nlays = nlaysx;
+end
 m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacWV'];
 m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacT'];
 m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacO3'];

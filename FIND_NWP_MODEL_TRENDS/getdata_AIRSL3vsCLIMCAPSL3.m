@@ -11,11 +11,16 @@ if nargin == 0
   iA = 1;
   iNorD = 1;
   iAorOrL = 0;
+  iNumYears = 19;
 elseif nargin == 1
   iNorD = 1;
   iAorOrL = 0;
+  iNumYears = 19;
 elseif nargin == 2
   iAorOrL = 0;
+  iNumYears = 19;
+elseif nargin == 3
+  iNumYears = 19;
 end
 
 if iA == 1

@@ -1,4 +1,4 @@
-function [airsChoice,nwpChoice,xmip6Choice] = driverchoose_AIRSvsNWPvsXMIP6(iA,iNWP,iXMIP6)
+function [airsChoice,nwpChoice,xmip6Choice] = driverchoose_AIRSvsNWPvsXMIP6(iA,iNWP,iXMIP6,iNumYears)
 
 % this serves to supercede
 %   plot_ERA_ERA5_AIRSL3_AMIP6_trends.m
@@ -16,19 +16,26 @@ if nargin == 0
   iA     = 1;
   iNWP   = 5;
   iXMIP6 = -1;
+  iNumYears = 19;
 elseif nargin == 1
   iNWP   = 5;
   iXMIP6 = -1;
+  iNumYears = 19;
 elseif nargin == 2
   iXMIP6 = -1;
+  iNumYears = 19;
+elseif nargin == 3
+  iNumYears = 19;
 end
 
 iNorD = 1;
 iAorOrL = 0;
 
-iNumYears = 19;
+%%iNumYears = 19;
 
-airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);
+fprintf(1,'driverchoose_AIRSvsNWPvsXMIP6.m : iNumYears = %2i \n',iNumYears)
+
+airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
 nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL,iNumYears);
 xmip6Choice = getdata_XMIP6(iXMIP6,iNorD,iAorOrL);
 

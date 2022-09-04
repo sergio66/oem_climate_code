@@ -56,13 +56,13 @@ disp('                        (3) Sergio Extreme Aug 2021 2002/09 to 2021/07 ');
 disp('                       (-3) Sergio Mean Aug 2021 2002/09 to 2021/07 ');
 disp(' <---------------------------------------------------------------------------------------> ')
 disp('                        (5) Sergio Quantile Aug 2022 2002/09 to 2014/08 Full 12 years **** ');
-iType = input('Enter DataSet to use (+1,-1,+2,+4   or +3,-3) : ');
+iType = input('Enter DataSet to use (+1,-1,+2,+4,+5   or +3,-3) : ');
 
 if iType ~= 3
   iQuantile = 16;  %% hottest, used for AIRS STM May 221
   iQuantile = 08;
   iQuantile = 04;
-  iQuantile = input('Enter iQuantile to make (1-16, 0 = avg) : ');
+  iQuantile = input('Enter iQuantile to make (1-16, 0 = avg, 50 = hottest 5) : ');
 end
 
 iKeepPlotting = -1;
@@ -136,16 +136,28 @@ for iLat = 1 : 64
       %b_err_desc(iLon,iLat,:) = x.berr_desc(:,iQuantile,2);
   
       %% these are bt
-      b_asc(iLon,iLat,:) = x.dbt_asc(:,iQuantile);
-      b_desc(iLon,iLat,:) = x.dbt_desc(:,iQuantile);
-      b_err_asc(iLon,iLat,:) = x.dbt_err_asc(:,iQuantile);
-      b_err_desc(iLon,iLat,:) = x.dbt_err_desc(:,iQuantile);
-      lagcor_obs_anom_asc(iLon,iLat,:)  = x.lag_asc(:,iQuantile);
-      lagcor_obs_anom_desc(iLon,iLat,:) = x.lag_desc(:,iQuantile);
-  
-      mean_rad(iLon,iLat,:) = squeeze(x.b_desc(:,iQuantile,1)); %% 10 params = <mean> + <linear trend> t + sum(i=1,4) Ci sin(wi t) + Di cos (wi t)
-      mean_BT(iLon,iLat,:)  = rad2bt(h.vchan,squeeze(x.b_desc(:,iQuantile,1)));
-  
+     if iQuantile <= 16
+        b_asc(iLon,iLat,:) = x.dbt_asc(:,iQuantile);
+        b_desc(iLon,iLat,:) = x.dbt_desc(:,iQuantile);
+        b_err_asc(iLon,iLat,:) = x.dbt_err_asc(:,iQuantile);
+        b_err_desc(iLon,iLat,:) = x.dbt_err_desc(:,iQuantile);
+        lagcor_obs_anom_asc(iLon,iLat,:)  = x.lag_asc(:,iQuantile);
+        lagcor_obs_anom_desc(iLon,iLat,:) = x.lag_desc(:,iQuantile);
+    
+        mean_rad(iLon,iLat,:) = squeeze(x.b_desc(:,iQuantile,1)); %% 10 params = <mean> + <linear trend> t + sum(i=1,4) Ci sin(wi t) + Di cos (wi t)
+        mean_BT(iLon,iLat,:)  = rad2bt(h.vchan,squeeze(x.b_desc(:,iQuantile,1)));
+      elseif iQuantile == 50
+        iQuantileX = 12:16;
+        b_asc(iLon,iLat,:) = nanmean(x.dbt_asc(:,iQuantileX),2);
+        b_desc(iLon,iLat,:) = nanmean(x.dbt_desc(:,iQuantileX),2);
+        b_err_asc(iLon,iLat,:) = nanmean(x.dbt_err_asc(:,iQuantileX),2);
+        b_err_desc(iLon,iLat,:) = nanmean(x.dbt_err_desc(:,iQuantileX),2);
+        lagcor_obs_anom_asc(iLon,iLat,:)  = nanmean(x.lag_asc(:,iQuantileX),2);
+        lagcor_obs_anom_desc(iLon,iLat,:) = nanmean(x.lag_desc(:,iQuantileX),2);
+    
+        mean_rad(iLon,iLat,:) = nanmean(squeeze(x.b_desc(:,iQuantileX,1)),2); %% 10 params = <mean> + <linear trend> t + sum(i=1,4) Ci sin(wi t) + Di cos (wi t)
+        mean_BT(iLon,iLat,:)  = rad2bt(h.vchan,nanmean(squeeze(x.b_desc(:,iQuantileX,1)),2));
+      end    
       junk = squeeze(mean_BT(iLon,iLat,:));
       junk = nedt_T0_T1(h.vchan,airs_noise,250*ones(h.nchan,1),real(junk));
       airs_noiseTtrue(iLon,iLat,:) = junk;
@@ -225,44 +237,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
-[g2378,g2645] = compare_goodchans_2378_2645();   %% shows g is index into f-ABCD and NOT chanID
-
-figure(1)
-junk = squeeze(b_desc(:,:,1520));
-scatter_coast(X(:),Y(:),50,junk(:)); pause(0.1);
-caxis([-0.2 +0.2]);; colormap(usa2)
-title(['Quantile ' num2str(iQuantile,'%02d')])
-
-figure(2); clf
-junk = rad2bt(1231,squeeze(mean_rad(:,:,1520)));
-scatter_coast(X(:),Y(:),50,junk(:));
-colormap jet
-title(['Quantile ' num2str(iQuantile,'%02d')])
-
-figure(2); clf
-junk = squeeze(mean_BT(:,:,1520));
-scatter_coast(X(:),Y(:),50,junk(:));
-colormap jet
-title(['Quantile ' num2str(iQuantile,'%02d')])
-
-figure(3); clf
-junk = squeeze(airs_noiseTtrue(:,:,1520));
-junk = reshape(airs_noiseTtrue,72*64,2645)'/sqrt(120);    %% need sqrt(N) from about 12000 obs/tile/16 days .. so 1% of this is 120 ... noise goes down by sqrt(N)
-plot(h.vchan,nanmean(reshape(b_err_desc,72*64,2645)',2),h.vchan(g2645),nanmean(junk(g2645,:),2));  
-  ylim([0 0.3]); 
-  hl = legend('from b_err','from 1/sqrt(N)','location','best','fontsize',10);
-title(['Quantile ' num2str(iQuantile,'%02d')])
-
-figure(4); clf
-junkA = reshape(b_asc,4608,2645);
-junkD = reshape(b_desc,4608,2645);
-plot(h.vchan,nanmean(junkA,1),h.vchan,nanmean(junkD,1),h.vchan,nanstd(junkA,1),'--',h.vchan,nanstd(junkD,1),'--')
-  ylim([-0.1 +0.1]*0.75)
-  xlim([640 1640])
-  hl = legend('mean ratesA','mean ratesD','std ratesA','std ratesD','location','best','fontsize',10);
-title(['Quantile ' num2str(iQuantile,'%02d')])
-
+figs_put_together_QuantileChoose_trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{

@@ -13,18 +13,35 @@ if ~exist('all')
   load ERA5_atm_data_2002_09_to_2021_08_desc.mat
 end
 
+iStartY = 2002; iStartYM = 09; iStopY = 2021; iStopYM = 08; 
+iStartY = 2002; iStartYM = 09; iStopY = 2014; iStopYM = 08; 
+booS = find(all.yy == iStartY & all.mm == iStartYM);
+booE = find(all.yy == iStopY & all.mm == iStopYM);
+ind = booS : booE;
+
+if round(length(ind)/12) ~= length(ind)/12
+  error('need full years')
+end
+
 %% these are actually DESC
-foutNyearaverageIP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.ip.rtp'];
-foutNyearaverageOP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.op.rtp'];
-foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp'];
+if length(ind)/12 == 19 & iStartY == 2002 & iStopY == 2021
+  foutNyearaverageIP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.ip.rtp'];
+  foutNyearaverageOP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.op.rtp'];
+  foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp'];
+else
+  foutNyearaverageIP = ['summary_' num2str(length(ind)/12) 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.ip.rtp'];
+  foutNyearaverageOP = ['summary_' num2str(length(ind)/12) 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.op.rtp'];
+  foutNyearaverageRP = ['summary_' num2str(length(ind)/12) 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.rp.rtp'];
+end
+
 if ~exist(foutNyearaverageIP)
   pNyearaverage = [];
   for ii = 1 : 4608
-    yavg.stemp(ii) = nanmean(all.stemp(:,ii));
-    yavg.ptemp(:,ii) = nanmean(squeeze(all.nwp_ptemp(:,:,ii)),1);
-    yavg.gas_1(:,ii) = nanmean(squeeze(all.nwp_gas_1(:,:,ii)),1);
-    yavg.gas_3(:,ii) = nanmean(squeeze(all.nwp_gas_3(:,:,ii)),1);
-    yavg.plevs(:,ii) = nanmean(squeeze(all.nwp_plevs(:,:,ii)),1);
+    yavg.stemp(ii) = nanmean(all.stemp(ind,ii));
+    yavg.ptemp(:,ii) = nanmean(squeeze(all.nwp_ptemp(ind,:,ii)),1);
+    yavg.gas_1(:,ii) = nanmean(squeeze(all.nwp_gas_1(ind,:,ii)),1);
+    yavg.gas_3(:,ii) = nanmean(squeeze(all.nwp_gas_3(ind,:,ii)),1);
+    yavg.plevs(:,ii) = nanmean(squeeze(all.nwp_plevs(ind,:,ii)),1);
     yavg.rlon(ii)  = all.rlon(ii);
     yavg.rlat(ii)  = all.rlat(ii);
   end
@@ -40,10 +57,14 @@ if ~exist(foutNyearaverageIP)
   yavg.emis = pERAI.emis;
   yavg.efreq = pERAI.efreq;
   yavg.rho = pERAI.rho;
-  
-  [yy,mm,dd,hh] = tai2utcSergio(yavg.rtime);
+
   tS = utc2taiSergio(2002,09,01,00);
   tE = utc2taiSergio(2021,08,31,23.99);
+  
+  [yy,mm,dd,hh] = tai2utcSergio(yavg.rtime(ind));
+  tS = utc2taiSergio(iStartY,iStartYM,01,00);
+  tE = utc2taiSergio(iStopY, iStopYM ,31,23.99);
+
   [yyX,mmX,ddX,hhX] = tai2utcSergio((tS+tE)/2);
   yavg.rtime = ones(size(yavg.rtime)) * (tS+tE)/2;
 
@@ -132,3 +153,25 @@ end
 disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
 disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
 disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
+[~,~,junk19] = rtpread('summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp');
+[~,~,junk12] = rtpread('summary_12years_all_lat_all_lon_2002_2014_monthlyERA5.rp.rtp');
+
+plevs = flipud(load('/home/sergio/MATLABCODE/airslevels.dat')); 
+
+figure(1); pcolor(1:64,plevs,squeeze(nanmean(reshape(junk19.ptemp,101,72,64),2))); shading interp; caxis([200 300]); set(gca,'ydir','reverse'); set(gca,'yscale','log'); colormap jet; colorbar; ylim([1 1000])
+figure(2); pcolor(1:64,plevs,squeeze(nanmean(reshape(junk19.ptemp - junk12.ptemp,101,72,64),2))); shading interp; caxis([-1 +1]); set(gca,'ydir','reverse'); set(gca,'yscale','log'); colormap(usa2); colorbar; ylim([1 1000])
+ title('\delta T(z) : 19 yrs - 12 years')
+
+figure(3); pcolor(1:64,plevs,log10(squeeze(nanmean(reshape(junk19.gas_1,101,72,64),2)))); shading interp; caxis([15 22]); set(gca,'ydir','reverse'); set(gca,'yscale','log'); colormap jet; colorbar; ylim([1 1000])
+figure(4); pcolor(1:64,plevs,1-squeeze(nanmean(reshape(junk19.gas_1 ./ junk12.gas_1,101,72,64),2))); shading interp; caxis([-1 +1]/10); set(gca,'ydir','reverse'); set(gca,'yscale','log'); colormap(usa2); colorbar; ylim([1 1000])
+  title('1 - WV19/WV12 : 19 yrs - 12 years')
+
+figure(5); scatter_coast(junk12.rlon,junk12.rlat,50,junk19.stemp-junk12.stemp); caxis([-1 +1]); colormap(usa2); title('\delta stemp : 19 yrs - 12 years')
+
+%}

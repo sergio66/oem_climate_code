@@ -21,7 +21,7 @@ foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.r
 if ~exist(foutNyearaverageIP)
   pNyearaverage = [];
 
-  yavg.spres = pERAI.spres;
+  yavg.spres0 = pERAI.spres;
   yavg.solzen = pERAI.solzen;
   yavg.satzen = pERAI.satzen;
   yavg.rtime = pERAI.rtime;
@@ -48,30 +48,38 @@ if ~exist(foutNyearaverageIP)
     yavg.rlon(ii)  = all.rlon(ii);
     yavg.rlat(ii)  = all.rlat(ii);
 
+
+    boo = find(yavg.ptemp(:,ii) >= 200 & yavg.gas_1(:,ii) > 0 & yavg.gas_3(:,ii) > 0);
+    boo = max(boo);
+    yavg.spres(ii) = yavg.plevs(boo,ii);
+
     boo = find(yavg.plevs(:,ii) <= yavg.spres(ii));
     yavg.nlevs(ii) = max(boo);
 
     iFix = +1;
     if iFix > 0
       iN = find(yavg.plevs(:,ii) <= yavg.spres(ii));
-      iN = [iN; iN(end)+1]; 
+      %iN = [iN; iN(end)+1]; 
       if length(iN) > 42
         iN = 1 : 42;
       end
       bad = find(yavg.ptemp(iN,ii) < 0 | yavg.gas_1(iN,ii) < 0 | yavg.gas_3(iN,ii) < 0);
       bad = find(yavg.ptemp(iN,ii) < 150);
       if length(bad) > 0
+        fprintf(1,'fix T for ii = %4i \n',ii);
         good = setdiff(iN,bad);
         yavg.ptemp(bad,ii) = interp1(log(yavg.plevs(good,ii)),yavg.ptemp(good,ii),log(yavg.plevs(bad,ii)),[],'extrap');
       end
       bad = find(yavg.gas_1(iN,ii) < 0);
       if length(bad) > 0
+        fprintf(1,'fix WV for ii = %4i \n',ii);
         good = setdiff(iN,bad);
         yavg.gas_1(bad,ii) = interp1(log(yavg.plevs(good,ii)),log(yavg.gas_1(good,ii)),log(yavg.plevs(bad,ii)),[],'extrap');
         yavg.gas_1(bad,ii) = exp(yavg.gas_1(bad,ii));
       end
       bad = find(yavg.gas_3(iN,ii) < 0);
       if length(bad) > 0
+        fprintf(1,'fix O3 for ii = %4i \n',ii);
         good = setdiff(iN,bad);
         yavg.gas_3(bad,ii) = interp1(log(yavg.plevs(good,ii)),log(yavg.gas_3(good,ii)),log(yavg.plevs(bad,ii)),[],'extrap');
         yavg.gas_3(bad,ii) = exp(yavg.gas_3(bad,ii));
@@ -166,6 +174,9 @@ if ~exist(foutNyearaverageIP)
   mmwI_300 = mmwater_rtp(hERAI,pERAI,300);
   mmw5_300 = mmwater_rtp(hnew,pnew,300);
   scatter_coast(yavg.rlon,yavg.rlat,50,mmw5_300-mmwI_300); title('mmw to 300 mb : MERRA2 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/100)
+
+  hist(yavg.spres0-pnew.spres,100);          title('spres ERA5 - MERRA2'); colormap jet
+  scatter_coast(yavg.rlon,yavg.rlat,50,yavg.spres0-pnew.spres);          title('spres ERA5 - MERRA2'); colormap jet
 
   scatter_coast(yavg.rlon,yavg.rlat,50,rad2bt(1231,pnew.rcalc(1520,:))); title('BT1231 calc'); colormap jet
 end
