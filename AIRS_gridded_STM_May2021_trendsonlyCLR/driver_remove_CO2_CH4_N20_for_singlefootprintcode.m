@@ -1,14 +1,123 @@
-iNumYears = 19
-iNumYears = 12
+addpath /asl/matlib/h4tools
+addpath /asl/matlib/rtptools
+addpath /asl/matlib/aslutil
+addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
+addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/COLORMAP
 
+load /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat
+rlat65 = latB2; rlon73 = -180 : 5 : +180;
+rlon = -180 : 5 : +180;  rlat = latB2;
+rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+iNumYears = 19;  %% 2002-2021
+iNumYears = 12;  %% 2002-2014
+
+iNumYears = input('Enter iNumYears : (12 or 19) : ');
+
+% see ../../oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLD/put_together_kcarta_jacs.m
+% normer.normCO2 = 2.2/370;   %% ppm/yr out of 370
+% normer.normO3  = 0.01;      %% frac/yr
+% normer.normN2O = 1.0/300;   %% ppb/yr outof 300
+% normer.normCH4 = 5/1860;    %% ppb/yr out of 1800
+% normer.normCFC = 1/1300;    %% ppt/yr out of 1300
+% normer.normST  = 0.1;       %% K/yr
+
+%% see driver_quickget_mauna_loaa_rate.m for rates
 if iNumYears == 12
   load iType_5_convert_sergio_clearskygrid_obsonly_Q16.mat
+
+  iVersESRL = 3
+  iVersESRL = 4
+  if iVersESRL == 0
+    %% this saved as no_tracegas_spectral_rate_12years0.mat
+    co2x = 2.2;
+    n2ox = 1.0;
+    ch4x = 5.0;
+
+    co2x = co2x * ones(1,64);
+    n2ox = n2ox * ones(1,64);
+    ch4x = ch4x * ones(1,64);
+  
+  else
+    co2x = 2.065319;
+    n2ox = 0.863650;
+    ch4x = 5.316252;
+
+    if iVersESRL == 1
+      %% this saved as no_tracegas_spectral_rate_12years1.mat
+      co2x = 2.065319;
+      n2ox = 0.863650;
+      ch4x = 5.316252;
+
+      co2x = co2x * ones(1,64);
+      n2ox = n2ox * ones(1,64);
+      ch4x = ch4x * ones(1,64);
+    
+    elseif iVersESRL == 2
+      %% this saved as no_tracegas_spectral_rate_12years2.mat
+      co2x = co2x * 0.98;
+      n2ox = n2ox * 0.98;
+      ch4x = ch4x * 0.98;
+
+      co2x = co2x * ones(1,64);
+      n2ox = n2ox * ones(1,64);
+      ch4x = ch4x * ones(1,64);
+    
+    elseif iVersESRL == 3
+      %% this saved as no_tracegas_spectral_rate_12years3.mat
+      co2x = co2x * 0.95;
+      n2ox = n2ox * 0.95;
+      ch4x = ch4x * 0.95;
+
+      co2x = co2x * ones(1,64);
+      n2ox = n2ox * ones(1,64);
+      ch4x = ch4x * ones(1,64);
+
+    elseif iVersESRL == 4
+      %% this saved as no_tracegas_spectral_rate_12years4.mat
+      co2x = co2x * 0.95;
+      n2ox = n2ox * 0.95;
+      ch4x = ch4x * 0.95;
+
+      esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+      n2ox = n2ox * ones(1,64);
+      co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_12,rlat);
+      ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_12,rlat);
+    end
+  end
+  [mean(co2x) mean(n2ox) mean(ch4x)]
+
 elseif iNumYears == 19
+  co2x = 2.262445;
+  n2ox = 0.925496;
+  ch4x = 6.613673;
+
+  iVersESRL = 0
+  iVersESRL = 4
+  if iVersESRL == 0
+    co2x = co2x * ones(1,64);
+    n2ox = n2ox * ones(1,64);
+    ch4x = ch4x * ones(1,64);
+  elseif iVersESRL == 4
+    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+    n2ox = n2ox * ones(1,64);
+    co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_19,rlat);
+    ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_19,rlat);
+  end
+
   load iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%keyboard_nowindow
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 for jj = 1 : 64
-  fprintf(1,'latbin %2i of 64 \n',jj);
+  fprintf(1,'>>>>>>>>>>>>>>>>>>>>>> latbin %2i of 64 \n',jj);
   if iNumYears == 12
     jacname = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(jj) '.mat'];
   elseif iNumYears == 19
@@ -16,10 +125,12 @@ for jj = 1 : 64
   end
   for ii = 1 : 72
     iibin = (jj-1)*72 + ii;
-    [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(jacname,iibin,ii,jj,2021);
-    co2 = m_ts_jac0(:,1);
-    n20 = m_ts_jac0(:,2);
-    ch4 = m_ts_jac0(:,3);
+
+    fprintf(1,'\n\n    lat/lon = %2i/%2i \n',jj,ii)
+    [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(jacname,iibin,ii,jj,2002+iNumYears);
+    co2 = m_ts_jac0(:,1) * co2x(jj)/2.2;
+    n20 = m_ts_jac0(:,2) * n2ox(jj)/1.0;
+    ch4 = m_ts_jac0(:,3) * ch4x(jj)/5.0;
     cfc11 = m_ts_jac0(:,4);
     cfc12 = m_ts_jac0(:,5);
     newrad(:,iibin) = squeeze(b_desc(ii,jj,:)) - co2 - ch4 - n20 - cfc11 - cfc12;
@@ -33,10 +144,11 @@ oldrad = reshape(permute(b_desc,[3 1 2]),2645,72*64);
 
 comment = 'see driver_remove_CO2_CH4_N20.m';
 if iNumYears == 12
-  save no_tracegas_spectral_rate_12years.mat newrad nedt_b nedt_true oldrad comment freq2645
+  saver = ['save no_tracegas_spectral_rate_12years' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
 elseif iNumYears == 19
-  save no_tracegas_spectral_rate_19years.mat newrad nedt_b nedt_true oldrad comment freq2645
+  saver = ['save no_tracegas_spectral_rate_19years' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
 end
+eval(saver)
 
 figure(1);
 pcolor(reshape(oldrad(50,:)-newrad(50,:),72,64)'); colormap(usa2); colorbar; shading interp; caxis([-1 +1]*0.15)

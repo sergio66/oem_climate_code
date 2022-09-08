@@ -800,30 +800,32 @@ elseif settings.set_era5_cmip6_airsL3 == 8
   xb = reshape(xb,length(xb),1);
 end
 
+[co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
+
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
   disp('setting constant rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8')
   if settings.co2lays == 1
-    xb(1) = 2.2;  % Set CO2 apriori
+    xb(1) = co2x;  % Set CO2 apriori
     xb(2) = 1;
-    xb(3) = 4.5;
+    xb(3) = ch4x;
     xb(4) = 0.0; %% clouds, so dunno value
     xb(5) = 0.0; %% clouds, so dunno value
 
-    xb(1) = 2.2 * 1;    % Set CO2 apriori
-    xb(2) = 0.8 * 1;    % set N2O 
-    xb(3) = 4.5 * 1;    % set CH4
+    xb(1) = co2x * 1;    % Set CO2 apriori
+    xb(2) = n2ox * 1;    % set N2O 
+    xb(3) = ch4x * 1;    % set CH4
     xb(4) = 0.0; %% clouds, so dunno value
     xb(5) = 0.0; %% clouds, so dunno value
 
     %xb(1:5) = xb(1:5)*10;
 
   elseif settings.co2lays == 3
-    xb(1) = 2.2 * 1;        % Set CO2 apriori lower trop
-    xb(2) = 2.2 * 1;        % Set CO2 apriori mid trop
-    xb(3) = 2.2 * 1;        % Set CO2 apriori strat
+    xb(1) = co2x * 1;        % Set CO2 apriori lower trop
+    xb(2) = co2x * 1;        % Set CO2 apriori mid trop
+    xb(3) = co2x * 1;        % Set CO2 apriori strat
 
-    xb(4) = 0.8 * 1;        % set N2O 
-    xb(5) = 4.5 * 1;        % set CH4
+    xb(4) = n2ox * 1;        % set N2O 
+    xb(5) = ch4x * 1;        % set CH4
     xb(6) = 0.0; %% clouds, so dunno value
     xb(7) = 0.0; %% clouds, so dunno value
 
@@ -838,21 +840,21 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_se
     deltaT = 365/16; %% days per timestep
 
     %% default all this while getting good results
-    xb(1) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
-    xb(2) = 0.8 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
-    xb(3) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
+    xb(1) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
+    xb(2) = n2ox * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
+    xb(3) = ch4x * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
     xb(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC11, before Aug 23 the mult was 1
     xb(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC12, before Aug 23 the mult was 1
 
   elseif settings.co2lays == 3
     deltaT = 365/16; %% days per timestep
 
-    xb(1) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori lower trop
-    xb(2) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori mid trop
-    xb(3) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori strat
+    xb(1) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori lower trop
+    xb(2) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori mid trop
+    xb(3) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori strat
 
-    xb(4) = 0.8 * (driver.i16daytimestep-1)/deltaT * 1.0;        % set N2O 
-    xb(5) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;        % set CH4
+    xb(4) = n2ox * (driver.i16daytimestep-1)/deltaT * 1.0;        % set N2O 
+    xb(5) = ch4x * (driver.i16daytimestep-1)/deltaT * 1.0;        % set CH4
     xb(6) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC11, before Aug 23 the mult was 1
     xb(7) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC12, before Aug 23 the mult was 1
   end
@@ -870,9 +872,9 @@ elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1 & settings.ocb_se
       deltaT = 365/16; %% days per timestep
 
       %% default all this while getting good results
-      xb0(1) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
-      xb0(2) = 0.8 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
-      xb0(3) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
+      xb0(1) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
+      xb0(2) = n2ox * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
+      xb0(3) = ch4x * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
       xb0(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC11, before Aug 23 the mult was 1
       xb0(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC12, before Aug 23 the mult was 1
 
@@ -905,9 +907,9 @@ if iSergioCO2 > 0 & settings.ocb_set == 1
 elseif iSergioCO2 > 0 & settings.ocb_set == 0
   disp('iSergioCO2 = +1 so RETRIEVE trace gases from obs!!!!')
   xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  xb(1) = 2.2;
-  xb(2) = 0.8;
-  xb(3) = 5.0;
+  xb(1) = co2x;
+  xb(2) = n2ox;
+  xb(3) = ch4x;
 end
 
 [mm,nn] = size(xb);

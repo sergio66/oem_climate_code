@@ -98,10 +98,9 @@ for iInd = iInd0 : iIndE
   iQuantile = 09;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.90 - 0.75
   iQuantile = 04;  %% quite cloudy (hopefully)
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
-  iQuantile = 16;  %% hottest, for AIRS STM
-
   iQuantile = 10;  %% 
-  iQuantile = 50;  %% 
+  iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
+  iQuantile = 16;  %% hottest, for AIRS STM
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -129,8 +128,8 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +3;   %% (+3) AIRS 19 year extreme  dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, EXTREME
   topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years
   topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
-  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years
   topts.dataset   = +5;   %% (+5) AIRS 12 year quantile dataset, Sergio Aug 2022   2002/09-2014/08 FULL 12 years
+  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years
 
   if iQuantile == 8
     topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, too lazy to make full 19 years
