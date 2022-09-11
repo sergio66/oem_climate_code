@@ -22,6 +22,9 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 %JOB = 20   %%% uncomment this when trying to fit for linear rates!!! fix change_important_topts_settings, and set <<< driver.i16daytimestep = -1 >>>;  below
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 
+iAnomOrTrend = +1;  %% %% anomaly time series, JOB = timestep (out of 157)
+iAnomOrTrend = -1;  %% %% trend,               JOB = latbin (out of 40)
+
 %---------------------------------------------------------------------------
 addpath /home/sergio/MATLABCODE/oem_pkg
 addpath /home/sergio/MATLABCODE/TIME
@@ -66,6 +69,13 @@ iLat0 =  1; iLatE = 40;
 %iLat0 =  20; iLatE = 20;
 
 %for iLat = iLatE : -1 : iLatE
+
+if iAnomOrTrend == +1
+  iLat0 = 1; iLatE = 40;  
+else
+  iLat0 = JOB; iLatE = JOB;
+end
+
 for iLat = iLat0 : iLatE
   disp(' ')
   fprintf(1,'timestep = %3i latbin = %2i \n',JOB,iLat);
@@ -74,13 +84,15 @@ for iLat = iLat0 : iLatE
 %% <<<<<<<    no real need to touch any of this  >>>>>>>>
   driver.iibin     = iLat;
 
-  %%%%%%%%%% ANOM or RATES %%%%%%%%%%
-  driver.i16daytimestep = -1;   %% for the rates, not anomalies, RUN BY HAND BY UN-COMMENTING THIS LINE and 
-                                %% on top JOB = 20, in change_important_topts_settings.m also set topts.set_tracegas = -1;
-  iDoAnomalyOrRates = -1;
-  %%%%%%%%%%%%%%%%%%%%%%%%% >>>>>>>>>>>>>>>>>>>>>>>>>
-  driver.i16daytimestep = JOB;  %% this is when doing anomaly
-  iDoAnomalyOrRates = +1;
+  if iAnomOrTrend == -1
+    driver.i16daytimestep = -1;   %% for the rates, not anomalies, RUN BY HAND BY UN-COMMENTING THIS LINE and 
+                                  %% on top JOB = 20, in change_important_topts_settings.m also set topts.set_tracegas = -1;
+    iDoAnomalyOrRates = -1;
+  else 
+    driver.i16daytimestep = JOB;  %% this is when doing anomaly
+    iDoAnomalyOrRates = +1;
+  end
+
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 
   ix = iLat;
@@ -94,6 +106,9 @@ for iLat = iLat0 : iLatE
 %---------------------------------------------------------------------------
   change_important_topts_settings  % Override many settings and add covariance matrix
 
+  topts.ocb_set = 0;
+  topts.resetnorm2one = -1;
+
   if topts.ocb_set == 0 & driver.i16daytimestep > 0
     driver.outfilename = ['OutputAnomaly_OBS/' num2str(iLat,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0
@@ -106,6 +121,8 @@ for iLat = iLat0 : iLatE
     [driver,aux] = strow_override_defaults_latbins_CRIS(driver,topts);
   elseif topts.iNlays_retrieve < 97 & ~exist(driver.outfilename)
     [driver,aux] = strow_override_defaults_latbins_CRIS_fewlays(driver,topts.iNlays_retrieve,topts);
+  else
+    fprintf(1,'%s already exists \n',driver.outfilename)
   end
   %%[driver,aux] = strow_override_defaults_latbins_CRIS_fewlays(driver,topts.iNlays_retrieve,topts);
 %---------------------------------------------------------------------------

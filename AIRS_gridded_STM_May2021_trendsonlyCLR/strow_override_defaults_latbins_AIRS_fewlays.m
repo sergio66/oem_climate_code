@@ -437,7 +437,7 @@ lenrates = length(driver.rateset.rates);
 
 iChSet = 2; %% new chans
 iChSet = 1; %% old chans (default)
-iChSet = 4; %% new set + Tonga (high alt)
+iChSet = 4; %% new chans + Tonga (high alt)
 iChSet = 3; %% new chans, but no CFC11
 iChSet = topts.iChSet;
 

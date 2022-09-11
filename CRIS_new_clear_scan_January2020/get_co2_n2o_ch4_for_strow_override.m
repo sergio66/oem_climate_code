@@ -1,0 +1,1 @@
+../AIRS_gridded_STM_May2021_trendsonlyCLR/get_co2_n2o_ch4_for_strow_override.m

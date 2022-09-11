@@ -1,6 +1,8 @@
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% see  ../../ESRL_TRACE_GAS/read_trace_gas_get_trend.m
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 co2 = load('mauna_loa_co2_growth_rate.txt');
 plot(co2(:,1),co2(:,2));
 co2(:,3) = 350 + cumsum(co2(:,2));

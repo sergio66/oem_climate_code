@@ -106,6 +106,10 @@ elseif driver.i16daytimestep < 0
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, * used this for Princeton iQuant=50 **
 
   cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, 
+  if topts.iChSet == 4
+    cov_set(11:13) = cov_set(11:13) *1e2;
+  end
+ 
 %  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-1     20*1E-1  20*1E-1];  %% new try 2002/09-2014/08, lousy std dev in window regions
 %  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-3     20*1E-3  20*1E-3];  %% new try 2002/09-2014/08, lousy std dev in window regions
 
@@ -324,6 +328,30 @@ if topts.tie_sst_lowestlayer > 0 & exist('tmat','var')
   %driver.oem.cov(driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
   driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end):driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
   driver.oem.cov(driver.jacobian.temp_i(end):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
+end
+
+rCoupleTWV = 0.001;
+rCoupleTWV = 0.1;
+rCoupleTWV = 1.0;
+rCoupleTWV = 0.25;
+
+iCoupleT_WV = -1;
+iCoupleT_WV = +1;
+if iCoupleT_WV > 0 & rCoupleTWV > eps
+  disp('coupling T, WV in build_cov_matrices.m')
+  rDiagSa = sqrt(diag(driver.oem.cov));
+  rSaT  = rDiagSa(driver.jacobian.temp_i);
+  rSaWV = rDiagSa(driver.jacobian.water_i);
+  rJunk = 0 * driver.oem.cov;
+  for wooT = 1 : length(rSaT)
+    for wooWV = 1 : length(rSaWV)
+      if wooT == wooWV
+        rJunk(driver.jacobian.temp_i(wooT),driver.jacobian.water_i(wooWV)) = rCoupleTWV * rSaT(wooT) * rSaWV(wooWV);
+        rJunk(driver.jacobian.water_i(wooWV),driver.jacobian.temp_i(wooT)) = rCoupleTWV * rSaT(wooT) * rSaWV(wooWV);
+      end
+    end
+  end
+  driver.oem.cov = driver.oem.cov + rJunk;
 end
 
 %---------------------------------------------------------------------

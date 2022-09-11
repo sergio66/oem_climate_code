@@ -104,6 +104,8 @@ cov_set = [1.0  uncT    uncT/100    1/2       uncWV       uncWV  1/2      uncWV 
 cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
                                                                                       %% great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
 
+
+  cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% testing perturbations for paper, see PAPER/questions.txt Q4
@@ -268,6 +270,7 @@ if settings.iFixTG_NoFit(1) > 0
   aux.m_ts_jac(:,settings.iFixTG_NoFit) = eps;
 end
 
+fmatd
 fmat  = diag(fmatd./fnorm); 
 fmat = fmat.*fmat; %% need sig^2   %% JUNE 1, 2022
 

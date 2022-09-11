@@ -43,6 +43,8 @@ if settings_chan_LW_SW ~= -2
     imore700 = find(f(ch) >= 700 & f(ch) < 730);
       imore700 = imore700(1:5:length(imore700));
     imore730 = find(f(ch) >= 730);
+    imore730 = find(f(ch) >= 730 & f(ch) <= 960);
+      imore730 = imore730(1:5:length(imore730));
     
     ch = ch([iless700; imore700; imore730]);
     ch = setdiff(ch,76);   %% 668.0348 cm-1 is a bad chan
@@ -116,6 +118,10 @@ if settings_chan_LW_SW ~= -2
       load('iaTongaChans.mat');
       disp('loading in Tonga high alt chans')
       ch = union(ch,iaTongaChans);
+
+      imore730 = find(f(ch) >= 810 & f(ch) <= 960);
+      imore730 = imore730(1:5:length(imore730));
+      ch = union(ch,imore730); 
     end
 
   else

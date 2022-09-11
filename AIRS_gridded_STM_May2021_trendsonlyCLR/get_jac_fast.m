@@ -18,6 +18,9 @@ elseif iVersJac == 2021
   see_clust_put_together_jacs_clrERA5_2021
 elseif iVersJac == 2014
   see_clust_put_together_jacs_clrERA5_2014
+else
+  iVersJac
+  error('iVersJac = 2014,2019,2021 only')
 end
 
 if iDoSlow > 0

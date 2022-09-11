@@ -27,28 +27,49 @@ end
 
 for ii = 1 : 40
   filex = [outputdir '/test' num2str(ii) '.mat'];
-  a = load(filex);
+  if exist(filex)
+    a = load(filex);
+  
+    chanset(:,ii) = zeros(1,2645);
+    g = a.jacobian.chanset;
+    chanset(g,ii) = 1;
+   
+    traceNstemp(:,ii) = a.oem.finalrates(1:6);
+    wv_ret(:,ii)      = a.oem.finalrates(driver.jacobian.water_i);
+    temp_ret(:,ii)    = a.oem.finalrates(driver.jacobian.temp_i);
+    ozone_ret(:,ii)   = a.oem.finalrates(driver.jacobian.ozone_i);
+  
+    traceNstemp_sigs(:,ii) = a.oem.finalsigs(1:6);
+    wv_ret_sigs(:,ii)      = a.oem.finalsigs(driver.jacobian.water_i);
+    temp_ret_sigs(:,ii)    = a.oem.finalsigs(driver.jacobian.temp_i);
+    ozone_ret_sigs(:,ii)   = a.oem.finalsigs(driver.jacobian.ozone_i);
+  
+    tz_ak40(ii,:,:) = a.oem.ak_temp;
+    wv_ak40(ii,:,:) = a.oem.ak_water;
+    o3_ak40(ii,:,:) = a.oem.ak_ozone;
+  
+    input_rates(:,ii) = a.rateset.rates;
+    fit_to_rates(:,ii) = a.oem.fit;
+  else
+    fprintf(1,'%s DNE \n',filex)
 
-  chanset(:,ii) = zeros(1,2645);
-  g = a.jacobian.chanset;
-  chanset(g,ii) = 1;
- 
-  traceNstemp(:,ii) = a.oem.finalrates(1:6);
-  wv_ret(:,ii)      = a.oem.finalrates(driver.jacobian.water_i);
-  temp_ret(:,ii)    = a.oem.finalrates(driver.jacobian.temp_i);
-  ozone_ret(:,ii)   = a.oem.finalrates(driver.jacobian.ozone_i);
-
-  traceNstemp_sigs(:,ii) = a.oem.finalsigs(1:6);
-  wv_ret_sigs(:,ii)      = a.oem.finalsigs(driver.jacobian.water_i);
-  temp_ret_sigs(:,ii)    = a.oem.finalsigs(driver.jacobian.temp_i);
-  ozone_ret_sigs(:,ii)   = a.oem.finalsigs(driver.jacobian.ozone_i);
-
-  tz_ak40(ii,:,:) = a.oem.ak_temp;
-  wv_ak40(ii,:,:) = a.oem.ak_water;
-  o3_ak40(ii,:,:) = a.oem.ak_ozone;
-
-  input_rates(:,ii) = a.rateset.rates;
-  fit_to_rates(:,ii) = a.oem.fit;
+    traceNstemp(:,ii) = NaN * a.oem.finalrates(1:6);
+    wv_ret(:,ii)      = NaN * a.oem.finalrates(driver.jacobian.water_i);
+    temp_ret(:,ii)    = NaN * a.oem.finalrates(driver.jacobian.temp_i);
+    ozone_ret(:,ii)   = NaN * a.oem.finalrates(driver.jacobian.ozone_i);
+  
+    traceNstemp_sigs(:,ii) = NaN * a.oem.finalsigs(1:6);
+    wv_ret_sigs(:,ii)      = NaN * a.oem.finalsigs(driver.jacobian.water_i);
+    temp_ret_sigs(:,ii)    = NaN * a.oem.finalsigs(driver.jacobian.temp_i);
+    ozone_ret_sigs(:,ii)   = NaN * a.oem.finalsigs(driver.jacobian.ozone_i);
+  
+    tz_ak40(ii,:,:) = NaN * a.oem.ak_temp;
+    wv_ak40(ii,:,:) = NaN * a.oem.ak_water;
+    o3_ak40(ii,:,:) = NaN * a.oem.ak_ozone;
+  
+    input_rates(:,ii) = NaN * a.rateset.rates;
+    fit_to_rates(:,ii) = NaN * a.oem.fit;
+  end
 end
 
 % comment40 = 'see plot_all_latbins_fewlays.m after doing RATES retrievals'; save ak40latbin_rates  *_ak40 comment40 playsRET
@@ -97,14 +118,18 @@ figure(7); clf
   plot(latx,traceNstemp(1:5,:),latx,traceNstemp(6,:)*100,'g','linewidth',2); grid
   hl = legend('CO2','N2O','CH4','CFC11','CFC12','stemp*100'); set(hl,'fontsize',10);
   title('tracegas and stemp rates/yr')
+figure(7); clf
+  plot(latx,traceNstemp(1:5,:),'linewidth',2); grid
+  hl = legend('CO2','N2O','CH4','CFC11','CFC12'); set(hl,'fontsize',10);
+  title('tracegas and stemp rates/yr')
+figure(9); clf
+  plot(latx,traceNstemp(6,:),'g','linewidth',2); grid
+  hl = legend('stemp'); set(hl,'fontsize',10);
+  title('tracegas and stemp rates/yr')
 
 g = a.jacobian.chanset;
-fairs = instr_chans;
-hdffile = '/home/sergio/MATLABCODE/airs_l1c_srf_tables_lls_20181205.hdf';   % what he gave in Dec 2018
-vchan2834 = hdfread(hdffile,'freq');
-fairs = vchan2834;
-load sarta_chans_for_l1c.mat
-fairs = fairs(ichan);
+load f1305
+fairs = f1305;
 
 iaLat = 1:40;
 iaLat = 2:39;

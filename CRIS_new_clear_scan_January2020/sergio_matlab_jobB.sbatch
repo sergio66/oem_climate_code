@@ -4,6 +4,7 @@
 #
 # run this with   sbatch --constraint=hpcf2013       --array=1-157 sergio_matlab_jobB.sbatch 1         for clust_run_retrieval_latbins_loop_anomaly
 #   or            sbatch --exclude=cnode[204,225,260,267] --array=1-157 sergio_matlab_jobB.sbatch 1            JOB=TIMESTEP,loop over 40 latbins
+#   or            sbatch --partition cpu2021 --array=1-157 sergio_matlab_jobB.sbatch 1
 #
 # run this with   sbatch --constraint=hpcf2013       --array=1-40 sergio_matlab_jobB.sbatch  2         for clust_run_retrieval_latbins_loop_anomalyV2
 #   or            sbatch --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2             JOB=LATBIN,loop over 157 timesteps

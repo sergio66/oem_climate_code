@@ -107,8 +107,12 @@ elseif settings.dataset == 5   %% CRIS LORES DEFAULT
   if settings.descORasc == +1 & driver.i16daytimestep < 0
     disp('doing descending latbin rates')
     driver.rateset.datafile  = 'convert_strowrates2oemrates_random_6_year_v32_clear_nucal.mat';
+    driver.rateset.datafile  = 'cris_npp_2012_o5_to_2019_04_trends_fron_anomaly.mat';
+    driver.rateset.datafile  = 'cris_npp_2012_o5_to_2019_04_trends_fron_data.mat';
     if settings.ocb_set == +1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'convert_strowrates2oemrates_random_6_year_v32_clear.mat';
+      driver.rateset.datafile  = 'cris_npp_2012_o5_to_2019_04_trends_fron_anomaly.mat';
+      driver.rateset.datafile  = 'cris_npp_2012_o5_to_2019_04_trends_fron_data.mat';
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'convert_strowrates2oemrates_random_6_year_v32_clear_nucal.mat';
     end
@@ -155,7 +159,7 @@ if driver.i16daytimestep < 0
     driver.jacobian.filename = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/JUNK_CRIS/kcarta_M_TS_jac_all_5_97_97_97_2235.mat';
 
     %% we can "fool" the code by using midpoint anomaly jac
-    junk = num2str(180,'%03d');
+    junk = num2str(125,'%03d');  %% 257 timesteps
     driver.jacobian.filename = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/CLO_Anomaly137_16_12p8/RESULTS/kcarta_' junk '_M_TS_jac_all_5_97_97_97_2235.mat']; 
 
     fprintf(1,'reading in constant kcarta jac file %s \n',driver.jacobian.filename)
@@ -164,7 +168,7 @@ if driver.i16daytimestep < 0
     driver.jacobian.filename = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/JUNK/kcarta_M_TS_jac_all_5_97_97_97_2235.mat';
 
     %% we can "fool" the code by using midpoint anomaly jac
-    junk = num2str(180,'%03d');
+    junk = num2str(125,'%03d');  %% 257 timesteps
     driver.jacobian.filename = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/CLO_Anomaly137_16_12p8/RESULTS/kcarta_' junk '_M_TS_jac_all_5_97_97_97_2235.mat']; 
 
     fprintf(1,'reading in constant kcarta jac file %s \n',driver.jacobian.filename)
@@ -746,28 +750,31 @@ end      %% if exist('iFixO3_NoFit','var')
 
 %% driver.settings = settings;   %% no need to do this since topts == settings == topts
 
+iVersJac = 2019;
+[co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
+
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 0
   disp('setting constant rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25')
   if settings.co2lays == 1
-    xb(1) = 2.2;  % Set CO2 apriori
-    xb(2) = 1;
-    xb(3) = 4.5;
+    xb(1) = co2x;  % Set CO2 apriori
+    xb(2) = n2ox;
+    xb(3) = ch4x;
     xb(4) = -1.0;
     xb(5) = -1.0;
 
-    xb(1) = 2.2 * 1;    % Set CO2 apriori
-    xb(2) = 0.8 * 1;    % set N2O 
-    xb(3) = 4.5 * 1;    % set CH4
+    xb(1) = co2x * 1;    % Set CO2 apriori
+    xb(2) = n2ox * 1;    % set N2O 
+    xb(3) = ch4x * 1;    % set CH4
     xb(4) = -1.25 * 0;  % set CFC11, before Aug 23 the mult was 1
     xb(5) = -1.25 * 0;  % set CFC12, before Aug 23 the mult was 1
 
   elseif settings.co2lays == 3
-    xb(1) = 2.2 * 1;        % Set CO2 apriori lower trop
-    xb(2) = 2.2 * 1;        % Set CO2 apriori mid trop
-    xb(3) = 2.2 * 1;        % Set CO2 apriori strat
+    xb(1) = co2x * 1;        % Set CO2 apriori lower trop
+    xb(2) = co2x * 1;        % Set CO2 apriori mid trop
+    xb(3) = co2x * 1;        % Set CO2 apriori strat
 
-    xb(4) = 0.8 * 1;        % set N2O 
-    xb(5) = 4.5 * 1;        % set CH4
+    xb(4) = n2ox * 1;        % set N2O 
+    xb(5) = ch4x * 1;        % set CH4
     xb(6) = -1.25 * 0;  % set CFC11, before Aug 23 the mult was 1
     xb(7) = -1.25 * 0;  % set CFC12, before Aug 23 the mult was 1
   end
@@ -781,9 +788,9 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_se
     deltaT = 365/16; %% days per timestep
 
     %% default all this while getting good results
-    xb(1) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
-    xb(2) = 0.8 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
-    xb(3) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
+    xb(1) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
+    xb(2) = n2ox * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
+    xb(3) = ch4x * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
     xb(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC11, before Aug 23 the mult was 1
     xb(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC12, before Aug 23 the mult was 1
     xb(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;    % set CFC11, before May 2022  the mult was 1
@@ -792,12 +799,12 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_se
   elseif settings.co2lays == 3
     deltaT = 365/16; %% days per timestep
 
-    xb(1) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori lower trop
-    xb(2) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori mid trop
-    xb(3) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori strat
+    xb(1) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori lower trop
+    xb(2) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori mid trop
+    xb(3) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori strat
 
-    xb(4) = 0.8 * (driver.i16daytimestep-1)/deltaT * 1.0;        % set N2O 
-    xb(5) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;        % set CH4
+    xb(4) = n2ox * (driver.i16daytimestep-1)/deltaT * 1.0;        % set N2O 
+    xb(5) = ch4x * (driver.i16daytimestep-1)/deltaT * 1.0;        % set CH4
     xb(6) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC11, before Aug 23 the mult was 1
     xb(7) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC12, before Aug 23 the mult was 1
     xb(6) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;  % set CFC11, before May 2022 the mult was 1
@@ -817,9 +824,9 @@ elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1 & settings.ocb_se
       deltaT = 365/16; %% days per timestep
 
       %% default all this while getting good results
-      xb0(1) = 2.2 * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
-      xb0(2) = 0.8 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
-      xb0(3) = 4.5 * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
+      xb0(1) = co2x * (driver.i16daytimestep-1)/deltaT * 1.0;    % Set CO2 apriori
+      xb0(2) = n2ox * (driver.i16daytimestep-1)/deltaT * 1.0;    % set N2O 
+      xb0(3) = ch4x * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
       xb0(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC11, before Aug 23 the mult was 1
       xb0(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC12, before Aug 23 the mult was 1
       xb0(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 1;    % set CFC11, before May 2022  the mult was 1
@@ -946,6 +953,7 @@ end
 %---------------------------------------------------------------------------
 % Modify rates with lag-1 correlation errors or add to above
 if driver.i16daytimestep < 0
+  nc_cor = ones(size(driver.rateset.unc_rates));
   nc_cor = nc_rates(driver);
   driver.rateset.unc_rates = driver.rateset.unc_rates.*nc_cor;   %% THIS IS AN ARRAY
 end
@@ -989,7 +997,8 @@ iCovSe_OffDiag = +2;  %% send in off-diag matrix serio
 iCovSe_OffDiag = topts.obs_corr_matrix;
 
 fprintf(1,'strow_override_defaults_latbins_CRIS_fewlays.m : iCovSe_OffDiag = %2i \n',iCovSe_OffDiag)
-if iCovSe_OffDiag >= 0
+if iCovSe_OffDiag >= 0 & driver.i16daytimestep > 0
+
   %% now turn driver.rateset.unc_rates into cov matrix
   %% var(i) = sig(i) sig(i)   where sig(i) = std dev (i)
   %% rij = cov(ij)/sqrt(var(i) var(j))
@@ -997,6 +1006,10 @@ if iCovSe_OffDiag >= 0
   %%    cov(ii) = 1.0 sqrt(var(i) var(i))  = var(i) = sig(i) sig(i)
   
   junk = driver.rateset.unc_rates;  %% sig(i)
+  [iiaa,jjaa] = size(junk);;
+  if iiaa > 1
+    junk = junk';
+  end
   junk0 = junk' * junk;             %% sig(i) sig(j)
   junknew = diag(diag(junk0));      %% sig(i) sig(i) on diag, everything else zeros == "AIRS" normal cov matrix
 

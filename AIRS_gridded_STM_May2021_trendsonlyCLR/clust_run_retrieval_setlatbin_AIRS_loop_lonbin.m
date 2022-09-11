@@ -29,9 +29,9 @@ clear h ha p pa
 %% 16 years so total of 365/16 * 16 = 365 steps
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
-%JOB = 33
-%JOB = 47
-%JOB = 36
+% JOB = 33
+% JOB = 47
+% JOB = 37
 
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 % JOBTYPE = 1000;  %%% uncomment this when trying to fit for linear rates!!! fix change_important_topts_settings, and set <<< driver.i16daytimestep = -1 >>>;  iDoAnomalyOrRates = -1; below
@@ -148,9 +148,9 @@ for iInd = iInd0 : iIndE
 
   iChSet = topts.iChSet;
   iChSet = 2; %% new chans
+  iChSet = 4; %% new chans + Tonga (high alt) + more LW
   iChSet = 1; %% old chans (default)
   iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019
-%  iChSet = 4; %% new set + Tonga (high alt)
   topts.iChSet = iChSet;
 
   %% iNorD > 0 ==> night

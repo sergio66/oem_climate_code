@@ -3,9 +3,11 @@ addpath /home/sergio/MATLABCODE/TROPOPAUSE
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /home/sergio/MATLABCODE/PLOTTER
+addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/matlib/science/
 addpath /asl/matlib/aslutil
+addpath /asl/matlib/h4tools
 addpath /asl/matlib/maps
 
 disp('  ')

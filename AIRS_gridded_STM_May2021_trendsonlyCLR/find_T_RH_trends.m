@@ -8,6 +8,7 @@ pjunkN = p.plevs(1:100,:)-p.plevs(2:101,:);
 pjunkD = log(p.plevs(1:100,:)./p.plevs(2:101,:));
 pavgLAY = pjunkN./pjunkD;
 
+mmw0 = mmwater_rtp(h,p);
 [xRH0,xRH1km0,xcolwater0] = layeramt2RH(h,p);
 [Tw0,Tw1km0,Tdew0,WBGT0,RH0,RH1km0,colwater0,TwSurf0,RHSurf0,TdewSurf0] = layeramt2RH_wet_bulb_dew_point_temperature(h,p);
 
@@ -80,6 +81,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % rtpwrite('summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_PERTv1.rtp',h,ha,pert,pa);
 
+mmwPert = mmwater_rtp(h,pert);
 [xRHpert,xRH1kmpert,xcolwaterpert] = layeramt2RH(h,pert);
 [Twpert,Tw1kmpert,Tdewpert,WBGTpert,RHpert,RH1kmpert,colwaterpert,TwSurfpert,RHSurfpert,TdewSurfpert] = layeramt2RH_wet_bulb_dew_point_temperature(h,pert);
 
@@ -289,9 +291,18 @@ dataMap = maskLFmatr.*smoothn(reshape(deltaT(i500,:),72,64)',1);
 save umbc_T_zonal_trends.mat rlat p97 data dataMap rlat65 rlon73
 %}
 
-figure(28); figure(29); figure(30); 
+figure(8); figure(28); figure(29); figure(30); 
 aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+aslmap(31,rlat65,rlon73,smoothn((reshape(mmwPert-mmw0,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+aslmap_polar(32,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+aslmap_polar(33,rlat65,rlon73,smoothn((reshape(mmwPert-mmw0,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+boo = mmwPert-mmw0; boo = boo ./ mmw0; boo = 100 * boo ./ results(:,6)';
+  bad = find(abs(results(:,6)) < 1e-2); boo(bad) = nan;
+aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dST');     caxis([-1 +1]*10); colormap(llsmap5)
+aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dST');     caxis([-1 +1]*10); colormap(llsmap5)
 disp('ret to continue'); pause
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 dirout = 'PrincetonPCTS/';
@@ -332,5 +343,4 @@ shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 ylim([10 1000]); caxis([-1 +1]*0.015); colorbar('horizontal'); %plotaxis2;
 title(['Zonal d/dt WVfrac UMBC'])
 colormap(cmap); ylim([100 1000])
-
 %}
