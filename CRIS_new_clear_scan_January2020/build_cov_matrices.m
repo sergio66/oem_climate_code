@@ -83,29 +83,32 @@ cov_set = [1.0  0.25    0.25    1/2       0.06        0.06      1/2      0.25   
 %%         lc   ct.lev1   ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2 coz_wide  alpha_T  alpha_w  alpha_oz
 
 %%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
-cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.05/25      0.05/25    1/2      0.005/2   0.005/0.75     1/2        1E-5     1E-5  1E-5]; %works pretty well for topts.obs_corr_matrix = -1;
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.01/25      0.01/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, water not very wiggly
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.1/25       0.1/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
-                                                                                                                                         %(great for ERA calcs T and O3 need to slightly improve WV make it slightly more wiggly)
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.5/25       0.5/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
-                                                                                                                                         %(great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
-                                                                                                                                         %(great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  
-                                                                                                                                         %<<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
-
-%%               sigT_t    sigT_s                sigWV_t   sigWV_s/2             sigO3_t/2   sigO3_s
-%%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2    coz_wide  alpha_T  alpha_w  alpha_oz
-uncT = 1; uncWV = 0.2; uncO3 = 0.2;
-%uncT = 2; uncWV = 0.5; uncO3 = 0.5;
-cov_set = [1.0  uncT    uncT/100    1/2       uncWV       uncWV  1/2      uncWV    uncWV     1/2        1/uncT/uncT    1/uncWV/uncWV  1/uncO3/uncO3]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
-
-%%% this is from ~/MATLABCODE/oem_pkg_run/AIRS_new_clear_scan_August2019_AMT2020PAPER/build_cov_matrices.m
-cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+if driver.i16daytimestep > 0
+  %% anomalies
+  cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
+  cov_set = [1.0  0.05/2    0.05/2    1/2       0.05/25      0.05/25    1/2      0.005/2   0.005/0.75     1/2        1E-5     1E-5  1E-5]; %works pretty well for topts.obs_corr_matrix = -1;
+  cov_set = [1.0  0.05/2    0.05/2    1/2       0.01/25      0.01/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, water not very wiggly
+  cov_set = [1.0  0.05/2    0.05/2    1/2       0.1/25       0.1/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+                                                                                                                                           %(great for ERA calcs T and O3 need to slightly improve WV make it slightly more wiggly)
+  cov_set = [1.0  0.05/2    0.05/2    1/2       0.5/25       0.5/25     1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+                                                                                                                                           %(great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)
+  cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
+                                                                                                                                           %(great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  
+                                                                                                                                           %<<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
+  
+  %%               sigT_t    sigT_s                sigWV_t   sigWV_s/2             sigO3_t/2   sigO3_s
+  %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2    coz_wide  alpha_T  alpha_w  alpha_oz
+  uncT = 1; uncWV = 0.2; uncO3 = 0.2;
+  %uncT = 2; uncWV = 0.5; uncO3 = 0.5;
+  cov_set = [1.0  uncT    uncT/100    1/2       uncWV       uncWV  1/2      uncWV    uncWV     1/2        1/uncT/uncT    1/uncWV/uncWV  1/uncO3/uncO3]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits   
+else
+  %% trends
+  %%% this is from ~/MATLABCODE/oem_pkg_run/AIRS_new_clear_scan_August2019_AMT2020PAPER/build_cov_matrices.m, for trends
+  cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, OBS AND ERA CALCS good fits 
                                                                                       %% great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
-
-
-  cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, 
+  %cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, 
+   cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E+0     20*1E+0  20*1E+0];  %% 2002/09-2014/08, worked great 2022/09/11
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% testing perturbations for paper, see PAPER/questions.txt Q4
@@ -250,7 +253,8 @@ end
 % cov_set(reduceL1L2) =  cov_set(reduceL1L2) * alpha_sf; fmatd = fmatd/alpha_sf; str = [' >>>> WARNING : build_cov_matrices.m : multiplied alpha,fmatd  x ' num2str(cov_sf)]; disp(str)
 
 if settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep < 0
-  fmatd(1:5) = fmatd(1:5)*0.0000001;   %% have put in xb(1:3) so we should not change those values
+  fmatd(1:5) = fmatd(1:5)*0.001;   %% have put in xb(1:3) so we should not change those values
+  %fmatd(1:5) = fmatd(1:5)*0.0000001;   %% have put in xb(1:3) so we should not change those values
 elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimestep < 0
   fmatd(1:7) = fmatd(1:7)*0.0000001;   %% have put in xb(1:3) so we should not change those values
 end

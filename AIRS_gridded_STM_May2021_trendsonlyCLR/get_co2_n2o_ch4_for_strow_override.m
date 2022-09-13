@@ -1,16 +1,34 @@
 function [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
 
-%strlatbin = num2str(floor((driver.iibin-1)/72)+1,'%02d');
-rlatxy = floor((driver.iibin-1)/72)+1;
+% 2019 : 40 latbins for CRIS_new_clear_scan_January2020            Suomi CrIS NSR 2012/05-2019/04 
+% 2012 : 4608 lonbins/latbins for AIRS obverlapping                Suomi CrIS NSR 2012/05-2019/04 
+%%%
+% 2014 : 4608 lonbins/latbins for 12 year AIRS obverlapping        AMIP6/CMIP6 2002/09-2014/08 
+% 2021 : 4608 lonbins/latbins for 19 years AIRS                    pure AIRS   2002/09-2021/08 
 
-load /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat
-rlat65 = latB2; rlon73 = -180 : 5 : +180;
-rlon = -180 : 5 : +180;  rlat = latB2;
-rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+if iVersJac ~= 2019
+  %% 4608
+  %strlatbin = num2str(floor((driver.iibin-1)/72)+1,'%02d');
+  ilatxy = floor((driver.iibin-1)/72)+1;
+  
+  load /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat
+  rlat65 = latB2; rlon73 = -180 : 5 : +180;
+  rlon = -180 : 5 : +180;  rlat = latB2;
+  rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+  rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+  
+  rlatx = rlat(ilatxy);
 
-rlatx = rlat(rlatxy);
+else
+  addpath /home/sergio/MATLABCODE/PLOTTER
+  lats = -90 : 5 : +90;
+  lats = equal_area_spherical_bands(20);
+  rlat = 0.5*(lats(1:end-1) + lats(2:end));
 
+  ilatxy = driver.iibin;
+  rlatx = rlat(driver.iibin);
+end
+  
 co2x = 2.2;
 n2ox = 1.0;
 ch4x = 5.0;
@@ -19,8 +37,11 @@ co2x = 2.2;
 n2ox = 0.8;
 ch4x = 4.5;
 
-if iVersJac == 2019
-  %% CRIS 2012/05 - 2019/04
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if iVersJac == 2019 | iVersJac == 2012
+  %% CRIS 2012/05 - 2019/04   2019 = 40    latbins
+  %% CRIS 2012/05 - 2019/04   2012 = 40608 lonbins/latbins
   co2x = 2.262445;
   n2ox = 0.925496;
   ch4x = 6.613673;
@@ -38,6 +59,7 @@ if iVersJac == 2019
     ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_cris07,rlatx);
   end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 elseif iVersJac == 2021
   %% AIRS 2002/09 - 2021/08
   co2x = 2.262445;
@@ -57,6 +79,7 @@ elseif iVersJac == 2021
     ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_19,rlatx);
   end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 elseif iVersJac == 2014
   %% CMIP6 2002/09 - 2014/08
   iVersESRL = 3;
@@ -121,4 +144,9 @@ elseif iVersJac == 2014
 
 end
 
-fprintf(1,'iiBin %4i latbin %2i latitude %8.6f : ESRL trends co2x = %8.6f ppm/yr n2ox = %8.6f ppb/yr ch4x = %8.6f ppb/yr \n',driver.iibin,rlatxy,rlatx,co2x,n2ox,ch4x)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fprintf(1,'iiBin %4i latbin %2i latitude %8.6f : ESRL trends co2x = %8.6f ppm/yr n2ox = %8.6f ppb/yr ch4x = %8.6f ppb/yr \n',driver.iibin,ilatxy,rlatx,co2x,n2ox,ch4x)
+

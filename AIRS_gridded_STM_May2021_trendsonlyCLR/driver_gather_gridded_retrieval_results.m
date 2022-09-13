@@ -64,7 +64,7 @@ if length(iOCBset) == 0
   iOCBset = 0;
 end
 
-dataset = input('Enter (+1) Strow 2002/09-2020/08 Q1-16 (-1) Sergio 2002/09-2020/08 Q1-16  (2) Sergio 2002/09-2021/07 OLD  Q1-16 (3) Sergio 2002/09-2021/08 Extreme (-3) Sergio 2002/09-2021/08 Mean (4) Sergio 2002/09-2021/08 FULL  Q1-16 (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 : [4 = Default] : ');
+dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap    :::  [4 = Default] : ');
 if length(dataset) == 0
   dataset = 4;
 end
@@ -112,6 +112,10 @@ if iOCBset == 0
   elseif dataset == 5
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_5_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    end
+  elseif dataset == 6
+    if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
+      data_trends = load(['iType_6_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     end
   else
     dataset

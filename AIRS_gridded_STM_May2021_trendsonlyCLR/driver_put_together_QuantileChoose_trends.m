@@ -45,6 +45,7 @@ iType = +03;   %% sergio Extreme 19 year trends   I     ran for me in Aug 2021, 
 iType = -03;   %% sergio Mean 19 year trends      I     ran for me in Aug 2021, 2002/09 to 2020/08
 iType = +04;   %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/08 FULL
 iType = +05;   %% sergio Q16 12 year trends       I     ran for me in Aug 2022, 2002/09 to 2014/08 FULL
+iType = +06;   %% sergio Q16 07 year trends       I     ran for me in Aug 2022, 2012/05 to 2019/04 FULL, same as Suomi NPP NSR
 
 disp('Choices DataSet to use ')
 disp('                       (+1) Strow  Quantile Mar 2021 2002/09 to 2020/08 Full 18 years');
@@ -56,7 +57,8 @@ disp('                        (3) Sergio Extreme Aug 2021 2002/09 to 2021/07 ');
 disp('                       (-3) Sergio Mean Aug 2021 2002/09 to 2021/07 ');
 disp(' <---------------------------------------------------------------------------------------> ')
 disp('                        (5) Sergio Quantile Aug 2022 2002/09 to 2014/08 Full 12 years **** ');
-iType = input('Enter DataSet to use (+1,-1,+2,+4,+5   or +3,-3) : ');
+disp('                        (6) Sergio Quantile Sep 2022 2012/05 to 2019/04 Suomi NPP years **** ');
+iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6   or +3,-3) : ');
 
 if iType ~= 3
   iQuantile = 16;  %% hottest, used for AIRS STM May 221
@@ -94,6 +96,10 @@ for iLat = 1 : 64
     % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0 = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
+  elseif iType == 6
+    % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
+    %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
+    thedir0 = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
   end
 
   for iLon = 1 : 72
@@ -119,6 +125,10 @@ for iLat = 1 : 64
     elseif iType == 5
       %% full 19 year by Sergio
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200500010001_201400120031_TimeStepsX228.mat'];
+    elseif iType == 6
+      %% full Suomi CrIS NSR 7 year by Sergio
+      %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin01/LonBin37/fits_LonBin37_LatBin01_V1_201200050001_201900040030_TimeStepsX159
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_201200050001_201900040030_TimeStepsX159.mat'];
     end
 
     iBoo = (iLat-1)*72 + iLon;
@@ -221,6 +231,9 @@ elseif iType == 4
 elseif iType == 5
   fnamePROCESS = ['iType_5_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
   saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+elseif iType == 6
+  fnamePROCESS = ['iType_6_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+  saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 %%%%
 elseif iType == 3
   fnamePROCESS = ['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat'];
@@ -231,6 +244,7 @@ elseif iType == -3
 end
 if ~exist(fnamePROCESS)
   eval(saver);
+  saver
 else 
   fprintf(1,'%s already exists \n',fnamePROCESS);
 end

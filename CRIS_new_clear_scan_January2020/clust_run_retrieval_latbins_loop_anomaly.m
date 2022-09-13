@@ -82,7 +82,7 @@ for iLat = iLat0 : iLatE
 
 %------------------------------------------------------------------------
 %% <<<<<<<    no real need to touch any of this  >>>>>>>>
-  driver.iibin     = iLat;
+  driver.iibin     = iLat
 
   if iAnomOrTrend == -1
     driver.i16daytimestep = -1;   %% for the rates, not anomalies, RUN BY HAND BY UN-COMMENTING THIS LINE and 
@@ -108,6 +108,7 @@ for iLat = iLat0 : iLatE
 
   topts.ocb_set = 0;
   topts.resetnorm2one = -1;
+  topts.iNlays_retrieve = 50; 
 
   if topts.ocb_set == 0 & driver.i16daytimestep > 0
     driver.outfilename = ['OutputAnomaly_OBS/' num2str(iLat,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];

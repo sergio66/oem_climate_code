@@ -14,7 +14,9 @@ if ~exist('all')
 end
 
 iStartY = 2002; iStartYM = 09; iStopY = 2021; iStopYM = 08; 
-iStartY = 2002; iStartYM = 09; iStopY = 2014; iStopYM = 08; 
+iStartY = 2002; iStartYM = 09; iStopY = 2014; iStopYM = 08; %% Joao wants AMIP/CMIP
+iStartY = 2012; iStartYM = 05; iStopY = 2019; iStopYM = 04; %% CRIS NSR
+
 booS = find(all.yy == iStartY & all.mm == iStartYM);
 booE = find(all.yy == iStopY & all.mm == iStopYM);
 ind = booS : booE;
@@ -29,9 +31,9 @@ if length(ind)/12 == 19 & iStartY == 2002 & iStopY == 2021
   foutNyearaverageOP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.op.rtp'];
   foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp'];
 else
-  foutNyearaverageIP = ['summary_' num2str(length(ind)/12) 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.ip.rtp'];
-  foutNyearaverageOP = ['summary_' num2str(length(ind)/12) 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.op.rtp'];
-  foutNyearaverageRP = ['summary_' num2str(length(ind)/12) 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.rp.rtp'];
+  foutNyearaverageIP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.ip.rtp'];
+  foutNyearaverageOP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.op.rtp'];
+  foutNyearaverageRP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.rp.rtp'];
 end
 
 if ~exist(foutNyearaverageIP)
@@ -158,6 +160,9 @@ disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENE
 disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %{
 [~,~,junk19] = rtpread('summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp');
 [~,~,junk12] = rtpread('summary_12years_all_lat_all_lon_2002_2014_monthlyERA5.rp.rtp');

@@ -27,6 +27,7 @@ clear iaFound
 iNumYears = 18; %% 2002/09-2020/08
 iNumYears = 19; %% 2002/09-2021/08
 iNumYears = 12; %% 2002/09-2014/08
+iNumYears = 07; %% 2012/05-2019/04
 iaMax = iNumYears*12;
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m

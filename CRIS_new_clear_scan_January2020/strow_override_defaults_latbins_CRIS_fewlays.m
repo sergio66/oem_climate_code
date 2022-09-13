@@ -159,7 +159,8 @@ if driver.i16daytimestep < 0
     driver.jacobian.filename = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/JUNK_CRIS/kcarta_M_TS_jac_all_5_97_97_97_2235.mat';
 
     %% we can "fool" the code by using midpoint anomaly jac
-    junk = num2str(125,'%03d');  %% 257 timesteps
+    junk = num2str(125,'%03d');  %% 257 timesteps ??? HMM NO
+    junk = num2str(078,'%03d');  %% 157 timesteps
     driver.jacobian.filename = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/CLO_Anomaly137_16_12p8/RESULTS/kcarta_' junk '_M_TS_jac_all_5_97_97_97_2235.mat']; 
 
     fprintf(1,'reading in constant kcarta jac file %s \n',driver.jacobian.filename)
@@ -168,7 +169,8 @@ if driver.i16daytimestep < 0
     driver.jacobian.filename = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/JUNK/kcarta_M_TS_jac_all_5_97_97_97_2235.mat';
 
     %% we can "fool" the code by using midpoint anomaly jac
-    junk = num2str(125,'%03d');  %% 257 timesteps
+    junk = num2str(125,'%03d');  %% 257 timesteps ??? HMM NO
+    junk = num2str(078,'%03d');  %% 157 timesteps
     driver.jacobian.filename = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/CLO_Anomaly137_16_12p8/RESULTS/kcarta_' junk '_M_TS_jac_all_5_97_97_97_2235.mat']; 
 
     fprintf(1,'reading in constant kcarta jac file %s \n',driver.jacobian.filename)
@@ -237,7 +239,9 @@ if iXJac == 0 | iXJac == 1
   qrenormjunk(6:297) = jac.qrenorm(5:296);
   jac.qrenorm = qrenormjunk;
 else
-  m_ts_jac0 = squeeze(jac.M_TS_jac_all(ix,:,:));
+  m_ts_jac0 = squeeze(jac.M_TS_jac_all(min(ix,39),:,:));  %% have no idea why jacs were not done for latbin 40
+  m_ts_jac0 = squeeze(jac.M_TS_jac_all(ix,:,:));          %% fixed it, but only till timestep 152 since labin 40 did not have all data
+
   %% oops forgot to fix qrenorm, will do later
   %% qrenormjunk = zeros(1,length(jac.qrenorm)+1);
   %% qrenormjunk(1:4)   = jac.qrenorm(1:4);
@@ -751,10 +755,10 @@ end      %% if exist('iFixO3_NoFit','var')
 %% driver.settings = settings;   %% no need to do this since topts == settings == topts
 
 iVersJac = 2019;
-[co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
+[co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac) %% sets co2x,n2ox,ch4x
 
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 0
-  disp('setting constant rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25')
+  fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  CH4 = %8.6f N2O = %8.6f CFC = -1.25 \n',co2x,n2ox,ch4x)
   if settings.co2lays == 1
     xb(1) = co2x;  % Set CO2 apriori
     xb(2) = n2ox;

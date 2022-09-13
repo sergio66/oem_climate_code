@@ -114,6 +114,11 @@ for ii = 1 : 3
   shading interp
 end
 
+esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+  n2ox = 0.8 * ones(size(latx));
+  co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_cris07,latx);
+  ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_cris07,latx);
+
 figure(7); clf
   plot(latx,traceNstemp(1:5,:),latx,traceNstemp(6,:)*100,'g','linewidth',2); grid
   hl = legend('CO2','N2O','CH4','CFC11','CFC12','stemp*100'); set(hl,'fontsize',10);
@@ -123,9 +128,13 @@ figure(7); clf
   hl = legend('CO2','N2O','CH4','CFC11','CFC12'); set(hl,'fontsize',10);
   title('tracegas and stemp rates/yr')
 figure(9); clf
-  plot(latx,traceNstemp(6,:),'g','linewidth',2); grid
+  plot(latx,traceNstemp(6,:),'b','linewidth',2); grid
   hl = legend('stemp'); set(hl,'fontsize',10);
-  title('tracegas and stemp rates/yr')
+  title('stemp rates/yr')
+figure(10); clf
+  plot(latx,traceNstemp(1:3,:),latx,[co2x; n2ox; ch4x],'--','linewidth',2); grid  
+  hl = legend('CO2','N2O','CH4'); set(hl,'fontsize',10);
+  title('tracegas/yr')
 
 g = a.jacobian.chanset;
 load f1305

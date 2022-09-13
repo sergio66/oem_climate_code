@@ -1,6 +1,7 @@
 fnameERArates = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/Aux_jacs_AIRS_ANOM_STM_Sept2016/LatbinProfRates/all40latbins.mat';
 fnameERArates = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/LATS40_avg_made_Mar29_2019/Desc/all_latbins_rates.mat';
 fnameERArates = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/LATS40_avg_made_Mar29_2019_Clr/Desc/all_latbins_rates.mat';
+fnameERArates = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/CLO_LAT40_avg_made_Dec2019_Clr/Desc/all_latbins_rates.mat';
 
 fnameERArtp = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/LATS40_avg_made_Mar29_2019_Clr/Desc/xlatbin_oneyear_1_40.op.rtp';
 
@@ -8,11 +9,6 @@ disp(['for ERA rates using ' fnameERArates])
 disp(['mean ERA profile    ' fnameERArtp])
 clear thestats xthestats
 xthestats = load(fnameERArates);
-
-addpath /asl/matlib/h4tools
-[hjunk,ha,pjunk,pa] = rtpread(fnameERArtp);
-
-i1231 = find(fairs >= 1231.15,1);
 
   thestats.waterrate0 = xthestats.thestats.waterrate;
   thestats.ptemprate0 = xthestats.thestats.ptemprate;
@@ -22,9 +18,76 @@ i1231 = find(fairs >= 1231.15,1);
   thestats.ozoneratestd_lag0 = xthestats.thestats.ozoneratestd;    
   thestats.stemprate0    = xthestats.thestats.stemprate;
   thestats.stempratestd0 = xthestats.thestats.stempratestd;    
+
+plays97 = load('/home/sergio/MATLABCODE/airslevels.dat');
+plays97 = plevs2plays(plays);
+plays97 = (plays97(4:100));
+
+figure(9); hold; plot(latx,xthestats.thestats.stemprate,'r','linewidth',2); hold off;
+hl = legend('UMBC','ERA5','location','best');
+
+figure(10); clf
+  pcolor(latx,plays97,xthestats.thestats.waterrate'*10);
+  caxis([-0.1 +0.1])
+  llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
+  set(gca,'ydir','reverse')
+  set(gca,'yscale','log')
+  axis([-90 +90 9 1000])
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})
+  shading interp
+  colorbar
+  title('ERA  WV(lat,z)')
+  
+figure(11); clf
+  pcolor(latx,plays97,xthestats.thestats.ptemprate'*10);
+  caxis([-0.5 +0.5])
+  llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
+  set(gca,'ydir','reverse')
+  set(gca,'yscale','log')
+  axis([-90 +90 9 1000])
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})
+  shading interp
+  colorbar
+  title('ERA  T(lat,z)')
+  
+figure(12); clf
+  pcolor(latx,plays97,xthestats.thestats.ozonerate'*10);
+  caxis([-0.2 +0.2])
+  llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
+  set(gca,'ydir','reverse')
+  set(gca,'yscale','log')
+  axis([-90 +90 9 1000])
+  set(gca,'YTick',[10,100,1000])
+  set(gca,'YTickLabel',{'10','100','1000'})
+  shading interp
+  colorbar
+  title('ERA  O3(lat,z)')
+
+figure(1); caxis([-1 +1]*0.2); figure(10); caxis([-1 +1]*0.2)
+figure(2); caxis([-1 +1]*1.5); figure(11); caxis([-1 +1]*1.5)
+error('nyuk')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
+addpath /asl/matlib/plotutils
+figure(1); aslprint('Figs/Flavio_2022_09/umbc_wv.pdf');
+figure(2); aslprint('Figs/Flavio_2022_09/umbc_tz.pdf');
+figure(3); aslprint('Figs/Flavio_2022_09/umbc_o3.pdf');
+figure(10); aslprint('Figs/Flavio_2022_09/era5_wv.pdf');
+figure(11); aslprint('Figs/Flavio_2022_09/era5_tz.pdf');
+figure(12); aslprint('Figs/Flavio_2022_09/era5_o3.pdf');
+figure(09); aslprint('Figs/Flavio_2022_09/umbc_era5_stemp.pdf');
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+addpath /asl/matlib/h4tools
+[hjunk,ha,pjunk,pa] = rtpread(fnameERArtp);
+
+i1231 = find(fairs >= 1231.15,1);
   
 %% true profile = AK * Retr_profile +   (I - AK) apriori_profile
-for ii = 1 : 40
+for ii = 1 : 38
   fname = [outputdir '/test' num2str(ii) '.mat'];
   loader = ['a = load(''' fname ''');'];
   eval(loader)
@@ -74,7 +137,7 @@ for ii = 1 : 40
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(9); clf
+figure(10); clf
 plot(1 - thestats.mean_era_gas_1_0 ./ thestats.mean_era_gas_1_F,playsRET,'b',1 - thestats.mean_era_gas_1_0 ./ thestats.mean_era_gas_1_S,playsRET,'r')
   set(gca,'ydir','reverse')
   set(gca,'yscale','log')
@@ -83,7 +146,7 @@ plot(1 - thestats.mean_era_gas_1_0 ./ thestats.mean_era_gas_1_F,playsRET,'b',1 -
   set(gca,'YTickLabel',{'10','100','1000'})
   title('frac \delta WV(z) (b) ERA (r) UMBC')
 
-figure(10); clf
+figure(11); clf
 plot(thestats.mean_era_ptemp_0-thestats.mean_era_ptemp_F,playsRET,'b',thestats.mean_era_ptemp_0-thestats.mean_era_ptemp_S,playsRET,'r')
   set(gca,'ydir','reverse')
   set(gca,'yscale','log')
@@ -92,7 +155,7 @@ plot(thestats.mean_era_ptemp_0-thestats.mean_era_ptemp_F,playsRET,'b',thestats.m
   set(gca,'YTickLabel',{'10','100','1000'})
   title('\delta T(z) (b) ERA (r) UMBC')
 
-figure(11); clf
+figure(12); clf
 plot(1 - thestats.mean_era_gas_3_0 ./ thestats.mean_era_gas_3_F,playsRET,'b',1 - thestats.mean_era_gas_3_0 ./ thestats.mean_era_gas_3_S,playsRET,'r')
   set(gca,'ydir','reverse')
   set(gca,'yscale','log')
@@ -101,7 +164,7 @@ plot(1 - thestats.mean_era_gas_3_0 ./ thestats.mean_era_gas_3_F,playsRET,'b',1 -
   set(gca,'YTickLabel',{'10','100','1000'})
   title('frac \delta O3(z) (b) ERA (r) UMBC')
 
-figure(9); clf
+figure(10); clf
 plot(1 - thestats.mean_era_gas_1_0(22,:) ./ thestats.mean_era_gas_1_F(22,:),playsRET,'b',1 - thestats.mean_era_gas_1_0(22,:) ./ thestats.mean_era_gas_1_S(22,:),playsRET,'r')
   set(gca,'ydir','reverse')
   set(gca,'yscale','log')
@@ -110,7 +173,7 @@ plot(1 - thestats.mean_era_gas_1_0(22,:) ./ thestats.mean_era_gas_1_F(22,:),play
   set(gca,'YTickLabel',{'10','100','1000'})
   title('frac \delta WV(z) (b) ERA (r) UMBC')
 
-figure(10); clf
+figure(11); clf
 plot(thestats.mean_era_ptemp_0(22,:)-thestats.mean_era_ptemp_F(22,:),playsRET,'b',thestats.mean_era_ptemp_0(22,:)-thestats.mean_era_ptemp_S(22,:),playsRET,'r')
   set(gca,'ydir','reverse')
   set(gca,'yscale','log')
@@ -119,7 +182,7 @@ plot(thestats.mean_era_ptemp_0(22,:)-thestats.mean_era_ptemp_F(22,:),playsRET,'b
   set(gca,'YTickLabel',{'10','100','1000'})
   title('\delta T(z) (b) ERA (r) UMBC')
 
-figure(11); clf
+figure(12); clf
 plot(1 - thestats.mean_era_gas_3_0(22,:) ./ thestats.mean_era_gas_3_F(22,:),playsRET,'b',1 - thestats.mean_era_gas_3_0(22,:) ./ thestats.mean_era_gas_3_S(22,:),playsRET,'r')
   set(gca,'ydir','reverse')
   set(gca,'yscale','log')
@@ -132,7 +195,7 @@ plot(1 - thestats.mean_era_gas_3_0(22,:) ./ thestats.mean_era_gas_3_F(22,:),play
 disp('ret to go on ERA(lat,z)')
 pause
 
-figure(9); clf
+figure(10); clf
   pcolor(latx,playsRET,thestats.waterrate1'*10);
   caxis([-0.1 +0.1])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -145,7 +208,7 @@ figure(9); clf
   colorbar
   title('ERA  WV(lat,z)')
   
-figure(10); clf
+figure(11); clf
   pcolor(latx,playsRET,thestats.ptemprate1'*10);
   caxis([-0.5 +0.5])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -158,7 +221,7 @@ figure(10); clf
   colorbar
   title('ERA  T(lat,z)')
   
-figure(11); clf
+figure(12); clf
   pcolor(latx,playsRET,thestats.ozonerate1'*10);
   caxis([-0.2 +0.2])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -175,7 +238,7 @@ figure(11); clf
 disp('ret to go on AK * ERA(lat,z)')
 pause
 
-figure(9); clf
+figure(10); clf
   pcolor(latx,playsRET,thestats.akwaterrate'*10);
   caxis([-0.1 +0.1])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -188,7 +251,7 @@ figure(9); clf
   colorbar
   title('ERA AK * WV(lat,z)')
   
-figure(10); clf
+figure(11); clf
   pcolor(latx,playsRET,thestats.akptemprate'*10);
   caxis([-0.5 +0.5])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -201,7 +264,7 @@ figure(10); clf
   colorbar
   title('ERA AK * T(lat,z)')
   
-figure(11); clf
+figure(12); clf
   pcolor(latx,playsRET,thestats.akozonerate'*10);
   caxis([-0.2 +0.2])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -215,7 +278,7 @@ figure(11); clf
   title('ERA AK * O3(lat,z)')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-figure(12); clf
+figure(13); clf
 errorbar(latx,100*traceNstemp(6,:),100*traceNstemp_sigs(6,:),'b','linewidth',2); grid
 hold on
 errorbar(latx,100*thestats.stemprate0,100*thestats.stempratestd0,'color','r','linewidth',2)
@@ -229,7 +292,7 @@ jett = jet; jett(1,:) = 1;
 
 disp('skipping error bars for ERA std devs')
 %{
-figure(13); clf
+figure(14); clf
   pcolor(latx,playsRET,thestats.akwaterrate_stdlag');
   caxis([0 +0.02])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -243,7 +306,7 @@ figure(13); clf
   title('ERA AK * WV(lat,z)stdlag')
   colormap(jett)
   
-figure(14); clf
+figure(15); clf
   pcolor(latx,playsRET,thestats.akptemprate_stdlag');
   caxis([0 +0.1])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -257,7 +320,7 @@ figure(14); clf
   title('ERA AK * T(lat,z)stdlag')
   colormap(jett)
   
-figure(11); clf
+figure(16); clf
   pcolor(latx,playsRET,thestats.akozonerate'*10);
   caxis([-0.02 +0.02])
   llsmap4 = load('//home/sergio/MATLABCODE/COLORMAP/llsmap4.mat'); colormap(llsmap4.llsmap4);
@@ -273,10 +336,10 @@ figure(11); clf
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(1); figure(9); disp('ret'); pause
-figure(2); figure(10); disp('ret'); pause
-figure(3); figure(11); disp('ret'); pause
-figure(4); figure(12); disp('ret'); pause
+figure(1); figure(10); disp('ret'); pause
+figure(2); figure(11); disp('ret'); pause
+figure(3); figure(12); disp('ret'); pause
+figure(4); figure(13); disp('ret'); pause
 figure(4); axis([-90 +90 -0.5 +0.5]);
 %figure(10); axis([-90 +90 -0.5 +0.5]);
 
