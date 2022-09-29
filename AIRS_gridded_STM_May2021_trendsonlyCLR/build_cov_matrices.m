@@ -303,6 +303,8 @@ end
 if iSergioCO2 > 0
   disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
   fmatd = [2     0.1       2      1     1            1]*0.001;
+  fmatd = [2     0.1       2      1     1            1]*0.025;
+  fmatd = [2     0.1       2      1     1            1]*0.0025;
   fmatd = [2     0.1       2      1     1            1];
 end
 

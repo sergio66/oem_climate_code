@@ -17,6 +17,8 @@ redo_fig6_surfT_rate
 redo_fig8_spectralrates_with_mask
 
 addpath ../FIND_NWP_MODEL_TRENDS
+iNumYears = 
+error('lkjsglkhsjg')
 driver_get_the_model_trends
 
 %figure(8); plot_profile_trends          %% ERA_ERA5_AIRSL3,   with mask

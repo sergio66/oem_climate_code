@@ -64,9 +64,27 @@ if length(iOCBset) == 0
   iOCBset = 0;
 end
 
-dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap    :::  [4 = Default] : ');
+dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n    :::  [4 = Default] : ');
 if length(dataset) == 0
   dataset = 4;
+end
+
+if dataset == 1 | dataset == -1
+  iNumYears = 18;
+elseif dataset == 2
+  iNumYears = 19;
+elseif abs(dataset) == 3
+  iNumYears = 19;
+elseif dataset == 4
+  iNumYears = 19;
+elseif dataset == 5
+  iNumYears = 12;
+elseif dataset == 6
+  iNumYears = 07;
+elseif dataset == 7
+  iNumYears = 20;
+elseif dataset == 8
+  iNumYears = 07;
 end
 
 if dataset == -3
@@ -116,6 +134,14 @@ if iOCBset == 0
   elseif dataset == 6
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_6_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    end
+  elseif dataset == 7
+    if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
+      data_trends = load(['iType_7_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    end
+  elseif dataset == 8
+    if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
+      data_trends = load(['iType_8_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     end
   else
     dataset
@@ -414,8 +440,21 @@ i0900 = find(f >= 0900,1);
 
 load llsmap5
 
-aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt CO2');  caxis([1.5 2.5])
 clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2.5]); caxis([2.0 2.5])
+aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2');  caxis([1.5 2.5])
+
+if dataset == 8
+  aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+  eracal = load('saved_co2_era_cal_retrieval_2002_2021.mat');
+  eracal = load('saved_co2_era_cal_retrieval_2015_2021.mat');
+  aslmap(2,rlat65,rlon73,smoothn((reshape(eracal.results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('ERA d/dt CO2');  caxis([-1 +1]*2); 
+  aslmap(3,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]);        colormap(jet);      title('UMBC d/dt CO2');  caxis([0 4]);
+  aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1)-eracal.results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('UMBC-ERA d/dt CO2');  caxis([0 4]);
+  oco2 = load('oco2_timeseries.mat');
+  aslmap(35,rlat65,rlon73,smoothn(oco2.co2_trend',1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2 from OCO2 2015-2021');  caxis([2.0 3.0])  
+    caxis([2.35 2.55])
+  disp('ret to continue'); pause
+end
 
 aslmap(5,rlat65,rlon73,smoothn((reshape(rates(i1231,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1231/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
 aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)

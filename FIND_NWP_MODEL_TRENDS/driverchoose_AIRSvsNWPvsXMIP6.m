@@ -35,8 +35,14 @@ iAorOrL = 0;
 
 fprintf(1,'driverchoose_AIRSvsNWPvsXMIP6.m : iNumYears = %2i \n',iNumYears)
 
-airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
+if iNumYears ~= 12 | iNumYears ~= 19
+  airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,19);
+else
+  airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
+end
+
 nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL,iNumYears);
+
 xmip6Choice = getdata_XMIP6(iXMIP6,iNorD,iAorOrL);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

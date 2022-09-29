@@ -10,6 +10,7 @@ drwxrwxr-x 2 sergio pi_strow 16384 Mar 31 07:23 AIRSL3
 drwxrwxr-x 2 sergio pi_strow 12288 Mar 31 07:21 ERA5
 %}
 
+
 %% superceded driver_get_the_model_trends_orig
 iJorC = input('(+1, default) J.Susskind AIRS L3  or (-1) C.Barnet CLIMCAPS  : ');
 if length(iJorC) == 0

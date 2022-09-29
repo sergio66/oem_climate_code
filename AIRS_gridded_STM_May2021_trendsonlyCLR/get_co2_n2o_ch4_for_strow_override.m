@@ -40,8 +40,9 @@ ch4x = 4.5;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iVersJac == 2019 | iVersJac == 2012
-  %% CRIS 2012/05 - 2019/04   2019 = 40    latbins
-  %% CRIS 2012/05 - 2019/04   2012 = 40608 lonbins/latbins
+  disp('get_co2_n2o_ch4_for_strow_override.m : CRIS 2012/05 - 2019/04   2019 = 40    latbins')
+  disp('get_co2_n2o_ch4_for_strow_override.m : CRIS 2012/05 - 2019/04   2012 = 4608 lonbins/latbins')
+
   co2x = 2.262445;
   n2ox = 0.925496;
   ch4x = 6.613673;
@@ -61,7 +62,7 @@ if iVersJac == 2019 | iVersJac == 2012
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 elseif iVersJac == 2021
-  %% AIRS 2002/09 - 2021/08
+  disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2002/09 - 2021/08')
   co2x = 2.262445;
   n2ox = 0.925496;
   ch4x = 6.613673;
@@ -79,9 +80,31 @@ elseif iVersJac == 2021
     ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_19,rlatx);
   end
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+elseif iVersJac == 2015
+  disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2015/01 - 2021/12, OCO2')
+  co2x = 2.262445;
+  n2ox = 0.925496;
+  ch4x = 6.613673;
+
+  iVersESRL = 0;
+  iVersESRL = 4;
+  if iVersESRL == 0
+    co2x = co2x;
+    n2ox = n2ox;
+    ch4x = ch4x;
+  elseif iVersESRL == 4
+    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+    n2ox = n2ox;
+    co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_oco2_07,rlatx);
+    ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_oco2_07,rlatx);
+  end
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 elseif iVersJac == 2014
-  %% CMIP6 2002/09 - 2014/08
+  disp('get_co2_n2o_ch4_for_strow_override.m : CMIP6 2002/09 - 2014/08')
   iVersESRL = 3;
   iVersESRL = 4;
   if iVersESRL == 0

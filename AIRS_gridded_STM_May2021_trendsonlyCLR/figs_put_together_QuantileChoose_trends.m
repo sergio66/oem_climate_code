@@ -54,3 +54,19 @@ load llsmap5
 figure(5); clf;
 moo = b_desc(:,:,i1231);
 aslmap(5,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['dBT1231/dt Quantile ' num2str(iQuantile,'%02d')]); caxis([-1 +1]*0.15); colormap(llsmap5)
+
+if exist('b_cal_desc')
+  figure(6); clf;
+  moo = b_cal_desc(:,:,i1231);
+  aslmap(6,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['dBT1231/dt ERA5 calc']); caxis([-1 +1]*0.15); colormap(llsmap5)
+
+  figure(7); clf;
+  moo = b_err_desc(:,:,i1231);
+  aslmap(7,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['unc dBT1231/dt Quantile ' num2str(iQuantile,'%02d')]); caxis([0 +1]*0.25); colormap(llsmap5)
+
+  figure(8); clf;
+  moo = b_cal_err_desc(:,:,i1231);
+  aslmap(8,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['unc dBT1231/dt ERA5 calc']); caxis([0 +1]*0.25); colormap(llsmap5)
+
+end
+  

@@ -1,4 +1,4 @@
-addpath ../../../FIND_TRENDS/
+addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
 fchanx = h72x.vchan;
@@ -52,6 +52,7 @@ end
 warning on
 
 figure(6); plot(rlon,thesave.xst_trend,rlon,thesave.xbt1231_trend); title('dST/dt and dBT1231/dt');
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 warning off
@@ -70,12 +71,14 @@ for iii = 1 : 2645
 
     zoo = find(isfinite(data));
     if length(zoo) > 20
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
-      thesave.xtrendSpectral(iii,ilon) = junk(2);
-      xconstr72(iii,ilon) = junk(1);
+      [junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      thesave.xtrendSpectral(iii,ilon)     = junk(2);
+      thesave.xtrendSpectral_unc(iii,ilon) = err.se(2);
+%      xconstr72(iii,ilon) = junk(1);
     else
       thesave.xtrendSpectral(iii,ilon) = NaN;
-      xconstr72(iii,ilon) = NaN;
+      thesave.xtrendSpectral_unc(iii,ilon) = NaN;
+%      xconstr72(iii,ilon) = NaN;
     end
   end
 end
@@ -88,11 +91,13 @@ for iii = 1 : 2645
 
   zoo = find(isfinite(data));
   if length(zoo) > 20
-    junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    [junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
     thesave.xtrend(iii) = junk(2);
+    thesave.xtrend_unc(iii) = err.se(2);
     xconstr(iii) = junk(1);
   else
     thesave.xtrend(iii) = NaN;
+    thesave.xtrend_unc(iii) = NaN;
     xconstr(iii) = NaN;
   end
 end
@@ -105,6 +110,7 @@ figure(2); plot(fchanx,thesave.xtrend); grid;  axis([640 1640 -0.1 +0.05]); plot
 %figure(2); plot(fchanx,thesave.trend,fchanx,thesave.xtrend,fchanx,1/cmean*nanmean((thesave.trendSpectral .* (ones(2645,1)*cos(pi/180*rlatx)))')); grid;
 %figure(2); plot(fchanx,thesave.trend,fchanx,thesave.xtrend,fchanx,1/cmean*nanmean((thesave.xtrendSpectral .* (ones(2645,1)*cos(pi/180*rlatx)))')); grid;
 %  hl = legend('trend','xtrend','weighted xtrend','location','best');
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 t = p72.ptemp; t = reshape(t,iNlev,72,numtimesteps); 
@@ -151,6 +157,108 @@ for jj = 1 : 101
 end
 
 figure(4); pcolor(rlon,plevsx,thesave.t2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+t = p72.gas_1; t = reshape(t,iNlev,72,numtimesteps); tX = squeeze(nanmean(t,3));
+[~,~,kk] = size(t); clear tXX
+for kkk = 1 : kk
+ tXX(:,:,kkk) = tX;
+end
+t = t./tXX;
+
+for jj = 1 : iNlev
+  for ll = 1 : 72
+    data = squeeze(t(jj,ll,:));
+    zoo = find(isfinite(data));
+    if length(zoo) > 20    
+      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      thesave.wv2d_xtrendnwp(jj,ll) = junk(2);
+      wv2d_xconstrnwp(jj,ll) = junk(1);
+    else
+      thesave.wv2d_xtrendnwp(jj,ll) = NaN;
+      wv2d_xconstrnwp(jj,ll) = NaN;
+    end
+  end
+end
+
+figure(3); pcolor(rlon,plevsnwp,thesave.wv2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('WV frac rates straight from CMIP6 or ERA5 zonal levels')
+
+t = p72x.gas_1; t = reshape(t,101,72,numtimesteps); tX = squeeze(nanmean(t,3));
+[~,~,kk] = size(t); clear tXX
+for kkk = 1 : kk
+ tXX(:,:,kkk) = tX;
+end
+t = t./tXX;
+for jj = 1 : 101
+  for ll = 1 : 72
+    data = squeeze(t(jj,ll,:));
+    zoo = find(isfinite(data));
+    if length(zoo) > 20    
+      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      thesave.wv2d_xtrend(jj,ll) = junk(2);
+      wv2d_xconstr(jj,ll) = junk(1);
+    else
+      thesave.wv2d_xtrend(jj,ll) = NaN;
+      wv2d_xconstr(jj,ll) = NaN;
+    end
+  end
+end
+
+figure(4); pcolor(rlon,plevsx,thesave.wv2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+t = p72.gas_3; t = reshape(t,iNlev,72,numtimesteps); tX = squeeze(nanmean(t,3));
+[~,~,kk] = size(t); clear tXX
+for kkk = 1 : kk
+ tXX(:,:,kkk) = tX;
+end
+t = t./tXX;
+
+for jj = 1 : iNlev
+  for ll = 1 : 72
+    data = squeeze(t(jj,ll,:));
+    zoo = find(isfinite(data));
+    if length(zoo) > 20    
+      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      thesave.oz2d_xtrendnwp(jj,ll) = junk(2);
+      oz2d_xconstrnwp(jj,ll) = junk(1);
+    else
+      thesave.oz2d_xtrendnwp(jj,ll) = NaN;
+      oz2d_xconstrnwp(jj,ll) = NaN;
+    end
+  end
+end
+
+figure(3); pcolor(rlon,plevsnwp,thesave.oz2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('OZ frac rates straight from CMIP6 or ERA5 zonal levels')
+
+t = p72x.gas_3; t = reshape(t,101,72,numtimesteps); tX = squeeze(nanmean(t,3));
+[~,~,kk] = size(t); clear tXX
+for kkk = 1 : kk
+ tXX(:,:,kkk) = tX;
+end
+t = t./tXX;
+for jj = 1 : 101
+  for ll = 1 : 72
+    data = squeeze(t(jj,ll,:));
+    zoo = find(isfinite(data));
+    if length(zoo) > 20    
+      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      thesave.oz2d_xtrend(jj,ll) = junk(2);
+      oz2d_xconstr(jj,ll) = junk(1);
+    else
+      thesave.oz2d_xtrend(jj,ll) = NaN;
+      oz2d_xconstr(jj,ll) = NaN;
+    end
+  end
+end
+
+figure(4); pcolor(rlon,plevsx,thesave.oz2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
   xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -252,34 +360,39 @@ figure(5); subplot(121); semilogy(thesave.t_xtrend(1:97),plevsx,'r','linewidth',
 warning on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+diroutX = dirout;
+diroutX = ' ';
 
 disp('here I am doing this save')
 if iType == 2
-  saver = ['save ' dirout '/reconstruct_merra2_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHMERRA2rate zonalTMERRA2rate '];
+  saver = ['save ' diroutX 'reconstruct_merra2_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHMERRA2rate zonalTMERRA2rate *xconstr*'];
 elseif iType == 5
-  saver = ['save ' dirout '/reconstruct_era5_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate '];
+  saver = ['save ' diroutX 'reconstruct_era5_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate *xconstr*'];
 elseif iType == 51
-  saver = ['save ' dirout '/reconstruct_era5_const_tracegas_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate '];
+  saver = ['save ' diroutX 'reconstruct_era5_const_tracegas_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate *xconstr*'];
 
 elseif iType == 6
-  saver = ['save ' dirout '/reconstruct_cmip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate '];
+  saver = ['save ' diroutX 'reconstruct_cmip6_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate *xconstr*'];
 elseif iType == 61
-  saver = ['save ' dirout '/reconstruct_cmip6_const_tracegas_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate '];
+  saver = ['save ' diroutX 'reconstruct_cmip6_const_tracegas_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHCMIP6rate zonalTCMIP6rate *xconstr*'];
 elseif iType == 7
-  saver = ['save ' dirout '/reconstruct_amip6_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHAMIP6rate zonalTAMIP6rate '];
+  saver = ['save ' diroutX 'reconstruct_amip6_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHAMIP6rate zonalTAMIP6rate *xconstr*'];
 
 elseif iType == 3
-  saver = ['save ' dirout '/reconstruct_airsL3_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHAIRSL3rate zonalTAIRSL3rate '];
+  saver = ['save ' diroutX 'reconstruct_airsL3_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHAIRSL3rate zonalTAIRSL3rate *xconstr*'];
 elseif iType == 4
-  saver = ['save ' dirout '/reconstruct_climcapsL3_spectra_geo_rlat' num2str(ii,'%02i') '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHAIRSCLIMCAPSL3rate zonalTAIRSCLIMCAPSL3rate '];
+  saver = ['save ' diroutX 'reconstruct_climcapsL3_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+  saver = [saver ' zonalrlat zonalplays zonalRHAIRSCLIMCAPSL3rate zonalTAIRSCLIMCAPSL3rate *xconstr*'];
 
 end
 
@@ -292,4 +405,5 @@ if ~exist(foutname)
   eval(saver)
 else
   fprintf(1,'%s alewady exists, not saving \n',foutname)
+  eval(saver)
 end

@@ -16,9 +16,14 @@ end
 timespan = 18;
 timespan = 19;
 timespan = 12;
+timespan = 07;
 fprintf(1,'timespan = %2i years \n',timespan)
 
-if timespan == 16
+if timespan == 07
+  savestr_version = 'May2012_07yr';
+  StartY = 2012; StartYM = 5;   %% start 05/2012
+  StopY  = 2019; StopYM  = 4;   %% stop  04/2019  
+elseif timespan == 16
   savestr_version = 'Sept2017_15yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2018; StopYM  = 8;   %% stop  08/2017  

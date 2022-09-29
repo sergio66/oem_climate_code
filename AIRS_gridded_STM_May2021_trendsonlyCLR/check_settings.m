@@ -1,3 +1,5 @@
+settings.iSergioCO2 = -1;            %% assume ESRL CO2/CH4 rates, DEFAULT   (+1) to fit for CO2/CH4
+
 settings.set_era5_cmip6_airsL3 = -1; %% default, no a priori, else set to 3,5,6 for AIRS L3/ERA5/CMIP6
 
 settings.resetnorm2one = -1; %%% default, keep my scaling, set to +1 if you want to reset all to 1.00000000
@@ -54,7 +56,8 @@ settings.UMBCvsERAjac = -1;            %% do not adjust jacobian, based on handf
 
 topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_tracegas'},{'offsetrates'},{'set_era5_cmip6_airsL3'},...
         	       {'addco2jacs'},{'obs_corr_matrix'},{'invtype'},{'tie_sst_lowestlayer'},{'iNlays_retrieve'},...
-                       {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'resetnorm2one'},{'UMBCvsERAjac'}];
+                       {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},...
+                       {'resetnorm2one'},{'UMBCvsERAjac'},{'iSergioCO2'}];
 
 %disp('settings before')
 %settings

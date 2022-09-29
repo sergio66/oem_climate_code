@@ -3,6 +3,9 @@ topts = [];
 
 topts = struct;
 
+topts.iSergioCO2 = +1;  %% fit for CO2/CH4 rates
+topts.iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates, DEFAULT
+
 topts.set_era5_cmip6_airsL3 = 3;  %% AIRS L3 rates for T(z). WV(z). O3(z). stemp
 topts.set_era5_cmip6_airsL3 = 6;  %% CMIP6 rates   for T(z). WV(z). O3(z). stemp
 topts.set_era5_cmip6_airsL3 = 5;  %% ERA5 rates    for T(z). WV(z). O3(z). stemp

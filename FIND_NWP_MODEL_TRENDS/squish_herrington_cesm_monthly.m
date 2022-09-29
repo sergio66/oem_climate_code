@@ -1,11 +1,25 @@
 %{
 ON CHEYENNE
-THIS SQUISHES DOWN THE *h0* monthly files from 1.9 G to 87 M by saving of only the required variables
+%%%%%%%%%%%%%%%%%%%%%%%%%
+login to cheyenne
+token reposnse= passwd then confirm "aauthenticate" from Duo
+
+cd /glade/scratch/sergio/
+cd adam_1998_2022
+
+run "./reduced.sc"
+
+more reduced.sc
 ## make sure you do    module load nco/5.0.7
 for file in /glade/scratch/aherring/archive/cam.clubbmf.bsort_FHIST_ne30pg2_ne30pg2_mg17_L58dev_3600pes_220720_run76_Nx2yrs/atm/hist/*.cam.h0.*; do
    echo $file
-   ncks -v hyam,hybm,lat,lon,lev,time,date,co2vmr,ch4vmr,n2ovmr,CLDTOT,CLOUD,CLDICE,CLDLIQ,IWC,LANDFRAC,TS,T,Q,O3,PS,U10,PMID $file -o /glade/scratch/sergio/adam_1998_2022/reduced_$(basename $file)
+   ncks -v hyam,hybm,lat,lon,lev,time,date,co2vmr,ch4vmr,n2ovmr,CLDTOT,CLOUD,CLDICE,CLDLIQ,IWC,LANDFRAC,TS,T,Q,O3,PS,U10,PMID,RELHUM $file -o /glade/scratch/sergio/adam_1998_2022/reduced_$(basename $file)
 done
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+THIS SQUISHES DOWN THE *h0* monthly files from 1.9 G to 87 M by saving of only the required variables
+
 %}
 
 %{

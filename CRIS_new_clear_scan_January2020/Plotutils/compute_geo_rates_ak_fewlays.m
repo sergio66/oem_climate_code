@@ -1,3 +1,6 @@
+%% see eg /home/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/clust_make_geophysical_rates40.m
+%%                                                              put_together_rates.m
+     
 fnameERArates = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/Aux_jacs_AIRS_ANOM_STM_Sept2016/LatbinProfRates/all40latbins.mat';
 fnameERArates = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/LATS40_avg_made_Mar29_2019/Desc/all_latbins_rates.mat';
 fnameERArates = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/LATS40_avg_made_Mar29_2019_Clr/Desc/all_latbins_rates.mat';
@@ -24,7 +27,7 @@ plays97 = plevs2plays(plays);
 plays97 = (plays97(4:100));
 
 figure(9); hold; plot(latx,xthestats.thestats.stemprate,'r','linewidth',2); hold off;
-hl = legend('UMBC','ERA5','location','best');
+hl = legend('UMBC','ERA','location','best');
 
 figure(10); clf
   pcolor(latx,plays97,xthestats.thestats.waterrate'*10);

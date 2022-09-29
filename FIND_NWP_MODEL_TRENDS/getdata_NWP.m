@@ -88,6 +88,8 @@ if iNorD > 0
       nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
     elseif iNumYears == 12
       nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat');
+    elseif iNumYears == 07
+      nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat');
     end
     strChoice  = 'ERA5';
   elseif iNWP == 1
@@ -113,6 +115,8 @@ else
     %  nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat'); %%% OOER may not have run this off yet
     %elseif iNumYears == 12
     %  nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_asc.mat'); %%% OOER may not have run this off yet
+    %elseif iNumYears == 07
+    %  nwpChoice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_asc.mat');
     %end
     strChoice  = 'ERA5';
   elseif iNWP == 1
@@ -140,7 +144,8 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 
 load llsmap5;
 iFig = 0;
-iFig = iFig + 1; figure(iFig); clf;  aslmap(iFig,rlat65,rlon73,maskLFmatr.*smoothn(reshape(nwpChoice.trend_stemp,72,64)',1),[-90 +90],[-180 +180]);   colormap(llsmap5); caxis([-0.15 +0.15]); title([strNorD ' stemp d/dt ' strChoice ' K/yr']); 
+iFig = iFig + 1; figure(iFig); clf;  
+aslmap(iFig,rlat65,rlon73,maskLFmatr.*smoothn(reshape(nwpChoice.trend_stemp,72,64)',1),[-90 +90],[-180 +180]);   colormap(llsmap5); caxis([-0.15 +0.15]); title([strNorD ' stemp d/dt ' strChoice ' K/yr']); 
 
 if ~exist('pavgLAY')
   boo = load('/home/sergio/MATLABCODE/airslevels.dat');

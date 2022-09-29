@@ -181,7 +181,7 @@ end
 cmap = llsmap5;
 
 figure(30); 
-pcolor(rlat,pavgLAY(1:97,1000),smoothn(fracWVlat(:,1:97)'),1); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+pcolor(rlat,pavgLAY(1:97,1000),smoothn(fracWVlat(:,1:97)',1)); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(fracWVlat)); junk = cos(rlat) * ones(1,101);
 area_wgt_fracWV = nansum(fracWVlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgt_fracWV(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
@@ -307,6 +307,7 @@ aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]
 
 figure(35); clf; junk = reshape(maskLF.*results(:,6)',72,64)'; plot(rlat,smooth(nanmean(junk,2),3)); title('dST/dt'); xlabel('Latitude')
 
+disp('if you hit Ctrl C and look at find_T_RH_trends.m, you can save these plots ....')
 disp('ret to continue'); pause
 
 
@@ -316,6 +317,7 @@ iPrintFigs = -1;
 if iPrintFigs > 0
   diroutQuick = 'QuickFigs/PrincetonPCTS/';
   diroutQuick = 'QuickFigs/Flavio_Sept2022_2012_05_to_2019_04/';
+  diroutQuick = 'QuickFigs/Q10_2002_2021/'
   quickprint_find_T_RH_trends
 end
 %}

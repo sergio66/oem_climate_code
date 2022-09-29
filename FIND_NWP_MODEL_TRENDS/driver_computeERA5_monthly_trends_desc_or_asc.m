@@ -214,9 +214,15 @@ elseif iNumYears == 12
   else
     save ERA5_atm_data_2002_09_to_2014_08_trends_asc.mat comment trend*
   end
+elseif iNumYears == 07
+  if iDorA > 0
+    save ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat comment trend*
+  else
+    save ERA5_atm_data_2012_05_to_2014_04_trends_asc.mat comment trend*
+  end
 else
   iNumYears
-  error('unknown iNumYears .. accepting 12,18,19')
+  error('unknown iNumYears .. accepting 07, 12,18,19')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

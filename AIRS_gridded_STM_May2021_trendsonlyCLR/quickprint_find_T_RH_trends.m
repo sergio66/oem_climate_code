@@ -43,9 +43,10 @@ ylim([10 1000]); caxis([-1 +1]*0.015); colorbar('horizontal'); %plotaxis2;
 title(['Zonal d/dt WVfrac UMBC'])
 colormap(cmap); ylim([100 1000])
 
-%{
-figure(06); aslprint([diroutQuick '/smoothed_stemp_rates.pdf'])
-figure(28); aslprint([diroutQuick '/smoothed_rh_rates.pdf'])
-figure(29); aslprint([diroutQuick '/smoothed_tz_rates.pdf'])
-figure(30); aslprint([diroutQuick '/smoothed_wv_rates.pdf'])
-%}
+iPrintfigs = input('print figs 28,29,30,06) ? (-1/+1) : ');
+if iPrintfigs > 0
+  figure(06); aslprint([diroutQuick '/smoothed_stemp_rates.pdf'])
+  figure(28); aslprint([diroutQuick '/smoothed_rh_rates.pdf'])
+  figure(29); aslprint([diroutQuick '/smoothed_tz_rates.pdf'])
+  figure(30); aslprint([diroutQuick '/smoothed_wv_rates.pdf'])
+end

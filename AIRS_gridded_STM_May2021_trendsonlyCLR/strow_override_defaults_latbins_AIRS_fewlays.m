@@ -33,7 +33,7 @@ if settings.dataset == -2
   disp('AIRS 16 year rates or anomalies, NO nu cal done')
   error('oops not done')
 
-elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 6
+elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 8
   disp('AIRS 07 or 18 or 19 year rates or anomalies, nu cal done in there')
   if settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 1    
     disp('doing Strow 18 yr gridded quantile rates')
@@ -151,6 +151,35 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 6
       driver.rateset.datafile  = 'AHAH';
     end
 
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 7
+    disp('doing Sergio FULL 20 year gridded quantile rates 2002/09-2022/08 ')
+    driver.rateset.datafile  = [];
+    if settings.ocb_set == 0  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = ['iType_7_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcsAHAH.mat';           
+      driver.rateset.datafile  = 'AHAH';
+      strlatbin                = num2str(floor((driver.iibin-1)/72)+1,'%02d');
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                 %% co2/n2o/ch4 change in time
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
+      driver.rateset.datafile  = 'AHAH';
+    elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'AHAH';
+    end
+
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 8
+    disp('doing Sergio FULL 07 year gridded quantile rates 2015/01-2021/12 OCO2')
+    driver.rateset.datafile  = [];
+    if settings.ocb_set == 0  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = ['iType_8_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcsAHAH.mat';           
+      driver.rateset.datafile  = 'AHAH';
+      driver.rateset.datafile  = ['iType_8_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'AHAH';
+    end
+
   elseif settings.descORasc == -1 & driver.i16daytimestep < 0
     disp('doing ascending latbin rates')
     driver.rateset.datafile  = [];
@@ -214,12 +243,17 @@ if driver.i16daytimestep < 0
     driver.jac_indexINSIDEbin = driver.iibin - (driver.jac_latbin-1)*72;     %% so this should be lonbin
 
     iKCARTAorSARTA = +1;
-    iVersJac = 2019;   %% ERA5 from 2002-2019
-    iVersJac = 2021;   %% ERA5 from 2002-2021
+    iVersJac = 2019;     %% ERA5 from 2002-2019
+    iVersJac = 2021;     %% ERA5 from 2002-2021
     if settings.dataset == 5
-      iVersJac = 2014;
+      iVersJac = 2014;   %% AMIP6/CMIp6 2002-2014
     elseif settings.dataset == 6
-      iVersJac = 2012;
+      iVersJac = 2012;   %% CrIS NSR 2012-2019
+    elseif settings.dataset == 7
+      iVersJac = 2022;
+      iVersJac = 2021;   %% ERA5 from 2002-2021
+     elseif settings.dataset == 8
+      iVersJac = 2015;   %% OCO2 2015-2021
     end
 
     if iKCARTAorSARTA < 0
@@ -227,20 +261,18 @@ if driver.i16daytimestep < 0
       AHA = [AHA '/clr_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
     else
       %AHA = [AHA '/kcarta_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];                                   %% 40 latbins
-      if iVersJac == 2012
-        %% AHA = [AHA '/kcarta_clr_subjacLatBin_newSARTA_' num2str(driver.jac_latbin,'%02i') '.mat'];                     %% technically this should be ERA-I 2012-2019 but oh well use 19 years jacs
-        %% see ~/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly/clust_put_together_jacs_clrERA5.m
-        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_07yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 12 year
+      if iVersJac == 2012 | iVersJac == 2015
+        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_07yr_' num2str(driver.jac_latbin,'%02i') '.mat'];   %% ERA5, 2012-2019 year
       elseif iVersJac == 2019
-        AHA = [AHA '/kcarta_clr_subjacLatBin_newSARTA_' num2str(driver.jac_latbin,'%02i') '.mat'];                     %% ERA-I, 17 year
-      elseif iVersJac == 2021
-        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 19 year
+        AHA = [AHA '/kcarta_clr_subjacLatBin_newSARTA_' num2str(driver.jac_latbin,'%02i') '.mat'];                     %% ERA-I, 2002-2019 17 year
+      elseif iVersJac == 2021 
+        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 2002-2021 19 year
       elseif iVersJac == 2014
         %% see ~/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Sept2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m
-        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 12 year
+        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2014 12 year
       else
         iVersJac
-        error('iVersJac = [2012,2019 = 2012/05-2019/04]  or 2014, 2021 [2002/09-20XY/08] only')
+        error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021 [2002/09-20XY/08] only')
       end
     end
 
@@ -831,7 +863,7 @@ end
 [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
 
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
-  disp('setting constant rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8')
+  fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  N2O = %8.6f   CH4 = %8.6f \n',co2x,n2ox,ch4x)
   if settings.co2lays == 1
     xb(1) = co2x;  % Set CO2 apriori
     xb(2) = 1;
@@ -927,17 +959,18 @@ elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1 & settings.ocb_se
   end
 end
 
-iSergioCO2 = +1;
-iSergioCO2 = -1;
+iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates
+iSergioCO2 = +1;  %% fit for CO2/CH4 rates
+iSergioCO2 = settings.iSergioCO2;
 if iSergioCO2 > 0 & settings.ocb_set == 1
-  disp('iSergioCO2 = +1 so RETRIEVE trace gases from ERA clas!!!!')
+  disp('iSergioCO2 = +1 so RETRIEVE trace gases from ERA calc!!!!')
   xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 elseif iSergioCO2 > 0 & settings.ocb_set == 0
   disp('iSergioCO2 = +1 so RETRIEVE trace gases from obs!!!!')
-  xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   xb(1) = co2x;
   xb(2) = n2ox;
   xb(3) = ch4x;
+  xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 end
 
 [mm,nn] = size(xb);
@@ -1041,6 +1074,8 @@ end
 if driver.i16daytimestep < 0
   if driver.topts.dataset == 6
     driver.rateset.unc_rates = driver.rateset.unc_rates/4;  %% 6 years of data ==> large unc
+  elseif driver.topts.dataset == 8
+    driver.rateset.unc_rates = driver.rateset.unc_rates/6;  %% 6 years of data ==> large unc
   end
   nc_cor = nc_rates(driver);
   driver.rateset.unc_rates = driver.rateset.unc_rates.*nc_cor;    %% THIS IS AN ARRAY
