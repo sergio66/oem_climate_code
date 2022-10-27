@@ -33,6 +33,18 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 47
 % JOB = 37
 % JOB = 7
+% JOB = 39
+
+iDebug = -1;
+%iDebug = +2742;  %% JOB = 39, rm Output_CAL/Quantile16/test2742.mat, gives awfully large CO2 when it shoud be 0.0
+
+if iDebug > 0
+  plot(1:4608,floor(((1:4608)-1)/72)+1)   %% this maps tile number and job (in sets of 72)
+  JOB = floor((iDebug-1)/72+1);
+  disp('Warning iDebug > 0')
+  disp('Warning iDebug > 0')
+  disp('Warning iDebug > 0')
+end
 
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 % JOBTYPE = 1000;  %%% uncomment this when trying to fit for linear rates!!! fix change_important_topts_settings, and set <<< driver.i16daytimestep = -1 >>>;  iDoAnomalyOrRates = -1; below
@@ -100,8 +112,11 @@ for iInd = iInd0 : iIndE
   iQuantile = 04;  %% quite cloudy (hopefully)
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
   iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
-  iQuantile = 10;  %% 
-  iQuantile = 16;  %% hottest, for AIRS STM
+  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
+  iQuantile = 02;  %% Q0.80, iQAX = 3, dataset = 9
+  iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
+  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
+  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -135,12 +150,11 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
 
-  topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
+  topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
+  topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
 
-%  if iQuantile == 8
-%    topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, too lazy to make full 19 years
-%  end
+  topts.tie_sst_lowestlayer = -1
 
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
@@ -164,6 +178,7 @@ for iInd = iInd0 : iIndE
   iChSet = 4; %% new chans + Tonga (high alt) + more LW
   iChSet = 1; %% old chans (default)
   iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019
+  iChSet = 5; %% new chans, + CO2 laser lines (window region, low altitude T)
   topts.iChSet = iChSet;
 
   %% iNorD > 0 ==> night
@@ -232,7 +247,11 @@ for iInd = iInd0 : iIndE
        %% now adjust everything!!!!!
        call_adjustCO2
      end
+     junk  = load('h2645structure.mat');
+     f2645 = junk.h.vchan;
+
      figure(3); plot(1:2645,driver.rateset.rates,'b',1:2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
+     figure(3); plot(f2645,driver.rateset.rates,'b',f2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
   else
     disp(' ')
     fprintf(1,'%s after all that, already exists \n',driver.outfilename)
@@ -306,8 +325,6 @@ driver
        fprintf(1,'SST   (K)    %5.3f  +- %5.3f \n',driver.oem.finalrates(8),driver.oem.finalsigs(8));
      end
 
-%% error('nyuk debug')
-
      %---------------------------------------------------------------------------
      % Pull interesting variable out for quick look
      if topts.co2lays == 1
@@ -340,7 +357,7 @@ driver
    end
 
    % Plot Results
-%{
+if (driver.iLat-1)*72 + driver.iLon == iDebug
   if topts.iNlays_retrieve >= 97
     plot_retrieval_latbins
   else
@@ -348,7 +365,9 @@ driver
   end
    %disp('Hit return for next latitude'); pause
    pause(0.1)
-%}
+   error('nnyuk iDebug')
+end
+
 
 end % end of latbin loop  
 %---------------------------------------------------------------------------

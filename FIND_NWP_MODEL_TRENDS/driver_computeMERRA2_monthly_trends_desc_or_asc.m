@@ -27,9 +27,10 @@ clear iaFound
 %iaMax = 18*12; %% 18 year
 %iaMax = 19*12; %% 19 year
 
+iNumYears = 12; %% 2002/09 to 2014/08 
 iNumYears = 18; %% 2002/09 to 2020/08 
 iNumYears = 19; %% 2002/09 to 2021/08 
-iNumYears = 12; %% 2002/09 to 2014/08 
+iNumYears = 20; %% 2002/09 to 2022/08 
 iaMax = iNumYears*12;
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
@@ -51,6 +52,10 @@ if sum(iaFound) < length(iaFound)
   find(iaFound == 0)
   error('not enough')
 end
+
+disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_MERRA2/clust_loop_make_monthly_tile_center.m')
+disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_MERRA2/clust_loop_make_monthly_tile_center.m')
+disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_MERRA2/clust_loop_make_monthly_tile_center.m')
 
 disp('reading in monthly MERRA2 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/MERRA2/Tile_Center/ made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_MERRA2/clust_loop_make_monthly_tile_center_asc_or_desc.m')
 for ii = 1 : iaMax
@@ -107,7 +112,16 @@ monitor_memory_whos
 
 comment = 'see computeMERRA2_trends.m';
 comment = 'see driver_computeMERRA2_monthly_trends_desc_or_asc.m';
-if iNumYears == 18
+
+if iNumYears == 12
+  if iDorA > 0
+%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_desc.mat comment all
+    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_desc.mat comment all
+  else
+%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_asc.mat comment all
+    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_asc.mat comment all
+  end
+elseif iNumYears == 18
   if iDorA > 0
     %save -v7.3 MERRA2_atm_data_2002_09_to_2019_08_desc.mat comment all
     save -v7.3 MERRA2_atm_data_2002_09_to_2020_08_desc.mat comment all
@@ -123,29 +137,27 @@ elseif iNumYears == 19
 %    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_asc.mat comment all
     save -v7.3 MERRA2_atm_data_2002_09_to_2021_08_asc.mat comment all
   end
-elseif iNumYears == 12
+elseif iNumYears == 20
   if iDorA > 0
-%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_desc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_desc.mat comment all
+    save -v7.3 MERRA2_atm_data_2002_09_to_2022_08_desc.mat comment all
   else
-%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_asc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_asc.mat comment all
+    save -v7.3 MERRA2_atm_data_2002_09_to_2022_08_asc.mat comment all
   end
 else
   iNumYears
-  error('unknown iNumYears .. accepting 12,18,19')
+  error('unknown iNumYears .. accepting 12,18,19,20')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('MERRA2 mean stemp')
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('MERRA2 mean RHsurf')
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('MERRA2 mean TWSurf')
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('MERRA2 mean RHsurf DO NOT BELIEVE')
+figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('MERRA2 mean TWSurf DO NOT BELIEVE')
 figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(all.mmw,1)); colormap(jet); title('MERRA2 mean mmw')
 
 figure(5); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.stemp); colormap(jet); title('MERRA2 mean stemp')
-figure(6); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('MERRA2 mean RHsurf')
-figure(7); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('MERRA2 mean TWSurf')
+figure(6); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('MERRA2 mean RHsurf DO NOT BELIEVE')
+figure(7); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('MERRA2 mean TWSurf DN NOT BELIEVE')
 figure(8); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('MERRA2 mean mmw')
 
 plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
@@ -177,13 +189,13 @@ dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
 computeERA5_surface_trends
 
 figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('MERRA2 trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MERRA2 trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('MERRA2 trend  TWSurf K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MERRA2 trend  RHsurf pc/yr UGH'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('MERRA2 trend  TWSurf K/yr UGH');  caxis([-0.2 +0.2]); colormap(usa2);
 figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('MERRA2 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
 
 figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('MERRA2 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MERRA2 trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('MERRA2 trend  TWSurf K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MERRA2 trend  RHsurf pc/yr UGH'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('MERRA2 trend  TWSurf K/yr UGH');  caxis([-0.1 +0.1]); colormap(usa2);
 figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('MERRA2 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
 pause(0.1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -201,7 +213,15 @@ trend_rlon = all.rlon;
 trend_rlat64 = rlat; trend_rlon72 = rlon;
 %trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
 
-if iNumYears == 18
+if iNumYears == 12
+  if iDorA > 0
+    %save MERRA2_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
+    save MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat comment trend*
+  else
+    %save MERRA2_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
+    save MERRA2_atm_data_2002_09_to_2014_08_trends_asc.mat comment trend*
+  end
+elseif iNumYears == 18
   if iDorA > 0
     %save MERRA2_atm_data_2002_09_to_2019_08_trends_desc.mat comment trend*
     save MERRA2_atm_data_2002_09_to_2020_08_trends_desc.mat comment trend*
@@ -217,20 +237,25 @@ elseif iNumYears == 19
     %save MERRA2_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
     save MERRA2_atm_data_2002_09_to_2021_08_trends_asc.mat comment trend*
   end
-elseif iNumYears == 12
+elseif iNumYears == 20
   if iDorA > 0
-    %save MERRA2_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat comment trend*
+    save MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat comment trend*
   else
-    %save MERRA2_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2014_08_trends_asc.mat comment trend*
+    save MERRA2_atm_data_2002_09_to_2022_08_trends_asc.mat comment trend*
   end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
+disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
+disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
+
 figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('MERRA2 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MERRA2 trend  RHsurf pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('MERRA2 trend  RHsurf DO NOT BELIEVE pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+addpath /asl/matlib/maps/
+aslmap(1,rlat65,rlon73,smoothn((reshape(trend_stemp,72,64)') ,1), [-90 +90],[-180 +180]); title('MERRA2 dST/dt');      caxis([-1 +1]*0.15); colormap(llsmap5)
+aslmap(2,rlat65,rlon73,smoothn((reshape(trend_RHSurf,72,64)') ,1), [-90 +90],[-180 +180]); title('MERRA2 UGH dRHSurf/dt'); caxis([-1 +1]*0.25); colormap(llsmap5)
 
 figure(3); junk = reshape(trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 trend ptemp K/yr');  caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar

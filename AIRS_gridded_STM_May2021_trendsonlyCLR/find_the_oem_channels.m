@@ -4,6 +4,7 @@ function ch = find_the_oem_channels(f,lenrates,settings_numchan,settings_chan_LW
 %iChSet = 2; %% after August 20, 2019, uses CFC11/CFC12 chans
 %iChSet = 3; %% after August 20, 2019, does not use CFC11 chans  STROW PRISTINE SET AMT 2019
 %iChSet = 4; %% new set + Tonga (high alt)
+%iChSet = 5; %% new chans + laserlines
 
 if nargin == 4
   iChSet = 1;
@@ -33,6 +34,8 @@ if iNum == 2378
 else
   ch = choose_goodchans_from_2645(settings_chan_LW_SW); %% New 2645 chans
 end
+
+fprintf(1,'length(chset) before special case = %4i \n',length(ch))
 
 if settings_chan_LW_SW ~= -2
   %% we need to check/add in a few LW channels
@@ -89,10 +92,10 @@ if settings_chan_LW_SW ~= -2
     ch = [ch; addCFC11_weakWV'];
     ch = setdiff(ch,rmBadChan);
   
-  elseif iChSet == 3 | iChSet == 4
+  elseif iChSet == 3 | iChSet == 4 | iChSet == 5
     %% after August 21, 2019
     %% see Channel_changes_for_anomaly_fits.txt
-    disp('find_the_oem_channels.m iChSet == 3 (new chans w/o CFC)')
+    disp('find_the_oem_channels.m iChSet == 3/4/5 (new chans w/o CFC)')
   
     iless700 = find(f(ch) < 700);
       iless700 = iless700(1:5:length(iless700));
@@ -119,14 +122,21 @@ if settings_chan_LW_SW ~= -2
       disp('loading in Tonga high alt chans')
       ch = union(ch,iaTongaChans);
 
-      imore730 = find(f(ch) >= 810 & f(ch) <= 960);
+      imore730 = find(f >= 810 & f <= 960);
       imore730 = imore730(1:5:length(imore730));
+      ch = union(ch,imore730); 
+    end
+
+    if iChSet == 5
+      disp('add in CO2 laser lines')
+      imore730 = find(f >= 940 & f <= 980);
+      imore730 = imore730(1:2:length(imore730));
       ch = union(ch,imore730); 
     end
 
   else
     iChSet
-    error('iChSet = 1,2,3 only')
+    error('iChSet = 1,2,3,4,5 only')
   end
 end
 fprintf(1,'number of chans being used after iChSet cases = %4i \n',length(ch))

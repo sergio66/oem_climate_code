@@ -33,7 +33,7 @@ if settings.dataset == -2
   disp('AIRS 16 year rates or anomalies, NO nu cal done')
   error('oops not done')
 
-elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 8
+elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 9
   disp('AIRS 07 or 18 or 19 year rates or anomalies, nu cal done in there')
   if settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 1    
     disp('doing Strow 18 yr gridded quantile rates')
@@ -179,6 +179,23 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 8
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
+
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 9
+    disp('doing Sergio FULL 20 year gridded quantile rates 2002/09-2022/08 , NEW WAY of doing quantile iQAX = 3')
+    driver.rateset.datafile  = [];
+    if settings.ocb_set == 0  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = ['iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == +1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'convert_strowrates2oemrates_allskygrid_obsNcalcsAHAH.mat';           
+      driver.rateset.datafile  = 'AHAH';
+      strlatbin                = num2str(floor((driver.iibin-1)/72)+1,'%02d');
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                 %% co2/n2o/ch4 change in time
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
+      driver.rateset.datafile  = 'AHAH';
+    elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'AHAH';
+    end
+
 
   elseif settings.descORasc == -1 & driver.i16daytimestep < 0
     disp('doing ascending latbin rates')
@@ -498,6 +515,7 @@ lenrates = length(driver.rateset.rates);
 iChSet = 2; %% new chans
 iChSet = 1; %% old chans (default)
 iChSet = 4; %% new chans + Tonga (high alt)
+iChSet = 5; %% new chans + laserlines
 iChSet = 3; %% new chans, but no CFC11
 iChSet = topts.iChSet;
 
@@ -878,6 +896,25 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
     xb(5) = 0.0; %% clouds, so dunno value
 
     %xb(1:5) = xb(1:5)*10;
+    %[hhh,~,ppp,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp');
+    [hhh,~,ppp,~] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp');
+    JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
+    if ppp.landfrac(JOBJOBJOB) < eps
+      %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
+      dBT1231 = 0.0025/2;
+      dBT1231 = driver.rateset.rates(1520); dBT1231 = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0
+    else
+      %% land, so whos know
+      dBT1231 = 0.0;
+    end
+    fprintf(1,'dBT1231 = %8.6f --> %8.6f \n',driver.rateset.rates(1520),dBT1231);
+    xb(6+length(driver.jacobian.water_i)-0) = dBT1231;
+    xb(6+length(driver.jacobian.water_i)-1) = dBT1231;
+%    xb(6+length(driver.jacobian.water_i)-2) = dBT1231;
+%    xb(6+length(driver.jacobian.water_i)-3) = dBT1231;
+%    xb(6+length(driver.jacobian.water_i)-4) = dBT1231;
+%    xb(6+length(driver.jacobian.water_i)-5) = dBT1231;
+%    xb(6+length(driver.jacobian.water_i)-6) = dBT1231;
 
   elseif settings.co2lays == 3
     xb(1) = co2x * 1;        % Set CO2 apriori lower trop
@@ -888,6 +925,8 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
     xb(5) = ch4x * 1;        % set CH4
     xb(6) = 0.0; %% clouds, so dunno value
     xb(7) = 0.0; %% clouds, so dunno value
+
+    xb(8+length(driver.jacobian.water_i)) = 0.01;
 
   end
 
@@ -905,7 +944,7 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_se
     xb(3) = ch4x * (driver.i16daytimestep-1)/deltaT * 1.0;    % set CH4
     xb(4) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC11, before Aug 23 the mult was 1
     xb(5) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;    % set CFC12, before Aug 23 the mult was 1
-
+   
   elseif settings.co2lays == 3
     deltaT = 365/16; %% days per timestep
 

@@ -56,6 +56,6 @@ ylim([10 1000])
 
 junkP = squeeze(Tlevs); junkP = squeeze(junkP(1:58,90,140));
 figure(5); clf; pcolor(thestats.lats,junkP/100,thestats.RHrate'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse');  set(gca,'yscale','log'); colorbar
-title('CESM3 dRH/dt 1/yr')
+title('CESM3 dRH/dt percent/yr')
 caxis([-1 +1]*0.15)
 ylim([100 1000])

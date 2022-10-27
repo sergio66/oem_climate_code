@@ -64,7 +64,7 @@ if length(iOCBset) == 0
   iOCBset = 0;
 end
 
-dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n    :::  [4 = Default] : ');
+dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9) Sergio 2002/09-2022/08 20 YEARS new quants iQAX=3 \n    :::  [4 = Default] : ');
 if length(dataset) == 0
   dataset = 4;
 end
@@ -85,6 +85,8 @@ elseif dataset == 7
   iNumYears = 20;
 elseif dataset == 8
   iNumYears = 07;
+elseif dataset == 9
+  iNumYears = 20;
 end
 
 if dataset == -3
@@ -142,6 +144,10 @@ if iOCBset == 0
   elseif dataset == 8
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_8_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    end
+  elseif dataset == 9
+    if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
+      data_trends = load(['iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     end
   else
     dataset
@@ -432,7 +438,7 @@ Xlon = X(:);
 % save landfrac_mask4608.mat landfrac Ylat Xlon rlat65 rlon73 rlon rlat
 
 junk = load('h2645structure.mat');
-f           = junk.h.vchan;
+f    = junk.h.vchan;
 
 i1419 = find(f >= 1419,1);
 i1231 = find(f >= 1231,1);
@@ -453,7 +459,7 @@ if dataset == 8
   oco2 = load('oco2_timeseries.mat');
   aslmap(35,rlat65,rlon73,smoothn(oco2.co2_trend',1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2 from OCO2 2015-2021');  caxis([2.0 3.0])  
     caxis([2.35 2.55])
-  disp('ret to continue'); pause
+  disp('showed the CO2 trends ... ret to continue'); pause
 end
 
 aslmap(5,rlat65,rlon73,smoothn((reshape(rates(i1231,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1231/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)

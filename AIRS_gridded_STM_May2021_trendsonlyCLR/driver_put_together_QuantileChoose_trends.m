@@ -38,16 +38,18 @@ quants =  [0.0100 0.0200 0.0300 0.0400 0.0500 0.1000 0.2500 0.5000 0.7500 0.9000
 b_asc = nan(72,64,2645);
 b_desc = nan(72,64,2645);
 
-iType = +01;   %% strows Q16 18 year trends       Strow ran for me in Feb 2021, 2002/09 to 2020/08
-iType = -01;   %% sergio Q16 18 year TEST trends  I     ran for me in Aug 2021, 2002/09 to 2020/08, to check I get same results as Strow +01
-iType = +02;   %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/07
-iType = +03;   %% sergio Extreme 19 year trends   I     ran for me in Aug 2021, 2002/09 to 2020/08
-iType = -03;   %% sergio Mean 19 year trends      I     ran for me in Aug 2021, 2002/09 to 2020/08
-iType = +04;   %% sergio Q16 19 year trends       I     ran for me in Aug 2021, 2002/09 to 2021/08 FULL
-iType = +05;   %% sergio Q16 12 year trends       I     ran for me in Aug 2022, 2002/09 to 2014/08 FULL
-iType = +06;   %% sergio Q16 07 year trends       I     ran for me in Aug 2022, 2012/05 to 2019/04 FULL, same as Suomi NPP NSR
-iType = +07;   %% sergio Q16 20 year trends       I     ran for me in Sep 2022, 2002/09 to 2021/08 FULL, 20 years
-iType = +08;   %% sergio Q16 06 year trends       I     ran for me in Sep 2022, 2015/01 to 2021/12 FULL, 06 years, OCO
+iType = +01;   %% strows Q16 18 year trends         Strow ran for me in Feb 2021, 2002/09 to 2020/08
+iType = -01;   %% sergio Q16 18 year TEST trends    I     ran for me in Aug 2021, 2002/09 to 2020/08, to check I get same results as Strow +01
+iType = +02;   %% sergio Q16 19 year trends         I     ran for me in Aug 2021, 2002/09 to 2021/07
+iType = +03;   %% sergio Extreme 19 year trends     I     ran for me in Aug 2021, 2002/09 to 2020/08
+iType = -03;   %% sergio Mean 19 year trends        I     ran for me in Aug 2021, 2002/09 to 2020/08
+iType = +04;   %% sergio Q16 19 year trends         I     ran for me in Aug 2021, 2002/09 to 2021/08 FULL
+iType = +05;   %% sergio Q16 12 year trends         I     ran for me in Aug 2022, 2002/09 to 2014/08 FULL
+iType = +06;   %% sergio Q16 07 year trends         I     ran for me in Aug 2022, 2012/05 to 2019/04 FULL, same as Suomi NPP NSR
+iType = +07;   %% sergio Q16 20 year trends         I     ran for me in Sep 2022, 2002/09 to 2022/08 FULL, 20 years
+iType = +08;   %% sergio Q16 06 year trends         I     ran for me in Sep 2022, 2015/01 to 2021/12 FULL, 06 years, OCO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+iType = +09;   %% sergio iQAX_3 Q05 20 year trends  I     ran for me in Oct 2022, 2002/09 to 2022/08 FULL, 20 years, with newer defn o quantiles
 
 disp('Choices DataSet to use ')
 disp('                       (+1) Strow  Quantile Mar 2021 2002/09 to 2020/08 Full 18 years');
@@ -62,7 +64,9 @@ disp('                        (5) Sergio Quantile Aug 2022 2002/09 to 2014/08 Fu
 disp('                        (6) Sergio Quantile Sep 2022 2012/05 to 2019/04 Suomi NPP years **** ');
 disp('                        (7) Sergio Quantile Sep 2022 2002/09 to 2022/08 Full 20 years **** ');
 disp('                        (8) Sergio Quantile Sep 2022 2015/01 to 2021/12 Full 06 OCO2 years **** ');
-iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8   or +3,-3) : ');
+disp(' <---------------------------------------------------------------------------------------> ')
+disp('                        (9) Sergio Quantile Sep 2022 2002/09 to 2022/08 Full 20 years, new quantile defn **** ');
+iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9   or +3,-3) : ');
 
 if iType ~= 3
   iQuantile = 16;  %% hottest, used for AIRS STM May 221
@@ -89,6 +93,9 @@ elseif iType == 7
   fnamePROCESS = ['iType_7_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
 elseif iType == 8
   fnamePROCESS = ['iType_8_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+%%%%
+elseif iType == 9
+  fnamePROCESS = ['iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
 %%%%
 elseif iType == 3
   fnamePROCESS = ['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat'];
@@ -133,7 +140,7 @@ for iLat = 1 : 64
     % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0 = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
-  elseif iType == 6 | iType == 7 | iType == 8
+  elseif iType == 6 | iType == 7 | iType == 8 | iType == 9
     % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0    = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
@@ -177,6 +184,10 @@ for iLat = 1 : 64
       %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/fits_LonBin*_LatBin*_V1_201500010001_202100120031_TimeStepsX160.mat
       thefilein   = [thedir0 '/LonBin' num2str(iLon,'%02d') '/fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_201500010001_202100120031_TimeStepsX160.mat'];
       thefileERA5 = [thedirERA5 '/reconstruct_era5_const_tracegas_spectra_geo_rlat' num2str(iLat,'%02d') '_2014_09_2021_08.mat'];
+    elseif iType == 9
+      %% full AIRS 20 year
+      %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_3_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps457.mat'];
     end
 
     iBoo = (iLat-1)*72 + iLon;

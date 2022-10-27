@@ -105,9 +105,13 @@ elseif driver.i16daytimestep < 0
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% 19 year rates, init try 2002/09-2014/08
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, * used this for Princeton iQuant=50 **
 
-  cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, 
-  if topts.iChSet == 4
+  %cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6
+  %cov_set = [1.0  0.05*1/3      0.05*1/3        1/3       0.02/5/3            0.02/5/3            1/3      0.02/5/3          0.02/5/3              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
+  %cov_set = [1.0  0.05*1/2      0.05*1/2        1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
+
+  if (topts.iChSet == 4 | topts.iChSet == 5) & topts.dataset >= 8
     cov_set(11:13) = cov_set(11:13) *1e2;
+    %cov_set(11:13) = cov_set(11:13) *1e4;
   end
  
 %  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-1     20*1E-1  20*1E-1];  %% new try 2002/09-2014/08, lousy std dev in window regions
@@ -260,6 +264,9 @@ if settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep < 
   %fmatd(1:3) = fmatd(1:3)*1e-2;    %% gives small spectral bias, TESTING SEPT 2021, works prety well except in tropics where CO2 becomes 1.9 ppm/yr
   fmatd(1:3) = fmatd(1:3)*1e-3;     %% so add in another factor of 10 on Oct 22, 2021
 
+   %fmatd(6) = 0.001   %%% oct 2022 UGH at the window region
+   %fmatd(6) = 1.0     %%% oct 2022 
+
 elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimestep < 0
   fmatd(1:5) = fmatd(1:5)*0.0000001;   %% have put in xb(1:3) so we should not change those values .. recall 1,2,3 = CO2/N2O/CH4 and 4/5 are cld1,cld2
   fmatd(1:5) = fmatd(1:5)*1e-3;    %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates  ******
@@ -267,7 +274,7 @@ end
 
 %% NEW Aug 16, 2020
 %if driver.i16daytimestep < 0
-%  fmatd = 1*[2     0.1       2      1     1            0.1];       %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
+%  fmatd = 1*[2   0  0.1       2      1     1            0.1];       %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
 %end
 
 %{

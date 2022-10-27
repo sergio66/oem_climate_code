@@ -64,13 +64,13 @@ addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 load llsmap5
 figure(1); pcolor(save_lat64x72,Tlevs/100,squeeze(nanmean(thestats64x72.ptemprate,1))'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-  title('AIRS L3 dT/dt K/yr');
-figure(2); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.waterrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-  title('AIRS L3 d(WV)/<WV>/dt /yr');
-figure(3); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.RHrate*100,1))'); shading interp; colorbar; caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-  title('AIRS L3 d(RH)/dt /yr');
+  title('CESM2.X dT/dt K/yr');
+figure(2); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.waterrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','linear')
+  title('CESM2.X d(WV)/<WV>/dt /yr');
+figure(3); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.RHrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','linear')
+  title('CESM2.X d(RH)/dt /yr');
 
-figure(1); ylim([10 1000]);
+figure(1); ylim([1 1000]);
 figure(2); ylim([100 1000]);
 figure(3); ylim([100 1000]);
 
@@ -83,16 +83,18 @@ rlat65 = latB2; rlon73 = -180 : 5 : +180;
 %rlon = -180 : 5 : +180;  rlat = latB2;
 %rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
 %rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-figure(4); aslmap(4,rlat65,rlon73,smoothn(thestats64x72.stemprate',1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt AIRS L3 K/yr'); colormap(llsmap5);
-  title('AIRS L3 d(stemp)/dt /yr');
+figure(4); aslmap(4,rlat65,rlon73,smoothn(thestats64x72.stemprate',1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt CESM3 K/yr'); colormap(llsmap5);
+  title('CESM2.X d(stemp)/dt /yr');
 caxis([-1 +1]*0.15)
 
-figure(4); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(save64x72_Q,[2 4]))'); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-figure(4); pcolor(save_lat64x72,Qlevs,log10(squeeze(nanmean(save64x72_Q,[2 4]))')); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+figure(5); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(save64x72_Q,[2 4]))'); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); title('CESM2.X <Q>')
+%figure(5); pcolor(save_lat64x72,Qlevs,log10(squeeze(nanmean(save64x72_Q,[2 4]))')); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
 
 comment = 'see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compute_cesm3_trends.m';
 saver = ['save /asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+saver = ['save /asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72                     Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
 eval(saver)
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 do_the_plots_64x72

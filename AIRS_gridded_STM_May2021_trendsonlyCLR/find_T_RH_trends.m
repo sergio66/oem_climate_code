@@ -204,15 +204,17 @@ figure(27); clf; simplemap(Y(:),X(:),deltaRH(i600,:)'.*maskLF',5); colorbar; tit
 for ii = 25 : 27; figure(ii); caxis([-1 +1]); colormap(llsmap5); plotaxis2; end
 for ii = 25 : 27; figure(ii); caxis([-0.25 +0.25]); colormap(llsmap5); plotaxis2; end
 
+addpath /home/sergio/MATLABCODE/COLORMAP/COLORBREWER/cbrewer/cbrewer
+ct = cbrewer('div','BrBG',8); colormap(ct);
+ct = cbrewer('div','BrBG',63,'spline');ct(ct < 0) = 0; ct(ct > 1) = 1;  
+
 iUT = find(pavgLAY(1:97,3000) >= 200 & pavgLAY(1:97,3000) <= 500);
 % Trends in Upper-Tropospheric Humidity: Expansion of the Subtropical Dry Zones? DOI: 10.1175/JCLI-D-19-0046.1
 % MIRIAM TIVIG AND VERENA GRUTZUN. J. Clim 2020
 boo = nanmean(deltaRH(iUT,:));
 figure(27); aslmap(27,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(boo,72,64)',1), [-90 +90],[-180 +180]);
 caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt UMBC RH(UT 200-500 mb) %/decade'); 
-addpath /home/sergio/MATLABCODE/COLORMAP/COLORBREWER/cbrewer/cbrewer
-ct = cbrewer('div','BrBG',8); colormap(ct);
-ct = cbrewer('div','BrBG',63,'spline');ct(ct < 0) = 0; ct(ct > 1) = 1;  colormap(ct);
+colormap(ct);
 
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_rh_ut_500_200mb_global_trends.pdf');
 
@@ -292,7 +294,6 @@ dataMap = maskLFmatr.*smoothn(reshape(deltaT(i500,:),72,64)',1);
 save umbc_T_zonal_trends.mat rlat p97 data dataMap rlat65 rlon73
 %}
 
-
 figure(8); figure(28); figure(29); figure(30); 
 aslmap(6,rlat65,rlon73,smoothn((reshape(maskLF.*results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 aslmap(31,rlat65,rlon73,smoothn((reshape(maskLF.*mmwPert - maskLF.*mmw0,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
@@ -306,6 +307,53 @@ aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]
 %aslmap(34,rlat65,rlon73,smoothn((reshape(abs(boo),72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dST');     caxis([-1 +1]*10); colormap(llsmap5)
 
 figure(35); clf; junk = reshape(maskLF.*results(:,6)',72,64)'; plot(rlat,smooth(nanmean(junk,2),3)); title('dST/dt'); xlabel('Latitude')
+
+figure(30); set(gca,'yscale','linear'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
+figure(28); set(gca,'yscale','linear'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
+figure(29); set(gca,'yscale','log'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+iUT = find(pavgLAY(1:97,3000) >= 200 & pavgLAY(1:97,3000) <= 500);
+iMT = find(pavgLAY(1:97,3000) >= 500 & pavgLAY(1:97,3000) <= 800);
+iLT = find(pavgLAY(1:97,3000) >= 800 & pavgLAY(1:97,3000) <= 1100);
+iLT = find(pavgLAY(1:97,3000) >= 900 & pavgLAY(1:97,3000) <= 1000);
+
+boo = nanmean(deltaRH(iUT,:));
+figure(36); clf; aslmap(36,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(boo,72,64)',1), [-90 +90],[-180 +180]);
+caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt UMBC RH(UT 200-500 mb) %/decade'); 
+colormap(ct);
+
+boo = nanmean(deltaRH(iMT,:));
+figure(37); clf; aslmap(37,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(boo,72,64)',1), [-90 +90],[-180 +180]);
+caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt UMBC RH(MT 500-800 mb) %/decade'); 
+colormap(ct);
+
+boo = nanmean(deltaRH(iLT,:));
+figure(38); clf; aslmap(38,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(boo,72,64)',1), [-90 +90],[-180 +180]);
+caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt UMBC RH(LT 800-1000 mb) %/decade'); 
+colormap(ct);
+
+had = load('../FIND_NWP_MODEL_TRENDS/hadcrut_surfaceTqRH_trends_2002_2021.mat');
+figure(39); pcolor(had.trend.lon,had.trend.lat,had.trend.rh*10); shading interp; wah = load('coast.mat');; hold on; plot(wah.long,wah.lat,'k'); hold off
+figure(39); pcolor_coast(had.trend.lon,had.trend.lat,had.trend.rh*10,-1); shading interp; 
+figure(39); clf; aslmap(39,rlat65,rlon73,10*maskLFmatr.*smoothn_nan(had.trend.rh_72x64',1), [-90 +90],[-180 +180]);
+%figure(39); clf; aslmap(39,rlat65,rlon73,10*maskLFmatr.*had.trend.rh_72x64', [-90 +90],[-180 +180]);
+caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt Hadley RHSurf %/decade'); 
+colormap(ct);
+
+figure(36); colormap(llsmap5)
+figure(37); colormap(llsmap5)
+figure(38); colormap(llsmap5)
+figure(39); colormap(llsmap5)
+
+waba = had.trend.rh_72x64(:); waba = (isfinite(waba)); waba = reshape(waba,72,64);
+figure(40); plot(nanmean(had.trend.rh*10,1),had.trend.latitude,nanmean(reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
+figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
+figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(waba.*reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
+  hl = legend('Hadley','UMBC','location','best'); ylabel('Latitude'); xlabel('dRH/dt percent/decade'); axis([-2 +2 -90 +90]); 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('if you hit Ctrl C and look at find_T_RH_trends.m, you can save these plots ....')
 disp('ret to continue'); pause

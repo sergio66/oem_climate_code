@@ -47,11 +47,11 @@ if iDo > 0
   
   disp(' ')
   disp('turning CESM data from gridded Lat/Lon bins to Lat bins');
-  plot_L3_data_native               %% copied from /home/sergio/MATLABCODE/AIRS_L3/plot_L3_data.m; need to modify this so I save it and can reuse it for eg shorter time spans!!!!
+  plot_cesm3_data_native               %% copied from /home/sergio/MATLABCODE/AIRS_L3/plot_L3_data.m; need to modify this so I save it and can reuse it for eg shorter time spans!!!!
   
   disp(' ')
   disp('doing the geophysical rates (do_profilerate_fit includes lag1) and anoms')
-  do_the_fits_airsL3_ratesv7_native %% copied from /home/sergio/MATLABCODE/AIRS_L3/do_the_fits_airsL3_ratesv7
+  do_the_fits_cesm3_ratesv7_native %% copied from /home/sergio/MATLABCODE/AIRS_L3/do_the_fits_airsL3_ratesv7
   
   %disp(' ')
   %disp('doing the radiances, including lag1')
@@ -99,7 +99,7 @@ if iDo > 0
   woo = find(read_this_file > 0);  %% typically 1 -- 12*timespan
   
   disp('TILE RESULTS')
-  clear latbins* save_lat*
+  clear latbins* save_lat* save64x72_save64x72_*
   load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
   
   drlon = 5; 
@@ -109,7 +109,9 @@ if iDo > 0
   save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
   
   disp(' ')
-  disp('turning AIRS L3 data from gridded Lat/Lon bins to Tiles bins VERY VERY SLOOOOOOOOWWWWWWWWW');
+  error('turning AIRS L3 data from gridded Lat/Lon bins to Tiles bins VERY VERY SLOOOOOOOOWWWWWWWWW');
+  %% here can eg load /asl/s1/sergio/CESM3//cesm_64x72_rates_Sept2002_Aug2021_19yr_stage2.mat
+  %%             then keep testing for presence of eg save64x72_stemp,save64x72_stempRH ...
   plot_cesm3_data_tiles
   
   disp(' ')

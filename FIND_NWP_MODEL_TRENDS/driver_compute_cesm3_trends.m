@@ -110,14 +110,15 @@ if iSkipTo_64x72_trend == +1
     iDorA = +1;
   end
   iL3orCLIMCAPS = +1;
-  savestr_version_big = 'Sept2002_Aug2021_19yr_';
-  if iDorA > 0
-    loader = ['load /asl/s1/sergio/CESM3/cesm3_v7_64x72_rates_' savestr_version_big 'desc.mat'];
-  else
-    loader = ['load /asl/s1/sergio/CESM3/cesm3_v7_64x72_rates_' savestr_version_big 'asc.mat'];
-  end
+
+  %savestr_version_big = 'Sept2002_Aug2021_19yr';
+  %loader = ['load /asl/s1/sergio/CESM3/cesm3_' savestr_version_big '.mat'];
+
+  savestr_version_big = 'Sept2002_Aug2021_19yr';
+  loader = ['load /asl/s1/sergio/CESM3/cesm_64x72_rates_' savestr_version_big '.mat'];
+
   eval(loader)
-  do_the_fits_cesmL3_ratesv7_tiles
+  do_the_fits_cesmL3_rates_tiles  %% which is part of do_the_CESM3_trends.m, but assumes you have successfully run "plot_cesm3_data_tiles" to completion
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -197,7 +198,8 @@ else
 
   disp('loading in data A')
   %% should be same as /cesmv7_March2014.mat
-  loader = ['load /asl/s1/sergio/CESM/cesmv7_' savestr_version '.mat'];
+
+  loader = ['load /asl/s1/sergio/CESM3/cesm3_' savestr_version '.mat'];
   eval(loader);
 
 end

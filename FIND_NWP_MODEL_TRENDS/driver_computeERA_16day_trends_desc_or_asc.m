@@ -35,6 +35,10 @@ end
 [sum(iaFound) length(iaFound)]
 plot(1:iaMax,iaFound,'+-')
 
+disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
+disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
+disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
+
 for ii = 1 : iaMax
   clear a
   if iDorA > 0

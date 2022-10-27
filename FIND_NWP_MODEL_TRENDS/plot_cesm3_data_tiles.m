@@ -52,8 +52,10 @@ save64x72_stempJUNK = [];
 save_lat64x72 = 0.5*(rlat(1:end-1)+rlat(2:end));
 save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
 
-Tlevs = nanmean(cesm_plev,1);
+Tlevs = nanmean(cesm_plev,11);
 Qlevs = nanmean(cesm_plev,1);
+Tlevs = nanmean(squeeze(cesm_plev(:,:,96,144)),1);
+Qlevs = nanmean(squeeze(cesm_plev(:,:,96,144)),1);
 
 saver = ['save /asl/s1/sergio/CESM3/cesm_64x72_rates_' savestr_version '.mat save64x72_olr save64x72_clrolr save64x72_O3 save64x72_CH4 save64x72_CO save64x72_Q save64x72_T save64x72_stemp days Tlevs Qlevs'];
 saver = ['save /asl/s1/sergio/CESM3/cesm_64x72_rates_' savestr_version '.mat save64x72_* days Tlevs Qlevs save_l*64*72'];
@@ -73,137 +75,166 @@ drlon = 5;
 rlon = -180 : drlon : +180;      %% 73 edges, so 72 bins
 rlat = latB2;                    %% 65 edges, so 64 bins
 
-disp('doing ST')
-for jj = 1 : length(rlat)-1
-  for ii = 1 : length(rlon)-1
-    find_set_L3_data_tiles_ii_jj
-    for tt = 1 : tmax
-      zz = cesm_stemp(tt,:,:);
-      xx = zz(ix); xx = xx(:);
-      good = find(xx > 0);
-      save64x72_stemp(jj,ii,tt) = nanmean(xx(good));
-      if iDebug
-        figure(3)
-        simplemap(Lat(ix(good)),Lon(ix(good)),zz(ix(good)));
-        caxis([220 310]); colorbar
-        title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+if ~exist('save64x72_stemp')
+  disp('doing ST')
+  for jj = 1 : length(rlat)-1
+    for ii = 1 : length(rlon)-1
+      find_set_L3_data_tiles_ii_jj
+      for tt = 1 : tmax
+        zz = cesm_stemp(tt,:,:);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save64x72_stemp(jj,ii,tt) = nanmean(xx(good));
+        if iDebug
+          figure(3)
+          simplemap(Lat(ix(good)),Lon(ix(good)),zz(ix(good)));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+        end
       end
     end
   end
+else
+  disp('save64x72_stemp already exists, skipping ....')
 end
+
 figure(1); pcolor(mean(double(save64x72_stemp),3)); colorbar; colormap(jet); shading interp; pause(1)
 eval(saver)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-boo = cesm_RH;
-donk = size(boo);
-save64x72_RH = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
-for jj = 1 : length(rlat)-1
-  fprintf(1,'RH latbin = %3i \n',jj);
-  for ii = 1 : length(rlon)-1
-    find_set_L3_data_tiles_ii_jj
-    for ll = 1 : donk(2)
-      for tt = 1 : tmax
-        zz = boo(tt,ll,:,:);
-        xx = zz(ix); xx = xx(:);
-        good = find(xx > 0);
-        save64x72_RH(jj,ii,ll,tt) = nanmean(xx(good));
-        if iDebug
-          figure(3)
-          simplemap(Lat(ix),Lon(ix),zz(ix));
-          caxis([220 310]); colorbar
-          title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+if ~exist('save64x72_RH')
+  boo = cesm_rh;
+  donk = size(boo);
+  save64x72_RH = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
+  for jj = 1 : length(rlat)-1
+    fprintf(1,'RH latbin = %3i \n',jj);
+    for ii = 1 : length(rlon)-1
+      find_set_L3_data_tiles_ii_jj
+      for ll = 1 : donk(2)
+        for tt = 1 : tmax
+          zz = boo(tt,ll,:,:);
+          xx = zz(ix); xx = xx(:);
+          good = find(xx > 0);
+          save64x72_RH(jj,ii,ll,tt) = nanmean(xx(good));
+          if iDebug
+            figure(3)
+            simplemap(Lat(ix),Lon(ix),zz(ix));
+            caxis([220 310]); colorbar
+            title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+          end
         end
       end
     end
   end
+else
+  disp('save64x72_RH already exists, skipping ....')
 end
+
 figure(2); pcolor(double(squeeze(mean(save64x72_RH(:,:,5,:),4)))); colorbar; colormap(jet); shading interp; pause(1)
 eval(saver)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-boo = cesm_gas_1;
-donk = size(boo);
-save64x72_Q = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
-for jj = 1 : length(rlat)-1
-  fprintf(1,'WV latbin = %3i \n',jj);
-  for ii = 1 : length(rlon)-1
-    find_set_L3_data_tiles_ii_jj
-    for ll = 1 : donk(2)
-      for tt = 1 : tmax
-        zz = boo(tt,ll,:,:);
-        xx = zz(ix); xx = xx(:);
-        good = find(xx > 0);
-        save64x72_Q(jj,ii,ll,tt) = nanmean(xx(good));
-        if iDebug
-          figure(3)
-          simplemap(Lat(ix),Lon(ix),zz(ix));
-          caxis([220 310]); colorbar
-          title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+
+if ~exist('save64x72_Q')
+  boo = cesm_gas_1;
+  donk = size(boo);
+  save64x72_Q = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
+  for jj = 1 : length(rlat)-1
+    fprintf(1,'WV latbin = %3i \n',jj);
+    for ii = 1 : length(rlon)-1
+      find_set_L3_data_tiles_ii_jj
+      for ll = 1 : donk(2)
+        for tt = 1 : tmax
+          zz = boo(tt,ll,:,:);
+          xx = zz(ix); xx = xx(:);
+          good = find(xx > 0);
+          save64x72_Q(jj,ii,ll,tt) = nanmean(xx(good));
+          if iDebug
+            figure(3)
+            simplemap(Lat(ix),Lon(ix),zz(ix));
+            caxis([220 310]); colorbar
+            title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+          end
         end
       end
     end
   end
+else
+  disp('save64x72_Q already exists, skipping ....')
 end
+
 figure(2); pcolor(double(squeeze(mean(save64x72_Q(:,:,5,:),4)))); colorbar; colormap(jet); shading interp; pause(1)
 eval(saver)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-boo = cesm_ptemp;
-donk = size(boo);
-save64x72_T = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
-for jj = 1 : length(rlat)-1
-  fprintf(1,'T latbin = %3i \n',jj);
-  for ii = 1 : length(rlon)-1
-    find_set_L3_data_tiles_ii_jj
-    for ll = 1 : donk(2)
-      for tt = 1 : tmax
-        zz = boo(tt,ll,:,:); zz = squeeze(zz);
-        xx = zz(ix); xx = xx(:);
-        good = find(xx > 0);
-        save64x72_T(jj,ii,ll,tt) = nanmean(xx(good));
-        if iDebug
-          figure(3)
-          simplemap(Lat(ix),Lon(ix),zz(ix));
-          caxis([220 310]); colorbar
-          title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+if ~exist('save64x72_T')
+  boo = cesm_ptemp;
+  donk = size(boo);
+  save64x72_T = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
+  for jj = 1 : length(rlat)-1
+    fprintf(1,'T latbin = %3i \n',jj);
+    for ii = 1 : length(rlon)-1
+      find_set_L3_data_tiles_ii_jj
+      for ll = 1 : donk(2)
+        for tt = 1 : tmax
+          zz = boo(tt,ll,:,:); zz = squeeze(zz);
+          xx = zz(ix); xx = xx(:);
+          good = find(xx > 0);
+          save64x72_T(jj,ii,ll,tt) = nanmean(xx(good));
+          if iDebug
+            figure(3)
+            simplemap(Lat(ix),Lon(ix),zz(ix));
+            caxis([220 310]); colorbar
+            title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+          end
         end
       end
     end
   end
+else
+  disp('save64x72_T already exists, skipping ....')
 end
+
 figure(3); pcolor(double(squeeze(mean(save64x72_T(:,:,5,:),4)))); colorbar; colormap(jet); shading interp; pause(1)
 eval(saver)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-boo = cesm_gas_3;
-donk = size(boo);
-save64x72_O3 = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
-for jj = 1 : length(rlat)-1
-  fprintf(1,'O3 latbin = %3i \n',jj);
-  for ii = 1 : length(rlon)-1
-    ix = find(Lat >= rlat(jj) & Lat < rlat(jj+1) & Lon >= rlon(ii) & Lon < rlon(ii+1) & landfrac < 0.001);
-    ix = find(Lat >= rlat(jj) & Lat < rlat(jj+1) & Lon >= rlon(ii) & Lon < rlon(ii+1));
-    for ll = 1 : donk(2)
-      for tt = 1 : tmax
-        zz = boo(tt,ll,:,:); zz = squeeze(zz);
-        xx = zz(ix); xx = xx(:);
-        good = find(xx > 0);
-        save64x72_O3(jj,ii,ll,tt) = nanmean(xx(good));
-        if iDebug
-          figure(3)
-          simplemap(Lat(ix),Lon(ix),zz(ix));
-          caxis([220 310]); colorbar
-          title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+
+if ~exist('save64x72_O3')
+  boo = cesm_gas_3;
+  donk = size(boo);
+  save64x72_O3 = zeros(length(rlat)-1,length(rlon)-1,donk(2),tmax);
+  for jj = 1 : length(rlat)-1
+    fprintf(1,'O3 latbin = %3i \n',jj);
+    for ii = 1 : length(rlon)-1
+      ix = find(Lat >= rlat(jj) & Lat < rlat(jj+1) & Lon >= rlon(ii) & Lon < rlon(ii+1) & landfrac < 0.001);
+      ix = find(Lat >= rlat(jj) & Lat < rlat(jj+1) & Lon >= rlon(ii) & Lon < rlon(ii+1));
+      for ll = 1 : donk(2)
+        for tt = 1 : tmax
+          zz = boo(tt,ll,:,:); zz = squeeze(zz);
+          xx = zz(ix); xx = xx(:);
+          good = find(xx > 0);
+          save64x72_O3(jj,ii,ll,tt) = nanmean(xx(good));
+          if iDebug
+            figure(3)
+            simplemap(Lat(ix),Lon(ix),zz(ix));
+            caxis([220 310]); colorbar
+            title(num2str(latbins(ii))); colorbar; colormap(jet); shading interp; pause(1);
+          end
         end
       end
     end
   end
+else
+  disp('save64x72_O3 already exists, skipping ....')
 end
+
 figure(4); pcolor(double(squeeze(mean(save64x72_O3(:,:,5,:),4)))); colorbar; colormap(jet); shading interp; pause(1)
 eval(saver)
+
+return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
