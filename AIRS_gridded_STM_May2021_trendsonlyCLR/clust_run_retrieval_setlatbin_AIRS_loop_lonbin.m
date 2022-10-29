@@ -153,6 +153,7 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
   topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
+  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
 
   topts.tie_sst_lowestlayer = -1
 
@@ -164,8 +165,8 @@ for iInd = iInd0 : iIndE
     topts.iSergioCO2 = +1; %% fit for CO2/CH4/N2O
   end
 
-  topts.ocb_set = 1; %% try ERA5 synthetic rates
   topts.ocb_set = 0; %% AIRS Obs
+  topts.ocb_set = 1; %% try ERA5 synthetic rates
 
   %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
   %topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori

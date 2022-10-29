@@ -97,17 +97,26 @@ do_the_plots_zonal
 
 figure(1);  pcolor(thestats.lats,1:length(Airs_PQ),thestats.waterrate'); colormap(llsmap5); colorbar; shading interp; title('RH rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.01)
 figure(3);  pcolor(thestats.lats,1:length(Airs_PT),thestats.ptemprate'); colormap(llsmap5); colorbar; shading interp; title('RH rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.15)
-figure(10); pcolor(thestats.lats,1:length(Airs_PQ),100*thestats.RHrate'); colormap(llsmap5); colorbar; shading interp; title('RH rate'); set(gca,'ydir','reverse');  caxis([-1 +1]*0.15)
+figure(10); pcolor(thestats.lats,1:length(Airs_PQ),100*thestats.RHrate'); colormap(llsmap5); colorbar; shading interp; title('RH rate'); set(gca,'ydir','reverse');  caxis([-1 +1]*1)
 
-figure(1);  pcolor(thestats.lats,Airs_PQ/100,thestats.waterrate'); colormap(llsmap5); colorbar; shading interp; title('WV frac rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.01); set(gca,'yscale','log'); ylim([100 1000])
-figure(3);  pcolor(thestats.lats,Airs_PT/100,thestats.ptemprate'); colormap(llsmap5); colorbar; shading interp; title('T rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.15); set(gca,'yscale','log'); ylim([10 1000])
-figure(10); pcolor(thestats.lats,Airs_PQ/100,100*thestats.RHrate'); colormap(llsmap5); colorbar; shading interp; title('RH rate'); set(gca,'ydir','reverse');  caxis([-1 +1]*0.15); set(gca,'yscale','log'); ylim([100 1000])
-figure(2); pcolor(quickSTrate); shading interp; colorbar; caxis([-1 +1]*0.15); title('Surf Temp Rate'); colormap(usa2);
-addpath /umbc/xfs2/strow/asl/matlib/maps/aslmap.m
-addpath /home/sergio/MATLABCODE/COLORMAP/LLSMAPS
-load llsmap5
-figure(2); aslmap(2,-90:1:+90,-180:1:+180,quickSTrate,[-90 +90],[-180 +180]);  colormap(llsmap5); caxis([-0.15 +0.15]);
-title('stemp rates')
+if iL3orCLIMCAPS == -1
+  figure(1);  pcolor(thestats.lats,Airs_PQ/100,thestats.waterrate'); colormap(llsmap5); colorbar; shading interp; title('WV frac rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.015); set(gca,'yscale','log'); ylim([100 1000])
+  figure(3);  pcolor(thestats.lats,Airs_PT/100,thestats.ptemprate'); colormap(llsmap5); colorbar; shading interp; title('T rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.15); set(gca,'yscale','log'); ylim([10 1000])
+  figure(10); pcolor(thestats.lats,Airs_PQ/100,100*thestats.RHrate'); colormap(llsmap5); colorbar; shading interp; title('RH rate'); set(gca,'ydir','reverse');  caxis([-1 +1]*0.5); set(gca,'yscale','log'); ylim([100 1000])
+else
+  figure(1);  pcolor(thestats.lats,Airs_PQ,thestats.waterrate'); colormap(llsmap5); colorbar; shading interp; title('WV frac rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.015); set(gca,'yscale','log'); ylim([100 1000])
+  figure(3);  pcolor(thestats.lats,Airs_PT,thestats.ptemprate'); colormap(llsmap5); colorbar; shading interp; title('T rate'); set(gca,'ydir','reverse'); caxis([-1 +1]*0.15); set(gca,'yscale','log'); ylim([10 1000])
+  figure(10); pcolor(thestats.lats,Airs_PQ,thestats.RHrate'); colormap(llsmap5); colorbar; shading interp; title('RH rate'); set(gca,'ydir','reverse');  caxis([-1 +1]*0.5); set(gca,'yscale','log'); ylim([100 1000])
+end
+
+if exist('quickSTrate')
+  figure(2); pcolor(quickSTrate); shading interp; colorbar; caxis([-1 +1]*0.15); title('Surf Temp Rate'); colormap(usa2);
+  addpath /umbc/xfs2/strow/asl/matlib/maps/aslmap.m
+  addpath /home/sergio/MATLABCODE/COLORMAP/LLSMAPS
+  load llsmap5
+  figure(2); aslmap(2,-90:1:+90,-180:1:+180,quickSTrate,[-90 +90],[-180 +180]);  colormap(llsmap5); caxis([-0.15 +0.15]);
+  title('stemp rates')
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iAnom = input('do the anomaly (-1/+1) : ');

@@ -281,6 +281,9 @@ figure(8); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshap
   pcolor(trend_rlat64,trend_plays,junk); title('MERRA2 std RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 %}
 
+figure(3); ylim([1 1000])
+figure(5); set(gca,'yscale','linear'); caxis([-1 +1]*0.015);
+figure(4); set(gca,'yscale','linear'); caxis([-1 +1]*0.5);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 iNlev = 42;

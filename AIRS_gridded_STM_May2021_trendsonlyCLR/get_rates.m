@@ -30,15 +30,16 @@ if driver.i16daytimestep < 0
       % driver.rateset.rates = real(squeeze(b_cal(ix,:,2))');
       % driver.rateset.unc_rates = real(squeeze(b_err_cal(ix,:,2))');
 
-      % this is assuming I am reading in  
+      % this is assuming I am reading in  dataset = 4, ocbset = +1
       %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                %% co2/n2o/ch4 change in time
       %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
-      %driver.rateset.rates = real(thesave.xtrend(:,ix));
-      %driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
+      driver.rateset.rates = real(thesave.xtrend(:,ix));
+      driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
 
-      % this is assuming I am reading in eg iType_8_convert_sergio_clearskygrid_obsonly_Q16.mat
-      driver.rateset.rates = real(squeeze(b_cal_desc(ix,iy,:)));
-      driver.rateset.unc_rates = real(squeeze(b_cal_err_desc(ix,iy,:)));  %% this is what was used for AIRS STM May 2021
+      % this is assuming I am reading in eg SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbinX/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat'];
+      % dataset = 6,7,8,9, ocbset = +1
+      %driver.rateset.rates = real(squeeze(b_cal_desc(ix,iy,:)));
+      %driver.rateset.unc_rates = real(squeeze(b_cal_err_desc(ix,iy,:)));  %% this is what was used for AIRS STM May 2021
 
     case {'obs','tracegas'}
       % driver.rateset.rates = real(squeeze(b_obs(ix,:,2))');

@@ -13,16 +13,21 @@ for ii = 1 : 6
   figure(ii); colormap jet
 end
 
-timespan = 18;
-timespan = 19;
 timespan = 12;
 timespan = 07;
+timespan = 18;
+timespan = 19;
+timespan = 20;
 fprintf(1,'timespan = %2i years \n',timespan)
 
 if timespan == 07
   savestr_version = 'May2012_07yr';
   StartY = 2012; StartYM = 5;   %% start 05/2012
   StopY  = 2019; StopYM  = 4;   %% stop  04/2019  
+elseif timespan == 12
+  savestr_version = 'Sept2002_Aug2014_12yr';
+  StartY = 2002; StartYM = 9;   %% start 09/2002
+  StopY  = 2014; StopYM  = 8;   %% stop  08/2014
 elseif timespan == 16
   savestr_version = 'Sept2017_15yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
@@ -31,10 +36,6 @@ elseif timespan == 18
   savestr_version = 'Sept2002_Aug2020_18yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2020; StopYM  = 8;   %% stop  08/2020
-elseif timespan == 12
-  savestr_version = 'Sept2002_Aug2014_12yr';
-  StartY = 2002; StartYM = 9;   %% start 09/2002
-  StopY  = 2014; StopYM  = 8;   %% stop  08/2014
 elseif timespan == 19
   savestr_version = 'Sept2002_Jul2021_19yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
@@ -42,6 +43,10 @@ elseif timespan == 19
   savestr_version = 'Sept2002_Aug2021_19yr';
   StartY = 2002; StartYM = 9;   %% start 09/2002
   StopY  = 2021; StopYM  = 8;   %% stop  08/2021  
+elseif timespan == 20
+  savestr_version = 'Sept2002_Aug2022_20yr';
+  StartY = 2002; StartYM = 9;   %% start 09/2002
+  StopY  = 2022; StopYM  = 8;   %% stop  08/2021  
 else
   error('huh check timespan')
 end

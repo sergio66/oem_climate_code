@@ -140,12 +140,21 @@ end
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 load llsmap5
-figure(1); pcolor(save_lat64x72,Tlevs/100,squeeze(nanmean(thestats64x72.ptemprate,1))'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-  title('AIRS L3 dT/dt K/yr');
-figure(2); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.waterrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-  title('AIRS L3 d(WV)/<WV>/dt /yr');
-figure(3); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.RHrate*100,1))'); shading interp; colorbar; caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-  title('AIRS L3 d(RH)/dt /yr');
+if iL3orCLIMCAPS > 0
+  figure(1); pcolor(save_lat64x72,Tlevs,squeeze(nanmean(thestats64x72.ptemprate,1))'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('AIRS L3 dT/dt K/yr');
+  figure(2); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(thestats64x72.waterrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('AIRS L3 d(WV)/<WV>/dt /yr');
+  figure(3); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(thestats64x72.RHrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('AIRS L3 d(RH)/dt /yr');
+else
+  figure(1); pcolor(save_lat64x72,Tlevs/100,squeeze(nanmean(thestats64x72.ptemprate,1))'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('AIRS L3 dT/dt K/yr');
+  figure(2); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.waterrate,1))'); shading interp; colorbar; caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('AIRS L3 d(WV)/<WV>/dt /yr');
+  figure(3); pcolor(save_lat64x72,Qlevs/100,squeeze(nanmean(thestats64x72.RHrate*100,1))'); shading interp; colorbar; caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('AIRS L3 d(RH)/dt /yr');
+end
 
 figure(1); ylim([10 1000]);
 figure(2); ylim([100 1000]);
@@ -164,25 +173,61 @@ figure(4); aslmap(4,rlat65,rlon73,smoothn(thestats64x72.stemprate',1), [-90 +90]
   title('AIRS L3 d(stemp)/dt /yr');
 caxis([-1 +1]*0.15)
 
-figure(4); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(save64x72_Q,[2 4]))'); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
-figure(4); pcolor(save_lat64x72,Qlevs,log10(squeeze(nanmean(save64x72_Q,[2 4]))')); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+figure(1); ylim([1 1000]); caxis([-1 +1]*0.15);
+figure(2); ylim([100 1000]); caxis([-1 +1]*0.015); set(gca,'yscale','linear');
+figure(3); ylim([100 1000]); caxis([-1 +1]*0.5); set(gca,'yscale','linear');
+
+figure(5); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(save64x72_Q,[2 4]))'); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+figure(5); pcolor(save_lat64x72,Qlevs,log10(squeeze(nanmean(save64x72_Q,[2 4]))')); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+
+if exist('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Aug2022_20yr_desc.mat')
+  zonal = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Aug2022_20yr_desc.mat')
+
+  figure(5); pcolor(zonal.thestats.lats,Tlevs,zonal.thestats.ptemprate'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('zonal 20 yr AIRS L3 dT/dt K/yr');
+  figure(6); pcolor(zonal.thestats.lats,Qlevs,zonal.thestats.waterrate'); shading interp; colorbar; caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('zonal 20 yr AIRS L3 d(WV)/<WV>/dt /yr');
+  figure(7); pcolor(zonal.thestats.lats,Qlevs,zonal.thestats.RHrate'); shading interp; colorbar; caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
+    title('zonal 20 yr AIRS L3 d(RH)/dt /yr');
+
+  figure(5); ylim([1 1000]); caxis([-1 +1]*0.15);
+  figure(6); ylim([100 1000]); caxis([-1 +1]*0.015); set(gca,'yscale','linear');
+  figure(7); ylim([100 1000]); caxis([-1 +1]*0.5); set(gca,'yscale','linear');
+
+end
 
 comment = 'see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compute_AIRSL3_trends.m';
-if iL3orCLIMCAPS == +1
-  if iDorA > 0
-    %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
-    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
-  else
-    %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
-    saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+if iSlowORFast == +1
+  if iL3orCLIMCAPS == +1
+    if iDorA > 0
+      %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
+      saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    else
+      %saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
+      saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    end
+  elseif iL3orCLIMCAPS == -1
+    if iDorA > 0
+      %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
+      saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    else
+      %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
+      saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    end
   end
-elseif iL3orCLIMCAPS == -1
-  if iDorA > 0
-    %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_desc.mat thestats Tlevs Qlevs zonk'];
-    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
-  else
-    %saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_asc.mat thestats Tlevs Qlevs zonk'];
-    saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+elseif iSlowORFast == -1
+  if iL3orCLIMCAPS == +1
+    if iDorA > 0
+      saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    else
+      saver = ['save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    end
+  elseif iL3orCLIMCAPS == -1
+    if iDorA > 0
+      saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_' savestr_version '_desc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    else
+      saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_' savestr_version '_asc.mat thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
+    end
   end
 end
 eval(saver)
@@ -191,17 +236,25 @@ eval(saver)
 do_the_plots_64x72
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iAnom = input('do the anomaly (-1/+1) : ');
+%iAnom = input('do the anomaly (-1/+1) : ');
 iAnom = -1;   %% code sucks
 if iAnom > 0
 
   quick_junk_anom64x72
   anom_thestats64x72 = do_profilerate_fit_anom3(save64x72_Q(:,:,zonk),save64x72_O3(:,:,zonk),save64x72_T(:,:,zonk),save64x72_stemp(:,zonk),days(zonk),rlat);  
   anom_thestats64x72.days = days;
-  if iL3orCLIMCAPS == +1
-    saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsL3_v7_64x72_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
-  elseif iL3orCLIMCAPS == -1
-    saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsclimcaps_64x72_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+  if iSlowORFast == +1
+    if iL3orCLIMCAPS == +1
+      saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsL3_v7_64x72_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+    elseif iL3orCLIMCAPS == -1
+      saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsclimcaps_64x72_rates_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+    end
+  elseif iSlowORFast == -1
+    if iL3orCLIMCAPS == +1
+      saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsL3_v7_64x72_rates_fastgrib_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+    elseif iL3orCLIMCAPS == -1
+      saver = ['save /asl/s1/sergio/AIRS_L3/fixedanomO3_airsclimcaps_64x72_rates_fastgrib_stats_' savestr_version '_all.mat thestats anom_thestats Tlevs Qlevs zonk'];  
+    end
   end
   eval(saver)
   
