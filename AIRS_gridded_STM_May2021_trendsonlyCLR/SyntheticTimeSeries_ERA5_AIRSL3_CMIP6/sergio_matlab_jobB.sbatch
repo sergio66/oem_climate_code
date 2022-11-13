@@ -25,8 +25,11 @@
 #
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 12    for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 13    for driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
+
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 14    for driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2_constracegas.m
 #
+#########################################################################
+
 # check stats after running using eg
 # sacct --name=KCARTA_BREAKOUTS --state=CD -S 2016-05-07 --format=elapsed,maxrss
 #

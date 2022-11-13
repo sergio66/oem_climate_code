@@ -33,7 +33,7 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 47
 % JOB = 37
 % JOB = 7
-% JOB = 39
+ JOB = 39
 
 iDebug = -1;
 %iDebug = +2742;  %% JOB = 39, rm Output_CAL/Quantile16/test2742.mat, gives awfully large CO2 when it shoud be 0.0
@@ -75,8 +75,6 @@ if iDoAnomalyOrRates == -1
   JOBTYPE = 1000;
 end
 
-%JOB = 31
-
 iOffset = (JOB-1)*72;
 iInd0 = iLon0A + iOffset;  iIndE = iLonEA + iOffset; 
 
@@ -112,11 +110,11 @@ for iInd = iInd0 : iIndE
   iQuantile = 04;  %% quite cloudy (hopefully)
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
   iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
+  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7
   iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
   iQuantile = 02;  %% Q0.80, iQAX = 3, dataset = 9
   iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
   iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
-  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -151,9 +149,9 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
 
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
-  topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
+  topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
 
   topts.tie_sst_lowestlayer = -1
 
@@ -165,8 +163,8 @@ for iInd = iInd0 : iIndE
     topts.iSergioCO2 = +1; %% fit for CO2/CH4/N2O
   end
 
-  topts.ocb_set = 0; %% AIRS Obs
   topts.ocb_set = 1; %% try ERA5 synthetic rates
+  topts.ocb_set = 0; %% AIRS Obs
 
   %topts.set_era5_cmip6_airsL3 = 5; %% use ERA5 a priori
   %topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori

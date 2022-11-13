@@ -14,6 +14,8 @@ end
 
 if iVersJac == 2019
   see_clust_put_together_jacs_clr
+elseif iVersJac == 2022
+  see_clust_put_together_jacs_cldERA5_2022
 elseif iVersJac == 2021
   see_clust_put_together_jacs_clrERA5_2021
 elseif iVersJac == 2012 | iVersJac == 2015
@@ -22,7 +24,7 @@ elseif iVersJac == 2014
   see_clust_put_together_jacs_clrERA5_2014
 else
   iVersJac
-  error('iVersJac = 2012,2014,2019,2021 only')
+  error('iVersJac = 2012,2014,2019,2021,2022 only')
 end
 
 if iDoSlow > 0

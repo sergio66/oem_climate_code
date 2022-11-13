@@ -6,6 +6,7 @@ addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/matlib/science/
+addpath /home/sergio/MATLABCODE/NANROUTINES/
 addpath /asl/matlib/aslutil
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/maps
@@ -237,7 +238,7 @@ for ii = 1 : 72 : 72*64
   if exist(fname) > 0
     iCnt = iCnt + 1;
     junkdir = dir(fname);
-    fprintf(1,'%s %s \n',[junkdir.folder '/' fname],junkdir.date);
+    fprintf(1,'%s %s \n',[junkdir.folder     fname],junkdir.date);
   end
 end
 fprintf(1,'found %4i of 64 (subset) files \n',iCnt);

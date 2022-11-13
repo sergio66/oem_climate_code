@@ -66,8 +66,17 @@ ind = (1:72) + (JOB-1)*72;
 [hkcarta_emis,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+
+iYS = 2002; iYE = 2021;
+iYS = 2002; iYE = 2022;
+
 %era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
-era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [numtimesteps0,~] = size(era5_64x72.all.mmw);
 numtimesteps = numtimesteps0;
@@ -77,17 +86,22 @@ rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 
 yy = []; mm = []; dd = [];
-for ii = 2002 : 2021
+for ii = iYS : iYE
   clear yyx mmx ddx
-  if ii == 2002
+  if ii == iYS
     inum = 4;
     yyx(1:inum) = ii;
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
-  elseif ii == 2021
-    %inum = 7;
-    %yyx(1:inum) = ii;
-    %mmx = 1 : 7;
+%  elseif ii == 2021
+%    %inum = 7;
+%    %yyx(1:inum) = ii;
+%    %mmx = 1 : 7;
+%    inum = 8;
+%    yyx(1:inum) = ii;
+%    mmx = 1 : 8;
+%    ddx = ones(size(mmx)) * 15;
+  elseif ii == iYE
     inum = 8;
     yyx(1:inum) = ii;
     mmx = 1 : 8;
@@ -104,13 +118,15 @@ for ii = 2002 : 2021
   dd = [dd ddx];
 end
 daysSince2002 = change2days(yy,mm,dd,2002);
+whos daysSince2002
 
-YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
 YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
 YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
+YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
+YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
 
 daysSince2002Start = change2days(YMStart(1),YMStart(2),15,2002);
-daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),15,2002);
+daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),  15,2002);
 
 usethese = find(daysSince2002  >= daysSince2002Start & daysSince2002 <= daysSince2002End);
 
@@ -340,7 +356,12 @@ for ii = JOB
 
   iType = 51;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
-
+  pwd
+  disp(' ')
+  disp('output in eg           SimulateTimeSeries/ERA5_ConstTracegas/reconstruct_era5_const_tracegas_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
+  disp('         also makes eg SimulateTimeSeries/ERA5_ConstTracegas/simulate64binsERA5_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
+  disp('then run driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 13')
+  disp(' ')
 end
 
 cder = ['cd ' homedir]; eval(cder);

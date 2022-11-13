@@ -5,6 +5,7 @@ function [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac);
 %%%
 % 2014 : 4608 lonbins/latbins for 12 year AIRS obverlapping        AMIP6/CMIP6 2002/09-2014/08 
 % 2021 : 4608 lonbins/latbins for 19 years AIRS                    pure AIRS   2002/09-2021/08 
+% 2022 : 4608 lonbins/latbins for 20 years AIRS                    pure AIRS   2002/09-2022/08 
 
 if iVersJac ~= 2019
   %% 4608
@@ -61,7 +62,7 @@ if iVersJac == 2019 | iVersJac == 2012
   end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elseif iVersJac == 2021
+elseif iVersJac == 2021 | iVersJac == 2022
   disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2002/09 - 2021/08')
   co2x = 2.262445;
   n2ox = 0.925496;
