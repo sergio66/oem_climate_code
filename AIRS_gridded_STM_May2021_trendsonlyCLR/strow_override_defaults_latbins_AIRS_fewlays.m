@@ -132,20 +132,14 @@ iZeroO3Vers = 2; %%% use raw ERA T anomalies as saved in era_ptempanom.mat (see 
 
 set_zeroO3_nofit
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%{
-%save -v7.3 nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat nwp_spectral_trends_cmip6_era5_airsL3_umbc
-save('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','-struct','nwp_spectral_trends_cmip6_era5_airsL3_umbc','-v7.3');
-vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
-era5rates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','era5_100_layertrends');
-%}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical
-set_CO2_CH4_N2O_ESRL
+set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical   %% can set a priori to the MLS, or to the ERA5, or to the MERRA2, or to the AIRS L3, rates
 
+iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates 
+                                                    
 iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates
 iSergioCO2 = +1;  %% fit for CO2/CH4 rates
 iSergioCO2 = settings.iSergioCO2;

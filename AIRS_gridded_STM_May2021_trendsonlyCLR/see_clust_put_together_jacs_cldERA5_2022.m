@@ -29,7 +29,7 @@ end
 if iOldORNew == 9
   [h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
   thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09//';
-  fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2021.m --> iOldORNew == 2021 (ERA5) JOB = %2i   \n',JOB);
+  fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -60,7 +60,8 @@ for lon = iLonBin
 
   %% kcarta nml = 2 4 5 6 51 52 T ST
   aout.jac(:,1) = acol.rKc(:,1);     %%% CO2
-  aout.jac(:,2) = acol.rKc(:,2);     %%% N2O
+  colo3 = acol.rKc(:,2);             %%% (O3 is ind2, can compare againt the sum(o3jac(z))
+  aout.jac(:,2) = acol.rKc(:,3);     %%% N2O (O3 is ind2)
   aout.jac(:,3) = acol.rKc(:,4);     %%% CH4
   aout.jac(:,4) = acol.rKc(:,5);     %%% CFC11
   aout.jac(:,5) = acol.rKc(:,6);     %%% CFC12
@@ -120,6 +121,7 @@ for lon = iLonBin
 
   aout.fKc = aout.fKc(ind2834to2645);
   aout.jac = aout.jac(ind2834to2645,:);
+  colo3    = colo3(ind2834to2645);
 
   kcarta.subjac.coljacCO2   = aout.jac(:,1);
   kcarta.subjac.coljacN2O   = aout.jac(:,2);

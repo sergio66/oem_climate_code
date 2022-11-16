@@ -2,7 +2,7 @@ for ii = 1 : 4; figure(ii); clf; end
 
 iLoad = +1;   %% older
 iLoad = -1;   %% newer
-iLoad = 0;    %% nothing
+iLoad = 0;    %% neweest
 
 if iLoad == 1
   era = load('/home/sergio/MATLABCODE/ROSES_2013_GRANT/NewClearPDFs/era_geo_rates_allsky_AIRIBRAD.mat');
@@ -10,6 +10,7 @@ elseif iLoad == -1
   era = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/LATS40_avg_made_Mar29_2019_Clr/Desc/all_latbins_rates.mat'); 
 elseif iLoad == 0
   era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc_64latbins.mat');
+  %era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat');
 end
 
 hdffile = '/home/sergio/MATLABCODE/airs_l1c_srf_tables_lls_20181205.hdf';   % what he gave in Dec 2018
@@ -112,7 +113,7 @@ if abs(iLoad) <= 1
     shadedErrorBarYLog10(ptemprate_ak1(ix,:),playsRET,ptempratestd1(ix,:),'gd-'); 
     shadedErrorBarYLog10(ptemprate_akF(ix,:),playsRET,ptempratestdF(ix,:),'rx-'); 
     hold off; 
-    hl = title('(b)UMBC (g/r)ERA,AK*ERA (K/yr)'); 
+    hl = title('(b)UMBC (g/r)ERA,AK*ERA Temperature (K/yr)'); 
     set(hl,'fontsize',12); 
     set(gca,'ydir','reverse'); grid; axis([-0.2 +0.15 1 3]);
   

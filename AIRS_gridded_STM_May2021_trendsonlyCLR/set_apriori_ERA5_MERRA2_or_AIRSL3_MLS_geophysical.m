@@ -1,4 +1,3 @@
-
 if settings.set_era5_cmip6_airsL3 == 5
   disp(' apriori will be using ERA5 trends')
   vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
@@ -17,6 +16,7 @@ if settings.set_era5_cmip6_airsL3 == 5
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
+
 elseif settings.set_era5_cmip6_airsL3 == 6
   disp(' apriori will be using CMIP6 trends')
   vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
@@ -35,6 +35,7 @@ elseif settings.set_era5_cmip6_airsL3 == 6
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
+
 elseif settings.set_era5_cmip6_airsL3 == 3
   disp(' apriori will be using AIRS L3 trends')
   vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
@@ -73,6 +74,7 @@ elseif settings.set_era5_cmip6_airsL3 == 2
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
+
 elseif settings.set_era5_cmip6_airsL3 == 8
   disp(' apriori will be using MLS trends')
   zrates = load('../FIND_NWP_MODEL_TRENDS/MLS_atm_data_2004_09_to_2020_08_trends.mat');

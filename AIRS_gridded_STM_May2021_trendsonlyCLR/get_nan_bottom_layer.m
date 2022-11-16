@@ -14,5 +14,5 @@ figure(27); clf; aslmap(27,rlat65,rlon73,reshape(p.nlevs,72,64)', [-90 +90],[-18
   title('Nlevs')
 
 figure(28); 
-junk = squeeze(nanmean(reshape(nan_bottom,101,72,64),2)); whos junk
+junk = squeeze(nanmean(reshape(nan_bottom,101,72,64),2));
 imagesc(junk); colorbar; title('NAN or not for SURFACE')

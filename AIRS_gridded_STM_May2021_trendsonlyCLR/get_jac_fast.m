@@ -1,4 +1,4 @@
-function [m_ts_jac,nlays,qrenorm,freq2645] = get_jac_fast(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac);
+function [m_ts_jac,nlays,qrenorm,freq2645,colo3] = get_jac_fast(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac);
 
 iDoSlow = -1;
 if iDoSlow > 0
@@ -15,6 +15,7 @@ end
 if iVersJac == 2019
   see_clust_put_together_jacs_clr
 elseif iVersJac == 2022
+  %% this one gives colo3
   see_clust_put_together_jacs_cldERA5_2022
 elseif iVersJac == 2021
   see_clust_put_together_jacs_clrERA5_2021
@@ -25,6 +26,10 @@ elseif iVersJac == 2014
 else
   iVersJac
   error('iVersJac = 2012,2014,2019,2021,2022 only')
+end
+
+if ~exist('colo3')
+ colo3 = zeros*freq2645;
 end
 
 if iDoSlow > 0
@@ -75,16 +80,27 @@ qrenorm(5) = 1/600;  %% see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/M
                      %% https://agage.mit.edu/data/agage-data    CFC11 = 242 ppt
 qrenorm(6) = 0.1;
 
-%% gives good T(z) rates, small WV rates, till AUg 2021
-qrenorm((1:nlays)+6+nlays*0) = 0.01; %% WV
-qrenorm((1:nlays)+6+nlays*1) = 0.01; %% T
-%qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
-qrenorm((1:nlays)+6+nlays*2) = 0.01; %% O3
+iVersQRenorm = 1; %% DEFAULT
+%iVersQRenorm = 3;
 
-%% try this Aug 26, 2021
-%qrenorm((1:nlays)+6+nlays*0) = 0.1; %% WV
-%qrenorm((1:nlays)+6+nlays*1) = 0.01; %% T
-%qrenorm((1:nlays)+6+nlays*2) = 0.1; %% O3
+fprintf(1,'get_jac_fast.m : iVersQRenorm = %2i \n',iVersQRenorm)
+
+if iVersQRenorm == 1
+  %% gives good T(z) rates, small WV rates, till AUg 2021
+  qrenorm((1:nlays)+6+nlays*0) = 0.01; %% WV
+  qrenorm((1:nlays)+6+nlays*1) = 0.01; %% T
+  %qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
+  qrenorm((1:nlays)+6+nlays*2) = 0.01; %% O3
+elseif iVersQRenorm == 2
+  %% try this Aug 26, 2021
+  qrenorm((1:nlays)+6+nlays*0) = 0.1; %% WV
+  qrenorm((1:nlays)+6+nlays*1) = 0.01; %% T
+  qrenorm((1:nlays)+6+nlays*2) = 0.1; %% O3
+elseif iVersQRenorm == 3
+  qrenorm((1:nlays)+6+nlays*0) = 0.01; %% WV
+  qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
+  qrenorm((1:nlays)+6+nlays*2) = 0.01; %% O3
+end
 
 qrenormUSE = qrenorm;
 m_ts_jac = (ones(2645,1) * qrenorm) .* m_ts_jac_fast;  %%% SO THIS IS NORMALIZED JAC!!!!!!!!!!!!!!!!! JTRUE * RENORM

@@ -3,6 +3,54 @@
 % run_retrieval_latbins_AIRS_loop_anomaly.m
 %---------------------------------------------------------------------------
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  FOR CALCS (RETRIEVAL COMPARISONS TO ERA5 TRENDS)
+%%  moo = load('Output_CAL/Quantile16/test4608.mat');
+%%                   debug: 0
+%%               debug_dir: '../Debug'
+%%                   iibin: 4608
+%%          i16daytimestep: -1
+%%       iDebugRatesUseNWP: -1
+%%                    NorD: 1
+%%               iQuantile: 16   ---------->>>>>>
+%%                    iLon: 72
+%%                    iLat: 64
+%%                     oem: [1x1 struct]
+%%                     lls: [1x1 struct]
+%%             outfilename: 'Output_CAL/Quantile16/test4608.mat'
+%%                   topts: [1x1 struct]
+%%                 rateset: [1x1 struct]
+%%              jac_latbin: 64
+%%      jac_indexINSIDEbin: 72
+%%                jacobian: [1x1 struct]
+%%                 qrenorm: [2.200000000000000e+00 1 5 1 1 1.000000000000000e-01 1.000000000000000e-02 1.000000000000000e-02 1.000000000000000e-02 1.000000000000000e-02 ... ]
+%%  
+%%  >> moo.topts
+%%                 iSergioCO2: -1
+%%      set_era5_cmip6_airsL3: -1
+%%               UMBCvsERAjac: -1
+%%              resetnorm2one: -1
+%%                    dataset: 9    -------------->>>>>
+%%                    co2lays: 1
+%%                    numchan: 2645
+%%                 chan_LW_SW: 0
+%%                  descORasc: 1
+%%               iFixTG_NoFit: -1
+%%               iFixTz_NoFit: -1
+%%               iFixO3_NoFit: -1
+%%                offsetrates: -1
+%%               set_tracegas: 1
+%%                      iXJac: 0
+%%                    ocb_set: 1   -------------->>>>>
+%%          iDoStrowFiniteJac: 3
+%%            iNlays_retrieve: 50
+%%                     iChSet: 5
+%%            obs_corr_matrix: -1
+%%        tie_sst_lowestlayer: -1
+%%                    invtype: 1
+%%  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /asl/matlib/h4tools
@@ -33,10 +81,12 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 47
 % JOB = 37
 % JOB = 7
- JOB = 39
+% JOB = 39
 
+iDebug = +2742;  %% JOB = 39, rm Output_CAL/Quantile16/test2742.mat, gives awfully large CO2 when it shoud be 0.0
+iDebug = +3255;  %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt < 0 over Western USA
+iDebug = +3259;  %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt > 0 over Eastern USA
 iDebug = -1;
-%iDebug = +2742;  %% JOB = 39, rm Output_CAL/Quantile16/test2742.mat, gives awfully large CO2 when it shoud be 0.0
 
 if iDebug > 0
   plot(1:4608,floor(((1:4608)-1)/72)+1)   %% this maps tile number and job (in sets of 72)
@@ -111,10 +161,10 @@ for iInd = iInd0 : iIndE
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
   iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
   iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7
-  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
-  iQuantile = 02;  %% Q0.80, iQAX = 3, dataset = 9
   iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
   iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
+  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
+  iQuantile = 01;  %% Q0.80, iQAX = 3, dataset = 9
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc

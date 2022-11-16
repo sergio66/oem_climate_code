@@ -27,14 +27,15 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
       %% land, so whos know
       dBT1231 = 0.0;
     end
-    fprintf(1,'dBT1231 = %8.6f --> %8.6f \n',driver.rateset.rates(1520),dBT1231);
-    xb(6+length(driver.jacobian.water_i)-0) = dBT1231;
-    xb(6+length(driver.jacobian.water_i)-1) = dBT1231;
-%    xb(6+length(driver.jacobian.water_i)-2) = dBT1231;
-%    xb(6+length(driver.jacobian.water_i)-3) = dBT1231;
-%    xb(6+length(driver.jacobian.water_i)-4) = dBT1231;
-%    xb(6+length(driver.jacobian.water_i)-5) = dBT1231;
-%    xb(6+length(driver.jacobian.water_i)-6) = dBT1231;
+    
+    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfrac = %8.6f\n',driver.rateset.rates(1520),dBT1231,iAdjLowerAtmWVfrac);
+    xb(6+length(driver.jacobian.water_i)-0) = dBT1231 * iAdjLowerAtmWVfrac;
+    xb(6+length(driver.jacobian.water_i)-1) = dBT1231 * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-2) = dBT1231 * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-3) = dBT1231 * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-4) = dBT1231 * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-5) = dBT1231 * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-6) = dBT1231 * iAdjLowerAtmWVfrac;
 
   elseif settings.co2lays == 3
     xb(1) = co2x * 1;        % Set CO2 apriori lower trop

@@ -28,6 +28,25 @@ disp('saved a version as   save -v7.3 /asl/s1/sergio/JUNK/gather_tileCLRday.mat 
 disp('saved a version as   save -v7.3 /asl/s1/sergio/JUNK/gather_tileCLRday.mat or /asl/s1/sergio/JUNK/gather_tileCLRnight.mat or /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat')
 disp(' ')
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
+%save -v7.3 nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat nwp_spectral_trends_cmip6_era5_airsL3_umbc
+save('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','-struct','nwp_spectral_trends_cmip6_era5_airsL3_umbc','-v7.3');
+vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+era5rates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','era5_100_layertrends');
+%}
+
+iAK = input('do AvgKernels ???? (-1/+1 = yes = default) ');
+if length(iAK) == 0
+  iAK = +1;
+end
+if iAK > 0
+  %% see Plotutils/plot_retrieval_latbins_fewlays
+  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat');
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iJunk = input('clear 50 figs???? (-1 = no = default) ');
 if length(iJunk) == 0
   iJunk = -1;
@@ -113,42 +132,60 @@ if iOCBset == 0
       data_trends = load(['convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     elseif iQuantile == 99
       data_trends = load(['convert_sergio_clearskygrid_obsonly_Q16.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == -1
     if iQuantile >= 1 & iQuantile <= 16
       data_trends = load(['iType_-1_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     elseif iQuantile == 99
       data_trends = load(['XYZconvert_sergio_clearskygrid_obsonly_Q16.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == 2
     if iQuantile >= 1 & iQuantile <= 16
       data_trends = load(['iType_2_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     elseif iQuantile == 99
       data_trends = load(['XYZconvert_sergio_clearskygrid_obsonly_Q16.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == 4
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == 5
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_5_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == 6
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_6_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == 7
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_7_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == 8
     if iQuantile >= 1 & (iQuantile <= 16 | iQuantile == 50)
       data_trends = load(['iType_8_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   elseif dataset == 9
     if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
       data_trends = load(['iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
   else
     dataset
@@ -307,7 +344,7 @@ while iDoAgain > 0
         resultsWVunc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*0);
         resultsTunc(ii,1:nn)  = oem.finalsigs((1:nn)+6+nn*1);
         resultsO3unc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*2);
-  
+
       else
         iWarning = iWarning + 1;
         iaWarning(iWarning) = ii;
@@ -331,7 +368,58 @@ while iDoAgain > 0
         wah = oem.finalsigs((1:nn)+6+nn*1);   resultsTunc(ii,1:nn0)  = wah(1:nn0);
         wah = oem.finalsigs((1:nn)+6+nn*2);   resultsO3unc(ii,1:nn0) = wah(1:nn0);
       end
+
+      if iAK > 0
+        if ~exist('waterrate_akF_era5')
+           waterrate_akF_era5 = nan(size(resultsWV));
+           o3rate_akF_era5 = nan(size(resultsWV));
+           temprrate_akF_era5 = nan(size(resultsWV));
+
+           waterrate_ak0_era5 = nan(size(resultsWV));
+           o3rate_ak0_era5 = nan(size(resultsWV));
+           temprrate_ak0_era5 = nan(size(resultsWV));
+
+           mean_ak_wv = nan(size(resultsWV));;
+           mean_ak_T  = nan(size(resultsWV));;
+           mean_ak_o3 = nan(size(resultsWV));;
+
+        end
   
+        %figure(47); plot(oem.ak_water',pjunk20,'c',max(oem.ak_water'),pjunk20,'rx-',mean(oem.ak_water'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(48); plot(oem.ak_ozone',pjunk20,'c',max(oem.ak_ozone'),pjunk20,'rx-',mean(oem.ak_ozone'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(49); plot(oem.ak_temp',pjunk20,'c',max(oem.ak_temp'),pjunk20,'rx-',mean(oem.ak_temp'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+
+        clear waterrate_ak0 waterrate_ak1 o3rate_ak0 o3rate_ak1 temprate_ak0 temprate_ak1
+        ix = ii;
+        waterrate_ak0 = ones(ix,1)*era5.trend_gas_1(1:100,ix)';
+          for iii = 1 : length(jacobian.wvjaclays_used)
+            junk = jacobian.wvjaclays_used{iii}-6;
+            waterrate_ak1(:,iii) = mean(waterrate_ak0(:,junk)');
+          end
+          ak = oem.ak_water;
+          mean_ak_wv(ix,1:length(ak)) = max(ak');
+          waterrate_ak0_era5(ix,1:length(ak)) = (waterrate_ak1(ix,:)')';
+          waterrate_akF_era5(ix,1:length(ak)) = (ak * waterrate_ak1(ix,:)')';
+        o3rate_ak0 = ones(ix,1)*era5.trend_gas_3(1:100,ix)';
+          for iii = 1 : length(jacobian.wvjaclays_used)
+            junk = jacobian.wvjaclays_used{iii}-6;
+            o3rate_ak1(:,iii) = mean(o3rate_ak0(:,junk)');
+          end
+          ak = oem.ak_ozone;
+          mean_ak_o3(ix,1:length(ak)) = max(ak');
+          o3rate_ak0_era5(ix,1:length(ak)) = (o3rate_ak1(ix,:)')';
+          o3rate_akF_era5(ix,1:length(ak)) = (ak * o3rate_ak1(ix,:)')';
+        temprate_ak0 = ones(ix,1)*era5.trend_ptemp(1:100,ix)';
+          for iii = 1 : length(jacobian.wvjaclays_used)
+            junk = jacobian.wvjaclays_used{iii}-6;
+            temprate_ak1(:,iii) = mean(temprate_ak0(:,junk)');
+          end
+          ak = oem.ak_temp;
+          mean_ak_T(ix,1:length(ak)) = max(ak');
+          temprate_ak0_era5(ix,1:length(ak)) = (temprate_ak1(ix,:)')';
+          temprate_akF_era5(ix,1:length(ak)) = (ak * temprate_ak1(ix,:)')';
+      end    
+
       junknoise = nan(2645,1);
       junknoise(jacobian.chanset) = diag(oem.se);
   

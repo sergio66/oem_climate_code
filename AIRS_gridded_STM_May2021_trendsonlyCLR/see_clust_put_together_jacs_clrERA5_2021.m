@@ -75,7 +75,8 @@ for lon = iLonBin
 
   %% kcarta nml = 2 4 5 6 51 52 T ST
   aout.jac(:,1) = acol.rKc(:,1);     %%% CO2
-  aout.jac(:,2) = acol.rKc(:,2);     %%% N2O
+  colo3 = acol.rKc(:,2);             %%% (O3 is ind2, can compare againt the sum(o3jac(z))
+  aout.jac(:,2) = acol.rKc(:,3);     %%% N2O (ind2 = O3)
   aout.jac(:,3) = acol.rKc(:,4);     %%% CH4
   aout.jac(:,4) = acol.rKc(:,5);     %%% CFC11
   aout.jac(:,5) = acol.rKc(:,6);     %%% CFC12
@@ -135,6 +136,7 @@ for lon = iLonBin
 
   aout.fKc = aout.fKc(ind2834to2645);
   aout.jac = aout.jac(ind2834to2645,:);
+  colo3    = colo3(ind2834to2645);
 
   kcarta.subjac.coljacCO2   = aout.jac(:,1);
   kcarta.subjac.coljacN2O   = aout.jac(:,2);

@@ -15,7 +15,6 @@ end
 sqrun = 'squeue -u sergio -t R -o "%.19i %.9P %.8j %.8u %.2t %.10M %.6D %R"';
 
 thedir = dir(['Output/Quantile' num2str(Q,'%02d') '/test*.mat']);
-fprintf(1,'found  %4i files in Output/Quantile%2i \n',length(thedir),Q);
 
 eval(['!' sqrun ' >& /home/sergio/ugh']);
 
@@ -120,6 +119,10 @@ if exist('iFound')
   figure(2); plot(expected(I,1),expected(I,2) ./ expected(I,3),'-o');
     xlabel('node number'); ylabel(['fraction jobs done (out of ' num2str(jobsPERproessor) ')']);
     grid
+  wah = [expected(I,1)    expected(I,2) ./ expected(I,3)];
+  fprintf(1,'cnode %3i   fraction done %8.4f \n',wah')
 else
   disp('oooer nothing running')
 end
+
+fprintf(1,'found  %4i files in Output/Quantile%2i \n',length(thedir),Q);

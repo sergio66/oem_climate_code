@@ -353,7 +353,66 @@ figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(reshape(boo,72,64
 figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(waba.*reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
   hl = legend('Hadley','UMBC','location','best'); ylabel('Latitude'); xlabel('dRH/dt percent/decade'); axis([-2 +2 -90 +90]); 
 
+figure(41); 
+junk = squeeze(nanmean(reshape(fracWVunc,101,72,64),2));
+pcolor(rlat,pavgLAY(1:97,1000),smoothn(junk(1:97,:),1)); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','linear')
+ylim([100 1000]); caxis([0 +1]*0.05); colorbar('horizontal'); %plotaxis2;
+title(['Zonal UNC d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+colormap(jet)
+
+figure(42); clf
+junk = squeeze(nanmean(reshape(deltaTunc,101,72,64),2));
+pcolor(rlat,pavgLAY(1:97,1000),smoothn(junk(1:97,:),1)); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+ylim([1 1000]); caxis([0 +1]*0.15); colorbar('horizontal'); %plotaxis2;
+title(['Zonal UNC d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+colormap(jet)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if iAK > 0
+  %junk = reshape(permute(waterrate_ak0_era5,[3 1 2]),72,64,49);
+  %figure(42); pcolor(rlat,pjunk20,squeeze(nanmean(junk,1))'); shading interp;
+  %caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 raw dWVfrac/dt 1/yr')
+  %caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 dWVfrac/dt 1/yr')
+  %colormap(llsmap5)
+  
+  figure(43); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(waterrate_ak0_era5,72,64,49),1))'); shading interp;
+  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 raw dWVfrac/dt 1/yr')
+  caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 dWVfrac/dt 1/yr')
+  colormap(llsmap5)
+
+  figure(44); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(waterrate_akF_era5,72,64,49),1))'); shading interp;
+  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 * AK dWVfrac/dt 1/yr')
+  caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 * AK dWVfrac/dt 1/yr')
+  colormap(llsmap5)
+
+  figure(45); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_wv,72,64,49),1))'); shading interp;
+  set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('AK WV')
+  colormap(jet); caxis([0 +1]*0.04); caxis([0 +1]*0.5); 
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  figure(46); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(temprate_ak0_era5,72,64,49),1))'); shading interp; 
+  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('ERA5 raw dT/dt K/yr')
+  colormap(llsmap5)
+
+  figure(47); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(temprate_akF_era5,72,64,49),1))'); shading interp; 
+  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('ERA5 * AK dT/dt K/yr')
+  colormap(llsmap5)
+
+  figure(48); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_T,72,64,49),1))'); shading interp;
+  set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('AK T')
+  colormap(jet); caxis([0 +1]*0.05); caxis([0 +1]*0.5); 
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+  figure(49); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_o3,72,64,49),1))'); shading interp;
+  set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([0.1 1000]); title('AK O3')
+  colormap(jet); caxis([0 +1]*0.025); caxis([0 +1]*0.2); 
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 disp('if you hit Ctrl C and look at find_T_RH_trends.m, you can save these plots ....')
 disp('ret to continue'); pause
