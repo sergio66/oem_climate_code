@@ -83,9 +83,16 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 7
 % JOB = 39
 
-iDebug = +2742;  %% JOB = 39, rm Output_CAL/Quantile16/test2742.mat, gives awfully large CO2 when it shoud be 0.0
-iDebug = +3255;  %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt < 0 over Western USA
-iDebug = +3259;  %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt > 0 over Eastern USA
+iDebug = +2742;   %% JOB = 39, rm Output_CAL/Quantile16/test2742.mat, gives awfully large CO2 when it shoud be 0.0
+iDebug = +3255;   %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt < 0 over Western USA
+iDebug = +3259;   %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt > 0 over Eastern USA
+iDebug = 4608-36; %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over Artic,     bad T(z) or CO2 fits
+iDebug = 36;      %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
+iDebug = 880;     %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
+iDebug = 1052;
+iDebug = 1070;
+%iDebug = 861;     %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
+%iDebug = input('Enter iDebug : ');
 iDebug = -1;
 
 if iDebug > 0
@@ -128,6 +135,15 @@ end
 iOffset = (JOB-1)*72;
 iInd0 = iLon0A + iOffset;  iIndE = iLonEA + iOffset; 
 
+%%% this is new
+if iDebug > 0
+  iInd0 = iDebug - (JOB-1)*72;
+  iIndE = iInd0;
+  fprintf(1,'iDebug = %4i   JOB (latbin) = %2i iInd0 (LonBin) = %2i \n',iDebug,JOB,iInd0)
+  iInd0 = (JOB-1)*72 + iInd0;
+  iIndE = iInd0;
+end
+
 %for iInd = iIndE : -1 : iInd0
 %for iInd = iInd0 + 21;
 for iInd = iInd0 : iIndE
@@ -150,8 +166,8 @@ for iInd = iInd0 : iIndE
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   driver.iDebugRatesUseNWP = 32; %% use AIRS L3 constructed spectral trends from SARTA
   driver.iDebugRatesUseNWP = 62; %% use CMIP6   constructed spectral trends from SARTA
-  driver.iDebugRatesUseNWP = 52; %% use ERA     constructed spectral trends from SARTA
   driver.iDebugRatesUseNWP = -1; %% use AIRS observed spectral trends >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  driver.iDebugRatesUseNWP = 52; %% use ERA     constructed spectral trends from SARTA
 
   iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
   iQuantile = 14;  %% 
@@ -160,11 +176,11 @@ for iInd = iInd0 : iIndE
   iQuantile = 04;  %% quite cloudy (hopefully)
   iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
   iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
-  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7
+  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!)
   iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
-  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
-  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
   iQuantile = 01;  %% Q0.80, iQAX = 3, dataset = 9
+  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
+  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -229,6 +245,10 @@ for iInd = iInd0 : iIndE
   iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019
   iChSet = 5; %% new chans, + CO2 laser lines (window region, low altitude T)
   topts.iChSet = iChSet;
+
+  iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
   %% iNorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
@@ -310,7 +330,15 @@ for iInd = iInd0 : iIndE
     disp(' ')
   end
 driver
-  
+
+if ~exist('oem')
+  oem = driver.oem;
+end
+if exist('oem')
+  if isfield(oem,'cov_set')
+    show_unc  
+  end
+end
 %---------------------------------------------------------------------------
   % Save retrieval output from this loop
 
@@ -407,14 +435,19 @@ driver
 
    % Plot Results
 if (driver.iLat-1)*72 + driver.iLon == iDebug
+
+  %disp('Hit return for next latitude'); pause
+  pause(0.1)
+  %[hMean17years,ha,pMean17years,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+  [hMean17years,ha,pMean17years,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
+  print_cloud_params(hMean17years,pMean17years,driver.iibin); 
+
   if topts.iNlays_retrieve >= 97
     plot_retrieval_latbins
   else
     plot_retrieval_latbins_fewlays
   end
-   %disp('Hit return for next latitude'); pause
-   pause(0.1)
-   error('nnyuk iDebug')
+  error('nnyuk iDebug')
 end
 
 

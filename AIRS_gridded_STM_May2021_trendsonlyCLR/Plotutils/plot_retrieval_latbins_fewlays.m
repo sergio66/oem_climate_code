@@ -9,8 +9,8 @@ if iLoad == 1
 elseif iLoad == -1
   era = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeProfs/LATS40_avg_made_Mar29_2019_Clr/Desc/all_latbins_rates.mat'); 
 elseif iLoad == 0
-  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc_64latbins.mat');
-  %era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat');
+  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc_64latbins.mat'); ahwoo = driver.iLat;   %% and use era5.trend64
+  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat'); ahwoo = driver.iibin;            %% and use era5.trend
 end
 
 hdffile = '/home/sergio/MATLABCODE/airs_l1c_srf_tables_lls_20181205.hdf';   % what he gave in Dec 2018
@@ -51,12 +51,14 @@ plays = plevsA./plevsB;
 %plays = plevs(4:100); 
 plays = flipud(plays);
 
-clear *_ak* *std
+clear *_ak* *std*
 
 for ii = 1 : length(driver.jacobian.wvjaclays_used)
   junk = driver.jacobian.wvjaclays_used{ii}-6;
   playsRET(ii) = mean(plays(junk));
 end
+
+clear waterrate_ak0 waterratestd0 ptemprate_ak0 ptempratestd0 o3rate_ak0 o3rate_std0
 
 if abs(iLoad) <= 1
   if iLoad == 1
@@ -66,8 +68,8 @@ if abs(iLoad) <= 1
     waterrate_ak0 = era.thestats.waterrate(:,1:97);
     waterratestd0 = era.thestats.waterratestd(:,1:97)/2;
   elseif iLoad == 0
-    waterrate_ak0 = ones(ix,1)*era5.trend64_gas_1(1:100,driver.iLat)';
-    waterratestd0 = ones(ix,1)*era5.trend64_gas_1_err(1:100,driver.iLat)';
+    waterrate_ak0 = ones(ix,1)*era5.trend_gas_1(1:100,ahwoo)';
+    waterratestd0 = ones(ix,1)*era5.trend_gas_1_err(1:100,ahwoo)';
   end
   for ii = 1 : length(driver.jacobian.wvjaclays_used)
     junk = driver.jacobian.wvjaclays_used{ii}-6;
@@ -95,8 +97,8 @@ if abs(iLoad) <= 1
     ptemprate_ak0 = era.thestats.ptemprate(:,1:97);
     ptempratestd0 = era.thestats.ptempratestd(:,1:97)/2;
   elseif iLoad == 0
-    ptemprate_ak0 = ones(ix,1)*era5.trend64_ptemp(1:100,driver.iLat)';
-    ptempratestd0 = ones(ix,1)*era5.trend64_ptemp_err(1:100,driver.iLat)';
+    ptemprate_ak0 = ones(ix,1)*era5.trend_ptemp(1:100,ahwoo)';
+    ptempratestd0 = ones(ix,1)*era5.trend_ptemp_err(1:100,ahwoo)';
   end
   for ii = 1 : length(driver.jacobian.wvjaclays_used)
     junk = driver.jacobian.wvjaclays_used{ii}-6;
@@ -124,8 +126,8 @@ if abs(iLoad) <= 1
     o3rate_ak0 = era.thestats.ozonerate(:,1:97);
     o3ratestd0 = era.thestats.ozoneratestd(:,1:97)/2;
   elseif iLoad == 0
-    o3rate_ak0 = ones(ix,1)*era5.trend64_gas_3(1:100,driver.iLat)';
-    o3ratestd0 = ones(ix,1)*era5.trend64_gas_3_err(1:100,driver.iLat)';
+    o3rate_ak0 = ones(ix,1)*era5.trend_gas_3(1:100,ahwoo)';
+    o3ratestd0 = ones(ix,1)*era5.trend_gas_3_err(1:100,ahwoo)';
   end
   for ii = 1 : length(driver.jacobian.wvjaclays_used)
     junk = driver.jacobian.wvjaclays_used{ii}-6;
@@ -143,7 +145,7 @@ if abs(iLoad) <= 1
     shadedErrorBarYLog10(o3rate_akF(ix,:),playsRET,o3ratestdF(ix,:),'rx-'); 
     hold off; 
     title('(b)UMBC (g/r)ERA,AK*ERA Ozone fr/yr')
-    set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 1 3]);   
+    set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0.1 3]);   
   %---------------------------------------------------------------------------
 
 else

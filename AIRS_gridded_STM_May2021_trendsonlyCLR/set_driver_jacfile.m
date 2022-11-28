@@ -49,7 +49,11 @@ if driver.i16daytimestep < 0
      elseif settings.dataset == 8
       iVersJac = 2015;   %% OCO2 2015-2021
      elseif settings.dataset == 9
-      iVersJac = 2022;   %% ERA5 cldQ 2012
+      iVersJac = 2022;   %% ERA5 cldQ 2022
+      if settings.ocb_set == 1
+        disp(' settings.dataset == 9 but settings.ocb_set == 1 so set iVersJac = 2021')
+        iVersJac = 2021;   %% ERA5 clr 2021
+      end
     end
 
     if iKCARTAorSARTA < 0

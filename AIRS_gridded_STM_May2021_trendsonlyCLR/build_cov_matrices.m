@@ -7,13 +7,6 @@ wnorm = driver.qrenorm(driver.jacobian.water_i);
 tnorm = driver.qrenorm(driver.jacobian.temp_i);
 oznorm = driver.qrenorm(driver.jacobian.ozone_i);
 
-% Make sure re-scale to Jacobians before squaring cov matrix
-for i=1:pmat_size
-  for j=1:pmat_size
-    mat_od(i,j) = abs(i-j);
-  end
-end
-
 % Defines tropopause index trpi
 trop_index
 if iNlays_retrieve < 90
@@ -54,60 +47,22 @@ if driver.i16daytimestep > 0
                                                                  %OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
   
 elseif driver.i16daytimestep < 0
-  %% trying to get goooooood trends
-  %%         lc   ct.lev1   ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2 coz_wide  alpha_T  alpha_w  alpha_oz
-  cov_set = [1.0  0.05/2/2    0.05/2/2    1/2       0.15/25/2      0.15/25/2    1/2      0.05/2/2    0.05/0.75/2      1/2        2*1E-1     2*1E-1  2*1E-1]; 
-  cov_set = [1.0  0.05/2*1000.0  0.05/2*1000.0  1/2       0.15/25*1000.0     0.15/25*1000.0   1/2      0.05/2*1000.0   0.05/0.75*1000.0    1/2        20*1E-3     20*1E-1  20*1E-1];  
-  cov_set = [1.0  0.05/2*1000.0  0.05/2*1000.0  1/2       0.15/25*1000.0     0.15/25*1000.0   1/2      0.15/25*1000.0  0.15/25*1000.0      1/2        20*1E-2     20*1E-2  20*1E-2];  
-  cov_set = [1.0  0.05/2*1.0E4  0.05/2*1.0E4    1/2       0.15/25*1.0E4     0.15/25*1.0E4     1/2      0.15/25*1.0E4   0.15/25*1.0E4       1/2        20*1E-3     20*1E-3  20*1E-3];  
-  cov_set = [1.0  0.05          0.05            1/2       0.15/25           0.15/25           1/2      0.15/25         0.15/25             1/2        20*1E-3     20*1E-3  20*1E-3];  
-
-  %% from ../AIRS_new_clear_scan_August2019_AMT2020PAPER/build_cov_matrices.m
-  cov_set = [1.0  0.05/2/2    0.05/2/2    1/2       0.15/25/2      0.15/25/2    1/2      0.05/2/2    0.05/0.75/2      1/2        2*1E-1     2*1E-1  2*1E-1];
-  cov_set = [1.0  0.05/2/20    0.05/2/20   1/2       0.15/25/20      0.15/25/20    1/2      0.05/2/20    0.05/0.75/20      1/2        20*1E-1     20*1E-1  20*1E-1];
-  cov_set = [1.0  0.05/2*2    0.05/2*2    1/2       0.15/25*2      0.15/25*2    1/2      0.05/2*2    0.05/0.75*2      1/2        2*1E-1     2*1E-1  2*1E-1];
-
-  cov_set = [1.0  0.05/2*2    0.05/2*2    1/2       0.15/25*2      0.15/25*2    1/2      0.15/25*2    0.15/25*2      1/2        2*1E-1     2*1E-1  2*1E-1];
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  cov_set = [1.0  0.05          0.05            1/2       0.15/25           0.15/25           1/2      0.15/25         0.15/25             1/2        20*1E-6     20*1E-6  20*1E-6];  %worked gret AIRS STM, 20 layers though WV O3 mebbe a little too tight, Q00, *8-16!! not so good for very cloudy eg Q04
-  cov_set = [1.0  0.1          0.1            1/2       0.15/10           0.15/10           1/2      0.15/10         0.15/10             1/2        20*1E-8     20*1E-8  20*1E-8];  %worked GOOD for iDebugRatesUseNWP = 3X,%X (ERA5 and AIRS L3reconstructed rates, though I think T(z) rates could be a little looser)
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  cov_set = [1.0  0.2          0.2            1/2       0.15/1           0.15/1           1/2      0.15/1         0.15/1             1/2        20*1E-9     20*1E-9  20*1E-9];  %even better, getting closer to AIRS L3, but maybe too loose
-%  cov_set = [1.0  0.2          0.2            1/2       0.15/1           0.15/1           1/2      0.15/1         0.15/1             1/2        10*1E-9     10*1E-9  10*1E-9];  % works well for iQuant == 8 to 16, lousy for iQuant 4
-%  cov_set = [1.0  0.1          0.1            1/2       0.15/2           0.15/2           1/2      0.15/2         0.15/2             1/2        20*1E-8     20*1E-8  20*1E-8];  %not bad
-  %cov_set = [1.0  0.025/2       0.025/2         1/2       0.15/200           0.15/200           1/2      0.15/200         0.15/200             1/2        20*1E-4     20*1E-4  20*1E-4];  %33 layers, tighten things up
-
-  %% worked GOOD for iDebugRatesUseNWP = 32,52,62 (ERA5 and AIRS L3reconstructed rates, though I think T(z) rates could be a little looser), 
-  %% trend for T ~ 0.01 K/yr, WVfrac and O3frac ~ 1e-3/yr while uncertainties for T ~ 0.04K/yr, WVfrac and O3frac ~ 4e-3/yr -- so unc ~ x4 the retrieved value, till Oct 15, 2021
-  cov_set = [1.0  0.2          0.2            1/2       0.15/10           0.15/10           1/2      0.15/10         0.15/10             1/2        20*1E-8     20*1E-8  20*1E-8];    %% some spikes when fmatd is changed so CO2 sticks to 2.2 ppm
-  cov_set = [1.0  0.1          0.1            1/2       0.15/20           0.15/20           1/2      0.15/20         0.15/20             1/2        20*1E-6     20*1E-6  20*1E-6];    %% some spikes when fmatd is changed so CO2 sticks to 2.2 ppm
-
-  %% increase WV,O3 uncertainty in covariances
-  %% trend for T ~ 0.01 K/yr, WVfrac and O3frac ~ 1e-3/yr while uncertainties for T ~ 0.04K/yr, WVfrac and O3frac ~ 3e-2/yr -- so unc ~ x40 the retrieved value OOOOOOOOOOOOPS, Oct 16, 2021
-%  cov_set = [1.0  0.2          0.2            1/2       0.15           0.15           1/2      0.15         0.15             1/2        20*1E-12     20*1E-12  20*1E-12];  
-
-  %% reduce T,WV,O3 uncertainty in covariances, makes WV DOF too small?????
-  %% trend for T ~ 0.01 K/yr, WVfrac and O3frac ~ 1e-3/yr while uncertainties for T ~ 0.03K/yr, WVfrac and O3frac ~ 1e-3/yr -- so unc ~ x3 the retrieved value, actually pretty good, Oct 16, 2021 
-  %%                                                                                     and Feb 4, 2022 (very good simulated ERA5 results)
-  %% works well with sticking CO2 to 2.2 ppm/yr, no spikes
-  cov_set = [1.0  0.025         0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  %% ok   excellent simulated ERA5 spectral rates Feb 4, 2022
-  cov_set = [1.0  0.05*1        0.05*1          1/2       0.15/50*1         0.15/50*1         1/2      0.15/50*1       0.15/50*1           1/2        20*1E-7     20*1E-7  20*1E-7];  %% very excellent simulated ERA5 spectral rates Feb 4, 2022 till Feb 15, 2022
-
-  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x100 unc, Feb 16 2022-Apr7,2022 :  great JPLMay 2022 talk!!!
-  cov_set = [1.0  0.05*3        0.05*3          1/2       0.15/50*3         0.15/50*3         1/2      0.15/50*3       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x3   unc, Feb 16 2022-Apr7,2022 :  great but maybe still constricts WV/O3
-
-  cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try strat only x3   unc
-  cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-1     20*1E-1  20*1E-1];  %% try strat only x3   unc, too higly damped??
-  cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-2     20*1E-2  20*1E-2];  %% try strat only x3   unc
+  %% earlier_cov_sets
 
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x100 unc, Feb 16 2022-Apr7,2022 :  great JPLMay 2022 talk!!!
 
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% 19 year rates, init try 2002/09-2014/08
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, * used this for Princeton iQuant=50, and GOOD ERA5 retr dataset4,Quant16 **
 
-  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        05*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reporoduces ERA5 20 year gophysical rates dataset9,Quant16 **
-  cov_set = [1.0  0.05*5        0.05*5          1/2       0.02              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reporoduces ERA5 20 year gophysical rates dataset9,Quant16 **
-  cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reporoduces ERA5 20 year gophysical rates dataset9,Quant16 **
+  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        05*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
+  cov_set = [1.0  0.05*5        0.05*5          1/2       0.02              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
+  cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
+
+
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-3     05*1E-3  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * too loosy goosy * 
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too tight *
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too loose *
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     02*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** bloody good ocb_set=1 testing, Q=18,dataset=9 NP iffy ***
 
   %cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
   %cov_set = [1.0  0.05*1/3      0.05*1/3        1/3       0.02/5/3            0.02/5/3            1/3      0.02/5/3          0.02/5/3              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
@@ -116,10 +71,17 @@ elseif driver.i16daytimestep < 0
 %  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years trying SHTUFF SHTUFF, T rates good, WV too constrained
 %    cov_set(12:13) = cov_set(12:13) *1e2;
 %    cov_set(11:11) = cov_set(11:11) *1e1;
-
+ 
   if (topts.iChSet == 4 | topts.iChSet == 5) & topts.dataset >= 8
-    cov_set(11:13) = cov_set(11:13) *1e2;
-    %cov_set(11:13) = cov_set(11:13) *1e4;
+    %%  cov_set(11:13) = cov_set(11:13) *1e2;  %% default but I think a little tooooo loosey goosey till Nov 2022
+
+    %%   cov_set(11:13) = cov_set(11:13) .* [1e2 5e5 1e2];  %% NOT bad at all, but could relax it a little
+    %%   cov_set(11:13) = cov_set(11:13) *1/2;
+
+    cov_set(11:13) = cov_set(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little
+
+    %% cov_set(11:13) = cov_set(11:13) *1e5;  %% pretty good but a little too strict trying this after Nov 2022
+    %% cov_set(11:13) = cov_set(11:13) *5e4;  %% pretty good but a little too strict
   end
  
 %  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-1     20*1E-1  20*1E-1];  %% new try 2002/09-2014/08, lousy std dev in window regions
@@ -144,9 +106,31 @@ junk = cov_set([8 9 10 13]); fprintf(1,'      O3 : sig_trop  sig_strat cwide alp
 junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+zalt = p2h(plays)/1000;
+
+% Make sure re-scale to Jacobians before squaring cov matrix
+for i=1:pmat_size
+  for j=1:pmat_size
+    mat_od(i,j)    = abs(i-j);
+    mat_odHgt(i,j) = abs(zalt(i)-zalt(j));
+  end
+end
+mat_od0    = mat_od;
+mat_odHgt0 = mat_odHgt;
+
+%% see eg /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/RODGERS/RODGERS5/rodgers5_reg_and_cov_buildmatrixV1.m
+Lscale_Tz = 3.0;  %% 3 kn
+Lscale_WV = 1.0;  %% 1 km
+Lscale_O3 = 1.0;  %% 1 km
+
+%% should rally be 
+%% mat_od(i,j) = abs(z(i)-z(j))/zScale;  %% and in lower atmosphere z(i)-z(j) ~ 0.5 km, zScale ~ 5 km so mat_od(i,j) ~ 0.1 and not 1 ----- so let l_c = 10
 % Relative off-diagonal
-l_c = cov_set(1);;
-mat_od = exp(-mat_od.^2./(1*l_c^2));
+l_c = cov_set(1)*100;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic
+l_c = Lscale_Tz;   mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
+l_c = Lscale_WV;   mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
+l_c = Lscale_O3;   mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
+  mat_odT = mat_od;   mat_odWV = mat_od;   mat_odO3 = mat_od; 
 
    iOffX = 10;
    ct(ix).trans1 = trpi(ix);
@@ -187,16 +171,24 @@ mat_od = exp(-mat_od.^2./(1*l_c^2));
    coz(ix).width1 = cov_set(10);
    coz(ix).width2 = coz(ix).width1;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Water level uncertainties, then scaled and squared
+wunc = cov2lev(cw(ix),driver.jacobian.numlays);
+w_sigma = (wunc./wnorm);  %% wnorm = qrenorm(iwater)
+wmat = (w_sigma'*w_sigma).*mat_odWV;
+driver.oem.wunc = wunc;
+
 % Temperature level uncertainties, then scaled and squared
 if ~exist('iFixTz_NoFit')
   tunc = cov2lev(ct(ix),driver.jacobian.numlays);
-  t_sigma = (tunc./tnorm);
-  tmat = (t_sigma'*t_sigma).*mat_od;
+  t_sigma = (tunc./tnorm);  %% tnorm = qrenorm(itemp)
+  tmat = (t_sigma'*t_sigma).*mat_odT;
   driver.oem.tunc = tunc;
 elseif exist('iFixTz_NoFit','var') & ~strcmp(driver.rateset.ocb_set,'obs')
   tunc = cov2lev(ct(ix),driver.jacobian.numlays);
-  t_sigma = (tunc./tnorm);
-  tmat = (t_sigma'*t_sigma).*mat_od;
+  t_sigma = (tunc./tnorm);  %% tnorm = qrenorm(itemp)
+  tmat = (t_sigma'*t_sigma).*mat_odT;
   driver.oem.tunc = tunc;
 elseif exist('iFixTz_NoFit','var') & strcmp(driver.rateset.ocb_set,'obs')
   %% from strow_override_defaults_latbins_AIRS_fewlays.m
@@ -214,13 +206,13 @@ end
 % ozone level uncertainties, then scaled and squared
 if ~exist('iFixO3_NoFit')
   ozunc = cov2lev(coz(ix),driver.jacobian.numlays);
-  oz_sigma = (ozunc./oznorm);
-  ozmat = (oz_sigma'*oz_sigma).*mat_od;
+  oz_sigma = (ozunc./oznorm);  %% oznorm = qrenorm(iozone)
+  ozmat = (oz_sigma'*oz_sigma).*mat_odO3;
   driver.oem.ozunc = ozunc;
 elseif exist('iFixO3_NoFit','var') & ~strcmp(driver.rateset.ocb_set,'obs') & ~strcmp(driver.rateset.ocb_set,'cal')
   ozunc = cov2lev(coz(ix),driver.jacobian.numlays);
-  oz_sigma = (ozunc./oznorm);
-  ozmat = (oz_sigma'*oz_sigma).*mat_od;
+  oz_sigma = (ozunc./oznorm);  %% oznorm = qrenorm(iozone)
+  ozmat = (oz_sigma'*oz_sigma).*mat_odO3;
   driver.oem.ozunc = ozunc;
 elseif exist('iFixO3_NoFit','var') & (strcmp(driver.rateset.ocb_set,'obs') | strcmp(driver.rateset.ocb_set,'cal'))
   %% from strow_override_defaults_latbins_AIRS_fewlays.m
@@ -235,14 +227,8 @@ elseif exist('iFixO3_NoFit','var') & (strcmp(driver.rateset.ocb_set,'obs') | str
   end
 end
 
-% Water level uncertainties, then scaled and squared
-wunc = cov2lev(cw(ix),driver.jacobian.numlays);
-w_sigma = (wunc./wnorm);
-wmat = (w_sigma'*w_sigma).*mat_od;
-driver.oem.wunc = wunc;
-
-%keyboard_nowindow
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Scalar uncertainties
@@ -311,10 +297,16 @@ if settings.iFixTG_NoFit(1) > 0
   %aux.m_ts_jac(:,settings.iFixTG_NoFit) = eps;
 end
 
-%% new July 2022
-if settings.ocb_set == 1
-  fmatd = [2     0.1       2      1     1            1];
-end
+%% new July 2022 if we are trying to retriev CO2!!!!!
+%% new July 2022 if we are trying to retriev CO2!!!!!
+%% new July 2022 if we are trying to retriev CO2!!!!!
+%if settings.ocb_set == 1
+%  fmatd = [2     0.1       2      1     1            1];
+%end
+%% new July 2022 if we are trying to retriev CO2!!!!!
+%% new July 2022 if we are trying to retriev CO2!!!!!
+%% new July 2022 if we are trying to retriev CO2!!!!!
+
 if iSergioCO2 > 0
   disp('iSergioCO2 = +1 so RETRIEVE trace gases!!!!')
   fmatd = [2     0.1       2      1     1            1]*0.001;
@@ -351,10 +343,11 @@ rCoupleTWV = 0.001;
 rCoupleTWV = 0.1;
 rCoupleTWV = 1.0;
 rCoupleTWV = 0.25;
+rCoupleT_WV = topts.rCoupleT_WV;
 
-iCoupleT_WV = -1;
-iCoupleT_WV = +1;
-if iCoupleT_WV > 0 & rCoupleTWV > eps
+iCoupleT_WV = -1;    %% default
+iCoupleT_WV = +1;   
+if iCoupleT_WV > 0 & abs(rCoupleTWV) > eps
   disp('coupling T, WV in build_cov_matrices.m')
   rDiagSa = sqrt(diag(driver.oem.cov));
   rSaT  = rDiagSa(driver.jacobian.temp_i);
@@ -386,6 +379,8 @@ end
 %% end
 %%
 
+%% cov = covariance ~ exp(-((i-j/lc).^2)
+%% reg = regulatization = Tikonov
 driver.oem.reg_type = 'cov';         % 'reg_and_cov','cov','reg' are other choices
 driver.oem.reg_type = 'reg';         % 'reg_and_cov','cov','reg' are other choices
 driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices DEFAULT

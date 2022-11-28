@@ -1,4 +1,4 @@
-function [m_ts_jac,nlays,qrenorm,freq2645,colo3] = get_jac_fast(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac);
+function [m_ts_jac,nlays,qrenorm,freq2645,colo3] = get_jac_fast(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac,topts);
 
 iDoSlow = -1;
 if iDoSlow > 0
@@ -81,9 +81,10 @@ qrenorm(5) = 1/600;  %% see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/M
 qrenorm(6) = 0.1;
 
 iVersQRenorm = 1; %% DEFAULT
-%iVersQRenorm = 3;
+iVersQRenorm = 3;
+iVersQRenorm = topts.iVersQRenorm;
 
-fprintf(1,'get_jac_fast.m : iVersQRenorm = %2i \n',iVersQRenorm)
+fprintf(1,'  ....  get_jac_fast.m : iVersQRenorm = %2i (default = 1) ....  \n',iVersQRenorm)
 
 if iVersQRenorm == 1
   %% gives good T(z) rates, small WV rates, till AUg 2021

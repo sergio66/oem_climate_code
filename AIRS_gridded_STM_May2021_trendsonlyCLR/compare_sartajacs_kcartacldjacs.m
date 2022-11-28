@@ -11,7 +11,20 @@ fop = 'junk.op.rtp';
 frp = 'junk.rp.rtp';
 
 % BT1231cld quants = [0 0.03 0.05 0.1 0.2 0.5 0.8 0.9 0.95 0.97 1.0];
-fop0 = '/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp';
+iYear = input('enter jacobian year : ');
+if length(iYear) == 0
+  iYear = 2022;
+end
+if iYear ~= 2022
+  iYear = 2021;
+end
+
+if iYear == 2022
+  fop0 = '/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp';
+else
+  fop0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp';
+end
+
 [h0,ha,p0,pa] = rtpread(fop0);
 
 iX = input('Enter [iLonBin iLatBin] : ');
@@ -22,7 +35,8 @@ fprintf(1,'[iLonBin iLatBin miaow] = %2i %2i %4i \n',[iLonBin iLatBin miaow]);
 fprintf(1,'[rLon rLat landfrac]    = %8.4f %8.4f %8.4f \n',[p0.rlon(miaow) p0.rlat(miaow) p0.landfrac(miaow)])
 [h0,p0] = subset_rtp_allcloudfields(h0,p0,[],[],miaow);
 hjunk = h0; 
-[m_ts_jac,nlays,qrenorm,freq2645,colo3] = get_jac_fast([],miaow,iLonBin,iLatBin,2022);
+topts.iVersQRenorm = 1;
+[m_ts_jac,nlays,qrenorm,freq2645,colo3] = get_jac_fast([],miaow,iLonBin,iLatBin,iYear,topts);
 
 pjunk = p0;
 rtpwrite(fop,hjunk,[],pjunk,[]);
@@ -69,17 +83,20 @@ str = ['Lon/Lat/Prof = ' num2str(iLonBin,'%02d') ' ' num2str(iLatBin,'%02d') ' '
 pjunkT.robs1 = pjunkT.rcalc;
 print_cloud_params(hjunk,pjunkT,1);
 
+[~,nlays] = size(m_ts_jac);
+nlays = (nlays-6)/3;
+
 %% qrenrom(150) = 0.01 = T renorm;
-ind = (6+1*97+(1:97)); figure(1); clf; plot(hjunk.vchan,0.01*(btT-bt0)/0.1,'b.-',hjunk.vchan,sum(m_ts_jac(:,ind),2),'r');       xlim([640 1640]); title([ str ' T jac'])
+ind = (6+1*nlays+(1:nlays)); figure(1); clf; plot(hjunk.vchan,0.01*(btT-bt0)/0.1,'b.-',hjunk.vchan,sum(m_ts_jac(:,ind),2),'r');       xlim([640 1640]); title([ str ' T jac'])
   hl = legend('SARTA','kCARTA','location','best');
 ind = 6;               figure(2); clf; plot(hjunk.vchan,0.10*(btST-bt0)/0.1,'b.-',hjunk.vchan,sum(m_ts_jac(:,ind),2),'r');      xlim([640 1640]); title([ str ' ST jac'])
   hl = legend('SARTA','kCARTA','location','best');
 
 %% qrenrom(90) = 0.01 = WV renorm;
-ind = (6+0*97+(1:97)); figure(3); clf; plot(hjunk.vchan,0.01*(bt1-bt0)/log(1.1),'b.-',hjunk.vchan,sum(m_ts_jac(:,ind),2),'r'); xlim([640 1640]); title([ str ' WV jac'])
+ind = (6+0*nlays+(1:nlays)); figure(3); clf; plot(hjunk.vchan,0.01*(bt1-bt0)/log(1.1),'b.-',hjunk.vchan,sum(m_ts_jac(:,ind),2),'r'); xlim([640 1640]); title([ str ' WV jac'])
   hl = legend('SARTA','kCARTA','location','best');
 ind = 1; figure(4); clf; plot(hjunk.vchan,2.2/400*(bt2-bt0)/log(1.1),'b.-',hjunk.vchan,m_ts_jac(:,ind),'r');                   xlim([640 1640]); title([ str ' CO2 jac'])
   hl = legend('SARTA','kCARTA','location','best');
 
-ind = (6+2*97+(1:97)); figure(5); clf; plot(hjunk.vchan,0.01*colo3,'b.-',hjunk.vchan,sum(m_ts_jac(:,ind),2),'r');       xlim([640 1640]); title([ str ' O3 jac'])
+ind = (6+2*nlays+(1:nlays)); figure(5); clf; plot(hjunk.vchan,0.01*colo3,'b.-',hjunk.vchan,sum(m_ts_jac(:,ind),2),'r');       xlim([640 1640]); title([ str ' O3 jac'])
   hl = legend('COLUMN','sum(O3jac(z))','location','best');

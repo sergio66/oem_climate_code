@@ -31,8 +31,6 @@ end
 % Raw rate data file        
 driver = set_driver_rateset_datafile(driver,settings);
 
-settings
-driver
 fprintf(1,'[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i %3i \n',[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset])
 fprintf(1,' <<< driver.rateset.datafile >>> = %s \n',driver.rateset.datafile)
 
@@ -138,6 +136,7 @@ set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical   %% can set a priori to the M
 
 iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates 
                                                     
 iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates

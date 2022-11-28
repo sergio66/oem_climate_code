@@ -370,6 +370,8 @@ colormap(jet)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iAK > 0
+  aslmap(50,rlat65,rlon73,smoothn((reshape(era5.trend_stemp,72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5); title('ERA5 stemp trends')
+
   %junk = reshape(permute(waterrate_ak0_era5,[3 1 2]),72,64,49);
   %figure(42); pcolor(rlat,pjunk20,squeeze(nanmean(junk,1))'); shading interp;
   %caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 raw dWVfrac/dt 1/yr')
@@ -408,6 +410,18 @@ if iAK > 0
   figure(49); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_o3,72,64,49),1))'); shading interp;
   set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([0.1 1000]); title('AK O3')
   colormap(jet); caxis([0 +1]*0.025); caxis([0 +1]*0.2); 
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %% these are NOT masked for L/O
+
+  if ~exist('rlon')
+    rlon73 = -180 : 5 : +180; rlon = meanvaluebin(rlon73);
+  end
+  iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
+  while iCompare > 0 & iCompare < 65
+    do_compare_ERA5_UMBC_latbin
+  end
 
 end
 

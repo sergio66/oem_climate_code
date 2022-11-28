@@ -3,6 +3,14 @@ topts = [];
 
 topts = struct;
 
+topts.rCoupleT_WV = 0.25; %% yes    couple in the covariance matrix, before Oct 2002 default
+topts.rCoupleT_WV = 0.00; %% do not couple in the covariance matrix
+
+topts.iVersQRenorm = +3; %% WV/T/O3 = 0.01 0.10 0.01 renormalization, increase T impact
+topts.iVersQRenorm = +1; %% WV/T/O3 = 0.01 0.01 0.01 renormalization, default
+
+topts.iAdjLowerAtmWVfrac = 1.0 %% trying to set dWVfrac/dt in lower atmosphere based on dBT1231/dt, assumuing d(RH) = 0, introduced after Oct 2022
+
 topts.iSergioCO2 = +1;  %% fit for CO2/CH4 rates
 topts.iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates, DEFAULT
 

@@ -2,9 +2,9 @@
 %[m_ts_jac0,nlays,qrenorm]  = get_jac(driver.jacobian.filename,driver.jac_indexINSIDEbin,iVersJac);
 if iVersJac == 2012 | iVersJac == 2019
   %% [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,2021);   %% I have not made jacs for this time period
-  [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac);
+  [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
 else
-  [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac);
+  [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
 end
 m_ts_jac0 = double(m_ts_jac0);
 
@@ -39,10 +39,19 @@ if iNlays_retrieve <= 60
   [m_ts_jac_wv,qWV,layWV]  = combinejaclays(m_ts_jac0,driver.jacobian.water_i,qrenorm,iNlays_retrieve);
   [m_ts_jac_t,qT,layT]     = combinejaclays(m_ts_jac0,driver.jacobian.temp_i, qrenorm,iNlays_retrieve);
   [m_ts_jac_o3,qO3,layO3]  = combinejaclays(m_ts_jac0,driver.jacobian.ozone_i,qrenorm,iNlays_retrieve);
+  playsx = load('/home/sergio/MATLABCODE/airslevels.dat');
+  playsx = flipud(plevs2plays(playsx));
+  for kkk = 1 : length(layWV)
+    iavg = layWV{kkk}-max(driver.jacobian.scalar_i);
+    plays(kkk) = mean(playsx(iavg));
+  end
 else
   fprintf(1,'setting iNlays_retrieve ( > 60) from %2i to 97 \n',iNlays_retrieve);
   m_ts_jac_wv = m_ts_jac0;
   iNlays_retrieve = 97;
+  plays = load('/home/sergio/MATLABCODE/airslevels.dat');
+  plays = flipud(plevs2plays(plays));
+  plays = plays(4:100);
 end
 %figure(10); imagesc(m_ts_jac_wv'); colorbar
 %figure(11); imagesc(m_ts_jac_t'); colorbar

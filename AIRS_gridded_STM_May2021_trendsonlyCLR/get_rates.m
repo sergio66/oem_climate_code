@@ -39,6 +39,9 @@ if driver.i16daytimestep < 0
       % this is assuming I am reading in  dataset = 9, ocbset = +1
       %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 unchanging
       elseif settings.dataset == 9
+'mamma mia'
+driver.rateset.datafile
+ix
         driver.rateset.rates = real(thesave.xtrend(:,ix));
         driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
 
@@ -187,39 +190,46 @@ if iDebugRatesUseNWP > 0
     end
   end
   
-  if iDebugRatesUseNWP > 0
+  if iDebugRatesUseNWP > 0 & settings.ocb_set == 1
+    disp('iDebugRatesUseNWP > 0 & settings.ocb_set == 1 so NOT loading in reconstrtcted sets, ,which hasve increasing CO2/CH4/N2O')
+  end
+
+  if iDebugRatesUseNWP > 0 & settings.ocb_set == 0
     iz = (iy-1)*72 + ix;
-    fprintf(1,'  ---> get_rates.m iDebugRatesUseNWP=%2i ix/iy= %2i/%2i iz/iibin=%4i/%4i \n',[iDebugRatesUseNWP ix iy iz driver.iibin])
+    fprintf(1,'  ---> get_rates.m settings.ocb_set == 0 AND iDebugRatesUseNWP=%2i ix/iy= %2i/%2i iz/iibin=%4i/%4i \n',[iDebugRatesUseNWP ix iy iz driver.iibin])
     if iz ~= driver.iibin
       error('driver.iibin ~= iz')
     end
   end
-  if iDebugRatesUseNWP == -1
-    %% do nothing, stick to AIRS obs
-  elseif iDebugRatesUseNWP == 31 | iDebugRatesUseNWP == 32
-    disp('  --> --> get_rates ... iDebugRatesUseNWP = 3 so use AIRS L3 reconstructed rates')
-    if iDebugRatesUseNWP == 31
-      load reconstructed_spectral_trends_nwp_night.mat
-    elseif iDebugRatesUseNWP == 32
-      load reconstructed_spectral_trends_nwp_day.mat
+  if settings.ocb_set == 0 
+    if iDebugRatesUseNWP == -1
+      %% do nothing, stick to AIRS obs
+    elseif iDebugRatesUseNWP == 31 | iDebugRatesUseNWP == 32 
+      disp('  --> --> get_rates ... iDebugRatesUseNWP = 3 so use AIRS L3 reconstructed rates')
+      if iDebugRatesUseNWP == 31
+        load reconstructed_spectral_trends_nwp_night.mat
+      elseif iDebugRatesUseNWP == 32
+        load reconstructed_spectral_trends_nwp_day.mat
+      end
+      driver.rateset.rates = the_nwp_trends.airsL3(:,iz);
+    elseif iDebugRatesUseNWP == 51 | iDebugRatesUseNWP == 52
+      disp('  --> --> get_rates ... iDebugRatesUseNWP = 5 so use ERA5 reconstructed rates')
+      if iDebugRatesUseNWP == 51
+        load reconstructed_spectral_trends_nwp_night.mat
+      elseif iDebugRatesUseNWP == 52
+        load reconstructed_spectral_trends_nwp_day.mat
+      end
+      driver.rateset.rates = the_nwp_trends.era5(:,iz);
+    elseif iDebugRatesUseNWP == 61 | iDebugRatesUseNWP == 62
+      disp('  --> --> get_rates ... iDebugRatesUseNWP = 6 so use CMIP6 reconstructed rates')
+      if iDebugRatesUseNWP == 61
+        load reconstructed_spectral_trends_nwp_night.mat
+      elseif iDebugRatesUseNWP == 62
+        load reconstructed_spectral_trends_nwp_day.mat
+      end
+      driver.rateset.rates = the_nwp_trends.cmip6(:,iz);
     end
-    driver.rateset.rates = the_nwp_trends.airsL3(:,iz);
-  elseif iDebugRatesUseNWP == 51 | iDebugRatesUseNWP == 52
-    disp('  --> --> get_rates ... iDebugRatesUseNWP = 5 so use ERA5 reconstructed rates')
-    if iDebugRatesUseNWP == 51
-      load reconstructed_spectral_trends_nwp_night.mat
-    elseif iDebugRatesUseNWP == 52
-      load reconstructed_spectral_trends_nwp_day.mat
-    end
-    driver.rateset.rates = the_nwp_trends.era5(:,iz);
-  elseif iDebugRatesUseNWP == 61 | iDebugRatesUseNWP == 62
-    disp('  --> --> get_rates ... iDebugRatesUseNWP = 6 so use CMIP6 reconstructed rates')
-    if iDebugRatesUseNWP == 61
-      load reconstructed_spectral_trends_nwp_night.mat
-    elseif iDebugRatesUseNWP == 62
-      load reconstructed_spectral_trends_nwp_day.mat
-    end
-    driver.rateset.rates = the_nwp_trends.cmip6(:,iz);
   end
+
 end
 

@@ -1,4 +1,7 @@
-function [] = hpc_usage(Q,iLinearOrLog)
+function [] = hpc_usage(Q,ocb_set,iLinearOrLog)
+
+% hpc_usage(Q,ocb_set,iLinearOrLog)
+%  defaults Q = 16, ocb_set = 0,iLinearOrLog = 1
 
 save_no_legend_autoupdate
 
@@ -6,15 +9,25 @@ disp('checking hpc nodes health ...')
 
 if nargin == 0
   Q = 16;
+  ocb_set = 0;
   iLinearOrLog = 1;
 elseif nargin == 1
+  ocb_set = 0;
+  iLinearOrLog = 1;
+elseif nargin == 2
   iLinearOrLog = 1;
 end
 
 %% alias sqrun='squeue -u sergio -t R -o "%.19i %.9P %.8j %.8u %.2t %.10M %.6D %R"'
 sqrun = 'squeue -u sergio -t R -o "%.19i %.9P %.8j %.8u %.2t %.10M %.6D %R"';
 
-thedir = dir(['Output/Quantile' num2str(Q,'%02d') '/test*.mat']);
+if ocb_set == 0
+  thedir = dir(['Output/Quantile' num2str(Q,'%02d') '/test*.mat']);
+  fprintf(1,'looking in Output/Quantile %2i /test*.mat \n',Q);
+elseif ocb_set == 1
+  thedir = dir(['Output_CAL/Quantile' num2str(Q,'%02d') '/test*.mat']);
+  fprintf(1,'looking in Output_CAL/Quantile %2i /test*.mat \n',Q);
+end
 
 eval(['!' sqrun ' >& /home/sergio/ugh']);
 
@@ -64,7 +77,11 @@ while ischar(tline)
     
     iFound = 0;
     for kk = iS : iE
-      fname = ['Output/Quantile' num2str(Q,'%02d') '/test' num2str(kk) '.mat'];
+      if ocb_set == 0
+        fname = ['Output/Quantile' num2str(Q,'%02d') '/test' num2str(kk) '.mat'];
+      else
+        fname = ['Output_CAL/Quantile' num2str(Q,'%02d') '/test' num2str(kk) '.mat'];
+      end
       if exist(fname)
          iFound = iFound + 1;
        end
@@ -122,7 +139,11 @@ if exist('iFound')
   wah = [expected(I,1)    expected(I,2) ./ expected(I,3)];
   fprintf(1,'cnode %3i   fraction done %8.4f \n',wah')
 else
-  disp('oooer nothing running')
+  disp(' oooer nothing running')
 end
 
-fprintf(1,'found  %4i files in Output/Quantile%2i \n',length(thedir),Q);
+if ocb_set == 0
+  fprintf(1,'found  %4i files in Output/Quantile%2i \n',length(thedir),Q);
+elseif ocb_set == 1
+  fprintf(1,'found  %4i files in Output_CAL/Quantile%2i \n',length(thedir),Q);
+end

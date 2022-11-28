@@ -616,6 +616,7 @@ disp('ret to continue to gridded results'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% look at current AIRS UMBC trend retrievals
+show_unc
 plot_driver_gather_gridded_retrieval_results
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,4 +1,5 @@
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil/
 addpath /home/sergio/MATLABCODE/TIME
@@ -6,7 +7,7 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 
 system_slurm_stats
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
-%JOB = 1
+%JOB = 1 -- 64
 
 % ls -lt /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5_ConstTracegas/simulate64binsERA5_15*.rp.rtp
 % -rw-rw-r-- 1 sergio pi_strow 316109325 Oct 29 15:35 /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5_ConstTracegas/simulate64binsERA5_15_2002_09_2022_08.rp.rtp
@@ -28,6 +29,8 @@ fprintf(1,'JOB = %2i iNumYear = %2i frp = %s \n',JOB,iNumYear,frp);
 [h,ha,pppp,pa] = rtpread(frp);
 
 numdatapts = iNumYear * 12 * 72; %% eg 19 years --> 16416 points
+
+[ppmvLAY,ppmvAVG,ppmvMAX,pavgLAY,tavgLAY,ppmv500,ppmv75,ppmvSURF] = layers2ppmv(h,pppp,1:length(pppp.stemp),2);
 
 for xx = 1 : 72
   ind = (1:72:numdatapts);
