@@ -1,6 +1,7 @@
 settings.iSergioCO2 = -1;            %% assume ESRL CO2/CH4 rates, DEFAULT   (+1) to fit for CO2/CH4
 
-settings.set_era5_cmip6_airsL3 = -1; %% default, no a priori, else set to 3,5,6 for AIRS L3/ERA5/CMIP6
+settings.set_era5_cmip6_airsL3         = -1; %% default, no a priori, else set to 3,5,6 for AIRS L3/ERA5/CMIP6
+settings.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% is using ERA5 or AIRS L3 or MERRA to set rates, you can choose to see -1:WV/T/O3 or +1/+2/+3 for WV.T.O3only
 
 settings.resetnorm2one = -1; %%% default, keep my scaling, set to +1 if you want to reset all to 1.00000000
 
@@ -54,7 +55,7 @@ settings.iFixTG_NoFit = -1;            %% -1 means retrieve all trace gases [CO2
 settings.UMBCvsERAjac = -1;            %% do not adjust jacobian, based on handful of clear sky retrieval days
                                        %% [+1] means to adjust
 
-topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_tracegas'},{'offsetrates'},{'set_era5_cmip6_airsL3'},...
+topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_tracegas'},{'offsetrates'},{'set_era5_cmip6_airsL3'},{'set_era5_cmip6_airsL3_WV_T_O3'},...
         	       {'addco2jacs'},{'obs_corr_matrix'},{'invtype'},{'tie_sst_lowestlayer'},{'iNlays_retrieve'},...
                        {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},...
                        {'resetnorm2one'},{'UMBCvsERAjac'},{'iSergioCO2'},{'iAdjLowerAtmWVfrac'},{'iVersQRenorm'},{'rCoupleT_WV'}];

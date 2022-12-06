@@ -10,7 +10,6 @@
 %   iXMIP6 = CMIP -1 default
 %            AMIP +1
 
-
 iNorD = 1;
 iAorOrL = 0;
 

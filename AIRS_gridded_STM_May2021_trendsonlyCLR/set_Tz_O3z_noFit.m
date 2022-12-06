@@ -1,4 +1,3 @@
-
 if exist('iFixTz_NoFit','var') & strcmp(driver.rateset.ocb_set,'obs')
 
   disp(' >>>>> need to account for cal_T_rates by eg subbing in T(z,t) from fits to cal or raw ERA anoms >>>>> ')

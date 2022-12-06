@@ -62,7 +62,19 @@ elseif driver.i16daytimestep < 0
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-3     05*1E-3  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * too loosy goosy * 
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too tight *
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too loose *
-  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     02*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** bloody good ocb_set=1 testing, Q=18,dataset=9 NP iffy ***
+  
+  %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     02*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** bloody good ocb_set=1 testing, Q=18,dataset=9 
+                                                                                                                                                                                    %% NP is iffy BUT obs T may be too tight, obs WV maybe too loose***
+                                                                                                                                                                                    %% see eg Output_CAL/Quantile16_20years and Output_CAL/Quantile16_20yearsV2
+  %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
+
+
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** TRY THIS, WV still too loose
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/8            0.01/8            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** very bad bad WV
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** 
+
 
   %cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
   %cov_set = [1.0  0.05*1/3      0.05*1/3        1/3       0.02/5/3            0.02/5/3            1/3      0.02/5/3          0.02/5/3              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3

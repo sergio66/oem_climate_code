@@ -38,47 +38,8 @@ clear px RHx RH1kmx colwaterx
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-pert     = p;
-pert_unc = p; 
+interp_resultsT_WV_O3_to_p   %% interp the 50 layer resultT,resultWV retrievals to 100 layer p
 
-for ii = 1 : length(p.stemp)
-  nlays = p.nlevs(ii)-1;
-  playsjunk = p.plays(1:nlays,ii);
-
-  roo = interp1(log(pavg),resultsT(ii,:),log(playsjunk),[],'extrap');
-    pert.ptemp(1:nlays,ii)     = pert.ptemp(1:nlays,ii) + roo;
-    pert.ptemp_unc(:,ii)       = 0 * pert.ptemp(:,ii);
-    roounc = interp1(log(pavg),resultsTunc(ii,:),log(playsjunk),[],'extrap');  
-    pert.ptemp_unc(1:nlays,ii) = roounc;
-    pert_unc.ptemp(1:nlays,ii) = pert_unc.ptemp(1:nlays,ii) + roo + roounc;
-
-  roo = interp1(log(pavg),resultsWV(ii,:),log(playsjunk),[],'extrap');
-    pert.gas_1(1:nlays,ii)     = pert.gas_1(1:nlays,ii) .* (1+roo);
-    pert.gas_1_unc(:,ii)       = 0 * pert.gas_1(:,ii);
-    roounc = interp1(log(pavg),resultsWVunc(ii,:),log(playsjunk),[],'extrap');
-    pert.gas_1_unc(1:nlays,ii) = pert.gas_1(1:nlays,ii) .* (0+roounc);
-    pert_unc.gas_1(1:nlays,ii) = pert_unc.gas_1(1:nlays,ii) .* (1+roo+roounc);
-
-  roo = interp1(log(pavg),resultsO3(ii,:),log(playsjunk),[],'extrap');
-    pert.gas_3(1:nlays,ii)     = pert.gas_3(1:nlays,ii) .* (1+roo);
-    pert.gas_3_unc(:,ii)       = 0 * pert.gas_3(:,ii);
-    roounc = interp1(log(pavg),resultsO3unc(ii,:),log(playsjunk),[],'extrap');
-    pert.gas_3_unc(1:nlays,ii) = pert.gas_3(1:nlays,ii) .* (0+roounc);
-    pert_unc.gas_3(1:nlays,ii) =  pert_unc.gas_3(1:nlays,ii) .* (1+roo+roounc);
-
-  pert.stemp(ii) = pert.stemp(ii) + results(ii,6);
-  pert.stemp_unc(ii) = results(ii,6);
-  pert_unc.stemp(ii) = pert_unc.stemp(ii) + resultsunc(ii,6);
-
-  pert.gas_2(1:nlays,ii) =  pert.gas_2(1:nlays,ii) .* (1+2.2/385);
-  pert.gas_4(1:nlays,ii) =  pert.gas_4(1:nlays,ii) .* (1+0.8/300);
-  pert.gas_6(1:nlays,ii) =  pert.gas_6(1:nlays,ii) .* (1+4.5/1700);
-  pert_unc.gas_2(1:nlays,ii) =  pert_unc.gas_2(1:nlays,ii) .* (1+2.2/385);
-  pert_unc.gas_4(1:nlays,ii) =  pert_unc.gas_4(1:nlays,ii) .* (1+0.8/300);
-  pert_unc.gas_6(1:nlays,ii) =  pert_unc.gas_6(1:nlays,ii) .* (1+4.5/1700);
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % rtpwrite('summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_PERTv1.rtp',h,ha,pert,pa);
 
 mmwPert = mmwater_rtp(h,pert);
@@ -286,6 +247,17 @@ junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
 ylim([1 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
 
+%% can estimate max deltaRH expected from Isaac Held blog
+%%% see my notes, BK 45
+averageTlat = squeeze(nanmean(reshape(p.ptemp,[101 72 64]),2))';
+      Lo = 2.5e6;  %%% J/kg
+      Rv = 461.52; %%% J/kg/K
+      moo = exp(Lo/Rv * deltaTlat ./ averageTlat ./ averageTlat) - 1;
+figure(51);
+  pcolor(rlat,pavgLAY(1:97,3000),smoothn(moo(:,1:97)',1)); shading interp; colormap(usa2); set(gca,'ydir','reverse')
+  ylim([100 1000]); caxis([-1 +1]*0.015); colorbar('horizontal'); colormap(cmap); title(['if RH0 were 100 \newline Zonal MAX dWVfrac/dt expected from dT/dt'])
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 clear data dataMap
@@ -300,13 +272,31 @@ aslmap(31,rlat65,rlon73,smoothn((reshape(maskLF.*mmwPert - maskLF.*mmw0,72,64)')
 aslmap_polar(32,rlat65,rlon73,smoothn((reshape(maskLF.*results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 aslmap_polar(33,rlat65,rlon73,smoothn((reshape(maskLF.*mmwPert - maskLF.*mmw0,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 
-boo = mmwPert-mmw0; boo = boo ./ mmw0; boo = 100 * boo ./ results(:,6)'; boo = boo.*maskLF;
+boo = mmwPert - mmw0; boo = boo ./ mmw0; boo = 1 * boo ./ results(:,6)'; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
   bad = find(abs(results(:,6)) < 1e-2); boo(bad) = nan;
-aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dST');     caxis([-1 +1]*10); colormap(llsmap5)
-aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dST');     caxis([-1 +1]*10); colormap(llsmap5)
-%aslmap(34,rlat65,rlon73,smoothn((reshape(abs(boo),72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dST');     caxis([-1 +1]*10); colormap(llsmap5)
+aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
+aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
+%aslmap(34,rlat65,rlon73,smoothn((reshape(abs(boo),72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
 
-figure(35); clf; junk = reshape(maskLF.*results(:,6)',72,64)'; plot(rlat,smooth(nanmean(junk,2),3)); title('dST/dt'); xlabel('Latitude')
+clf
+plot(results(:,6),100*(mmwPert - mmw0)./mmw0,'.'); ylabel('% change in mmw'); xlabel('d(ST) (K)')
+dsst = [-1:0.01:+1]/2; dmmwfrac = [-20:0.1:+20]/2; 
+dsst = linspace(-0.2,+0.2,20); dmmwfrac = linspace(-5,5,20);
+[nz,nx,ny,nmean,nstd] = myhist2d(results(:,6),100*(mmwPert - mmw0)./mmw0,dsst,dmmwfrac);
+pcolor(nx,ny,nz);  pcolor(nx,ny,nz); shading interp; colormap jet; colorbar; jett = jet(64); jett(1,:) = 1; colormap(jett); 
+hold on; errorbar(dsst,nmean,nstd); hold off; ylabel('% change in mmw'); xlabel('d(ST) (K)')
+
+fprintf(1,'blindly fitting the fractional dMMWW vs dSTEMP gives %8.6f percent/kelvin + %8.6f percent ',nanpolyfit(results(:,6),100*(mmwPert - mmw0)./mmw0,1))
+
+if iAK > 0
+  boo = era5.trend_mmw; boo = boo ./ mmw0; boo = 1 * boo ./ era5.trend_stemp; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
+  bad = find(abs(era5.trend_stemp) < 1e-2); boo(bad) = nan;
+  aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
+  fprintf(1,'blindly fitting the ERA5 fractional dMMWW vs dSTEMP gives %8.6f percent/kelvin + %8.6f percent ',nanpolyfit(results(:,6),100*(mmwPert - mmw0)./mmw0,1))
+else
+  figure(35); clf; junk = reshape(maskLF.*results(:,6)',72,64)'; plot(rlat,smooth(nanmean(junk,2),3)); title('dST/dt'); xlabel('Latitude')
+end
+
 
 figure(30); set(gca,'yscale','linear'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
 figure(28); set(gca,'yscale','linear'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
@@ -370,67 +360,13 @@ colormap(jet)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iAK > 0
-  aslmap(50,rlat65,rlon73,smoothn((reshape(era5.trend_stemp,72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5); title('ERA5 stemp trends')
-
-  %junk = reshape(permute(waterrate_ak0_era5,[3 1 2]),72,64,49);
-  %figure(42); pcolor(rlat,pjunk20,squeeze(nanmean(junk,1))'); shading interp;
-  %caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 raw dWVfrac/dt 1/yr')
-  %caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 dWVfrac/dt 1/yr')
-  %colormap(llsmap5)
-  
-  figure(43); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(waterrate_ak0_era5,72,64,49),1))'); shading interp;
-  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 raw dWVfrac/dt 1/yr')
-  caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 dWVfrac/dt 1/yr')
-  colormap(llsmap5)
-
-  figure(44); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(waterrate_akF_era5,72,64,49),1))'); shading interp;
-  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 * AK dWVfrac/dt 1/yr')
-  caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 * AK dWVfrac/dt 1/yr')
-  colormap(llsmap5)
-
-  figure(45); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_wv,72,64,49),1))'); shading interp;
-  set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('AK WV')
-  colormap(jet); caxis([0 +1]*0.04); caxis([0 +1]*0.5); 
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-  figure(46); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(temprate_ak0_era5,72,64,49),1))'); shading interp; 
-  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('ERA5 raw dT/dt K/yr')
-  colormap(llsmap5)
-
-  figure(47); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(temprate_akF_era5,72,64,49),1))'); shading interp; 
-  caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('ERA5 * AK dT/dt K/yr')
-  colormap(llsmap5)
-
-  figure(48); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_T,72,64,49),1))'); shading interp;
-  set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('AK T')
-  colormap(jet); caxis([0 +1]*0.05); caxis([0 +1]*0.5); 
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-
-  figure(49); pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_o3,72,64,49),1))'); shading interp;
-  set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([0.1 1000]); title('AK O3')
-  colormap(jet); caxis([0 +1]*0.025); caxis([0 +1]*0.2); 
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-
-  %% these are NOT masked for L/O
-
-  if ~exist('rlon')
-    rlon73 = -180 : 5 : +180; rlon = meanvaluebin(rlon73);
-  end
-  iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
-  while iCompare > 0 & iCompare < 65
-    do_compare_ERA5_UMBC_latbin
-  end
-
+  plot_ERA_vs_UMBC
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 disp('if you hit Ctrl C and look at find_T_RH_trends.m, you can save these plots ....')
 disp('ret to continue'); pause
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %{

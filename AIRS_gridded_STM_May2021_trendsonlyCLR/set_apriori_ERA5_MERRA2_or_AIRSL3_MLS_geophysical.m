@@ -11,10 +11,34 @@ if settings.set_era5_cmip6_airsL3 == 5
   ix = driver.iLon;
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
-  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+    boo
+  else
+    boo = 6;
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+    boo
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+    boo
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 3
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+    boo
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  % boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 
 elseif settings.set_era5_cmip6_airsL3 == 6
@@ -30,10 +54,34 @@ elseif settings.set_era5_cmip6_airsL3 == 6
   ix = driver.iLon;
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
-  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  % boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  else
+    boo = 6;
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 3
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  % boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 
 elseif settings.set_era5_cmip6_airsL3 == 3
@@ -49,10 +97,30 @@ elseif settings.set_era5_cmip6_airsL3 == 3
   ix = driver.iLon;
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
-  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  else
+    boo = 6;
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 3
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  % boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 elseif settings.set_era5_cmip6_airsL3 == 2
   disp(' apriori will be using MERRA2 trends')
@@ -69,10 +137,30 @@ elseif settings.set_era5_cmip6_airsL3 == 2
   ix = driver.iLon;
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
-  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  else
+    boo = 6;
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 3
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  % boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 
 elseif settings.set_era5_cmip6_airsL3 == 8
@@ -90,9 +178,29 @@ elseif settings.set_era5_cmip6_airsL3 == 8
   ix = driver.iLon;
   iy = driver.iLat;
   iz = (iy-1)*72 + ix;
-  boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
-  boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  else
+    boo = 6;
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 3
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  else
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
+  end
+  % boo = 6;                                             xb(boo)     = xrates.stemp(iz);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
+  % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 end

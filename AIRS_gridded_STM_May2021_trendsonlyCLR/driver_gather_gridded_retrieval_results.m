@@ -3,10 +3,12 @@ addpath /home/sergio/MATLABCODE/TROPOPAUSE
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /home/sergio/MATLABCODE/PLOTTER
+addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/matlib/science/
 addpath /home/sergio/MATLABCODE/NANROUTINES/
+addpath /home/sergio/MATLABCODE/SHOWSTATS/
 addpath /asl/matlib/aslutil
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/maps
@@ -225,6 +227,7 @@ if ~exist('iaFound')
   resultsTunc  = nan(4608,iNumLay);
   resultsO3unc = nan(4608,iNumLay);
 
+  spectral_deltan00 = nan(2645,4608);
   rates = nan(2645,4608);
   fits  = nan(2645,4608);
   nedt  = nan(2645,4608);
@@ -423,6 +426,10 @@ while iDoAgain > 0
       junknoise = nan(2645,1);
       junknoise(jacobian.chanset) = diag(oem.se);
   
+      if isfield(oem,'spectral_deltan00')
+        spectral_deltan00(:,ii) = oem.spectral_deltan00;
+      end
+
       rates(:,ii) = rateset.rates;
       fits(:,ii)  = oem.fit';
       nedt(:,ii)  = sqrt(junknoise);
@@ -611,6 +618,12 @@ figure(11); ylim([-1 +1]*0.1/2)
 figure(12); ylim([-1 +1]*5)
 for ii = 15:20; figure(ii); colormap jet; caxis([0 1]*10); end
 
+figure(21);
+if isfield(oem,'spectral_deltan00')
+  plot(f,mean(rates'),f,mean(spectral_deltan00'))
+  hl = legend('actual data','what was fitted','location','best'); plotaxis2;
+  title('After doing data-sum(jac(i)*startxb(i)')
+end
 disp('ret to continue to gridded results'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

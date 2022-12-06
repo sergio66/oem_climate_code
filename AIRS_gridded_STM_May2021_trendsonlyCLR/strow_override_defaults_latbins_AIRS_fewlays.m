@@ -120,6 +120,8 @@ iZeroTVers = 2; %%% use raw ERA T anomalies as saved in era_ptempanom.mat (see c
 
 set_zeroT_nofit
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if settings.iFixO3_NoFit >= 0 & (strcmp(driver.rateset.ocb_set,'obs') | strcmp(driver.rateset.ocb_set,'cal'))
   iFixO3_NoFit = settings.iFixO3_NoFit;    %%% LARABBEE LIKES THIS TURNED OFF ie keep spectra as is, just read in ERA anom and proceed
 end
@@ -137,7 +139,7 @@ set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical   %% can set a priori to the M
 iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
-set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates 
+set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
                                                     
 iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates
 iSergioCO2 = +1;  %% fit for CO2/CH4 rates

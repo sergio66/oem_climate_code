@@ -22,20 +22,28 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
     if ppp.landfrac(JOBJOBJOB) < eps
       %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
       dBT1231 = 0.0025/2;
-      dBT1231 = driver.rateset.rates(1520); dBT1231 = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0
+      dBT1231 = driver.rateset.rates(1520); 
+      dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+
+      %%% see my notes, BK 45
+      Lo = 2.5e6;  %%% J/kg
+      Rv = 461.52; %%% J/kg/K
+      moo = exp(Lo/Rv * dBT1231/ppp.stemp(JOBJOBJOB)/ppp.stemp(JOBJOBJOB))-1;
+      dBT1231_WV = moo; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+
     else
       %% land, so whos know
-      dBT1231 = 0.0;
+      dBT1231_WV = 0.0;
     end
     
-    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfrac = %8.6f\n',driver.rateset.rates(1520),dBT1231,iAdjLowerAtmWVfrac);
-    xb(6+length(driver.jacobian.water_i)-0) = dBT1231 * iAdjLowerAtmWVfrac;
-    xb(6+length(driver.jacobian.water_i)-1) = dBT1231 * iAdjLowerAtmWVfrac;
-%    xb(6+length(driver.jacobian.water_i)-2) = dBT1231 * iAdjLowerAtmWVfrac;
-%    xb(6+length(driver.jacobian.water_i)-3) = dBT1231 * iAdjLowerAtmWVfrac;
-%    xb(6+length(driver.jacobian.water_i)-4) = dBT1231 * iAdjLowerAtmWVfrac;
-%    xb(6+length(driver.jacobian.water_i)-5) = dBT1231 * iAdjLowerAtmWVfrac;
-%    xb(6+length(driver.jacobian.water_i)-6) = dBT1231 * iAdjLowerAtmWVfrac;
+    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfrac = %8.6f\n',driver.rateset.rates(1520),dBT1231_WV,iAdjLowerAtmWVfrac);
+    xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfrac;
+    xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-2) = dBT1231_WV * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-3) = dBT1231_WV * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-4) = dBT1231_WV * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-5) = dBT1231_WV * iAdjLowerAtmWVfrac;
+%    xb(6+length(driver.jacobian.water_i)-6) = dBT1231_WV * iAdjLowerAtmWVfrac;
 
   elseif settings.co2lays == 3
     xb(1) = co2x * 1;        % Set CO2 apriori lower trop
