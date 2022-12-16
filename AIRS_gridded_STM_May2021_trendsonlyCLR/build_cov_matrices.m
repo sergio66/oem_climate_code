@@ -72,9 +72,10 @@ elseif driver.i16daytimestep < 0
 
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** TRY THIS, WV still too loose
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/8            0.01/8            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** very bad bad WV
-  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible
-  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** 
-
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too tight, commmitted Dec 6 
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
+%  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     09*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
+%  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     10*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
 
   %cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
   %cov_set = [1.0  0.05*1/3      0.05*1/3        1/3       0.02/5/3            0.02/5/3            1/3      0.02/5/3          0.02/5/3              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
@@ -187,6 +188,16 @@ l_c = Lscale_O3;   mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
 
 % Water level uncertainties, then scaled and squared
 wunc = cov2lev(cw(ix),driver.jacobian.numlays);
+if driver.iLat < 55
+  wunc(1:5)       = 0.5*wunc(1:5);
+  wunc(end-5:end) = 0.5*wunc(end-5:end);
+else
+  woox = 0.375;
+  woox = 0.25;
+  woox = 0.275;
+  wunc(1:5)       = woox*wunc(1:5);
+  wunc(end-5:end) = woox*wunc(end-5:end);
+end
 w_sigma = (wunc./wnorm);  %% wnorm = qrenorm(iwater)
 wmat = (w_sigma'*w_sigma).*mat_odWV;
 driver.oem.wunc = wunc;

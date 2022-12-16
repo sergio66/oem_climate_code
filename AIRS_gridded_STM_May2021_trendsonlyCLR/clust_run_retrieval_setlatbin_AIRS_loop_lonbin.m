@@ -52,6 +52,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/rtptools
@@ -89,13 +90,8 @@ iDebug = +3259;   %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley say
 iDebug = 4608-36; %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over Artic,     bad T(z) or CO2 fits
 iDebug = 36;      %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
 iDebug = 880;     %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
-iDebug = 1052;
-iDebug = 1070;
-iDebug = 1023;
-iDebug = 2252;
-%iDebug = 861;     %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
-%iDebug = input('Enter iDebug : ');
-%iDebug = -1;
+iDebug = 4316;
+iDebug = -1;
 
 if iDebug > 0
   plot(1:4608,floor(((1:4608)-1)/72)+1)   %% this maps tile number and job (in sets of 72)
@@ -181,8 +177,8 @@ for iInd = iInd0 : iIndE
   iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
   iQuantile = 01;  %% Q0.80, iQAX = 3, dataset = 9
   iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
-  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
   iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!)
+  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -231,13 +227,14 @@ for iInd = iInd0 : iIndE
     topts.iSergioCO2 = +1; %% fit for CO2/CH4/N2O
   end
 
-  topts.ocb_set = 0; %% AIRS Obs
   topts.ocb_set = 1; %% try ERA5 synthetic rates
+  topts.ocb_set = 0; %% AIRS Obs
 
   %topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori
   topts.set_era5_cmip6_airsL3  = 5; %% use ERA5 a priori
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% use WV/T/O3
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +2; %% use T
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% use WV/T/O3
+  topts.set_era5_cmip6_airsL3  = 0; %% use 0 a priori
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
@@ -248,6 +245,7 @@ for iInd = iInd0 : iIndE
   iChSet = 1; %% old chans (default)
   iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019
   iChSet = 5; %% new chans, + CO2 laser lines (window region, low altitude T)
+  %iChSet = 6; %% SW T(z) chans + 800 - 1600 cm- 1 lines (window region, low altitude T)
   topts.iChSet = iChSet;
 
   iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
