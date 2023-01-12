@@ -132,6 +132,18 @@ iZeroO3Vers = 2; %%% use raw ERA T anomalies as saved in era_ptempanom.mat (see 
 
 set_zeroO3_nofit
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if settings.iFixWV_NoFit >= 0 & (strcmp(driver.rateset.ocb_set,'obs') | strcmp(driver.rateset.ocb_set,'cal'))
+  iFixWV_NoFit = settings.iFixWV_NoFit;    %%% LARABBEE LIKES THIS TURNED OFF ie keep spectra as is, just read in ERA anom and proceed
+end
+
+iZeroWVVers = 0; %%% use my fit to sarta calcs, as a proxy to ERA T anomalies
+iZeroWVVers = 1; %%% use raw ERA T anomalies, and do the averaging here on the fly
+iZeroWVVers = 2; %%% use raw ERA T anomalies as saved in era_ptempanom.mat (see compare_era_anomaly_from_fit_and_model.m)
+
+set_zeroWV_nofit
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical   %% can set a priori to the MLS, or to the ERA5, or to the MERRA2, or to the AIRS L3, rates
@@ -291,3 +303,5 @@ build_cov_matrices
 
 %driver.jacobian.thin = aux.m_ts_jac;
 %keyboard_nowindow
+
+driver.iaSequential = topts.iaSequential;

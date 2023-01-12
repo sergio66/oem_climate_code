@@ -1,4 +1,7 @@
-settings.iSergioCO2 = -1;            %% assume ESRL CO2/CH4 rates, DEFAULT   (+1) to fit for CO2/CH4
+settings.iaSequential = -1;                  %% default is to retrieve everything at one go, 
+                                             %% or can do sequential ala Chris Barnet eg do [150 60 100] to do T WV O3, after "fixing" CO2 and CH4 and N2O
+
+settings.iSergioCO2 = -1;                    %% assume ESRL CO2/CH4 rates, DEFAULT   (+1) to fit for CO2/CH4
 
 settings.set_era5_cmip6_airsL3         = -1; %% default, no a priori, else set to 3,5,6 for AIRS L3/ERA5/CMIP6
 settings.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% is using ERA5 or AIRS L3 or MERRA to set rates, you can choose to see -1:WV/T/O3 or +1/+2/+3 for WV.T.O3only
@@ -44,11 +47,15 @@ settings.iDoStrowFiniteJac = -1;       %% -1 : do not change the time varying an
 settings.iChSet = 1;                   %% +1 default, old chans (about 500)
                                        %% +2, new chans (about 400) with CFC11,CFC12      and weak WV, bad chans gone
                                        %% +3, new chans (about 400) w/o  CFC11 with CFC12 and weak WV, bad chans gone
+
 settings.iFixTz_NoFit = -1;            %% -1 : do not fix Tz to ERA anomaly T(z,time) values, then fit for Tz
                                        %% +1 : do     fix Tz to ERA anomaly T(z,time) values, then keep Tz fixed (ie do not fit)
+settings.iFixWV_NoFit = -1;            %% -1 : do not fix WV to ERA anomaly T(z,time) values, then fit for WV
+                                       %% +1 : do     fix WV to ERA anomaly T(z,time) values, then keep WV fixed (ie do not fit)
 settings.iFixO3_NoFit = -1;            %% -1 : do not fix O3 to ERA anomaly O3(z,time) values, then fit for O3
                                        %% +1 : do     fix O3 to ERA anomaly O3(z,time) values, then keep O3 fixed (ie do not fit)
                                        %% +0 : do     fix O3 to zero        O3(z,time) values, then keep O3 fixed (ie do not fit)
+
 settings.iFixTG_NoFit = -1;            %% -1 means retrieve all trace gases [CO2 N2O CH4 CFC11 CFC12]
                                        %% eg [4 5] means do not do CFC11,CFC12
                                        %% eg [4] means do not do CFC11
@@ -57,7 +64,8 @@ settings.UMBCvsERAjac = -1;            %% do not adjust jacobian, based on handf
 
 topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_tracegas'},{'offsetrates'},{'set_era5_cmip6_airsL3'},{'set_era5_cmip6_airsL3_WV_T_O3'},...
         	       {'addco2jacs'},{'obs_corr_matrix'},{'invtype'},{'tie_sst_lowestlayer'},{'iNlays_retrieve'},...
-                       {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},{'iFixTz_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},...
+                       {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},...
+                       {'iFixTz_NoFit'},{'iFixWV_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'iaSequential'}...
                        {'resetnorm2one'},{'UMBCvsERAjac'},{'iSergioCO2'},{'iAdjLowerAtmWVfrac'},{'iVersQRenorm'},{'rCoupleT_WV'}];
 
 %disp('settings before')
@@ -68,7 +76,8 @@ if narginS == 3
   for i = 1 : length(optvar)
    if (length(intersect(topts_allowedparams,optvar{i})) == 1)
      eval(sprintf('settings.%s = topts.%s;', optvar{i}, optvar{i}));
-     fprintf(1,'  check_settings.m : will use default setting.%s \n',optvar{i});
+     str = ['junk = topts.' optvar{i} ';']; eval(str)
+     fprintf(1,'  check_settings.m : will use user setting.%s = %3i \n',optvar{i},junk);
    else
      fprintf(1,'topts param not in allowed list ... %s \n',optvar{i});
      error('quitting ');

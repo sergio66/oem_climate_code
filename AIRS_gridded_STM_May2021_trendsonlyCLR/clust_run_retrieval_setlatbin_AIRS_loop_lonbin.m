@@ -90,8 +90,11 @@ iDebug = +3259;   %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley say
 iDebug = 4608-36; %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over Artic,     bad T(z) or CO2 fits
 iDebug = 36;      %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
 iDebug = 880;     %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
-iDebug = 4316;
+iDebug = 4299;
 iDebug = -1;
+
+iDo_OBS_or_CAL = +1; %% cal fit iQuantile = 16, dataset = 9, ocb_set = 1
+iDo_OBS_or_CAL = +0; %% obs fit iQuantile = 05, dataset = 9, ocb_set = 0
 
 if iDebug > 0
   plot(1:4608,floor(((1:4608)-1)/72)+1)   %% this maps tile number and job (in sets of 72)
@@ -152,6 +155,11 @@ for iInd = iInd0 : iIndE
 
 %------------------------------------------------------------------------
 %% <<<<<<<    no real need to touch any of this  >>>>>>>>
+  %% DO NOT PUT TOPTS HERE, put TOPTS LATER after change_important_topts_settings is called
+  %% DO NOT PUT TOPTS HERE, put TOPTS LATER after change_important_topts_settings is called
+  %% DO NOT PUT TOPTS HERE, put TOPTS LATER after change_important_topts_settings is called
+  %% DO NOT PUT TOPTS HERE, put TOPTS LATER after change_important_topts_settings is called
+
   driver.iibin     = iInd;
 
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
@@ -177,8 +185,14 @@ for iInd = iInd0 : iIndE
   iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
   iQuantile = 01;  %% Q0.80, iQAX = 3, dataset = 9
   iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
-  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!)
+  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
   iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
+
+  if iDo_OBS_or_CAL == 0
+    iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
+  elseif iDo_OBS_or_CAL == 1
+    iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
+  end
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -198,8 +212,13 @@ for iInd = iInd0 : iIndE
   driver.oem.doplots = false;
 
 %---------------------------------------------------------------------------
+  %% need to run this before inputting topts
   change_important_topts_settings  % Override many settings and add covariance matrix
 %------------------------------------------------------------------------
+
+  topts.iaSequential = -1;                  %% default one gulp
+  topts.iaSequential = [150 60 100 -1];     %% sequential, like SingleFootprint
+  topts.iaSequential = [-1 150 60 100 -1];  %% sequential, like SingleFootprint
 
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
   topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 FULL 18 years
@@ -213,9 +232,15 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
 
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
-  topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
+  topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
+
+  if iDo_OBS_or_CAL == 0 
+    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
+  elseif iDo_OBS_or_CAL == 1 
+    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
+  end
 
   topts.tie_sst_lowestlayer = -1
 
@@ -227,8 +252,11 @@ for iInd = iInd0 : iIndE
     topts.iSergioCO2 = +1; %% fit for CO2/CH4/N2O
   end
 
-  topts.ocb_set = 1; %% try ERA5 synthetic rates
-  topts.ocb_set = 0; %% AIRS Obs
+  if iDo_OBS_or_CAL == 0 
+    topts.ocb_set = 0; %% AIRS Obs
+  else
+    topts.ocb_set = 1; %% try ERA5 synthetic rates
+  end
 
   %topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori
   topts.set_era5_cmip6_airsL3  = 5; %% use ERA5 a priori
@@ -344,10 +372,33 @@ end
 %---------------------------------------------------------------------------
   % Save retrieval output from this loop
 
-  if isfield(topts,'iFixTz_NoFit')
-    if topts.iFixTz_NoFit > 0
-      junk = 1:length(driver.oem.finalrates)+length(aux.orig_temp_i);
+  if isfield(topts,'iFixWV_NoFit')
+    %% hardest, since WV is at the beginning
+    if topts.iFixWV_NoFit > 0
+      %% put ozone and temp into correct (expected) spots
+      driver.oem.finalrates(aux.orig_ozone_i) = driver.oem.finalrates(aux.orig_temp_i);
+      driver.oem.finalsigs(aux.orig_ozone_i)  = driver.oem.finalsigs(aux.orig_temp_i);
 
+      driver.oem.finalrates(aux.orig_ozone_i) = driver.oem.finalrates(aux.orig_temp_i);
+      driver.oem.finalsigs(aux.orig_ozone_i)  = driver.oem.finalsigs(aux.orig_temp_i);
+
+      %% put fixed/unchanging T anomaly
+      driver.oem.finalrates(aux.orig_temp_i) = aux.FixTz_NoFit;
+      driver.oem.finalsigs(aux.orig_temp_i)  = 0;
+
+      driver.oem.finalrates(aux.orig_temp_i) = aux.FixTz_NoFit;
+      driver.oem.finalsigs(aux.orig_temp_i)  = 0;
+
+      driver.jacobian.water_i = driver.jacobian.ozone_i;
+      driver.jacobian.temp_i  = driver.jacobian.ozone_i;
+      driver.jacobian.ozone_i = driver.jacobian.ozone_i + driver.jacobian.numlays;
+
+    end
+  end
+
+  if isfield(topts,'iFixTz_NoFit')
+    %% harder, since T is in the middle
+    if topts.iFixTz_NoFit > 0
       %% put ozone into correct (expected) spot
       driver.oem.finalrates(aux.orig_ozone_i) = driver.oem.finalrates(aux.orig_temp_i);
       driver.oem.finalsigs(aux.orig_ozone_i)  = driver.oem.finalsigs(aux.orig_temp_i);
@@ -363,6 +414,7 @@ end
   end
 
   if isfield(topts,'iFixO3_NoFit')
+    %% easiest, since O3 is tail end
     if topts.iFixO3_NoFit > 0
 
       %% put ozone into correct (expected) spot
@@ -372,6 +424,7 @@ end
       driver.jacobian.ozone_i = driver.jacobian.temp_i + driver.jacobian.numlays;
     end
   end
+
 
   if sum(abs(driver.rateset.rates)) > 0 & ~exist(driver.outfilename)
     fprintf(1,'saving to %s \n',driver.outfilename)

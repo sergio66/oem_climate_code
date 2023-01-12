@@ -9,7 +9,7 @@ topts.rCoupleT_WV = 0.00; %% do not couple in the covariance matrix
 topts.iVersQRenorm = +3; %% WV/T/O3 = 0.01 0.10 0.01 renormalization, increase T impact
 topts.iVersQRenorm = +1; %% WV/T/O3 = 0.01 0.01 0.01 renormalization, default
 
-topts.iAdjLowerAtmWVfrac = 1.0 %% trying to set dWVfrac/dt in lower atmosphere based on dBT1231/dt, assumuing d(RH) = 0, introduced after Oct 2022
+topts.iAdjLowerAtmWVfrac = 1.0; %% trying to set dWVfrac/dt in lower atmosphere based on dBT1231/dt, assumuing d(RH) = 0, introduced after Oct 2022
 
 topts.iSergioCO2 = +1;  %% fit for CO2/CH4 rates
 topts.iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates, DEFAULT
@@ -53,6 +53,9 @@ topts.iFixTG_NoFit = -1;  %% fit all trace gases DEFAULT
 
 topts.iFixTz_NoFit = -1;  %% DEFAULT, fit for T
 %% topts.iFixTz_NoFit = +1;  %% fix T and do NOT fit for it
+
+topts.iFixWV_NoFit = -1;  %% DEFAULT, fit for WV
+%% topts.iFixWV_NoFit = +1;  %% fix WV and do NOT fit for it
 
 topts.iFixO3_NoFit = -1;  %% DEFAULT, fit for O3
 %% topts.iFixO3_NoFit = +1;  %% fix O3 and do NOT fit for it

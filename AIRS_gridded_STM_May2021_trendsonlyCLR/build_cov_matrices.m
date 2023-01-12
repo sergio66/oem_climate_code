@@ -49,6 +49,15 @@ if driver.i16daytimestep > 0
 elseif driver.i16daytimestep < 0
   %% earlier_cov_sets
 
+%  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     09*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
+%  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     10*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
+%  cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
+%  cov_set = [1.0  0.05*1/3      0.05*1/3        1/3       0.02/5/3            0.02/5/3            1/3      0.02/5/3          0.02/5/3              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
+%  cov_set = [1.0  0.05*1/2      0.05*1/2        1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
+%  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years trying SHTUFF SHTUFF, T rates good, WV too constrained
+%    cov_set(12:13) = cov_set(12:13) *1e2;
+%    cov_set(11:11) = cov_set(11:11) *1e1;
+
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x100 unc, Feb 16 2022-Apr7,2022 :  great JPLMay 2022 talk!!!
 
   cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% 19 year rates, init try 2002/09-2014/08
@@ -73,25 +82,31 @@ elseif driver.i16daytimestep < 0
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** TRY THIS, WV still too loose
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/8            0.01/8            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** very bad bad WV
   cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too tight, commmitted Dec 6 
-  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
-%  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     09*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
-%  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     10*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-2  05*1E-2];  %% Dec 2022 -- 2002/09-2022/08, *** WV too flexible, bias great, std dev little large
 
-  %cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
-  %cov_set = [1.0  0.05*1/3      0.05*1/3        1/3       0.02/5/3            0.02/5/3            1/3      0.02/5/3          0.02/5/3              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
-  %cov_set = [1.0  0.05*1/2      0.05*1/2        1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     02*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** bloody good ocb_set=1 testing, Q=18,dataset=9 
+  cov_set = [1.0  0.05*1       0.05*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     10*1E-2  05*1E-2]; 
 
-%  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years trying SHTUFF SHTUFF, T rates good, WV too constrained
-%    cov_set(12:13) = cov_set(12:13) *1e2;
-%    cov_set(11:11) = cov_set(11:11) *1e1;
- 
+  %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** Dec 6, 2022 commit GREAT T(z),WV too overdamped, awesome biases/std dev     
+  %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
+
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/5            0.01/5            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% try this, bias good std dev sucks, WV too tight
+  cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/3            0.01/3            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% try this, bias good std dev sucks, WV too tight
+
+  cov_setX = cov_set; 
   if (topts.iChSet == 4 | topts.iChSet == 5) & topts.dataset >= 8
-    %%  cov_set(11:13) = cov_set(11:13) *1e2;  %% default but I think a little tooooo loosey goosey till Nov 2022
+    %%  cov_set(11:13) = cov_setX(11:13) *1e2;  %% default but I think a little tooooo loosey goosey till Nov 2022
 
-    %%   cov_set(11:13) = cov_set(11:13) .* [1e2 5e5 1e2];  %% NOT bad at all, but could relax it a little
+    %%   cov_set(11:13) = cov_setX(11:13) .* [1e2 5e5 1e2];  %% NOT bad at all, but could relax it a little
     %%   cov_set(11:13) = cov_set(11:13) *1/2;
 
-    cov_set(11:13) = cov_set(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little
+  %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
+  %%%%    cov_set(11:13) = cov_setX(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
+  %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
+
+    cov_set(11:13) = cov_setX(11:13) .* [1e2 1e3 5e1];  %% loosen WV, NOOOOO CRAP
+    cov_set(11:13) = cov_setX(11:13) .* [1e2 8e2 5e1];  %% loosen WV, this works decently if cov_set(WV = 5,6) == 0.01/4
 
     %% cov_set(11:13) = cov_set(11:13) *1e5;  %% pretty good but a little too strict trying this after Nov 2022
     %% cov_set(11:13) = cov_set(11:13) *5e4;  %% pretty good but a little too strict
@@ -188,6 +203,7 @@ l_c = Lscale_O3;   mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
 
 % Water level uncertainties, then scaled and squared
 wunc = cov2lev(cw(ix),driver.jacobian.numlays);
+%{
 if driver.iLat < 55
   wunc(1:5)       = 0.5*wunc(1:5);
   wunc(end-5:end) = 0.5*wunc(end-5:end);
@@ -198,6 +214,7 @@ else
   wunc(1:5)       = woox*wunc(1:5);
   wunc(end-5:end) = woox*wunc(end-5:end);
 end
+%}
 w_sigma = (wunc./wnorm);  %% wnorm = qrenorm(iwater)
 wmat = (w_sigma'*w_sigma).*mat_odWV;
 driver.oem.wunc = wunc;
