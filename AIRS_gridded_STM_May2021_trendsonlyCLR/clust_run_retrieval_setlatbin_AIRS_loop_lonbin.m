@@ -84,14 +84,10 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 7
 % JOB = 39
 
-iDebug = +2742;   %% JOB = 39, rm Output_CAL/Quantile16/test2742.mat, gives awfully large CO2 when it shoud be 0.0
-iDebug = +3255;   %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt < 0 over Western USA
-iDebug = +3259;   %% JOB = XY, rm Output_CAL/Quantile16/test3255.mat, Hadley says dRH/dt > 0 over Eastern USA
-iDebug = 4608-36; %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over Artic,     bad T(z) or CO2 fits
-iDebug = 36;      %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
-iDebug = 880;     %% JOB = XY, rm Output_CAL/Quantile16/test36.mat,   over ANtartica, bad T(z) or CO2 fits
-iDebug = 4299;
+iDebug = 1;
+iDebug = 1665;
 iDebug = -1;
+%iDebug = 4608;
 
 iDo_OBS_or_CAL = +1; %% cal fit iQuantile = 16, dataset = 9, ocb_set = 1
 iDo_OBS_or_CAL = +0; %% obs fit iQuantile = 05, dataset = 9, ocb_set = 0
@@ -175,31 +171,6 @@ for iInd = iInd0 : iIndE
   driver.iDebugRatesUseNWP = -1; %% use AIRS observed spectral trends >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   driver.iDebugRatesUseNWP = 52; %% use ERA     constructed spectral trends from SARTA
 
-  iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
-  iQuantile = 14;  %% 
-  iQuantile = 08;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.25 - 0.50
-  iQuantile = 09;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.90 - 0.75
-  iQuantile = 04;  %% quite cloudy (hopefully)
-  iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
-  iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
-  iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
-  iQuantile = 01;  %% Q0.80, iQAX = 3, dataset = 9
-  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
-  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
-  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
-
-  if iDo_OBS_or_CAL == 0
-    iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
-  elseif iDo_OBS_or_CAL == 1
-    iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
-  end
-
-  driver.NorD = -1; %% day, asc
-  driver.NorD = +1; %% night, desc
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-  driver.iQuantile = iQuantile;
   ix = iInd;
   driver.iLon = iInd-iOffset;
   driver.iLat = JOB;
@@ -216,9 +187,11 @@ for iInd = iInd0 : iIndE
   change_important_topts_settings  % Override many settings and add covariance matrix
 %------------------------------------------------------------------------
 
-  topts.iaSequential = -1;                  %% default one gulp
-  topts.iaSequential = [150 60 100 -1];     %% sequential, like SingleFootprint
-  topts.iaSequential = [-1 150 60 100 -1];  %% sequential, like SingleFootprint
+  topts.iaSequential = [150 60 100 -1];            %% sequential, like SingleFootprint
+  topts.iaSequential = [-1 150 60 100 -1];         %% sequential, like SingleFootprint
+  topts.iaSequential = [-1 150 60 100 150 60];     %% sequential, like SingleFootprint
+  topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
+  topts.iaSequential = -1;                         %% default one gulp
 
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
   topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 FULL 18 years
@@ -227,20 +200,58 @@ for iInd = iInd0 : iIndE
   topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
   topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
   topts.dataset   = +5;   %% (+5) AIRS 12 year quantile dataset, Sergio Aug 2022   2002/09-2014/08 FULL 12 years
-  topts.dataset   = +6;   %% (+6) AIRS = CRIS NSR 07 year quantile dataset,        2012/05-2019/04 FULL 12 years
+  topts.dataset   = +6;   %% (+6) AIRS = CRIS NSR 07 year quantile dataset,        2012/05-2019/04 FULL 07 years
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
+  topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
+
 
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
   topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
-  topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
 
   if iDo_OBS_or_CAL == 0 
     topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
+    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
   elseif iDo_OBS_or_CAL == 1 
     topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
+    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
   end
+
+  %%%%%%%%%%
+
+  iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
+  iQuantile = 14;  %% 
+  iQuantile = 08;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.25 - 0.50
+  iQuantile = 09;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.90 - 0.75
+  iQuantile = 04;  %% quite cloudy (hopefully)
+  iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
+  iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
+  iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
+  iQuantile = 01;  %% Q0.80, iQAX = 3, dataset = 9
+  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
+  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
+  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
+
+  if topts.dataset == 9
+    if iDo_OBS_or_CAL == 0
+      iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
+    elseif iDo_OBS_or_CAL == 1
+      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
+    end
+  elseif topts.dataset == 4
+    if iDo_OBS_or_CAL == 0
+      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
+    elseif iDo_OBS_or_CAL == 1
+      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
+    end
+  end
+
+  driver.NorD = -1; %% day, asc
+  driver.NorD = +1; %% night, desc
+  driver.iQuantile = iQuantile;
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   topts.tie_sst_lowestlayer = -1
 

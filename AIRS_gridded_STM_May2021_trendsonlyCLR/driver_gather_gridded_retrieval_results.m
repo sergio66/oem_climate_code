@@ -650,4 +650,12 @@ disp('if you save a big fat file, you can then look at SyntheticTimeSeries_ERA5_
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-savebigFATfile
+iSave = input('Enter to save  (-1, default) small file (0) nothing (+1) big fat file : ');
+if length(iSave) == 0
+  iSave = -1;
+end
+if iSave == +1
+  savebigFATfile
+elseif iSave == -1
+  savesmallFATfile
+end

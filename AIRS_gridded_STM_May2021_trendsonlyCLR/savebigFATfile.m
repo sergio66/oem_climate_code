@@ -24,19 +24,28 @@ end
 
 numretlayers_str = [num2str(topts.iNlays_retrieve) 'fatlayers'];
 
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_'         numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX1   %s \n',genericoutname);
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX3_'   numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX3   %s \n',genericoutname);
-genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; fprintf(1,'suggested name uncX100 %s \n',genericoutname);
+if length(iaSequential) == 1 & iaSequential(1) == -1
+  cGorS = 'GULP';
+else
+  cGorS = 'SEQN';
+end
 
-junk = input('save savebigFATfile???? (-1/ +1 default) : ');
+genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_'         numretlayers_str '_' strMODELS '_feedback.mat']; 
+  fprintf(1,'suggested name uncX1   %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX3_'   numretlayers_str '_' strMODELS '_feedback.mat']; 
+  fprintf(1,'suggested name uncX3   %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/gather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; 
+  fprintf(1,'suggested name uncX100 %s \n',genericoutname);
+
+junk = input('save savebigFATfile???? (-1 default/+1) : ');
 if length(junk) == 0
-  junk = 1;
+  junk = -1;
 end
 if junk == 1
   junk2 = +1;
   genericoutname = input('Enter name of savebigFATfile : ');
   if exist(genericoutname)
-    lser = ['!ls -lt ' genericoutname];
+    lser = ['!ls -lth ' genericoutname];
     eval(lser);
     junk2 = input('file already exists, overwrite (-1 default/+1) : ');
     if length(junk2) == 0
