@@ -50,12 +50,12 @@
 ##  This is in MB, very aggressive but I have been running outta memory, CRIS convolve
 ##SBATCH --mem-per-cpu=24000
 
-##  This is in MB, easy peasy, 18000 works
+##  This is in MB, easy peasy, 12000 works best for clust_run_retrieval_setlatbin_AIRS_loop_lonbin
 ##SBATCH --mem-per-cpu=18000
-#SBATCH --mem-per-cpu=12000
+##SBATCH --mem-per-cpu=12000
 ##SBATCH --mem-per-cpu=8000
 ##SBATCH --mem-per-cpu=6000 
-##SBATCH --mem-per-cpu=6000 
+#SBATCH --mem-per-cpu=8000 
 
 #SBATCH --account=pi_strow
 

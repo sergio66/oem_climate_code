@@ -48,61 +48,81 @@ if driver.i16daytimestep > 0
   
 elseif driver.i16daytimestep < 0
   %% earlier_cov_sets
-  iCovSet = 1;     %% great JPLMay 2022 talk!!! so probably dataset=4,Q=16, 19 year rates
-  iCovSet = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
-  iCovSet = 18;    %% did it for 18 year rates 2002/09 to 2020/08 
-  iCovSet = 19;    %% did it for 18 year rates 2002/09 to 2021/08 
-  iCovSet = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=7,Q=16
-  iCovSet = 20.1;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=16, ocb_set = 1 (cal) gives great results == ERA spectral trends
-  iCovSet = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)
+  iCovSetNumber = 4.16;  %% great JPLMay 2022 talk!!! so probably dataset=4,Q=16, 19 year rates
+  iCovSetNumber = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
+  iCovSetNumber = 18;    %% did it for 18 year rates 2002/09 to 2020/08 
+  iCovSetNumber = 19;    %% did it for 18 year rates 2002/09 to 2021/08 
+  iCovSetNumber = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=7,Q=16
+  iCovSetNumber = 20.1;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=16, ocb_set = 1 (cal) gives great results == ERA spectral trends
+  iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)
 
-  if topts.dataset == 5
-    iCovSet = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
-  elseif topts.dataset == -1 | topts.dataset == +1
-    iCovSet = 18;    %% did it for 18 year rates 2002/09 to 2020/08   
+  if topts.dataset == -1 | topts.dataset == +1
+    iCovSetNumber = 18;    %% did it for 18 year rates 2002/09 to 2020/08   
   elseif topts.dataset == 2 | topts.dataset == -3 | topts.dataset == 3
-    iCovSet = 19;    %% did it for 18 year rates 2002/09 to 2021/08   
-  elseif topts.dataset == 4
-    iCovSet = 1;     %% great JPLMay 2022 talk!!! so probably dataset=4,Q=16, 19 year rates       but kinda gives me spiky junk for dataset-04,Q=16.. 
-    iCovSet = 19;    %% did it for 18 year rates 2002/09 to 2021/08                               this is even worse, in my humble opinion  
+    iCovSetNumber = 19;    %% did it for 18 year rates 2002/09 to 2021/08   
+  elseif topts.dataset == 4  
+    %%  JPL April 2021 Sounder Science Meeting
+    iCovSetNumber = 19;    %% did it for 18 year rates 2002/09 to 2021/08                               this is even worse, in my humble opinion  
+    iCovSetNumber = 4.16;  %% great JPLMay 2022 talk!!! so probably dataset=4,Q=16, 19 year rates       
+  elseif topts.dataset == 5 | topts.dataset == 6 | topts.dataset == 8
+    iCovSetNumber = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
+  elseif topts.dataset == 7
+    iCovSetNumber = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=7,Q=16
+  elseif topts.dataset == 9
+    if topts.ocb_set == 1
+      iCovSetNumber = 20.1;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=16, CAL
+    elseif topts.ocb_set == 0
+      iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=05, OBS
+    end
   end
 
-  if iCovSet == 1
-    cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x100 unc, Feb 16 2022-Apr7,2022 :  great JPLMay 2022 talk!!!
+  driver.iCovSetNumber = iCovSetNumber;
+  fprintf(1,' build_cov_matrices.m : iCovSetNumber = %8.5f \n',driver.iCovSetNumber)
 
-  elseif iCovSet == 12
+  if iCovSetNumber == 4.16
+    cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try strat only x3   unc
+    cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E+2     20*1E+2  20*1E+2];  %% try strat only x3   unc
+
+    cov_set = [1.0  0.025         0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  %% ok   excellent simulated ERA5 spectral rates Feb 4, 2022
+    cov_set = [1.0  0.05*1        0.05*1          1/2       0.15/50*1         0.15/50*1         1/2      0.15/50*1       0.15/50*1           1/2        20*1E-7     20*1E-7  20*1E-7];  %% very excellent simulated ERA5 spectral rates Feb 4, 2022 till Feb 15, 2022
+
+    cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try strat only x3   unc
+    cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x100 unc, Feb 16 2022-Apr7,2022 : great JPLMay 2022 talk!!! huge retr uncertainty
+    cov_set = [1.0  0.05*3        0.05*3          1/2       0.15/50*3         0.15/50*3         1/2      0.15/50*3       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x3   unc, Feb 16 2022-Apr7,2022 : great but maybe still constricts WV/O3
+
+  elseif iCovSetNumber == 12
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% 12 year rates, init try 2002/09-2014/08
+    cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5            0.02/5            1/2      0.02/5          0.02/5              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, * used this for Princeton iQuant=50, 
                                                                                                                                                                                         %% and GOOD ERA5 retr dataset4,Quant16 **
-  elseif iCovSet == 18 | iCovSet == 19
+  elseif iCovSetNumber == 18 | iCovSetNumber == 19
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        05*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
     cov_set = [1.0  0.05*5        0.05*5          1/2       0.02              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
     cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
 
-  elseif iCovSet == 20.0
+  elseif iCovSetNumber == 20.0
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-3     05*1E-3  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * too loosy goosy * 
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too tight *
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too loose *
   
-  elseif iCovSet == 20.1
+  elseif iCovSetNumber == 20.1
     %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     02*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** bloody good ocb_set=1 testing, Q=16,dataset=9 
                                                                                                                                                                                       %% NP is iffy BUT obs T may be too tight, obs WV maybe too loose***
                                                                                                                                                                                       %% see eg Output_CAL/Quantile16_20years and Output_CAL/Quantile16_20yearsV2
     %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
 
-  elseif iCovSet == 20.2
+  elseif iCovSetNumber == 20.2
     %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** Dec 6, 2022 commit 
                                                                                                                                                                                       %% GREAT T(z),WV too overdamped, awesome biases/std dev     
     %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
 
-  elseif iCovSet == 0
+  elseif iCovSetNumber == 0
     %% testing and trying
 
     %  cov_set = [1.0  0.05*1        0.09*1        1/2        0.01/4               0.01/4              1/2      0.01              0.01                  1/2        03*1E-2     09*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
     %  cov_set = [1.0  0.05*1        0.09*1        1/2        0.01/4               0.01/4              1/2      0.01              0.01                  1/2        03*1E-2     10*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** WV too flexible?
-    %  cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5              0.02/5              1/2      0.02/5            0.02/5                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
     %  cov_set = [1.0  0.05*1/3      0.05*1/3        1/3       0.02/5/3            0.02/5/3            1/3      0.02/5/3          0.02/5/3              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
     %  cov_set = [1.0  0.05*1/2      0.05*1/2        1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years, iQAX=3
     %  cov_set = [1.0  0.05*3        0.05*3          1/2       0.02/5/2            0.02/5/2            1/2      0.02/5/2          0.02/5/2              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 20 years trying SHTUFF SHTUFF, T rates good, WV too constrained
@@ -126,13 +146,13 @@ elseif driver.i16daytimestep < 0
 
   cov_setX = cov_set; 
   if (topts.iChSet == 4 | topts.iChSet == 5) & topts.dataset >= 8
-    if iCovSet == 20.0 | iCovSet == 20.1
+    if iCovSetNumber == 20.0 | iCovSetNumber == 20.1
       cov_set(11:13) = cov_setX(11:13) *1e2;  %% default but I think a little tooooo loosey goosey till Nov 2022
 
       %%   cov_set(11:13) = cov_setX(11:13) .* [1e2 5e5 1e2];       %% NOT bad at all, but could relax it a little
       %%   cov_set(11:13) = cov_setX(11:13) .* [1e2 5e5 1e2] * 1/2;
 
-    elseif iCovSet == 20.2
+    elseif iCovSetNumber == 20.2
       %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
       cov_set(11:13) = cov_setX(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
       %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
@@ -170,7 +190,7 @@ junk = cov_set([8 9 10 13]); fprintf(1,'      O3 : sig_trop  sig_strat cwide alp
 junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-zalt = p2h(plays)/1000;
+zalt = p2h(plays)/1000;  %% change m to km
 
 % Make sure re-scale to Jacobians before squaring cov matrix
 for i=1:pmat_size
@@ -187,14 +207,26 @@ Lscale_Tz = 3.0;  %% 3 kn
 Lscale_WV = 1.0;  %% 1 km
 Lscale_O3 = 1.0;  %% 1 km
 
-%% should rally be 
+%% should really be 
 %% mat_od(i,j) = abs(z(i)-z(j))/zScale;  %% and in lower atmosphere z(i)-z(j) ~ 0.5 km, zScale ~ 5 km so mat_od(i,j) ~ 0.1 and not 1 ----- so let l_c = 10
 % Relative off-diagonal
-l_c = cov_set(1)*100;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic
-l_c = Lscale_Tz;   mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
-l_c = Lscale_WV;   mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
-l_c = Lscale_O3;   mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
-  mat_odT = mat_od;   mat_odWV = mat_od;   mat_odO3 = mat_od; 
+l_c = cov_set(1)*100;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, oops, why 100 which becomes 100^2?
+l_c = cov_set(1)*10;   mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, try 10 which becomes 10^2?
+l_c = cov_set(1)*1;    mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, this was in Apr 2022, claiming that (i-j)/<scale> = 1   which is almost saying (z(i)-z(j))/<scale hgt> = 1 or dz = 1 km, zscale = 1 km
+l_c = Lscale_Tz;       mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
+l_c = Lscale_WV;       mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
+l_c = Lscale_O3;       mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
+
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = -1; %% this is what we had upto Apr 2022, which was the JPL Sounder team Meeting, dataset=4,Quantile=16 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) did not square fmat
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 0;  %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) fmat -> fmat.*fmat
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = +1; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) mat_odX = exp(-mat_odZ.^2./(LscaleX^2));               and (2) fmat -> fmat.*fmat
+
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1
+
+driver.iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = iCov_SqrFmatd_MatOd_Apr2022SounderMeeting;
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == -1
+  mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< hmm the big reset to what was done in April 2022 JPL Sounder Meeting >>>>>>>>>>
+end
 
    iOffX = 10;
    ct(ix).trans1 = trpi(ix);
@@ -337,7 +369,10 @@ if settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep < 
    %fmatd(6) = 0.001   %%% oct 2022 UGH at the window region
    %fmatd(6) = 1.0     %%% oct 2022 
 
-  fmatd(4:5) = fmatd(4:5)*1e-3;     %% new, Jan 2023
+  if topts.dataset >= 8
+    fmatd(4:5) = fmatd(4:5)*1e-3;     %% new, Jan 2023
+  end
+
 elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimestep < 0
   fmatd(1:5) = fmatd(1:5)*0.0000001;   %% have put in xb(1:3) so we should not change those values .. recall 1,2,3 = CO2/N2O/CH4 and 4/5 are cld1,cld2
   fmatd(1:5) = fmatd(1:5)*1e-3;    %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates  ******
@@ -393,10 +428,10 @@ if iSergioCO2 > 0
 end
 
 fmatd
-%keyboard_nowindow
-
 fmat  = diag(fmatd./fnorm); 
-fmat = fmat .* fmat;   %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting >= 0
+  fmat = fmat .* fmat;           
+end
 
 if exist('tmat','var') & exist('ozmat','var')
   driver.oem.cov = blkdiag(fmat,wmat,tmat,ozmat);
@@ -416,29 +451,31 @@ if topts.tie_sst_lowestlayer > 0 & exist('tmat','var')
   driver.oem.cov(driver.jacobian.temp_i(end):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
 end
 
-rCoupleTWV = 0.001;
-rCoupleTWV = 0.1;
-rCoupleTWV = 1.0;
-rCoupleTWV = 0.25;
-rCoupleT_WV = topts.rCoupleT_WV;
-
-iCoupleT_WV = -1;    %% default
-iCoupleT_WV = +1;   
-if iCoupleT_WV > 0 & abs(rCoupleTWV) > eps
-  disp('coupling T, WV in build_cov_matrices.m')
-  rDiagSa = sqrt(diag(driver.oem.cov));
-  rSaT  = rDiagSa(driver.jacobian.temp_i);
-  rSaWV = rDiagSa(driver.jacobian.water_i);
-  rJunk = 0 * driver.oem.cov;
-  for wooT = 1 : length(rSaT)
-    for wooWV = 1 : length(rSaWV)
-      if wooT == wooWV
-        rJunk(driver.jacobian.temp_i(wooT),driver.jacobian.water_i(wooWV)) = rCoupleTWV * rSaT(wooT) * rSaWV(wooWV);
-        rJunk(driver.jacobian.water_i(wooWV),driver.jacobian.temp_i(wooT)) = rCoupleTWV * rSaT(wooT) * rSaWV(wooWV);
+if topts.dataset >= 8
+  rCoupleTWV = 0.001;
+  rCoupleTWV = 0.1;
+  rCoupleTWV = 1.0;
+  rCoupleTWV = 0.25;
+  rCoupleT_WV = topts.rCoupleT_WV;
+  
+  iCoupleT_WV = -1;    %% default
+  iCoupleT_WV = +1;   
+  if iCoupleT_WV > 0 & abs(rCoupleTWV) > eps
+    disp('coupling T, WV in build_cov_matrices.m')
+    rDiagSa = sqrt(diag(driver.oem.cov));
+    rSaT  = rDiagSa(driver.jacobian.temp_i);
+    rSaWV = rDiagSa(driver.jacobian.water_i);
+    rJunk = 0 * driver.oem.cov;
+    for wooT = 1 : length(rSaT)
+      for wooWV = 1 : length(rSaWV)
+        if wooT == wooWV
+          rJunk(driver.jacobian.temp_i(wooT),driver.jacobian.water_i(wooWV)) = rCoupleTWV * rSaT(wooT) * rSaWV(wooWV);
+          rJunk(driver.jacobian.water_i(wooWV),driver.jacobian.temp_i(wooT)) = rCoupleTWV * rSaT(wooT) * rSaWV(wooWV);
+        end
       end
     end
+    driver.oem.cov = driver.oem.cov + rJunk;
   end
-  driver.oem.cov = driver.oem.cov + rJunk;
 end
 
 %---------------------------------------------------------------------

@@ -86,9 +86,11 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 
 iDebug = 1;
 iDebug = 1665;
+iDebug = 2376;
 iDebug = -1;
 %iDebug = 4608;
 
+%% JPL 2021 Science Team Meeting used dataset=4,quantile=16
 iDo_OBS_or_CAL = +1; %% cal fit iQuantile = 16, dataset = 9, ocb_set = 1
 iDo_OBS_or_CAL = +0; %% obs fit iQuantile = 05, dataset = 9, ocb_set = 0
 
@@ -168,8 +170,8 @@ for iInd = iInd0 : iIndE
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   driver.iDebugRatesUseNWP = 32; %% use AIRS L3 constructed spectral trends from SARTA
   driver.iDebugRatesUseNWP = 62; %% use CMIP6   constructed spectral trends from SARTA
-  driver.iDebugRatesUseNWP = -1; %% use AIRS observed spectral trends >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   driver.iDebugRatesUseNWP = 52; %% use ERA     constructed spectral trends from SARTA
+  driver.iDebugRatesUseNWP = -1; %% use AIRS observed spectral trends >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   ix = iInd;
   driver.iLon = iInd-iOffset;
@@ -198,24 +200,24 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years
   topts.dataset   = +3;   %% (+3) AIRS 19 year extreme  dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, EXTREME
   topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
-  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
+  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
   topts.dataset   = +5;   %% (+5) AIRS 12 year quantile dataset, Sergio Aug 2022   2002/09-2014/08 FULL 12 years
   topts.dataset   = +6;   %% (+6) AIRS = CRIS NSR 07 year quantile dataset,        2012/05-2019/04 FULL 07 years
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
   topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
 
-
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
+  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL Aprl 2021 Sounder Science Meeting
   topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
 
   if iDo_OBS_or_CAL == 0 
     topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
-    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
+    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
   elseif iDo_OBS_or_CAL == 1 
     topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
-    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
+    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
   end
 
   %%%%%%%%%%
@@ -241,9 +243,9 @@ for iInd = iInd0 : iIndE
     end
   elseif topts.dataset == 4
     if iDo_OBS_or_CAL == 0
-      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
+      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL, JPL April 2021 Sounder Science Meeting
     elseif iDo_OBS_or_CAL == 1
-      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
+      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL, JPL April 2021 Sounder Science Meeting
     end
   end
 
@@ -282,9 +284,13 @@ for iInd = iInd0 : iIndE
   iChSet = 2; %% new chans
   iChSet = 4; %% new chans + Tonga (high alt) + more LW
   iChSet = 1; %% old chans (default)
-  iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019
+  iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019, also used for JPL April 2021 Sounder Science Meeting
   iChSet = 5; %% new chans, + CO2 laser lines (window region, low altitude T)
   %iChSet = 6; %% SW T(z) chans + 800 - 1600 cm- 1 lines (window region, low altitude T)
+  if topts.dataset == 4
+    iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019, also used for JPL April 2021 Sounder Science Meeting
+  end
+
   topts.iChSet = iChSet;
 
   iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
