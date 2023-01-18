@@ -1,11 +1,17 @@
 % Get jacobians, and combine the 97 layer T(z)/WV(z)/O3(z) into N layers
+
 %[m_ts_jac0,nlays,qrenorm]  = get_jac(driver.jacobian.filename,driver.jac_indexINSIDEbin,iVersJac);
-if iVersJac == 2012 | iVersJac == 2019
-  %% [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,2021);   %% I have not made jacs for this time period
-  [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
-else
-  [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
-end
+% if iVersJac == 2012 | iVersJac == 2019
+%   %% [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,2021);   %% I have not made jacs for this time period
+%   [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts); %% now I fixed it so can use same code
+% else
+%   [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
+% end
+
+[m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
+fprintf(1,'in set_the_jacobians.m nlays = %2i \n',nlays)
+%keyboard_str = 'nlays'; keyboard_nowindow
+
 m_ts_jac0 = double(m_ts_jac0);
 
 %% THIS IS DEFAULT -- 4 column trace gas (CO2/N2O/CH4/Cld1/CLd2), 1 stemp, (97x3) geo
@@ -32,7 +38,7 @@ m_ts_jac_coljac = m_ts_jac0(:,driver.jacobian.scalar_i);
 
 driver.qrenorm  = qrenorm;       %% set this default
 jac.qrenorm     = qrenorm;
-junk = load('h2645structure.mat');
+junk            = load('h2645structure.mat');
 jac.f           = junk.h.vchan;
 
 if iNlays_retrieve <= 60
@@ -191,3 +197,23 @@ if settings.UMBCvsERAjac == 1 & settings.iDoStrowFiniteJac > 0
   addpath /home/sergio/MATLABCODE/oem_pkg_run/AIRS_new_clear_scan_August2019/NewJacs_forAMT2020
   m_ts_jac = add_deltaJ_to_jacs(m_ts_jac,driver.iibin,-1);
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+profilejunk.navg  = length(driver.jacobian.wvjaclays_used);
+for iii = 1 : length(driver.jacobian.wvjaclays_used)
+  junk = driver.jacobian.wvjaclays_used{iii}-6;
+  junk = driver.jacobian.wvjaclays_used{iii}-driver.jacobian.wvjaclays_offset;
+  profilejunk.pavg(iii) = mean(profilejunk.plays(junk));
+  profilejunk.tavg(iii) = mean(profilejunk.ptemp(junk));
+end
+jac.nlays       = profilejunk.nlays;
+jac.plays       = profilejunk.plays;
+jac.ptemp       = profilejunk.ptemp;
+jac.spres       = profilejunk.spres;
+jac.stemp       = profilejunk.stemp;
+jac.navg        = profilejunk.navg;
+jac.pavg        = profilejunk.pavg;
+jac.tavg        = profilejunk.tavg;
+jac.trop_P      = profilejunk.lps_tropoapauseP;
+jac.trop_ind    = profilejunk.lps_tropoapauseind;

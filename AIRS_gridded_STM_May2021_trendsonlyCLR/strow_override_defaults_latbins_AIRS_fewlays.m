@@ -46,10 +46,20 @@ driver = get_rates(driver,settings,settings.iNoiseType);  %% this gets spectral 
 % Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200
 [driver,iVersJac,iXJac] = set_driver_jacfile(driver,settings);
 
-set_the_jacobians
+set_the_jacobians  %% sets structure "jac" and m_ts_jac
 
 aux.m_ts_jac = m_ts_jac;
 aux.f        = jac.f;
+aux.spres    = jac.spres;
+aux.stemp    = jac.stemp;
+aux.nlays    = jac.nlays; %% 100
+aux.plays    = jac.plays; %% 1:100
+aux.ptemp    = jac.ptemp; %% 1:100
+aux.navg     = jac.navg;  %% N
+aux.pavg     = jac.pavg;  %% 1 : N
+aux.tavg     = jac.tavg;  %% 1 : N
+aux.trop_P   = jac.trop_P;
+aux.trop_ind = jac.trop_ind;
 
 f = jac.f;
 clear jac

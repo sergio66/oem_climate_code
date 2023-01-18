@@ -9,9 +9,15 @@ oznorm = driver.qrenorm(driver.jacobian.ozone_i);
 
 % Defines tropopause index trpi
 trop_index
-if iNlays_retrieve < 90
-  trpi = floor(trpi/(100/iNlays_retrieve));
+
+if isfield(aux,'trop_ind')
+  trpi = ones(size(trpi)) * aux.trop_ind;
 end
+
+if topts.iNlays_retrieve < 90
+  trpi = floor(trpi/(100/topts.iNlays_retrieve));
+end
+
 
 %%%%%%%%%%%%%%%%%%%%
 %% see ../Strow/strow_override_defaults_latbins_AIRS.m
@@ -118,6 +124,28 @@ elseif driver.i16daytimestep < 0
                                                                                                                                                                                       %% GREAT T(z),WV too overdamped, awesome biases/std dev     
     %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
 
+    cov_set = [1.0  0.05*3       0.05*3        1/2        0.15/50*3         0.15/50*3         1/2      0.15/50*3       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% copied from iCovSetNumber == 4.16!!!!!! should work here, eh???
+    cov_set = [1.0  0.05*1       0.10*1        1/2        0.15/50*2         0.15/50*2         1/2      0.15/50*3       0.15/50*3           1/2        20*1E-5     20*1E-5  20*1E-5];  %% adjst iCovSetNumber == 4.16!!!!!! oscillates
+    cov_set = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        10*1E+1     10*1E+1  10*1E+1];  %% try, not bad!!! T(z) too constrained, WV(z) could be loosed
+    cov_set = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        10*1E+0     10*1E+1  10*1E+1];  %% try, good!!! T(z) and WV(z) could still be loosened
+    cov_set = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        05*1E+0     05*1E+1  10*1E+1];  %% try, good!!! T(z) and WV(z) could still be loosened
+    cov_set = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        01*1E+0     01*1E+1  01*1E+1];  %% try, good!!! T(z) good but WV(z) oscillates
+    cov_set = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        01*1E+0     05*1E+1  01*1E+1];  %% try, good!!! QUITE GOOD AT TROPICS/MIDLATs, bad at N/S. Pole!!!! SAVE THIS!!!
+    cov_set = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        02*1E-1     10*1E+1  01*1E+1];  %% 
+
+    %% cov_setA = tropics/midlats; cov_setB  = poles
+    cov_setA = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        01*1E+0     05*1E+1  01*1E+1];  %% try, good!!! QUITE GOOD AT TROPICS/MIDLATs, bad at N/S. Pole!!!! SAVE THIS!!!
+    cov_setB = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** Dec 6, 2022 commit 
+        cov_setB(11:13) = cov_setB(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
+    cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two for POLES
+%      cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two
+%      cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        5*1E-3      08*1E+2  05*1E-1];  %% combine the above two
+
+    iLatX = 07;
+    iLatX = 11;
+    find_wgtA_wgtB
+    cov_set = wgtA * cov_setA + wgtB * cov_setB;
+
   elseif iCovSetNumber == 0
     %% testing and trying
 
@@ -148,6 +176,7 @@ elseif driver.i16daytimestep < 0
   if (topts.iChSet == 4 | topts.iChSet == 5) & topts.dataset >= 8
     if iCovSetNumber == 20.0 | iCovSetNumber == 20.1
       cov_set(11:13) = cov_setX(11:13) *1e2;  %% default but I think a little tooooo loosey goosey till Nov 2022
+      cov_set(11:13) = cov_setX(11:13) .* [1e0 1e0 1e0];  %% THIS EXTRA MULT WAS TOO COMPLICATED! and it was because I screwed up mat_od with scale lenghts below! so just set to 1
 
       %%   cov_set(11:13) = cov_setX(11:13) .* [1e2 5e5 1e2];       %% NOT bad at all, but could relax it a little
       %%   cov_set(11:13) = cov_setX(11:13) .* [1e2 5e5 1e2] * 1/2;
@@ -155,6 +184,7 @@ elseif driver.i16daytimestep < 0
     elseif iCovSetNumber == 20.2
       %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
       cov_set(11:13) = cov_setX(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
+      cov_set(11:13) = cov_setX(11:13) .* [1e0 1e0 1e0];  %% THIS EXTRA MULT WAS TOO COMPLICATED! and it was because I screwed up mat_od with scale lenghts below! so just set to 1
       %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
     end
 
@@ -168,26 +198,19 @@ elseif driver.i16daytimestep < 0
   %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%%
   %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% 
 
-%  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-1     20*1E-1  20*1E-1];  %% new try 2002/09-2014/08, lousy std dev in window regions
-%  cov_set = [1.0  0.05*10       0.05*10         1/2       0.02*10           0.02*10           1/2      0.02*10         0.02*10             1/2        20*1E-3     20*1E-3  20*1E-3];  %% new try 2002/09-2014/08, lousy std dev in window regions
-
-%%% after AIRS STM 2021, testing quantile 16
-%%%  cov_set = [1.0  0.05          0.05            1/2       0.15/10           0.15/10           1/2      0.15/10         0.15/10             1/2        20*1E-6     20*1E-6  20*1E-6];  %
-%%%  cov_set = [1.0  0.05          0.05            1/2       0.15/05           0.15/05           1/2      0.15/05         0.15/05             1/2        20*1E-6     20*1E-6  20*1E-6];  %
-
-%%   if sig_q -> 0   then you say you are VERY sure about a-priori ==> do not change ==> delta(param) --> 0
-%%      sig_q -> INF then you say you are DO NOT TRUST    a-priori ==>        change ==> delta(param) --> bigly wigly
-%%   if alpha -> 0   then you say you are DO NOT TRUST    a-priori ==>        change ==> delta(param) --> bigly wigly
-%%      alpha -> INF then you say you are VERY sure about a-priori ==> do not change ==> delta(param) --> 0
+  %%   if sig_q -> 0   then you say you are VERY sure about a-priori ==> do not change ==> delta(param) --> 0
+  %%      sig_q -> INF then you say you are DO NOT TRUST    a-priori ==>        change ==> delta(param) --> bigly wigly
+  %%   if alpha -> 0   then you say you are DO NOT TRUST    a-priori ==>        change ==> delta(param) --> bigly wigly
+  %%      alpha -> INF then you say you are VERY sure about a-priori ==> do not change ==> delta(param) --> 0
 
 end
 
-fprintf(1,'cov_set lc = %8.6f \n',cov_set(1));
-junk = cov_set([2 3 4  11]); fprintf(1,'      T  : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
-junk = cov_set([5 6 7  12]); fprintf(1,'      WV : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk);
-junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
-junk = cov_set([8 9 10 13]); fprintf(1,'      O3 : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
-junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
+fprintf(1,'cov_set : lenngth scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
+  junk = cov_set([2 3 4  11]); fprintf(1,'      T  : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
+  junk = cov_set([5 6 7  12]); fprintf(1,'      WV : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk);
+  junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
+  junk = cov_set([8 9 10 13]); fprintf(1,'      O3 : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
+  junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 zalt = p2h(plays)/1000;  %% change m to km
@@ -287,9 +310,31 @@ w_sigma = (wunc./wnorm);  %% wnorm = qrenorm(iwater)
 wmat = (w_sigma'*w_sigma).*mat_odWV;
 driver.oem.wunc = wunc;
 
+figure(1)
+miaow = find(aux.f <= 800); miaow = miaow(end);
+pcolor(aux.f(1:miaow),1:driver.jacobian.numlays,aux.m_ts_jac(1:miaow,driver.jacobian.temp_i)'); shading flat; colorbar; set(gca,'ydir','reverse'); title('Tz jac')
+line([650 800],[trpi(driver.iibin) trpi(driver.iibin)],'color','r','linewidth',2); 
+pcolor(aux.f(1:miaow),aux.pavg,aux.m_ts_jac(1:miaow,driver.jacobian.temp_i)'); shading flat; colorbar; set(gca,'ydir','reverse'); title('Tz jac')
+line([650 800],[aux.pavg(trpi(driver.iibin)) aux.pavg(trpi(driver.iibin))],'color','r','linewidth',2); 
+
+figure(2);
+plot(sum(aux.m_ts_jac(1:miaow,driver.jacobian.temp_i),1),aux.pavg); set(gca,'ydir','reverse'); title('Tz jac');
+ax = axis; line([ax(1) ax(2)],[aux.pavg(trpi(driver.iibin)) aux.pavg(trpi(driver.iibin))],'color','r','linewidth',2); 
+
+figure(3); semilogy(aux.ptemp(1:aux.nlays),aux.plays(1:aux.nlays),aux.tavg,aux.pavg); set(gca,'ydir','reverse')
+
+%% recall tropopause is a problem, so make uncertainty 0 there? or large there?
+sumtjac = sum(aux.m_ts_jac(1:miaow,driver.jacobian.temp_i),1);
+sumtjac = sumtjac/max(abs(sumtjac));
+sumtjac = 1./sumtjac;
+sumtjac(sumtjac > 5) = 5;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Temperature level uncertainties, then scaled and squared
 if ~exist('iFixTz_NoFit')
   tunc = cov2lev(ct(ix),driver.jacobian.numlays);
+  tunc = tunc.*sumtjac/max(abs(sumtjac));;
   t_sigma = (tunc./tnorm);  %% tnorm = qrenorm(itemp)
   tmat = (t_sigma'*t_sigma).*mat_odT;
   driver.oem.tunc = tunc;

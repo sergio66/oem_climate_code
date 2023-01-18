@@ -13,25 +13,21 @@ if settings.set_era5_cmip6_airsL3 == 5
   iz = (iy-1)*72 + ix;
   if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
     boo = 6;                                             xb(boo)     = xrates.stemp(iz);
-    boo
   else
     boo = 6;
   end
   if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
-    boo
   else
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
   end
   if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 2
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.ptemp(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
-    boo
   else
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
   end
   if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 3
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
-    boo
   else
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
   end

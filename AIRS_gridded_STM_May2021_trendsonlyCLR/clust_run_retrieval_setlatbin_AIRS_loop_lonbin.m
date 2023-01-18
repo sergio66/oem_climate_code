@@ -87,8 +87,20 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 iDebug = 1;
 iDebug = 1665;
 iDebug = 2376;
+
+iDebug = 0180;  %% SP
+iDebug = 0249;  %% SP
+iDebug = 0233;  %% SP
+iDebug = 4233; %% NP
+iDebug = 3233; %% NML
+iDebug = 2233; %% T
+iDebug = 1233; %% SML
+
 iDebug = -1;
-%iDebug = 4608;
+%iDebug = 180
+%iDebug = 674
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16
 iDo_OBS_or_CAL = +1; %% cal fit iQuantile = 16, dataset = 9, ocb_set = 1
@@ -213,11 +225,11 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
 
   if iDo_OBS_or_CAL == 0 
-    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
     topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
+    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
   elseif iDo_OBS_or_CAL == 1 
-    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
     topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
+    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
   end
 
   %%%%%%%%%%
@@ -271,11 +283,11 @@ for iInd = iInd0 : iIndE
     topts.ocb_set = 1; %% try ERA5 synthetic rates
   end
 
-  %topts.set_era5_cmip6_airsL3 = 8; %% use MLS a priori
-  topts.set_era5_cmip6_airsL3  = 5; %% use ERA5 a priori
+  topts.set_era5_cmip6_airsL3 = 8;          %% use MLS a priori
+  topts.set_era5_cmip6_airsL3 = 5;          %% use ERA5 a priori
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +2; %% use T
   topts.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% use WV/T/O3
-  topts.set_era5_cmip6_airsL3  = 0; %% use 0 a priori
+  topts.set_era5_cmip6_airsL3         = 0;  %% use 0 a priori
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
@@ -339,6 +351,19 @@ for iInd = iInd0 : iIndE
       oldstyle_removeCO2 = -1;
     end
   end
+  if exist(driver.outfilename) & iDebug > 0
+    disp(' ')
+    fprintf(1,'WARNING iDebug = %5i and %s already exists, so deleting and continuing \n',iDebug,driver.outfilename);
+    fprintf(1,'WARNING iDebug = %5i and %s already exists, so deleting and continuing \n',iDebug,driver.outfilename);
+    fprintf(1,'WARNING iDebug = %5i and %s already exists, so deleting and continuing \n',iDebug,driver.outfilename);
+    fprintf(1,'WARNING iDebug = %5i and %s already exists, so deleting and continuing \n',iDebug,driver.outfilename);
+    fprintf(1,'WARNING iDebug = %5i and %s already exists, so deleting and continuing \n',iDebug,driver.outfilename);
+    disp(' ')
+    pause(2)
+    rmer = ['!/bin/rm ' driver.outfilename];
+    eval(rmer)
+  end
+
   if oldstyle_removeCO2 > 0 
     if topts.iNlays_retrieve >= 97 & ~exist(driver.outfilename)
       [driver,aux] = strow_override_defaults_latbins_AIRS(driver,topts);
@@ -515,8 +540,10 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
   print_cloud_params(hMean17years,pMean17years,driver.iibin); 
 
   if topts.iNlays_retrieve >= 97
+    disp('ret to plot retrievals'); pause
     plot_retrieval_latbins
   else
+    disp('ret to plot retrievals'); pause
     plot_retrieval_latbins_fewlays
   end
   error('nnyuk iDebug')

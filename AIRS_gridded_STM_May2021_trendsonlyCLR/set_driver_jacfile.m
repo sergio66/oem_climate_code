@@ -7,6 +7,7 @@ iXJac = settings.iXJac;
 %  iXJac = 0; %% const geo kcarta jcs, default for trends
 %  iXJac = 1; %% varying geo sarta jacs
 %  iXJac = 2; %% varying geo kcarta jacs, default for anomaly
+%  iXJac = 3; %% should really be Q(X --> 1) but hard to get ERA5 conditions for this!
 %end
 
 if driver.i16daytimestep < 0
@@ -45,37 +46,39 @@ if driver.i16daytimestep < 0
       iVersJac = 2012;   %% CrIS NSR 2012-2019
     elseif settings.dataset == 7
       iVersJac = 2022;
-      iVersJac = 2021;   %% ERA5 from 2002-2021
+      iVersJac = 2021;   %% ERA5 CLR from 2002-2021
      elseif settings.dataset == 8
       iVersJac = 2015;   %% OCO2 2015-2021
      elseif settings.dataset == 9
-      iVersJac = 2022;   %% ERA5 cldQ 2022
       if settings.ocb_set == 1
         disp(' settings.dataset == 9 but settings.ocb_set == 1 so set iVersJac = 2021')
         iVersJac = 2021;   %% ERA5 clr 2021
+      elseif settings.ocb_set == 0
+        iVersJac = 2022;   %% ERA5 cldQ 2022
+        iVersJac = 2021;   %% ERA5 CLR from 2002-2021
       end
     end
 
     if iKCARTAorSARTA < 0
-      %AHA = [AHA '/subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
+      %% AHA = [AHA '/subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
       AHA = [AHA '/clr_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
     else
-      %AHA = [AHA '/kcarta_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];                                   %% 40 latbins
+      % AHA = [AHA '/kcarta_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];                                   %% 40 latbins
       if iVersJac == 2012 | iVersJac == 2015
         AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_07yr_' num2str(driver.jac_latbin,'%02i') '.mat'];   %% ERA5, 2012-2019 year
+      elseif iVersJac == 2014
+        %% see ~/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Sept2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m
+        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2014 12 year
       elseif iVersJac == 2019
         AHA = [AHA '/kcarta_clr_subjacLatBin_newSARTA_' num2str(driver.jac_latbin,'%02i') '.mat'];                     %% ERA-I, 2002-2019 17 year
       elseif iVersJac == 2021 
         AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 2002-2021 19 year
-      elseif iVersJac == 2014
-        %% see ~/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Sept2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m
-        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2014 12 year
       elseif iVersJac == 2022
-        %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/clust_put_together_jacs_cldERA5.m
-        AHA = [AHA '/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2014 12 year
+        %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/clust_put_together_jacs_cldERA5.m, but this has TONS of clouds
+        AHA = [AHA '/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2022 20 year <avg cld = Q09> and NOT Q05
       else
         iVersJac
-        error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021 [2002/09-20XY/08] only')
+        error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021, 2022 [2002/09-20XY/08] only')
       end
     end
 

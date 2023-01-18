@@ -32,6 +32,17 @@ if iOldORNew == 9
   fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
 end
 
+lps = compute_lapse_rate(h,p);
+profilejunk.nlays = p.nlevs(:,(iLatBin-1)*72+iLonBin)-1;
+profilejunk.plays = plevs2plays(p.plevs(:,(iLatBin-1)*72+iLonBin));
+profilejunk.ptemp = p.ptemp(:,(iLatBin-1)*72+iLonBin);
+profilejunk.stemp = p.stemp((iLatBin-1)*72+iLonBin);
+profilejunk.spres = p.spres((iLatBin-1)*72+iLonBin);
+profilejunk.lps_tropoapauseP   = lps.trp_pHI((iLatBin-1)*72+iLonBin);
+profilejunk.lps_tropoapauseind = lps.trp_ind((iLatBin-1)*72+iLonBin);
+
+%% do the iNlaysavg later
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 factor_log10 = log(10); %% this changes gas jac scaling to log10

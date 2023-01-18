@@ -323,8 +323,17 @@ while iDoAgain > 0
     end
   
     existfname(ii) = exist(fname);
+    i10sec = -1;
+    if exist(fname)
+      %% datenum : A serial date number represents the whole and fractional number of days from a fixed, preset date (January 0, 0000) in the proleptic ISO calendar.
+      moo = dir(fname);
+      rightnow = datenum(datetime('now'));
+      if (rightnow-moo.datenum)*24*60*60 > 10
+        i10sec = 1;
+      end
+    end
     %fprintf(1,'%5i    %s \n',existfname(ii),fname)
-    if exist(fname) > 0 & iaFound(ii) == 0
+    if exist(fname) > 0 & iaFound(ii) == 0 & i10sec == 1
       fnamelastloaded = fname;
       iExist = +1;
       loader = ['load ' fname];
@@ -483,6 +492,9 @@ while iDoAgain > 0
     rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
     aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
     
+    figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
+    figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
+    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  colormap(jet); 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
       iDoAgain = +1;
@@ -544,6 +556,9 @@ load llsmap5
 
 clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2.5]); caxis([2.0 2.5])
 aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2');  caxis([1.5 2.5])
+
+figure(29); waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha); shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt'); colormap(llsmap5); caxis([-1 +1]*0.15)
+figure(30); waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha); shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
 
 if dataset == 8
   aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)

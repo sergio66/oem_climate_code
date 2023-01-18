@@ -1,4 +1,4 @@
-function [m_ts_jac,nlays,qrenorm,freq2645,colo3] = get_jac_fast(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac,topts);
+function [m_ts_jac,nlays,qrenorm,freq2645,colo3,profilejunk] = get_jac_fast(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac,topts);
 
 iDoSlow = -1;
 if iDoSlow > 0

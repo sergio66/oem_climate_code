@@ -50,8 +50,16 @@ iType = +07;   %% sergio Q16 20 year trends         I     ran for me in Sep 2022
 iType = +08;   %% sergio Q16 06 year trends         I     ran for me in Sep 2022, 2015/01 to 2021/12 FULL, 06 years, OCO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iType = +09;   %% sergio iQAX_3 Q05 20 year trends  I     ran for me in Oct 2022, 2002/09 to 2022/08 FULL, 20 years, with newer defn o quantiles
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('Choices DataSet to use ')
+disp(' see  ../../oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_fits_quantiles.m, and set_iQAX');
+disp(' datasets 1-8 are mostly interquantile')
+disp('     iQAX = +1; %% quantile   quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];')
+disp(' datasets 9 is Q(x-->1.0)')
+disp('     iQAX = +3; %% quantile   quants = [0 0.50 0.9 0.95 0.97 1.00];');
+
+disp(' <---------------------------------------------------------------------------------------> ')
 disp('                       (+1) Strow  Quantile Mar 2021 2002/09 to 2020/08 Full 18 years');
 disp('                       (-1) Sergio Quantile Aug 2021 2002/09 to 2020/08 Full 18 years');
 disp('                        (2) Sergio Quantile Aug 2021 2002/09 to 2021/07 ');
@@ -66,6 +74,7 @@ disp('                        (7) Sergio Quantile Sep 2022 2002/09 to 2022/08 Fu
 disp('                        (8) Sergio Quantile Sep 2022 2015/01 to 2021/12 Full 06 OCO2 years **** ');
 disp(' <---------------------------------------------------------------------------------------> ')
 disp('                        (9) Sergio Quantile Sep 2022 2002/09 to 2022/08 Full 20 years, new quantile defn **** ');
+disp(' <---------------------------------------------------------------------------------------> ')
 iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9   or +3,-3) : ');
 
 if iType ~= 3

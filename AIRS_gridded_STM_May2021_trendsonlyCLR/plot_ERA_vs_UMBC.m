@@ -90,6 +90,7 @@ iFig = 50; figure(iFig); clf; profile_plots_3tiledlayout(rlat,pjunk20,z1,z2,z3,i
 if ~exist('rlon')
   rlon73 = -180 : 5 : +180; rlon = meanvaluebin(rlon73);
 end
+
 iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
 while iCompare > 0 & iCompare < 65
   do_compare_ERA5_UMBC_latbin
