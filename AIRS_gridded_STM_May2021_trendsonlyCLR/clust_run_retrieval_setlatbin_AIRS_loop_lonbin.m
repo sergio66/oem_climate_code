@@ -88,30 +88,33 @@ iDebug = 1;
 iDebug = 1665;
 iDebug = 2376;
 
-iDebug = 0180;  %% SP
-iDebug = 0249;  %% SP
-iDebug = 0233;  %% SP
+iDebug = 0108;  %% SP
+%iDebug = 0180;  %% SP
+%iDebug = 0249;  %% SP
+%iDebug = 0233;  %% SP
 iDebug = 4233; %% NP
+iDebug = 4483; %% NP
 iDebug = 3233; %% NML
 iDebug = 2233; %% T
+iDebug = 2264; %% T
 iDebug = 1233; %% SML
+iDebug = 180
+%iDebug = 754
 
 iDebug = -1;
-%iDebug = 180
-%iDebug = 674
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16
-iDo_OBS_or_CAL = +1; %% cal fit iQuantile = 16, dataset = 9, ocb_set = 1
-iDo_OBS_or_CAL = +0; %% obs fit iQuantile = 05, dataset = 9, ocb_set = 0
+ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
+ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(09.97-->1)
+ia_OorC_DataSet_Quantile = [+0 04 16]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iDebug > 0
   plot(1:4608,floor(((1:4608)-1)/72)+1)   %% this maps tile number and job (in sets of 72)
   JOB = floor((iDebug-1)/72+1);
-  disp('Warning iDebug > 0')
-  disp('Warning iDebug > 0')
-  disp('Warning iDebug > 0')
 end
 
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
@@ -207,6 +210,7 @@ for iInd = iInd0 : iIndE
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
   topts.iaSequential = -1;                         %% default one gulp
 
+  % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
   topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 FULL 18 years
   topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years
@@ -217,20 +221,10 @@ for iInd = iInd0 : iIndE
   topts.dataset   = +6;   %% (+6) AIRS = CRIS NSR 07 year quantile dataset,        2012/05-2019/04 FULL 07 years
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
+  % quants = [0.50 0.80 0.90 0.95 0.97 1.00];
   topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
 
-  topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
-  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL Aprl 2021 Sounder Science Meeting
-  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************
-  topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
-
-  if iDo_OBS_or_CAL == 0 
-    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
-    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
-  elseif iDo_OBS_or_CAL == 1 
-    topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
-    topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************  
-  end
+  topts.dataset   = ia_OorC_DataSet_Quantile(2);
 
   %%%%%%%%%%
 
@@ -247,19 +241,7 @@ for iInd = iInd0 : iIndE
   iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
   iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
 
-  if topts.dataset == 9
-    if iDo_OBS_or_CAL == 0
-      iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
-    elseif iDo_OBS_or_CAL == 1
-      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
-    end
-  elseif topts.dataset == 4
-    if iDo_OBS_or_CAL == 0
-      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL, JPL April 2021 Sounder Science Meeting
-    elseif iDo_OBS_or_CAL == 1
-      iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL, JPL April 2021 Sounder Science Meeting
-    end
-  end
+  iQuantile = ia_OorC_DataSet_Quantile(3);
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -267,7 +249,8 @@ for iInd = iInd0 : iIndE
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  topts.tie_sst_lowestlayer = -1
+  topts.tie_sst_lowestlayer = +1;
+  topts.tie_sst_lowestlayer = -1;
 
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
@@ -277,27 +260,29 @@ for iInd = iInd0 : iIndE
     topts.iSergioCO2 = +1; %% fit for CO2/CH4/N2O
   end
 
-  if iDo_OBS_or_CAL == 0 
-    topts.ocb_set = 0; %% AIRS Obs
-  else
-    topts.ocb_set = 1; %% try ERA5 synthetic rates
-  end
+  topts.ocb_set = ia_OorC_DataSet_Quantile(1);
 
-  topts.set_era5_cmip6_airsL3 = 8;          %% use MLS a priori
-  topts.set_era5_cmip6_airsL3 = 5;          %% use ERA5 a priori
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = +2; %% use T
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% use WV/T/O3
-  topts.set_era5_cmip6_airsL3         = 0;  %% use 0 a priori
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = +2;  %% use T+ST
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T+ST/O3
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = +40; %% use T only in the lower trop to "start things" in the polar region, based on BT1231
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = +4;  %% use T only
+
+  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS a priori
+  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5 a priori
+  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
+
+  topts.resetnorm2one = +1;
+  topts.resetnorm2one = -1;   %% DEFAULT
 
   iChSet = topts.iChSet;
   iChSet = 2; %% new chans
   iChSet = 4; %% new chans + Tonga (high alt) + more LW
   iChSet = 1; %% old chans (default)
   iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019, also used for JPL April 2021 Sounder Science Meeting
-  iChSet = 5; %% new chans, + CO2 laser lines (window region, low altitude T)
+  %iChSet = 5; %% new chans, + CO2 laser lines (window region, low altitude T)
   %iChSet = 6; %% SW T(z) chans + 800 - 1600 cm- 1 lines (window region, low altitude T)
   if topts.dataset == 4
     iChSet = 3; %% new chans, but no CFC11   STROW PRISTINE SET, AMT 2019, also used for JPL April 2021 Sounder Science Meeting
@@ -540,10 +525,12 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
   print_cloud_params(hMean17years,pMean17years,driver.iibin); 
 
   if topts.iNlays_retrieve >= 97
-    disp('ret to plot retrievals'); pause
+    %disp('ret to plot retrievals'); pause
+    pause(1)
     plot_retrieval_latbins
   else
-    disp('ret to plot retrievals'); pause
+    %disp('ret to plot retrievals'); pause
+    pause(1)
     plot_retrieval_latbins_fewlays
   end
   error('nnyuk iDebug')

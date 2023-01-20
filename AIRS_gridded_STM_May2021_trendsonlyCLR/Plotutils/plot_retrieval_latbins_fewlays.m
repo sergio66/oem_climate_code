@@ -25,16 +25,39 @@ f = f(ichan);
 figure(1); clf
 
 g1 = driver.jacobian.chanset;
-plot(f(g1),driver.rateset.rates(g1),'k-');
+plot(f(g1),driver.rateset.rates(g1),'k-','linewidth',2);
 hold on;
-plot(f(g1),driver.oem.fit(g1),'b-');
-plot(f(g1),driver.rateset.rates(g1)-driver.oem.fit(g1)','r-')
+plot(f(g1),driver.oem.fit(g1),'b-','linewidth',2);
+plot(f(g1),driver.rateset.rates(g1)-driver.oem.fit(g1)','r-','linewidth',2);
+plot(f(g1),+driver.rateset.unc_rates(g1),'color',[1 1 1]*0.75);
+plot(f(g1),-driver.rateset.unc_rates(g1),'color',[1 1 1]*0.75);
 grid;
-axis([min(f(g1)) max(f(g1)) -0.15 +0.15]);
+axis([min(f(g1)) max(f(g1)) -0.1 +0.1]);
 title('AIRS'); 
-hl=legend('Obs','Fit','Residual');
-set(hl,'fontsize',14)
+plotaxis2;
+hl=legend('Obs','Fit','Residual','location','best');
+set(hl,'fontsize',10)
 hold off
+
+if isfield(driver.oem,'spectral_deltan00')
+
+  plot(f(g1),driver.rateset.rates(g1),'k-','linewidth',2);
+  hold on;
+  plot(f(g1),driver.oem.fit(g1),'b-','linewidth',2);
+  plot(f(g1),driver.rateset.rates(g1)-driver.oem.fit(g1)','r-','linewidth',2);
+  plot(f(g1),driver.oem.spectral_deltan00(g1),'g.-');
+
+  plot(f(g1),+driver.rateset.unc_rates(g1),'color',[1 1 1]*0.75);
+  plot(f(g1),-driver.rateset.unc_rates(g1),'color',[1 1 1]*0.75);
+  grid;
+  axis([min(f(g1)) max(f(g1)) -0.1 +0.1]);
+  title('AIRS'); 
+  hold off
+
+  plotaxis2;
+  hl=legend('Obs','Fit','Residual','No TraceGas Obs','location','best');
+  set(hl,'fontsize',10)
+end
 
 %---------------------------------------------------------------------------
 water = driver.oem.finalrates(driver.jacobian.water_i);
@@ -83,12 +106,13 @@ if abs(iLoad) <= 1
     shadedErrorBarYLog10(water,playsRET,watersigs,'bo-');
     hold on
     semilogy(water,log10(playsRET),'bo-');
-    shadedErrorBarYLog10(waterrate_ak1(ix,:),playsRET,waterratestd1(ix,:),'gd-');
-    shadedErrorBarYLog10(waterrate_akF(ix,:),playsRET,waterratestdF(ix,:),'rx-');
+    shadedErrorBarYLog10(waterrate_ak1(ix,:),playsRET,waterratestd1(ix,:),'rd-');
+    shadedErrorBarYLog10(waterrate_akF(ix,:),playsRET,waterratestdF(ix,:),'gx-');
     hold off; 
-    title('(b)UMBC (g/r)ERA,AK*ERA Water fr/yr')
-    set(hl,'fontsize',12); 
-    set(gca,'ydir','reverse'); grid; axis([-0.01 +0.01 1 3]); 
+    ax = axis; line([ax(1) ax(2)],log10([aux.spres  aux.spres]),'color','g','linewidth',2)
+    ax = axis; line([ax(1) ax(2)],log10([aux.trop_P aux.trop_P]),'color','c','linewidth',2)
+    title('(b)UMBC (r)ERA (g)AK*ERA WVfrac(z) 1/yr','fontsize',12);
+    set(gca,'ydir','reverse'); grid; axis([-0.01 +0.01 2 3]); 
   
   if iLoad == 1
     ptemprate_ak0 = era.thestats.akptemprate(:,1:97);
@@ -112,11 +136,12 @@ if abs(iLoad) <= 1
     shadedErrorBarYLog10(temp,playsRET,tempsigs,'bo-');
     hold on
     semilogy(temp,log10(playsRET),'bo-');
-    shadedErrorBarYLog10(ptemprate_ak1(ix,:),playsRET,ptempratestd1(ix,:),'gd-'); 
-    shadedErrorBarYLog10(ptemprate_akF(ix,:),playsRET,ptempratestdF(ix,:),'rx-'); 
+    shadedErrorBarYLog10(ptemprate_ak1(ix,:),playsRET,ptempratestd1(ix,:),'rd-'); 
+    shadedErrorBarYLog10(ptemprate_akF(ix,:),playsRET,ptempratestdF(ix,:),'gx-'); 
     hold off; 
-    hl = title('(b)UMBC (g/r)ERA,AK*ERA Temperature (K/yr)'); 
-    set(hl,'fontsize',12); 
+    ax = axis; line([ax(1) ax(2)],log10([aux.spres  aux.spres]),'color','g','linewidth',2)
+    ax = axis; line([ax(1) ax(2)],log10([aux.trop_P aux.trop_P]),'color','c','linewidth',2)
+    hl = title('(b)UMBC (r)ERA (g)AK*ERA T(z) (K/yr)','fontsize',12); 
     set(gca,'ydir','reverse'); grid; axis([-0.2 +0.15 1 3]);
   
   if iLoad == 1
@@ -141,11 +166,13 @@ if abs(iLoad) <= 1
     shadedErrorBarYLog10(ozone,playsRET,ozonesigs,'bo-');
     hold on
     semilogy(ozone,log10(playsRET),'bo-');
-    shadedErrorBarYLog10(o3rate_ak1(ix,:),playsRET,o3ratestd1(ix,:),'gd-'); 
-    shadedErrorBarYLog10(o3rate_akF(ix,:),playsRET,o3ratestdF(ix,:),'rx-'); 
+    shadedErrorBarYLog10(o3rate_ak1(ix,:),playsRET,o3ratestd1(ix,:),'rd-'); 
+    shadedErrorBarYLog10(o3rate_akF(ix,:),playsRET,o3ratestdF(ix,:),'gx-'); 
     hold off; 
-    title('(b)UMBC (g/r)ERA,AK*ERA Ozone fr/yr')
-    set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 0.1 3]);   
+    ax = axis; line([ax(1) ax(2)],log10([aux.spres  aux.spres]),'color','g','linewidth',2)
+    ax = axis; line([ax(1) ax(2)],log10([aux.trop_P aux.trop_P]),'color','c','linewidth',2)
+    title('(b)UMBC (r)ERA (g)AK*ERA O3(z) fr/yr','fontsize',12)
+    set(gca,'ydir','reverse'); grid; axis([-0.025 +0.025 1 3]);   
   %---------------------------------------------------------------------------
 
 else
@@ -154,6 +181,6 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-for ii = 1 : 4
+for ii = 2 : 4
   figure(ii); plotaxis2;
 end

@@ -1,6 +1,6 @@
-function [] = hpc_usage(Q,ocb_set,iLinearOrLog)
+function [] = hpc_check_node(Q,ocb_set,iLinearOrLog)
 
-% hpc_usage(Q,ocb_set,iLinearOrLog)
+% hpc_check_node(Q,ocb_set,iLinearOrLog)
 %  defaults Q = 16, ocb_set = 0,iLinearOrLog = 1
 
 save_no_legend_autoupdate
@@ -128,16 +128,43 @@ if exist('iFound')
   if length(jettY) == 1
     jettY = jettY-1:jettY+1;
   end
+
   jettY = colormap(jet(length(jettY)));
   figure(1); scatter(node(Yi,2),node(Yi,3),40,node(Yi,1),'filled'); colorbar; colormap(jettY);
-    xlabel('array ID (1-64)'); ylabel(['jobs done out of ' num2str(jobsPERproessor)]); colorbar; title('colorbar = cnode')
-  
+    xlabel('JOB array ID (1-64)'); ylabel(['jobs done out of ' num2str(jobsPERproessor)]); colorbar; title('colorbar = cnode')
+
+  jettY = colormap(jet(length(jettY)));
+  figure(2); scatter(node(Yi,1),node(Yi,3),40,node(Yi,2),'filled'); colorbar; colormap(jettY);
+    xlabel('cnode'); ylabel(['jobs done out of ' num2str(jobsPERproessor)]); colorbar; title('colorbar = JOB array ID(1-64)')
+  ax = axis; 
+  if ax(1) < 50 & ax(2) > 50
+    line([50 50],[ax(3) ax(4)],'color','k','linewidth',2);
+    text(ax(1)+1,ax(3)+0.5,'HIGHMEM');
+    text(50+1,ax(3)+0.5,'CPU2021');
+  elseif ax(2) < 50
+    text(ax(1)+1,ax(3)+0.5,'HIGHMEM');
+  elseif ax(1) >= 50
+    text(ax(1)+1,ax(3)+0.5,'CPU2021');
+  end
+
   [Y,I] = sort(expected(:,1));
-  figure(2); plot(expected(I,1),expected(I,2) ./ expected(I,3),'-o');
+  figure(3); plot(expected(I,1),expected(I,2) ./ expected(I,3),'-o');
     xlabel('node number'); ylabel(['fraction jobs done (out of ' num2str(jobsPERproessor) ')']);
     grid
+  ax = axis; 
+  if ax(1) < 50 & ax(2) > 50
+    line([50 50],[ax(3) ax(4)],'color','k','linewidth',2);
+    text(ax(1)+1,ax(3)+0.02,'HIGHMEM');
+    text(50+1,ax(3)+0.02,'CPU2021');
+  elseif ax(2) < 50
+    text(ax(1)+1,ax(3)+0.02,'HIGHMEM');
+  elseif ax(1) >= 50
+    text(ax(1)+1,ax(3)+0.02,'CPU2021');
+  end
+
   wah = [expected(I,1)    expected(I,2) ./ expected(I,3)];
   fprintf(1,'cnode %3i   fraction done %8.4f \n',wah')
+
 else
   disp(' oooer nothing running')
 end

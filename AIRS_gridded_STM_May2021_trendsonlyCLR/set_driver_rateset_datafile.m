@@ -7,7 +7,7 @@ if settings.dataset == -2
   error('oops not done')
 
 elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 9
-  disp('AIRS 07 or 18 or 19 year rates or anomalies, nu cal done in there')
+  disp('AIRS 07 or 18 or 19 or 20 year rates or anomalies, nu cal done in there')
   if settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 1    
     disp('doing Strow 18 yr gridded quantile rates')
     driver.rateset.datafile  = [];

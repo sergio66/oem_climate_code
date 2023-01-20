@@ -4,7 +4,7 @@ settings.iaSequential = -1;                  %% default is to retrieve everythin
 settings.iSergioCO2 = -1;                    %% assume ESRL CO2/CH4 rates, DEFAULT   (+1) to fit for CO2/CH4
 
 settings.set_era5_cmip6_airsL3         = -1; %% default, no a priori, else set to 3,5,6 for AIRS L3/ERA5/CMIP6
-settings.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% is using ERA5 or AIRS L3 or MERRA to set rates, you can choose to see -1:WV/T/O3 or +1/+2/+3 for WV.T.O3only
+settings.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% is using ERA5 or AIRS L3 or MERRA to set rates, you can choose to see -1:WV/T/ST/O3 or +1/+2/+3/+4/+5/+40  for WV/T+ST/O3/T/ST/LowerT only
 
 settings.resetnorm2one = -1; %%% default, keep my scaling, set to +1 if you want to reset all to 1.00000000
 
@@ -77,7 +77,7 @@ if narginS == 3
    if (length(intersect(topts_allowedparams,optvar{i})) == 1)
      eval(sprintf('settings.%s = topts.%s;', optvar{i}, optvar{i}));
      str = ['junk = topts.' optvar{i} ';']; eval(str)
-     fprintf(1,'  check_settings.m : will use user setting.%25s = %4i \n',optvar{i},junk);
+     fprintf(1,'  check_settings.m : will use user setting.%30s = %4i \n',optvar{i},junk);
    else
      fprintf(1,'topts param not in allowed list ... %s \n',optvar{i});
      error('quitting ');

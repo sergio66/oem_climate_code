@@ -83,9 +83,16 @@ end
 z3 = waterrate_ak0_era5'; z3 = reshape(z3,length(pjunk20),72,64); z3 = squeeze(nanmean(z3,2));
 iFig = 50; figure(iFig); clf; profile_plots_3tiledlayout(rlat,pjunk20,z1,z2,z3,iFig,plotoptions);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+plotoptions.cx = [-1 +1]*0.5; plotoptions.maintitle = 'dRH/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.yLimits = [100 1000];
+plotoptions.yLinearOrLog = +1;
+plotoptions.str2 = 'ERA5';   
+plotoptions = rmfield(plotoptions,'str3');
+z1 = deltaRHlat'; 
+z2 = era5.trend_RH; z2 = reshape(z2,100,72,64); z2 = squeeze(nanmean(z2,2));
+iFig = 51; figure(iFig); clf; profile_plots_2tiledlayout(rlat,plays,z1,z2,iFig,plotoptions);
 
-%% these are NOT masked for L/O
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~exist('rlon')
   rlon73 = -180 : 5 : +180; rlon = meanvaluebin(rlon73);

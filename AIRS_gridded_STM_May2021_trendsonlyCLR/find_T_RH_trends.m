@@ -253,7 +253,7 @@ averageTlat = squeeze(nanmean(reshape(p.ptemp,[101 72 64]),2))';
       Lo = 2.5e6;  %%% J/kg
       Rv = 461.52; %%% J/kg/K
       moo = exp(Lo/Rv * deltaTlat ./ averageTlat ./ averageTlat) - 1;
-figure(51);
+figure(51); clf; 
   pcolor(rlat,pavgLAY(1:97,3000),smoothn(moo(:,1:97)',1)); shading interp; colormap(usa2); set(gca,'ydir','reverse')
   ylim([100 1000]); caxis([-1 +1]*0.015); colorbar('horizontal'); colormap(cmap); title(['if RH0 were 100 \newline Zonal MAX dWVfrac/dt expected from dT/dt'])
 

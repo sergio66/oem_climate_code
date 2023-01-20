@@ -30,7 +30,7 @@ driver.jacobian.colO3_values   = nansum(m_ts_jac0(:,driver.jacobian.ozone_i),2);
 figure(7); imagesc(m_ts_jac0(:,driver.jacobian.water_i)'); colorbar
 figure(8); imagesc(m_ts_jac0(:,driver.jacobian.temp_i)'); colorbar
 figure(9); imagesc(m_ts_jac0(:,driver.jacobian.ozone_i)'); colorbar
-size(m_ts_jac0)
+
 %[1 6 min(driver.jacobian.water_i) max(driver.jacobian.water_i) min(driver.jacobian.temp_i) max(driver.jacobian.temp_i) min(driver.jacobian.ozone_i) max(driver.jacobian.ozone_i)]
 %disp('here 1'); pause
 

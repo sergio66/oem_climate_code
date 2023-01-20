@@ -39,8 +39,8 @@ if iDoSlow > 0
   timervalx1
   timervalx2
 
-  [mm,nnS] = size(m_ts_jac_slow)
-  [mm,nnF] = size(m_ts_jac_fast)
+  [mm,nnS] = size(m_ts_jac_slow);
+  [mm,nnF] = size(m_ts_jac_fast);
 
   if nnS == nnF
     plot(sum(m_ts_jac_slow-m_ts_jac_fast),'o-'); pause(0.1); grid
@@ -90,7 +90,6 @@ if iVersQRenorm == 1
   %% gives good T(z) rates, small WV rates, till AUg 2021
   qrenorm((1:nlays)+6+nlays*0) = 0.01; %% WV
   qrenorm((1:nlays)+6+nlays*1) = 0.01; %% T
-  %qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
   qrenorm((1:nlays)+6+nlays*2) = 0.01; %% O3
 elseif iVersQRenorm == 2
   %% try this Aug 26, 2021
@@ -101,6 +100,10 @@ elseif iVersQRenorm == 3
   qrenorm((1:nlays)+6+nlays*0) = 0.01; %% WV
   qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
   qrenorm((1:nlays)+6+nlays*2) = 0.01; %% O3
+elseif iVersQRenorm == 4
+  qrenorm((1:nlays)+6+nlays*0) = 0.1; %% WV
+  qrenorm((1:nlays)+6+nlays*1) = 1.00; %% T
+  qrenorm((1:nlays)+6+nlays*2) = 0.1; %% O3
 end
 
 qrenormUSE = qrenorm;

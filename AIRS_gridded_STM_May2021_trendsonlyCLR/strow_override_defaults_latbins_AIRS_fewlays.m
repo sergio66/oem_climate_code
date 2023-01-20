@@ -302,7 +302,7 @@ if settings.resetnorm2one == +1
   for ii = 1 : length(boo1)
     aux.m_ts_jac(:,ii) = aux.m_ts_jac(:,ii)/driver.qrenorm(ii);
   end;
-  aux.xb = aux.xb./driver.qrenorm';
+  aux.xb = aux.xb.*driver.qrenorm';
   driver.qrenorm = ones(size(driver.qrenorm));
 end
 

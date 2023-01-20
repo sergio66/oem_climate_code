@@ -135,9 +135,17 @@ elseif driver.i16daytimestep < 0
 
     %% cov_setA = tropics/midlats; cov_setB  = poles
     cov_setA = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        01*1E+0     05*1E+1  01*1E+1];  %% try, good!!! QUITE GOOD AT TROPICS/MIDLATs, bad at N/S. Pole!!!! SAVE THIS!!!
+    cov_setA = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E-2     10*1E+0  05*1E-1];  %% combine the above two for POLES anduse for TROPICS/MIDLATS
+
     cov_setB = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** Dec 6, 2022 commit 
         cov_setB(11:13) = cov_setB(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
-    cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two for POLES
+    cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two for POLES
+    cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E-2      10*1E+0  05*1E-1];  %% combine the above two for POLES
+    cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E-2      10*1E+0  05*1E-1];  %% combine the above two for POLES *** NOT BAD 
+    cov_setB = [1.0  0.50*10      0.10*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E0      10*1E+0  05*1E-2];  %% combine the above two for POLES
+
+    cov_setB = [1.0  0.10*1      0.10*1       1/2        0.01/5            0.01/5            1/2      0.01            0.01                1/2        03*1E+2      10*1E+2  05*1E+2];  %% qrenorm = 1
+
 %      cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two
 %      cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        5*1E-3      08*1E+2  05*1E-1];  %% combine the above two
 
@@ -244,7 +252,7 @@ iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = -1; %% this is what we had upto Apr 
 iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 0;  %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) fmat -> fmat.*fmat
 iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = +1; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) mat_odX = exp(-mat_odZ.^2./(LscaleX^2));               and (2) fmat -> fmat.*fmat
 
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1;
 
 driver.iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = iCov_SqrFmatd_MatOd_Apr2022SounderMeeting;
 if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == -1
@@ -501,12 +509,12 @@ if topts.dataset >= 8
   rCoupleTWV = 0.1;
   rCoupleTWV = 1.0;
   rCoupleTWV = 0.25;
-  rCoupleT_WV = topts.rCoupleT_WV;
+  rCoupleTWV = topts.rCoupleT_WV;
   
   iCoupleT_WV = -1;    %% default
   iCoupleT_WV = +1;   
   if iCoupleT_WV > 0 & abs(rCoupleTWV) > eps
-    disp('coupling T, WV in build_cov_matrices.m')
+    fprintf(1,'coupling T, WV in build_cov_matrices.m with strngth %8.6e \n',rCoupleTWV)
     rDiagSa = sqrt(diag(driver.oem.cov));
     rSaT  = rDiagSa(driver.jacobian.temp_i);
     rSaWV = rDiagSa(driver.jacobian.water_i);
