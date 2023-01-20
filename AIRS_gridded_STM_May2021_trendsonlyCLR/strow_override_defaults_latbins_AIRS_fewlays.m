@@ -306,6 +306,7 @@ if settings.resetnorm2one == +1
   driver.qrenorm = ones(size(driver.qrenorm));
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 build_cov_matrices
 
 %figure(13); colormap jet; imagesc(log10(abs(aux.m_ts_jac'))); caxis([-12 0]); colorbar 
@@ -315,3 +316,4 @@ build_cov_matrices
 %keyboard_nowindow
 
 driver.iaSequential = topts.iaSequential;
+driver.dataset      = topts.dataset;
