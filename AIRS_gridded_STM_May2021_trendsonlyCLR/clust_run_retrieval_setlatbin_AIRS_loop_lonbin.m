@@ -84,10 +84,6 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 7
 % JOB = 39
 
-iDebug = 1;
-iDebug = 1665;
-iDebug = 2376;
-
 iDebug = 0108;  %% SP
 %iDebug = 0180;  %% SP
 %iDebug = 0249;  %% SP
@@ -100,6 +96,9 @@ iDebug = 2264; %% T
 iDebug = 1233; %% SML
 iDebug = 180
 %iDebug = 754
+iDebug = 1;
+iDebug = 1665;
+iDebug = 2376;
 
 iDebug = -1;
 
@@ -249,8 +248,8 @@ for iInd = iInd0 : iIndE
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  topts.tie_sst_lowestlayer = +1;
-  topts.tie_sst_lowestlayer = -1;
+  topts.tie_sst_lowestlayer = -1;  %% DEFAULT
+  topts.tie_sst_lowestlayer = +1;  %% testing dataset=4,iQuantil=16,ocb_set=0 (the JPL SOunder meeting Apr 2022, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 
   %topts.iFixTG_NoFit = +1; %% dump out first scalar = CO2 boy certainly messes up CO2 even more!!!!!
 
@@ -328,14 +327,6 @@ for iInd = iInd0 : iIndE
     eval(mker);
   end
 
-  oldstyle_removeCO2 = +1;
-  if ~isfield(topts,'iFixTG_NoFit')
-    oldstyle_removeCO2 = +1;
-  elseif isfield(topts,'iFixTG_NoFit')
-    if length(intersect(topts.iFixTG_NoFit,2)) >  0
-      oldstyle_removeCO2 = -1;
-    end
-  end
   if exist(driver.outfilename) & iDebug > 0
     disp(' ')
     fprintf(1,'WARNING iDebug = %5i and %s already exists, so deleting and continuing \n',iDebug,driver.outfilename);
@@ -347,6 +338,15 @@ for iInd = iInd0 : iIndE
     pause(2)
     rmer = ['!/bin/rm ' driver.outfilename];
     eval(rmer)
+  end
+
+  oldstyle_removeCO2 = +1;
+  if ~isfield(topts,'iFixTG_NoFit')
+    oldstyle_removeCO2 = +1;
+  elseif isfield(topts,'iFixTG_NoFit')
+    if length(intersect(topts.iFixTG_NoFit,2)) >  0
+      oldstyle_removeCO2 = -1;
+    end
   end
 
   if oldstyle_removeCO2 > 0 

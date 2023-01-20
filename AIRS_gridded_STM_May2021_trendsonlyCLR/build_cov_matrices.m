@@ -7,15 +7,33 @@ wnorm = driver.qrenorm(driver.jacobian.water_i);
 tnorm = driver.qrenorm(driver.jacobian.temp_i);
 oznorm = driver.qrenorm(driver.jacobian.ozone_i);
 
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1; %% this is what we had upto Apr 2022, which was the JPL Sounder team Meeting, dataset=4,Quantile=16 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) did not square fmat, 
+                                               %% 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 2; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) fmat -> fmat.*fmat
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 3; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) mat_odX = exp(-mat_odZ.^2./(LscaleX^2));               and (2) fmat -> fmat.*fmat
+
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 3;
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1;
+
+driver.iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = iCov_SqrFmatd_MatOd_Apr2022SounderMeeting;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Defines tropopause index trpi
 trop_index
 
-if isfield(aux,'trop_ind')
+if isfield(aux,'trop_ind') & iCov_SqrFmatd_MatOd_Apr2022SounderMeeting ~= 1
+  %% this would give a slightly more profile dependednt (218 vs 2019 vs 2020 average) tropopause index, rather than a standard generic number from subroutine trop_index
   trpi = ones(size(trpi)) * aux.trop_ind;
 end
 
 if topts.iNlays_retrieve < 90
-  trpi = floor(trpi/(100/topts.iNlays_retrieve));
+  if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1
+    %% this is what was there till abiut Oct 2022 and is slightly incorrect
+    trpi = floor(trpi/(100/iNlays_retrieve));
+  else
+    trpi = floor(trpi/(100/topts.iNlays_retrieve));
+  end
 end
 
 
@@ -92,9 +110,9 @@ elseif driver.i16daytimestep < 0
     cov_set = [1.0  0.025         0.05            1/2       0.15/50           0.15/50           1/2      0.15/50         0.15/50             1/2        20*1E-7     20*1E-7  20*1E-7];  %% ok   excellent simulated ERA5 spectral rates Feb 4, 2022
     cov_set = [1.0  0.05*1        0.05*1          1/2       0.15/50*1         0.15/50*1         1/2      0.15/50*1       0.15/50*1           1/2        20*1E-7     20*1E-7  20*1E-7];  %% very excellent simulated ERA5 spectral rates Feb 4, 2022 till Feb 15, 2022
 
-    cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try strat only x3   unc
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x100 unc, Feb 16 2022-Apr7,2022 : great JPLMay 2022 talk!!! huge retr uncertainty
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.15/50*3         0.15/50*3         1/2      0.15/50*3       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try x3   unc, Feb 16 2022-Apr7,2022 : great but maybe still constricts WV/O3
+    cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try strat only x3   unc  04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 
   elseif iCovSetNumber == 12
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% 12 year rates, init try 2002/09-2014/08
@@ -241,21 +259,14 @@ Lscale_O3 = 1.0;  %% 1 km
 %% should really be 
 %% mat_od(i,j) = abs(z(i)-z(j))/zScale;  %% and in lower atmosphere z(i)-z(j) ~ 0.5 km, zScale ~ 5 km so mat_od(i,j) ~ 0.1 and not 1 ----- so let l_c = 10
 % Relative off-diagonal
-l_c = cov_set(1)*100;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, oops, why 100 which becomes 100^2?
-l_c = cov_set(1)*10;   mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, try 10 which becomes 10^2?
-l_c = cov_set(1)*1;    mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, this was in Apr 2022, claiming that (i-j)/<scale> = 1   which is almost saying (z(i)-z(j))/<scale hgt> = 1 or dz = 1 km, zscale = 1 km
+l_c = cov_set(1)*100;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, oops, why 100 which becomes 100^2??  WIERD AND WRONG
+l_c = cov_set(1)*10;   mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, try 10 which becomes 10^2?           WIERD AND WRONG
+l_c = cov_set(1)*1;    mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, this was in Apr 2022, claiming that (i-j)/<scale> = 1 ie basically (z(i)-z(j))/<scale hgt> = 1 or dz = 1 km, zscale = 1 km, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bc
 l_c = Lscale_Tz;       mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
 l_c = Lscale_WV;       mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
 l_c = Lscale_O3;       mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
 
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = -1; %% this is what we had upto Apr 2022, which was the JPL Sounder team Meeting, dataset=4,Quantile=16 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) did not square fmat
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 0;  %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) fmat -> fmat.*fmat
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = +1; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) mat_odX = exp(-mat_odZ.^2./(LscaleX^2));               and (2) fmat -> fmat.*fmat
-
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1;
-
-driver.iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = iCov_SqrFmatd_MatOd_Apr2022SounderMeeting;
-if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == -1
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< hmm the big reset to what was done in April 2022 JPL Sounder Meeting >>>>>>>>>>
 end
 
@@ -337,6 +348,21 @@ sumtjac = sumtjac/max(abs(sumtjac));
 sumtjac = 1./sumtjac;
 sumtjac(sumtjac > 5) = 5;
 
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1
+  sumtjac = ones(size(sumtjac));
+  if xb(1) > 0
+    fprintf(1,'in build_cov_matrices.m we have iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1, duplicating JPL Sounder STM Apr 2022 so need to reset xb(1:3) = %8.6f %8.6f %8.6f \n',xb(1:3))
+    %% set a global trend, but this is really silly as CO2/CH4/N2O trends vary latitudinally
+    xb(1) = 2.2;
+    xb(2) = 0.8;
+    xb(3) = 4.5;
+    aux.xb(1:3) = xb(1:3)./driver.qrenorm(1:3)';
+    if settings.resetnorm2one == +1
+      aux.xb(1:3) = xb(1:3).*driver.qrenorm(1:3)';       
+    end
+    driver.oem.xb(1:3) = xb(1:3);
+  end
+end  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Temperature level uncertainties, then scaled and squared
@@ -482,7 +508,8 @@ end
 
 fmatd
 fmat  = diag(fmatd./fnorm); 
-if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting >= 0
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting >= 2
+  %% this is correct; iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 (JPL SOunder Meeting Apr 2022) did NOT square the matrix, which is wrong
   fmat = fmat .* fmat;           
 end
 
