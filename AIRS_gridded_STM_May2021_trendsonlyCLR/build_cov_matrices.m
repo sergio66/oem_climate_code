@@ -13,7 +13,9 @@ iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 2; %% this is new Aug 2022, put into
 iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 3; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) mat_odX = exp(-mat_odZ.^2./(LscaleX^2));               and (2) fmat -> fmat.*fmat
 
 iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 3;
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1;
+if driver.ia_OorC_DataSet_Quantile == [+0 04 16]
+  iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1;
+end
 
 driver.iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = iCov_SqrFmatd_MatOd_Apr2022SounderMeeting;
 
@@ -116,9 +118,11 @@ elseif driver.i16daytimestep < 0
 
   elseif iCovSetNumber == 12
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-7     20*1E-7  20*1E-7];  %% 12 year rates, init try 2002/09-2014/08
-    cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5            0.02/5            1/2      0.02/5          0.02/5              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08, * used this for Princeton iQuant=50, 
                                                                                                                                                                                         %% and GOOD ERA5 retr dataset4,Quant16 **
+    cov_set = [1.0  0.05*1        0.05*1          1/2       0.02/5            0.02/5            1/2      0.02/5          0.02/5              1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
+    cov_set = [1.0  0.05*1        0.05*1          1/2       0.08/20           0.08/20           1/2      0.08/20         0.08/20             1/2        20*1E-4     20*1E-4  20*1E-4];  %% 2002/09-2014/08 12 years AMIP6/CMIP6 for Princeton
+
   elseif iCovSetNumber == 18 | iCovSetNumber == 19
     cov_set = [1.0  0.05*3        0.05*3          1/2       0.02              0.02              1/2      0.02            0.02                1/2        05*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
     cov_set = [1.0  0.05*5        0.05*5          1/2       0.02              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 **
@@ -266,7 +270,7 @@ l_c = Lscale_Tz;       mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
 l_c = Lscale_WV;       mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
 l_c = Lscale_O3;       mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
 
-if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quantile == [0 5 50]
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< hmm the big reset to what was done in April 2022 JPL Sounder Meeting >>>>>>>>>>
 end
 
@@ -348,7 +352,7 @@ sumtjac = sumtjac/max(abs(sumtjac));
 sumtjac = 1./sumtjac;
 sumtjac(sumtjac > 5) = 5;
 
-if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quantile == [0 5 50]
   sumtjac = ones(size(sumtjac));
   if xb(1) > 0
     fprintf(1,'in build_cov_matrices.m we have iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1, duplicating JPL Sounder STM Apr 2022 so need to reset xb(1:3) = %8.6f %8.6f %8.6f \n',xb(1:3))

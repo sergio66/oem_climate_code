@@ -41,21 +41,21 @@ if driver.i16daytimestep < 0
     iVersJac = 2019;     %% ERA5 from 2002-2019
     iVersJac = 2021;     %% ERA5 from 2002-2021
     if settings.dataset == 5
-      iVersJac = 2014;   %% AMIP6/CMIp6 2002-2014
+      iVersJac = 2014;   %% AMIP6/CMIp6 2002-2014, 12 years
     elseif settings.dataset == 6
-      iVersJac = 2012;   %% CrIS NSR 2012-2019
+      iVersJac = 2012;   %% CrIS NSR 2012-2019, 07 years
     elseif settings.dataset == 7
-      iVersJac = 2022;
+      iVersJac = 2022;   %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
       iVersJac = 2021;   %% ERA5 CLR from 2002-2021
      elseif settings.dataset == 8
-      iVersJac = 2015;   %% OCO2 2015-2021
+      iVersJac = 2015;   %% OCO2 2015-2021, 7 years
      elseif settings.dataset == 9
       if settings.ocb_set == 1
         disp(' settings.dataset == 9 but settings.ocb_set == 1 so set iVersJac = 2021')
         iVersJac = 2021;   %% ERA5 clr 2021
       elseif settings.ocb_set == 0
-        iVersJac = 2022;   %% ERA5 cldQ 2022
-        iVersJac = 2021;   %% ERA5 CLR from 2002-2021
+        iVersJac = 2022;   %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
+        iVersJac = 2021;   %% ERA5 CLR  from 2002-2021
       end
     end
 

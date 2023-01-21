@@ -57,6 +57,15 @@ elseif iOldORNew == 12
   fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2014.m --> iOldORNew == 2014 (ERA5) JOB = %2i   \n',JOB);
 end
 
+lps = compute_lapse_rate(h,p);
+profilejunk.nlays = p.nlevs(:,(iLatBin-1)*72+iLonBin)-1;
+profilejunk.plays = plevs2plays(p.plevs(:,(iLatBin-1)*72+iLonBin));
+profilejunk.ptemp = p.ptemp(:,(iLatBin-1)*72+iLonBin);
+profilejunk.stemp = p.stemp((iLatBin-1)*72+iLonBin);
+profilejunk.spres = p.spres((iLatBin-1)*72+iLonBin);
+profilejunk.lps_tropoapauseP   = lps.trp_pHI((iLatBin-1)*72+iLonBin);
+profilejunk.lps_tropoapauseind = lps.trp_ind((iLatBin-1)*72+iLonBin);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 factor_log10 = log(10); %% this changes gas jac scaling to log10
@@ -86,7 +95,7 @@ for lon = iLonBin
   %% kcarta nml = 2 4 5 6 51 52 T ST
   aout.jac(:,1) = acol.rKc(:,1);     %%% CO2
   colo3 = acol.rKc(:,2);             %%% (O3 is ind2, can compare againt the sum(o3jac(z))
-  aout.jac(:,2) = acol.rKc(:,3);     %%% N2O (ind2 = O3)
+  aout.jac(:,2) = acol.rKc(:,2);     %%% N2O (ind3 = CO) FOR see_clust_put_together_jacs_clrERA5_2014 and _2021.m : others eg 2021, it is ind3
   aout.jac(:,3) = acol.rKc(:,4);     %%% CH4
   aout.jac(:,4) = acol.rKc(:,5);     %%% CFC11
   aout.jac(:,5) = acol.rKc(:,6);     %%% CFC12
@@ -199,3 +208,4 @@ m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacT'];
 m_ts_jac_fast = [m_ts_jac_fast kcarta.subjac.jacO3'];
 
 freq2645 = h.vchan;
+
