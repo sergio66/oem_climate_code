@@ -51,6 +51,8 @@ lps = compute_lapse_rate(h,p);
 profilejunk.nlays = p.nlevs(:,(iLatBin-1)*72+iLonBin)-1;
 profilejunk.plays = plevs2plays(p.plevs(:,(iLatBin-1)*72+iLonBin));
 profilejunk.ptemp = p.ptemp(:,(iLatBin-1)*72+iLonBin);
+profilejunk.gas_1 = p.gas_1(:,(iLatBin-1)*72+iLonBin);
+profilejunk.gas_3 = p.gas_3(:,(iLatBin-1)*72+iLonBin);
 profilejunk.stemp = p.stemp((iLatBin-1)*72+iLonBin);
 profilejunk.spres = p.spres((iLatBin-1)*72+iLonBin);
 profilejunk.lps_tropoapauseP   = lps.trp_pHI((iLatBin-1)*72+iLonBin);
@@ -207,3 +209,17 @@ if nlaysx ~= nlays
 end
 
 freq2645 = h.vchan;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%{
+keyboard_nowindow
+quickjac = quicksartajac(h,p,(iLatBin-1)*72+iLonBin,1,-1);
+plot(quickjac.f,quickjac.jac(:,2),freq2645,m_ts_jac_fast(:,1)); xlim([650 1650]); title('CO2 jac'); legend('sarta','kcarta');
+plot(quickjac.f,quickjac.jac(:,7),freq2645,m_ts_jac_fast(:,6)); xlim([650 1650]); title('ST jac'); legend('sarta','kcarta');
+plot(quickjac.f,sum(quickjac.wvjac(:,(1:nlays)),2),freq2645,sum(m_ts_jac_fast(:,(1:nlays)+6),2)); title('WV(z) jac'); legend('sarta','kcarta');
+plot(quickjac.f,sum(quickjac.tjac(:,(1:nlays)),2),freq2645,sum(m_ts_jac_fast(:,(1:nlays)+6+nlays),2)); title('T(z) jac'); legend('sarta','kcarta');
+plot(quickjac.f,quickjac.wvjac(:,nlays),freq2645,m_ts_jac_fast(:,nlays+6)); title('WV(z) jac'); legend('sarta','kcarta');
+junk = 0;  junk = junk + nlays; plot(quickjac.f,quickjac.wvjac(:,junk),freq2645,m_ts_jac_fast(:,junk+6)); title('WV(z) jac'); legend('sarta','kcarta');
+junk = -1; junk = junk + nlays; plot(quickjac.f,quickjac.wvjac(:,junk),freq2645,m_ts_jac_fast(:,junk+6)); title('WV(z) jac'); legend('sarta','kcarta');
+%}

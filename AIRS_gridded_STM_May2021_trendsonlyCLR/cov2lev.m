@@ -13,3 +13,5 @@ y1 = m1*tanh(c.width1*(pt1-c.trans1)) + (c.lev2 + c.lev1)/2;
 %y2 = m2*tanh(c.width2*(pt2-c.trans2)) + (c.lev3 + c.lev2)/2;
 
 y = y1;
+
+%keyboard_nowindow

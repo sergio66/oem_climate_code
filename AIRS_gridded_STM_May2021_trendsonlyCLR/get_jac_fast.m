@@ -84,6 +84,11 @@ iVersQRenorm = 1; %% DEFAULT
 iVersQRenorm = 3;
 iVersQRenorm = topts.iVersQRenorm;
 
+if iLatBin <= 11 | iLatBin >= 64-11
+  %% see iLatX in build_cov_matrices.m
+  iVersQRenorm = 4; %% TESTING POALR REGIONS JAN 2023
+end
+
 fprintf(1,'  ....  get_jac_fast.m : iVersQRenorm = %2i (default = 1) ....  \n',iVersQRenorm)
 
 if iVersQRenorm == 1
@@ -104,6 +109,13 @@ elseif iVersQRenorm == 4
   qrenorm((1:nlays)+6+nlays*0) = 0.1; %% WV
   qrenorm((1:nlays)+6+nlays*1) = 1.00; %% T
   qrenorm((1:nlays)+6+nlays*2) = 0.1; %% O3
+
+  qrenorm((1:nlays)+6+nlays*0) = 0.01; %% WV
+  qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
+  qrenorm((1:nlays)+6+nlays*1) = 0.05; %% T
+  qrenorm((1:nlays)+6+nlays*1) = 0.01; %% T
+  qrenorm((1:nlays)+6+nlays*1) = 0.50; %% T
+  qrenorm((1:nlays)+6+nlays*2) = 0.01; %% O3
 end
 
 qrenormUSE = qrenorm;

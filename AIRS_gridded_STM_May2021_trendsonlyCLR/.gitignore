@@ -11,6 +11,9 @@ TESTOLR_KCARTA
 
 PDF*
 
+# from diff_m_or_f_files
+diff_kcarta_results.txt
+
 # symbolic links
 driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
 driver_check_WV_T_RH_AMIP6_geo_and_spectral_rates2.m

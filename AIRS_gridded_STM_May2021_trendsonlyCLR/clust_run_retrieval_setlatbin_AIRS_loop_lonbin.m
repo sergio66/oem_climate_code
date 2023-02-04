@@ -84,29 +84,34 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 7
 % JOB = 39
 
-iDebug = 0108;  %% SP
-%iDebug = 0180;  %% SP
-%iDebug = 0249;  %% SP
-%iDebug = 0233;  %% SP
-iDebug = 4233; %% NP
-iDebug = 4483; %% NP
+
 iDebug = 3233; %% NML
 iDebug = 2233; %% T
 iDebug = 2264; %% T
+iDebug = 2268; %% T
 iDebug = 1233; %% SML
-iDebug = 180
+%iDebug = 180
 %iDebug = 754
-iDebug = 1;
-iDebug = 1665;
-iDebug = 2376;
+%iDebug = 1;
+%iDebug = 1665;
+%iDebug = 2376;
 
+%iDebug = 4483; %% NP
+%iDebug = 4233; %% NP
+%iDebug = 0249;  %% SP
+%iDebug = 0233;  %% SP
+%iDebug = 0108;  %% SP works nice
+%iDebug = 0180;  %% SP terrible wiggles in lower atm
+
+iDebug = 2268; %% T
+iDebug = 2259; %% T
 iDebug = -1;
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16
-ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
 ia_OorC_DataSet_Quantile = [+0 04 16]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
-ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(09.97-->1)
 ia_OorC_DataSet_Quantile = [+0 05 50]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
+ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
+ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(09.97-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -208,7 +213,10 @@ for iInd = iInd0 : iIndE
   topts.iaSequential = [150 60 100 -1];            %% sequential, like SingleFootprint
   topts.iaSequential = [-1 150 60 100 -1];         %% sequential, like SingleFootprint
   topts.iaSequential = [-1 150 60 100 150 60];     %% sequential, like SingleFootprint
+  topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint
+  topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
+  topts.iaSequential = [150];                      %% sequential, like SingleFootprint
   topts.iaSequential = -1;                         %% default one gulp
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
@@ -250,6 +258,10 @@ for iInd = iInd0 : iIndE
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT
   topts.tie_sst_lowestlayer = +1;  %% testing dataset=4,iQuantil=16,ocb_set=0 (the JPL SOunder meeting Apr 2022, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 
@@ -275,8 +287,8 @@ for iInd = iInd0 : iIndE
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
 
-  topts.resetnorm2one = +1;
   topts.resetnorm2one = -1;   %% DEFAULT
+  topts.resetnorm2one = +1;
 
   iChSet = topts.iChSet;
   iChSet = 2; %% new chans
@@ -291,9 +303,8 @@ for iInd = iInd0 : iIndE
 
   topts.iChSet = iChSet;
 
-  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
-  iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
-  topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   %% iNorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3

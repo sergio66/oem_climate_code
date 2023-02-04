@@ -10,7 +10,7 @@
 
 [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
 fprintf(1,'in set_the_jacobians.m nlays = %2i \n',nlays)
-%keyboard_str = 'nlays'; keyboard_nowindow
+%keyboardstr = 'nlays'; keyboard_nowindow
 
 m_ts_jac0 = double(m_ts_jac0);
 
@@ -206,14 +206,20 @@ for iii = 1 : length(driver.jacobian.wvjaclays_used)
   junk = driver.jacobian.wvjaclays_used{iii}-driver.jacobian.wvjaclays_offset;
   profilejunk.pavg(iii) = mean(profilejunk.plays(junk));
   profilejunk.tavg(iii) = mean(profilejunk.ptemp(junk));
+  profilejunk.qavg(iii) = mean(profilejunk.gas_1(junk));
+  profilejunk.oavg(iii) = mean(profilejunk.gas_3(junk));
 end
 jac.nlays       = profilejunk.nlays;
 jac.plays       = profilejunk.plays;
 jac.ptemp       = profilejunk.ptemp;
+jac.gas_1       = profilejunk.gas_1;
+jac.gas_3       = profilejunk.gas_3;
 jac.spres       = profilejunk.spres;
 jac.stemp       = profilejunk.stemp;
 jac.navg        = profilejunk.navg;
 jac.pavg        = profilejunk.pavg;
 jac.tavg        = profilejunk.tavg;
+jac.qavg        = profilejunk.qavg;
+jac.oavg        = profilejunk.oavg;
 jac.trop_P      = profilejunk.lps_tropoapauseP;
 jac.trop_ind    = profilejunk.lps_tropoapauseind;

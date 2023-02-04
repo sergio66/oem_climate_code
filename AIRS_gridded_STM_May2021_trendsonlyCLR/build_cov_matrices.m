@@ -61,9 +61,7 @@ end
 %%      alpha -> INF then you say you are VERY sure about a-priori ==> do not change ==> delta(param) --> 0
 %%
 %%               sigT_t    sigT_s                sigWV_t   sigWV_s             sigO3_t   sigO3_s
-%%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2    coz_wide  alpha_T  alpha_w  alpha_oz
-
-%%         lc   ct.lev1   ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2 coz_wide  alpha_T  alpha_w  alpha_oz
+%%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
 
 if driver.i16daytimestep > 0
   %% worked great for anomalies!!!
@@ -105,6 +103,7 @@ elseif driver.i16daytimestep < 0
   driver.iCovSetNumber = iCovSetNumber;
   fprintf(1,' build_cov_matrices.m : iCovSetNumber = %8.5f \n',driver.iCovSetNumber)
 
+%%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
   if iCovSetNumber == 4.16
     cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try strat only x3   unc
     cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E+2     20*1E+2  20*1E+2];  %% try strat only x3   unc
@@ -157,19 +156,23 @@ elseif driver.i16daytimestep < 0
 
     %% cov_setA = tropics/midlats; cov_setB  = poles
     cov_setA = [1.0  0.05*1       0.10*1        1/2        0.01/4            0.01/4            1/2      0.025           0.025               1/2        01*1E+0     05*1E+1  01*1E+1];  %% try, good!!! QUITE GOOD AT TROPICS/MIDLATs, bad at N/S. Pole!!!! SAVE THIS!!!
-    cov_setA = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E-2     10*1E+0  05*1E-1];  %% combine the above two for POLES anduse for TROPICS/MIDLATS
+    cov_setA = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E-2     10*1E+0  05*1E-1];  %% combine the above two for POLES and use for TROPICS/MIDLATS iaSequential = -1
+    cov_setA = [1.0  0.05*1       0.09*1        1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E+1     20*1E-1  05*1E-2];  %% use for TROPICS/MIDLATS iaSequential = [150 60 100 -1 150 60 -1]
+    cov_setA = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        05*1E0     10*1E+0  05*1E-1];  %% combine the above two for POLES and use for TROPICS/MIDLATS iaSequential = -1
+    cov_setA = [1.0  0.05*0.5      0.09*0.5       1/2        0.01/2            0.01/2            1/2      0.01            0.01                1/2        09*1E2     9*1E+3  05*1E-1];  %% combine the above two for POLES and use for TROPICS/MIDLATS iaSequential = -1
+    cov_setA = [1.0  0.05*0.5      0.09*0.5       1/8        0.01/2            0.01/2            1/8      0.01/10        0.01                1/8        04*1E3     75*1E+4  05*1E-1];  %% TROPICS/MIDLATS iaSequential = -1 iia_OorC_DataSet_Quantile = [+0 09 05]; 2/4/23 git commit
 
     cov_setB = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** Dec 6, 2022 commit 
         cov_setB(11:13) = cov_setB(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
     cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two for POLES
     cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E-2      10*1E+0  05*1E-1];  %% combine the above two for POLES
     cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E-2      10*1E+0  05*1E-1];  %% combine the above two for POLES *** NOT BAD 
-    cov_setB = [1.0  0.50*10      0.10*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        03*1E0      10*1E+0  05*1E-2];  %% combine the above two for POLES
 
-    cov_setB = [1.0  0.10*1      0.10*1       1/2        0.01/5            0.01/5            1/2      0.01            0.01                1/2        03*1E+2      10*1E+2  05*1E+2];  %% qrenorm = 1
+    cov_setB = [1.0  0.50*10      0.10*10       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        01*1E-2      10*1E+0  05*1E-2];  %% combine the above two for POLES, pretty nice but T too wiggly
+    cov_setB = [1.0  0.50*10      0.10*06       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        07*1E-2      10*1E+0  01*1E-2];  %% combine the above two for POLES, WV good, T too wiggly
+    cov_setB = [1.0  0.10         0.10          1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        07*1E-2      10*1E+0  01*1E-2];  %% works nicely for iaSequential = [150 60 100 -1 150 60 -1]
 
-%      cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two
-%      cov_setB = [1.0  0.05*10       0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        5*1E-3      08*1E+2  05*1E-1];  %% combine the above two
+%%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
 
     iLatX = 07;
     iLatX = 11;
@@ -235,12 +238,6 @@ elseif driver.i16daytimestep < 0
 
 end
 
-fprintf(1,'cov_set : lenngth scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
-  junk = cov_set([2 3 4  11]); fprintf(1,'      T  : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
-  junk = cov_set([5 6 7  12]); fprintf(1,'      WV : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk);
-  junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
-  junk = cov_set([8 9 10 13]); fprintf(1,'      O3 : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
-  junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 zalt = p2h(plays)/1000;  %% change m to km
@@ -256,15 +253,33 @@ mat_od0    = mat_od;
 mat_odHgt0 = mat_odHgt;
 
 %% see eg /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/RODGERS/RODGERS5/rodgers5_reg_and_cov_buildmatrixV1.m
-Lscale_Tz = 3.0;  %% 3 kn
-Lscale_WV = 1.0;  %% 1 km
+%% exp(-(dx/L)^2) so L is scalle lenght at which the covariance dies : if I ls large, all levels correleated; if IL is small, dies away very fast
+%%      L = 0.1  ==> with 0.25 km/layer things die away after abot 1 layers == diagonla matrixx
+%%      L = 1    ==> with 0.25 km/layer things die away after abot 4 layers
+%%      L = 10   ==> with 0.25 km/layer things die away after abot 40 layers
+
+%% gives too big oscillation in lower atm
+Lscale_Tz = 3.0;  %% 3 km
+Lscale_WV = 1.0;  %% 1 km 
 Lscale_O3 = 1.0;  %% 1 km
+
+Lscale_Tz = 0.25;  %% Irion
+Lscale_WV = 0.25;  %% Irion
+Lscale_O3 = 0.20;  %% Irion
+
+if iCovSetNumber == 20.2
+  if driver.iLat >= iLatX & driver.iLat <= 64-iLatX
+    Lscale_Tz = 5.0;  %% 1 km
+    Lscale_WV = 3.0;  %% 1 km 
+    Lscale_O3 = 1.0;  %% 1 km
+  end
+end
 
 %% should really be 
 %% mat_od(i,j) = abs(z(i)-z(j))/zScale;  %% and in lower atmosphere z(i)-z(j) ~ 0.5 km, zScale ~ 5 km so mat_od(i,j) ~ 0.1 and not 1 ----- so let l_c = 10
 % Relative off-diagonal
-l_c = cov_set(1)*100;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, oops, why 100 which becomes 100^2??  WIERD AND WRONG
-l_c = cov_set(1)*10;   mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, try 10 which becomes 10^2?           WIERD AND WRONG
+%l_c = cov_set(1)*100; mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, oops, why 100 which becomes 100^2??  WIERD AND WRONG
+%l_c = cov_set(1)*10;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, try 10 which becomes 10^2?           WIERD AND WRONG
 l_c = cov_set(1)*1;    mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, this was in Apr 2022, claiming that (i-j)/<scale> = 1 ie basically (z(i)-z(j))/<scale hgt> = 1 or dz = 1 km, zscale = 1 km, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bc
 l_c = Lscale_Tz;       mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
 l_c = Lscale_WV;       mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
@@ -274,12 +289,16 @@ if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quant
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< hmm the big reset to what was done in April 2022 JPL Sounder Meeting >>>>>>>>>>
 end
 
+%%%%%
    iOffX = 10;
    ct(ix).trans1 = trpi(ix);
    ct(ix).trans2 = trpi(ix) + -floor(iOffX/(100/iNlays_retrieve));; %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
 
-   ct(ix).trans1 = ct(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move towards ground (+1) away from gnd/to TOA (-)
-   ct(ix).trans2 = ct(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move towards ground (+1) away from gnd/to TOA (-)
+   ct(ix).trans1 = ct(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+   ct(ix).trans2 = ct(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+
+   ct(ix).trans1 = trpi(ix);
+   ct(ix).trans2 = trpi(ix);
 
    ct(ix).lev1 = cov_set(2);
    ct(ix).lev2 = cov_set(3);
@@ -287,14 +306,15 @@ end
    ct(ix).width1 = cov_set(4);
    ct(ix).width2 = ct(ix).width1;
 
+%%%%%
    iOffX = 10;
 %   cw(ix).trans1 = trpi(ix);
 %   cw(ix).trans2 = trpi(ix) + -floor(iOffX/(100/iNlays_retrieve));       %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
-   cw(ix).trans1 = trpi(ix) + -floor(iOffX/(100/iNlays_retrieve));  %% new move towards ground (+1) away from gnd/to TOA (-)
-   cw(ix).trans2 = trpi(ix) + -floor(iOffX/(100/iNlays_retrieve));  %% new move towards ground (+1) away from gnd/to TOA (-)
+   cw(ix).trans1 = trpi(ix) + -floor(iOffX/(100/iNlays_retrieve));  %% new move (+) towards ground (-) away from gnd/to TOA
+   cw(ix).trans2 = trpi(ix) + -floor(iOffX/(100/iNlays_retrieve));  %% new move (+) towards ground (-) away from gnd/to TOA
 
-   cw(ix).trans1 = cw(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move towards ground (+1) away from gnd/to TOA (-)
-   cw(ix).trans2 = cw(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move towards ground (+1) away from gnd/to TOA (-)
+   cw(ix).trans1 = cw(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+   cw(ix).trans2 = cw(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
 
    cw(ix).lev1 = cov_set(5);
    cw(ix).lev2 = cov_set(6);
@@ -302,11 +322,12 @@ end
    cw(ix).width1 = cov_set(7);
    cw(ix).width2 = cw(ix).width1;
 
+%%%%%
    iOffX = 10;
    coz(ix).trans1 = trpi(ix);
    coz(ix).trans2 = trpi(ix) + floor(iOffX/(100/iNlays_retrieve));       %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
-   coz(ix).trans1 = coz(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move towards ground (+1) away from gnd/to TOA (-)
-   coz(ix).trans2 = coz(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move towards ground (+1) away from gnd/to TOA (-)
+   coz(ix).trans1 = coz(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+   coz(ix).trans2 = coz(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
    coz(ix).lev1 = cov_set(8);
    coz(ix).lev2 = cov_set(9);
    coz(ix).lev3 = coz(ix).lev2;
@@ -438,27 +459,29 @@ end
 %fmatd = ones(size(fmatd))*1e-4;
 fmatd(6) = 0.1;
 
+fmatd0 = fmatd;
 if settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep < 0
-  %fmatd(1:3) = fmatd(1:3)*1e-7;   %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives large spectral bias, great gas rates eg CO2=2.2, terrible T rates  ******
-  %fmatd(1:3) = fmatd(1:3)*1e-5;   %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives large spectral bias, great gas rates eg CO2=2.2, terrible T rates  ******
+  %fmatd(1:3) = fmatd0(1:3)*1e-7;   %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives large spectral bias, great gas rates eg CO2=2.2, terrible T rates  ******
+  %fmatd(1:3) = fmatd0(1:3)*1e-5;   %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives large spectral bias, great gas rates eg CO2=2.2, terrible T rates  ******
 
-  %fmatd(1:3) = fmatd(1:3)*1e-1;    %% gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates   *** >>>  WORKS FOR AIRS STM Oct 2020 and May 2021 and AUG 2021<<< ****  
-  %fmatd(1:3) = fmatd(1:3)*1.0;     %% gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates   *** >>>  WORKS FOR AIRS STM Oct 2020 and May 2021 <<< ****
+  %fmatd(1:3) = fmatd0(1:3)*1e-1;    %% gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates   *** >>>  WORKS FOR AIRS STM Oct 2020 and May 2021 and AUG 2021<<< ****  
+  %fmatd(1:3) = fmatd0(1:3)*1.0;     %% gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates   *** >>>  WORKS FOR AIRS STM Oct 2020 and May 2021 <<< ****
 
 
-  %fmatd(1:3) = fmatd(1:3)*1e-2;    %% gives small spectral bias, TESTING SEPT 2021, works prety well except in tropics where CO2 becomes 1.9 ppm/yr
-  fmatd(1:3) = fmatd(1:3)*1e-3;     %% so add in another factor of 10 on Oct 22, 2021
+  %fmatd(1:3) = fmatd0(1:3)*1e-2;    %% gives small spectral bias, TESTING SEPT 2021, works prety well except in tropics where CO2 becomes 1.9 ppm/yr
+  fmatd(1:3) = fmatd0(1:3)*1e-3;     %% so add in another factor of 10 on Oct 22, 2021, maybe too much?????? for NP/SP???
+  %fmatd(1:3) = fmatd0(1:3)*1e-1;     %% back to this for  Jan 2023 for NP/SP
 
    %fmatd(6) = 0.001   %%% oct 2022 UGH at the window region
    %fmatd(6) = 1.0     %%% oct 2022 
 
   if topts.dataset >= 8
-    fmatd(4:5) = fmatd(4:5)*1e-3;     %% new, Jan 2023
+    fmatd(4:5) = fmatd0(4:5)*1e-3;     %% new, Jan 2023. for CFC11,CFC12
   end
 
 elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimestep < 0
-  fmatd(1:5) = fmatd(1:5)*0.0000001;   %% have put in xb(1:3) so we should not change those values .. recall 1,2,3 = CO2/N2O/CH4 and 4/5 are cld1,cld2
-  fmatd(1:5) = fmatd(1:5)*1e-3;    %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates  ******
+  %fmatd(1:5) = fmatd0(1:5)*0.0000001;   %% have put in xb(1:3) so we should not change those values .. recall 1,2,3 = CO2/N2O/CH4 and 4/5 are cld1,cld2
+  fmatd(1:5) = fmatd0(1:5)*1e-3;    %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates  ******
 end
 
 %% NEW Aug 16, 2020
@@ -531,8 +554,18 @@ if topts.tie_sst_lowestlayer > 0 & exist('tmat','var')
   wah2 = driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.temp_i(end));
   %driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
   %driver.oem.cov(driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
-  driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end):driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
-  driver.oem.cov(driver.jacobian.temp_i(end):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
+end
+
+if topts.tie_sst_lowestlayer > 0 & topts.rCoupleT_WV > 0 & exist('tmat','var') & exist('wmat','var')
+  %% now tie together surface temp with lowest layers
+  wah1 = driver.oem.cov(driver.jacobian.water_i(end),driver.jacobian.water_i(end));
+  wah2 = driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.temp_i(end));
+  %driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
+  %driver.oem.cov(driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.water_i(end),driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.water_i(end)) = sqrt(abs(wah1*wah2));
 end
 
 if topts.dataset >= 8
@@ -579,8 +612,8 @@ end
 
 %% cov = covariance ~ exp(-((i-j/lc).^2)
 %% reg = regulatization = Tikonov
-driver.oem.reg_type = 'cov';         % 'reg_and_cov','cov','reg' are other choices
 driver.oem.reg_type = 'reg';         % 'reg_and_cov','cov','reg' are other choices
+driver.oem.reg_type = 'cov';         % 'reg_and_cov','cov','reg' are other choices
 driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices DEFAULT
 
 % Separate reg weights for water, temperature, ozone profiles
@@ -602,5 +635,18 @@ elseif exist('iFixO3_NoFit','var') & (strcmp(driver.rateset.ocb_set,'obs') | str
   disp('oops iFixO3_NoFit exists, for driver.rateset.ocb_set = obs so not setting driver.oem.alpha_ozone')
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 driver.oem.cov_set = cov_set;
 driver.oem.fmat    = fmat;
+
+fprintf(1,'cov_set : lenngth scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
+  junk = cov_set([2 3 4  11]); fprintf(1,'      T  : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
+  junk = cov_set([5 6 7  12]); fprintf(1,'      WV : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk);
+  junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
+  junk = cov_set([8 9 10 13]); fprintf(1,'      O3 : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
+  junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
+
+oem = driver.oem;
+show_unc
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

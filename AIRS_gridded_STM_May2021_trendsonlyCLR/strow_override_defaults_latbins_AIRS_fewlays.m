@@ -55,9 +55,13 @@ aux.stemp    = jac.stemp;
 aux.nlays    = jac.nlays; %% 100
 aux.plays    = jac.plays; %% 1:100
 aux.ptemp    = jac.ptemp; %% 1:100
+aux.gas_1    = jac.gas_1; %% 1:100
+aux.gas_3    = jac.gas_3; %% 1:100
 aux.navg     = jac.navg;  %% N
 aux.pavg     = jac.pavg;  %% 1 : N
 aux.tavg     = jac.tavg;  %% 1 : N
+aux.qavg     = jac.qavg;  %% 1 : N
+aux.oavg     = jac.oavg;  %% 1 : N
 aux.trop_P   = jac.trop_P;
 aux.trop_ind = jac.trop_ind;
 
