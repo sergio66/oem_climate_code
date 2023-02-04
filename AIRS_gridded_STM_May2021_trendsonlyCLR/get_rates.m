@@ -39,9 +39,6 @@ if driver.i16daytimestep < 0
       % this is assuming I am reading in  dataset = 9, ocbset = +1
       %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 unchanging
       elseif settings.dataset == 9
-'mamma mia'
-driver.rateset.datafile
-ix
         driver.rateset.rates = real(thesave.xtrend(:,ix));
         driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
 

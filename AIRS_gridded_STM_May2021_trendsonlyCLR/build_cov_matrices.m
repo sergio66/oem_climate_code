@@ -138,6 +138,16 @@ elseif driver.i16daytimestep < 0
                                                                                                                                                                                       %% NP is iffy BUT obs T may be too tight, obs WV maybe too loose***
                                                                                                                                                                                       %% see eg Output_CAL/Quantile16_20years and Output_CAL/Quantile16_20yearsV2
     %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
+    if topts.ocb_set == 1
+      %% use the Nov 16, 2022 commit commit 41a6282ca1902035330b78d4e378c6d9aba23491
+      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     05*1E-0  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     05*1E-0  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     05*1E+1  05*1E-1];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     01*1E+2  01*1E+0];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+        cov_set(11:13) = cov_set(11:13) *1e3;
+    end
 
   elseif iCovSetNumber == 20.2
     %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
@@ -278,14 +288,12 @@ end
 %% should really be 
 %% mat_od(i,j) = abs(z(i)-z(j))/zScale;  %% and in lower atmosphere z(i)-z(j) ~ 0.5 km, zScale ~ 5 km so mat_od(i,j) ~ 0.1 and not 1 ----- so let l_c = 10
 % Relative off-diagonal
-%l_c = cov_set(1)*100; mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, oops, why 100 which becomes 100^2??  WIERD AND WRONG
-%l_c = cov_set(1)*10;  mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, try 10 which becomes 10^2?           WIERD AND WRONG
 l_c = cov_set(1)*1;    mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, this was in Apr 2022, claiming that (i-j)/<scale> = 1 ie basically (z(i)-z(j))/<scale hgt> = 1 or dz = 1 km, zscale = 1 km, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bc
 l_c = Lscale_Tz;       mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
 l_c = Lscale_WV;       mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
 l_c = Lscale_O3;       mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
 
-if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quantile == [0 5 50]
+if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quantile == [0 5 50] | driver.ia_OorC_DataSet_Quantile == [1 9 16]
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< hmm the big reset to what was done in April 2022 JPL Sounder Meeting >>>>>>>>>>
 end
 

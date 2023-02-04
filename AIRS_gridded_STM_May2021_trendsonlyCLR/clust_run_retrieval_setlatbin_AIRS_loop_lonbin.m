@@ -103,15 +103,17 @@ iDebug = 1233; %% SML
 %iDebug = 0108;  %% SP works nice
 %iDebug = 0180;  %% SP terrible wiggles in lower atm
 
-iDebug = 2268; %% T
 iDebug = 2259; %% T
+iDebug = 3439; %% NML
+iDebug = 3276; %% NML
+iDebug = 2268; %% T
 iDebug = -1;
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16
 ia_OorC_DataSet_Quantile = [+0 04 16]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 ia_OorC_DataSet_Quantile = [+0 05 50]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
-ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
 ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(09.97-->1)
+ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%

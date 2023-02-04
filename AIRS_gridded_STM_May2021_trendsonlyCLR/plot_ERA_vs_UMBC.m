@@ -65,6 +65,7 @@ if topts.ocb_set == 0
 else
   z2 = resultsT' - temprate_ak0_era5'; z2 = reshape(z2,length(pjunk20),72,64); z2 = squeeze(nanmean(z2,2));
   z2 = resultsT' - temprate_akF_era5'; z2 = reshape(z2,length(pjunk20),72,64); z2 = squeeze(nanmean(z2,2));
+  disp('WARNING : sice this is retrieval using SYNTHETIC rates, fig 49/50 : center panel is not AK * ERA5rate, but is UMBC - AK * ERA5rate')
 end
 z3 = temprate_ak0_era5'; z3 = reshape(z3,length(pjunk20),72,64); z3 = squeeze(nanmean(z3,2));
 iFig = 49; figure(iFig); clf; profile_plots_3tiledlayout(rlat,pjunk20,z1,z2,z3,iFig,plotoptions);
@@ -79,6 +80,7 @@ else
   z2 = 1-resultsWV'./(waterrate_ak0_era5'+eps); z2 = reshape(z2,length(pjunk20),72,64); z2 = squeeze(nanmean(z2,2));
   z2 = resultsWV' - waterrate_ak0_era5'; z2 = reshape(z2,length(pjunk20),72,64); z2 = squeeze(nanmean(z2,2));
   z2 = resultsWV' - waterrate_akF_era5'; z2 = reshape(z2,length(pjunk20),72,64); z2 = squeeze(nanmean(z2,2));
+  disp('WARNING : sice this is retrieval using SYNTHETIC rates, fig 49/50 : center panel is not AK * ERA5rate, but is UMBC - AK * ERA5rate')
 end
 z3 = waterrate_ak0_era5'; z3 = reshape(z3,length(pjunk20),72,64); z3 = squeeze(nanmean(z3,2));
 iFig = 50; figure(iFig); clf; profile_plots_3tiledlayout(rlat,pjunk20,z1,z2,z3,iFig,plotoptions);
