@@ -180,7 +180,7 @@ figure(3); ylim([100 1000]); caxis([-1 +1]*0.5); set(gca,'yscale','linear');
 figure(5); pcolor(save_lat64x72,Qlevs,squeeze(nanmean(save64x72_Q,[2 4]))'); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
 figure(5); pcolor(save_lat64x72,Qlevs,log10(squeeze(nanmean(save64x72_Q,[2 4]))')); shading interp; colorbar; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log')
 
-if exist('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Aug2022_20yr_desc.mat')
+if exist('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Aug2022_20yr_desc.mat') & iL3orCLIMCAPS == +1
   zonal = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Aug2022_20yr_desc.mat')
 
   figure(5); pcolor(zonal.thestats.lats,Tlevs,zonal.thestats.ptemprate'); shading interp; colorbar; caxis([-0.15 +0.15]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log')
@@ -193,7 +193,6 @@ if exist('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Aug2022_20
   figure(5); ylim([1 1000]); caxis([-1 +1]*0.15);
   figure(6); ylim([100 1000]); caxis([-1 +1]*0.015); set(gca,'yscale','linear');
   figure(7); ylim([100 1000]); caxis([-1 +1]*0.5); set(gca,'yscale','linear');
-
 end
 
 comment = 'see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compute_AIRSL3_trends.m';

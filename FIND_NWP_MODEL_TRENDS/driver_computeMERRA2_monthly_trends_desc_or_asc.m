@@ -113,6 +113,9 @@ monitor_memory_whos
 comment = 'see computeMERRA2_trends.m';
 comment = 'see driver_computeMERRA2_monthly_trends_desc_or_asc.m';
 
+foutjunk = ['MERRA2_atm_data_2002_09_to_*.mat'];
+fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
+
 if iNumYears == 12
   if iDorA > 0
 %    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_desc.mat comment all

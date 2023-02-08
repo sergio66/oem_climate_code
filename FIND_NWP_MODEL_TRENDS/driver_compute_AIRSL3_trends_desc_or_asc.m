@@ -9,6 +9,8 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
 clear all
 
+disp('may need to do  srun -p high_mem --qos=long+ --mem=350000 --time=2-00:00:00 --cpus-per-task 1 -N 1 --pty /bin/bash')
+
 for ii = 1 : 6
   figure(ii); colormap jet
 end
@@ -129,7 +131,7 @@ if iSkipTo_64x72_trend == +1
   iL3orCLIMCAPS = +1;
   savestr_version_big = 'Sept2002_Aug2021_19yr_';
   if iDorA > 0
-    loader = ['load /asl/s1/sergio/AIRS_L3S/airsL3_v7_64x72_rates_' savestr_version_big 'desc.mat'];
+    loader = ['load /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version_big 'desc.mat'];
   else
     loader = ['load /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_' savestr_version_big 'asc.mat'];
   end
@@ -270,6 +272,8 @@ if iDo < 0
 
   iSave = input('save these mega huge files (+1) or store in memory??? (-1) : ? ');
   if iSave > 0
+    foutjunk = ['/asl/s1/sergio/AIRS_L3/airs_L3v7_' savestr_version '.mat'];
+    fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
     saver = ['save -v7.3 /asl/s1/sergio/AIRS_L3/airs_L3v7_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon Airs_CO* Airs_CH4* yy mm'];
     eval(saver);
     saver = ['save -v7.3 /asl/s1/sergio/AIRS_L3/airs_L3v7_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Date* Airs_Cl* Airs_Ice* Airs_Lat Airs_Lon Airs_Liq*  yy mm'];

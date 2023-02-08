@@ -8,8 +8,6 @@ addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/FIND_TRENDS/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
-clear all
-
 disp('may need to do  srun -p high_mem --qos=long+ --mem=350000 --time=2-00:00:00 --cpus-per-task 1 -N 1 --pty /bin/bash')
 
 for ii = 1 : 6
@@ -99,7 +97,8 @@ disp('ret to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% this is suppose we save 2002/09 to 2021/08 but only want eg AMIP/CMIP time = 2002/09 to 2014/08
-iSkipTo_64x72_trend = input('Skip directly to trends by reading in earlier files????? (-1 default /+1) : ');
+%iSkipTo_64x72_trend = input('Skip directly to trends by reading in earlier files????? (-1 default /+1) : ');
+iSkipTo_64x72_trend = -1;
 if length(iSkipTo_64x72_trend) == 0
   iSkipTo_64x72_trend = -1;
 end
@@ -109,6 +108,11 @@ if iSkipTo_64x72_trend == +1
   drlon = 5; 
   rlon = -180 : drlon : +180;      %% 73 edges, so 72 bins
   rlat = latB2;                    %% 65 edges, so 64 bins
+
+  rlat65 = rlat;
+  rlon73 = rlon;
+  whos rlat65 rlon73
+
   %save_lat64x72 = 0.5*(rlat(1:end-1)+rlat(2:end));
   %save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
 
@@ -187,7 +191,8 @@ Airs_CldPres_D = zeros(length(woo),1,180,360,'single');
 
 clear yy mm
 
-iDo = input('(+1) read in saved mat file or (-1) read in L3 NUCAPS files, one at a time  ? ');
+%iDo = input('(+1) read in saved mat file or (-1) read in L3 NUCAPS files, one at a time  ? ');
+iDo = +1;
 if iDo < 0
   clear yy mm
   for ix = 1:length(woo)
@@ -282,35 +287,6 @@ else
 
 end
 
-error('ooo')
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-figure(1); pcolor((squeeze(mean(double(Airs_STemp_D),1)))); shading interp; colorbar; caxis([220 320]); title('Surf Temp'); colormap(jet);
-warning off
-iX = 0;
-for ii = 1 : 3 : 180
-  iX = iX + 1;
-  if mod(ii,100) == 0
-    fprintf(1,'+')
-  elseif mod(ii,10) == 0
-    fprintf(1,'.')
-  end
-  iY = 0;
-  for jj = 1 : 3 : 360
-    iY = iY + 1;
-    junk = squeeze(Airs_STemp_D(:,ii,jj));
-    boo = Math_tsfit_lin_robust((1:length(junk))*30,junk,4);
-    quickSTrate(iX,iY) = boo(2);
-  end
-end
-warning on
-fprintf(1,'\n');
-figure(2); pcolor(quickSTrate); shading interp; colorbar; caxis([-1 +1]*0.15); title('Surf Temp Rate'); colormap(usa2);
-addpath /umbc/xfs2/strow/asl/matlib/maps/aslmap.m
-addpath /home/sergio/MATLABCODE/COLORMAP/LLSMAPS
-load llsmap5
-%figure(2); aslmap(2,-90:1:+90,-180:1:+180,quickSTrate,[-90 +90],[-180 +180]);  colormap(llsmap5); caxis([-0.15 +0.15]);
 
 iL3orCLIMCAPS = -1;
-do_the_AIRSL3_trends
+do_the_AIRSL3_trends_OQuestioN

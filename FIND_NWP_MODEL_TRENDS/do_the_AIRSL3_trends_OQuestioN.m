@@ -13,7 +13,8 @@ disp('      [0,default] ALL trends : ');
 
 ixAorOorL = 0;  %% +1 = ocean, -1 = Land, 0 = both
 
-ixAorOorL = input('Enter region : ');
+%ixAorOorL = input('Enter region : ');
+ixAorOorL = 0;
 if length(ixAorOorL) == 0 
   ixAorOorL = 0;
 end
@@ -30,14 +31,16 @@ if iL3orCLIMCAPS == -1
   [Airs_Lon,Airs_Lat] = meshgrid(Airs_Lon0,Airs_Lat0);
 end
 
-iDorA = input('Enter Asc(-1) or Desc (+1) : ');
+%iDorA = input('Enter Asc(-1) or Desc (+1) : ');
+iDorA = 1;
 if length(iDorA) == 0
   iDorA = +1;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iDo = input('do NATIVE 180 bins? (-1/+1) (-1 = default) : ');
+%iDo = input('do NATIVE 180 bins? (-1/+1) (-1 = default) : ');
+iDo = -1;
 if length(iDo) == 0
   iDo = -1;
 end
@@ -67,7 +70,8 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iDo = input('do EQ AREA 40 latbins? (-1/+1) (-1 = default) : ');
+%iDo = input('do EQ AREA 40 latbins? (-1/+1) (-1 = default) : ');
+iDo = -1;
 if length(iDo) == 0
   iDo = -1;
 end
@@ -97,7 +101,11 @@ if iDo > 0
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iDo = input('do 64x72 TILES SLOW? (-1/+1) (-1 = default) : ');
+%iDo = input('do 64x72 TILES SLOW? (-1/+1) (-1 = default) : ');
+iDo = -1;
+if iSlowORFast == +1
+  iDo = +1;
+end
 if length(iDo) == 0
   iDo = -1;
 end
@@ -113,6 +121,11 @@ if iDo > 0
   drlon = 5; 
   rlon = -180 : drlon : +180;      %% 73 edges, so 72 bins
   rlat = latB2;                    %% 65 edges, so 64 bins
+
+  rlat65 = rlat;
+  rlon73 = rlon;
+  whos rlat65 rlon73
+
   save_lat64x72 = 0.5*(rlat(1:end-1)+rlat(2:end));
   save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
   
@@ -128,7 +141,11 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iDo = input('do 64x72 TILES fastgribd? (-1/+1) (-1 = default) : ');
+%iDo = input('do 64x72 TILES fastgribd? (-1/+1) (-1 = default) : ');
+iDo = -1;
+if iSlowORFast == -1
+  iDo = +1;
+end
 if length(iDo) == 0
   iDo = -1;
 end
@@ -144,6 +161,11 @@ if iDo > 0
   drlon = 5; 
   rlon = -180 : drlon : +180;      %% 73 edges, so 72 bins
   rlat = latB2;                    %% 65 edges, so 64 bins
+
+  rlat65 = rlat;
+  rlon73 = rlon;
+  whos rlat65 rlon73
+
   save_lat64x72 = 0.5*(rlat(1:end-1)+rlat(2:end));
   save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
   

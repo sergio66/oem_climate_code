@@ -106,6 +106,10 @@ monitor_memory_whos
 
 comment = 'see computeERA5_trends.m';
 comment = 'see driver_computeERA5_monthly_trends_desc_or_asc.m';
+
+foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
+fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
+
 if iNumYears == 12
   if iDorA > 0
     save -v7.3 ERA5_atm_data_2002_09_to_2014_08_desc.mat comment all

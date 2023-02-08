@@ -245,6 +245,56 @@ if iL3orCLIMCAPS == +1
     end
   end
   figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
+
+  for ii = 1 : length(latbins)-1
+    fprintf(1,'CO latbin = %3i \n',ii);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
+                landfrac < 0.001);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
+    boo = Airs_CO;
+    donk = size(boo);
+    for jj = 1 : donk(2)
+      for tt = 1 : tmax
+        zz = boo(tt,jj,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save_CO(ii,jj,tt) = nanmean(xx(good));
+        if iDebug
+          figure(8)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; pause(1);
+        end
+      end
+    end
+  end
+  %figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
+  
+  for ii = 1 : length(latbins)-1
+    fprintf(1,'CH4 latbin = %3i \n',ii);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
+                landfrac < 0.001);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
+    boo = Airs_CH4;
+    donk = size(boo);
+    for jj = 1 : donk(2)
+      for tt = 1 : tmax
+        zz = boo(tt,jj,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save_CH4(ii,jj,tt) = nanmean(xx(good));
+        if iDebug
+          figure(8)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; pause(1);
+        end
+      end
+    end
+  end
+  %figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
+  
+
 else
   for ii = 1 : length(latbins)-1
     fprintf(1,'O3 latbin = %3i \n',ii);
@@ -268,56 +318,57 @@ else
       end
     end
   end
-  figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
-end
+  figure(7); pcolor(double(squeeze(save_O3(:,1,:)))); colorbar; shading interp;  title('O3(1)'); pause(1)
 
-for ii = 1 : length(latbins)-1
-  fprintf(1,'CO latbin = %3i \n',ii);
-  ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
-              landfrac < 0.001);
-  ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
-  boo = Airs_CO;
-  donk = size(boo);
-  for jj = 1 : donk(2)
-    for tt = 1 : tmax
-      zz = boo(tt,jj,:,:); zz = squeeze(zz);
-      xx = zz(ix); xx = xx(:);
-      good = find(xx > 0);
-      save_CO(ii,jj,tt) = nanmean(xx(good));
-      if iDebug
-        figure(8)
-        simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
-        caxis([220 310]); colorbar
-        title(num2str(latbins(ii))); colorbar; pause(1);
+  for ii = 1 : length(latbins)-1
+    fprintf(1,'CO latbin = %3i \n',ii);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
+                landfrac < 0.001);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
+    boo = Airs_Ozone;
+    donk = size(boo);
+    for jj = 1 : 1
+      for tt = 1 : tmax
+        zz = boo(tt,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save_CO(ii,jj,tt) = nanmean(xx(good));
+        if iDebug
+          figure(8)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; pause(1);
+        end
       end
     end
   end
-end
-figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
+  figure(7); pcolor(double(squeeze(save_CO(:,1,:)))); colorbar; shading interp;  title('CO(1)'); pause(1)
 
-for ii = 1 : length(latbins)-1
-  fprintf(1,'CH4 latbin = %3i \n',ii);
-  ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
-              landfrac < 0.001);
-  ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
-  boo = Airs_CH4;
-  donk = size(boo);
-  for jj = 1 : donk(2)
-    for tt = 1 : tmax
-      zz = boo(tt,jj,:,:); zz = squeeze(zz);
-      xx = zz(ix); xx = xx(:);
-      good = find(xx > 0);
-      save_CH4(ii,jj,tt) = nanmean(xx(good));
-      if iDebug
-        figure(8)
-        simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
-        caxis([220 310]); colorbar
-        title(num2str(latbins(ii))); colorbar; pause(1);
+  for ii = 1 : length(latbins)-1
+    fprintf(1,'CH4 latbin = %3i \n',ii);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1) & ...
+                landfrac < 0.001);
+    ix = find(Airs_Lat >= latbins(ii) & Airs_Lat < latbins(ii+1));
+    boo = Airs_Ozone;
+    donk = size(boo);
+    for jj = 1 : 1
+      for tt = 1 : tmax
+        zz = boo(tt,:,:); zz = squeeze(zz);
+        xx = zz(ix); xx = xx(:);
+        good = find(xx > 0);
+        save_CH4(ii,jj,tt) = nanmean(xx(good));
+        if iDebug
+          figure(8)
+          simplemap(Airs_Lat(ix),Airs_Lon(ix),zz(ix));
+          caxis([220 310]); colorbar
+          title(num2str(latbins(ii))); colorbar; pause(1);
+        end
       end
     end
   end
+  figure(7); pcolor(double(squeeze(save_CH4(:,1,:)))); colorbar; shading interp;  title('CH4(1)'); pause(1)
 end
-figure(7); pcolor(double(squeeze(save_O3(:,5,:)))); colorbar; shading interp;  title('O3(5)'); pause(1)
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for ii = 1 : length(latbins)-1
