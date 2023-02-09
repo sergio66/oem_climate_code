@@ -298,9 +298,10 @@ else
 end
 
 
-figure(30); set(gca,'yscale','linear'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
-figure(28); set(gca,'yscale','linear'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
-figure(29); set(gca,'yscale','log'); hold on; plot(rlat,nanmean(reshape(p.spres,72,64),1),'k','linewidth',2); hold off
+spres_avg = nanmean(reshape(p.spres,72,64),1);
+figure(30); set(gca,'yscale','linear'); hold on; plot(rlat,spres_avg,'k','linewidth',2); hold off
+figure(28); set(gca,'yscale','linear'); hold on; plot(rlat,spres_avg,'k','linewidth',2); hold off
+figure(29); set(gca,'yscale','log'); hold on; plot(rlat,spres_avg,'k','linewidth',2); hold off
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

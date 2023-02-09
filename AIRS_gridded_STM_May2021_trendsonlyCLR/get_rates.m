@@ -229,4 +229,3 @@ if iDebugRatesUseNWP > 0
   end
 
 end
-

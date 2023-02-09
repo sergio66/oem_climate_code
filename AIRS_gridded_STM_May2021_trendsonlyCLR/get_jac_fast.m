@@ -112,10 +112,13 @@ elseif iVersQRenorm == 4
 
   qrenorm((1:nlays)+6+nlays*0) = 0.01; %% WV
   qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
-  qrenorm((1:nlays)+6+nlays*1) = 0.05; %% T
-  qrenorm((1:nlays)+6+nlays*1) = 0.01; %% T
-  qrenorm((1:nlays)+6+nlays*1) = 0.50; %% T
   qrenorm((1:nlays)+6+nlays*2) = 0.01; %% O3
+
+  qrenorm((1:nlays)+6+nlays*1) = 0.05; %% T
+  qrenorm((1:nlays)+6+nlays*1) = 0.50; %% T
+  qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
+  qrenorm((1:nlays)+6+nlays*1) = 1.00; %% T
+  qrenorm(6) = 1.0;
 end
 
 qrenormUSE = qrenorm;

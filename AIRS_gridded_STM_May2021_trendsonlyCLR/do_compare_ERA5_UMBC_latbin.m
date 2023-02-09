@@ -2,8 +2,8 @@ if ~exist('phmm')
   [hmm,~,phmm,~] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
 end
 
-ind = 1:72:4608; ind = ind + 31; %% this is GMT line from -90 S to + 90 N
-ind = (1:72) + (iCompare-1)*72;         %% this is S. Pole
+ind = 1:72:4608; ind = ind + 36; %% this is GMT line from -90 S to + 90 N
+ind = (1:72) + (iCompare-1)*72;         %% this is one latitude bin eg S. Pole or Equator
   
 fprintf(1,'  LatBin %2i = %8.6f iiBin = [%4i,%4i] \n',iCompare,rlat(iCompare),ind(1),ind(end));
 
@@ -37,5 +37,10 @@ jett = jet; jett(1,:) = 1; colorbar; colormap(jett);
 %figure(20); pcolor(rlat,pavg,resultsT(ind,:)');  xlabel('latitude'); title('GMT line T');  caxis([-0.1 +0.1]);        
 %figure(21); pcolor(rlat,pavg,resultsO3(ind,:)'); xlabel('latitude'); title('GMT line O3'); caxis([-0.01 +0.01]*0.25); 
 %for ii = 19:21; figure(ii); colorbar; shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); end
+
+figure(23); 
+  plot(f,nanmean(rates(:,ind),2),'b',f,nanmean(fits(:,ind),2),'r',f,nanmean(rates(:,ind),2)-nanmean(fits(:,ind),2),'k'); plotaxis2;
+  title(['Latbin ' num2str(iCompare,'%02d') ' SPECTRA dBT/dt K/yr']); 
+  hl = legend('input','fit','diff','location','best'); xlim([650 1650])
 
 iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');

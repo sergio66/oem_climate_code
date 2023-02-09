@@ -24,6 +24,10 @@ load llsmap5
 %  llsmap5 = llsmap5(2:end,:);
 %end
 
+llsmap5NAN = [[0.0 0.0 0.0]; llsmap5];
+llsmap5_0 = llsmap5;
+llsmap5   = llsmap5NAN;
+
 disp(' ')
 disp('saved a version as   save -v7.3 /asl/s1/sergio/JUNK/gather_tileCLRday.mat or /asl/s1/sergio/JUNK/gather_tileCLRnight.mat or /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat')
 disp('saved a version as   save -v7.3 /asl/s1/sergio/JUNK/gather_tileCLRday.mat or /asl/s1/sergio/JUNK/gather_tileCLRnight.mat or /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat')
@@ -346,7 +350,7 @@ while iDoAgain > 0
       resultsunc(ii,1:6) = oem.finalsigs(1:6);
       [mmn,nn] = size(oem.ak_water);
   
-      nlays(ii) = nn;
+      nlays_straight_from_results(ii) = nn;
       nn0 = min(nn,iNumLay);
       if nn0 == iNumLay
         thedofs(ii) = oem.dofs;
@@ -384,6 +388,7 @@ while iDoAgain > 0
         wah = oem.finalsigs((1:nn)+6+nn*2);   resultsO3unc(ii,1:nn0) = wah(1:nn0);
       end
 
+      %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%%
       if iAK > 0
         if ~exist('waterrate_akF_era5')
            waterrate_akF_era5 = nan(size(resultsWV));
@@ -397,7 +402,6 @@ while iDoAgain > 0
            mean_ak_wv = nan(size(resultsWV));;
            mean_ak_T  = nan(size(resultsWV));;
            mean_ak_o3 = nan(size(resultsWV));;
-
         end
   
         %figure(47); plot(oem.ak_water',pjunk20,'c',max(oem.ak_water'),pjunk20,'rx-',mean(oem.ak_water'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
@@ -433,7 +437,8 @@ while iDoAgain > 0
           mean_ak_T(ix,1:length(ak)) = max(ak');
           temprate_ak0_era5(ix,1:length(ak)) = (temprate_ak1(ix,:)')';
           temprate_akF_era5(ix,1:length(ak)) = (ak * temprate_ak1(ix,:)')';
-      end    
+      end   %% if iAK > 0
+      %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%%
 
       junknoise = nan(2645,1);
       junknoise(jacobian.chanset) = diag(oem.se);
@@ -497,13 +502,25 @@ while iDoAgain > 0
     
     figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
     figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  colormap(jet); 
+    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jet); 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
       iDoAgain = +1;
     end
   end
 end
+
+load latB64.mat
+rlat65 = latB2; rlon73 = -180 : 5 : +180;
+rlon = -180 : 5 : +180;  rlat = latB2; 
+rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
+
+figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
+figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
+figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jet); 
+
 a = load(fnamelastloaded);
 fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f \n',fnamelastloaded,a.oem.xb(1:6))
 
@@ -554,8 +571,6 @@ f    = junk.h.vchan;
 i1419 = find(f >= 1419,1);
 i1231 = find(f >= 1231,1);
 i0900 = find(f >= 0900,1);
-
-load llsmap5
 
 clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2.5]); caxis([2.0 2.5])
 aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2');  caxis([1.5 2.5])

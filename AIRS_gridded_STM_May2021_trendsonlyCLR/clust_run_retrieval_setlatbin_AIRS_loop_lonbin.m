@@ -85,35 +85,47 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 39
 
 
-iDebug = 3233; %% NML
-iDebug = 2233; %% T
-iDebug = 2264; %% T
-iDebug = 2268; %% T
-iDebug = 1233; %% SML
 %iDebug = 180
 %iDebug = 754
 %iDebug = 1;
 %iDebug = 1665;
 %iDebug = 2376;
 
-%iDebug = 4483; %% NP
-%iDebug = 4233; %% NP
-%iDebug = 0249;  %% SP
-%iDebug = 0233;  %% SP
-%iDebug = 0108;  %% SP works nice
-%iDebug = 0180;  %% SP terrible wiggles in lower atm
-
 iDebug = 2259; %% T
 iDebug = 3439; %% NML
-iDebug = 3276; %% NML
 iDebug = 2268; %% T
-iDebug = -1;
+iDebug = 3276; %% NML
+iDebug = 0180;  %% SP terrible wiggles in lower atm
+iDebug = 0108;  %% SP works terible
 
-%% JPL 2021 Science Team Meeting used dataset=4,quantile=16
+iDebug = 1233; %% SML
+iDebug = 3233; %% NML
+iDebug = 2233; %% T
+iDebug = 2264; %% T
+iDebug = 4483; %% NP
+%iDebug = 4233; %% NP BAD
+%iDebug = 0249;  %% SP
+%iDebug = 0233;  %% SP
+iDebug = 1404; %% SML'
+iDebug = 1380; %% SML
+iDebug = 4212; %% NP
+iDebug = 4226; %% NP WOW dSST/dt = +0.15 K/yr
+
+iDebug = 108;
+iDebug = 287;
+iDebug = 4500;
+iDebug = 4487;
+iDebug = 2268; %% T
+iDebug = 252;
+iDebug = -1;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
 ia_OorC_DataSet_Quantile = [+0 04 16]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 ia_OorC_DataSet_Quantile = [+0 05 50]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
-ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(09.97-->1)
+%%
 ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
+ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(09.97-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -218,8 +230,9 @@ for iInd = iInd0 : iIndE
   topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint
   topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
-  topts.iaSequential = [150];                      %% sequential, like SingleFootprint
+  topts.iaSequential = [150 60];                   %% sequential, like SingleFootprint
   topts.iaSequential = -1;                         %% default one gulp
+  topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years

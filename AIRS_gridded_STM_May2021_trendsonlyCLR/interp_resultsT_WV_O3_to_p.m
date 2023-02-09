@@ -1,9 +1,13 @@
 pert     = p;
 pert_unc = p; 
 
+nanBelowSurf101 = ones(101,4608);
+
 for ii = 1 : length(p.stemp)
   nlays = p.nlevs(ii)-1;
   playsjunk = p.plays(1:nlays,ii);
+
+  nanBelowSurf101(p.nlevs(ii):101,ii) = nan;
 
   roo = interp1(log(pavg),resultsT(ii,:),log(playsjunk),[],'extrap');
   goo = find(isfinite(roo)); boo = find(~isfinite(roo));

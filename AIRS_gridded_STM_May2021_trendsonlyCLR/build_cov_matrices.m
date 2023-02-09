@@ -103,6 +103,7 @@ elseif driver.i16daytimestep < 0
   driver.iCovSetNumber = iCovSetNumber;
   fprintf(1,' build_cov_matrices.m : iCovSetNumber = %8.5f \n',driver.iCovSetNumber)
 
+%%               sigT_t    sigT_s                sigWV_t   sigWV_s             sigO3_t   sigO3_s
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
   if iCovSetNumber == 4.16
     cov_set = [1.0  0.05*1        0.05*3          1/2       0.15/50*1         0.15/50*3         1/2      0.15/50*1       0.15/50*3           1/2        20*1E-7     20*1E-7  20*1E-7];  %% try strat only x3   unc
@@ -139,14 +140,12 @@ elseif driver.i16daytimestep < 0
                                                                                                                                                                                       %% see eg Output_CAL/Quantile16_20years and Output_CAL/Quantile16_20yearsV2
     %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
     if topts.ocb_set == 1
-      %% use the Nov 16, 2022 commit commit 41a6282ca1902035330b78d4e378c6d9aba23491
+      %% this is the Nov 16, 2022 commit commit 41a6282ca1902035330b78d4e378c6d9aba23491
       cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-4     05*1E-4  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
-      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     05*1E-0  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
-      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     05*1E-0  05*1E-4];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
-      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     05*1E+1  05*1E-1];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
-      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        01*1E-0     01*1E+2  01*1E+0];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
-      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2020/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
-        cov_set(11:13) = cov_set(11:13) *1e3;
+      %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
+      cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2022/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+        cov_set(11:13) = cov_set(11:13) *1e3;  %% Feb 4,2022 commit
+      %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
     end
 
   elseif iCovSetNumber == 20.2
@@ -172,6 +171,7 @@ elseif driver.i16daytimestep < 0
     cov_setA = [1.0  0.05*0.5      0.09*0.5       1/2        0.01/2            0.01/2            1/2      0.01            0.01                1/2        09*1E2     9*1E+3  05*1E-1];  %% combine the above two for POLES and use for TROPICS/MIDLATS iaSequential = -1
     cov_setA = [1.0  0.05*0.5      0.09*0.5       1/8        0.01/2            0.01/2            1/8      0.01/10        0.01                1/8        04*1E3     75*1E+4  05*1E-1];  %% TROPICS/MIDLATS iaSequential = -1 iia_OorC_DataSet_Quantile = [+0 09 05]; 2/4/23 git commit
 
+
     cov_setB = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** Dec 6, 2022 commit 
         cov_setB(11:13) = cov_setB(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
     cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two for POLES
@@ -182,12 +182,38 @@ elseif driver.i16daytimestep < 0
     cov_setB = [1.0  0.50*10      0.10*06       1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        07*1E-2      10*1E+0  01*1E-2];  %% combine the above two for POLES, WV good, T too wiggly
     cov_setB = [1.0  0.10         0.10          1/2        0.01/1            0.01/1            1/2      0.01            0.01                1/2        07*1E-2      10*1E+0  01*1E-2];  %% works nicely for iaSequential = [150 60 100 -1 150 60 -1]
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%               sigT_t    sigT_s                sigWV_t   sigWV_s             sigO3_t   sigO3_s
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
 
     iLatX = 07;
     iLatX = 11;
+
+    %% COPY THE SETTINGS FOR ia_OorC_DataSet_Quantile = [01 09 16] synthetic calc
+    cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2022/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+    cov_set0 = cov_set;
+
+    cov_setA = cov_set0;
+    cov_setA(11:13) = cov_set0(11:13) *1e3;               %% Feb 4,2022 synthetic calc commit, works great for tropics obs as well
+
+    cov_setB = cov_set0;
+    if driver.iLat >= 64-iLatX | driver.iLat <= iLatX
+      cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.1 1.0] *1e4;     %% trying to figure out polar
+      cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.5 1.0] *1e3;     %% trying to figure out polar --- ok, not great, tried 2/5/23
+      cov_setB(11:13) = cov_set0(11:13) .* [1.0 1.0 1.0] *1e3;     %% trying to figure out polar
+
+      cov_setB(11:13) = cov_set0(11:13) .* [1.0   1.0e-1 1.0] *5e2;  %% trying to figure out polar
+      cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e-0 1.0] *1e-1; %% trying to figure out polar
+      cov_setB([4 7 10]) = 1/8;
+      cov_setB([2]) = 1.0;
+      cov_setB([3]) = 1.0;
+    end
+
     find_wgtA_wgtB
     cov_set = wgtA * cov_setA + wgtB * cov_setB;
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   elseif iCovSetNumber == 0
     %% testing and trying
@@ -282,6 +308,11 @@ if iCovSetNumber == 20.2
     Lscale_Tz = 5.0;  %% 1 km
     Lscale_WV = 3.0;  %% 1 km 
     Lscale_O3 = 1.0;  %% 1 km
+  else
+    %% completely diagnol
+    Lscale_Tz = 1e-5;  %% 1 km
+    Lscale_WV = 1e-5;  %% 1 km 
+    Lscale_O3 = 1e-5;  %% 1 km
   end
 end
 
@@ -295,6 +326,7 @@ l_c = Lscale_O3;       mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
 
 if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quantile == [0 5 50] | driver.ia_OorC_DataSet_Quantile == [1 9 16]
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< hmm the big reset to what was done in April 2022 JPL Sounder Meeting >>>>>>>>>>
+  mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< also this works fine for Feb 4, 2023 testing of driver.ia_OorC_DataSet_Quantile == [1 9 16] >>>>>>>>>>>>
 end
 
 %%%%%
@@ -401,7 +433,7 @@ end
 % Temperature level uncertainties, then scaled and squared
 if ~exist('iFixTz_NoFit')
   tunc = cov2lev(ct(ix),driver.jacobian.numlays);
-  tunc = tunc.*sumtjac/max(abs(sumtjac));;
+  %%%% tunc = tunc.*sumtjac/max(abs(sumtjac));;    %%% WHAT IS THIS??????????? been here for ages???????????
   t_sigma = (tunc./tnorm);  %% tnorm = qrenorm(itemp)
   tmat = (t_sigma'*t_sigma).*mat_odT;
   driver.oem.tunc = tunc;
@@ -466,6 +498,10 @@ elseif settings.co2lays == 3
 end
 %fmatd = ones(size(fmatd))*1e-4;
 fmatd(6) = 0.1;
+if driver.iLat <= iLatX | driver.iLat >= 64-iLatX
+  fmatd(6) = 0.25;
+  fmatd(6) = 0.50;
+end
 
 fmatd0 = fmatd;
 if settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep < 0
@@ -560,20 +596,22 @@ if topts.tie_sst_lowestlayer > 0 & exist('tmat','var')
   %% now tie together surface temp with lowest layers
   wah1 = driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.scalar_i(end));
   wah2 = driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.temp_i(end));
-  %driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
-  %driver.oem.cov(driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
-  driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
-  driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
+  rCoupleTWV = topts.rCoupleT_WV;
+  %driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
+  %driver.oem.cov(driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
 end
 
 if topts.tie_sst_lowestlayer > 0 & topts.rCoupleT_WV > 0 & exist('tmat','var') & exist('wmat','var')
   %% now tie together surface temp with lowest layers
   wah1 = driver.oem.cov(driver.jacobian.water_i(end),driver.jacobian.water_i(end));
   wah2 = driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.temp_i(end));
-  %driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
-  %driver.oem.cov(driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = sqrt(abs(wah1*wah2));
-  driver.oem.cov(driver.jacobian.water_i(end),driver.jacobian.temp_i(end)) = sqrt(abs(wah1*wah2));
-  driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.water_i(end)) = sqrt(abs(wah1*wah2));
+  rCoupleTWV = topts.rCoupleT_WV;
+  %driver.oem.cov(driver.jacobian.scalar_i(end),driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
+  %driver.oem.cov(driver.jacobian.temp_i(end-1):driver.jacobian.temp_i(end),driver.jacobian.scalar_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.water_i(end),driver.jacobian.temp_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
+  driver.oem.cov(driver.jacobian.temp_i(end),driver.jacobian.water_i(end)) = rCoupleTWV * sqrt(abs(wah1*wah2));
 end
 
 if topts.dataset >= 8

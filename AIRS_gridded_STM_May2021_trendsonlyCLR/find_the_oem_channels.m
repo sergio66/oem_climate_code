@@ -92,7 +92,23 @@ if settings_chan_LW_SW ~= -2
     ch = [ch; addCFC11_weakWV'];
     ch = setdiff(ch,rmBadChan);
   
-  elseif iChSet == 3 | iChSet == 4 | iChSet == 5
+  elseif iChSet == 3
+
+    iless700 = find(f(ch) < 700);
+      iless700 = iless700(1:3:length(iless700));
+    imore700 = find(f(ch) >= 700 & f(ch) < 730);
+      imore700 = imore700(1:3:length(imore700));
+    imore730 = find(f(ch) >= 730 & f(ch) < 800);
+      imore730 = imore730(1:2:length(imore730));
+    chx = ch;
+    chx = chx([iless700; imore700; imore730]);
+    chx = setdiff(chx,76);   %% 668.0348 cm-1 is a bad chan
+
+    moo = load('climateQA_LW_noCFC.txt');
+    ch = moo(:,2);
+    %ch = union(ch,chx);
+
+  elseif iChSet == 4 | iChSet == 5
     %% after August 21, 2019
     %% see Channel_changes_for_anomaly_fits.txt
     disp('find_the_oem_channels.m iChSet == 3/4/5 (new chans w/o CFC)')
@@ -105,6 +121,9 @@ if settings_chan_LW_SW ~= -2
     
     ch = ch([iless700; imore700; imore730]);
     ch = setdiff(ch,76);   %% 668.0348 cm-1 is a bad chan
+
+    moo = load('climateQA_LW_noCFC.txt');
+    ch = moo(:,2);
   
     addCFC11_weakWV = [634 635 637 1513 1520];
     rmBadChan = [289 647 648 649 650 652 654 655 660 663 664 669 671 673 674 676 682 685 689 690 ...
