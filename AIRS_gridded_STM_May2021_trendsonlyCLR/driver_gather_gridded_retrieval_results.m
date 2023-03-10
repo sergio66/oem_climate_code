@@ -500,9 +500,10 @@ while iDoAgain > 0
     rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
     aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
     
+    jett = jet(64); jett(1,:) = 1;
     figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
     figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jet); 
+    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jett); 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
       iDoAgain = +1;
@@ -539,6 +540,17 @@ for ii = 1 : iNumLay
 end
 
 for ii = 1 : 12;  figure(ii); clf; end;
+
+wah = resultsTunc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2));  figure(1); clf; pcolor(rlat,pavg,wah); title('\sigma T'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp; 
+  set(gca,'yscale','log'); ylim([1 1000])
+wah = resultsWVunc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); figure(2); clf; pcolor(rlat,pavg,wah); title('\sigma WV'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+wah = resultsO3unc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); figure(3); clf; pcolor(rlat,pavg,wah); title('\sigma O3'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+
+wah = abs(resultsT'./resultsTunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2));  figure(1); clf; pcolor(rlat,pavg,wah); title('S/N : T/\sigma T'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp; 
+  set(gca,'yscale','log'); ylim([1 1000])
+wah = abs(resultsWV'./resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); figure(2); clf; pcolor(rlat,pavg,wah); title('S/N : WV/\sigma WV'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+wah = abs(resultsO3'./resultsO3unc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); figure(3); clf; pcolor(rlat,pavg,wah); title('S/N : O3/\sigma O3'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+disp('ret to continue'); pause;
 
 figure(1); clf; semilogy(nanmean(resultsT,1),pavg,'bx-',nanmean(resultsTunc,1)/sqrt(4608),pavg,'c.-');   set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); title('T and \sigma T')
 figure(2); clf; semilogy(nanmean(resultsWV,1),pavg,'bx-',nanmean(resultsWVunc,1)/sqrt(4608),pavg,'c.-'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); title('WV and \sigma WV')
@@ -642,11 +654,12 @@ settings.iIgnoreChans_CH4 = -1;
 settings.iIgnoreChans_N2O = -1;
 settings.iIgnoreChans_SO2 = -1;
 chanset = jacobian.chanset;
-[hMean17years,ha,pMean17years,pa]     = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+[hMean17years,ha,pMean17years,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+[hMean17years,ha,pMean17years,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
 plotopt.iUpperWavenumLimit = 1620;
 plotopt.rlon = pMean17years.rlon;
 plotopt.rlat = pMean17years.rlat;
-[raaBadFov,indBadFov] = plot_spectral_region_chisqr(rates(chanset,:),0*rates(chanset,:),0*rates(chanset,:),fits(chanset,:),f(chanset,:),nedt(chanset,:),-1,settings,plotopt);
+[raaBadFov,indBadFov,chisqrX,chisqrR] = plot_spectral_region_chisqr(rates(chanset,:),0*rates(chanset,:),0*rates(chanset,:),fits(chanset,:),f(chanset,:),nedt(chanset,:),-1,settings,plotopt);
 figure(11); ylim([-1 +1]*0.1/2)
 figure(12); ylim([-1 +1]*5)
 for ii = 15:20; figure(ii); colormap jet; caxis([0 1]*10); end
@@ -657,6 +670,27 @@ if isfield(oem,'spectral_deltan00')
   hl = legend('actual data','what was fitted','location','best'); plotaxis2;
   title('After doing data-sum(jac(i)*startxb(i)')
 end
+
+maskLF = ones(size(chisqrX));
+figure(52); clf; 
+aslmap(52,rlat65,rlon73,smoothn((reshape(maskLF.*chisqrX,72,64)') ,1), [-90 +90],[-180 +180]); title('Chisqr');     caxis([0 +1]*0.2); colormap(jet)
+clear plotoptions;
+plotoptions.cx = [0 +1]*0.15; plotoptions.maintitle = '\chi^2'; plotoptions.plotcolors = jet(64);
+plotoptions.str11 = 'ALL';   
+plotoptions.str12 = 'T(z)';   
+plotoptions.str21 = 'Window';   
+plotoptions.str22 = '5*WV(z)';   
+plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+plotoptions.yLinearOrLog = +1;
+
+z11 = maskLF.*chisqrR.iAll;
+z12 = maskLF.*chisqrR.i15um;
+z21 = maskLF.*chisqrR.iWindow;
+z22 = maskLF.*chisqrR.iWV;
+
+iFig = 52; figure(iFig); clf; 
+aslmap_4tiledlayout(z11,z12,z21,z22*5,iFig,plotoptions);
+
 disp('ret to continue to gridded results'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

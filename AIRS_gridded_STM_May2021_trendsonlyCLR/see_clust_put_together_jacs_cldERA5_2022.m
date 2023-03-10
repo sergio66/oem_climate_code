@@ -13,13 +13,21 @@ JOB = iLatBin;
 miaow = load('sarta_chans_for_l1c.mat');
 ind2834to2645 = miaow.ichan;
 
-iOldORNew = +9;  %% the 20 year ERA5 cld,Q09
+if ~exist('iOldORNew')
+  iOldORNew = +9;  %% the 19 year ERA5 cld, Q09
+  iOldORNew = +5;  %% the 20 year ERA5 clr (Q0.97-->1) Q05
+end
 
 if iOldORNew == 9
   %% see ~sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
   foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_cld_subjacLatBin_kCARTA_ERA5_20yr_CLD_Q09_'           num2str(JOB,'%02i') '.mat'];
   foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(JOB,'%02i') '.mat'];
+elseif iOldORNew == 5
+  %% see ~sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/
+  SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
+  foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_20yr_'           num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(JOB,'%02i') '.mat'];
 else
   error('unknown iOldORNew')
 end
@@ -29,6 +37,10 @@ end
 if iOldORNew == 9
   [h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
   thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09//';
+  fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
+elseif iOldORNew == 5
+  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
+  thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/';
   fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
 end
 
@@ -56,9 +68,21 @@ ind_subset_junk = (1:72) + (ind_lat_junk-1)*72;
 for lon = iLonBin
 
   ind_subset_junk_ii = ind_subset_junk(lon);
-  frad0 = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
-  fz    = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
-  fcol  = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  if iOldORNew == 9
+    frad0 = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+    fz    = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+    fcol  = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  elseif iOldORNew == 5
+    frad0 = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+    fz    = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+    fcol  = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  end
+
+  fprintf(1,'in see_clust_put_together_jacs_cldERA5_2022.m : iOldORNew  = %2i \n',iOldORNew);
+  fprintf(1,'  frad0 = %s \n',frad0);
+  fprintf(1,'  fz    = %s \n',fz);
+  fprintf(1,'  fcol  = %s \n',fcol);
+
   iaIndices = ind_subset_junk_ii;
 
   arad0 = load(frad0);

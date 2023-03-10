@@ -84,6 +84,11 @@ for lon = iLonBin
   fcol  = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
   iaIndices = ind_subset_junk_ii;
 
+  fprintf(1,'in see_clust_put_together_jacs_clrERA5_2014.m : iOldORNew  = %2i \n',iOldORNew);
+  fprintf(1,'  frad0 = %s \n',frad0);
+  fprintf(1,'  fz    = %s \n',fz);
+  fprintf(1,'  fcol  = %s \n',fcol);
+
   arad0 = load(frad0);
   az    = load(fz);
   acol  = load(fcol); acol.rKc(:,1:6) = acol.rKc(:,1:6) * factor_log10;

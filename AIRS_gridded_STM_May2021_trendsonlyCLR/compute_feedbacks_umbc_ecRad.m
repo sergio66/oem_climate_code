@@ -207,7 +207,7 @@ ylim([-10 +10]/2); plotaxis2; title('UMBC \lambda'); xlabel('Latitude'); hl = le
 
 junk = umbc_spectral_olr.feedback.planck_ecRad; junk(bad) = NaN;
 if ~exist('lps0')
-  [mmw0,lps0] = mmwater_rtp(h,p);
+  [mmw0,lps0] = mmwater_rtp_pstop_lapse(h,p);
 end
 figure(79); clf; plot(mean(lps0.lapse1(80:97,:),1),junk,'.');
 figure(79); clf; scatter(mean(lps0.lapse1(80:97,:),1),junk,10,p.rlat,'filled');      colorbar; colormap jet; axis([0 10 -5 -3])

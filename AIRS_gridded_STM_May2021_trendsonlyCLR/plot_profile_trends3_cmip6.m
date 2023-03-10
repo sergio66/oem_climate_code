@@ -199,7 +199,7 @@ plot(f,nanmean(rates(:,mask),2),...
     end
 
     addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-      [mmw0,lps0] = mmwater_rtp(h,p);
+      [mmw0,lps0] = mmwater_rtp_pstop_lapse(h,p);
       figure(1); aslmap(1,rlat65,rlon73,maskLFmatr.*smoothn((reshape(mmw0,72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('mmw');  caxis([0 70])
       figure(1); aslmap(1,rlat65,rlon73,maskLFmatr.*smoothn((reshape(lps0.lapse_othermethod,72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('est. lapse rate K/km');   caxis([2 8])
       figure(1); aslmap(1,rlat65,rlon73,maskLFmatr.*smoothn((reshape(lps0.trp_zHI/1000,72,64)'),1),[-90 +90],[-180 +180]);      colormap(jet);  title('Tropopause Hgt HighRes'); caxis([5 20])

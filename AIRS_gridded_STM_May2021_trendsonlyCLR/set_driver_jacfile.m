@@ -40,6 +40,7 @@ if driver.i16daytimestep < 0
     iKCARTAorSARTA = +1;
     iVersJac = 2019;     %% ERA5 from 2002-2019
     iVersJac = 2021;     %% ERA5 from 2002-2021
+
     if settings.dataset == 5
       iVersJac = 2014;   %% AMIP6/CMIp6 2002-2014, 12 years
     elseif settings.dataset == 6
@@ -50,6 +51,8 @@ if driver.i16daytimestep < 0
      elseif settings.dataset == 8
       iVersJac = 2015;   %% OCO2 2015-2021, 7 years
      elseif settings.dataset == 9
+
+      %% Feb 9, 2023 commit
       if settings.ocb_set == 1
         disp(' settings.dataset == 9 but settings.ocb_set == 1 so set iVersJac = 2021')
         iVersJac = 2021;   %% ERA5 clr 2021
@@ -57,6 +60,15 @@ if driver.i16daytimestep < 0
         iVersJac = 2022;   %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
         iVersJac = 2021;   %% ERA5 CLR  from 2002-2021
       end
+
+      if settings.ocb_set == 1
+        iVersJac = 2022; iOldORNew = +5;  %% ERA5 clr from 2002-2022
+      elseif settings.ocb_set == 0
+        iVersJac = 2021;   %% ERA5 CLR  from 2002-2021
+        iVersJac = 2022;  iOldORNew = +5;  %% ERA5 clr from 2002-2022
+        iVersJac = 2022;  iOldORNew = +9;  %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
+      end
+
     end
 
     if iKCARTAorSARTA < 0
@@ -74,14 +86,21 @@ if driver.i16daytimestep < 0
       elseif iVersJac == 2021 
         AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 2002-2021 19 year
       elseif iVersJac == 2022
-        %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/clust_put_together_jacs_cldERA5.m, but this has TONS of clouds
-        AHA = [AHA '/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2022 20 year <avg cld = Q09> and NOT Q05
+        if iOldORNew == 9
+          %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/clust_put_together_jacs_cldERA5.m, but this has TONS of clouds
+          AHA = [AHA '/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2022 20 year <avg cld = Q09> and NOT Q05
+        elseif iOldORNew == 5
+          %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/clust_put_together_jacs_clrERA5.m
+          AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2022 20 year <CLR>
+        end
+        iOldORNew
       else
         iVersJac
-        error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021, 2022 [2002/09-20XY/08] only')
+        error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021, 2022 and fake 2023 [2002/09-20XY/08] only')
       end
     end
 
+    topts.jacobian.filename = AHA;
     driver.jacobian.filename = AHA;
     clear AHA
     fprintf(1,'reading in jac version %4i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)

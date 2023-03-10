@@ -166,6 +166,17 @@ iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV
 iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
+
+%{
+disp('WV xb WV xb WV xb')
+disp('WV xb WV xb WV xb')
+disp('WV xb WV xb WV xb')
+disp('WV xb WV xb WV xb')
+disp('WV xb WV xb WV xb')
+disp('WV xb WV xb WV xb')
+disp('WV xb WV xb WV xb')
+  xb(driver.jacobian.water_i) = +0.01/2;
+%}
                                                     
 iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates
 iSergioCO2 = +1;  %% fit for CO2/CH4 rates
@@ -297,7 +308,14 @@ if settings.resetnorm2one == +1
   %% we already cleared jac
   %aux
 
+  disp(' ')
+  disp('settings.resetnorm2one == +1')
   disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
+  disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
+  disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
+  disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
+  disp(' ')
+
   boo1 = driver.qrenorm;
   boo2 = aux.xb; 
   %whos boo1 boo2

@@ -108,7 +108,9 @@ plotoptions.cx = [-1 +1]*0.5; plotoptions.maintitle = 'dRH/dt'; plotoptions.plot
 plotoptions.yLimits = [100 1000];
 plotoptions.yLinearOrLog = +1;
 plotoptions.str2 = 'ERA5';   
-plotoptions = rmfield(plotoptions,'str3');
+if isfield(plotoptions,'str3')
+  plotoptions = rmfield(plotoptions,'str3');
+end
 z1 = deltaRHlat'; 
 z2 = era5.trend_RH; z2 = reshape(z2,100,72,64); z2 = squeeze(nanmean(z2,2));
 iFig = 51; figure(iFig); clf; profile_plots_2tiledlayout(rlat,plays,z1,z2,iFig,plotoptions);

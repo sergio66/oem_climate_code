@@ -1,3 +1,6 @@
+rmpath  /asl/matlab2012/rtptoolsV201/
+addpath /asl/matlib/rtptools
+
 load('llsmap5');
 
 get_the_mean_profiles
@@ -8,6 +11,7 @@ pjunkN = p.plevs(1:100,:)-p.plevs(2:101,:);
 pjunkD = log(p.plevs(1:100,:)./p.plevs(2:101,:));
 pavgLAY = pjunkN./pjunkD;
 
+addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/
 mmw0 = mmwater_rtp(h,p);
 [xRH0,xRH1km0,xcolwater0] = layeramt2RH(h,p);
 [Tw0,Tw1km0,Tdew0,WBGT0,RH0,RH1km0,colwater0,TwSurf0,RHSurf0,TdewSurf0] = layeramt2RH_wet_bulb_dew_point_temperature(h,p);
@@ -38,7 +42,7 @@ clear px RHx RH1kmx colwaterx
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-interp_resultsT_WV_O3_to_p   %% interp the 50 layer resultT,resultWV retrievals to 100 layer p
+interp_resultsT_WV_O3_to_p         %% interp the 50 layer resultT,resultWV retrievals to 100 layer p
 
 % rtpwrite('summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_PERTv1.rtp',h,ha,pert,pa);
 
@@ -49,7 +53,23 @@ mmwPert = mmwater_rtp(h,pert);
 [xRHpert_unc,xRH1kmpert_unc,xcolwaterpert_unc] = layeramt2RH(h,pert_unc);
 [Twpert_unc,Tw1kmpert_unc,Tdewpert_unc,WBGTpert_unc,RHpert_unc,RH1kmpert_unc,colwaterpert_unc,TwSurfpert_unc,RHSurfpert_unc,TdewSurfpert_unc] = layeramt2RH_wet_bulb_dew_point_temperature(h,pert_unc);
 
-scatter_coast(pert.rlon,pert.rlat,50,colwaterpert-colwater0); title('\delta colwater mm/yr');
+scatter_coast(pert.rlon,pert.rlat,50,colwaterpert-colwater0); title('UMBC \delta colwater mm/yr'); caxis([-1 +1]*0.2)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if iAK > 0
+  interp_resultsT_WV_O3_to_p_ERA5  %% just to check to see if things make sense eg ERA5 mmw rates!
+  mmwPertERA5 = mmwater_rtp(h,pertERA5);
+  [xRHpertERA5,xRH1kmpertERA5,xcolwaterpertERA5] = layeramt2RH(h,pertERA5);
+  [TwpertERA5,Tw1kmpertERA5,TdewpertERA5,WBGTpertERA5,RHpertERA5,RH1kmpertERA5,colwaterpertERA5,TwSurfpertERA5,RHSurfpertERA5,TdewSurfpertERA5] = layeramt2RH_wet_bulb_dew_point_temperature(h,pertERA5);
+  
+%  [xRHpertERA5_unc,xRH1kmpertERA5_unc,xcolwaterpertERA5_unc] = layeramt2RH(h,pertERA5_unc);
+%  [TwpertERA5_unc,Tw1kmpertERA5_unc,TdewpertERA5_unc,WBGTpertERA5_unc,RHpertERA5_unc,RH1kmpertERA5_unc,colwaterpertERA5_unc,TwSurfpertERA5_unc,RHSurfpertERA5_unc,TdewSurfpertERA5_unc] = layeramt2RH_wet_bulb_dew_point_temperature(h,pertERA5_unc);
+  
+  scatter_coast(pertERA5.rlon,pertERA5.rlat,50,colwaterpertERA5-colwater0); title('ERA5 \delta colwater mm/yr');  caxis([-1 +1]*0.2)
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 i005 = find(p.plevs(1:90,2300) >= 005,1);
 i010 = find(p.plevs(1:90,2300) >= 010,1);
@@ -247,18 +267,6 @@ junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
 ylim([1 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
 
-%% can estimate max deltaRH expected from Isaac Held blog
-%%% see my notes, BK 45
-averageTlat = squeeze(nanmean(reshape(p.ptemp,[101 72 64]),2))';
-      Lo = 2.5e6;  %%% J/kg
-      Rv = 461.52; %%% J/kg/K
-      moo = exp(Lo/Rv * deltaTlat ./ averageTlat ./ averageTlat) - 1;
-figure(51); clf; 
-  pcolor(rlat,pavgLAY(1:97,3000),smoothn(moo(:,1:97)',1)); shading interp; colormap(usa2); set(gca,'ydir','reverse')
-  ylim([100 1000]); caxis([-1 +1]*0.015); colorbar('horizontal'); colormap(cmap); title(['if RH0 were 100 \newline Zonal MAX dWVfrac/dt expected from dT/dt'])
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 clear data dataMap
 data = maskLFmatr.*smoothn(deltaTlat(:,1:97)',1); p97 = pavgLAY(1:97,1000); 
@@ -266,17 +274,18 @@ dataMap = maskLFmatr.*smoothn(reshape(deltaT(i500,:),72,64)',1);
 save umbc_T_zonal_trends.mat rlat p97 data dataMap rlat65 rlon73
 %}
 
-figure(8); figure(28); figure(29); figure(30); 
-aslmap(6,rlat65,rlon73,smoothn((reshape(maskLF.*results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
-aslmap(31,rlat65,rlon73,smoothn((reshape(maskLF.*mmwPert - maskLF.*mmw0,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
-aslmap_polar(32,rlat65,rlon73,smoothn((reshape(maskLF.*results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
-aslmap_polar(33,rlat65,rlon73,smoothn((reshape(maskLF.*mmwPert - maskLF.*mmw0,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-boo = mmwPert - mmw0; boo = boo ./ mmw0; boo = 1 * boo ./ results(:,6)'; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
+isaac_held_dRH_dST_pgorman_dcolwater_dST
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+boo = mmwPert - mmw0; 
+boo = boo ./ mmw0; boo = 1 * boo ./ results(:,6)'; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
   bad = find(abs(results(:,6)) < 1e-2); boo(bad) = nan;
-aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
-aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
-%aslmap(34,rlat65,rlon73,smoothn((reshape(abs(boo),72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
+aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
+aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
+%aslmap(34,rlat65,rlon73,smoothn((reshape(abs(boo),72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
 
 clf
 plot(results(:,6),100*(mmwPert - mmw0)./mmw0,'.'); ylabel('% change in mmw'); xlabel('d(ST) (K)')
@@ -286,17 +295,16 @@ dsst = linspace(-0.2,+0.2,20); dmmwfrac = linspace(-5,5,20);
 pcolor(nx,ny,nz);  pcolor(nx,ny,nz); shading interp; colormap jet; colorbar; jett = jet(64); jett(1,:) = 1; colormap(jett); 
 hold on; errorbar(dsst,nmean,nstd); hold off; ylabel('% change in mmw'); xlabel('d(ST) (K)')
 
-fprintf(1,'blindly fitting the fractional dMMWW vs dSTEMP gives %8.6f percent/kelvin + %8.6f percent ',nanpolyfit(results(:,6),100*(mmwPert - mmw0)./mmw0,1))
+fprintf(1,'blindly nanpolyfit y=mx+b fitting the fractional dMMWW vs dSTEMP gives %8.6f percent/kelvin + %8.6f percent \n',nanpolyfit(results(:,6),100*(mmwPert - mmw0)./mmw0,1))
 
 if iAK > 0
   boo = era5.trend_mmw; boo = boo ./ mmw0; boo = 1 * boo ./ era5.trend_stemp; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
   bad = find(abs(era5.trend_stemp) < 1e-2); boo(bad) = nan;
-  aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 d frac(mmw)/dST');     caxis([-1 +1]*10); colormap(llsmap5)
-  fprintf(1,'blindly fitting the ERA5 fractional dMMWW vs dSTEMP gives %8.6f percent/kelvin + %8.6f percent ',nanpolyfit(results(:,6),100*(mmwPert - mmw0)./mmw0,1))
+  aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 d frac(mmw)/dST');     caxis([-1 +1]*0.2); colormap(llsmap5)
+  fprintf(1,'blindly nanpolyfit y=mx+b fitting the ERA5 fractional dMMWW vs dSTEMP gives %8.6f percent/kelvin + %8.6f percent \n',nanpolyfit(results(:,6),100*(mmwPert - mmw0)./mmw0,1))
 else
   figure(35); clf; junk = reshape(maskLF.*results(:,6)',72,64)'; plot(rlat,smooth(nanmean(junk,2),3)); title('dST/dt'); xlabel('Latitude')
 end
-
 
 spres_avg = nanmean(reshape(p.spres,72,64),1);
 figure(30); set(gca,'yscale','linear'); hold on; plot(rlat,spres_avg,'k','linewidth',2); hold off

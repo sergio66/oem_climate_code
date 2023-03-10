@@ -17,7 +17,7 @@ if iVers == 0
 elseif iVers == 1  
   %{
   %% after doing [h,ha,p,pa] = rtpread('avgprof');
-  %% plot_profile_trends2.m:1o05:      [mmw0,lps0] = mmwater_rtp(h,p);
+  %% plot_profile_trends2.m:105:      [mmw0,lps0] = mmwater_rtp_pstop_lapse(h,p);
   lps_index.rlat = p.rlat;
   lps_index.rlon = p.rlon;
   lps_index.trp_ind = lps0.trp_ind;

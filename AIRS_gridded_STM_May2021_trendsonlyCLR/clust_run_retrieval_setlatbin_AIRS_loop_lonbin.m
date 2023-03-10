@@ -111,13 +111,16 @@ iDebug = 1380; %% SML
 iDebug = 4212; %% NP
 iDebug = 4226; %% NP WOW dSST/dt = +0.15 K/yr
 
+iDebug = 4487;
+iDebug = 252;
 iDebug = 108;
 iDebug = 287;
-iDebug = 4500;
-iDebug = 4487;
 iDebug = 2268; %% T
-iDebug = 252;
+
 iDebug = -1;
+
+%iDebug = 4500;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
@@ -233,6 +236,7 @@ for iInd = iInd0 : iIndE
   topts.iaSequential = [150 60];                   %% sequential, like SingleFootprint
   topts.iaSequential = -1;                         %% default one gulp
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
+  %topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
@@ -302,8 +306,13 @@ for iInd = iInd0 : iIndE
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
 
-  topts.resetnorm2one = -1;   %% DEFAULT
-  topts.resetnorm2one = +1;
+  iLatX = 11;
+  if driver.iLat <= iLatX | driver.iLat >= 64 - iLatX
+    topts.resetnorm2one = -1;   %% DEFAULT, use eg 0.01 for T, 2.2/400 for CO2 etc
+  else
+    topts.resetnorm2one = +1;   %% use 1 for every param
+  end
+  %topts.resetnorm2one = +1;   %% use 1 for every param, this is new March 2023 and duplicates the Feb 9, 2023 commit
 
   iChSet = topts.iChSet;
   iChSet = 2; %% new chans

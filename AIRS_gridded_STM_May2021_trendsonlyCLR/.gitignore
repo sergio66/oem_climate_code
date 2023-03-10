@@ -2,6 +2,7 @@
 *.pdf
 *.fig
 *.png
+*.txt
 ugh*
 
 WORKS*
@@ -13,6 +14,7 @@ PDF*
 
 # from diff_m_or_f_files
 diff_kcarta_results.txt
+diff_results.txt
 
 # symbolic links
 driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m

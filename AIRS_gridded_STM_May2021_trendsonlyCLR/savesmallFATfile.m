@@ -54,7 +54,7 @@ if junk == 1
   end
   if junk2 > 0
     saver = ['save -v7.3 ' genericoutname];
-    saver = [saver ' deltaRH deltaRHlat deltaRHunc results resultsO3 resultsO3unc resultsT resultsTunc resultsWV resultsWVunc rlat rlat65 rlon rlon73'];
+    saver = [saver ' deltaRH deltaRHlat deltaRHunc results resultsO3 resultsO3unc resultsT resultsTunc resultsWV resultsWVunc rlat rlat65 rlon rlon73 topts fracO3 fracWV fracWVunc deltaT deltaTunc'];
     if iAK > 0
       figure(54); waha = squeeze(nanmean(reshape(deltaRH,100,72,64),2));        pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('UMBC dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
       figure(55); waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)

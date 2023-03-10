@@ -9,13 +9,17 @@ addpath /asl/matlib/aslutil/
 topts.klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 topts.sarta = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';
 
-if ~exist('all')
-  load ERA5_atm_data_2002_09_to_2021_08_desc.mat
-end
-
 iStartY = 2002; iStartYM = 09; iStopY = 2021; iStopYM = 08; 
 iStartY = 2002; iStartYM = 09; iStopY = 2014; iStopYM = 08; %% Joao wants AMIP/CMIP
 iStartY = 2012; iStartYM = 05; iStopY = 2019; iStopYM = 04; %% CRIS NSR
+iStartY = 2002; iStartYM = 09; iStopY = 2022; iStopYM = 08; 
+
+if ~exist('all') & iStopY == 2021
+  load ERA5_atm_data_2002_09_to_2021_08_desc.mat
+elseif ~exist('all') & iStopY == 2022
+  load ERA5_atm_data_2002_09_to_2022_08_desc.mat
+end
+
 
 booS = find(all.yy == iStartY & all.mm == iStartYM);
 booE = find(all.yy == iStopY & all.mm == iStopYM);

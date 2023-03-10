@@ -23,7 +23,7 @@ end
 if junk > 0
   if ~exist('lps0')
     addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/
-    [mmw0,lps0] = mmwater_rtp(h,p);
+    [mmw0,lps0] = mmwater_rtp_pstop_lapse(h,p);
   end
   %do_feedbacks
   do_feedbacks_wrt_globalSST

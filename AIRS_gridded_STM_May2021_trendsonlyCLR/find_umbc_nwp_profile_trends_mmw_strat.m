@@ -136,11 +136,11 @@ figure(6); clf;
 %%%%%%%%%%%%%%%%%%%%%%%%%
 disp('ret to continue to colum water to 200 mb'); pause
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-x200.mmw0      = mmwater_rtp(h,p,200);
-x200.mmwUMBC   = mmwater_rtp(h,pert,200);
-x200.mmwERA    = mmwater_rtp(h,pera,200);
-x200.mmwERA5   = mmwater_rtp(h,pera5,200);
-x200.mmwAIRSL3 = mmwater_rtp(h,pairsL3,200);
+x200.mmw0      = mmwater_rtp_pstop_lapse(h,p,200);
+x200.mmwUMBC   = mmwater_rtp_pstop_lapse(h,pert,200);
+x200.mmwERA    = mmwater_rtp_pstop_lapse(h,pera,200);
+x200.mmwERA5   = mmwater_rtp_pstop_lapse(h,pera5,200);
+x200.mmwAIRSL3 = mmwater_rtp_pstop_lapse(h,pairsL3,200);
 
 figure(1); scatter_coast(p.rlon,p.rlat,50,x200.mmw0); title('mmw0 to 200 mb'); colormap jet
 figure(2); scatter_coast(p.rlon,p.rlat,50,x200.mmwUMBC-x200.mmw0);   title('dmmwUMBC/dt');   colormap(usa2); caxis([-0.00025 +0.00025]);
@@ -173,11 +173,11 @@ figure(6); clf;
 
 disp('ret to continue to colum water to tropopause'); pause
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-xtrop.mmw0      = mmwater_rtp(h,p,-1);
-xtrop.mmwUMBC   = mmwater_rtp(h,pert,-1);
-xtrop.mmwERA    = mmwater_rtp(h,pera,-1);
-xtrop.mmwERA5   = mmwater_rtp(h,pera5,-1);
-xtrop.mmwAIRSL3 = mmwater_rtp(h,pairsL3,-1);
+xtrop.mmw0      = mmwater_rtp_pstop_lapse(h,p,-1);
+xtrop.mmwUMBC   = mmwater_rtp_pstop_lapse(h,pert,-1);
+xtrop.mmwERA    = mmwater_rtp_pstop_lapse(h,pera,-1);
+xtrop.mmwERA5   = mmwater_rtp_pstop_lapse(h,pera5,-1);
+xtrop.mmwAIRSL3 = mmwater_rtp_pstop_lapse(h,pairsL3,-1);
 
 figure(1); scatter_coast(p.rlon,p.rlat,50,xtrop.mmw0); title('mmw0 to tropopause'); colormap jet
 figure(2); scatter_coast(p.rlon,p.rlat,50,xtrop.mmwUMBC-xtrop.mmw0);   title('dmmwUMBC/dt');   colormap(usa2); caxis([-0.05 +0.05]);
@@ -235,11 +235,11 @@ figure(6); clf;
 
 disp('ret to continue to colum water to upper troposphere '); pause
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-xUTLS.mmw0      = mmwater_rtp(h,p,-2);
-xUTLS.mmwUMBC   = mmwater_rtp(h,pert,-2);
-xUTLS.mmwERA    = mmwater_rtp(h,pera,-2);
-xUTLS.mmwERA5   = mmwater_rtp(h,pera5,-2);
-xUTLS.mmwAIRSL3 = mmwater_rtp(h,pairsL3,-2);
+xUTLS.mmw0      = mmwater_rtp_pstop_lapse(h,p,-2);
+xUTLS.mmwUMBC   = mmwater_rtp_pstop_lapse(h,pert,-2);
+xUTLS.mmwERA    = mmwater_rtp_pstop_lapse(h,pera,-2);
+xUTLS.mmwERA5   = mmwater_rtp_pstop_lapse(h,pera5,-2);
+xUTLS.mmwAIRSL3 = mmwater_rtp_pstop_lapse(h,pairsL3,-2);
 
 figure(1); scatter_coast(p.rlon,p.rlat,50,xUTLS.mmw0); title('mmw0 to UT'); colormap jet
 figure(2); scatter_coast(p.rlon,p.rlat,50,xUTLS.mmwUMBC-xUTLS.mmw0);   title('dmmwUMBC/dt');   colormap(usa2); caxis([-0.05 +0.05]);

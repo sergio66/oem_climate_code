@@ -146,10 +146,10 @@ disp('showed dRH/dSKT, <ret> to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 boo_lps0 = lps0.lapse_othermethod;
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-pjunk = p; pjunk.ptemp(1:101,:) = pjunk.ptemp(1:101,:) + deltaT; [~,junk] = mmwater_rtp(h,pjunk); boo_lpsUMBC = junk.lapse_othermethod;
-pjunk = p; pjunk.ptemp(1:100,:) = pjunk.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp; [~,junk] = mmwater_rtp(h,pjunk); boo_lpsAIRSL3 = junk.lapse_othermethod;
-pjunk = p; pjunk.ptemp(1:100,:) = pjunk.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp;  [~,junk] = mmwater_rtp(h,pjunk); boo_lpsERA5   = junk.lapse_othermethod;
-pjunk = p; pjunk.ptemp(1:100,:) = pjunk.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;   [~,junk] = mmwater_rtp(h,pjunk); boo_lpsCMIP6  = junk.lapse_othermethod;
+pjunk = p; pjunk.ptemp(1:101,:) = pjunk.ptemp(1:101,:) + deltaT; [~,junk] = mmwater_rtp_pstop_lapse(h,pjunk); boo_lpsUMBC = junk.lapse_othermethod;
+pjunk = p; pjunk.ptemp(1:100,:) = pjunk.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp; [~,junk] = mmwater_rtp_pstop_lapse(h,pjunk); boo_lpsAIRSL3 = junk.lapse_othermethod;
+pjunk = p; pjunk.ptemp(1:100,:) = pjunk.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.cmip6_100_layertrends.ptemp;  [~,junk] = mmwater_rtp_pstop_lapse(h,pjunk); boo_lpsERA5   = junk.lapse_othermethod;
+pjunk = p; pjunk.ptemp(1:100,:) = pjunk.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;   [~,junk] = mmwater_rtp_pstop_lapse(h,pjunk); boo_lpsCMIP6  = junk.lapse_othermethod;
 
 figure(6); clf
   aslmap(6,rlat65,rlon73,100*maskLFmatr.*smoothn((reshape(boo_lpsUMBC-boo_lps0,72,64)'),1),[-90 +90],[-180 +180]);   colormap(llsmap5); caxis([-1 +1]);  title('\delta lapse rate K/km/century UMBC');  

@@ -171,7 +171,6 @@ elseif driver.i16daytimestep < 0
     cov_setA = [1.0  0.05*0.5      0.09*0.5       1/2        0.01/2            0.01/2            1/2      0.01            0.01                1/2        09*1E2     9*1E+3  05*1E-1];  %% combine the above two for POLES and use for TROPICS/MIDLATS iaSequential = -1
     cov_setA = [1.0  0.05*0.5      0.09*0.5       1/8        0.01/2            0.01/2            1/8      0.01/10        0.01                1/8        04*1E3     75*1E+4  05*1E-1];  %% TROPICS/MIDLATS iaSequential = -1 iia_OorC_DataSet_Quantile = [+0 09 05]; 2/4/23 git commit
 
-
     cov_setB = [1.0  0.05*1       0.09*1        1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2     08*1E-1  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** Dec 6, 2022 commit 
         cov_setB(11:13) = cov_setB(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
     cov_setB = [1.0  0.05*10      0.09*10       1/2        0.01/4            0.01/4            1/2      0.01            0.01                1/2        03*1E-2      08*1E+3  05*1E-1];  %% combine the above two for POLES
@@ -194,22 +193,64 @@ elseif driver.i16daytimestep < 0
     cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2022/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
     cov_set0 = cov_set;
 
-    cov_setA = cov_set0;
-    cov_setA(11:13) = cov_set0(11:13) *1e3;               %% Feb 4,2022 synthetic calc commit, works great for tropics obs as well
+    iSimpleLife = +1;
+    iSimpleLife = -1;
+    if iSimpleLife == +1
+      %%% WHEN LIFE WAS SIMPLE, FEB 09, 2023 commit
+      cov_setA = cov_set0;
+      cov_setA(11:13) = cov_set0(11:13) *1e3;               %% Feb 4,2022 synthetic calc commit, works great for tropics obs as well
+  
+      cov_setB = cov_set0;
+      if driver.iLat >= 64-iLatX | driver.iLat <= iLatX
+        cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.1 1.0] *1e4;     %% trying to figure out polar
+        cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.5 1.0] *1e3;     %% trying to figure out polar --- ok, not great, tried 2/5/23
+        cov_setB(11:13) = cov_set0(11:13) .* [1.0 1.0 1.0] *1e3;     %% trying to figure out polar
+  
+        cov_setB(11:13) = cov_set0(11:13) .* [1.0   1.0e-1 1.0] *5e2;  %% trying to figure out polar
+        cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e-0 1.0] *1e-1; %% trying to figure out polar
+        cov_setB([4 7 10]) = 1/8;
+        cov_setB([2]) = 1.0;
+        cov_setB([3]) = 1.0;
+      end
+  
+    elseif iSimpleLife == -1
+      %% MAKING LIFE MORE N MORE COMPLICATED
+      cov_setA = cov_set0;
+      cov_setA(11:13) = cov_set0(11:13) *1e3;               %% Feb 4,2022 synthetic calc commit, works great for tropics obs as well  
+      cov_setB = cov_set0;
 
-    cov_setB = cov_set0;
-    if driver.iLat >= 64-iLatX | driver.iLat <= iLatX
-      cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.1 1.0] *1e4;     %% trying to figure out polar
-      cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.5 1.0] *1e3;     %% trying to figure out polar --- ok, not great, tried 2/5/23
-      cov_setB(11:13) = cov_set0(11:13) .* [1.0 1.0 1.0] *1e3;     %% trying to figure out polar
+      if topts.resetnorm2one == +1
+  
+        if driver.iLat >= 64-iLatX | driver.iLat <= iLatX
+          cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.1 1.0] *1e4;     %% trying to figure out polar
+          cov_setB(11:13) = cov_set0(11:13) .* [1.0 0.5 1.0] *1e3;     %% trying to figure out polar --- ok, not great, tried 2/5/23
+          cov_setB(11:13) = cov_set0(11:13) .* [1.0 1.0 1.0] *1e3;     %% trying to figure out polar
+    
+          cov_setB(11:13) = cov_set0(11:13) .* [1.0   1.0e-1 1.0]   *5e2;  %% trying to figure out polar
+%          cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e-0 1.0]   *1e-1; %% trying to figure out polar %%% THIS WAS COMMITED 8 am 2/9/23
+%          cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e+4 1.0e2] *1e-1; %% trying to figure out polar %% mid Feb 2023
 
-      cov_setB(11:13) = cov_set0(11:13) .* [1.0   1.0e-1 1.0] *5e2;  %% trying to figure out polar
-      cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e-0 1.0] *1e-1; %% trying to figure out polar
-      cov_setB([4 7 10]) = 1/8;
-      cov_setB([2]) = 1.0;
-      cov_setB([3]) = 1.0;
+          cov_setB([4 7 10]) = 1/8;
+          cov_setB([2 3]) = 1.0;
+
+%          cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e+5 1.0e2] *1e-1; %% trying to figure out polar %% Mar 2023
+%          cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e+2 1.0e2] *1e-1; %% trying to figure out polar %% Mar 2023
+%  %        cov_setB([5 6]) = cov_set0([5 6])/5;
+        end
+      else
+        if driver.iLat >= 64-iLatX | driver.iLat <= iLatX
+          cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e+4 1.0e2]  *1e-1;  %% trying to figure out polar  Feb 2023 worse
+          cov_setB(11:13) = cov_set0(11:13) .* [2.0e3 1.0e+0 1.0e+1] *5e-2;  %% trying to figure out polar  Feb 2023 better ***
+          cov_setB(11:13) = cov_set0(11:13) .* [5.0e2 5.0e-1 1.0e+1] *5e-2;  %% trying to figure out polar  Feb 2023 better
+          cov_setB(11:13) = cov_set0(11:13) .* [2.0e2 2.0e-1 5.0e+0] *5e-2;  %% trying to figure out polar  Feb 2023 better
+          cov_setB([4 7 10]) = 1/8;
+          cov_setB([2]) = 1.0;
+          cov_setB([3]) = 1.0;
+  
+        end
+      end
     end
-
+    
     find_wgtA_wgtB
     cov_set = wgtA * cov_setA + wgtB * cov_setB;
     
@@ -241,28 +282,23 @@ elseif driver.i16daytimestep < 0
   %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%%
   %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%%
 
+  %{
+  %%% this complicates things tooooooo much to remember
   cov_setX = cov_set; 
   if (topts.iChSet == 4 | topts.iChSet == 5) & topts.dataset >= 8
     if iCovSetNumber == 20.0 | iCovSetNumber == 20.1
       cov_set(11:13) = cov_setX(11:13) *1e2;  %% default but I think a little tooooo loosey goosey till Nov 2022
       cov_set(11:13) = cov_setX(11:13) .* [1e0 1e0 1e0];  %% THIS EXTRA MULT WAS TOO COMPLICATED! and it was because I screwed up mat_od with scale lenghts below! so just set to 1
-
       %%   cov_set(11:13) = cov_setX(11:13) .* [1e2 5e5 1e2];       %% NOT bad at all, but could relax it a little
       %%   cov_set(11:13) = cov_setX(11:13) .* [1e2 5e5 1e2] * 1/2;
-
     elseif iCovSetNumber == 20.2
       %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
       cov_set(11:13) = cov_setX(11:13) .* [1e2 1e4 5e1];  %% NOT bad at all, but could relax it a little ... used in the Dec 6, 2022 commit where for OBS, dT(z)/dt from obs are mostly pretty good, WV too overdamped, great bias/std dev ****************
       cov_set(11:13) = cov_setX(11:13) .* [1e0 1e0 1e0];  %% THIS EXTRA MULT WAS TOO COMPLICATED! and it was because I screwed up mat_od with scale lenghts below! so just set to 1
       %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight %%% THIS IS ALSO PRETTY DARN GOOD FOR OBS and ERA CAL, though WV is a but tooooo tight 
     end
-
-    %% cov_set(11:13) = cov_setX(11:13) .* [1e2 1e3 5e1];  %% loosen WV, NOOOOO CRAP
-    %% cov_set(11:13) = cov_setX(11:13) .* [1e2 8e2 5e1];  %% loosen WV, this works decently if cov_set(WV = 5,6) == 0.01/4
-
-    %% cov_set(11:13) = cov_set(11:13) *1e5;  %% pretty good but a little too strict trying this after Nov 2022
-    %% cov_set(11:13) = cov_set(11:13) *5e4;  %% pretty good but a little too strict
   end
+  %}
 
   %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%%
   %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% <<<<<<<<<< %%%%%%%%%% >>>>>>>>>> %%%%%%%%%% 

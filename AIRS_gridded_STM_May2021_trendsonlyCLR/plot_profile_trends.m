@@ -100,7 +100,7 @@ if junk > 0
     nwp_spectral_trends_era_era5_airsL3_umbc = make_profile_spectral_trends(era,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f);
 
     addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-      [mmw0,lps] = mmwater_rtp(h,p);
+      [mmw0,lps] = mmwater_rtp_pstop_lapse(h,p);
       figure(1); aslmap(1,rlat65,rlon73,maskLFmatr.*smoothn((reshape(mmw0,72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('mmw');  caxis([0 70])
       figure(1); aslmap(1,rlat65,rlon73,maskLFmatr.*smoothn((reshape(lps.lapse_othermethod,72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('est. lapse rate K/km');   caxis([2 8])
       figure(1); aslmap(1,rlat65,rlon73,maskLFmatr.*smoothn((reshape(lps.trp_zHI/1000,72,64)'),1),[-90 +90],[-180 +180]);      colormap(jet);  title('Tropopause Hgt HighRes'); caxis([5 20])
