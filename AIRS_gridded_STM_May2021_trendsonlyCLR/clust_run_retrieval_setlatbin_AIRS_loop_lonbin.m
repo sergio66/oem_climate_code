@@ -84,7 +84,6 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 % JOB = 7
 % JOB = 39
 
-
 %iDebug = 180
 %iDebug = 754
 %iDebug = 1;
@@ -289,8 +288,8 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
   iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT
@@ -314,13 +313,19 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
 
   topts.set_era5_cmip6_airsL3 = 8;           %% use MLS a priori
-  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
   topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5 a priori
+  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
+  if topts.iAdjLowerAtmWVfrac > 0
+    topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori  
+  end
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
 
   iLatX = 11;
+  %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
+  %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
+  %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
   if driver.iLat <= iLatX | driver.iLat >= 64 - iLatX
     topts.resetnorm2one = -1;   %% DEFAULT, use eg 0.01 for T, 2.2/400 for CO2 etc
   else

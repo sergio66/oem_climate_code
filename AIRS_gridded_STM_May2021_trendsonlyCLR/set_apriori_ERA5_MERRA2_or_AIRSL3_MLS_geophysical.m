@@ -8,7 +8,10 @@
 %% settings.set_era5_cmip6_airsL3_WV_T_O3 == +10 : set lower WV
 %% settings.set_era5_cmip6_airsL3_WV_T_O3 == +40 : set lower T
 
-if settings.set_era5_cmip6_airsL3 == 5
+if settings.set_era5_cmip6_airsL3 == 0
+  disp('apriori will be using ZERO (no ERA5 trends being used)')
+
+elseif settings.set_era5_cmip6_airsL3 == 5
   disp(' apriori will be using ERA5 trends')
   vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
   xrates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','era5_100_layertrends');
@@ -117,10 +120,16 @@ elseif settings.set_era5_cmip6_airsL3 == 6
   % boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_3(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve);
   xb = reshape(xb,length(xb),1);
 
-elseif settings.set_era5_cmip6_airsL3 == 3
-  disp(' apriori will be using AIRS L3 trends')
-  vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
-  xrates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','airsL3_100_layertrends');
+elseif abs(settings.set_era5_cmip6_airsL3) == 3
+  if settings.set_era5_cmip6_airsL3 == 3
+    disp(' apriori will be using AIRS L3 trends')
+    vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+    xrates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','airsL3_100_layertrends');
+  elseif settings.set_era5_cmip6_airsL3 == -3
+    error(' apriori will be using CLIMCAPS L3 trends ... still not saved')
+    vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
+    xrates = load('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','climcapsL3_100_layertrends');
+  end
   xrates = xrates.airsL3_100_layertrends;
 
   bad = find(isnan(xrates.ptemp)); xrates.ptemp(bad) = 0;

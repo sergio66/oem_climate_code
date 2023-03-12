@@ -1,5 +1,5 @@
 ls -lt Output/Quantile05/test*.mat | wc -l
-echo "removing latbins 01 .. 64
+echo "removing latbins 01 .. 64"
 /bin/rm Output/Quantile05/test*.mat
 
 /bin/rm slurm*.out

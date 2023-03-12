@@ -94,7 +94,6 @@ if driver.i16daytimestep < 0
           %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/clust_put_together_jacs_clrERA5.m
           AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2022 20 year <CLR>
         end
-        iOldORNew
       else
         iVersJac
         error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021, 2022 and fake 2023 [2002/09-20XY/08] only')
