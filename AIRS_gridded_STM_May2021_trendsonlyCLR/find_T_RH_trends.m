@@ -276,6 +276,8 @@ save umbc_T_zonal_trends.mat rlat p97 data dataMap rlat65 rlon73
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+guess_wv_surface
+
 isaac_held_dRH_dST_pgorman_dcolwater_dST
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

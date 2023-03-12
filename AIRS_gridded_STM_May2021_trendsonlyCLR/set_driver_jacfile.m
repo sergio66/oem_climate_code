@@ -1,6 +1,7 @@
-function [driver,iVersJac,iXJac] = set_driver_jacfile(driver0,settings);
+function [driver,iVersJac,iXJac,topts] = set_driver_jacfile(driver0,settings,topts0);
 
 driver = driver0;
+topts  = topts0;
 
 iXJac = settings.iXJac;
 %if driver.i16daytimestep > 0
@@ -65,8 +66,8 @@ if driver.i16daytimestep < 0
         iVersJac = 2022; iOldORNew = +5;  %% ERA5 clr from 2002-2022
       elseif settings.ocb_set == 0
         iVersJac = 2021;   %% ERA5 CLR  from 2002-2021
-        iVersJac = 2022;  iOldORNew = +5;  %% ERA5 clr from 2002-2022
         iVersJac = 2022;  iOldORNew = +9;  %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
+        iVersJac = 2022;  iOldORNew = +5;  %% ERA5 clr from 2002-2022
       end
 
     end
@@ -102,6 +103,8 @@ if driver.i16daytimestep < 0
 
     topts.jacobian.filename = AHA;
     driver.jacobian.filename = AHA;
+    topts.iVersJac = iVersJac;
+
     clear AHA
     fprintf(1,'reading in jac version %4i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)
   end
@@ -123,4 +126,9 @@ elseif driver.i16daytimestep > 0
     driver.jacobian.filename = [];
     fprintf(1,'iXJac == 0 reading in constant kcarta jac file %s \n',driver.jacobian.filename)
   end
+
+  topts.jacobian.filename = driver.jacobian.filename;
+  driver.jacobian.filename = driver.jacobian.filename;
+  topts.iVersJac = NaN;
+
 end

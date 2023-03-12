@@ -119,8 +119,8 @@ elseif iVersQRenorm == 4
   qrenorm((1:nlays)+6+nlays*1) = 1.00; %% T
   qrenorm(6) = 1.0;
 
-  qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
-  qrenorm(6) = 0.1;
+%  qrenorm((1:nlays)+6+nlays*1) = 0.10; %% T
+%  qrenorm(6) = 0.1;
 end
 
 qrenormUSE = qrenorm;

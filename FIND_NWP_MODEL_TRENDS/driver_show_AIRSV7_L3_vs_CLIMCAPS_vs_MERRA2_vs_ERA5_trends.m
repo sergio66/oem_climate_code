@@ -308,12 +308,12 @@ if iUMBC  > 0
   plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
-  plotoptions.yLimits = [100 1000];
   
   iFig = iFig + 1;
   figure(iFig); clf; 
   plotoptions.maintitle = 'dRH/dt'; 
   plotoptions.cx = [-1 +1]*0.5; 
+  plotoptions.yLimits = [100 1000];
   miaow11 = squeeze(nanmean(reshape(umbc.deltaRH,100,72,64),2));
   miaow12 = squeeze(nanmean(permute(climcapsL3.RHrate,[3 1 2]),2));
   miaow21 = squeeze(nanmean(reshape(era5.RHrate,100,72,64),2));
@@ -324,6 +324,7 @@ if iUMBC  > 0
   figure(iFig); clf; 
   plotoptions.maintitle = 'dWVfrac/dt'; 
   plotoptions.cx = [-1 +1]*0.015; 
+  plotoptions.yLimits = [100 1000];
   miaow11 = squeeze(nanmean(reshape(umbc.fracWV,100,72,64),2));
   miaow12 = squeeze(nanmean(permute(climcapsL3.waterrate,[3 1 2]),2));
   miaow21 = squeeze(nanmean(reshape(era5.waterrate,100,72,64),2));
@@ -337,6 +338,19 @@ if iUMBC  > 0
   plotoptions.yLinearOrLog = -1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits = [10 1000];
+  miaow11 = squeeze(nanmean(reshape(umbc.deltaT,100,72,64),2));
+  miaow12 = squeeze(nanmean(permute(climcapsL3.ptemprate,[3 1 2]),2));
+  miaow21 = squeeze(nanmean(reshape(era5.ptemprate,100,72,64),2));
+  miaow22 = squeeze(nanmean(reshape(merra2.ptemprate,100,72,64),2));
+  profile_plots_4tiledlayout(trend_rlat64,plays100,miaow11,miaow12,miaow21,miaow22,iFig,plotoptions);
+
+  iFig = iFig + 1;
+  figure(iFig); clf; 
+  plotoptions.maintitle = 'dT/dt'; 
+  plotoptions.cx = [-1 +1]*0.15; 
+  plotoptions.yLinearOrLog = -1;
+  plotoptions.yReverseDir  = +1;
+  plotoptions.yLimits = [0.1 100];
   miaow11 = squeeze(nanmean(reshape(umbc.deltaT,100,72,64),2));
   miaow12 = squeeze(nanmean(permute(climcapsL3.ptemprate,[3 1 2]),2));
   miaow21 = squeeze(nanmean(reshape(era5.ptemprate,100,72,64),2));

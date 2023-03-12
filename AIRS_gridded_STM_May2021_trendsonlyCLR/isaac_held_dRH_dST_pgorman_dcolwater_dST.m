@@ -1,5 +1,3 @@
-%% can estimate max deltaRH expected from Isaac Held blog
-%%% see my notes, BK 45
 figure(49);  %% 3 panel dT/dt       UMBC, ERA5xAK,ERA5 
 figure(50);  %% 3 panel dWVfrac/dt  UMBC, ERA5xAK,ERA5 
 figure(51);  %% 2 panel dRH/dt      UMBC, ERA5 
@@ -15,6 +13,8 @@ figure(51);  %% 2 panel dRH/dt      UMBC, ERA5
 % z2 = era5.trend_RH; z2 = reshape(z2,100,72,64); z2 = squeeze(nanmean(z2,2));
 % iFig = 51; figure(iFig); clf; profile_plots_2tiledlayout(rlat,plays,z1,z2,iFig,plotoptions);
 
+%% can estimate max deltaRH expected from Isaac Held blog  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
+%%% see my notes, BK 45
 averageTlat = squeeze(nanmean(reshape(p.ptemp,[101 72 64]),2))';
       Lo = 2.5e6;  %%% J/kg
       Rv = 461.52; %%% J/kg/K

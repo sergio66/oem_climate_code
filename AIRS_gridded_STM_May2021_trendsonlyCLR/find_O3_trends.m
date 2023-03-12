@@ -82,13 +82,48 @@ for ii = 1 : length(rlat)
   deltaO3lat(ii,:) = nanmean(deltaO3(:,boo),2);
 end
 
-figure(31); clf; pcolor(rlat,pavgLAY(1:nlayO3,1000),smoothn(deltaO3lat(:,1:nlayO3)',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+duO3_0 = dobson_rtp(h,p);
+duO3_F = dobson_rtp(h,pert);
+
+figure(31); clf; aslmap(31,rlat65,rlon73,maskLFmatr.*smoothn(reshape(duO3_F-duO3_0,72,64)',1), [-90 +90],[-180 +180]);
+caxis([-1 +1]*1); colormap(cmap);  title('d/dt colO3 (du/year)'); 
+
+%% Global, regional and seasonal analysis of total ozone trends derived from the 1995–2020 GTO-ECV climate data record
+%% Melanie Coldewey-Egbers1 , Diego G. Loyola1, Christophe Lerot2 , and Michel van Roozendael2
+%% Deutsches Zentrum für Luft- und Raumfahrt (DLR), Institut für Methodik der Fernerkundung, Oberpfaffenhofen, Germ
+%% https://doi.org/10.5194/acp-2021-1047
+disp('Fig 32 : see Figure 3 in https://acp.copernicus.org/preprints/acp-2021-1047/acp-2021-1047.pdf')
+figure(32); clf; aslmap(32,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(100*(duO3_F-duO3_0)./duO3_0,72,64)',1), [-90 +90],[-180 +180]);
+caxis([-1 +1]*2.5); colormap(cmap);  title('d/dt colO3 (percent/decade)'); 
+usa22 = usa2; usa22 = usa22(60-40:60+40,:); colormap(usa22);
+
+figure(33); clf; pcolor(rlat,pavgLAY(1:nlayO3,1000),smoothn(deltaO3lat(:,1:nlayO3)',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaO3lat)); junk = cos(rlat) * ones(1,nlayO3);
 area_wgtO3 = nansum(deltaO3lat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgtO3(1:nlayO3)*10000,pavgLAY(1:nlayO3,1000),'color','r','linewidth',2); hold off
-ylim([0.1 100]); caxis([-0.5 +0.5]*4e-2); title('Zonal d/dt O3 UMBC'); %colorbar; plotaxis2; title('d/dt UMBC O3(025 mb)'); 
+ylim([0.1 100]); caxis([-0.5 +0.5]*4e-2); title('Zonal d/dt O3 UMBC'); 
 colormap(cmap)
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_o3_zonal_trends.pdf');
+
+figure(34); clf; 
+aslmap_polar(33,rlat65,rlon73,smoothn((reshape(duO3_F-duO3_0,72,64)') ,1), [-90 +90],[-180 +180]); caxis([-1 +1]*1); colormap(cmap);  title('d/dt colO3 (du/year)'); 
+clear junk
+junk.color = 'k'; junk.iNorS = +1; aslmap_polar(33,rlat65,rlon73,smoothn((reshape(duO3_F-duO3_0,72,64)') ,1), [-90 +90],[-180 +180],junk); title('UMBC dcolO3/dt du/yr');  caxis([-1 +1]*1); colormap(llsmap5)
+junk.color = 'k'; junk.iNorS = -1; aslmap_polar(33,rlat65,rlon73,smoothn((reshape(duO3_F-duO3_0,72,64)') ,1), [-90 +90],[-180 +180],junk); title('UMBC dcolO3/dt du/yr');  caxis([-1 +1]*1); colormap(llsmap5)
+
+if exist('era5')
+  jjunk = era5.trend_gas_3(1:nlayO3,:);
+  jjunk = reshape(jjunk,nlayO3,72,64);
+  jjunk = squeeze(nanmean(jjunk,2))';
+  figure(33); clf; pcolor(rlat,pavgLAY(1:nlayO3,1000),smoothn(jjunk',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+  junk = zeros(size(deltaO3lat)); junk = cos(rlat) * ones(1,nlayO3);
+  area_wgtO3 = nansum(deltaO3lat.*junk,1)./nansum(junk,1);
+  %hold on; plot(area_wgtO3(1:nlayO3)*10000,pavgLAY(1:nlayO3,1000),'color','r','linewidth',2); hold off
+  ylim([0.1 100]); caxis([-0.5 +0.5]*4e-2); title('Zonal d/dt O3 ERA5'); 
+  colormap(cmap)
+  %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/era5_o3_zonal_trends.pdf');
+end
 
 %{
 clear data dataMap

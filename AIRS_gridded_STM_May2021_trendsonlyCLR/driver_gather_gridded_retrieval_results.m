@@ -220,6 +220,9 @@ if ~exist('iaFound')
   iaFound = zeros(1,4608);
   existfname = zeros(1,4608);
 
+  save_cov_set.cov_set = nan(13,4608);
+  save_cov_set.fmat = nan(6,4608);
+
   cdofs = nan(4608,66);
   lencdofs = nan(1,4608);
   thedofs = nan(1,4608);
@@ -350,6 +353,22 @@ while iDoAgain > 0
       resultsunc(ii,1:6) = oem.finalsigs(1:6);
       [mmn,nn] = size(oem.ak_water);
   
+      save_cov_set.cov_set(:,ii)   = oem.cov_set;
+      save_cov_set.fmat(:,ii)      = sqrt(diag(oem.fmat));
+      save_cov_set.reg_type        = oem.reg_type;
+      save_cov_set.xb_traceI(:,ii) = jacobian.scalar_i([1 length(jacobian.scalar_i)]); %% Co2/N2O/CH4/CFC11/CFC11/stemp etc
+      save_cov_set.xb_wvzI(:,ii)   = jacobian.water_i([1 length(jacobian.water_i)]);   %% top/bottom
+      save_cov_set.xb_tzzI(:,ii)   = jacobian.temp_i([1 length(jacobian.temp_i)]);     %% top/bottom
+      save_cov_set.xb_ozzI(:,ii)   = jacobian.ozone_i([1 length(jacobian.ozone_i)]);   %% top/bottom
+      save_cov_set.xb_trace(:,ii)  = oem.xb(1:6);
+      save_cov_set.xb_wvz(:,ii)    = oem.xb(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom
+      save_cov_set.xb_tzz(:,ii)    = oem.xb(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom
+      save_cov_set.xb_ozz(:,ii)    = oem.xb(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom
+      save_cov_set.xf_trace(:,ii)  = oem.finalrates(1:6);
+      save_cov_set.xf_wvz(:,ii)    = oem.finalrates(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom
+      save_cov_set.xf_tzz(:,ii)    = oem.finalrates(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom
+      save_cov_set.xf_ozz(:,ii)    = oem.finalrates(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom
+
       nlays_straight_from_results(ii) = nn;
       nn0 = min(nn,iNumLay);
       if nn0 == iNumLay
@@ -691,14 +710,19 @@ z22 = maskLF.*chisqrR.iWV;
 iFig = 52; figure(iFig); clf; 
 aslmap_4tiledlayout(z11,z12,z21,z22*5,iFig,plotoptions);
 
-disp('ret to continue to gridded results'); pause
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp('ret to continue to gridded results'); pause
 
 %% look at current AIRS UMBC trend retrievals
 show_unc
 plot_driver_gather_gridded_retrieval_results
 
+%% give a chance for a quick save
+savesmallFATfile
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% then look at model data

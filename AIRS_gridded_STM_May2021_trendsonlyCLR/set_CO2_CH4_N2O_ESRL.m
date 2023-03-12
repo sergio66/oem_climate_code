@@ -29,6 +29,7 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
       Lo = 2.5e6;  %%% J/kg
       Rv = 461.52; %%% J/kg/K
       moo = exp(Lo/Rv * dBT1231/ppp.stemp(JOBJOBJOB)/ppp.stemp(JOBJOBJOB))-1;
+      moo = Lo/Rv * dBT1231/ppp.stemp(JOBJOBJOB)/ppp.stemp(JOBJOBJOB);
       dBT1231_WV = moo; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
 
     else

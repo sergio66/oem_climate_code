@@ -115,11 +115,11 @@ iDebug = 4487;
 iDebug = 252;
 iDebug = 108;
 iDebug = 287;
-iDebug = 2268; %% T
 
 iDebug = -1;
 
 %iDebug = 4500;
+%iDebug = 2268; %% T
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -180,9 +180,21 @@ if iDebug > 0
   iIndE = iInd0;
 end
 
+if ~exist('iForward')
+  iForward = -1;   %% so start at 72 and go down to 01
+  iForward = +1;   %% so start at 01 and go up   to 72
+end
+if iForward == +1
+  iXX1 = iInd0; iXX2 = iIndE; idX = +1;
+else
+  iXX2 = iInd0; iXX1 = iIndE; idX = -1;
+end
+
 %for iInd = iIndE : -1 : iInd0
 %for iInd = iInd0 + 21;
-for iInd = iInd0 : iIndE
+%for iInd = iInd0 : iIndE
+
+for iInd = iXX1 : idX : iXX2
 
   %% so this is really iInd into 1:4608, 72 at a time
   disp(' ')
@@ -236,7 +248,7 @@ for iInd = iInd0 : iIndE
   topts.iaSequential = [150 60];                   %% sequential, like SingleFootprint
   topts.iaSequential = -1;                         %% default one gulp
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
-  %topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
+  topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
@@ -295,13 +307,15 @@ for iInd = iInd0 : iIndE
   topts.ocb_set = ia_OorC_DataSet_Quantile(1);
 
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +2;  %% use T+ST
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T+ST/O3
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T/ST/O3
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +40; %% use T only in the lower trop to "start things" in the polar region, based on BT1231
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +4;  %% use T only
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = +1;  %% use WV only
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
 
   topts.set_era5_cmip6_airsL3 = 8;           %% use MLS a priori
-  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5 a priori
   topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
+  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5 a priori
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
@@ -388,11 +402,11 @@ for iInd = iInd0 : iIndE
 
   if oldstyle_removeCO2 > 0 
     if topts.iNlays_retrieve >= 97 & ~exist(driver.outfilename)
-      [driver,aux] = strow_override_defaults_latbins_AIRS(driver,topts);
+      [driver,aux,topts] = strow_override_defaults_latbins_AIRS(driver,topts);
     elseif topts.iNlays_retrieve < 97 & ~exist(driver.outfilename)
-      [driver,aux] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
+      [driver,aux,topts] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
     end
-    %%[driver,aux] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
+    %%[driver,aux,topts] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
   else
     if topts.iNlays_retrieve >= 97 & ~exist(driver.outfilename)
       [driver,aux,co2rate] = strow_override_defaults_latbins_AIRS_removeCO2(driver,topts);
@@ -404,6 +418,14 @@ for iInd = iInd0 : iIndE
 %---------------------------------------------------------------------------
   fprintf(1,'A outdir,outname = %s \n',driver.outfilename)
   % Do the retrieval
+
+  wvmoo = driver.jacobian.water_i;
+  plot(aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,wvmoo(end-2:end)),2),'b',...
+       aux.f(driver.jacobian.chanset),aux.m_ts_jac(driver.jacobian.chanset,6)*10,'k',...
+       aux.f(driver.jacobian.chanset),driver.rateset.rates(driver.jacobian.chanset)*50,'r')
+  plotaxis2; hl = legend('lowest WVjac','ST jac','rateset','location','best');
+  pause(0.1);
+
   if ~exist(driver.outfilename)     
      driver = retrieval(driver,aux);
      if oldstyle_removeCO2 < 0
@@ -560,6 +582,42 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
   %[hMean17years,ha,pMean17years,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
   [hMean17years,ha,pMean17years,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
   print_cloud_params(hMean17years,pMean17years,driver.iibin); 
+
+  if ~isfield(pMean17years,'plays')
+    pMean17years = make_rtp_plays(pMean17years);
+  end
+  pMean17yearsx = pMean17years;
+
+  junk = pMean17years.plays(1:101,driver.iibin);
+  for iii = 1 : driver.jacobian.numlays
+    junk2 = driver.jacobian.wvjaclays_used{iii}-6;
+    playsRET(iii) = mean(junk(junk2));
+  end
+
+  pMean17yearsx.stemp(iDebug) = pMean17years.stemp(iDebug) + driver.oem.finalrates(6);
+  junk = driver.oem.finalrates(driver.jacobian.ozone_i);
+    njunk = pMean17years.nlevs(driver.iibin);
+    junk2 = interp1(log10(playsRET),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
+    bad = find(isnan(junk2) | isinf(junk2)); junk2(bad) = 0;    
+    pMean17yearsx.gas_3(1:njunk,driver.iibin) = pMean17years.gas_3(1:njunk,driver.iibin) .* (1+junk2);
+
+  junk = driver.oem.finalrates(driver.jacobian.temp_i);
+    njunk = pMean17years.nlevs(driver.iibin);
+    junk2 = interp1(log10(playsRET),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
+    bad = find(isnan(junk2) | isinf(junk2)); junk2(bad) = 0;    
+    pMean17yearsx.ptemp(1:njunk,driver.iibin) = pMean17years.ptemp(1:njunk,driver.iibin) + junk2;
+
+  junk = driver.oem.finalrates(driver.jacobian.water_i);
+    njunk = pMean17years.nlevs(driver.iibin);
+    junk2 = interp1(log10(playsRET),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
+    bad = find(isnan(junk2) | isinf(junk2)); junk2(bad) = 0;    
+    pMean17yearsx.gas_1(1:njunk,driver.iibin) = pMean17years.gas_1(1:njunk,driver.iibin) .* (1+junk2);
+    semilogy(junk,playsRET,'b.-',junk2,pMean17years.plays(1:njunk,driver.iibin)); set(gca,'ydir','reverse');
+    ylim([10 1050]); axx = axis; line([axx(1) axx(2)],[pMean17years.spres(driver.iibin) pMean17years.spres(driver.iibin)]);
+
+  mmw0 = mmwater_rtp(hMean17years,pMean17years);
+  mmwX = mmwater_rtp(hMean17years,pMean17yearsx);
+  fprintf(1,'d(percent mmw)/d(ST) = %8.6f percent mm/K \n',100*(mmwX(driver.iibin)-mmw0(driver.iibin))/mmw0(driver.iibin)/driver.oem.finalrates(6))
 
   if topts.iNlays_retrieve >= 97
     %disp('ret to plot retrievals'); pause

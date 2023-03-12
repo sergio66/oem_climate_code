@@ -1,4 +1,7 @@
-function [driver,aux] = strow_override_defaults_latbins_AIRS_fewlays(driver,iNlays_retrieve,topts);
+function [driver,aux,topts] = strow_override_defaults_latbins_AIRS_fewlays(driver0,iNlays_retrieve,topts0);
+
+topts = topts0;
+driver = driver0;
 
 narginS = nargin;
 
@@ -7,7 +10,8 @@ check_driver    %% note this logic looks at some "miaow" settings; if driver has
 
 aux.invtype = settings.invtype;
 
-driver.topts = topts;
+driver.topts0 = topts;
+driver.topts  = topts;
 
 %---------------------------------------------------------------------------
 % Which latitude bin
@@ -44,7 +48,7 @@ driver = get_rates(driver,settings,settings.iNoiseType);  %% this gets spectral 
 
 %---------------------------------------------------------------------------
 % Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200
-[driver,iVersJac,iXJac] = set_driver_jacfile(driver,settings);
+[driver,iVersJac,iXJac,topts] = set_driver_jacfile(driver,settings,topts);
 
 set_the_jacobians  %% sets structure "jac" and m_ts_jac
 
@@ -339,3 +343,5 @@ build_cov_matrices
 
 driver.iaSequential = topts.iaSequential;
 driver.dataset      = topts.dataset;
+
+driver.topts = topts;

@@ -2,11 +2,11 @@
 #
 # clust_run_retrieval_latbins_AIRS_iasitimespan_loop_anomaly.m clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
 #
-# run this with   kleenslurm; sbatch  --constraint=hpcf2013       --array=1-64 sergio_matlab_jobB.sbatch            for clust_run_retrieval_setlatbin_AIRS_loop_lonbin == TRENDS
-#   or            kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
-#                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
-#                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
-#                 kleenslurm; sbatch  -p cpu2021                       --array=1-64 sergio_matlab_jobB.sbatch 1     == TRENDS
+# run this with   kleenslurm; sbatch  --constraint=hpcf2013            --array=1-64 sergio_matlab_jobB.sbatch 0 or 1     == TRENDS, looping forward(0) or backward(1)
+#   or            kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 0 or 1     == TRENDS, looping forward(0) or backward(1)
+#                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 0 or 1     == TRENDS, looping forward(0) or backward(1)
+#                 kleenslurm; sbatch  -p high_mem                      --array=1-64 sergio_matlab_jobB.sbatch 0 or 1     == TRENDS, looping forward(0) or backward(1)
+#                 kleenslurm; sbatch  -p cpu2021                       --array=1-64 sergio_matlab_jobB.sbatch 0 or 1     == TRENDS, looping forward(0) or backward(1)
 #
 # run this with   kleenslurm; sbatch  --constraint=hpcf2013       --array=1-40 sergio_matlab_jobB.sbatch            for clust_run_retrieval_setlatbin_AIRS_loop_lonbinV2
 #   or            kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-40 sergio_matlab_jobB.sbatch 2
@@ -77,11 +77,15 @@ fi
 if [[ "$1" -eq "" ]]; then
   # this is fixed latbin, loop over 72 lonbins 
   echo "cmd line arg = DNE, clust_run_retrieval_setlatbin_AIRS_loop_lonbin => JOB = latbin"
-  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "clust_run_retrieval_setlatbin_AIRS_loop_lonbin; exit"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iForward = +1; clust_run_retrieval_setlatbin_AIRS_loop_lonbin; exit"
+elif [[ "$1" -eq "0" ]]; then
+  # this is fixed latbin, loop over 72 lonbins 
+  echo "cmd line arg = 0, clust_run_retrieval_setlatbin_AIRS_loop_lonbin => JOB = latbin"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iForward = +1; clust_run_retrieval_setlatbin_AIRS_loop_lonbin; exit"
 elif [[ "$1" -eq "1" ]]; then
   # this is fixed latbin, loop over 72 lonbins 
   echo "cmd line arg = 1, clust_run_retrieval_setlatbin_AIRS_loop_lonbin => JOB = latbin"
-  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "clust_run_retrieval_setlatbin_AIRS_loop_lonbin; exit"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iForward = -1; clust_run_retrieval_setlatbin_AIRS_loop_lonbin; exit"
 elif [[ "$1" -eq "2" ]]; then
   # this fixed latbin, loop over 72 lonbins
   echo "cmd line arg = 2, clust_run_retrieval_setlatbin_AIRS_loop_lonbinV2 => JOB = latbin"

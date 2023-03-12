@@ -1,3 +1,13 @@
+%% check_settings.m:7:settings.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% is using ERA5 or AIRS L3 or MERRA to set rates, you can choose to see -1:WV/T/ST/O3 or +1/+2/+3/+4/+5/+40  for WV/T+ST/O3/T/ST/LowerT only
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == -1  : set all
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +1  : set WV
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +2  : set T/ST
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +3  : set O3
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +4  : set T
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +5  : set ST
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +10 : set lower WV
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +40 : set lower T
+
 if settings.set_era5_cmip6_airsL3 == 5
   disp(' apriori will be using ERA5 trends')
   vars_cmip6_era5_airsL3_umbc = whos('-file','nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat');
@@ -18,9 +28,13 @@ if settings.set_era5_cmip6_airsL3 == 5
     boo = 6;
   end
 
-  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 10
     %% WV(z)
-    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
+    wvscale = boo(end)+1 : boo(end)+1 + iNlays_retrieve-1; wvscale = ones(size(wvscale)); 
+    if settings.set_era5_cmip6_airsL3_WV_T_O3 == 10
+      wvscale(end-3:end) = [1 2 3 4]/4; wvscale(1:end-4) = 0;
+    end
+    boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve) .* wvscale; 
   else
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); 
   end
