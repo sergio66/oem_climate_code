@@ -39,13 +39,15 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
     
     fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfrac = %8.6f\n',driver.rateset.rates(1520),dBT1231_WV,iAdjLowerAtmWVfrac);
     if iAdjLowerAtmWVfrac > eps
-      iVers = 0;  %% before noon Mar 11,2023
-      iVers = 1;  %% after  noon Mar 11,2023
+      iVers = 0;  %% before noon Mar 11,2023, only sets LOWEST 2 layers
+      iVers = 1;  %% after  noon Mar 11,2023,      sets LOWEST 6 layers
       
       if iVers == 0
+        %% tested and  savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers0_march11_2023.mat
         xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfrac;
         xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfrac;
       elseif iVers == 1
+        %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers1_march11_2023.mat
         xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 0/6);
         xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 1/6);
         xb(6+length(driver.jacobian.water_i)-2) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 2/6);
