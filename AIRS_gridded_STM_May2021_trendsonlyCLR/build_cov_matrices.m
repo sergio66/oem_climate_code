@@ -188,6 +188,9 @@ elseif driver.i16daytimestep < 0
 
     iLatX = 07;
     iLatX = 11;
+    iLatX = settings.iLatX;
+
+    fprintf(1,'  in build_cov_matrices.m, iLatX = %2i \n',iLatX)
 
     %% COPY THE SETTINGS FOR ia_OorC_DataSet_Quantile = [01 09 16] synthetic calc
     cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2022/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
@@ -251,9 +254,16 @@ elseif driver.i16daytimestep < 0
       end
     end
     
-    find_wgtA_wgtB
+    [wgtA,wgtB] = find_wgtA_wgtB(driver,iLatX);
     cov_set = wgtA * cov_setA + wgtB * cov_setB;
-    
+
+    %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
+    cov_set = cov_setA;
+    cov_set = cov_set0;
+       cov_set(11:13) = cov_set(11:13) *1e0;  %% this loosy goosy setting actually made dWVfrac/dt > 0 at surface in all latitudes but has low S/N : about 2-3
+       cov_set(11:13) = cov_set(11:13) *1e3;  %% to duplicate settings of synthetic rate retrieval, Feb 4,2022 commit, and has higher S/N, about 6
+    %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   elseif iCovSetNumber == 0

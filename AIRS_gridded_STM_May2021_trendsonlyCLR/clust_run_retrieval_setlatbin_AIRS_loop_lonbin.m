@@ -288,8 +288,10 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46)
+  iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
+  iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
   iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
-  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT
@@ -322,7 +324,12 @@ for iInd = iXX1 : idX : iXX2
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
 
-  iLatX = 11;
+  %% iLatX is used in : build_cov_matrices.m to make the cov_setA, cov_srtB ... cov_set = wgtA cov_setA + wgtB cov_setB
+  %%                  : get_jac_fast.m to set the iVersQRenorm and then qrenorm
+  iLatX = 11; %% midlats
+  iLatX = -1; %% do not any blending!!!     %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
+
+  topts.iLatX = iLatX;
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)

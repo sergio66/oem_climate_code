@@ -37,10 +37,10 @@ if max(save_cov_set.xb_wvz(2,:)) >= 1e-6
     strX = 'UA MLS';
   end
 
-  strX2 = ['warning : even though save_cov_set.xb_wvz(2,:) is nonzero, set by ' strX ' (topts.set_era5_cmip6_airsL3 = ' num2str(topts.set_era5_cmip6_airsL3) ')'];
+  strX2 = ['warning : save_cov_set.xb_wvz(2,:) is nonzero, set by ' strX ' (topts.set_era5_cmip6_airsL3 = ' num2str(topts.set_era5_cmip6_airsL3) ')'];
   disp(strX2);
   if topts.set_era5_cmip6_airsL3 == 0
-    disp('        : it was set by the first guess based on dBT1231/dt in set_CO2_CH4_N2O_ESRL.m                   (topts.iAdjLowerAtmWVfrac > 0)')
+    disp(['        : it was set by the first guess based on dBT1231/dt in set_CO2_CH4_N2O_ESRL.m (topts.iAdjLowerAtmWVfrac = ' num2str(topts.iAdjLowerAtmWVfrac) ')'])
   end
 
   era5_wv_frac_lowestlayer = save_cov_set.xb_wvz(2,:); 
@@ -59,6 +59,7 @@ if max(save_cov_set.xb_wvz(2,:)) >= 1e-6
     hl = legend('UMBC',strX,'this guess'); title('dWVfrac/dt'); xlim([0 0.01])
 
 else
+  iFig = iFig + 1; figure(iFig); clf;  
   dn = 0 : 0.0001 : 1; semilogy(dn,hist(umbc_wv_frac_lowestlayer,dn),'b',dn,hist(guess_wv_frac_lowestlayer,dn),'g','linewidth',2)
     hl = legend('UMBC','this guess'); title('dWVfrac/dt'); xlim([0 0.01])
 end

@@ -1,3 +1,5 @@
+function [wgtA,wgtB] = find_wgtA_wgtB(driver,iLatX)
+
 iWgtVers = 3;
 
 if iWgtVers == 1
@@ -52,7 +54,7 @@ end
 iLatX = 11;
 for ii = 1 : 64
   driver.iLat = ii;
-  find_wgtA_wgtB;
+  [wgtA,wgtB] = find_wgtA_wgtB(driver,iLatX);
   mooA(ii) = wgtA; mooB(ii) = wgtB;
 end
 %}

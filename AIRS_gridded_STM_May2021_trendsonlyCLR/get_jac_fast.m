@@ -84,8 +84,9 @@ iVersQRenorm = 1; %% DEFAULT
 iVersQRenorm = 3;
 iVersQRenorm = topts.iVersQRenorm;
 
-if iLatBin <= 11 | iLatBin >= 64-11
-  %% see iLatX in build_cov_matrices.m
+%% see iLatX in build_cov_matrices.m
+iLatX = topts.iLatX;
+if iLatBin <= iLatX | iLatBin >= 64-iLatX
   iVersQRenorm = 4; %% TESTING POALR REGIONS JAN 2023
 end
 

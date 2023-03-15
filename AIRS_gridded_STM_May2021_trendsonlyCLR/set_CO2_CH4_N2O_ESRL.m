@@ -1,3 +1,5 @@
+%% note this is a SCRIPT
+
 [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
 
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
@@ -37,24 +39,33 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
       dBT1231_WV = 0.0;
     end
     
-    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfrac = %8.6f\n',driver.rateset.rates(1520),dBT1231_WV,iAdjLowerAtmWVfrac);
-    if iAdjLowerAtmWVfrac > eps
+    iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;
+    iAdjLowerAtmWVfracX = 0.0;
+    if abs(iAdjLowerAtmWVfrac-1) < eps
+      iAdjLowerAtmWVfracX = 1.0;
+    elseif iAdjLowerAtmWVfrac > 0
+      %% see Bk 46 : dWVfrac/dt =  1/RH dRH/dt + Lo/Rv 
+      iAdjLowerAtmWVfracX = (1 + iAdjLowerAtmWVfrac/0.8);
+    end
+
+    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfracX = %8.6f\n',driver.rateset.rates(1520),dBT1231_WV,iAdjLowerAtmWVfracX);
+    if iAdjLowerAtmWVfracX > eps
       iVers = 0;  %% before noon Mar 11,2023, only sets LOWEST 2 layers
       iVers = 1;  %% after  noon Mar 11,2023,      sets LOWEST 6 layers
       
       if iVers == 0
-        %% tested and  savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers0_march11_2023.mat
-        xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfrac;
-        xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfrac;
+        %% tested and  savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers0_march11_2023.mat, commit on Sat Mar 11 19:17:59 2023 -0500
+        xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfracX;
+        xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfracX;
       elseif iVers == 1
-        %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers1_march11_2023.mat
-        xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 0/6);
-        xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 1/6);
-        xb(6+length(driver.jacobian.water_i)-2) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 2/6);
-        xb(6+length(driver.jacobian.water_i)-3) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 3/6);
-        xb(6+length(driver.jacobian.water_i)-4) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 4/6);
-        xb(6+length(driver.jacobian.water_i)-5) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 5/6);      
-        xb(6+length(driver.jacobian.water_i)-6) = dBT1231_WV * iAdjLowerAtmWVfrac * (1 - 6/6);
+        %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers1_march11_2023.mat, commits on Sun Mar 12 10:01:58 2023 -0400 and Sun Mar 12 09:51:40 2023 -0400
+        xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 0/6);
+        xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 1/6);
+        xb(6+length(driver.jacobian.water_i)-2) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 2/6);
+        xb(6+length(driver.jacobian.water_i)-3) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 3/6);
+        xb(6+length(driver.jacobian.water_i)-4) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 4/6);
+        xb(6+length(driver.jacobian.water_i)-5) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 5/6);      
+        xb(6+length(driver.jacobian.water_i)-6) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 6/6);
       end
 
     end

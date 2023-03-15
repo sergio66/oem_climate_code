@@ -10,7 +10,7 @@ function [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac);
 if iVersJac ~= 2019
   %% 4608
   %strlatbin = num2str(floor((driver.iibin-1)/72)+1,'%02d');
-  ilatxy = floor((driver.iibin-1)/72)+1;
+  ilatjunkxy = floor((driver.iibin-1)/72)+1;
   
   load /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat
   rlat65 = latB2; rlon73 = -180 : 5 : +180;
@@ -18,7 +18,7 @@ if iVersJac ~= 2019
   rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
   rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
   
-  rlatx = rlat(ilatxy);
+  rlatx = rlat(ilatjunkxy);
 
 else
   addpath /home/sergio/MATLABCODE/PLOTTER
@@ -26,7 +26,7 @@ else
   lats = equal_area_spherical_bands(20);
   rlat = 0.5*(lats(1:end-1) + lats(2:end));
 
-  ilatxy = driver.iibin;
+  ilatjunkxy = driver.iibin;
   rlatx = rlat(driver.iibin);
 end
   
@@ -172,5 +172,5 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fprintf(1,'iiBin %4i latbin %2i latitude %8.6f : ESRL trends co2x = %8.6f ppm/yr n2ox = %8.6f ppb/yr ch4x = %8.6f ppb/yr \n',driver.iibin,ilatxy,rlatx,co2x,n2ox,ch4x)
+fprintf(1,'iiBin %4i latbin %2i latitude %8.6f : ESRL trends co2x = %8.6f ppm/yr n2ox = %8.6f ppb/yr ch4x = %8.6f ppb/yr \n',driver.iibin,ilatjunkxy,rlatx,co2x,n2ox,ch4x)
 

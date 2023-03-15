@@ -61,12 +61,13 @@ settings.iFixTG_NoFit = -1;            %% -1 means retrieve all trace gases [CO2
                                        %% eg [4] means do not do CFC11
 settings.UMBCvsERAjac = -1;            %% do not adjust jacobian, based on handful of clear sky retrieval days
                                        %% [+1] means to adjust
+settings.iLatX = 11;                   %% do latbins 01-11,54-64 using one set of params, 12-53 using another
 
 topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_tracegas'},{'offsetrates'},{'set_era5_cmip6_airsL3'},{'set_era5_cmip6_airsL3_WV_T_O3'},...
         	       {'addco2jacs'},{'obs_corr_matrix'},{'invtype'},{'tie_sst_lowestlayer'},{'iNlays_retrieve'},...
                        {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},...
                        {'iFixTz_NoFit'},{'iFixWV_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'iaSequential'}...
-                       {'resetnorm2one'},{'UMBCvsERAjac'},{'iSergioCO2'},{'iAdjLowerAtmWVfrac'},{'iVersQRenorm'},{'rCoupleT_WV'}];
+                       {'resetnorm2one'},{'UMBCvsERAjac'},{'iSergioCO2'},{'iAdjLowerAtmWVfrac'},{'iVersQRenorm'},{'rCoupleT_WV'},{'iLatX'}];
 
 %disp('settings before')
 %settings
