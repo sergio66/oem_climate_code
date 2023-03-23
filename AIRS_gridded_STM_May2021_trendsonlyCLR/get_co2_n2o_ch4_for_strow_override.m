@@ -57,6 +57,7 @@ if iVersJac == 2019 | iVersJac == 2012
   elseif iVersESRL == 4
     esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
     n2ox = n2ox;
+    n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_cris07,rlatx);
     co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_cris07,rlatx);
     ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_cris07,rlatx);
   end
@@ -77,6 +78,7 @@ elseif iVersJac == 2021 | iVersJac == 2022
   elseif iVersESRL == 4
     esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
     n2ox = n2ox;
+    n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_19,rlatx);
     co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_19,rlatx);
     ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_19,rlatx);
   end
@@ -98,6 +100,7 @@ elseif iVersJac == 2015
   elseif iVersESRL == 4
     esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
     n2ox = n2ox;
+    n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_oco2_07,rlatx);
     co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_oco2_07,rlatx);
     ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_oco2_07,rlatx);
   end
@@ -161,6 +164,7 @@ elseif iVersJac == 2014
 
       esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
       n2ox = n2ox;
+      n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_12,rlatx);
       co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_12,rlatx);
       ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_12,rlatx);
     end

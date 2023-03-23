@@ -54,8 +54,11 @@ if junk == 1
   end
   if junk2 > 0
     saver = ['save -v7.3 ' genericoutname];
-    saver = [saver ' deltaRH deltaRHlat deltaRHunc results resultsO3 resultsO3unc resultsT resultsTunc resultsWV resultsWVunc rlat rlat65 rlon rlon73 topts fracO3 fracWV fracWVunc deltaT deltaTunc save_cov_set chisqrR'];
+    saver = [saver ' deltaRH deltaRHlat deltaRHunc results resultsO3 resultsO3unc resultsT resultsTunc resultsWV resultsWVunc rlat rlat65 rlon rlon73 '];
+    saver = [saver ' topts fracO3 fracWV fracWVunc deltaT deltaTunc save_cov_set chisqrR'];
+    saver = [saver ' rates fits nedt'];
     if iAK > 0
+      deltaRH = real(deltaRH);
       figure(54); waha = squeeze(nanmean(reshape(deltaRH,100,72,64),2));        pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('UMBC dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
       figure(55); waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
       figure(56); waha = save_cov_set.xb_wvz(2,:);                              aslmap(56,rlat65,rlon73,smoothn(reshape(waha,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.015); title('xb(WVfrac(gnd))')

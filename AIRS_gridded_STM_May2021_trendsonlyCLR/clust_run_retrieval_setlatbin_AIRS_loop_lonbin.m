@@ -126,8 +126,10 @@ iDebug = -1;
 ia_OorC_DataSet_Quantile = [+0 04 16]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 ia_OorC_DataSet_Quantile = [+0 05 50]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
 %%
+ia_OorC_DataSet_Quantile = [+0 07 16]; %% ocb_set = 0 : obs fit, dataset = 7, iQuantile = 16    20 year rates, AIRS obs Q16
 ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
-ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(09.97-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -288,10 +290,10 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46)
   iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
   iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
   iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46)
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT
@@ -326,8 +328,8 @@ for iInd = iXX1 : idX : iXX2
 
   %% iLatX is used in : build_cov_matrices.m to make the cov_setA, cov_srtB ... cov_set = wgtA cov_setA + wgtB cov_setB
   %%                  : get_jac_fast.m to set the iVersQRenorm and then qrenorm
-  iLatX = 11; %% midlats
   iLatX = -1; %% do not any blending!!!     %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
+  iLatX = 11; %% midlats
 
   topts.iLatX = iLatX;
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)

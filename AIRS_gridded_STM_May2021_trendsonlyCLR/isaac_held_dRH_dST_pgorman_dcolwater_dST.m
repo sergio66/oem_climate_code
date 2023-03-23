@@ -31,6 +31,10 @@ aslmap_polar(33,rlat65,rlon73,smoothn((reshape(maskLF.*mmwPert - maskLF.*mmw0,72
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% see How closely do changes in surface and column water vapor follow Clausius-Clapeyron scaling in climate-change simulations?
+%% P A O’Gorman, C J Muller, https://core.ac.uk/download/pdf/4426849.pdf, or saved in PDF/change_of_RH_with_stemp_GCM_PGorman.pdf
+%% P A O'Gorman and C J Muller 2010 Environ. Res. Lett. 5 025207 DOI 10.1088/1748-9326/5/2/025207
+
 booU = mmwPert - mmw0; 
 if iAK > 0
   booE = era5.trend_mmw;
@@ -38,9 +42,6 @@ else
   booE = boo;
 end
 
-%% see How closely do changes in surface and column water vapor follow Clausius-Clapeyron scaling in climate-change simulations?
-%% P A O’Gorman, C J Muller, https://core.ac.uk/download/pdf/4426849.pdf, or saved in PDF/change_of_RH_with_stemp_GCM_PGorman.pdf
-%% P A O'Gorman and C J Muller 2010 Environ. Res. Lett. 5 025207 DOI 10.1088/1748-9326/5/2/025207
 figure(36); clf
 booUU = booU./mmw0 * 100;
 booEE = booE./mmw0 * 100;
@@ -70,6 +71,31 @@ elseif iPG == 2
   figure(36); ylim([0 +1]*20)
 end
 plotaxis2; ylabel('d% mmw/dST  %/K');                       xlabel('Latitude'); legend('UMBC','ERA5');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if std(pMean17years.landfrac) < eps
+  [salti, landfrac] = usgs_deg10_dem(pMean17years.rlat, pMean17years.rlon);
+  pMean17years.landfrac = landfrac;
+else
+  landfrac = pMean17years.landfrac;
+end  
+lfmaskA = ones(1,4608);
+lfmaskL = (landfrac > 0);
+lfmaskL = (landfrac == 1);
+lfmaskO = (landfrac == 0);
+
+figure(36); booUU = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,mmw0,mmwPert-mmw0,    results(:,6)');
+figure(36); booEE = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,mmw0,mmwPertERA5-mmw0,era5.trend_stemp);
+plot(rlat,smooth(booUU.all,10),'r',rlat,smooth(booEE.all,10),'r--',rlat,smooth(booUU.ocean,10),'b',rlat,smooth(booEE.ocean,10),'b--',rlat,smooth(booUU.land,10),'g',rlat,smooth(booEE.land,10),'g--','linewidth',2);
+if iPG == 0 | iPG == 1
+  figure(36); ylim([-1 +1]*20)
+elseif iPG == 2
+  figure(36); ylim([0 +1]*20)
+end
+plotaxis2; ylabel('d% mmw/dST  %/K');                       xlabel('Latitude'); legend('UMBC all','ERA5 all','UMBC ocean','ERA5 ocean','UMBC land','ERA5 land','location','best','fontsize',10);
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear junk;
 junk.color = 'k'; junk.iNorS = +1; aslmap_polar(34,rlat65,rlon73,10*smoothn((reshape(booU,72,64)') ,1), [-90 +90],[-180 +180],junk); title('UMBC dmmw/dt mm/decade');  caxis([-1 +1]*2); colormap(llsmap5)

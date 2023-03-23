@@ -8,6 +8,8 @@ addpath /asl/matlib/maps
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fname = '/asl/models/gistemp4/gistemp1200_GHCNv4_ERSSTv5.nc';
+fname = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/GISTEMP/F77/gistemp1200_ERSST.nc';
+
 giss = read_netcdf_lls(fname);
 
 %% want to do doy since 01/01/1800

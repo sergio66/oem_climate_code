@@ -78,13 +78,21 @@ if narginS == 3
    if (length(intersect(topts_allowedparams,optvar{i})) == 1)
      eval(sprintf('settings.%s = topts.%s;', optvar{i}, optvar{i}));
      str = ['junk = topts.' optvar{i} ';']; eval(str)
-     fprintf(1,'  check_settings.m : will use user setting %30s = %4i \n',optvar{i},junk(1));
+     fprintf(1,'  check_settings.m : will use user topt setting %30s = %4i \n',optvar{i},junk(1));
    else
-     fprintf(1,'topts param not in allowed list ... %s \n',optvar{i});
+     fprintf(1,'topts param not in allowed settings list ... %s \n',optvar{i});
      error('quitting ');
    end
  end
 end
+
+%xyz = fieldnames(topts); length(xyz)
+%topts
+
+topts = settings;
+%topts
+%xyz = fieldnames(topts); length(xyz)
+%keyboard_nowindow
 
 %disp('settings after')
 %settings

@@ -3,32 +3,6 @@ addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /asl/matlib/aslutil/
 
-%{
-please look at the comments in eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09_V2/clust_put_together_jacs_cldERA5.m
-there I proclaim,
-
-if iOldORNew == 20
-  % this comes from ~/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/cluster_driver_put_together_globalavg_profiles.m
-  %   which uses data from clustmake_whole_12month_ERA5.m in that dir. In that file
-  %   usethese = find(era5_X >= rlon73(indX) & era5_X < rlon73(indX+1) & era5_Y >= rlat65(indY) & era5_Y < rlat65(indY+1));
-  %  and ALSO does partitioning by quantiles so need to look at this
-  % [h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
-
-  % this comes from ~/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS//driver_makeavgprofile_ERA5_monthly_desc_or_asc.m
-  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_atm_N_cld_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
-else
-  error('unknown iOldORNew')
-end
-
-so in other words, I have already attempted to make cloudy rtp files, BASED ON QUANTILES
-%}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if ~exist('iCldORClr')
-  iCldORClr = -1; %% clear only
-  iCldORClr = +1; %% include cloud fields
-end
-
 %% see eg ~/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_AIRS_STM_Oct2020_allstarts_Jan20XY/call_save_split_apart_rtp_howard_bins.m
 [hERAI,ha,pERAI,pa] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002/summary_17years_all_lat_all_lon_2002_2019.rtp');
 
@@ -41,18 +15,10 @@ iStartY = 2012; iStartYM = 05; iStopY = 2019; iStopYM = 04; %% CRIS NSR
 iStartY = 2002; iStartYM = 09; iStopY = 2022; iStopYM = 08; 
 
 %% likely made by /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m
-if iCldORClr == -1
-  if ~exist('all') & iStopY == 2021
-    load ERA5_atm_data_2002_09_to_2021_08_desc.mat
-  elseif ~exist('all') & iStopY == 2022
-    load ERA5_atm_data_2002_09_to_2022_08_desc.mat
-  end
-elseif iCldORClr == +1
-  if ~exist('all') & iStopY == 2021
-    load ERA5_atm_N_cld_data_2002_09_to_2021_08_desc.mat
-  elseif ~exist('all') & iStopY == 2022
-    load ERA5_atm_N_cld_data_2002_09_to_2022_08_desc.mat
-  end
+if ~exist('all') & iStopY == 2021
+  load ERA5_atm_data_2002_09_to_2021_08_desc.mat
+elseif ~exist('all') & iStopY == 2022
+  load ERA5_atm_data_2002_09_to_2022_08_desc.mat
 end
 %% likely made by /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m
 
@@ -65,26 +31,14 @@ if round(length(ind)/12) ~= length(ind)/12
 end
 
 %% these are actually DESC
-if iCldORClr == -1 
-  if length(ind)/12 == 19 & iStartY == 2002 & iStopY == 2021
-    foutNyearaverageIP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.ip.rtp'];
-    foutNyearaverageOP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.op.rtp'];
-    foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp'];
-  else
-    foutNyearaverageIP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.ip.rtp'];
-    foutNyearaverageOP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.op.rtp'];
-    foutNyearaverageRP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.rp.rtp'];
-  end
-elseif iCldORClr == +1 
-  if length(ind)/12 == 19 & iStartY == 2002 & iStopY == 2021
-    foutNyearaverageIP = ['summary_atm_N_cld_19years_all_lat_all_lon_2002_2021_monthlyERA5.ip.rtp'];
-    foutNyearaverageOP = ['summary_atm_N_cld_19years_all_lat_all_lon_2002_2021_monthlyERA5.op.rtp'];
-    foutNyearaverageRP = ['summary_atm_N_cld_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp'];
-  else
-    foutNyearaverageIP = ['summary_atm_N_cld_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.ip.rtp'];
-    foutNyearaverageOP = ['summary_atm_N_cld_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.op.rtp'];
-    foutNyearaverageRP = ['summary_atm_N_cld_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.rp.rtp'];
-  end
+if length(ind)/12 == 19 & iStartY == 2002 & iStopY == 2021
+  foutNyearaverageIP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.ip.rtp'];
+  foutNyearaverageOP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.op.rtp'];
+  foutNyearaverageRP = ['summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp'];
+else
+  foutNyearaverageIP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.ip.rtp'];
+  foutNyearaverageOP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.op.rtp'];
+  foutNyearaverageRP = ['summary_' num2str(length(ind)/12,'%02d') 'years_all_lat_all_lon_' num2str(iStartY) '_' num2str(iStopY) '_monthlyERA5.rp.rtp'];
 end
 
 if ~exist(foutNyearaverageIP)
@@ -99,28 +53,6 @@ if ~exist(foutNyearaverageIP)
     yavg.rlat(ii)  = all.rlat(ii);
   end
 
-  if iCldORClr == +1 
-    for ii = 1 : 4608
-      boo = find(all.ctype(:,ii)  == 201 & all.cngwat(:,ii) > 0);
-      boo = find(all.ctype2(:,ii) == 101 & all.cngwat2(:,ii) > 0 & all.ctype(:,ii) == 201 & all.cngwat(:,ii) > 0);
-        yavg.ctype(ii)  = 201;
-        yavg.cfrac(ii)  = nanmean(all.cfrac(boo,ii));
-        yavg.cngwat(ii) = nanmean(all.cngwat(boo,ii));
-        yavg.cpsize(ii) = nanmean(all.cpsize(boo,ii));
-        yavg.cprtop(ii) = nanmean(all.cprtop(boo,ii));
-        yavg.cprbot(ii) = nanmean(all.cprbot(boo,ii));
-
-        yavg.ctype2(ii)  = 101;
-        yavg.cfrac2(ii)  = nanmean(all.cfrac2(boo,ii));
-        yavg.cngwat2(ii) = nanmean(all.cngwat2(boo,ii));
-        yavg.cpsize2(ii) = nanmean(all.cpsize2(boo,ii));
-        yavg.cprtop2(ii) = nanmean(all.cprtop2(boo,ii));
-        yavg.cprbot2(ii) = nanmean(all.cprbot2(boo,ii));
-
-        yavg.cfrac12(ii) = nanmean(all.cfrac12(boo,ii));
-    end
-  end
-
   yavg.spres = pERAI.spres;
   yavg.solzen = pERAI.solzen;
   yavg.satzen = pERAI.satzen;
@@ -132,10 +64,9 @@ if ~exist(foutNyearaverageIP)
   yavg.emis = pERAI.emis;
   yavg.efreq = pERAI.efreq;
   yavg.rho = pERAI.rho;
-  yavg.landfrac= pERAI.landfrac;
 
-  tS = utc2taiSergio(iStartY,iStartYM,01,00);
-  tE = utc2taiSergio(iStopY, iStopYM, 31,23.99);
+  tS = utc2taiSergio(2002,09,01,00);
+  tE = utc2taiSergio(2021,08,31,23.99);
   
   [yy,mm,dd,hh] = tai2utcSergio(yavg.rtime(ind));
   tS = utc2taiSergio(iStartY,iStartYM,01,00);
@@ -200,23 +131,9 @@ if ~exist(foutNyearaverageIP)
   scatter_coast(yavg.rlon,yavg.rlat,50,ppmv2(i500mb,:))
   scatter_coast(yavg.rlon,yavg.rlat,50,ppmv4(i500mb,:))
   scatter_coast(yavg.rlon,yavg.rlat,50,ppmv6(i500mb,:))
-
-  if iCldORClr > 0
-    addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
-    pnew = fix_clouds_as_needed(pnew);
-  end 
   rtpwrite(foutNyearaverageOP,hnew,hax,pnew,pax)
  
-  sartaer = ['!' topts.sarta ' fin=' foutNyearaverageOP '     fout=' foutNyearaverageRP]; 
-  eval(sartaer);
-
-  %{
-  %% if problems here
-  addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
-  print_cloud_params(havg,yavg,139);
-  print_cloud_params(hnew,pnew,139);
- 
-  %}
+  sartaer = ['!' topts.sarta ' fin=' foutNyearaverageOP '     fout=' foutNyearaverageRP]; eval(sartaer);
 
   [hnew,hax,pnew,pax] = rtpread(foutNyearaverageRP);
   scatter_coast(yavg.rlon,yavg.rlat,50,rad2bt(1231,pnew.rcalc(1520,:)))  

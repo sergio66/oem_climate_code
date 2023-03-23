@@ -1,0 +1,80 @@
+https://data.giss.nasa.gov/gistemp/
+
+Analysis Source code : https://data.giss.nasa.gov/gistemp/sources_v4/
+  gets you https://data.giss.nasa.gov/gistemp/sources_v4/gistemp4.0.tar.gz
+
+What I need : f77 SOurce Code
+mkdir F77
+cd F77
+wget https://data.giss.nasa.gov/pub/gistemp/README.txt
+wget https://data.giss.nasa.gov/pub/gistemp/mkTsMap.f
+wget https://data.giss.nasa.gov/pub/gistemp/SBBX_to_nc.f
+wget https://data.giss.nasa.gov/pub/gistemp/SBBX_to_1x1.f
+wget https://data.giss.nasa.gov/pub/gistemp/SBBX_to_txt.f
+
+What I need : data
+mkdir DATA
+cd DATA
+
+1: SBBX.Tsurf1200  (44 MB) surf air temp (1880-present) 1200km smoothing
+2: SBBX.Tsurf250   (19 MB) surf air temp (1880-present)  250km smoothing
+3d: SBBX.ERSSTv5    (35 MB) sea surf temp. data (1880-present) - currently used
+
+wget https://data.giss.nasa.gov/pub/gistemp/SBBX1880.Ts.GHCNv4.1200.gz
+wget https://data.giss.nasa.gov/pub/gistemp/SBBX1880.Ts.GHCNv4.250.gz
+wget https://data.giss.nasa.gov/pub/gistemp/SBBX.ERSSTv5.gz
+
+wget https://data.giss.nasa.gov/pub/gistemp/gistemp1200_GHCNv4_ERSSTv5.zarr.tar.gz <<<<<<<<<< MOST IMPORTANT
+[sergio@taki-usr2 DATA]$ gunzip gistemp1200_GHCNv4_ERSSTv5.zarr.tar.gz
+[sergio@taki-usr2 DATA]$ tar -xvf gistemp1200_GHCNv4_ERSSTv5.zarr.tar
+[sergio@taki-usr2 DATA]$ cd gistemp1200_GHCNv4_ERSSTv5.zarr
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+now compile F77 code for primetime
+see https://data.giss.nasa.gov/pub/gistemp/README.txt
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ The new conversion-to-netcdf program                              + 
++ ------------------------------------                              +
++ The following script produced the available netcdf files:         +
++                                                                   +    
++ ln SBBX.ERSSTv5 ERSST_DATA                                        +
++ ln SBBX1880.Ts.GHCN.CL.PA.1200 TS1200_DATA                        +
++ ln SBBX1880.Ts.GHCN.CL.PA.250  TS250_DATA                         +
++ gfortran -fconvert=big-endian SBBX_to_ncint.f -o SBBX_to_nc.exe \ +
++          -L/usr/lib64 -lnetcdf -lnetcdff -I/usr/include           +
++ ./SBBX_to_nc.exe 1200 5 1880 2016 9 gistemp1200_ERSST.nc          +
++ ./SBBX_to_nc.exe  250 0 1880 2016 9 gistemp250.nc                 +
++                                                                   +  
++ The arguments are in order:                                       +
++ smoothing radius            250 or 1200                           +
++ ocean index                 1=Hadley/Reynolds 3=ERSST 4=ERSSTv4   +
++ first year of series        1880 or later             5=ERSSTv5   +
++ last year month of series                                         +
++ name of output file                                               +
++                                                                   + 
++ Any other parameter changes have to be made in SBBX_to_ncint.f    +
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+so for us
+cd F77
+
+ ln -s ../DATA/SBBX1880.Ts.GHCNv4.250 TS250_DATA
+ ln -s ../DATA/SBBX1880.Ts.GHCNv4.1200 TS1200_DATA
+ #ln -s ../DATA/SBBX.ERSSTv5 ERSST_DATA                                        
+ ln -s ../DATA/SBBX.ERSSTv5 ERSSTv5_DATA
+
+ gfortran -fconvert=big-endian SBBX_to_nc.f -o SBBX_to_nc.exe -L/usr/lib64 -lnetcdf -lnetcdff -I/usr/include 
+    oops has an error
+
+  [sergio@taki-usr2 F77]$ nf-config --fc
+  ifort
+
+  ifort -convert big_endian SBBX_to_nc.f -o SBBX_to_nc.exe -L/usr/lib64 -lnetcdf -lnetcdff -I/usr/include
+  ifort  -check bounds -g -traceback -debug inline-debug-info -check all -fp-stack-check -convert big_endian SBBX_to_nc.f -o SBBX_to_nc.exe -L/usr/lib64 -lnetcdf -lnetcdff -I/usr/include
+
+ ./SBBX_to_nc.exe 1200 5 2002 2022 12 gistemp1200_ERSST.nc          
+ ./SBBX_to_nc.exe  250 5 2002 2022 12 gistemp250_ERSST.nc
+

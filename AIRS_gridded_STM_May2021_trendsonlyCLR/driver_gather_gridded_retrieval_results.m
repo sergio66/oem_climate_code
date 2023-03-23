@@ -300,6 +300,14 @@ if iJunk < 0
   return
 end
 
+plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
+playsN = plevs(1:100)-plevs(2:101);
+playsD = log(plevs(1:100)./plevs(2:101));
+plays = playsN./playsD;
+plays = flipud(plays);
+
+clear pavg
+
 iDoAgain = +1;
 while iDoAgain > 0
   for ii = 1 : 64*72
@@ -352,7 +360,15 @@ while iDoAgain > 0
       results(ii,1:6)    = oem.finalrates(1:6);
       resultsunc(ii,1:6) = oem.finalsigs(1:6);
       [mmn,nn] = size(oem.ak_water);
-  
+
+      if length(jacobian.wvjaclays_used) == iNumLay
+        for iii = 1 : length(jacobian.wvjaclays_used)
+          %iavg = jacobian.wvjaclays_used{iNumLay}-6;
+          iavg = jacobian.wvjaclays_used{iii}-jacobian.wvjaclays_offset;
+          pavg(iii) = mean(plays(iavg));
+        end
+      end
+
       save_cov_set.cov_set(:,ii)   = oem.cov_set;
       save_cov_set.fmat(:,ii)      = sqrt(diag(oem.fmat));
       save_cov_set.reg_type        = oem.reg_type;
@@ -459,8 +475,16 @@ while iDoAgain > 0
       end   %% if iAK > 0
       %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%%
 
-      junknoise = nan(2645,1);
-      junknoise(jacobian.chanset) = diag(oem.se);
+      junknoise  = nan(2645,1);
+      junknoise2 = nan(2645,1);
+      junknoise(jacobian.chanset)  = sqrt(diag(oem.se));
+      junknoise2(jacobian.chanset) = rateset.unc_rates(jacobian.chanset);
+      junknoise2                   = rateset.unc_rates;
+
+      %% depending on the lag1 correction, maybe junknoise and junknoise2 are different
+      if sum([junknoise(jacobian.chanset)-junknoise2(jacobian.chanset)]) > eps
+        fprintf(1,'WARNING fov %4i we have junknoise and junknoise2 differing \n',ii)
+      end
   
       if isfield(oem,'spectral_deltan00')
         spectral_deltan00(:,ii) = oem.spectral_deltan00;
@@ -468,7 +492,9 @@ while iDoAgain > 0
 
       rates(:,ii) = rateset.rates;
       fits(:,ii)  = oem.fit';
-      nedt(:,ii)  = sqrt(junknoise);
+      nedt(:,ii)  = junknoise;  %% will have lots of NaNs since based on oem.se which only used selected channels
+      nedt(:,ii)  = junknoise2; %% should be nicely filled in
+
     elseif exist(fname) > 0 & iaFound(ii) == 1
       %% do nothing, things are cool
     else
@@ -522,7 +548,9 @@ while iDoAgain > 0
     jett = jet(64); jett(1,:) = 1;
     figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
     figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jett); 
+    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  
+      title([num2str(sum(iaFound(:))) ' / 4608 = ' num2str(100*sum(iaFound(:))/4608) ' % made so far']);  
+      xlabel('Longitude'); ylabel('Latitude'); colormap(jett); 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
       iDoAgain = +1;
@@ -549,18 +577,6 @@ a = load(fnamelastloaded);
 fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f \n',fnamelastloaded,a.oem.xb(1:6))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
-playsN = plevs(1:100)-plevs(2:101);
-playsD = log(plevs(1:100)./plevs(2:101));
-plays = playsN./playsD;
-plays = flipud(plays);
-
-clear pavg
-for ii = 1 : iNumLay
-  %iavg = jacobian.wvjaclays_used{iNumLay}-6;
-  iavg = jacobian.wvjaclays_used{ii}-jacobian.wvjaclays_offset;
-  pavg(ii) = mean(plays(iavg));
-end
 
 for ii = 1 : 12;  figure(ii); clf; end;
 

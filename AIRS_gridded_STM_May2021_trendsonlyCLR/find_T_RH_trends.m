@@ -213,6 +213,7 @@ for ii = 1 : length(rlat)
 end
 
 figure(28);
+deltaRHlat = real(deltaRHlat);
 pcolor(rlat,pavgLAY(1:97,3000),smoothn(deltaRHlat(:,1:97)',1)); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaRHlat)); junk = cos(rlat) * ones(1,100);
 area_wgtRH = nansum(deltaRHlat.*junk,1)./nansum(junk,1);

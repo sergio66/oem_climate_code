@@ -8,7 +8,7 @@
 %   [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
 % end
 
-[m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
+[m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
 fprintf(1,'in set_the_jacobians.m nlays = %2i \n',nlays)
 %keyboardstr = 'nlays'; keyboard_nowindow
 

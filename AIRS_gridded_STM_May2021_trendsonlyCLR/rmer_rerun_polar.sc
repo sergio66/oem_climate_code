@@ -1,3 +1,5 @@
+date
+
 ls -lt Output/Quantile05/test*.mat | wc -l
 echo "removing latbins 01 .. 11 == first 11x72 = 792 mat files"
 ## 11 x 72 === 792

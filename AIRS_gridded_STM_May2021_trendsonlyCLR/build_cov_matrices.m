@@ -7,6 +7,10 @@ wnorm = driver.qrenorm(driver.jacobian.water_i);
 tnorm = driver.qrenorm(driver.jacobian.temp_i);
 oznorm = driver.qrenorm(driver.jacobian.ozone_i);
 
+iLatX = 07;
+iLatX = 11;
+iLatX = settings.iLatX;
+
 iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1; %% this is what we had upto Apr 2022, which was the JPL Sounder team Meeting, dataset=4,Quantile=16 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) did not square fmat, 
                                                %% 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 2; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) fmat -> fmat.*fmat
@@ -132,7 +136,15 @@ elseif driver.i16daytimestep < 0
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-3     05*1E-3  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * too loosy goosy * 
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too tight *
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        01*1E-2     05*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, * pretty good but might be little too loose *
-  
+
+    %%%%% March 2023  
+    cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2022/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+    cov_set0 = cov_set;
+    cov_set = cov_set0;
+    cov_set(11:13) = cov_set0(11:13) .* [1e2 1 1e3]/20;   %% loosen tikonov params
+      cov_set(2:3) = cov_set0(2:3)*2;                     %% loosen cov
+      cov_set(5:6) = cov_set0(5:6)*2;                     %% loosen cov
+
   elseif iCovSetNumber == 20.1
     %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%% %%%% YES YES YES for ERA5 cal %%%%%
     cov_set = [1.0  0.05*1       0.09*1        1/2        0.01              0.01              1/2      0.01            0.01                1/2        05*1E-2     02*1E-2  05*1E-2];  %% Nov 2022 -- 2002/09-2022/08, *** bloody good ocb_set=1 testing, Q=16,dataset=9 
@@ -185,10 +197,6 @@ elseif driver.i16daytimestep < 0
 
 %%               sigT_t    sigT_s                sigWV_t   sigWV_s             sigO3_t   sigO3_s
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
-
-    iLatX = 07;
-    iLatX = 11;
-    iLatX = settings.iLatX;
 
     fprintf(1,'  in build_cov_matrices.m, iLatX = %2i \n',iLatX)
 
@@ -245,7 +253,7 @@ elseif driver.i16daytimestep < 0
           cov_setB(11:13) = cov_set0(11:13) .* [1.0e4 1.0e+4 1.0e2]  *1e-1;  %% trying to figure out polar  Feb 2023 worse
           cov_setB(11:13) = cov_set0(11:13) .* [2.0e3 1.0e+0 1.0e+1] *5e-2;  %% trying to figure out polar  Feb 2023 better ***
           cov_setB(11:13) = cov_set0(11:13) .* [5.0e2 5.0e-1 1.0e+1] *5e-2;  %% trying to figure out polar  Feb 2023 better
-          cov_setB(11:13) = cov_set0(11:13) .* [2.0e2 2.0e-1 5.0e+0] *5e-2;  %% trying to figure out polar  Feb 2023 better
+          cov_setB(11:13) = cov_set0(11:13) .* [2.0e2 2.0e-1 5.0e+0] *5e-2;  %% trying to figure out polar  Feb 2023 better, used in /asl/s1/sergio/JUNK/test7_guessstartWV_Vers1_march11_2023.mat, git commit Sun Mar 12 09:51:40 2023, Sun Mar 12 10:01:58 2023
           cov_setB([4 7 10]) = 1/8;
           cov_setB([2]) = 1.0;
           cov_setB([3]) = 1.0;
@@ -258,10 +266,48 @@ elseif driver.i16daytimestep < 0
     cov_set = wgtA * cov_setA + wgtB * cov_setB;
 
     %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
+    %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
+
+    %{
     cov_set = cov_setA;
-    cov_set = cov_set0;
-       cov_set(11:13) = cov_set(11:13) *1e0;  %% this loosy goosy setting actually made dWVfrac/dt > 0 at surface in all latitudes but has low S/N : about 2-3
-       cov_set(11:13) = cov_set(11:13) *1e3;  %% to duplicate settings of synthetic rate retrieval, Feb 4,2022 commit, and has higher S/N, about 6
+
+    cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2022/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
+    cov_set0 = cov_set;
+       cov_set(11:13) = cov_set0(11:13) *1e0;            %% this loosy goosy setting actually made dWVfrac/dt > 0 at surface in all latitudes but has low S/N : about 2-3
+       cov_set(11:13) = cov_set0(11:13) *1e3;            %% to duplicate settings of synthetic rate retrieval, Feb 4,2022 commit, and has higher S/N, about 6, but ERA5/UMBC dWVfrac/dt is about x2
+       cov_set(11:13) = cov_set0(11:13) *1e1;            %% loosen things, not bad the ERA5/UMBC troposphere WVfrac ratio now 1.14 but things too wiggly at bottom
+       
+       %% this is not bad, but have not really improved dcolW/dt 
+       cov_set = cov_set0;
+       cov_set(11:13) = cov_set0(11:13) .* [1e2 1 1e3];  %% loosen tikonov params
+          cov_set(2:3) = cov_set0(2:3)/5;                %% tighten cov
+          cov_set(5:6) = cov_set0(5:6) .* [1/4 1/2];     %% tighten cov
+
+       cov_set = cov_set0;
+       cov_set(11:13) = cov_set0(11:13) .* [1e2 1 1e3]/10;  %% loosen tikonov params
+          cov_set(2:3) = cov_set0(2:3)/1;                   %% leave cov alone
+          cov_set(5:6) = cov_set0(5:6) .* [1 1];            %% leave cov alone
+
+       %%% way toooooo loooosey goooosey
+       cov_set = cov_set0;
+       cov_set(11:13) = cov_set0(11:13) .* [1e2 1 1e3]/100; %% loosen tikonov params
+          cov_set(2:3) = cov_set0(2:3)*10;                   %% loosen cov
+          cov_set(5:6) = cov_set0(5:6)*10;                   %% loosen cov
+
+       %%% way toooooo loooosey goooosey
+       cov_set = cov_set0;
+       cov_set(11:13) = cov_set0(11:13) .* [1e2 1 1e3]/20;   %% loosen tikonov params
+          cov_set(2:3) = cov_set0(2:3)*2;                    %% loosen cov
+          cov_set(5:6) = cov_set0(5:6)*2;                    %% loosen cov
+       cov_set(11:13) = cov_set0(11:13) .* [1e2 1 1e3]/50;   %% loosen tikonov params
+          cov_set(2:3) = cov_set0(2:3)*5;                    %% loosen cov
+          cov_set(5:6) = cov_set0(5:6)*5;                    %% loosen cov
+       cov_set(11:13) = cov_set0(11:13) .* [1e2 1 1e3]/50;   %% loosen tikonov params
+          cov_set(2:3) = cov_set0(2:3)*2.5;                  %% loosen cov
+          cov_set(5:6) = cov_set0(5:6)*2.5;                  %% loosen cov
+    %}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
     %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

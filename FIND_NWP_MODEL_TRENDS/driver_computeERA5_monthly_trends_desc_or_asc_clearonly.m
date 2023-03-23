@@ -31,11 +31,6 @@ iNumYears = 07; %% 2012/05-2019/04
 iNumYears = 20; %% 2002/09-2022/08
 iaMax = iNumYears*12;
 
-if ~exist('iCldORClr')
-  iCldORClr = -1; %% clear only
-  iCldORClr = +1; %% include cloud fields
-end
-
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
 for ii = 1 : iaMax
   if iDorA > 0
@@ -99,27 +94,6 @@ for ii = 1 : iaMax
     all.RH(ii,:,:)    = a.pnew_op.RH;
     all.TwSurf(ii,:)  = a.pnew_op.TwSurf;
     all.RHSurf(ii,:)  = a.pnew_op.RHSurf;
-    
-    if iCldORClr == +1
-      hunk = a.hnew_op;
-      junk = a.pnew_op;
-      %junk = find_average_rtp(hunk,junk);
-      all.ctype(ii,:)  = a.pnew_op.ctype;
-      all.cfrac(ii,:)  = a.pnew_op.cfrac;
-      all.cpsize(ii,:) = a.pnew_op.cpsize;
-      all.cngwat(ii,:) = a.pnew_op.cngwat;
-      all.cprtop(ii,:) = a.pnew_op.cprtop;
-      all.cprbot(ii,:) = a.pnew_op.cprbot;
-
-      all.ctype2(ii,:)  = a.pnew_op.ctype2;
-      all.cfrac2(ii,:)  = a.pnew_op.cfrac2;
-      all.cpsize2(ii,:) = a.pnew_op.cpsize2;
-      all.cngwat2(ii,:) = a.pnew_op.cngwat2;
-      all.cprtop2(ii,:) = a.pnew_op.cprtop2;
-      all.cprbot2(ii,:) = a.pnew_op.cprbot2;
-      
-      all.cfrac12(ii,:)  = a.pnew_op.cfrac12;
-    end
   else
     iaFound(ii) = 0;
   end
@@ -133,15 +107,42 @@ monitor_memory_whos
 comment = 'see computeERA5_trends.m';
 comment = 'see driver_computeERA5_monthly_trends_desc_or_asc.m';
 
-find_computeERA5_monthly_foutname
-
-%%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
+foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
 fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
-saver = ['save ' foutjunk ' comment all'];
-eval(saver);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if iNumYears == 12
+  if iDorA > 0
+    save -v7.3 ERA5_atm_data_2002_09_to_2014_08_desc.mat comment all
+  else
+    save -v7.3 ERA5_atm_data_2002_09_to_2014_08_asc.mat comment all
+  end
+elseif iNumYears == 18
+  if iDorA > 0
+    %save -v7.3 ERA5_atm_data_2002_09_to_2019_08_desc.mat comment all
+    save -v7.3 ERA5_atm_data_2002_09_to_2020_08_desc.mat comment all
+  else
+    %save -v7.3 ERA5_atm_data_2002_09_to_2019_08_asc.mat comment all
+    save -v7.3 ERA5_atm_data_2002_09_to_2020_08_asc.mat comment all
+  end
+elseif iNumYears == 19
+  if iDorA > 0
+%    save -v7.3 ERA5_atm_data_2002_09_to_2021_07_desc.mat comment all
+    save -v7.3 ERA5_atm_data_2002_09_to_2021_08_desc.mat comment all
+  else
+%    save -v7.3 ERA5_atm_data_2002_09_to_2021_07_asc.mat comment all
+    save -v7.3 ERA5_atm_data_2002_09_to_2021_08_asc.mat comment all
+  end
+elseif iNumYears == 20
+  if iDorA > 0
+    save -v7.3 ERA5_atm_data_2002_09_to_2022_08_desc.mat comment all
+  else
+    save -v7.3 ERA5_atm_data_2002_09_to_2022_08_asc.mat comment all
+  end
+else
+  iNumYears
+  error('unknown iNumYears .. accepting 12,18,19')
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('ERA5 mean stemp')
@@ -202,10 +203,44 @@ trend_rlon = all.rlon;
 trend_rlat64 = rlat; trend_rlon72 = rlon;
 %trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
 
-find_computeERA5_monthly_trends_foutname
-fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
-saver = ['save ' fout_trendjunk ' comment trend*'];
-eval(saver);
+if iNumYears == 12
+  if iDorA > 0
+    save ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat comment trend*
+  else
+    save ERA5_atm_data_2002_09_to_2014_08_trends_asc.mat comment trend*
+  end
+elseif iNumYears == 07
+  if iDorA > 0
+    save ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat comment trend*
+  else
+    save ERA5_atm_data_2012_05_to_2014_04_trends_asc.mat comment trend*
+  end
+elseif iNumYears == 18
+  if iDorA > 0
+    %save ERA5_atm_data_2002_09_to_2019_08_trends_desc.mat comment trend*
+    save ERA5_atm_data_2002_09_to_2020_08_trends_desc.mat comment trend*
+  else
+    %save ERA5_atm_data_2002_09_to_2019_08_trends_asc.mat comment trend*
+    save ERA5_atm_data_2002_09_to_2020_08_trends_asc.mat comment trend*
+  end
+elseif iNumYears == 19
+  if iDorA > 0
+    %save ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
+    save ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat comment trend*
+  else
+    %save ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
+    save ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat comment trend*
+  end
+elseif iNumYears == 20
+  if iDorA > 0
+    save ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat comment trend*
+  else
+    save ERA5_atm_data_2002_09_to_2022_08_trends_asc.mat comment trend*
+  end
+else
+  iNumYears
+  error('unknown iNumYears .. accepting 07, 12,18,19,20')
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

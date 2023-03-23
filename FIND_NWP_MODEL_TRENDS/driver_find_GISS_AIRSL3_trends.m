@@ -8,11 +8,17 @@ addpath /asl/matlib/maps
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fname = '/asl/models/gistemp4/gistemp1200_GHCNv4_ERSSTv5.nc';
+fname = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/GISTEMP/F77/gistemp1200_ERSST.nc';
+
+figure(1); clf; 
+
 giss = read_netcdf_lls(fname);
 
 %% want to do doy since 01/01/1800
 doyS = change2days(2002,09,01,1800);
 doyE = change2days(2019,08,31,1800);
+yE = 2022;
+doyE = change2days(yE,08,31,1800);
 
 plot(giss.time)
   line([0 length(giss.time)],[doyS doyS]);
@@ -34,13 +40,14 @@ for ii = 1 : 180
     if length(aha) > 20
       [B stats] = Math_tsfit_lin_robust(double(giss.time(oo(aha))),double(data(oo(aha))),4);
       giss_trend(ii,jj) = B(2);  
-      giss_trend_err(ii,jj) = stats(2);  
+      giss_trend_err(ii,jj) = stats.se(2);  
     else
       giss_trend(ii,jj) = NaN;  
       giss_trend_err(ii,jj) = NaN;
     end
   end
 end
+fprintf(1,'\n');
 warning on
 
 simplemap(Y(:),X(:),giss_trend(:))
@@ -49,6 +56,10 @@ caxis([-0.1 +0.1])
 
 aslmap(1,-90:2:+90,-180:2:+180,smoothn(giss_trend',1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt GISS K/yr'); 
 caxis([-0.1 +0.1]);
+
+addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+load llsmap5
+colormap(llsmap5)
 
 %% so now interp2 to the Howard tiles
 %load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat
@@ -61,15 +72,17 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 giss_trend4608     = interp2(Y,X,giss_trend,Y4608,X4608);
 giss_trend_err4608 = interp2(Y,X,giss_trend_err,Y4608,X4608);
 
-aslmap(1,rlat65,rlon73,smoothn(giss_trend4608',1), [-90 +90],[-180 +180]);  colormap(usa2);  title('d/dt GISS K/yr'); 
-caxis([-0.1 +0.1]);
+aslmap(1,rlat65,rlon73,smoothn(giss_trend4608',1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt GISS K/yr'); 
+caxis([-1 +1] * 0.15);
 
 comment = 'see find_GISS_AIRSL3_trends.m';
-save ChrisHTrends/giss_trends.mat giss_* X Y comment
-
+saver = ['save ChrisHTrends/giss_trends.mat giss_* X Y comment'];  %% this is 2002-2019
+saver = ['save ChrisHTrends/giss_trends_2002_' num2str(yE) '.mat giss_* X Y comment'];  %% this is 2002-2019
+eval(saver);
+error('nyuk')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-x = load(‘/home/chepplew/data/rates_anomalies/tiled/airs_l3_skt_d_fit_results.mat’)
+x = load('/home/chepplew/data/rates_anomalies/tiled/airs_l3_skt_d_fit_results.mat')
 airs_time = (1:220)*30;
 oo = 1:216;  %% 12months*18years = 216
 warning off

@@ -1,7 +1,9 @@
-function [driver,iVersJac,iXJac,topts] = set_driver_jacfile(driver0,settings,topts0);
+function [driver,iVersJac,iOldORNew,iXJac,topts] = set_driver_jacfile(driver0,settings,topts0);
 
 driver = driver0;
 topts  = topts0;
+
+iOldORNew = -1;
 
 iXJac = settings.iXJac;
 %if driver.i16daytimestep > 0
@@ -49,9 +51,9 @@ if driver.i16daytimestep < 0
     elseif settings.dataset == 7
       iVersJac = 2022;   %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
       iVersJac = 2021;   %% ERA5 CLR from 2002-2021
-     elseif settings.dataset == 8
+    elseif settings.dataset == 8
       iVersJac = 2015;   %% OCO2 2015-2021, 7 years
-     elseif settings.dataset == 9
+    elseif settings.dataset == 9
 
       %% Feb 9, 2023 commit
       if settings.ocb_set == 1
@@ -65,12 +67,15 @@ if driver.i16daytimestep < 0
       if settings.ocb_set == 1
         iVersJac = 2022; iOldORNew = +5;  %% ERA5 clr from 2002-2022
       elseif settings.ocb_set == 0
-        iVersJac = 2021;   %% ERA5 CLR  from 2002-2021
-        iVersJac = 2022;  iOldORNew = +9;  %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
-        iVersJac = 2022;  iOldORNew = +5;  %% ERA5 clr from 2002-2022
+        if driver0.iQuantile < 4
+          iVersJac = 2022;  iOldORNew = +9;  %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
+        elseif driver0.iQuantile >= 4
+          iVersJac = 2021;                   %% ERA5 CLR  from 2002-2021
+          iVersJac = 2022;  iOldORNew = +5;  %% ERA5 clr from 2002-2022
+        end
       end
-
     end
+    fprintf(1,' set_driver_jacfile.m : settings.ocb_set = %2i     iVersJac = %4i    iOldORNew = %2i \n',settings.ocb_set,iVersJac,iOldORNew);
 
     if iKCARTAorSARTA < 0
       %% AHA = [AHA '/subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
