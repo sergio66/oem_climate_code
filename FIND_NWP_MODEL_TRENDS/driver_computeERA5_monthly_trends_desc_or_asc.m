@@ -15,6 +15,15 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
 load('llsmap5.mat');
 
+%% note this code only handles 2002_09 to YYYY_08 sp
+%%      this code does not currently handle eg OCO2 ERA5_atm_N_cld_data_2012_05_to_2019_04_trends_desc.mat
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
+
 if ~exist('iDorA')
   iDorA = -1; %% asc
   iDorA = +1; %% desc
@@ -27,9 +36,17 @@ clear iaFound
 iNumYears = 18; %% 2002/09-2020/08
 iNumYears = 19; %% 2002/09-2021/08
 iNumYears = 12; %% 2002/09-2014/08
-iNumYears = 07; %% 2012/05-2019/04
+iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iNumYears = 20; %% 2002/09-2022/08
-iaMax = iNumYears*12;
+
+% iNumYears = input('Enter iNumYears : ');
+iNumYears = JOB;
+
+if iNumYears <= 69
+  iaMax = iNumYears*12;
+elseif iNumYears == 70
+  iaMax = 7*12;
+end
 
 if ~exist('iCldORClr')
   iCldORClr = -1; %% clear only
@@ -49,7 +66,7 @@ for ii = 1 : iaMax
     iaFound(ii) = 0;
   end
 end
-fprintf(1,'found %3i of expected %3i files \n', [sum(iaFound) length(iaFound)])
+fprintf(1,'iNumYears = %3i : found %3i of expected %3i files \n',[iNumYears sum(iaFound) length(iaFound)])
 plot(1:iaMax,iaFound,'+-')
 if sum(iaFound) < length(iaFound)
   find(iaFound == 0)
@@ -135,24 +152,34 @@ comment = 'see driver_computeERA5_monthly_trends_desc_or_asc.m';
 
 find_computeERA5_monthly_foutname
 
-%%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
-fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
-saver = ['save ' foutjunk ' comment all'];
-eval(saver);
+if iNumYears <= 100
+  iSave = -1;
+else
+  iSave = input('Save huge file (-1/+1) : ');
+end
+
+iSave = -1;  %%% unless now you do a whole new set of files Steve brings down from ERA5
+
+if iSave > 0
+  %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
+  fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
+  saver = ['save ' foutjunk ' comment all'];
+  eval(saver);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('ERA5 mean stemp')
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('ERA5 mean TWSurf DO NOT BELIEVE')
-figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(all.mmw,1)); colormap(jet); title('ERA5 mean mmw')
+figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('ERA5 mean stemp')
+figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
+figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('ERA5 mean TWSurf DO NOT BELIEVE')
+figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.mmw,1)); colormap(jet); title('ERA5 mean mmw')
 
-figure(5); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.stemp); colormap(jet); title('ERA5 mean stemp')
-figure(6); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
-figure(7); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('ERA5 mean TWSurf DO NOT BELIEVE')
-figure(8); scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('ERA5 mean mmw')
+figure(5); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.stemp); colormap(jet); title('ERA5 mean stemp')
+figure(6); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
+figure(7); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('ERA5 mean TWSurf DO NOT BELIEVE')
+figure(8); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('ERA5 mean mmw')
 
 plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
 pN = plevs(1:end-1)-plevs(2:end);
@@ -165,10 +192,10 @@ rlon = -180 : 5 : +180;  rlat = latB2;
 rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
 rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 
-figure(9); junk = reshape(a.pnew_op.ptemp,101,72,64); junk = squeeze(nanmean(junk,2)); junk = junk(1:100,:); pcolor(rlat,plays,junk);
+figure(9); clf; junk = reshape(a.pnew_op.ptemp,101,72,64); junk = squeeze(nanmean(junk,2)); junk = junk(1:100,:); pcolor(rlat,plays,junk);
   caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
   title('Mean T')
-figure(10); junk = reshape(a.pnew_op.RH,100,72,64); junk = squeeze(nanmean(junk,2)); junk = junk(1:100,:); pcolor(rlat,plays,junk);
+figure(10); clf; junk = reshape(a.pnew_op.RH,100,72,64); junk = squeeze(nanmean(junk,2)); junk = junk(1:100,:); pcolor(rlat,plays,junk);
   caxis([00 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
   title('Mean RH')
 
@@ -177,15 +204,15 @@ dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
 
 computeERA5_surface_trends
 
-figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
-figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
+figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
 
-figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
-figure(2); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
-figure(4); scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
+figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
+figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
 pause(0.1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -213,8 +240,8 @@ disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf i
 disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
 disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
 
-figure(1); scatter_coast(all.rlon,all.rlat,40,trend_stemp); title('ERA5 trend  stemp K/yr');    caxis([-1 +1]*0.15); colormap(llsmap5);
-figure(2); scatter_coast(all.rlon,all.rlat,40,trend_RHSurf); title('ERA5 trend  UGH RHsurf pc/yr'); caxis([-1 +1]*0.4); colormap(llsmap5);
+figure(1); clf; scatter_coast(all.rlon,all.rlat,40,trend_stemp); title('ERA5 trend  stemp K/yr');    caxis([-1 +1]*0.15); colormap(llsmap5);
+figure(2); clf; scatter_coast(all.rlon,all.rlat,40,trend_RHSurf); title('ERA5 trend  UGH RHsurf pc/yr'); caxis([-1 +1]*0.4); colormap(llsmap5);
 addpath /asl/matlib/maps/
 aslmap(1,rlat65,rlon73,smoothn((reshape(trend_stemp,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 dST/dt');      caxis([-1 +1]*0.15); colormap(llsmap5)
 aslmap(2,rlat65,rlon73,smoothn((reshape(trend_RHSurf,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 UGH dRHSurf/dt'); caxis([-1 +1]*0.25); colormap(llsmap5)

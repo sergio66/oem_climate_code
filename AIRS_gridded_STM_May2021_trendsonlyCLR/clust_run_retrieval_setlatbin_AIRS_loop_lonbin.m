@@ -433,21 +433,22 @@ for iInd = iXX1 : idX : iXX2
   fprintf(1,'A outdir,outname = %s \n',driver.outfilename)
   % Do the retrieval
 
-  wvmoo = driver.jacobian.water_i;
-  plot(aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,wvmoo(end-2:end)),2),'b',...
+  if ~exist(driver.outfilename)     
+
+    wvmoo = driver.jacobian.water_i;
+    plot(aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,wvmoo(end-2:end)),2),'b',...
        aux.f(driver.jacobian.chanset),aux.m_ts_jac(driver.jacobian.chanset,6)*10,'k',...
        aux.f(driver.jacobian.chanset),driver.rateset.rates(driver.jacobian.chanset)*50,'r')
-  plotaxis2; hl = legend('lowest WVjac','ST jac','rateset','location','best');
-  pause(0.1);
+    plotaxis2; hl = legend('lowest WVjac','ST jac','rateset','location','best');
+    pause(0.1);
 
-  if ~exist(driver.outfilename)     
-     driver = retrieval(driver,aux);
-     if oldstyle_removeCO2 < 0
-       %% now adjust everything!!!!!
-       call_adjustCO2
-     end
-     junk  = load('h2645structure.mat');
-     f2645 = junk.h.vchan;
+    driver = retrieval(driver,aux);
+    if oldstyle_removeCO2 < 0
+      %% now adjust everything!!!!!
+      call_adjustCO2
+    end
+    junk  = load('h2645structure.mat');
+    f2645 = junk.h.vchan;
 
      figure(3); plot(1:2645,driver.rateset.rates,'b',1:2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
      figure(3); plot(f2645,driver.rateset.rates,'b',f2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
@@ -593,8 +594,9 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
 
   %disp('Hit return for next latitude'); pause
   pause(0.1)
-  %[hMean17years,ha,pMean17years,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
-  [hMean17years,ha,pMean17years,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
+
+  read_fileMean17years
+
   print_cloud_params(hMean17years,pMean17years,driver.iibin); 
 
   if ~isfield(pMean17years,'plays')

@@ -1,3 +1,4 @@
+clear
 date
 
 ls -lt Output/Quantile05/test*.mat | wc -l

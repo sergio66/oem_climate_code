@@ -4,8 +4,10 @@
 %% see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/plot_driver_gather_gridded_retrieval_results.m
 %% see eg FIND_NWP_MODEL_TRENDS/driver_computeERA_16day_trends_desc_or_asc.m
 
-%[h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019_palts.rtp');
-[hMean17years,ha,pMean17years,pa]     = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+if ~exist('fileMean17years')
+  read_fileMean17years
+end
+
 iLoad = 1;
   iDorA = 1;
   if iDorA > 0

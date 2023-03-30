@@ -1,3 +1,4 @@
+clear
 date
 
 ## echo "the argument is $1"

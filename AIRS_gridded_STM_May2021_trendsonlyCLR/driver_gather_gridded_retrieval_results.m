@@ -683,8 +683,9 @@ settings.iIgnoreChans_CH4 = -1;
 settings.iIgnoreChans_N2O = -1;
 settings.iIgnoreChans_SO2 = -1;
 chanset = jacobian.chanset;
-[hMean17years,ha,pMean17years,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
-[hMean17years,ha,pMean17years,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
+
+read_fileMean17years
+
 plotopt.iUpperWavenumLimit = 1620;
 plotopt.rlon = pMean17years.rlon;
 plotopt.rlat = pMean17years.rlat;

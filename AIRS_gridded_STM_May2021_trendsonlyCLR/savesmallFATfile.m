@@ -58,6 +58,8 @@ if junk == 1
     saver = [saver ' topts fracO3 fracWV fracWVunc deltaT deltaTunc save_cov_set chisqrR'];
     saver = [saver ' rates fits nedt'];
     if iAK > 0
+      figure(29); figure(30); 
+      figure(45); figure(46); 
       deltaRH = real(deltaRH);
       figure(54); waha = squeeze(nanmean(reshape(deltaRH,100,72,64),2));        pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('UMBC dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
       figure(55); waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)

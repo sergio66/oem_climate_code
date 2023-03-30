@@ -1,0 +1,6 @@
+https://gml.noaa.gov/ozwv/wvap/
+https://gml.noaa.gov/aftp/data/ozwv/WaterVapor/Hilo_New/
+
+wwget https://gml.noaa.gov/aftp/data/ozwv/WaterVapor/Hilo_New/
+wwget https://gml.noaa.gov/aftp/data/ozwv/WaterVapor/Boulder_New/
+wwget https://gml.noaa.gov/aftp/data/ozwv/WaterVapor/Lauder_New/

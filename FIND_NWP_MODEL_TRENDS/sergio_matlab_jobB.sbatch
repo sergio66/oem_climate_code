@@ -25,16 +25,16 @@
 
 #  Specify the qos and run time (format:  dd-hh:mm:ss)
 # trying 20 trapezoid layer jacs, less aggressive mem in MB
-##SBATCH --qos=medium+
-##SBATCH --time=15:59:00 
-##SBATCH --mem-per-cpu=16000    
-##SBATCH --cpus-per-task 1
+#SBATCH --qos=medium+
+#SBATCH --time=15:59:00 
+#SBATCH --mem-per-cpu=16000    
+#SBATCH --cpus-per-task 1
 
 ### this is for sbatch 5 6 (ie the long laborious jobs)
-#SBATCH --qos=long+
-#SBATCH --time=10-00:00:00
-#SBATCH --mem-per-cpu=360000    
-#SBATCH --cpus-per-task 1
+##SBATCH --qos=long+
+##SBATCH --time=10-00:00:00
+##SBATCH --mem-per-cpu=360000    
+##SBATCH --cpus-per-task 1
 
 ########################################################################
 ### check the number of input arguments
@@ -65,6 +65,6 @@ elif [[ "$1" -eq "5" ]]; then
   echo "cmd line arg = 5; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN FAST"
   matlab -nodisplay -r "iSlowORFast = -1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
 elif [[ "$1" -eq "6" ]]; then
-  echo "cmd line arg = 5; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN SLOW"
+  echo "cmd line arg = 6; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN SLOW"
   matlab -nodisplay -r "iSlowORFast = +1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
 fi
