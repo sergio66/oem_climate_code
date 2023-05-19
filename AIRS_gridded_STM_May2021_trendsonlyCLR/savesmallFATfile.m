@@ -36,6 +36,12 @@ genericoutname = ['/asl/s1/sergio/JUNK/smallgather_tileCLRnight_' cGorS '_datase
   fprintf(1,'suggested name uncX3   %s \n',genericoutname);
 genericoutname = ['/asl/s1/sergio/JUNK/smallgather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; 
   fprintf(1,'suggested name uncX100 %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/smallgather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_'         numretlayers_str '_' strMODELS '_feedback.mat']; 
+  fprintf(1,'suggested name uncX1   %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/smallgather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX3_'   numretlayers_str '_' strMODELS '_feedback.mat']; 
+  fprintf(1,'suggested name uncX3   %s \n',genericoutname);
+genericoutname = ['/asl/s1/sergio/JUNK/smallgather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2021jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; 
+  fprintf(1,'suggested name uncX100 %s \n',genericoutname);
 
 junk = input('save savesmallFATfile???? (-1 default/+1) : ');
 if length(junk) == 0

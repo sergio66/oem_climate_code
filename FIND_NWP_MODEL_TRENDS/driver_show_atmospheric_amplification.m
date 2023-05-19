@@ -1,17 +1,19 @@
 pert = make_rtp_plays(pert);
 pavg = nanmean(pert.plays,2); boo = find(pert.spres == max(pert.spres)); pavg = pert.plays(:,boo);
 
-disp('Enter (-7) polar    L/O')
-disp('      (-6) midlat   L/O')
-disp('      (-5) tropical L/O')
-disp('      (-4) polar land    (+4) polar ocean')
-disp('      (-3) midlat land   (+3) midlat ocean')
-disp('      (-2) tropical land (+2) tropical ocean')
-disp('      (-1) land          (+1) ocean');
-disp('      [0,default] ALL trends : ');
-iAorOorL = input('Enter region : ');
-if length(iAorOorL) == 0 
-  iAorOorL = 0;
+if ~exist('iAorOorL')
+  disp('Enter (-7) polar    L/O')
+  disp('      (-6) midlat   L/O')
+  disp('      (-5) tropical L/O')
+  disp('      (-4) polar land    (+4) polar ocean')
+  disp('      (-3) midlat land   (+3) midlat ocean')
+  disp('      (-2) tropical land (+2) tropical ocean')
+  disp('      (-1) land          (+1) ocean');
+  disp('      [0,default] ALL trends : ');
+  iAorOorL = input('Enter region : ');
+  if length(iAorOorL) == 0 
+    iAorOorL = 0;
+  end
 end
 
 %% this is bascially copied from AIRS_gridded_STM_May2021_trendsonlyCLR/plot_driver_gather_gridded_retrieval_results. but with TWO modifications
@@ -124,12 +126,12 @@ if iUMBC > 0
       plot(era5amp.T_amp,pavg(1:97),'b',merra2amp.T_amp,pavg(1:97),'c',airsL3amp.T_amp,pavg(1:97),'r',climcapsL3amp.T_amp,pavg(1:97),'m',... 
            umbcamp.T_amp,pavg(1:97),'k','linewidth',2)
       set(gca,'ydir','reverse'); plotaxis2;
-      title('T amplification dT/dST'); ylim([100 1000]); xlim([-1 +1]); hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS L3','UMBC','location','best','fontsize',10);
+      title('T amplification dT/dST'); ylim([100 1000]); xlim([-1 +1]*2); hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS L3','UMBC','location','best','fontsize',10);
     subplot(122);
       plot(era5amp.T_amp_sig,pavg(1:97),'b',merra2amp.T_amp_sig,pavg(1:97),'c',airsL3amp.T_amp_sig,pavg(1:97),'r',climcapsL3amp.T_amp_sig,pavg(1:97),'m',... 
            umbcamp.T_amp_sig,pavg(1:97),'k','linewidth',2)
       set(gca,'ydir','reverse'); plotaxis2;
-      title('T amplification dT/dST'); ylim([100 1000]); xlim([0 +1]); hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS L3','UMBC','location','best','fontsize',10);
+      title('T amplification dT/dST'); ylim([100 1000]); xlim([0 +1]*2); hl = legend('ERA5','MERRA2','AIRS L3','CLIMCAPS L3','UMBC','location','best','fontsize',10);
   
   iFig = iFig + 1;
   figure(iFig); clf; 

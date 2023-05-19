@@ -171,6 +171,16 @@ title(['Zonal d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 colormap(cmap)
 caxis([-1 +1]*0.015); ylim([100 1000])
 
+figure(30); 
+pcolor_sin(rlat,pavgLAY(1:97,1000),smoothn(fracWVlat(:,1:97)',1),30); 
+junk = zeros(size(fracWVlat)); junk = cos(rlat) * ones(1,101);
+area_wgt_fracWV = nansum(fracWVlat.*junk,1)./nansum(junk,1);
+%hold on; plot(area_wgt_fracWV(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('horizontal'); %plotaxis2;
+title(['Zonal d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+colormap(cmap)
+caxis([-1 +1]*0.015); ylim([100 1000])
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 deltaRH    = (RHpert-RH0) .* (ones(100,1)*maskLF);;     %% DO NOT USE deltaRH(97,:) as surface change in RH, use  RHSurfpert-RHSurf0
@@ -221,6 +231,15 @@ area_wgtRH = nansum(deltaRHlat.*junk,1)./nansum(junk,1);
 ylim([100 1000]); caxis([-1 +1]*0.5); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt RH UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_rh_zonal_trends.pdf');
 
+figure(28);
+deltaRHlat = real(deltaRHlat);
+pcolor_sin(rlat,pavgLAY(1:97,3000),smoothn(deltaRHlat(:,1:97)',1),28); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+junk = zeros(size(deltaRHlat)); junk = cos(rlat) * ones(1,100);
+area_wgtRH = nansum(deltaRHlat.*junk,1)./nansum(junk,1);
+%hold on; plot(area_wgtRH(1:97)*100,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+ylim([100 1000]); caxis([-1 +1]*0.5); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt RH UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+%% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_rh_zonal_trends.pdf');
+
 %{
 clear data dataMap
 data = maskLFmatr.*smoothn(deltaRHlat(:,1:97)',1); p97 = pavgLAY(1:97,1000); 
@@ -261,6 +280,16 @@ caxis([-1 +1]/10); colormap(cmap);  title('d/dt UMBC T(600 mb)');
 figure(29); clf
 pcolor(rlat,pavgLAY(1:97,3000),deltaTlat(:,1:97)'); 
 pcolor(rlat,pavgLAY(1:97,3000),smoothn(deltaTlat(:,1:97)',1)); 
+shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
+%area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);
+%hold on; plot(area_wgtT(1:97)*1000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+ylim([1 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+%% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
+
+figure(29); clf
+pcolor_sin(rlat,pavgLAY(1:97,3000),deltaTlat(:,1:97)'); 
+pcolor_sin(rlat,pavgLAY(1:97,3000),smoothn(deltaTlat(:,1:97)',1)); 
 shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
 %area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);

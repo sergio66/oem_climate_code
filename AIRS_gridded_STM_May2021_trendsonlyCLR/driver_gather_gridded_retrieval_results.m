@@ -719,7 +719,7 @@ z21 = maskLF.*chisqrR.iWindow;
 z22 = maskLF.*chisqrR.iWV;
 
 iFig = 52; figure(iFig); clf; 
-aslmap_4tiledlayout(z11,z12,z21,z22*5,iFig,plotoptions);
+aslmap_2x2tiledlayout(z11,z12,z21,z22*5,iFig,plotoptions);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

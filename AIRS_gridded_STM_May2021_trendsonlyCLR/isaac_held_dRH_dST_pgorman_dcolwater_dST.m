@@ -11,7 +11,7 @@ figure(51);  %% 2 panel dRH/dt      UMBC, ERA5
 % end
 % z1 = deltaRHlat'; 
 % z2 = era5.trend_RH; z2 = reshape(z2,100,72,64); z2 = squeeze(nanmean(z2,2));
-% iFig = 51; figure(iFig); clf; profile_plots_2tiledlayout(rlat,plays,z1,z2,iFig,plotoptions);
+% iFig = 51; figure(iFig); clf; profile_plots_1x2tiledlayout(rlat,plays,z1,z2,iFig,plotoptions);
 
 %% can estimate max deltaRH expected from Isaac Held blog  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
 %%% see my notes, BK 45

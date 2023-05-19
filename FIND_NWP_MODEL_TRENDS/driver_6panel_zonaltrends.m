@@ -49,4 +49,4 @@ z22 = z11;
 z31 = z11;
 z32 = z11;
 plotoptions.maintitle = 'dT(z,lat)/dt'; plotoptions.cx = [-1 +1]*0.15; plotoptions.yLimits = [10 1000]; plotoptions.xLimits = [-85 +85];
-profile_plots_6tiledlayout(x,y,z11,z12,z21,z22,z31,z32,iFig,plotoptions);
+profile_plots_3x2tiledlayout(x,y,z11,z12,z21,z22,z31,z32,iFig,plotoptions);

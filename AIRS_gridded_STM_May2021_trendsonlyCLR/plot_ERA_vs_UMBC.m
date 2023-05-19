@@ -83,7 +83,7 @@ else
   end
 end
 z3 = temprate_ak0_era5'; z3 = reshape(z3,length(pjunk20),72,64); z3 = squeeze(nanmean(z3,2));
-iFig = 49; figure(iFig); clf; profile_plots_3tiledlayout(rlat,pjunk20,z1,z2,z3,iFig,plotoptions);
+iFig = 49; figure(iFig); clf; profile_plots_1x3tiledlayout(rlat,pjunk20,z1,z2,z3,iFig,plotoptions);
 
 plotoptions.cx = [-1 +1]*0.015; plotoptions.maintitle = 'dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
 plotoptions.yLimits = [100 1000];
@@ -102,7 +102,7 @@ else
   end
 end
 z3 = waterrate_ak0_era5'; z3 = reshape(z3,length(pjunk20),72,64); z3 = squeeze(nanmean(z3,2));
-iFig = 50; figure(iFig); clf; profile_plots_3tiledlayout(rlat,pjunk20,z1,z2,z3,iFig,plotoptions);
+iFig = 50; figure(iFig); clf; profile_plots_1x3tiledlayout(rlat,pjunk20,z1,z2,z3,iFig,plotoptions);
 
 plotoptions.cx = [-1 +1]*0.5; plotoptions.maintitle = 'dRH/dt'; plotoptions.plotcolors = llsmap5;
 plotoptions.yLimits = [100 1000];
@@ -113,7 +113,7 @@ if isfield(plotoptions,'str3')
 end
 z1 = deltaRHlat'; 
 z2 = era5.trend_RH; z2 = reshape(z2,100,72,64); z2 = squeeze(nanmean(z2,2));
-iFig = 51; figure(iFig); clf; profile_plots_2tiledlayout(rlat,plays,z1,z2,iFig,plotoptions);
+iFig = 51; figure(iFig); clf; profile_plots_1x2tiledlayout(rlat,plays,z1,z2,iFig,plotoptions);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
