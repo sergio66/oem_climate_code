@@ -72,6 +72,7 @@ disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs
 iYS = 2002; iYE = 2021;
 iYS = 2002; iYE = 2022;
 
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
 %era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
 %era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
 era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
@@ -117,6 +118,9 @@ for ii = iYS : iYE
   mm = [mm mmx];
   dd = [dd ddx];
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 daysSince2002 = change2days(yy,mm,dd,2002);
 whos daysSince2002
 
@@ -356,6 +360,7 @@ for ii = JOB
 
   iType = 51;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
+
   pwd
   disp(' ')
   disp('output in eg           SimulateTimeSeries/ERA5_ConstTracegas/reconstruct_era5_const_tracegas_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')

@@ -10,7 +10,6 @@ drwxrwxr-x 2 sergio pi_strow 16384 Mar 31 07:23 AIRSL3
 drwxrwxr-x 2 sergio pi_strow 12288 Mar 31 07:21 ERA5
 %}
 
-
 %% superceded driver_get_the_model_trends_orig
 iJorC = input('(+1, default) J.Susskind AIRS L3  or (-1) C.Barnet CLIMCAPS  : ');
 if length(iJorC) == 0
@@ -34,7 +33,6 @@ end
 if iEorM == 1
   iEorMstr = 'ERA-I';
   disp('remember all your plots with title ERA5 should really be ERA-I')
-  
 elseif iEorM == 2
   iEorMstr = 'MERRA2';
   iEorMFstr = '/reconstruct_merra2_spectra_geo_rlat';
@@ -81,8 +79,15 @@ if iSpectra == 1
   end
 
   %% see plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
+  if iEorM == 5
+    disp('loading in 2002/09 to 2022/08 spectral rates')
+  end
   for ii = 1 : 64
-    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '.mat'];
+    if iEorM ~= 5
+      fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '.mat'];
+    else
+      fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '_2002_09_2022_08.mat'];
+    end
     junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
     junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
     ind = (ii-1)*72 + (1:72);

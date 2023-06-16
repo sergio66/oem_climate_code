@@ -120,7 +120,13 @@ end
 
 if dataset == -3
   iQuantile = 00;
-elseif dataset ~= 3
+elseif dataset == 9
+  iQuantile = 05; 
+  iQuantile = input('Dataset = 9 ==> Which quantile 1..6   [5 = Default] : ');
+  if length(iQuantile) == 0
+    iQuantile = 5;
+  end
+elseif dataset ~= 3 & dataset ~= 9
   iQuantile = 16;  %% AIRS STM 2021, hottest
   iQuantile = 08;  %% 
   iQuantile = input('Which quantile -1 for extremes [(1--16) (99 for orig Q16, done for AIRS STM)]   [16 = Default] : ');
@@ -280,18 +286,27 @@ for ii = 1 : 72 : 72*64
     end
   elseif iOCBset == 1
     if iNorD > 0
-      fname =     ['Output_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      fname = ['Output_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
     elseif iNorD < 0
       fname = ['Output_Day_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
     end
   end
+
   if exist(fname) > 0
     iCnt = iCnt + 1;
     junkdir = dir(fname);
     fprintf(1,'%s %s \n',[junkdir.folder     fname],junkdir.date);
+  else
+    fprintf(1,'%s DNE \n',fname);  
   end
 end
 fprintf(1,'found %4i of 64 (subset) files \n',iCnt);
+if iCnt == 0
+  fprintf(1,'with iOCBset = %2i dataset = %2i iNorD = %2i seem to have found nothing nada zilch in %s \n',iOCBset,dataset,iNorD,fname )
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iJunk = input('correct dates/names etc etc???  Proceed or quit (+1 default/-1) : ');
 if length(iJunk) == 0
   iJunk = +1;

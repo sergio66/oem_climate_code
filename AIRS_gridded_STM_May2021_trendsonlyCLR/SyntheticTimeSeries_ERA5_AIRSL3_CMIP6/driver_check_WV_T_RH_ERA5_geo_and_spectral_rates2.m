@@ -66,27 +66,43 @@ ind = (1:72) + (JOB-1)*72;
 [hkcarta_emis,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
-%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
-era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
 
-[numtimesteps,~] = size(era5_64x72.all.mmw);
+iYS = 2002; iYE = 2021;
+iYS = 2002; iYE = 2022;
+
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
+%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[numtimesteps0,~] = size(era5_64x72.all.mmw);
+numtimesteps = numtimesteps0;
 fprintf(1,'driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
 
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
 
 yy = []; mm = []; dd = [];
-for ii = 2002 : 2021
+for ii = iYS : iYE
   clear yyx mmx ddx
-  if ii == 2002
+  if ii == iYS
     inum = 4;
     yyx(1:inum) = ii;
     mmx = 9:12;
     ddx = ones(size(mmx)) * 15;
-  elseif ii == 2021
-    %inum = 7;
-    %yyx(1:inum) = ii;
-    %mmx = 1 : 7;
+%  elseif ii == 2021
+%    %inum = 7;
+%    %yyx(1:inum) = ii;
+%    %mmx = 1 : 7;
+%    inum = 8;
+%    yyx(1:inum) = ii;
+%    mmx = 1 : 8;
+%    ddx = ones(size(mmx)) * 15;
+  elseif ii == iYE
     inum = 8;
     yyx(1:inum) = ii;
     mmx = 1 : 8;
@@ -102,13 +118,71 @@ for ii = 2002 : 2021
   mm = [mm mmx];
   dd = [dd ddx];
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+daysSince2002 = change2days(yy,mm,dd,2002);
+whos daysSince2002
+
+YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
+YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
+YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
+YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+
+daysSince2002Start = change2days(YMStart(1),YMStart(2),15,2002);
+daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),  15,2002);
+
+usethese = find(daysSince2002  >= daysSince2002Start & daysSince2002 <= daysSince2002End);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fprintf(1,' YM timeperiod  = %4i/%2i --> %4i/%2i needs %3i of %3i timesteps \n',YMStart,YMEnd,length(usethese),numtimesteps)
+yy = yy(usethese);
+mm = mm(usethese);
+dd = dd(usethese);
+
+numtimesteps = length(yy);
+era5_64x72.all.yy = era5_64x72.all.yy(usethese);
+era5_64x72.all.mm = era5_64x72.all.mm(usethese);
+era5_64x72.all.dd = era5_64x72.all.dd(usethese);
+era5_64x72.all.nwp_ptemp = era5_64x72.all.nwp_ptemp(usethese,:,:);
+era5_64x72.all.nwp_gas_1 = era5_64x72.all.nwp_gas_1(usethese,:,:);
+era5_64x72.all.nwp_gas_3 = era5_64x72.all.nwp_gas_3(usethese,:,:);
+era5_64x72.all.nwp_rh    = era5_64x72.all.nwp_rh(usethese,:,:);
+era5_64x72.all.nwp_plevs = era5_64x72.all.nwp_plevs(usethese,:,:);
+era5_64x72.all.ptemp = era5_64x72.all.ptemp(usethese,:,:);
+era5_64x72.all.gas_1 = era5_64x72.all.gas_1(usethese,:,:);
+era5_64x72.all.gas_3 = era5_64x72.all.gas_3(usethese,:,:);
+era5_64x72.all.mmw   = era5_64x72.all.mmw(usethese,:);
+era5_64x72.all.stemp = era5_64x72.all.stemp(usethese,:);
+era5_64x72.all.nlays = era5_64x72.all.nlays(usethese,:);
+era5_64x72.all.RH    = era5_64x72.all.RH(usethese,:,:);
+era5_64x72.all.TwSurf = era5_64x72.all.TwSurf(usethese,:);
+era5_64x72.all.RHSurf = era5_64x72.all.RHSurf(usethese,:);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 rtime = utc2taiSergio(yy,mm,dd,ones(size(yy))*12.0);
 time_so_far = (yy-2000) + ((mm-1)+1)/12;
+
 co2ppm = 370 + 2.2*((yy+mm/12)-2002);
+
 %% see ~/MATLABCODE/CRODGERS_FAST_CLOUD/driver_stage2_ESRL_set_CO2_CH4_N2O.m
 co2ppm = 368 + 2.1*time_so_far;
 n2oppm = 315  + (332-315)/(2020-2000)*time_so_far; n2oppm = n2oppm/1000;
 ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
+
+iConstORVary = -1;
+if iConstORVary < 0
+  %% see ~/MATLABCODE/CRODGERS_FAST_CLOUD/driver_stage2_ESRL_set_CO2_CH4_N2O.m
+  co2ppm = 368 + 2.1*time_so_far;
+  n2oppm = 315  + (332-315)/(2020-2000)*time_so_far; n2oppm = n2oppm/1000;
+  ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
+else
+  co2ppm = 385 * ones(size(co2ppm));
+  n2oppm = 323 * ones(size(co2ppm))/1000;
+  ch4ppm = 1813 * ones(size(co2ppm))/1000;
+end
 
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
@@ -203,9 +277,10 @@ for ii = JOB
   p72.emis  = emis_t;
   p72.rho   = rho_t;
     
-  fip = [dirout '/simulate64binsERA5_' num2str(ii) '.ip.rtp'];
-  fop = [dirout '/simulate64binsERA5_' num2str(ii) '.op.rtp'];
-  frp = [dirout '/simulate64binsERA5_' num2str(ii) '.rp.rtp'];
+  fstr = ['_' num2str(YMStart(1),'%04d') '_' num2str(YMStart(2),'%02d') '_' num2str(YMEnd(1),'%04d') '_' num2str(YMEnd(2),'%02d')];
+  fip = [dirout 'simulate64binsERA5_' num2str(ii) fstr '.ip.rtp'];
+  fop = [dirout 'simulate64binsERA5_' num2str(ii) fstr '.op.rtp'];
+  frp = [dirout 'simulate64binsERA5_' num2str(ii) fstr '.rp.rtp'];
 
   rtpwrite(fip,h72,[],p72,[]);
     
@@ -281,5 +356,12 @@ for ii = JOB
 
   iType = 5;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
+
+  pwd
+  disp(' ')
+  disp('output in eg           SimulateTimeSeries/ERA5/reconstruct_era5_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
+  disp('         also makes eg SimulateTimeSeries/ERA5/simulate64binsERA5_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
+  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 5')
+  disp(' ')
 
 end

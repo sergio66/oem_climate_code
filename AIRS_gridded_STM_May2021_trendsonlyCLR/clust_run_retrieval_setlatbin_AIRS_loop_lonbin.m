@@ -119,6 +119,7 @@ iDebug = -1;
 
 %iDebug = 4500;
 %iDebug = 2268; %% T
+%iDebug = 1082
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -292,7 +293,7 @@ for iInd = iXX1 : idX : iXX2
 
   iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
   iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
-  iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  iAdjLowerAtmWVfrac = 0;                             %% WARNING this does not  set WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
   iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46)
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
@@ -316,11 +317,23 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +1;  %% use WV only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
 
-  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS a priori
-  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5 a priori
+  topts.set_era5_cmip6_airsL3 = 6;           %% use AMIP6    a priori
+  topts.set_era5_cmip6_airsL3 = 3;           %% use AIRSL3   a priori
+  topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
+  topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
+  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
   topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
-  if topts.iAdjLowerAtmWVfrac > 0
-    topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori  
+  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori
+
+  if topts.set_era5_cmip6_airsL3 == 8   
+    if topts.set_era5_cmip6_airsL3_WV_T_O3 == +10
+      topts.set_era5_cmip6_airsL3_WV_T_O3 = +100;
+      disp('you want MLS plus you want to set lower WV .... reset topts.set_era5_cmip6_airsL3_WV_T_O3 = +100')
+    end
+  end
+  if topts.iAdjLowerAtmWVfrac > 0 & topts.set_era5_cmip6_airsL3 > 0 & topts.set_era5_cmip6_airsL3 < 8
+    disp('You have topts.iAdjLowerAtmWVfrac > 0 so you want to set PBL ... but you also want to set ERA5 or MERRA2 or AIRS L3 a-priori NOPE NOPE NOPE')
+    topts.set_era5_cmip6_airsL3 = 0;         %% use 0 a priori for every layer ... but can still allow MLS input at UT?LS and above 300 mb
   end
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick

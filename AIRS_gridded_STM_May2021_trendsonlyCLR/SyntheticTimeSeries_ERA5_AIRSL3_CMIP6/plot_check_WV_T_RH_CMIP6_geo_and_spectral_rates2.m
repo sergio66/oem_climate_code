@@ -364,7 +364,7 @@ warning on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 diroutX = dirout;
-diroutX = ' ';
+%diroutX = ' ';
 
 disp('here I am doing this save')
 if iType == 2

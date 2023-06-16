@@ -68,6 +68,7 @@ if ~exist(dirout)
   mker = ['!mkdir ' dirout];
   eval(mker);
 end
+
 comment = 'see MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m';
 if iNumYear == 07
   saver = ['save ' dirout '/sarta_spectral_trends_const_tracegas_latbin' num2str(JOB,'%02d') '_2014_09_2021_08.mat thesave comment'];

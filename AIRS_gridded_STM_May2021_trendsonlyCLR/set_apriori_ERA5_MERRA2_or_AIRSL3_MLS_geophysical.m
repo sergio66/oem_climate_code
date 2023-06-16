@@ -1,12 +1,13 @@
 %% check_settings.m:7:settings.set_era5_cmip6_airsL3_WV_T_O3 = -1; %% is using ERA5 or AIRS L3 or MERRA to set rates, you can choose to see -1:WV/T/ST/O3 or +1/+2/+3/+4/+5/+40  for WV/T+ST/O3/T/ST/LowerT only
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == -1  : set all
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +1  : set WV
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +2  : set T/ST
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +3  : set O3
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +4  : set T
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +5  : set ST
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +10 : set lower WV
-%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +40 : set lower T
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == -1   : set all
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +1   : set WV
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +2   : set T/ST
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +3   : set O3
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +4   : set T
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +5   : set ST
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +10  : set lower WV
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +100 : set lower WV/upper WV with MLS
+%% settings.set_era5_cmip6_airsL3_WV_T_O3 == +40  : set lower T
 
 if settings.set_era5_cmip6_airsL3 == 0
   disp('apriori will be using ZERO (no ERA5 trends being used)')
@@ -251,7 +252,7 @@ elseif settings.set_era5_cmip6_airsL3 == 8
     boo = 6;
   end
 
-  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1
+  if settings.set_era5_cmip6_airsL3_WV_T_O3 == -1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 1 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 10 | settings.set_era5_cmip6_airsL3_WV_T_O3 == 100
     %% WV(z)
     boo = (boo(end)+1 : boo(end)+1 + iNlays_retrieve-1); xb(boo) = average_over_5(xrates.gas_1(:,iz),floor(100/iNlays_retrieve),iNlays_retrieve); 
   else

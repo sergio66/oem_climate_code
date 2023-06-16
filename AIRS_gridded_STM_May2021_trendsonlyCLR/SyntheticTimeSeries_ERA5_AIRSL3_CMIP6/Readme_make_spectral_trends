@@ -1,0 +1,14 @@
+See and modify as need the YS/MS and YE/ME (typically 2002/09 to 20XY/08)
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m
+
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
+
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
+
+The sergio_matlab_jobB.sbatch can be used nicely eg 
+  "5"  for making the ip/op/rp rtp file with the monthly ERA5 data
+  "11" for reading the .rp.rtp file and making spectral trends
+
+

@@ -6,7 +6,10 @@ set(0,'DefaultaxesFontSize',16);
 amp = [];
 
 if nargin == 0
+  strUMBC = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithMLSL3_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_globalSSTfeedback.mat';
   strUMBC = '/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat';
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_feedback.mat';              %% not too bad at lower atm/polar!!!!
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith_MLSL3_TOA_guessWV_dRH_zero_bot_50fatlayers.mat';  ## too much oomph at gnd : use MLS L3 TOA and dRH/dt = 0 at bottom
   strUMBC = [];
   iUMBC = -1;
   umbc = [];
@@ -202,7 +205,7 @@ plotaxis2; hl = legend('MERRA2','ERA5','AIRS L3','CLIMCAPSL3','location','best',
 iFig = iFig + 1;
 figure(iFig); clf; clear plotoptions
 maskLF = ones(size(z22));
-plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
 plotoptions.str11 = 'AIRS L3';
 plotoptions.str12 = 'CLIMCAPS L3';
 plotoptions.str21 = 'MERRA2';
@@ -250,7 +253,7 @@ plotoptions.xaxis_metric = 'sine';
 
 iFig = iFig + 1;
 figure(iFig); clf; 
-plotoptions.maintitle = 'dRH/dt [%/yr]'; 
+plotoptions.maintitle = 'RH trends [%/yr]'; 
 plotoptions.cx = [-1 +1]*0.5; 
 miaow11 = squeeze(nanmean(permute(airsL3.RHrate,[3 1 2]),2));
 miaow12 = squeeze(nanmean(permute(climcapsL3.RHrate,[3 1 2]),2));
@@ -270,8 +273,8 @@ profile_plots_2x2tiledlayout(trend_rlat64,plays100,miaow11,miaow12,miaow21,miaow
 
 iFig = iFig + 1;
 figure(iFig); clf; 
-plotoptions.maintitle = 'dT/dt [K/yr]'; 
-plotoptions.cx = [-1 +1]*0.15; 
+plotoptions.maintitle = 'Temperature Trends [K/yr]'; 
+plotoptions.cx = [-1 +1]*0.151; 
 plotoptions.yLinearOrLog = -1;
 plotoptions.yReverseDir  = +1;
 plotoptions.yLimits = [10 1000];
@@ -352,7 +355,7 @@ if iUMBC  > 0
   iFig = iFig + 1;
   figure(iFig); clf; clear plotoptions
   maskLF = ones(size(z22));
-  plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
   plotoptions.str11 = 'UMBC';
   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';
@@ -375,7 +378,7 @@ if iUMBC  > 0
   
   iFig = iFig + 1;
   figure(iFig); clf; 
-  plotoptions.maintitle = 'dRH/dt [%/yr]'; 
+  plotoptions.maintitle = 'RH trends [%/yr]'; 
   plotoptions.cx = [-1 +1]*0.5; 
   plotoptions.yLimits = [100 1000];
   miaow11 = squeeze(nanmean(reshape(umbc.RHrate,100,72,64),2));
@@ -394,11 +397,11 @@ if iUMBC  > 0
   miaow21 = squeeze(nanmean(reshape(era5.waterrate,100,72,64),2));
   miaow22 = squeeze(nanmean(reshape(merra2.waterrate,100,72,64),2));
   profile_plots_2x2tiledlayout(trend_rlat64,plays100,miaow11,miaow12,miaow21,miaow22,iFig,plotoptions);
-  
+
   iFig = iFig + 1;
   figure(iFig); clf; 
-  plotoptions.maintitle = 'dT/dt [K/yr]'; 
-  plotoptions.cx = [-1 +1]*0.15; 
+  plotoptions.maintitle = 'Temperature Trends [K/yr]'; 
+  plotoptions.cx = [-1 +1]*0.151; 
   plotoptions.yLinearOrLog = -1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits = [10 1000];
@@ -411,7 +414,7 @@ if iUMBC  > 0
   iFig = iFig + 1;
   figure(iFig); clf; 
   plotoptions.maintitle = 'dT/dt UA'; 
-  plotoptions.cx = [-1 +1]*0.15; 
+  plotoptions.cx = [-1 +1]*0.151; 
   plotoptions.yLinearOrLog = -1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits = [0.1 100];
@@ -442,7 +445,7 @@ if iUMBC  > 0
   plotoptions.str22 = 'Stemp UMBC-ERA5';
 
   plotoptions.maintitle = 'Compare UMBC/ERA5 or UMBC-ERA5'; 
-  plotoptions.cx = [-1 +1]*0.15; 
+  plotoptions.cx = [-1 +1]*0.151; 
   plotoptions.yLinearOrLog = -1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits = [0.1 100];
@@ -550,7 +553,7 @@ if iUMBC  > 0
   figure(iFig); clf;
   z32 = giss_trend4608(:); z32 = z32';
   clear plotoptions
-  plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'UMBC';      plotoptions.str32 = 'GISS';
@@ -559,11 +562,14 @@ if iUMBC  > 0
   z31 = z11x; z32 = z32;
   aslmap_3x2tiledlayout(z11,z12,z21,z22,z31,z32,iFig,plotoptions);
 
+  figure(20); clf; aslmap(20,rlat65,rlon73,smoothn(reshape(z31,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.151); %% UMBC
+  figure(21); clf; aslmap(21,rlat65,rlon73,smoothn(reshape(z32,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.151); %% GISS
+
   clear plotoptions
-  plotoptions.cx = [-1 +1]*0.1501; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3'; plotoptions.str13 = 'MERRA2';    
   plotoptions.str21 = 'ERA5';      plotoptions.str22 = 'UMBC';        plotoptions.str23 = 'GISS';
-  plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+  plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
   z31 = z11x; z32 = z32;
   aslmap_2x3tiledlayout(z11,z12,z21,z22,z31,z32,iFig,plotoptions);
@@ -619,7 +625,7 @@ if iUMBC  > 0
   if iY > 0
     iFig = iFig + 1;
     figure(iFig); clf;   
-    plotoptions.maintitle = 'dRH/dt [%/yr]'; 
+    plotoptions.maintitle = 'RH trends [%/yr]'; 
     plotoptions.cx = [-1 +1]*0.5; 
     miaow11 = squeeze(nanmean(permute(airsL3.RHrate,[3 1 2]),2));
     miaow12 = squeeze(nanmean(permute(climcapsL3.RHrate,[3 1 2]),2));
@@ -642,8 +648,8 @@ if iUMBC  > 0
     iFig = iFig + 1;
     figure(iFig); clf;
     plotoptions.yLinearOrLog = -1;
-    plotoptions.maintitle = 'dT/dt [K/yr]';
-    plotoptions.cx = [-1 +1]*0.15;
+    plotoptions.maintitle = 'Temperature Trends [K/yr]';
+    plotoptions.cx = [-1 +1]*0.151;
     plotoptions.yLimits = [10 1000];  
     miaow11 = squeeze(nanmean(permute(airsL3.ptemprate,[3 1 2]),2));
     miaow12 = squeeze(nanmean(permute(climcapsL3.ptemprate,[3 1 2]),2));
@@ -667,7 +673,7 @@ if iUMBC  > 0
   iFig = iFig + 1;
   figure(iFig); clf;
   clear plotoptions
-  plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'GISS';    
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';    
   plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
@@ -692,7 +698,7 @@ if iUMBC  > 0
   if iY > 0
     iFig = iFig + 1;
     figure(iFig); clf;   
-    plotoptions.maintitle = 'dRH/dt [%/yr]'; 
+    plotoptions.maintitle = 'RH trends [%/yr]'; 
     plotoptions.cx = [-1 +1]*0.5; 
     miaow11 = squeeze(nanmean(permute(airsL3.RHrate,[3 1 2]),2));
     miaow12 = squeeze(nanmean(reshape(merra2.RHrate,100,72,64),2));
@@ -711,8 +717,8 @@ if iUMBC  > 0
     iFig = iFig + 1;
     figure(iFig); clf;
     plotoptions.yLinearOrLog = -1;
-    plotoptions.maintitle = 'dT/dt [K/yr]';
-    plotoptions.cx = [-1 +1]*0.15;
+    plotoptions.maintitle = 'Temperature Trends [K/yr]';
+    plotoptions.cx = [-1 +1]*0.151;
     plotoptions.yLimits = [10 1000];  
     miaow11 = squeeze(nanmean(permute(airsL3.ptemprate,[3 1 2]),2));
     miaow12 = squeeze(nanmean(reshape(merra2.ptemprate,100,72,64),2));

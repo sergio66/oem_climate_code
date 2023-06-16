@@ -1,3 +1,5 @@
+for ii = 1 : 30; figure(ii); clf; end
+
 moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','b_err_desc');
 b_err_desc = moonoise.b_err_desc; clear moonoise;
 b_err_desc = permute(b_err_desc,[3 1 2]);
@@ -12,7 +14,8 @@ moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','h');
 f = moonoise.h.vchan; clear moonoise;
 
 addpath ../FIND_NWP_MODEL_TRENDS/
-driver_get_the_model_trends
+iNumYears = 20;
+driver_get_the_model_trends  %% gets era5, airsL3 etc
 
 settings.iIgnoreChans_CH4 = -1;
 settings.iIgnoreChans_N2O = -1;

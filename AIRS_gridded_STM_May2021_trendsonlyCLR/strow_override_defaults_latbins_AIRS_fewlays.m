@@ -164,6 +164,7 @@ set_zeroWV_nofit
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% this is where topts.set_era5_cmip6_airsL3 is used
 set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical   %% can set a priori to the MLS, or to the ERA5, or to the MERRA2, or to the AIRS L3, rates
 
 iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
@@ -181,6 +182,8 @@ disp('WV xb WV xb WV xb')
 disp('WV xb WV xb WV xb')
   xb(driver.jacobian.water_i) = +0.01/2;
 %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                                                     
 iSergioCO2 = -1;  %% assume ESRL CO2/CH4 rates
 iSergioCO2 = +1;  %% fit for CO2/CH4 rates
