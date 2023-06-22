@@ -1,14 +1,32 @@
 See and modify as need the YS/MS and YE/ME (typically 2002/09 to 20XY/08)
-  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
-  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m
+  %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch 5
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m    --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 increasing according to the average rates
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m             --- then make the spectral trends, need to set iModel
 
-  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
-  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
+  %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch XXX
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 consta over all times
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m        --- then make the spectral trends, need to set iModel
 
-  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
+  %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch 8
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2.m  --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 increasing according to the average rates
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m             --- then make the spectral trends, need to set iModel
 
-The sergio_matlab_jobB.sbatch can be used nicely eg 
+  %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch 7
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m  --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 increasing according to the average rates
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m             --- then make the spectral trends, need to set iModel
+
+  %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch 10
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m  --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 increasing according to the average rates
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m                     --- then make the spectral trends, need to set iModel
+
+  %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch 11
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2.m  --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 increasing according to the average rates
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m                     --- then make the spectral trends, need to set iModel
+
+  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m is common to all these
+
+The "sergio_matlab_jobB.sbatch: can be used nicely eg 
   "5"  for making the ip/op/rp rtp file with the monthly ERA5 data
-  "11" for reading the .rp.rtp file and making spectral trends
+  "12" for reading the .rp.rtp file and making spectral trends
 
-
+Then FIND_NWP_MODEL_TRENDS/driver_get_the_model_trends.m can be used to plot the spectral trends

@@ -212,55 +212,57 @@ figure(4); pcolor(rlon,plevsx,thesave.wv2d_xtrend(1:97,:)); shading interp; colo
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-t = p72.gas_3; t = reshape(t,iNlev,72,numtimesteps); tX = squeeze(nanmean(t,3));
-[~,~,kk] = size(t); clear tXX
-for kkk = 1 : kk
- tXX(:,:,kkk) = tX;
-end
-t = t./tXX;
-
-for jj = 1 : iNlev
-  for ll = 1 : 72
-    data = squeeze(t(jj,ll,:));
-    zoo = find(isfinite(data));
-    if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
-      thesave.oz2d_xtrendnwp(jj,ll) = junk(2);
-      oz2d_xconstrnwp(jj,ll) = junk(1);
-    else
-      thesave.oz2d_xtrendnwp(jj,ll) = NaN;
-      oz2d_xconstrnwp(jj,ll) = NaN;
+if iType ~= 4
+  t = p72.gas_3; t = reshape(t,iNlev,72,numtimesteps); tX = squeeze(nanmean(t,3));
+  [~,~,kk] = size(t); clear tXX
+  for kkk = 1 : kk
+   tXX(:,:,kkk) = tX;
+  end
+  t = t./tXX;
+  
+  for jj = 1 : iNlev
+    for ll = 1 : 72
+      data = squeeze(t(jj,ll,:));
+      zoo = find(isfinite(data));
+      if length(zoo) > 20    
+        junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+        thesave.oz2d_xtrendnwp(jj,ll) = junk(2);
+        oz2d_xconstrnwp(jj,ll) = junk(1);
+      else
+        thesave.oz2d_xtrendnwp(jj,ll) = NaN;
+        oz2d_xconstrnwp(jj,ll) = NaN;
+      end
     end
   end
-end
-
-figure(3); pcolor(rlon,plevsnwp,thesave.oz2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
-  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('OZ frac rates straight from CMIP6 or ERA5 zonal levels')
-
-t = p72x.gas_3; t = reshape(t,101,72,numtimesteps); tX = squeeze(nanmean(t,3));
-[~,~,kk] = size(t); clear tXX
-for kkk = 1 : kk
- tXX(:,:,kkk) = tX;
-end
-t = t./tXX;
-for jj = 1 : 101
-  for ll = 1 : 72
-    data = squeeze(t(jj,ll,:));
-    zoo = find(isfinite(data));
-    if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
-      thesave.oz2d_xtrend(jj,ll) = junk(2);
-      oz2d_xconstr(jj,ll) = junk(1);
-    else
-      thesave.oz2d_xtrend(jj,ll) = NaN;
-      oz2d_xconstr(jj,ll) = NaN;
+  
+  figure(3); pcolor(rlon,plevsnwp,thesave.oz2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
+    xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('OZ frac rates straight from CMIP6 or ERA5 zonal levels')
+  
+  t = p72x.gas_3; t = reshape(t,101,72,numtimesteps); tX = squeeze(nanmean(t,3));
+  [~,~,kk] = size(t); clear tXX
+  for kkk = 1 : kk
+   tXX(:,:,kkk) = tX;
+  end
+  t = t./tXX;
+  for jj = 1 : 101
+    for ll = 1 : 72
+      data = squeeze(t(jj,ll,:));
+      zoo = find(isfinite(data));
+      if length(zoo) > 20    
+        junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+        thesave.oz2d_xtrend(jj,ll) = junk(2);
+        oz2d_xconstr(jj,ll) = junk(1);
+      else
+        thesave.oz2d_xtrend(jj,ll) = NaN;
+        oz2d_xconstr(jj,ll) = NaN;
+      end
     end
   end
+  
+  figure(4); pcolor(rlon,plevsx,thesave.oz2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
+    xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
 end
-
-figure(4); pcolor(rlon,plevsx,thesave.oz2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
-  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
-
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 rh = p72.rh; rh = reshape(rh,iNlev,72,numtimesteps); 
@@ -367,7 +369,11 @@ diroutX = dirout;
 %diroutX = ' ';
 
 disp('here I am doing this save')
-if iType == 2
+if iType == 1
+  saver = ['save ' diroutX 'reconstruct_umbc_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx *xconstr*'];
+  %saver = [saver ' zonalrlat zonalplays zonalRHUMBCrate zonalTUMBCrate *xconstr*'];
+
+elseif iType == 2
   saver = ['save ' diroutX 'reconstruct_merra2_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHMERRA2rate zonalTMERRA2rate *xconstr*'];
 elseif iType == 5

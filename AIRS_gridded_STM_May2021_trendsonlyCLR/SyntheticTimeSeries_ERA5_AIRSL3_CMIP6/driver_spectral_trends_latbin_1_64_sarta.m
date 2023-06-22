@@ -7,6 +7,7 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 
 system_slurm_stats
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
+JOB = 31
 %JOB = 1 -- 64
 
 % ls -lt /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_15*.rp.rtp
@@ -16,13 +17,63 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 iNumYear = 19;
 iNumYear = 20;
 
-if iNumYear == 07
-  frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '_2014_09_2021_08.rp.rtp'];  %% OCO2
-elseif iNumYear == 19
-  frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '.rp.rtp'];                  %% GENERIC, 19 year
-  %%% OOPSY I THINIK I DELETED THESE SO RERUN IF NEEDED, and then 2002_09_2021_08 will now be added to name
-elseif iNumYear == 20
-  frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '_2002_09_2022_08.rp.rtp'];  %% 20 year
+iModel = 5;   %% ERA5
+iModel = 2;   %% MERRA2
+iModel = +3;  %% AIRS v7
+iModel = -3;  %% CLIMCAPS
+iModel = 1;   %% UMBC
+
+if iModel == 1
+  disp('UMBC')
+  if iNumYear == 07
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '_2014_09_2021_08.rp.rtp'];  %% OCO2
+  elseif iNumYear == 19
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '.rp.rtp'];                  %% GENERIC, 19 year
+    %%% OOPSY I THINIK I DELETED THESE SO RERUN IF NEEDED, and then 2002_09_2021_08 will now be added to name
+  elseif iNumYear == 20
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/UMBC/simulate64binsUMBC_' num2str(JOB) '_2002_09_2022_08.rp.rtp'];  %% 20 year
+  end
+
+elseif iModel == 5
+  disp('ERA5')
+  if iNumYear == 07
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '_2014_09_2021_08.rp.rtp'];  %% OCO2
+  elseif iNumYear == 19
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '.rp.rtp'];                  %% GENERIC, 19 year
+    %%% OOPSY I THINIK I DELETED THESE SO RERUN IF NEEDED, and then 2002_09_2021_08 will now be added to name
+  elseif iNumYear == 20
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_' num2str(JOB) '_2002_09_2022_08.rp.rtp'];  %% 20 year
+  end
+
+elseif iModel == 2
+  disp('MERRA2')
+  if iNumYear == 19
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/MERRA2/simulate64binsMERRA2_' num2str(JOB) '.rp.rtp'];                  %% GENERIC, 19 year
+    %%% OOPSY I THINIK I DELETED THESE SO RERUN IF NEEDED, and then 2002_09_2021_08 will now be added to name
+  elseif iNumYear == 20
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/MERRA2/simulate64binsMERRA2_' num2str(JOB) '_2002_09_2022_08.rp.rtp'];  %% 20 year
+  end
+
+elseif iModel == 3
+  disp('AIRS L3 ')
+  if iNumYear == 19
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/AIRSL3/simulate64binsAIRSL3_' num2str(JOB) '.rp.rtp'];                  %% GENERIC, 19 year
+    %%% OOPSY I THINIK I DELETED THESE SO RERUN IF NEEDED, and then 2002_09_2021_08 will now be added to name
+  elseif iNumYear == 20
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/AIRSL3/simulate64binsAIRSL3_' num2str(JOB) '_2002_09_2022_08.rp.rtp'];  %% 20 year
+  end
+
+elseif iModel == -3
+  disp('AIRS CLIMCAPSL3 ')
+  if iNumYear == 19
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/AIRSCLIMCAPSL3/simulate64binsAIRSCLIMCAPSL3_' num2str(JOB) '.rp.rtp'];                  %% GENERIC, 19 year
+    %%% OOPSY I THINIK I DELETED THESE SO RERUN IF NEEDED, and then 2002_09_2021_08 will now be added to name
+  elseif iNumYear == 20
+    frp = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/CLIMCAPSL3/simulate64binsCLIM_' num2str(JOB) '_2002_09_2022_08.rp.rtp'];  %% 20 year
+  end
+
+else
+  error('iModel = 2 (MERRA2) or 5 (ERA5) or +/-3 (AIRS v7/CLIMCAPS) ')
 end
 
 fprintf(1,'JOB = %2i iNumYear = %2i frp = %s \n',JOB,iNumYear,frp);
@@ -34,6 +85,7 @@ numdatapts = iNumYear * 12 * 72; %% eg 19 years --> 16416 points
 [ppmvLAY,ppmvAVG,ppmvMAX,pavgLAY,tavgLAY,ppmv500,ppmv75,ppmvSURF] = layers2ppmv(h,pppp,1:length(pppp.stemp),2);
 
 for xx = 1 : 72
+  fprintf(1,'JOB ( = latbin) = %2i       : Lonbin %2i of 72 : doing 2645 chans : ',JOB,xx)
   ind = (1:72:numdatapts);
   ind = ind + (xx-1);
   boo = find(ind <= iNumYear*12*72);
@@ -63,8 +115,21 @@ for xx = 1 : 72
       thesave.const(iii,xx)     = NaN;
     end
   end
+  fprintf(1,'\n');
 end
-dirout = ['ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' num2str(JOB,'%02d')  '/'];
+
+if iModel == 1
+  dirout = ['UMBC_SARTA_SPECTRAL_RATES/KCARTA_latbin' num2str(JOB,'%02d')  '/'];
+elseif iModel == 5
+  dirout = ['ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' num2str(JOB,'%02d')  '/'];
+elseif iModel == 2
+  dirout = ['MERRA2_SARTA_SPECTRAL_RATES/KCARTA_latbin' num2str(JOB,'%02d')  '/'];
+elseif iModel == +3
+  dirout = ['AIRSL3_SARTA_SPECTRAL_RATES/KCARTA_latbin' num2str(JOB,'%02d')  '/'];
+elseif iModel == -3
+  dirout = ['CLIMCAPSL3_SARTA_SPECTRAL_RATES/KCARTA_latbin' num2str(JOB,'%02d')  '/'];
+end
+
 if ~exist(dirout)
   mker = ['!mkdir ' dirout];
   eval(mker);

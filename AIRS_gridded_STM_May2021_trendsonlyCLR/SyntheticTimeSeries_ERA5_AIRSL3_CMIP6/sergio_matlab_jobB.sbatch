@@ -20,13 +20,14 @@
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 8     for driver_check_WV_T_RH_MERRA_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 9     for driver_check_WV_T_RH_AMIP6_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 10    for driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 11    for driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2.m
 #
-# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 11    for driver_spectral_trends_latbin_1_64_sarta
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 12    for driver_spectral_trends_latbin_1_64_sarta
 #
-# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 12    for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
-# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 13    for driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 13    for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 14    for driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
 
-# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 14    for driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2_constracegas.m
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 15    for driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2_constracegas.m
 #
 #########################################################################
 
@@ -130,17 +131,21 @@ elif [[ "$1" -eq "10" ]]; then
   # makes driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
   echo "cmd line arg = 10, driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2; exit"
-
 elif [[ "$1" -eq "11" ]]; then
+  # makes driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2.m
+  echo "cmd line arg = 10, driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2; exit"
+
+elif [[ "$1" -eq "12" ]]; then
   ## makes driver_spectral_trends_latbin_1_64_sarta.m
   echo "cmd line arg = 8, driver_spectral_trends_latbin_1_64_sarta"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta; exit"
 
-elif [[ "$1" -eq "12" ]]; then
+elif [[ "$1" -eq "13" ]]; then
   # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
   echo "cmd line arg = 5, driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas; exit"
-elif [[ "$1" -eq "13" ]]; then
+elif [[ "$1" -eq "14" ]]; then
   # makes driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
   echo "cmd line arg = 6, driver_spectral_trends_latbin_1_64_sarta_const_tracegas"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta_const_tracegas; exit"

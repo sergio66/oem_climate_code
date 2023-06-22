@@ -36,6 +36,8 @@ pERA5.stemp          = pERA5.stemp          + nwp_spectral_trends_cmip6_era5_air
 pERA5.ptemp(1:100,:) = pERA5.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
 pERA5.gas_1(1:100,:) = pERA5.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_1);
 pERA5.gas_3(1:100,:) = pERA5.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_3);
+
+
 RHERA5 = layeramt2RH(h,pERA5);
 
 RHERA5rate = RHERA5 - RH000;
@@ -189,6 +191,9 @@ sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
 dirout = 'SimulateTimeSeries/ERA5/';
+if iConstORVary == +1
+  dirout = 'SimulateTimeSeries/ERA5_ConstTracegas/';
+end
 
 co2ppm_t = [];
 n2oppm_t = [];

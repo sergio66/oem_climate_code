@@ -10,10 +10,12 @@ addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 
+addpath  /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
+
 system_slurm_stats
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
-%JOB = 21
+%JOB = 31
 
 %load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
 wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','h');
@@ -25,48 +27,16 @@ load('llsmap5.mat');
 
 RH000 = layeramt2RH(h,p);
 
-pMERRA2 = p;
-nwptrend = getdata_NWP(2);
-pMERRA2.stemp          = pMERRA2.stemp          + nwptrend.trend_stemp;
-pMERRA2.ptemp(1:100,:) = pMERRA2.ptemp(1:100,:) + nwptrend.trend_ptemp;
-pMERRA2.gas_1(1:100,:) = pMERRA2.gas_1(1:100,:).*(1 + nwptrend.trend_gas_1);
-pMERRA2.gas_3(1:100,:) = pMERRA2.gas_3(1:100,:).*(1 + nwptrend.trend_gas_3);
-%{
-pMERRA2.stemp          = pMERRA2.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.stemp;
-pMERRA2.ptemp(1:100,:) = pMERRA2.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.ptemp;
-pMERRA2.gas_1(1:100,:) = pMERRA2.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.gas_1);
-pMERRA2.gas_3(1:100,:) = pMERRA2.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.gas_3);
-%}
-
-RHMERRA2 = layeramt2RH(h,pMERRA2);
-
-RHMERRA2rate = RHMERRA2 - RH000;
-zonalRHMERRA2rate = reshape(RHMERRA2rate,100,72,64);
-zonalRHMERRA2rate = squeeze(nanmean(zonalRHMERRA2rate,2));
-
-kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
-rlat = kaboom.rlat; 
-
-zonalrlat = rlat;
-zonalplays = p.plays(1:100,3000);
-figure(1); pcolor(zonalrlat,zonalplays,zonalRHMERRA2rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
-
-%TMERRA2rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.merra2_100_layertrends.ptemp;
-TMERRA2rate = nwptrend.trend_ptemp;
-zonalTMERRA2rate = reshape(TMERRA2rate,100,72,64);
-zonalTMERRA2rate = squeeze(nanmean(zonalTMERRA2rate,2));
-figure(2); pcolor(zonalrlat,zonalplays,zonalTMERRA2rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct Trate')
+pUMBC = p; 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[hkcarta_emis,~,kcarta_emis,~] = rtpread('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.rp.rtp');
+[hkcarta_emis,~,kcarta_emis,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp');
 ind = (1:72) + (JOB-1)*72;
-[hkcarta_emis,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
+[hkcarta_emism,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
 disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
@@ -75,16 +45,20 @@ disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs
 iYS = 2002; iYE = 2021;
 iYS = 2002; iYE = 2022;
 
-%% see  FIND_NWP_MODEL_TRENDS/driver_computeMERRA2_monthly_trends.m  and do_the_AIRSL3_trends.m
-%merra2_64x72 = load('../../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_07_desc.mat');
-%merra2_64x72 = load('../../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_desc.mat');
-merra2_64x72 = load('../../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2022_08_desc.mat');
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
+%% this will have to be modified as per my UMBC retrievals!!!!!!!
+%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
 
+umbc = load('/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat','results','resultsO3','resultsT','resultsWV','pjunk20');
+plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
+plays = flipud(plevs2plays(plevs));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[numtimesteps0,~] = size(merra2_64x72.all.mmw);
+[numtimesteps0,~] = size(era5_64x72.all.mmw);
 numtimesteps = numtimesteps0;
-fprintf(1,'driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
+fprintf(1,'driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
 
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
@@ -145,23 +119,6 @@ mm = mm(usethese);
 dd = dd(usethese);
 
 numtimesteps = length(yy);
-merra2_64x72.all.yy = merra2_64x72.all.yy(usethese);
-merra2_64x72.all.mm = merra2_64x72.all.mm(usethese);
-merra2_64x72.all.dd = merra2_64x72.all.dd(usethese);
-merra2_64x72.all.nwp_ptemp = merra2_64x72.all.nwp_ptemp(usethese,:,:);
-merra2_64x72.all.nwp_gas_1 = merra2_64x72.all.nwp_gas_1(usethese,:,:);
-merra2_64x72.all.nwp_gas_3 = merra2_64x72.all.nwp_gas_3(usethese,:,:);
-merra2_64x72.all.nwp_rh    = merra2_64x72.all.nwp_rh(usethese,:,:);
-merra2_64x72.all.nwp_plevs = merra2_64x72.all.nwp_plevs(usethese,:,:);
-merra2_64x72.all.ptemp = merra2_64x72.all.ptemp(usethese,:,:);
-merra2_64x72.all.gas_1 = merra2_64x72.all.gas_1(usethese,:,:);
-merra2_64x72.all.gas_3 = merra2_64x72.all.gas_3(usethese,:,:);
-merra2_64x72.all.mmw   = merra2_64x72.all.mmw(usethese,:);
-merra2_64x72.all.stemp = merra2_64x72.all.stemp(usethese,:);
-merra2_64x72.all.nlays = merra2_64x72.all.nlays(usethese,:);
-merra2_64x72.all.RH    = merra2_64x72.all.RH(usethese,:,:);
-merra2_64x72.all.TwSurf = merra2_64x72.all.TwSurf(usethese,:);
-merra2_64x72.all.RHSurf = merra2_64x72.all.RHSurf(usethese,:);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -191,10 +148,12 @@ klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
 dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
-dirout = 'SimulateTimeSeries/MERRA2/';
+dirout = 'SimulateTimeSeries/UMBC/';
 if iConstORVary == +1
-  dirout = 'SimulateTimeSeries/MERRA2_ConstTracegas/';
+  dirout = 'SimulateTimeSeries/UMBC_ConstTracegas/';
 end
+
+time_slope = time_so_far-mean(time_so_far);
 
 co2ppm_t = [];
 n2oppm_t = [];
@@ -213,7 +172,7 @@ for ii = JOB
   h72 = h;
   h72.ptype = 0;
   h72.pfields = 1;
-  h72.ngas  = 2;
+  h72.ngas = 2;
   h72.gunit = [21 21]';  %% g/g
   h72.glist = [ 1 3]';
   
@@ -234,28 +193,100 @@ for ii = JOB
   end
   
   iNlev = 37;
-  iNlev = 42;
-  plevsnwp  = squeeze(merra2_64x72.all.nwp_plevs(1,:,3000))';
+  plevsnwp  = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))';
   p72.nlevs = ones(size(p72.rtime)) * iNlev;
-  p72.plevs = squeeze(merra2_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
+  p72.plevs = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
   p72.rlat  = rlat(ii) * ones(1,72*numtimesteps); p72.rlat = p72.rlat(:)';
   p72.rlon = rlon' * ones(1,numtimesteps);        p72.rlon = p72.rlon(:)';
   p72.plat = p72.rlat;
   p72.plon = p72.rlon;
-  
-  junk = merra2_64x72.all.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
-  junk = merra2_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
-  junk = merra2_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
-  junk = merra2_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
-  junk = merra2_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
 
+  junk = era5_64x72.all.stemp;                  junk = reshape( junk,numtimesteps,72,64);    junk = squeeze( junk(:,:,ii));  junk =  junk';  rara = mean(junk,2);
+  xjunk = time_slope' * (umbc.results(:,6)');  xjunk = reshape(xjunk,numtimesteps,72,64);   xjunk = squeeze(xjunk(:,:,ii)); xjunk = xjunk';
+  bad = find(isnan(xjunk)); xjunk(bad) = 0;
+  for lonlon = 1 : 72
+    yjunk(lonlon,:) = rara(lonlon) + xjunk(lonlon,:);
+  end
+  p72.stemp = reshape(yjunk,1,72*numtimesteps);
+
+  junk = era5_64x72.all.nwp_plevs;               junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); eraplevs = squeeze(nanmean(junk,1));
+
+  junk = era5_64x72.all.nwp_ptemp;               junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); rara = squeeze(nanmean(junk,1));
+  trend = umbc.resultsT';                        trend = reshape(trend,49,72,64);               trend = squeeze(trend(:,:,ii)); 
+  for kkkk = 1 : 72
+    xtrend(:,kkkk) = interp1(log(umbc.pjunk20),trend(:,kkkk),log(eraplevs(:,kkkk)),[],'extrap');
+  end
+  bad = find(isnan(xtrend)); xtrend(bad) = 0;
+  xjunk = zeros([size(rara) length(time_slope)]);
+  for kkkk = 1 : 37
+    for llll = 1 : 72
+      xjunk(kkkk,llll,:) = rara(kkkk,llll) + xtrend(kkkk,llll)*time_slope;
+    end
+  end
+  wah = squeeze(xjunk(:,1,:));
+  figure(1); pcolor(1:72,p72.plevs(:,1),xtrend); colorbar; shading interp; colormap(usa2); colorbar; set(gca,'ydir','reverse')
+  figure(2); pcolor(1:72,p72.plevs(:,1),rara); colorbar; shading interp; colormap(jet); colorbar; set(gca,'ydir','reverse')
+  figure(3); pcolor(1:240,p72.plevs(:,1),wah); colorbar; shading interp; colormap(jet); colorbar; set(gca,'ydir','reverse')
+  figure(4); pcolor(1:240,p72.plevs(:,1),nanmean(wah')'-wah); colorbar; shading interp; colormap(usa2); colorbar; set(gca,'ydir','reverse')
+  p72.ptemp = reshape(xjunk,iNlev,72*numtimesteps);
+
+  junk = era5_64x72.all.nwp_gas_1;               junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); rara = squeeze(nanmean(junk,1));
+  trend = umbc.resultsWV';                       trend = reshape(trend,49,72,64);               trend = squeeze(trend(:,:,ii)); 
+  for kkkk = 1 : 72
+    xtrend(:,kkkk) = interp1(log(umbc.pjunk20),trend(:,kkkk),log(eraplevs(:,kkkk)),[],'extrap');
+  end
+  bad = find(isnan(xtrend)); xtrend(bad) = 0;
+  xjunk = zeros([size(rara) length(time_slope)]);
+  for kkkk = 1 : 37
+    for llll = 1 : 72
+      xjunk(kkkk,llll,:) = rara(kkkk,llll) * (1 + xtrend(kkkk,llll)*time_slope);
+    end
+  end
+  wah = squeeze(xjunk(:,1,:));
+  figure(1); pcolor(1:72,p72.plevs(:,1),xtrend); colorbar; shading interp; colormap(usa2); colorbar; set(gca,'ydir','reverse')
+  figure(2); pcolor(1:72,p72.plevs(:,1),rara); colorbar; shading interp; colormap(jet); colorbar; set(gca,'ydir','reverse')
+  figure(3); pcolor(1:240,p72.plevs(:,1),wah); colorbar; shading interp; colormap(jet); colorbar; set(gca,'ydir','reverse')
+  figure(4); pcolor(1:240,p72.plevs(:,1),nanmean(wah')'-wah); colorbar; shading interp; colormap(usa2); colorbar; set(gca,'ydir','reverse')
+  p72.gas_1 = reshape(xjunk,iNlev,72*numtimesteps);
+
+  junk = era5_64x72.all.nwp_gas_3;               junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); rara = squeeze(nanmean(junk,1));
+  trend = umbc.resultsO3';                       trend = reshape(trend,49,72,64);               trend = squeeze(trend(:,:,ii)); 
+  for kkkk = 1 : 72
+    xtrend(:,kkkk) = interp1(log(umbc.pjunk20),trend(:,kkkk),log(eraplevs(:,kkkk)),[],'extrap');
+  end
+  bad = find(isnan(xtrend)); xtrend(bad) = 0;
+  xjunk = zeros([size(rara) length(time_slope)]);
+  for kkkk = 1 : 37
+    for llll = 1 : 72
+      xjunk(kkkk,llll,:) = rara(kkkk,llll) * (1 + xtrend(kkkk,llll)*time_slope);
+    end
+  end
+  wah = squeeze(xjunk(:,1,:));
+  figure(1); pcolor(1:72,p72.plevs(:,1),xtrend); colorbar; shading interp; colormap(usa2); colorbar; set(gca,'ydir','reverse')
+  figure(2); pcolor(1:72,p72.plevs(:,1),rara); colorbar; shading interp; colormap(jet); colorbar; set(gca,'ydir','reverse')
+  figure(3); pcolor(1:240,p72.plevs(:,1),wah); colorbar; shading interp; colormap(jet); colorbar; set(gca,'ydir','reverse')
+  figure(4); pcolor(1:240,p72.plevs(:,1),nanmean(wah')'-wah); colorbar; shading interp; colormap(usa2); colorbar; set(gca,'ydir','reverse')
+  p72.gas_3 = reshape(xjunk,iNlev,72*numtimesteps);
+
+% function out = convert_humidity (P, T, in, type_in, type_out, method_es, tol_T)
+% pressure in Pa (not hPa nor mbar)
+% temperature in K (not in degree Celsius)
+% humidity:
+% - partial pressure of water vapor in Pa (not hPa nor mbar)
+% - specific humidity in kg/kg (not g/kg)
+% - mixing ratio in kg/kg (not g/kg)
+% - relative humidity in percent
+% - dew point temperature in K (not degree Celsius)
+% - virtual temperature in K (not degree Celsius)
+  p72.rh = convert_humidity(p72.plevs*100,p72.ptemp,p72.gas_1,'specific humidity','relative humidity');
+  
 %  p72.scanang = zeros(size(p72.stemp));
 %  p72.satzen = zeros(size(p72.stemp));
   p72.zobs = 705000 * ones(size(p72.stemp));
   p72.scanang = ones(size(p72.stemp)) * 22;
   p72.satzen = vaconv(p72.scanang, p72.zobs, zeros(size(p72.zobs)));
-  p72.satzen = ones(size(p72.stemp)) * 24; %%% to match what is in home/sergio/KCARTA/WORK/RUN/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyMERRA2.rp.rtp which was used to make jacs
+  p72.satzen = ones(size(p72.stemp)) * 24; %%% to match what is in home/sergio/KCARTA/WORK/RUN/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp which was used to make jacs
   p72.solzen = 150 * ones(size(p72.stemp));
   %p72.spres = 1000 * ones(size(p72.stemp));
   %p72.salti = 0 * ones(size(p72.stemp));
@@ -283,17 +314,15 @@ for ii = JOB
   p72.efreq = efreq_t;
   p72.emis  = emis_t;
   p72.rho   = rho_t;
-
+    
   fstr = ['_' num2str(YMStart(1),'%04d') '_' num2str(YMStart(2),'%02d') '_' num2str(YMEnd(1),'%04d') '_' num2str(YMEnd(2),'%02d')];
-  fip = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.ip.rtp'];
-  fop = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.op.rtp'];
-  frp = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.rp.rtp'];
+  fip = [dirout 'simulate64binsUMBC_' num2str(ii) fstr '.ip.rtp'];
+  fop = [dirout 'simulate64binsUMBC_' num2str(ii) fstr '.op.rtp'];
+  frp = [dirout 'simulate64binsUMBC_' num2str(ii) fstr '.rp.rtp'];
 
-  p72_0 = p72;
-  p72 = fix_merraL3(p72);
   rtpwrite(fip,h72,[],p72,[]);
     
-  klayerser = ['!' klayers ' fin=' fip ' fout=' fop];
+  klayerser = ['!' klayers ' fin=' fip ' fout=' fop ' >& ugh'];
   sartaer   = ['!' sarta '   fin=' fop ' fout=' frp];
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -363,14 +392,14 @@ for ii = JOB
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  iType = 2;
+  iType = 1;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
 
   pwd
   disp(' ')
-  disp('output in eg           SimulateTimeSeries/MERRA2/reconstruct_merra2_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
-  disp('         also makes eg SimulateTimeSeries/MERRA2/simulate64binsMERRA2_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
-  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 5')
+  disp('output in eg           SimulateTimeSeries/UMBC/reconstruct_umbc_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
+  disp('         also makes eg SimulateTimeSeries/UMBC/simulate64binsUMBC_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
+  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 12')
   disp(' ')
 
 end

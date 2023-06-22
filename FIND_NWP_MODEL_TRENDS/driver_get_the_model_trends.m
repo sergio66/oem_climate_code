@@ -10,6 +10,10 @@ drwxrwxr-x 2 sergio pi_strow 16384 Mar 31 07:23 AIRSL3
 drwxrwxr-x 2 sergio pi_strow 12288 Mar 31 07:21 ERA5
 %}
 
+addpath addpath /home/sergio/MATLABCODE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% superceded driver_get_the_model_trends_orig
 iJorC = input('(+1, default) J.Susskind AIRS L3  or (-1) C.Barnet CLIMCAPS  : ');
 if length(iJorC) == 0
@@ -58,6 +62,10 @@ end
 iAorCstrSPECTRA = iAorCstr;
 
 strMODELS = [iJorCstr '_' iEorMstr '_' iAorCstr];
+if ~exist('iNumYears')
+  disp('setting iNumYears == 20 in driver_get_the_model_trends')
+  iNumYears = 20;
+end
 [airsL3,era5,cmip6] = driverchoose_AIRSvsNWPvsXMIP6(iJorC,iEorM,iAorC,iNumYears);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -65,51 +73,27 @@ iSpectra = input('  now get model/L3 spectral rates???? (-1/+1 default) : ');
 if length(iSpectra) == 0
   iSpectra = +1;
 end
+
 if iSpectra == 1
   %% see eg driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
   dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
 
-  %% see plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
-  for ii = 1 : 64
-    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iJorCstrSPECTRA '/' iJorCFstr num2str(ii,'%02i') '.mat'];
-    junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
-    junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
-    ind = (ii-1)*72 + (1:72);
-    airsL3.airsL3_spectral_rates(:,ind) = thesave;
-  end
+  obsrates = load('/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat','rates');
+  obslat = load('/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat','rlat');
+  obslon = load('/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat','rlon');
+  [YY,XX] = meshgrid(obslat.rlat,obslon.rlon);
+  YY = YY(:);
+  cosYY = cos(YY*pi/180)';
+  cosYY = ones(2645,1) * cosYY;
 
-  %% see plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
-  if iEorM == 5
-    disp('loading in 2002/09 to 2022/08 spectral rates')
-  end
-  for ii = 1 : 64
-    if iEorM ~= 5
-      fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '.mat'];
-    else
-      fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '_2002_09_2022_08.mat'];
-    end
-    junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
-    junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
-    ind = (ii-1)*72 + (1:72);
-    era5.era5_spectral_rates(:,ind) = thesave;
-  end
-
-  %% see plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
-  for ii = 1 : 64
-    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iAorCstrSPECTRA '/' iAorCFstr num2str(ii,'%02i') '.mat'];
-    junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
-    junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
-    ind = (ii-1)*72 + (1:72);
-    cmip6.cmip6_spectral_rates(:,ind) = thesave;
-  end
+  get_spectral_get_the_model_trends
 
   airsL3.fchanx = fchanx;
   era5.fchanx = fchanx;
   cmip6.fchanx = fchanx;
 
-  figure(5); plot(fchanx,nanmean(airsL3.airsL3_spectral_rates'),'b',fchanx,nanmean(era5.era5_spectral_rates'),'r',fchanx,nanmean(cmip6.cmip6_spectral_rates'),'k');
-   xlim([640 1640]); ylim([-0.08 +0.04])
-    plotaxis2;
-   hl = legend(iJorCstrSPECTRA,iEorMstrSPECTRA,iAorCstrSPECTRA,'location','best','fontsize',8);
+  %plot_spectral_get_the_model_trends
+  plot_spectral_get_the_model_trends2
+
 end
   

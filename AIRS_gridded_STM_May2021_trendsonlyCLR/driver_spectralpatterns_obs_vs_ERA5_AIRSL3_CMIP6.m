@@ -13,9 +13,11 @@ b_desc = reshape(b_desc,2645,72*64);
 moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','h');
 f = moonoise.h.vchan; clear moonoise;
 
+%%%%% >>>>>>>>>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>
 addpath ../FIND_NWP_MODEL_TRENDS/
 iNumYears = 20;
 driver_get_the_model_trends  %% gets era5, airsL3 etc
+%%%%% >>>>>>>>>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>
 
 settings.iIgnoreChans_CH4 = -1;
 settings.iIgnoreChans_N2O = -1;
