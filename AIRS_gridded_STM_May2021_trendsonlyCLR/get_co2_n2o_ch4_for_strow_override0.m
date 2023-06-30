@@ -1,4 +1,4 @@
-function [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,settings,iVersJac); %% sets co2x,n2ox,ch4x
+function [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
 
 % 2019 : 40 latbins for CRIS_new_clear_scan_January2020            Suomi CrIS NSR 2012/05-2019/04 
 % 2012 : 4608 lonbins/latbins for AIRS obverlapping                Suomi CrIS NSR 2012/05-2019/04 
@@ -63,6 +63,28 @@ if iVersJac == 2019 | iVersJac == 2012
   end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+elseif iVersJac == 2021 | iVersJac == 2022
+  disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2002/09 - 2021/08')
+  co2x = 2.262445;
+  n2ox = 0.925496;
+  ch4x = 6.613673;
+
+  iVersESRL = 0;
+  iVersESRL = 4;
+  if iVersESRL == 0
+    co2x = co2x;
+    n2ox = n2ox;
+    ch4x = ch4x;
+  elseif iVersESRL == 4
+    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+    n2ox = n2ox;
+    n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_19,rlatx);
+    co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_19,rlatx);
+    ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_19,rlatx);
+  end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 elseif iVersJac == 2015
   disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2015/01 - 2021/12, OCO2')
   co2x = 2.262445;
@@ -83,31 +105,71 @@ elseif iVersJac == 2015
     ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_oco2_07,rlatx);
   end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-else
-  disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2002/09 - 2021/08')
-  co2x = 2.262445;
-  n2ox = 0.925496;
-  ch4x = 6.613673;
 
-  iVersESRL = 0;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+elseif iVersJac == 2014
+  disp('get_co2_n2o_ch4_for_strow_override.m : CMIP6 2002/09 - 2014/08')
+  iVersESRL = 3;
   iVersESRL = 4;
   if iVersESRL == 0
+    %% this saved as no_tracegas_spectral_rate_12years0.mat
+    co2x = 2.2;
+    n2ox = 1.0;
+    ch4x = 5.0;
+
     co2x = co2x;
     n2ox = n2ox;
     ch4x = ch4x;
-  elseif iVersESRL == 4
-    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2021.mat');
-    iNX = settings.iNumYears + 2002;
-    if iNX <= esrl_trend.yyE(end)      
-      [~,iNX] = intersect(esrl_trend.yyE,iNX);
-    else
-      iNX = length(esrl_trend.yyE);
+  
+  else
+    co2x = 2.065319;
+    n2ox = 0.863650;
+    ch4x = 5.316252;
+
+    if iVersESRL == 1
+      %% this saved as no_tracegas_spectral_rate_12years1.mat
+      co2x = 2.065319;
+      n2ox = 0.863650;
+      ch4x = 5.316252;
+
+      co2x = co2x;
+      n2ox = n2ox;
+      ch4x = ch4x;
+    
+    elseif iVersESRL == 2
+      %% this saved as no_tracegas_spectral_rate_12years2.mat
+      co2x = co2x * 0.98;
+      n2ox = n2ox * 0.98;
+      ch4x = ch4x * 0.98;
+
+      co2x = co2x;
+      n2ox = n2ox;
+      ch4x = ch4x;
+    
+    elseif iVersESRL == 3
+      %% this saved as no_tracegas_spectral_rate_12years3.mat
+      co2x = co2x * 0.95;
+      n2ox = n2ox * 0.95;
+      ch4x = ch4x * 0.95;
+
+      co2x = co2x;
+      n2ox = n2ox;
+      ch4x = ch4x;
+
+    elseif iVersESRL == 4
+      %% this saved as no_tracegas_spectral_rate_12years4.mat
+      co2x = co2x * 0.95;
+      n2ox = n2ox * 0.95;
+      ch4x = ch4x * 0.95;
+
+      esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+      n2ox = n2ox;
+      n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_12,rlatx);
+      co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_12,rlatx);
+      ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_12,rlatx);
     end
-    n2ox = interp1(esrl_trend.rlat0,esrl_trend.n2otrend(iNX,:),rlatx);
-    co2x = interp1(esrl_trend.rlat0,esrl_trend.co2trend(iNX,:),rlatx);
-    ch4x = interp1(esrl_trend.rlat0,esrl_trend.ch4trend(iNX,:),rlatx);
   end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

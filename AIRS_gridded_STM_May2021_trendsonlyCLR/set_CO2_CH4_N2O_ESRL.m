@@ -1,6 +1,10 @@
 %% note this is a SCRIPT
 
-[co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,iVersJac); %% sets co2x,n2ox,ch4x
+if length(intersect(settings.dataset,[6 8])) == 1
+  [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override0(driver,iVersJac); %% sets co2x,n2ox,ch4x using special CRIS or OCO years
+else
+  [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,settings,iVersJac); %% sets co2x,n2ox,ch4x using 2-19 years :: AIRS which starts in 2002/09
+end
 
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
   fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  N2O = %8.6f   CH4 = %8.6f \n',co2x,n2ox,ch4x)

@@ -24,7 +24,7 @@ junk = squeeze(airs_noiseTtrue(:,:,1520));
 junk = reshape(airs_noiseTtrue,72*64,2645)'/sqrt(120);    %% need sqrt(N) from about 12000 obs/tile/16 days .. so 1% of this is 120 ... noise goes down by sqrt(N)
 plot(h.vchan,nanmean(reshape(b_err_desc,72*64,2645)',2),h.vchan(g2645),nanmean(junk(g2645,:),2));  
   ylim([0 0.3]); 
-  hl = legend('from b_err','from 1/sqrt(N)','location','best','fontsize',10);
+  hl = legend('from b_{err}','from 1/sqrt(N)','location','best','fontsize',10);
 title(['Quantile ' num2str(iQuantile,'%02d')])
 
 figure(4); clf

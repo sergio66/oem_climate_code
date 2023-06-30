@@ -14,6 +14,11 @@ addpath /home/sergio/MATLABCODE/matlib/science/
 %   b_obs = b_desc;
 % end
 
+disp('Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/ReadmeQuick to figure out how to make trends from YYYY1/MM1/DD1 to YYYY2/MM2/DD2')
+disp('Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/ReadmeQuick to figure out how to make trends from YYYY1/MM1/DD1 to YYYY2/MM2/DD2')
+disp('Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/ReadmeQuick to figure out how to make trends from YYYY1/MM1/DD1 to YYYY2/MM2/DD2')
+disp(' ')
+
 if ~exist('h')
   load h2645structure.mat
 end
@@ -49,7 +54,10 @@ iType = +06;   %% sergio Q16 07 year trends         I     ran for me in Aug 2022
 iType = +07;   %% sergio Q16 20 year trends         I     ran for me in Sep 2022, 2002/09 to 2022/08 FULL, 20 years
 iType = +08;   %% sergio Q16 06 year trends         I     ran for me in Sep 2022, 2015/01 to 2021/12 FULL, 06 years, OCO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iType = +09;   %% sergio iQAX_3 Q05 20 year trends  I     ran for me in Oct 2022, 2002/09 to 2022/08 FULL, 20 years, with newer defn o quantiles
+iType = +09;   %% sergio iQAX_3 Q05 20 year trends  I     ran for me in Oct 2022, 2002/09 to 2022/08 FULL, 20 years, with newer defn of quantiles
+iType = +19;   %% sergio iQAX_3 Q05 05 year trends  I     ran for me in June 2023, 2002/09 to 2007/08 FULL, 05 years, with newer defn of quantiles
+iType = +11;   %% sergio iQAX_3 Q05 10 year trends  I     ran for me in June 2023, 2002/09 to 2012/08 FULL, 10 years, with newer defn of quantiles
+iType = +12;   %% sergio iQAX_3 Q05 15 year trends  I     ran for me in June 2023, 2002/09 to 2015/08 FULL, 15 years, with newer defn of quantiles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('Choices DataSet to use ')
@@ -74,14 +82,20 @@ disp('                        (7) Sergio Quantile Sep 2022 2002/09 to 2022/08 Fu
 disp('                        (8) Sergio Quantile Sep 2022 2015/01 to 2021/12 Full 06 OCO2 years **** ');
 disp(' <---------------------------------------------------------------------------------------> ')
 disp('                        (9) Sergio Quantile Sep 2022 2002/09 to 2022/08 Full 20 years, new quantile defn **** ');
+disp('                       (10) Sergio Quantile Jun 2023 2002/09 to 2007/08 Full 05 years, new quantile defn **** ');
+disp('                       (11) Sergio Quantile Jun 2023 2002/09 to 2012/08 Full 10 years, new quantile defn **** ');
+disp('                       (12) Sergio Quantile Jun 2023 2002/09 to 2017/08 Full 15 years, new quantile defn **** ');
 disp(' <---------------------------------------------------------------------------------------> ')
-iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9   or +3,-3) : ');
+iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9,+10,+11,+12   or +3,-3) : ');
 
-if iType ~= 3
-  iQuantile = 16;  %% hottest, used for AIRS STM May 221
+if iType ~= 3 & iType < 9
+  iQuantile = 16;  %% hottest, used for AIRS STM May 21
   iQuantile = 08;
   iQuantile = 04;
   iQuantile = input('Enter iQuantile to make (1-16, 0 = avg, 50 = hottest 5) : ');
+elseif iType >= 9 & iType <= 12
+  iQuantile = 03;  %% Q0.95, used for AIRS STM May 22
+  iQuantile = input('Enter iQuantile to make (1-5, 1 = mean (Q0.50) , 5 = clearest (Q0.99) : ');
 end
 
 iKeepPlotting = -1;
@@ -105,6 +119,12 @@ elseif iType == 8
 %%%%
 elseif iType == 9
   fnamePROCESS = ['iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+elseif iType == 10
+  fnamePROCESS = ['iType_10_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+elseif iType == 11
+  fnamePROCESS = ['iType_11_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
+elseif iType == 12
+  fnamePROCESS = ['iType_12_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat'];
 %%%%
 elseif iType == 3
   fnamePROCESS = ['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat'];
@@ -154,6 +174,11 @@ for iLat = 1 : 64
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0    = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
     thedirERA5 = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/SimulateTimeSeries/ERA5_ConstTracegas/'];
+  elseif iType == 10 | iType == 11 | iType == 12
+    % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
+    %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
+    thedir0    = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
+    thedirERA5 = ['/NOTDONE/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/SimulateTimeSeries/ERA5_ConstTracegas/'];
   end
 
   for iLon = 1 : 72
@@ -197,6 +222,18 @@ for iLat = 1 : 64
       %% full AIRS 20 year
       %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_3_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_TimeSteps457.mat'];
+    elseif iType == 10
+      %% full AIRS 05 year
+      %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_3_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200200090001_200700080031_TimeStepsX114.mat'];
+    elseif iType == 11
+      %% full AIRS 10 year
+      %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_3_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200200090001_201200080031_TimeStepsX228.mat'];
+    elseif iType == 12
+      %% full AIRS 15 year
+      %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_3_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200200090001_201700080031_TimeStepsX342.mat'];
     end
 
     iBoo = (iLat-1)*72 + iLon;
@@ -302,6 +339,9 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+addpath /home/sergio/MATLABCODE/PLOTTER
+addpath /asl/matlib/plotutils
+addpath /asl/matlib/maps/
 
 figs_put_together_QuantileChoose_trends
 

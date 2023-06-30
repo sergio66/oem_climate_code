@@ -33,7 +33,7 @@ elseif abs(settings.ocb_set) > 1
 end
 %---------------------------------------------------------------------------
 % Raw rate data file        
-driver = set_driver_rateset_datafile(driver,settings);
+[driver,settings] = set_driver_rateset_datafile(driver,settings);
 
 fprintf(1,'[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i %3i \n',[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset])
 fprintf(1,' <<< driver.rateset.datafile >>> = %s \n',driver.rateset.datafile)

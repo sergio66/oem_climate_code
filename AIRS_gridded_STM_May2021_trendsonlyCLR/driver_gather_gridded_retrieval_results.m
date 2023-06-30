@@ -48,7 +48,13 @@ if length(iAK) == 0
 end
 if iAK > 0
   %% see Plotutils/plot_retrieval_latbins_fewlays
-  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat');
+  iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 20] ');  
+  if length(iNumYears) == 0
+    iNumYears = 20;
+  end
+  junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
+  junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
+  era5 = load(junk);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,10 +96,10 @@ if length(iOCBset) == 0
   iOCBset = 0;
 end
 
-disp('quants for dataset 1-8 = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00]');
-disp('quants for dataset 9   = [0.50 0.80 0.90 0.95 0.97 1.00]');
+disp('quants for dataset 1-8        = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00]');
+disp('quants for dataset 9,10,11,12 = [0.50 0.80 0.90 0.95 0.97 1.00]');
 
-dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9) Sergio 2002/09-2022/08 20 YEARS new quants iQAX=3 \n    :::  [4 = Default] : ');
+dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n    :::  [4 = Default] : ');
 if length(dataset) == 0
   dataset = 4;
 end
@@ -116,17 +122,23 @@ elseif dataset == 8
   iNumYears = 07;
 elseif dataset == 9
   iNumYears = 20;
+elseif dataset == 10
+  iNumYears = 05;
+elseif dataset == 11
+  iNumYears = 10;
+elseif dataset == 12
+  iNumYears = 15;
 end
 
 if dataset == -3
   iQuantile = 00;
-elseif dataset == 9
+elseif dataset >= 9
   iQuantile = 05; 
-  iQuantile = input('Dataset = 9 ==> Which quantile 1..6   [5 = Default] : ');
+  iQuantile = input('Dataset = 9,10,11,12 ==> Which quantile 1..5   [5 = Default] : ');
   if length(iQuantile) == 0
     iQuantile = 5;
   end
-elseif dataset ~= 3 & dataset ~= 9
+elseif dataset ~= 3 & dataset < 9
   iQuantile = 16;  %% AIRS STM 2021, hottest
   iQuantile = 08;  %% 
   iQuantile = input('Which quantile -1 for extremes [(1--16) (99 for orig Q16, done for AIRS STM)]   [16 = Default] : ');
@@ -199,6 +211,24 @@ if iOCBset == 0
   elseif dataset == 9
     if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
       data_trends = load(['iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
+    end
+  elseif dataset == 10
+    if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
+      data_trends = load(['iType_10_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
+    end
+  elseif dataset == 11
+    if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
+      data_trends = load(['iType_11_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
+    end
+  elseif dataset == 12
+    if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
+      data_trends = load(['iType_12_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     else
       fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
