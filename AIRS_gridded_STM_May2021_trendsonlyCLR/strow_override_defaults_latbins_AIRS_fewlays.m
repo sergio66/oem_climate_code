@@ -336,7 +336,8 @@ if settings.resetnorm2one == +1
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-build_cov_matrices
+build_cov_matrices  %% iLatX controls the "width" of the polar regions, which have different covariance matrices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %figure(13); colormap jet; imagesc(log10(abs(aux.m_ts_jac'))); caxis([-12 0]); colorbar 
 %disp('here 3'); pause

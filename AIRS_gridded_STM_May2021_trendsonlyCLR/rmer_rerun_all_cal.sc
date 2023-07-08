@@ -17,9 +17,9 @@ fi
 
 echo "the second argument is $2"
 
-ls -lt Output/Quantile$c/test*.mat | wc -l
+ls -lt Output_CAL/Quantile$c/test*.mat | wc -l
 echo "removing latbins 01 .. 64 from Output/Quantile$c/"
-/bin/rm Output/Quantile$c/test*.mat
+/bin/rm Output_CAL/Quantile$c/test*.mat
 
 /bin/rm slurm*.out
 

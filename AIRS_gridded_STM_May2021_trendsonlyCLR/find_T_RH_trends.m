@@ -42,7 +42,8 @@ clear px RHx RH1kmx colwaterx
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-interp_resultsT_WV_O3_to_p         %% interp the 50 layer resultT,resultWV retrievals to 100 layer p
+interp_resultsT_WV_O3_to_p         %% interp the 50 layer resultT,resultWV retrievals      to 100 layer p
+interp_resultsT_WV_O3_to_p_xb      %% interp the 50 layer xbT,xbWV,xbO3    initializations to 100 layer p
 
 % rtpwrite('summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_PERTv1.rtp',h,ha,pert,pa);
 

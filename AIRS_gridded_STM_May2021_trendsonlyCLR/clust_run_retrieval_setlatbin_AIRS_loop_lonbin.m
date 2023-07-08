@@ -120,6 +120,7 @@ iDebug = -1;
 %iDebug = 4500;
 %iDebug = 2268; %% T
 %iDebug = 1082
+%iDebug = 98
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -130,8 +131,12 @@ ia_OorC_DataSet_Quantile = [+0 05 50]; %% ocb_set = 0 : obs fit, dataset = 5, iQ
 ia_OorC_DataSet_Quantile = [+0 07 16]; %% ocb_set = 0 : obs fit, dataset = 7, iQuantile = 16    20 year rates, AIRS obs Q16
 ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
 ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+
 ia_OorC_DataSet_Quantile = [+0 10 03]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 11 03]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 12 03]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 0 : cal fit, dataset = 9, iQuantile = 16    20 year rates, AIRS cal Q(0.99-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -294,7 +299,7 @@ for iInd = iXX1 : idX : iXX2
 
   iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
   iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
-  iAdjLowerAtmWVfrac = 0;                             %% WARNING this does not  set WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  iAdjLowerAtmWVfrac = 0;                             %% WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
   iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46)
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
@@ -312,19 +317,26 @@ for iInd = iXX1 : idX : iXX2
   topts.ocb_set = ia_OorC_DataSet_Quantile(1);
 
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +2;  %% use T+ST
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T/ST/O3
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +40; %% use T only in the lower trop to "start things" in the polar region, based on BT1231
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +4;  %% use T only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +1;  %% use WV only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T/ST/O3
 
   topts.set_era5_cmip6_airsL3 = 6;           %% use AMIP6    a priori
   topts.set_era5_cmip6_airsL3 = 3;           %% use AIRSL3   a priori
   topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
   topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
-  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
-  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
   topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori
+  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
+  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
+
+  if ia_OorC_DataSet_Quantile(1) == 1 & topts.set_era5_cmip6_airsL3 ~= 0
+    %% this is synthetic rates, and starting with big a-priori .... so do not mess with lower atm WV!!!
+    disp('ia_OorC_DataSet_Quantile(1) == 1 & topts.set_era5_cmip6_airsL3 ~= 0 ==> synthetic rates + start with NWP trends as xb (a priori) means .... do not mess with PBL WV trends!!!!')
+    disp('  making sure topts.iAdjLowerAtmWVfrac = 0 ')
+    topts.iAdjLowerAtmWVfrac = 0;
+  end
 
   if topts.set_era5_cmip6_airsL3 == 8   
     if topts.set_era5_cmip6_airsL3_WV_T_O3 == +10
@@ -332,9 +344,10 @@ for iInd = iXX1 : idX : iXX2
       disp('you want MLS plus you want to set lower WV .... reset topts.set_era5_cmip6_airsL3_WV_T_O3 = +100')
     end
   end
-  if topts.iAdjLowerAtmWVfrac > 0 & topts.set_era5_cmip6_airsL3 > 0 & topts.set_era5_cmip6_airsL3 < 8
+  if topts.iAdjLowerAtmWVfrac > 0 & topts.set_era5_cmip6_airsL3 ~= 0
     disp('You have topts.iAdjLowerAtmWVfrac > 0 so you want to set PBL ... but you also want to set ERA5 or MERRA2 or AIRS L3 a-priori NOPE NOPE NOPE')
-    topts.set_era5_cmip6_airsL3 = 0;         %% use 0 a priori for every layer ... but can still allow MLS input at UT?LS and above 300 mb
+    topts.iAdjLowerAtmWVfrac = 0;             %% forget about PBL
+    %topts.set_era5_cmip6_airsL3 = 0;         %% use 0 a priori for every layer ... but can still allow MLS input at UT?LS and above 300 mb
   end
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
@@ -342,8 +355,8 @@ for iInd = iXX1 : idX : iXX2
 
   %% iLatX is used in : build_cov_matrices.m to make the cov_setA, cov_srtB ... cov_set = wgtA cov_setA + wgtB cov_setB
   %%                  : get_jac_fast.m to set the iVersQRenorm and then qrenorm
-  iLatX = -1; %% do not any blending!!!     %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
   iLatX = 11; %% midlats
+  iLatX = -1; %% do not any blending!!!     %%%%%%%%%%%%%%%%%%%%%%%%% TESTING TO GET OBS COV MATRICES SAME AS SYNTHETIC ERA5 COV MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%    
 
   topts.iLatX = iLatX;
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)

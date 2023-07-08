@@ -134,9 +134,19 @@ if dataset == -3
   iQuantile = 00;
 elseif dataset >= 9
   iQuantile = 05; 
-  iQuantile = input('Dataset = 9,10,11,12 ==> Which quantile 1..5   [5 = Default] : ');
-  if length(iQuantile) == 0
-    iQuantile = 5;
+  if iOCBset == 0
+    iQuantile = input('Dataset = 9,10,11,12, iOCBset = 0 (obs)  ==> Which quantile 1..5   [5 = Default] : ');
+    if length(iQuantile) == 0
+      iQuantile = 5;
+    end
+  elseif iOCBset == 1
+    iQuantile = input('Dataset = 9,10,11,12, iOCBset = 1 (cal)  ==> Which quantile 1..16   [16 = Default] : ');
+    if length(iQuantile) == 0
+      iQuantile = 16;
+    end
+  else
+    iOCBset
+    error('huh??? iOCBset = 0,1 only!!!')
   end
 elseif dataset ~= 3 & dataset < 9
   iQuantile = 16;  %% AIRS STM 2021, hottest
@@ -402,6 +412,7 @@ while iDoAgain > 0
       loader = ['load ' fname];
       eval(loader);
       iaFound(ii) = +1;
+      
       results(ii,1:6)    = oem.finalrates(1:6);
       resultsunc(ii,1:6) = oem.finalsigs(1:6);
       [mmn,nn] = size(oem.ak_water);
@@ -432,14 +443,21 @@ while iDoAgain > 0
 
       nlays_straight_from_results(ii) = nn;
       nn0 = min(nn,iNumLay);
+
+      xb(ii,1:6)    = oem.xb(1:6);
+      xbWV(ii,1:nn) = oem.xb((1:nn)+6+nn*0);
+      xbT(ii,1:nn)  = oem.xb((1:nn)+6+nn*1);
+      xbO3(ii,1:nn) = oem.xb((1:nn)+6+nn*2);
+
       if nn0 == iNumLay
         thedofs(ii) = oem.dofs;
         lencdofs(ii) = length(oem.cdofs);
         cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
+
+        
         resultsWV(ii,1:nn) = oem.finalrates((1:nn)+6+nn*0);
         resultsT(ii,1:nn)  = oem.finalrates((1:nn)+6+nn*1);
         resultsO3(ii,1:nn) = oem.finalrates((1:nn)+6+nn*2);
-  
         resultsWVunc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*0);
         resultsTunc(ii,1:nn)  = oem.finalsigs((1:nn)+6+nn*1);
         resultsO3unc(ii,1:nn) = oem.finalsigs((1:nn)+6+nn*2);
