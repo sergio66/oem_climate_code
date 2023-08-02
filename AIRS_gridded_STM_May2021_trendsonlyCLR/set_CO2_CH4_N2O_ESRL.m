@@ -6,6 +6,24 @@ else
   [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,settings,iVersJac); %% sets co2x,n2ox,ch4x using 2-19 years :: AIRS which starts in 2002/09
 end
 
+iAdjCo2 = +1;
+co2x = co2x * iAdjCo2;
+
+if iAdjCo2 >= 10
+  boo = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
+  JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
+  co2x = boo.trend(JOBJOBJOB);
+  disp('set_CO2_CH4_N2O_ESRL.m : co2 --> co2 CarbonTracker')
+elseif iAdjCo2 > -1 & iAdjCo2 < +1
+  %co2x = co2x * 1.1  %%%% SERGIO PUT THIS JULY 23, 2023  makes WV at surface pretty good across all lats, dT/dt < dT(ERA5)/dt in tropical troposphere
+  %co2x = co2x * 0.9  %%%% SERGIO PUT THIS JULY 23, 2023   makes dWVfrac/dt < 0 at southern latitudes!!!s  dT/dt > dT(ERA5)/dt in tropical troposphere
+  %co2x = co2x * 0.95  %%%% SERGIO PUT THIS JULY 23, 2023   makes dWVfrac/dt < 0 at southern latitudes!!!!!
+  %co2x = co2x * 1.05  %%%% SERGIO PUT THIS JULY 23, 2023   makes dWVfrac/dt < 0 at southern latitudes!!!!!
+  co2x = co2x * (1 + iAdjCo2);
+  %disp('set_CO2_CH4_N2O_ESRL.m : co2 --> co2 x 1.05')  
+end
+driver.co2adj_ESRL = iAdjCo2;
+
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
   fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  N2O = %8.6f   CH4 = %8.6f \n',co2x,n2ox,ch4x)
   if settings.co2lays == 1
@@ -39,18 +57,29 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~=
       dBT1231_WV = moo; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
 
     else
-      %% land, so whos know
+      %% land, so whos knows
       dBT1231_WV = 0.0;
       dBT1231    = 0.0;
     end
     
     iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;
     iAdjLowerAtmWVfracX = 0.0;
-    if abs(iAdjLowerAtmWVfrac-1) < eps
-      iAdjLowerAtmWVfracX = 1.0;
-    elseif iAdjLowerAtmWVfrac > 0
+ 
+    %% code before 10 July 2023
+    %% if abs(iAdjLowerAtmWVfrac-1) < eps
+    %%   %% if iAdjLowerAtmWVfrac == 1, iAdjLowerAtmWVfracX = 1 so use dBT1231_WV as is from above
+    %%   iAdjLowerAtmWVfracX = 1.0;
+    %% elseif iAdjLowerAtmWVfrac > 0
+    %%   %% see Bk 46 : dWVfrac/dt =  1/RH dRH/dt + Lo/Rv 
+    %%   iAdjLowerAtmWVfracX = (1 + iAdjLowerAtmWVfrac/0.8);
+    %% end
+
+    %% code after 10 July 2023
+    if iAdjLowerAtmWVfrac > 0
       %% see Bk 46 : dWVfrac/dt =  1/RH dRH/dt + Lo/Rv 
-      iAdjLowerAtmWVfracX = (1 + iAdjLowerAtmWVfrac/0.8);
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac;
+    else
+      iAdjLowerAtmWVfracX = 0.0;
     end
 
     fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfracX = %8.6f\n',driver.rateset.rates(1520),dBT1231_WV,iAdjLowerAtmWVfracX);

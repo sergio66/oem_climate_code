@@ -75,14 +75,17 @@ iNumYears = 19;
 
 %% airsL3 : 'native' = 180 bins from L3, 'zonal' = 40 equal area latbins, [] = 64x72
 if iXMIP6 == -1
-  xmip6Choice  = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat');
+  fXMIP6 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat';
   strChoice  = 'CMIP6';
 elseif iXMIP6 == +1
-  xmip6Choice   = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/AMIP6_atm_data_2002_09_to_2014_08_trends.mat');
+  fXMIP6 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/AMIP6_atm_data_2002_09_to_2014_08_trends.mat';
   strChoice  = 'AMIP6';
 else
   error('unknown XMIP6 choice')
 end
+
+fprintf(1,' getdata_XMIP6.m : iXMIP = %2i iNumYears = %2i : fAIRS = %s \n',iXMIP6,12,fXMIP6);
+xmip6Choice = load(fXMIP6);
 
 load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
 rlat65 = latB2; rlon73 = -180 : 5 : +180;

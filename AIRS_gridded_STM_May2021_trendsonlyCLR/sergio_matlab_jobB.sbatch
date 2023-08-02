@@ -34,9 +34,15 @@
 #  Specify the desired partition develop : use batch/short for 64, time = 1 hr
 ##SBATCH --partition=batch
 #SBATCH --partition=high_mem
-#SBATCH --qos=short+
 ##SBATCH --partition=cpu2021
+
+#### this is ideal
+#SBATCH --qos=short+
 #SBATCH --time=0:59:00 
+
+### this is hope but does not work
+##SBATCH --qos=medium+
+##SBATCH --time=1:59:00 
 
 #  Specify the desired partition develop : use high mem/medium for 40, time = 4 hr
 ##SBATCH --partition=high_mem

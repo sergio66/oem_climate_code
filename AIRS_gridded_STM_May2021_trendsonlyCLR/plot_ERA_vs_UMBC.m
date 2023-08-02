@@ -50,7 +50,14 @@ if ~exist('rlon')
   rlon73 = -180 : 5 : +180; rlon = meanvaluebin(rlon73);
 end
 
-iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
+%iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
+iComparex = input('Enter rlat over which to compare ERA5 vs UMBC trends (-85 : +85, -9999 to stop) : ');
+if iComparex > -91
+  iCompare = find(rlat > iComparex,1);
+else
+  iCompare = -1;
+end
+fprintf(1,'you entered latitude %8.4f which corresponds to latbin %2i \n',iComparex,iCompare)
 while iCompare > 0 & iCompare < 65
   do_compare_ERA5_UMBC_latbin
 end

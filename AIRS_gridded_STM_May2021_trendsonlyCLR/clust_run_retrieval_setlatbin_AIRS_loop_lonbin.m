@@ -77,12 +77,19 @@ clear h ha p pa
 %% I did 16 day averages .... so 365/16 steps per year ... and 2002-2018 is
 %% 16 years so total of 365/16 * 16 = 365 steps
 
-JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
+if exist('JOBM')
+  JOB = JOBM;
+else
+  JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
+end
+
 % JOB = 33
 % JOB = 47
 % JOB = 37
 % JOB = 7
 % JOB = 39
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %iDebug = 180
 %iDebug = 754
@@ -120,7 +127,7 @@ iDebug = -1;
 %iDebug = 4500;
 %iDebug = 2268; %% T
 %iDebug = 1082
-%iDebug = 98
+%iDebug = 1009   %% Southern Midlats
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -135,8 +142,8 @@ ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQ
 ia_OorC_DataSet_Quantile = [+0 10 03]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 11 03]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 12 03]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 0 : cal fit, dataset = 9, iQuantile = 16    20 year rates, AIRS cal Q(0.99-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -254,9 +261,10 @@ for iInd = iXX1 : idX : iXX2
   topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
   topts.iaSequential = [150 60];                   %% sequential, like SingleFootprint
-  topts.iaSequential = -1;                         %% default one gulp
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
   topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
+  topts.iaSequential = [60 150 100];               %% sequential, like SingleFootprint
+  topts.iaSequential = -1;                         %% default one gulp
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
@@ -270,26 +278,15 @@ for iInd = iXX1 : idX : iXX2
   topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
   % quants = [0.50 0.80 0.90 0.95 0.97 1.00];
-  topts.dataset   = +9;   %% (+9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
+  topts.dataset   = +09;   %% (+ 9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
+  topts.dataset   = +10;   %% (+10) AIRS 05 year quantile dataset, Sergio May 2023   2002/09-2007/08 FULL 05 years, new way of douning quantile iQAX = 3  ************************
+  topts.dataset   = +11;   %% (+11) AIRS 10 year quantile dataset, Sergio May 2023   2002/09-2012/08 FULL 10 years, new way of douning quantile iQAX = 3  ************************
+  topts.dataset   = +12;   %% (+12) AIRS 15 year quantile dataset, Sergio May 2023   2002/09-2017/08 FULL 15 years, new way of douning quantile iQAX = 3  ************************
 
   topts.dataset   = ia_OorC_DataSet_Quantile(2);
+  iQuantile = ia_OorC_DataSet_Quantile(3);
 
   %%%%%%%%%%
-
-  iQuantile = 04;  %% 05% so very cloudy (hope SST jac can take care of that) and convection
-  iQuantile = 14;  %% 
-  iQuantile = 08;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.25 - 0.50
-  iQuantile = 09;  %% 50% so has clouds (hope SST jac can take care of that) and convection -- this is 0.90 - 0.75
-  iQuantile = 04;  %% quite cloudy (hopefully)
-  iQuantile = 00;  %% mean     <<<<***** IF YOU SET THIS THEN topts.dataset is ignored, uses topts.dataset   = -3; *****>>>>
-  iQuantile = 50;  %% top 5 quantiles averaged (so some cloud and hottest)
-  iQuantile = 04;  %% Q0.95, iQAX = 3, dataset = 9
-  iQuantile = 01;  %% Q0.80, iQAX = 3, dataset = 9
-  iQuantile = 03;  %% Q0.90, iQAX = 3, dataset = 9
-  iQuantile = 16;  %% Q0.99 hottest, for AIRS STM, dataset = 7,9 (yeah the last is a fudge!) -- use this when fitting CAL
-  iQuantile = 05;  %% Q0.97, iQAX = 3, dataset = 9
-
-  iQuantile = ia_OorC_DataSet_Quantile(3);
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
@@ -299,8 +296,9 @@ for iInd = iXX1 : idX : iXX2
 
   iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
   iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
-  iAdjLowerAtmWVfrac = 0;                             %% WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
-  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46)
+  iAdjLowerAtmWVfrac = 0;                             %% << WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac >>
+  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), but I think tooooo much
+  iAdjLowerAtmWVfrac = 0.25;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT
@@ -328,8 +326,8 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
   topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
   topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori
-  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
   topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
+  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
 
   if ia_OorC_DataSet_Quantile(1) == 1 & topts.set_era5_cmip6_airsL3 ~= 0
     %% this is synthetic rates, and starting with big a-priori .... so do not mess with lower atm WV!!!
@@ -553,7 +551,6 @@ end
     end
   end
 
-
   if sum(abs(driver.rateset.rates)) > 0 & ~exist(driver.outfilename)
     fprintf(1,'saving to %s \n',driver.outfilename)
     save(driver.outfilename,'-struct','driver');
@@ -671,6 +668,7 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
     pause(1)
     plot_retrieval_latbins_fewlays
   end
+  plot(f,driver.oem.fitXcomponents); plotaxis2; xlim([640 1640]); title('Components of fit'); hl = legend('trace gases','ST','WV(z)','T(z)','O3(z)','location','best','fontsize',10);
   error('nnyuk iDebug')
 end
 

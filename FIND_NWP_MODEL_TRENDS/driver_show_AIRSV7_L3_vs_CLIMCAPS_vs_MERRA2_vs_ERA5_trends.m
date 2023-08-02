@@ -9,7 +9,8 @@ if nargin == 0
   strUMBC = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithMLSL3_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_globalSSTfeedback.mat';
   strUMBC = '/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat';
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_feedback.mat';              %% not too bad at lower atm/polar!!!!
-  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith_MLSL3_TOA_guessWV_dRH_zero_bot_50fatlayers.mat';  ## too much oomph at gnd : use MLS L3 TOA and dRH/dt = 0 at bottom
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith_MLSL3_TOA_guessWV_dRH_zero_bot_50fatlayers.mat';  %% too much oomph at gnd : use MLS L3 TOA and dRH/dt = 0 at bottom
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';               %% use CarbonTracker CO2 trends
   strUMBC = [];
   iUMBC = -1;
   umbc = [];
@@ -296,7 +297,7 @@ profile_plots_2x2tiledlayout(trend_rlat64,plays100,miaow11,miaow12,miaow21,miaow
 if iUMBC  > 0
   %strUMBC = input('Enter UMBC results fname eg ''/asl/s1/sergio/JUNK/test5_march9_2023.mat'' : ');
   fprintf(1,'loading in %s \n',strUMBC);
-  umbcX = load(strUMBC,'deltaRH','deltaT','fracWV','results');
+  umbcX        = load(strUMBC,'deltaRH','deltaT','fracWV','results');
 
   strGISS = 'ChrisHTrends/giss_trends_2002_2022.mat';
   fprintf(1,'loading in %s \n',strGISS);
@@ -778,5 +779,16 @@ if iAmp >= -10
   end
 end
 
+if iUMBC > 0
+  iSpectra = input('Show spectral trends : (-1 default/+1 yes) : ');
+  if length(iSpectra) == 0
+    iSpectra = -1;
+  end
+  if iSpectra > 0
+    %% umbcXspectra = load(strUMBC,'fits','rates');
+    umbcXspectra = load(strUMBC,'fits');
+    driver_get_the_model_trends
+  end
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

@@ -10,7 +10,7 @@ drwxrwxr-x 2 sergio pi_strow 16384 Mar 31 07:23 AIRSL3
 drwxrwxr-x 2 sergio pi_strow 12288 Mar 31 07:21 ERA5
 %}
 
-addpath addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -78,9 +78,14 @@ if iSpectra == 1
   %% see eg driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
   dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
 
-  obsrates = load('/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat','rates');
-  obslat = load('/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat','rlat');
-  obslon = load('/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat','rlon');
+  if ~exist(strUMBC)
+    strUMBC = '/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat';
+  end
+  fprintf(1,'driver_get_the_model_trends.m is using obs rates from %s \n',strUMBC)
+
+  obsrates = load(strUMBC,'rates');  
+  obslat = load(strUMBC,'rlat');
+  obslon = load(strUMBC,'rlon');
   [YY,XX] = meshgrid(obslat.rlat,obslon.rlon);
   YY = YY(:);
   cosYY = cos(YY*pi/180)';

@@ -49,7 +49,7 @@ if max(save_cov_set.xb_wvz(2,:)) >= 1e-6
   waha = guess_wv_frac_lowestlayer./era5_wv_frac_lowestlayer;
   waha = abs(waha);
   iFig = iFig + 1; figure(iFig); clf;  aslmap(iFig,rlat65,rlon73,smoothn(reshape(waha,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*5); 
-  caxis([0 +1]*10); title(['GUESS/' strX ' xb(WVfrac(gnd)) if dRH = 0'])
+  caxis([0 +1]*1); title(['GUESS/' strX ' xb(WVfrac(gnd)) if dRH = 0']); colormap jet
 
   iFig = iFig + 1; figure(iFig); clf;  
   dn = 0:0.01:010; plot(dn,hist(waha,dn)); title(['GUESS/' strX ' xb(WVfrac(gnd)) if dRH = 0'])

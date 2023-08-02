@@ -43,4 +43,41 @@ figure(23);
   title(['Latbin ' num2str(iCompare,'%02d') ' SPECTRA dBT/dt K/yr']); 
   hl = legend('input','fit','diff','location','best'); xlim([650 1650])
 
-iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
+figure(24); 
+  pcolor(f,rlon,rates(:,ind)'); shading interp; colorbar; caxis([-1 +1]*0.1); xlabel('f cm-1'); ylabel('lonbin'); title('dBT/dt K/yr'); xlim([640 1640])
+  pcolor(rlon,f,rates(:,ind));  shading interp; colorbar; caxis([-1 +1]*0.1); ylabel('f cm-1'); xlabel('lonbin'); title('dBT/dt K/yr'); ylim([640 1640])
+  plotaxis2; 
+  line([-180 +180],[0800 0800],'color','k','linewidth',2);
+  line([-180 +180],[1000 1000],'color','k','linewidth',2);
+  line([-180 +180],[1200 1200],'color','k','linewidth',2);
+  line([-180 +180],[1400 1400],'color','k','linewidth',2);
+  line([-180 +180],[1600 1600],'color','k','linewidth',2);
+
+figure(25); 
+  pcolor(f,rlon,rates(:,ind)'); shading interp; colorbar; caxis([-1 +1]*0.1); xlabel('f cm-1'); ylabel('lonbin'); title('dBT/dt K/yr'); xlim([640 1640])
+  pcolor(rlon,f,squeeze(componentfits(3,:,ind)));  shading interp; colorbar; caxis([-1 +1]*0.1); ylabel('f cm-1'); xlabel('lonbin'); title('dBT WVcomponent/dt K/yr'); ylim([640 1640])
+  plotaxis2; 
+  line([-180 +180],[0800 0800],'color','k','linewidth',2);
+  line([-180 +180],[1000 1000],'color','k','linewidth',2);
+  line([-180 +180],[1200 1200],'color','k','linewidth',2);
+  line([-180 +180],[1400 1400],'color','k','linewidth',2);
+  line([-180 +180],[1600 1600],'color','k','linewidth',2);
+
+figure(26); 
+  pcolor(f,rlon,rates(:,ind)'); shading interp; colorbar; caxis([-1 +1]*0.1); xlabel('f cm-1'); ylabel('lonbin'); title('dBT/dt K/yr'); xlim([640 1640])
+  pcolor(rlon,f,squeeze(componentfits(4,:,ind)));  shading interp; colorbar; caxis([-1 +1]*0.1); ylabel('f cm-1'); xlabel('lonbin'); title('dBT Tcomponent/dt K/yr'); ylim([640 1640])
+  plotaxis2; 
+  line([-180 +180],[0800 0800],'color','k','linewidth',2);
+  line([-180 +180],[1000 1000],'color','k','linewidth',2);
+  line([-180 +180],[1200 1200],'color','k','linewidth',2);
+  line([-180 +180],[1400 1400],'color','k','linewidth',2);
+  line([-180 +180],[1600 1600],'color','k','linewidth',2);
+
+%iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
+iComparex = input('Enter rlat over which to compare ERA5 vs UMBC trends (-85 : +85, -9999 to stop) : ');
+if iComparex > -91
+  iCompare = find(rlat > iComparex,1);
+else
+  iCompare = -1;
+end
+fprintf(1,'you entered latitude %8.4f which corresponds to latbin %2i \n',iComparex,iCompare)

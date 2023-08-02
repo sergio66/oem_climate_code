@@ -284,9 +284,10 @@ if ~exist('iaFound')
   resultsO3unc = nan(4608,iNumLay);
 
   spectral_deltan00 = nan(2645,4608);
-  rates = nan(2645,4608);
-  fits  = nan(2645,4608);
-  nedt  = nan(2645,4608);
+  rates             = nan(2645,4608);
+  fits              = nan(2645,4608);
+  componentfits     = nan(5,2645,4608);
+  nedt              = nan(2645,4608);
 
 end
 
@@ -453,7 +454,6 @@ while iDoAgain > 0
         thedofs(ii) = oem.dofs;
         lencdofs(ii) = length(oem.cdofs);
         cdofs(ii,1:length(oem.cdofs)) = oem.cdofs;
-
         
         resultsWV(ii,1:nn) = oem.finalrates((1:nn)+6+nn*0);
         resultsT(ii,1:nn)  = oem.finalrates((1:nn)+6+nn*1);
@@ -553,8 +553,16 @@ while iDoAgain > 0
         spectral_deltan00(:,ii) = oem.spectral_deltan00;
       end
 
-      rates(:,ii) = rateset.rates;
-      fits(:,ii)  = oem.fit';
+      rates(:,ii)           = rateset.rates;
+      fits(:,ii)            = oem.fit';
+      if isfield(oem,'fitXcomponents')
+        componentfits(1,:,ii) = oem.fitXcomponents(1,:);   %% trace gases CO2/N2O/CH4
+        componentfits(2,:,ii) = oem.fitXcomponents(2,:);   %% ST
+        componentfits(3,:,ii) = oem.fitXcomponents(3,:);   %% WV(z)
+        componentfits(4,:,ii) = oem.fitXcomponents(4,:);   %% T(z)
+        componentfits(5,:,ii) = oem.fitXcomponents(5,:);   %% O3(z)
+      end
+
       nedt(:,ii)  = junknoise;  %% will have lots of NaNs since based on oem.se which only used selected channels
       nedt(:,ii)  = junknoise2; %% should be nicely filled in
 
@@ -609,9 +617,9 @@ while iDoAgain > 0
     aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
     
     jett = jet(64); jett(1,:) = 1;
-    figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
-    figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  
+    figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
+    figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
+    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(rlon,rlat,waha'); shading flat;   colorbar; set(gca,'ydir','normal');  
       title([num2str(sum(iaFound(:))) ' / 4608 = ' num2str(100*sum(iaFound(:))/4608) ' % made so far']);  
       xlabel('Longitude'); ylabel('Latitude'); colormap(jett); 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
@@ -628,9 +636,9 @@ rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
 rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
 
-figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
-figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jet); 
+figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
+figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
+figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(rlon,rlat,waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jet); 
 
 disp('WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster')
 disp('WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster')

@@ -86,17 +86,21 @@ if iNorD > 0
       %airsL3native = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
       %airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
       %airsL3       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
-      airsChoice    = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat');
+      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_desc.mat';
+      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat';
+      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat';
+    elseif iNumYears == 20
+      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2022_20yr_desc.mat';
     elseif iNumYears == 12
-      airsChoice    = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat');
+      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat';
     else
       error('need 12 or 19 years')
     end
   else
     if iNumYears == 19
-      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat');
+      fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat';
     elseif iNumYears == 12
-      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat');
+      fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat';
     else
       error('need 12 or 19 years')
     end    
@@ -107,22 +111,27 @@ else
     if iNumYears == 19  
       %airsL3native = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_asc.mat');
       %airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_asc.mat');
-      airsChoice       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_asc.mat');
+      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_asc.mat';
     elseif iNumYears == 12
-      airsChoice       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_asc.mat');
+      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_asc.mat';
     else
       error('need 12 or 19 years')
     end
   else
     if iNumYears == 19  
-      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_asc.mat');
+      fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_asc.mat';
+    elseif iNumYears == 20
+      fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2022_20yr_asc.mat';
     elseif iNumYears == 12
-      airsChoice       = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2014_12yr_asc.mat');
+     fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2014_12yr_asc.mat';
     else
       error('need 12 or 19 years')
     end
   end
 end
+
+fprintf(1,' getdata_AIRSL3vsCLIMCAPSL3.m : iA = %2i iNumYears = %2i : fAIRS = %s \n',iA,iNumYears,fAIRS);
+airsChoice       = load(fAIRS);
 
 load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
 rlat65 = latB2; rlon73 = -180 : 5 : +180;
