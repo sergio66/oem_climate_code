@@ -148,7 +148,7 @@ if iDo > 0
   save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
   
   disp(' ')
-  disp('turning AIRS L3 data from gridded Lat/Lon bins to Tiles bins VERY VERY SLOOOOOOOOWWWWWWWWW');
+  disp('turning AIRS L3 data from gridded Lat/Lon bins to Tiles bins QUITE FAST');
   plot_L3_data_tiles_fast_grib
   
   disp(' ')

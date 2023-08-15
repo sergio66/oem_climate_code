@@ -22,7 +22,7 @@
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 10    for driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 11    for driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2.m
 #
-# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 12    for driver_spectral_trends_latbin_1_64_sarta
+# run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 12    for driver_spectral_trends_latbin_1_64_sarta; make sure you set iModel correctly
 #
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 13    for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
 # run this with   kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 14    for driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
@@ -67,21 +67,12 @@
 #SBATCH --mem-per-cpu=18000
 ##SBATCH --mem-per-cpu=8000
 ##SBATCH --mem-per-cpu=6000 
-##SBATCH --mem-per-cpu=6000 
 
 #SBATCH --account=pi_strow
 
-##  Specify the job array (format:  start-stop:step) 
-# AIRS
-#srun matlab -nojvm -nodisplay -r "clust_convert_strowrates2oemrates_anomaly; exit"
-#srun matlab -nojvm -nodisplay -nosplash -r "clust_run_retrieval_latbins_AIRS_loop_anomaly; exit"
-#
-# IASI
-#srun matlab -nojvm -nodisplay -r "clust_convert_strowrates2oemrates_anomaly_11year_iasitimespan; exit"
-#
-
 if [ $# -gt 0 ]; then
-  echo "Your command line contains $# arguments"
+  echo "Your command line contains $# arguments, argument 1 is "
+  echo $1
 elif [ $# -eq 0 ]; then
   echo "Your command line contains no arguments"
 fi
@@ -137,9 +128,10 @@ elif [[ "$1" -eq "11" ]]; then
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2; exit"
 
 elif [[ "$1" -eq "12" ]]; then
-  ## makes driver_spectral_trends_latbin_1_64_sarta.m
+  ## makes driver_spectral_trends_latbin_1_64_sarta.m, make sure you set iModel correctly
   echo "cmd line arg = 8, driver_spectral_trends_latbin_1_64_sarta"
-  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta; exit"
+  ## srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta; exit"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iModel = +2; iNumYears = 05; driver_spectral_trends_latbin_1_64_sarta; exit"
 
 elif [[ "$1" -eq "13" ]]; then
   # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m

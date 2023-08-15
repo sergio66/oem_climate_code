@@ -92,6 +92,17 @@ figure(1); pcolor(mean(double(xsave64x72_stemp),3)); colorbar; colormap(jet); sh
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tic
+if exist('Airs_Spres')
+  disp('doing Spres')
+  for tt = 1 : tmax
+    zz = squeeze(Airs_STemp(tt,:,:));
+    save64x72_spres(:,:,tt) = interpn(Airs_Lat,Airs_Lon,zz,X,Y);
+  end
+  toc
+  save64x72_spres(save64x72_spres > 1100) = NaN;
+  figure(2); pcolor(mean(double(save64x72_stemp),3)); colorbar; colormap(jet); shading interp; pause(1)
+end
+
 disp('doing ST')
 for tt = 1 : tmax
   zz = squeeze(Airs_STemp(tt,:,:));

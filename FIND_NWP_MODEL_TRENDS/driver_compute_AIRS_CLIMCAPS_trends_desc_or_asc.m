@@ -139,6 +139,11 @@ end
 woo = find(read_this_file > 0);  %% typically 1 -- 12*timespan
 
 %% from standard
+Airs_Spres_A = zeros(length(woo),length(Airs_PT),180,360,'single');
+Airs_Spres_D = zeros(length(woo),length(Airs_PT),180,360,'single');
+Airs_Salti_A = zeros(length(woo),length(Airs_PT),180,360,'single');
+Airs_Salti_D = zeros(length(woo),length(Airs_PT),180,360,'single');
+
 Airs_Temp_A = zeros(length(woo),length(Airs_PT),180,360,'single');
 Airs_Temp_D = zeros(length(woo),length(Airs_PT),180,360,'single');
 Airs_STemp_A = zeros(length(woo),180,360,'single');
@@ -162,8 +167,6 @@ Airs_CO_A = zeros(length(woo),180,360,'single');
 Airs_CO_D = zeros(length(woo),180,360,'single');
 Airs_CH4_A = zeros(length(woo),180,360,'single');
 Airs_CH4_D = zeros(length(woo),180,360,'single');
-Airs_SPres_A = zeros(length(woo),180,360,'single');
-Airs_SPres_D = zeros(length(woo),180,360,'single');
 %Airs_OLR_A = zeros(length(woo),180,360,'single');
 %Airs_OLR_D = zeros(length(woo),180,360,'single');
 %Airs_ClrOLR_A = zeros(length(woo),180,360,'single');
@@ -236,6 +239,9 @@ if iDo < 0
     Airs_SPres_A(ix,:,:) = squeeze(a.prior_surf_pres(:,:,1))';
     Airs_SPres_D(ix,:,:) = squeeze(a.prior_surf_pres(:,:,2))';
 
+    Airs_Salti_A(ix,:,:) = squeeze(a.surf_alt(:,:,1))';
+    Airs_Salti_D(ix,:,:) = squeeze(a.surf_alt(:,:,2))';
+
     %Airs_OLR_A(ix,:,:) = 
     %Airs_OLR_D(ix,:,:) = 
 
@@ -265,7 +271,7 @@ if iDo < 0
     fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
     saver = ['save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_' savestr_version '.mat  Airs_Date* Airs_Temp* Airs_STemp* Airs_H2OVap* Airs_RH* Airs_Lat Airs_Lon Airs_CO* Airs_CH4* yy mm'];
     eval(saver);
-    saver = ['save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Date* Airs_Cl* Airs_Lat Airs_Lon yy mm'];
+    saver = ['save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_extra_' savestr_version '.mat Airs_Oz* Airs_PQ Airs_PT Airs_SPres* Airs_Salti* Airs_Date* Airs_Cl* Airs_Lat Airs_Lon yy mm'];
     eval(saver);
   end
   

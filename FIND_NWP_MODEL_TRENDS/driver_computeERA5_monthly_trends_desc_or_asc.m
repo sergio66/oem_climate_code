@@ -22,7 +22,7 @@ load('llsmap5.mat');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
+JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
 
 if ~exist('iDorA')
   iDorA = -1; %% asc
@@ -41,6 +41,8 @@ iNumYears = 20; %% 2002/09-2022/08
 
 % iNumYears = input('Enter iNumYears : ');
 iNumYears = JOB;
+
+fprintf(1,'iNumYears = %2i \n');
 
 if iNumYears <= 69
   iaMax = iNumYears*12;

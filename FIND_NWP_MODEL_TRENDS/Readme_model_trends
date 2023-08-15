@@ -1,0 +1,7 @@
+driver_find_GISS_AIRSL3_trends.m                             : run by hand, set iaNumYears (currently 05,10,15
+
+driver_computeERA5_monthly_trends_desc_or_asc.m              : run by sbatch option 3 or 4,   set iaNumYears by JOB number
+driver_computeMERRA2_monthly_trends_desc_or_asc.m            : run by sbatch option 5,        set iaNumYears by JOB number
+driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m  : run by sbatch option 6 or 7,   set iaNumYears by JOB number, FAST
+driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m  : run by sbatch option 8 or 9,   set iaNumYears by JOB number, SLOW
+driver_compute_AIRSL3_trends_desc_or_asc.m                   : run by sbatch option 10 or 11, set iaNumYears by JOB number, FAST

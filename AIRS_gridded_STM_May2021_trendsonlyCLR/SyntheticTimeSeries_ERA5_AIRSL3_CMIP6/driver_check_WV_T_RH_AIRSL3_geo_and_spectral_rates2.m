@@ -52,6 +52,11 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTAIRSL3rate); shading interp; colorb
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+
+%% NOTE THIS IS JUST HOW MUCH DATA YOU HAVE, AND IS DIFFERENT THAN YMStart,YMEnd where you set ACTUAL startYY/stopYY for trends
 iYS = 2002; iYE = 2021;
 iYS = 2002; iYE = 2022;
 
@@ -109,6 +114,9 @@ YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
 YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
 YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
 YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+YMStart = [2002 09];  YMEnd = [2017 08];  %% 15 years
+YMStart = [2002 09];  YMEnd = [2012 08];  %% 10 years
+YMStart = [2002 09];  YMEnd = [2007 08];  %% 05 years
 
 daysSince2002Start = change2days(YMStart(1),YMStart(2),15,2002);
 daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),  15,2002);
@@ -123,23 +131,24 @@ mm = mm(usethese);
 dd = dd(usethese);
 
 numtimesteps = length(yy);
-% airsL3_64x72.all.yy = airsL3_64x72.all.yy(usethese);
-% airsL3_64x72.all.mm = airsL3_64x72.all.mm(usethese);
-% airsL3_64x72.all.dd = airsL3_64x72.all.dd(usethese);
-% airsL3_64x72.all.nwp_ptemp = airsL3_64x72.all.nwp_ptemp(usethese,:,:);
-% airsL3_64x72.all.nwp_gas_1 = airsL3_64x72.all.nwp_gas_1(usethese,:,:);
-% airsL3_64x72.all.nwp_gas_3 = airsL3_64x72.all.nwp_gas_3(usethese,:,:);
-% airsL3_64x72.all.nwp_rh    = airsL3_64x72.all.nwp_rh(usethese,:,:);
-% airsL3_64x72.all.nwp_plevs = airsL3_64x72.all.nwp_plevs(usethese,:,:);
-% airsL3_64x72.all.ptemp = airsL3_64x72.all.ptemp(usethese,:,:);
-% airsL3_64x72.all.gas_1 = airsL3_64x72.all.gas_1(usethese,:,:);
-% airsL3_64x72.all.gas_3 = airsL3_64x72.all.gas_3(usethese,:,:);
-% airsL3_64x72.all.mmw   = airsL3_64x72.all.mmw(usethese,:);
-% airsL3_64x72.all.stemp = airsL3_64x72.all.stemp(usethese,:);
-% airsL3_64x72.all.nlays = airsL3_64x72.all.nlays(usethese,:);
-% airsL3_64x72.all.RH    = airsL3_64x72.all.RH(usethese,:,:);
-% airsL3_64x72.all.TwSurf = airsL3_64x72.all.TwSurf(usethese,:);
-% airsL3_64x72.all.RHSurf = airsL3_64x72.all.RHSurf(usethese,:);
+airsl3_64x72.days                = airsl3_64x72.days(usethese);
+airsl3_64x72.save64x72_olr       = airsl3_64x72.save64x72_olr(:,:,usethese);
+airsl3_64x72.save64x72_stemp     = airsl3_64x72.save64x72_stemp(:,:,usethese);
+airsl3_64x72.save64x72_CH4       = airsl3_64x72.save64x72_CH4(:,:,:,usethese);
+airsl3_64x72.save64x72_CO        = airsl3_64x72.save64x72_CO(:,:,:,usethese);
+airsl3_64x72.save64x72_O3        = airsl3_64x72.save64x72_O3(:,:,:,usethese);
+airsl3_64x72.save64x72_Q         = airsl3_64x72.save64x72_Q(:,:,:,usethese);
+airsl3_64x72.save64x72_RH        = airsl3_64x72.save64x72_RH(:,:,:,usethese);
+airsl3_64x72.save64x72_T         = airsl3_64x72.save64x72_T(:,:,:,usethese);
+airsl3_64x72.save64x72_cld_frac  = airsl3_64x72.save64x72_cld_frac(:,:,:,usethese);
+airsl3_64x72.save64x72_cld_pres  = airsl3_64x72.save64x72_cld_pres(:,:,:,usethese);
+airsl3_64x72.save64x72_RHSurf    = airsl3_64x72.save64x72_RHSurf(:,:,usethese);
+airsl3_64x72.save64x72_TWetSurf  = airsl3_64x72.save64x72_TWetSurf(:,:,usethese);
+airsl3_64x72.save64x72_clrolr    = airsl3_64x72.save64x72_clrolr(:,:,usethese);
+airsl3_64x72.save64x72_iceT      = airsl3_64x72.save64x72_iceT(:,:,usethese);
+airsl3_64x72.save64x72_ice_od    = airsl3_64x72.save64x72_ice_od(:,:,usethese);
+airsl3_64x72.save64x72_icesze    = airsl3_64x72.save64x72_icesze(:,:,usethese);
+airsl3_64x72.save64x72_liq_water = airsl3_64x72.save64x72_liq_water(:,:,usethese);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

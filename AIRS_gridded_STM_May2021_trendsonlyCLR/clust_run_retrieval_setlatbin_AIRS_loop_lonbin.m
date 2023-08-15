@@ -142,7 +142,6 @@ ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQ
 ia_OorC_DataSet_Quantile = [+0 10 03]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 11 03]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 12 03]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 0 : cal fit, dataset = 9, iQuantile = 16    20 year rates, AIRS cal Q(0.99-->1)
 ia_OorC_DataSet_Quantile = [+0 09 03]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -291,6 +290,28 @@ for iInd = iXX1 : idX : iXX2
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc
   driver.iQuantile = iQuantile;
+
+  if abs(topts.dataset) == +1
+    driver.iNumYears = 18;
+  elseif abs(topts.dataset) >= 2 & abs(topts.dataset) <= 4
+    driver.iNumYears = 18;
+  elseif topts.dataset == 5
+    driver.iNumYears = 12;
+  elseif topts.dataset == 6
+    driver.iNumYears = 07; %% oops 2012-2019
+  elseif topts.dataset == 7
+    driver.iNumYears = 20;
+  elseif topts.dataset == 8
+    driver.iNumYears = 07; %% oops 2015-2021
+  elseif topts.dataset == 9
+    driver.iNumYears = 20;
+  elseif topts.dataset == 10
+    driver.iNumYears = 05;
+  elseif topts.dataset == 11
+    driver.iNumYears = 10;
+  elseif topts.dataset == 12
+    driver.iNumYears = 15;
+  end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

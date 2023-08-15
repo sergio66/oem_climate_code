@@ -4,7 +4,7 @@ zonkA = find(yy == StartY & mm == StartYM);
 zonkB = find(yy == StopY  & mm == StopYM);
 %zonk = 1:zonk;
 zonk = zonkA : zonkB;
-fprintf(1,'going from %4i/%2i to %4i/%2i .. found %3i time points \n',StartY,StartYM,StopY,StopYM,length(zonk))
+fprintf(1,'going from %4i/%2i to %4i/%2i .. found %3i time points out of %3i\n',StartY,StartYM,StopY,StopYM,length(zonk),length(yy))
 
 %{
 warning off
@@ -229,7 +229,15 @@ elseif iSlowORFast == -1
     end
   end
 end
-eval(saver)
+savename1 = findstr(saver,'asl');
+savename2 = findstr(saver,'mat');
+savename = saver(savename1-1:savename2+2);
+if ~exist(savename)
+  fprintf(1,'saving to %s \n',savename);
+  eval(saver)
+else
+  fprintf(1,'after all that not saving since file already exists %s \n',savename);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 do_the_plots_64x72

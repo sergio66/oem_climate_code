@@ -6,6 +6,9 @@
 %Airs_Clr_OLR = (Airs_ClrOLR_A + Airs_ClrOLR_D)/2;
 
 if iDorA > 0
+  if exist('Airs_Spres_D')
+    Airs_Spres = Airs_Spres_D;
+  end
   Airs_Temp    = Airs_Temp_D;
   Airs_STemp   = Airs_STemp_D;
   Airs_H2OVap  = Airs_H2OVap_D;
@@ -39,6 +42,9 @@ if iDorA > 0
     Airs_CldFrac = Airs_Temp_D(:,1,:,:); Airs_CldFrac = ones(size(Airs_CldFrac));
   end
 else
+  if exist('Airs_Spres_A')
+    Airs_Spres = Airs_Spres_A;
+  end
   Airs_Temp    = Airs_Temp_A;
   Airs_STemp   = Airs_STemp_A;
   Airs_H2OVap  = Airs_H2OVap_A;

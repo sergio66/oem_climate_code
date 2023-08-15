@@ -14,6 +14,14 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
 load('llsmap5.mat');
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+system_slurm_stats
+
+JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
+fprintf(1,'JOB = %2i \n',JOB)
+
 if ~exist('iDorA')
   iDorA = -1; %% asc
   iDorA = +1; %% desc
@@ -27,11 +35,24 @@ clear iaFound
 %iaMax = 18*12; %% 18 year
 %iaMax = 19*12; %% 19 year
 
+iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iNumYears = 12; %% 2002/09 to 2014/08 
 iNumYears = 18; %% 2002/09 to 2020/08 
 iNumYears = 19; %% 2002/09 to 2021/08 
 iNumYears = 20; %% 2002/09 to 2022/08 
-iaMax = iNumYears*12;
+%iaMax = iNumYears*12;
+
+% iNumYears = input('Enter iNumYears : ');
+iNumYears = JOB;
+
+fprintf(1,'iNumYears = %2i \n',iNumYears);
+
+if iNumYears <= 69
+  iaMax = iNumYears*12;
+elseif iNumYears == 70
+  iaMax = 7*12;
+end
+[iDorA iaMax]
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
 for ii = 1 : iaMax
@@ -50,6 +71,7 @@ fprintf(1,'found %3i of expected %3i files \n', [sum(iaFound) length(iaFound)])
 plot(1:iaMax,iaFound,'+-')
 if sum(iaFound) < length(iaFound)
   find(iaFound == 0)
+  fprintf(1,'last file looked for = %s \n',fin)
   error('not enough')
 end
 
@@ -113,44 +135,26 @@ monitor_memory_whos
 comment = 'see computeMERRA2_trends.m';
 comment = 'see driver_computeMERRA2_monthly_trends_desc_or_asc.m';
 
-foutjunk = ['MERRA2_atm_data_2002_09_to_*.mat'];
-fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
+find_computeMERRA2_monthly_foutname
 
-if iNumYears == 12
-  if iDorA > 0
-%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_desc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_desc.mat comment all
-  else
-%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_asc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2014_08_asc.mat comment all
-  end
-elseif iNumYears == 18
-  if iDorA > 0
-    %save -v7.3 MERRA2_atm_data_2002_09_to_2019_08_desc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2020_08_desc.mat comment all
-  else
-    %save -v7.3 MERRA2_atm_data_2002_09_to_2019_08_asc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2020_08_asc.mat comment all
-  end
-elseif iNumYears == 19
-  if iDorA > 0
-%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_desc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2021_08_desc.mat comment all
-  else
-%    save -v7.3 MERRA2_atm_data_2002_09_to_2021_07_asc.mat comment all
-    save -v7.3 MERRA2_atm_data_2002_09_to_2021_08_asc.mat comment all
-  end
-elseif iNumYears == 20
-  if iDorA > 0
-    save -v7.3 MERRA2_atm_data_2002_09_to_2022_08_desc.mat comment all
-  else
-    save -v7.3 MERRA2_atm_data_2002_09_to_2022_08_asc.mat comment all
-  end
+if iNumYears <= 100
+  iSave = -1;
 else
-  iNumYears
-  error('unknown iNumYears .. accepting 12,18,19,20')
+  iSave = input('Save huge file (-1/+1) : ');
 end
 
+iSave = -1;  %%% unless now you do a whole new set of files Steve brings down from ERA5
+
+if iSave > 0
+  %%% foutjunk = ['MERRA2_atm_data_2002_09_to_*.mat'];
+  fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
+  saver = ['save ' foutjunk ' comment all'];
+  eval(saver);
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('MERRA2 mean stemp')
@@ -216,37 +220,11 @@ trend_rlon = all.rlon;
 trend_rlat64 = rlat; trend_rlon72 = rlon;
 %trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
 
-if iNumYears == 12
-  if iDorA > 0
-    %save MERRA2_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat comment trend*
-  else
-    %save MERRA2_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2014_08_trends_asc.mat comment trend*
-  end
-elseif iNumYears == 18
-  if iDorA > 0
-    %save MERRA2_atm_data_2002_09_to_2019_08_trends_desc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2020_08_trends_desc.mat comment trend*
-  else
-    %save MERRA2_atm_data_2002_09_to_2019_08_trends_asc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2020_08_trends_asc.mat comment trend*
-  end
-elseif iNumYears == 19
-  if iDorA > 0
-    %save MERRA2_atm_data_2002_09_to_2021_07_trends_desc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2021_08_trends_desc.mat comment trend*
-  else
-    %save MERRA2_atm_data_2002_09_to_2021_07_trends_asc.mat comment trend*
-    save MERRA2_atm_data_2002_09_to_2021_08_trends_asc.mat comment trend*
-  end
-elseif iNumYears == 20
-  if iDorA > 0
-    save MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat comment trend*
-  else
-    save MERRA2_atm_data_2002_09_to_2022_08_trends_asc.mat comment trend*
-  end
-end
+find_computeMERRA2_monthly_trends_foutname
+fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
+saver = ['save ' fout_trendjunk ' comment trend*'];
+eval(saver);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

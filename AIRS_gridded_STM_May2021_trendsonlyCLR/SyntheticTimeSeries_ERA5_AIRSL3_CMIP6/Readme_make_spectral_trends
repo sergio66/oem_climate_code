@@ -3,10 +3,6 @@ See and modify as need the YS/MS and YE/ME (typically 2002/09 to 20XY/08)
   SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m    --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 increasing according to the average rates
   SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m             --- then make the spectral trends, need to set iModel
 
-  %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch XXX
-  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 consta over all times
-  SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m        --- then make the spectral trends, need to set iModel
-
   %% use sbatch  --array=1-64 sergio_matlab_jobB.sbatch 8
   SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2.m  --- first make the ip/op/rp rtp files which will cotain the profiles and spectra; co2/n2/ch4 increasing according to the average rates
   SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_spectral_trends_latbin_1_64_sarta.m             --- then make the spectral trends, need to set iModel

@@ -1,5 +1,5 @@
 ## this deletes stuff from Output/QuantileXYZ where XYZ is 1-16; 
-## so run it as        rmer_rerun_all.sc $1 $2
+## so run it as        rmer_rerun_all_cal.sc $1 $2
 ## where first arg == 1-16 for Quantile .... second arg is 1[default]/2 for cpu2021/highmem
 
 clear
@@ -15,7 +15,11 @@ else
   echo "the first argument is $c"
 fi
 
-echo "the second argument is $2"
+if [[ "$2" -eq "" ]]; then
+  echo "no arguments, set $2 = 1 (cpu_highmem)"
+else
+  echo "the second argument is $2"
+fi
 
 ls -lt Output_CAL/Quantile$c/test*.mat | wc -l
 echo "removing latbins 01 .. 64 from Output/Quantile$c/"

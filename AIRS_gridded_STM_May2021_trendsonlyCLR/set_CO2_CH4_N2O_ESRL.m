@@ -9,12 +9,20 @@ end
 iAdjCo2 = +1;
 co2x = co2x * iAdjCo2;
 
-if iAdjCo2 >= 10
-  boo = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
+if iAdjCo2 >= 1
+  boo05 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2007_08.mat');
+  boo10 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2012_08.mat');
+  boo15 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2017_08.mat');
+  boo20 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
   JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
-  co2x = boo.trend(JOBJOBJOB);
-  disp('set_CO2_CH4_N2O_ESRL.m : co2 --> co2 CarbonTracker')
-elseif iAdjCo2 > -1 & iAdjCo2 < +1
+  co2x_05 = boo05.trend(JOBJOBJOB);
+  co2x_10 = boo10.trend(JOBJOBJOB);
+  co2x_15 = boo15.trend(JOBJOBJOB);
+  co2x_20 = boo20.trend(JOBJOBJOB);
+  co2x = interp1([05 10 15 20],[co2x_05 co2x_10 co2x_15 co2x_20],driver.iNumYears,[],'extrap');
+  fprintf(1,'set_CO2_CH4_N2O_ESRL.m : co2 --> co2 CarbonTracker, iNumYears = %2i\n',driver.iNumYears)
+
+elseif iAdjCo2 > -1 & iAdjCo2 < +0.99
   %co2x = co2x * 1.1  %%%% SERGIO PUT THIS JULY 23, 2023  makes WV at surface pretty good across all lats, dT/dt < dT(ERA5)/dt in tropical troposphere
   %co2x = co2x * 0.9  %%%% SERGIO PUT THIS JULY 23, 2023   makes dWVfrac/dt < 0 at southern latitudes!!!s  dT/dt > dT(ERA5)/dt in tropical troposphere
   %co2x = co2x * 0.95  %%%% SERGIO PUT THIS JULY 23, 2023   makes dWVfrac/dt < 0 at southern latitudes!!!!!

@@ -1,4 +1,4 @@
-function [era5,merra2,airsL3,climcapsL3,umbc,thecorr,amp] = driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC);
+function [era5,merra2,airsL3,climcapsL3,umbc,thecorr,amp] = driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears);
 
 set(0,'DefaultaxesLineWidth',1);
 set(0,'DefaultaxesFontSize',16);
@@ -10,11 +10,22 @@ if nargin == 0
   strUMBC = '/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat';
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_feedback.mat';              %% not too bad at lower atm/polar!!!!
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith_MLSL3_TOA_guessWV_dRH_zero_bot_50fatlayers.mat';  %% too much oomph at gnd : use MLS L3 TOA and dRH/dt = 0 at bottom
-  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';               %% use CarbonTracker CO2 trends
+
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_ERA5calcs_spectraltrends.mat'; iNumYears = 20; %% compare geophysical trends from ERA5 spectral trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20;         %% use CarbonTracker CO2 trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 05;         %% use CarbonTracker CO2 trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 10;         %% use CarbonTracker CO2 trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 15;          %% use CarbonTracker CO2 trends
+
   strUMBC = [];
   iUMBC = -1;
   umbc = [];
+  iNumYears = -1;
+
   thecorr = [];
+elseif nargin == 1
+  iNumYears = 20;
+
 else
   iUMBC = +1;
 end
@@ -70,14 +81,37 @@ end
 %if length(iX) == 0
 %  iX = 1;
 %end
-iX = 1;
+iX = -1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iX > 0
-  load /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat
+  %load /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat
+  fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
+  iNumYearsPowWow = iNumYears;
+  if ~exist(fin)
+    iaJunk = 20;
+    moo = abs(iaJunk-iNumYears);
+    moo = find(moo == min(moo),1);    
+    fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
+    iNumYearsPowWow = 2002+iaJunk(moo);
+  end
+  loader = ['load ' fin];
+  eval(loader)
+  fprintf(1,'loaded %2i years AIRS     geophysical trends from %s \n',iNumYearsPowWow,fin)
 else
-  load /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2022_20yr_desc.mat
+  fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
+  iNumYearsPowWow = iNumYears;
+  if ~exist(fin)
+    iaJunk = [5 10 15 20 12 18 19];
+    moo = abs(iaJunk-iNumYears);
+    moo = find(moo == min(moo),1);    
+    iNumYearsPowWow = 2002+iaJunk(moo);
+    fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
+  end
+  loader = ['load ' fin];
+  eval(loader)
+  fprintf(1,'loaded %2i years AIRS     geophysical trends from %s \n',iNumYearsPowWow,fin)
 end
 
 z11 = thestats64x72.stemprate(:);
@@ -108,7 +142,18 @@ figure(13); dmmw_dST_airsL3 = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,mmw0,airs
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-load /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat
+fin = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
+iNumYearsPowWow = iNumYears;
+if ~exist(fin)
+  iaJunk = [5 10 15 20];
+  moo = abs(iaJunk-iNumYears);
+  moo = find(moo == min(moo),1);    
+  fin = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
+  iNumYearsPowWow = 2002+iaJunk(moo);
+end
+loader = ['load ' fin];
+eval(loader)
+fprintf(1,'loaded %2i years CLIMCAPS geophysical trends from %s \n',iNumYearsPowWow,fin)
 
 z12 = thestats64x72.stemprate(:);
 z12 = z12';
@@ -138,7 +183,18 @@ figure(13); clf; dmmw_dST_climcapsL3 = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-load MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat
+fin = ['MERRA2_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+iNumYearsPowWow = iNumYears;
+if ~exist(fin)
+  iaJunk = [5 10 15 20];
+  moo = abs(iaJunk-iNumYears);
+  moo = find(moo == min(moo),1);    
+  fin = ['MERRA2_atm_data_2002_09_to_' num2str(2002+iaJunk(moo)) '_08_trends_desc.mat']; 
+  iNumYearsPowWow = 2002+iaJunk(moo);
+end
+loader = ['load ' fin];
+eval(loader)
+fprintf(1,'loaded %2i years MERRA2   geophysical trends from %s \n',iNumYearsPowWow,fin)
 
 z21 = trend_stemp;
 merra2.stemprate = trend_stemp;
@@ -159,7 +215,15 @@ figure(13); clf; dmmw_dST_MERRA2 = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,mmw0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-load ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat
+if iNumYears > 0
+  eraX = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+  eraX = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+else
+  eraX = ['ERA5_atm_data_2002_09_to_' num2str(2022) '_08_trends_desc.mat'];
+end
+loader = ['load ' eraX];
+fprintf(1,'loaded %2i years ERA5     geophysical trends from %s \n',iNumYears,eraX)
+eval(loader);
 
 z22 = trend_stemp;
 era5.stemprate = trend_stemp;
@@ -296,11 +360,20 @@ profile_plots_2x2tiledlayout(trend_rlat64,plays100,miaow11,miaow12,miaow21,miaow
 
 if iUMBC  > 0
   %strUMBC = input('Enter UMBC results fname eg ''/asl/s1/sergio/JUNK/test5_march9_2023.mat'' : ');
-  fprintf(1,'loading in %s \n',strUMBC);
+  fprintf(1,'<<< loading in %s >>> \n',strUMBC);
   umbcX        = load(strUMBC,'deltaRH','deltaT','fracWV','results');
 
-  strGISS = 'ChrisHTrends/giss_trends_2002_2022.mat';
-  fprintf(1,'loading in %s \n',strGISS);
+  strGISS = ['ChrisHTrends/giss_trends_2002_' num2str(2002+iNumYears) '.mat'];
+  iNumYearsPowWow = iNumYears;
+  if ~exist(strGISS)
+    iaJunk = [05 10 15 818 19 20];
+    moo = abs(iaJunk-iNumYears);
+    moo = find(moo == min(moo),1);    
+    strGISS = ['ChrisHTrends/giss_trends_2002_' num2str(2002+iaJunk(moo)) '.mat'];
+    iNumYearsPowWow = 2002+iaJunk(moo);
+  end
+
+  fprintf(1,'loaded %2i years %s \n',iNumYearsPowWow,strGISS);
   loader = ['load ' strGISS];
   eval(loader);
 
@@ -445,15 +518,50 @@ if iUMBC  > 0
   plotoptions.str21 = 'T(z) UMBC-ERA5';
   plotoptions.str22 = 'Stemp UMBC-ERA5';
 
-  plotoptions.maintitle = 'Compare UMBC/ERA5 or UMBC-ERA5'; 
+  plotoptions.maintitle = 'Compare UA UMBC/ERA5 or UMBC-ERA5'; 
   plotoptions.cx = [-1 +1]*0.151; 
   plotoptions.yLinearOrLog = -1;
   plotoptions.yReverseDir  = +1;
+  plotoptions.yLimits = [0.1 100];
   plotoptions.yLimits = [0.1 100];
 
   miaowA = squeeze(nanmean(reshape(umbc.RHrate,100,72,64),2));
   miaowB = squeeze(nanmean(reshape(era5.RHrate,100,72,64),2));
   miaow11 = 10*(miaowA - miaowB);
+
+  miaowA = squeeze(nanmean(reshape(umbc.waterrate,100,72,64),2));
+  miaowB = squeeze(nanmean(reshape(era5.waterrate,100,72,64),2));
+  miaow12 = (miaowA ./ miaowB - 1)/100;
+
+  miaowA = squeeze(nanmean(reshape(umbc.ptemprate,100,72,64),2));
+  miaowB = squeeze(nanmean(reshape(era5.ptemprate,100,72,64),2));
+  miaow21 = miaowA - miaowB;
+
+  miaow22 = umbc.stemprate - era5.stemprate;
+  miaow22 = ones(100,1) * miaow22;
+  miaow22 = squeeze(nanmean(reshape(miaow22,100,72,64),2));
+
+  profile_plots_2x2tiledlayout(trend_rlat64,plays100,miaow11,miaow12,miaow21,miaow22,iFig,plotoptions);
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  iFig = iFig + 1;
+  figure(iFig); clf; 
+
+  plotoptions.str11 = 'RH (UMBC-ERA5)';
+  plotoptions.str12 = 'WVfrac (UMBC/ERA5-1)/100';
+  plotoptions.str21 = 'T(z) UMBC-ERA5';
+  plotoptions.str22 = 'Stemp UMBC-ERA5';
+
+  plotoptions.maintitle = 'Compare LA UMBC/ERA5 or UMBC-ERA5'; 
+  plotoptions.cx = [-1 +1]*0.151; 
+  plotoptions.yLinearOrLog = -1;
+  plotoptions.yReverseDir  = +1;
+  plotoptions.yLimits = [0.1 100];
+  plotoptions.yLimits = [100 1000];
+
+  miaowA = squeeze(nanmean(reshape(umbc.RHrate,100,72,64),2));
+  miaowB = squeeze(nanmean(reshape(era5.RHrate,100,72,64),2));
+  miaow11 = 1*(miaowA - miaowB);
 
   miaowA = squeeze(nanmean(reshape(umbc.waterrate,100,72,64),2));
   miaowB = squeeze(nanmean(reshape(era5.waterrate,100,72,64),2));
@@ -506,8 +614,9 @@ if iUMBC  > 0
   iFig = iFig + 1;
   figure(iFig); plot(umbc.stemprate,era5.stemprate,'r.',umbc.stemprate,merra2.stemprate,'g.',...
                    umbc.stemprate,airsL3.stemprate,'b.',umbc.stemprate,climcapsL3.stemprate,'c.');
+  axis([-1 +1 -1 +1]*0.3); line([-0.3 +0.3],[-0.3 +0.3],'color','k','linewidth',3)
   plotaxis2; hl = legend('ERA5','MERRA2','AIRSL3','CLIMCAPSL3','location','best'); title('dSKT/dt [K/yr]'); xlabel('UMBC');
-
+ 
   i100 = find(plays100 >= 100);
   for mm = 1 : length(i100)
     mmm = i100(mm);
@@ -548,6 +657,59 @@ if iUMBC  > 0
    subplot(132); plot(thecorr.water',plays100(i100),'linewidth',2); plotaxis2; hl = legend('ERA5','MERRA2','AIRSL3','CLIMCAPSL3','location','best','fontsize',8); set(gca,'ydir','reverse'); title('water corr');
    subplot(133); plot(thecorr.ptemp',plays100(i10),'linewidth',2); plotaxis2; hl = legend('ERA5','MERRA2','AIRSL3','CLIMCAPSL3','location','best','fontsize',8); set(gca,'ydir','reverse'); title('ptemp corr');
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  i300 = find(plays100 >= 300,1);
+  i500 = find(plays100 >= 500,1);
+  i800 = find(plays100 >= 800,1);
+
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.RHrate(:,:,i500);
+  zyx12 = climcapsL3.RHrate(:,:,i500);
+  zyx21 = reshape(merra2.RHrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
+  zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';
+  plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';
+  plotoptions.str22 = 'ERA5';
+  plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+  plotoptions.yLinearOrLog = +1;
+  aslmap_2x2tiledlayout(zyx11,zyx12,zyx21,zyx22,iFig,plotoptions);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.waterrate(:,:,i500);
+  zyx12 = climcapsL3.waterrate(:,:,i500);
+  zyx21 = reshape(merra2.waterrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
+  zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '500 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';
+  plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';
+  plotoptions.str22 = 'ERA5';
+  plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+  plotoptions.yLinearOrLog = +1;
+  aslmap_2x2tiledlayout(zyx11,zyx12,zyx21,zyx22,iFig,plotoptions);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.ptemprate(:,:,i500);
+  zyx12 = climcapsL3.ptemprate(:,:,i500);
+  zyx21 = reshape(merra2.ptemprate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
+  zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';
+  plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';
+  plotoptions.str22 = 'ERA5';
+  plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+  plotoptions.yLinearOrLog = +1;
+  aslmap_2x2tiledlayout(zyx11,zyx12,zyx21,zyx22,iFig,plotoptions);
+  
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   iFig = iFig + 1;
@@ -604,6 +766,197 @@ if iUMBC  > 0
           nansum(z31(boo).*mu(boo))/nansum(mu(boo))  nansum(z32(boo).*mu(boo))/nansum(mu(boo))];
   fprintf(1,'(LAND )         |  %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n',junk);
   disp('----------------|--------------------------------------------------------');
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+  i200 = find(plays100 >= 200,1);
+  i300 = find(plays100 >= 300,1);
+  i500 = find(plays100 >= 500,1);
+  i800 = find(plays100 >= 800,1);
+
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.RHrate(:,:,i200);
+  zyx12 = climcapsL3.RHrate(:,:,i200);
+  zyx21 = reshape(merra2.RHrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i200);
+  zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i200);
+  zyx31 = reshape(umbc.RHrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i200);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '200 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'200 mb dRH/dt     correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.waterrate(:,:,i200);
+  zyx12 = climcapsL3.waterrate(:,:,i200);
+  zyx21 = reshape(merra2.waterrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i200);
+  zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i200);
+  zyx31 = reshape(umbc.waterrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i200);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '200 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'200 mb dWVfrac/dt correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.ptemprate(:,:,i200);
+  zyx12 = climcapsL3.ptemprate(:,:,i200);
+  zyx21 = reshape(merra2.ptemprate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i200);
+  zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i200);
+  zyx31 = reshape(umbc.ptemprate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i200);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '200 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'200 mb dT/dt      correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+
+  %%%%%%%%%%
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.RHrate(:,:,i500);
+  zyx12 = climcapsL3.RHrate(:,:,i500);
+  zyx21 = reshape(merra2.RHrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
+  zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
+  zyx31 = reshape(umbc.RHrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i500);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '500 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'800 mb dRH/dt     correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.waterrate(:,:,i500);
+  zyx12 = climcapsL3.waterrate(:,:,i500);
+  zyx21 = reshape(merra2.waterrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
+  zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
+  zyx31 = reshape(umbc.waterrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i500);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '500 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'500 mb dWVfrac/dt correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.ptemprate(:,:,i500);
+  zyx12 = climcapsL3.ptemprate(:,:,i500);
+  zyx21 = reshape(merra2.ptemprate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
+  zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
+  zyx31 = reshape(umbc.ptemprate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i500);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'500 mb dT/dt      correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+
+  %%%%%%%%%%
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.RHrate(:,:,i800);
+  zyx12 = climcapsL3.RHrate(:,:,i800);
+  zyx21 = reshape(merra2.RHrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i800);
+  zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i800);
+  zyx31 = reshape(umbc.RHrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i800);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '800 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'800 mb dRH/dt     correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.waterrate(:,:,i800);
+  zyx12 = climcapsL3.waterrate(:,:,i800);
+  zyx21 = reshape(merra2.waterrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i800);
+  zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i800);
+  zyx31 = reshape(umbc.waterrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i800);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '800 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'800 mb dWVfrac/dt correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+  
+  iFig = iFig + 1;
+  figure(iFig); clf; clear plotoptions
+  zyx11 = airsL3.ptemprate(:,:,i800);
+  zyx12 = climcapsL3.ptemprate(:,:,i800);
+  zyx21 = reshape(merra2.ptemprate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i800);
+  zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i800);
+  zyx31 = reshape(umbc.ptemprate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i800);
+  maskLF = ones(size(zyx22));
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '800 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str31 = 'UMBC';      plotoptions.str32 = '    ';
+  plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
+  aslmap_3x2tiledlayout(zyx11,zyx12,zyx21,zyx22,zyx31,0*zyx31,iFig,plotoptions);
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx11(:));  thecorr.junk(1) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx12(:));  thecorr.junk(2) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
+    [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
+    fprintf(1,'800 mb dT/dt      correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
   iY = input('Show 5 panel plots? (-1 default/+1) : ');
   if length(iY) == 0
@@ -622,7 +975,7 @@ if iUMBC  > 0
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits = [100 1000];  
-
+   
   if iY > 0
     iFig = iFig + 1;
     figure(iFig); clf;   
@@ -667,6 +1020,8 @@ if iUMBC  > 0
     figure(18); aslprint('QuickFigs/Strow_March2023/wv_trend.pdf');
     figure(19); aslprint('QuickFigs/Strow_March2023/tz_trend.pdf');
     %}
+  else
+    fprintf(1,'currently at iFig = %2i \n',iFig);
   end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -734,17 +1089,19 @@ if iUMBC  > 0
     figure(22); aslprint('QuickFigs/Strow_March2023/wv_trend_3panel.pdf');
     figure(23); aslprint('QuickFigs/Strow_March2023/tz_trend_3panel.pdf');
     %}
-  end
 
+  else
+    fprintf(1,'currently at iFig = %2i \n',iFig);
+  end
 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iFigiAmp = iFig;
 
-iAmp = input('Do amplification??? (-9999 to stop/ 0 [default] to go on) : ');
+iAmp = input('Do amplification??? (-9999 to stop [default]/ 0 to go on) : ');
 if length(iAmp) == 0
-  iAmp = 0;
+  iAmp = -9999;
 end
 
 if iAmp >= -10
@@ -777,12 +1134,15 @@ if iAmp >= -10
       iAorOorL = 0;
     end
   end
+else
+  fprintf(1,'currently at iFig = %2i \n',iFig);
 end
+fprintf(1,'currently at iFig = %2i \n',iFig);
 
 if iUMBC > 0
-  iSpectra = input('Show spectral trends : (-1 default/+1 yes) : ');
+  iSpectra = input('Show spectral trends : (-1 /+1 yes [default]) : ');
   if length(iSpectra) == 0
-    iSpectra = -1;
+    iSpectra = +1;
   end
   if iSpectra > 0
     %% umbcXspectra = load(strUMBC,'fits','rates');

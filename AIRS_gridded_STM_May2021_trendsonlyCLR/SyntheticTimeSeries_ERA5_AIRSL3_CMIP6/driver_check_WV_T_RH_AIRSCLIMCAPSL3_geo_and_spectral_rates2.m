@@ -15,7 +15,7 @@ addpath /home/sergio/MATLABCODE/TIME
 system_slurm_stats
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
-%JOB = 19
+%JOB = 3
 
 load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
 
@@ -60,16 +60,24 @@ figure(2); pcolor(zonalrlat,zonalplays,zonalTAIRSCLIMCAPSL3rate); shading interp
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+
+%% NOTE THIS IS JUST HOW MUCH DATA YOU HAVE, AND IS DIFFERENT THAN YMStart,YMEnd where you set ACTUAL startYY/stopYY for trends
 iYS = 2002; iYE = 2021;
 iYS = 2002; iYE = 2022;
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeAIRSCLIMCAPSL3_monthly_trends.m  and do_the_AIRSCLIMCAPSL3_trends.m
+%% see  FIND_NWP_MODEL_TRENDS/driver_compute_AIRS_CLIMCAPS_trends_desc_or_asc.m or FIND_NWP_MODEL_TRENDS/driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m  
+
 %airsclimcapsl3_64x72 = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_Sept2002_Aug2021_19yr_desc.mat');
 airsclimcapsl3_64x72 = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_Sept2002_Aug2022_20yr_desc.mat');
 
 [numtimesteps0] = length(airsclimcapsl3_64x72.days);
 numtimesteps = numtimesteps0;
 fprintf(1,'driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
+iNumYears = numtimesteps/12;
 
 rlat = load('latB64.mat'); rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
 rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
@@ -116,6 +124,9 @@ YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
 YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
 YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
 YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+YMStart = [2002 09];  YMEnd = [2017 08];  %% 15 years
+YMStart = [2002 09];  YMEnd = [2012 08];  %% 10 years
+YMStart = [2002 09];  YMEnd = [2007 08];  %% 10 years
 
 daysSince2002Start = change2days(YMStart(1),YMStart(2),15,2002);
 daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),  15,2002);
@@ -130,23 +141,22 @@ mm = mm(usethese);
 dd = dd(usethese);
  
 numtimesteps = length(yy);
-% airsCLIMCAPSL3_64x72.all.yy = airsCLIMCAPSL3_64x72.all.yy(usethese);
-% airsCLIMCAPSL3_64x72.all.mm = airsCLIMCAPSL3_64x72.all.mm(usethese);
-% airsCLIMCAPSL3_64x72.all.dd = airsCLIMCAPSL3_64x72.all.dd(usethese);
-% airsCLIMCAPSL3_64x72.all.nwp_ptemp = airsCLIMCAPSL3_64x72.all.nwp_ptemp(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.nwp_gas_1 = airsCLIMCAPSL3_64x72.all.nwp_gas_1(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.nwp_gas_3 = airsCLIMCAPSL3_64x72.all.nwp_gas_3(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.nwp_rh    = airsCLIMCAPSL3_64x72.all.nwp_rh(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.nwp_plevs = airsCLIMCAPSL3_64x72.all.nwp_plevs(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.ptemp = airsCLIMCAPSL3_64x72.all.ptemp(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.gas_1 = airsCLIMCAPSL3_64x72.all.gas_1(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.gas_3 = airsCLIMCAPSL3_64x72.all.gas_3(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.mmw   = airsCLIMCAPSL3_64x72.all.mmw(usethese,:);
-% airsCLIMCAPSL3_64x72.all.stemp = airsCLIMCAPSL3_64x72.all.stemp(usethese,:);
-% airsCLIMCAPSL3_64x72.all.nlays = airsCLIMCAPSL3_64x72.all.nlays(usethese,:);
-% airsCLIMCAPSL3_64x72.all.RH    = airsCLIMCAPSL3_64x72.all.RH(usethese,:,:);
-% airsCLIMCAPSL3_64x72.all.TwSurf = airsCLIMCAPSL3_64x72.all.TwSurf(usethese,:);
-% airsCLIMCAPSL3_64x72.all.RHSurf = airsCLIMCAPSL3_64x72.all.RHSurf(usethese,:);
+airsclimcapsl3_64x72.days                = airsclimcapsl3_64x72.days(usethese);
+airsclimcapsl3_64x72.save64x72_olr       = airsclimcapsl3_64x72.save64x72_olr(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_stemp     = airsclimcapsl3_64x72.save64x72_stemp(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_Q         = airsclimcapsl3_64x72.save64x72_Q(:,:,:,usethese);
+airsclimcapsl3_64x72.save64x72_RH        = airsclimcapsl3_64x72.save64x72_RH(:,:,:,usethese);
+airsclimcapsl3_64x72.save64x72_T         = airsclimcapsl3_64x72.save64x72_T(:,:,:,usethese);
+
+airsclimcapsl3_64x72.save64x72_cld_frac  = airsclimcapsl3_64x72.save64x72_cld_frac(:,:,:,usethese);
+airsclimcapsl3_64x72.save64x72_cld_pres  = airsclimcapsl3_64x72.save64x72_cld_pres(:,:,:,usethese);
+airsclimcapsl3_64x72.save64x72_RHSurf    = airsclimcapsl3_64x72.save64x72_RHSurf(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_TWetSurf  = airsclimcapsl3_64x72.save64x72_TWetSurf(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_clrolr    = airsclimcapsl3_64x72.save64x72_clrolr(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_iceT      = airsclimcapsl3_64x72.save64x72_iceT(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_ice_od    = airsclimcapsl3_64x72.save64x72_ice_od(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_icesze    = airsclimcapsl3_64x72.save64x72_icesze(:,:,usethese);
+airsclimcapsl3_64x72.save64x72_liq_water = airsclimcapsl3_64x72.save64x72_liq_water(:,:,usethese);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -186,7 +196,6 @@ nemis_t = [];
 emis_t  = [];
 efreq_t = [];
 rho_t   = [];
-
 
 for ii = JOB
 
@@ -262,7 +271,55 @@ for ii = JOB
   %p72.salti = 0 * ones(size(p72.stemp));
   p72.spres = reshape(p.spres,72,64); p72.spres = p72.spres(:,ii) * ones(1,1*numtimesteps); p72.spres = p72.spres(:)';
   p72.salti = reshape(p.salti,72,64); p72.salti = p72.salti(:,ii) * ones(1,1*numtimesteps); p72.salti = p72.salti(:)';
-  
+
+  verybad = find(isnan(p72.ptemp(50,:)) | isnan(p72.gas_1(50,:)) | isnan(p72.rh(50,:)))
+  if length(verybad) > 0  
+    for jjj = 1 : length(verybad)
+      bah = verybad(jjj);
+      badah = (1:72:240*72) + (mod(bah,72)-1);
+      [Y,I1,I2] = intersect(bah,badah);
+      p72.stemp(bah)   = p72.stemp(badah(I2-1));
+      p72.ptemp(:,bah) = p72.ptemp(:,badah(I2-1));
+      p72.gas_1(:,bah) = p72.gas_1(:,badah(I2-1));
+      p72.rh(:,bah)    = p72.rh(:,badah(I2-1));
+    end    
+  end
+
+  for jjj = 1 : length(p72.stemp)
+    junklevs = p72.plevs(:,jjj);
+    junkT    = p72.ptemp(:,jjj);
+    junkQ    = p72.gas_1(:,jjj);
+    junkrh   = p72.rh(:,jjj);
+    moo = find(junklevs >= p72.spres(jjj),1);
+    p72.nlevs(jjj) = moo;
+
+    bad = find(junkT(1:moo) < 10 | isnan(junkT(1:moo)));
+    good = find(junkT(1:moo) > 150);
+    if length(bad) > 0
+      junkT(bad) = interp1(log(junklevs(good)),junkT(good),log(junklevs(bad)),[],'extrap');
+      p72.ptemp(bad,jjj) = junkT(bad);
+    end
+
+    bad = find(junkQ(1:moo) < 0 | isnan(junkQ(1:moo)));
+    good = find(junkQ(1:moo) > 0);
+    if length(bad) > 0
+      junkQ(bad) = interp1(log(junklevs(good)),junkQ(good),log(junklevs(bad)),[],'extrap');
+      haha = find(junkQ(bad) < 0);
+      junkQ(bad(haha)) = junkQ(good(end));
+      p72.gas_1(bad,jjj) = junkQ(bad);
+      
+    end
+
+    bad = find(junkrh(1:moo) < 0 | isnan(junkrh(1:moo)));
+    good = find(junkrh(1:moo) > 0);
+    if length(bad) > 0
+      junkrh(bad) = interp1(log(junklevs(good)),junkrh(good),log(junklevs(bad)),[],'extrap');
+      haha = find(junkQ(bad) < 0);
+      junkrh(bad(haha)) = junkrh(good(end));
+      p72.rh(bad,jjj) = junkrh(bad);
+    end
+  end
+    
   pcolor(rlon,1:numtimesteps,reshape(p72.stemp,72,numtimesteps)'); colormap jet; colorbar
   pcolor(rlon,1:numtimesteps,reshape(p72.spres,72,numtimesteps)'); colormap jet; colorbar
   pcolor(rlon,1:numtimesteps,reshape(p72.salti,72,numtimesteps)'); colormap jet; colorbar
@@ -367,8 +424,7 @@ for ii = JOB
   disp(' ')
   disp('output in eg           SimulateTimeSeries/CLIMCAPSL3/reconstruct_climcapsL3_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
   disp('         also makes eg SimulateTimeSeries/CLIMCAPSL3/simulate64binsAIRSCLIMCAPSL3_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
-  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 5')
+  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 12')
   disp(' ')
-
 
 end

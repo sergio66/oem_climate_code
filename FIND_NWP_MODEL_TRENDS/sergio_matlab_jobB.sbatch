@@ -1,12 +1,23 @@
 #!/bin/bash
 
 # condensed into master_sbatch.sc which does
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 1
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 2
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 3
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 4
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 5    for driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m which is 5 days/tons of memory, FAST
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 6    for driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m which is 5 days/tons of memory, SLOW
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 1       for driver_computeERA5_16day_trends_desc_or_asc, iDorA = +1
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 2       for driver_computeERA5_16day_trends_desc_or_asc, iDorA = -1
+#
+# run this with   sbatch -p high_mem --array=1-20 sergio_matlab_jobB.sbatch 3    for driver_computeERA5_monthly_trends_desc_or_asc, iDorA = +1
+# run this with   sbatch -p high_mem --array=1-20 sergio_matlab_jobB.sbatch 4    for driver_computeERA5_monthly_trends_desc_or_asc, iDorA = -1
+#
+# run this with   sbatch -p high_mem --array=1-20 sergio_matlab_jobB.sbatch 5    for driver_computeMERRA2_monthly_trends_desc_or_asc, iDorA = +1 (no separation)
+#
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 6    for driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m which is 5 days/tons of memory, iDorA = +1, FAST
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 7    for driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m which is 5 days/tons of memory, iDorA = -1, FAST
+#
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 8    for driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m which is 5 days/tons of memory, iDorA = +1, SLOW
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 9    for driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m which is 5 days/tons of memory, iDorA = -1, SLOW
+#
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 10    for driver_compute_AIRSL3_trends_desc_or_asc.m which is 5 days/tons of memory, iDorA = +1, FAST
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 11    for driver_compute_AIRSL3_trends_desc_or_asc.m which is 5 days/tons of memory, iDorA = -1, FAST
+#
 
 #  Name of the job:
 #SBATCH --job-name=RUN_ERA_TRENDS
@@ -62,9 +73,24 @@ elif [[ "$1" -eq "4" ]]; then
   echo "cmd line arg = 4; iDorA=-1; driver_computeERA5_monthly_trends_desc_or_asc"
   matlab -nodisplay -r "iCmdLineOption = $1; iDorA=-1; driver_computeERA5_monthly_trends_desc_or_asc; exit"
 elif [[ "$1" -eq "5" ]]; then
-  echo "cmd line arg = 5; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN FAST"
-  matlab -nodisplay -r "iSlowORFast = -1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
+  echo "cmd line arg = 5; iDorA=+1; driver_computeMERRA2_monthly_trends_desc_or_asc"
+  matlab -nodisplay -r "iCmdLineOption = $1; iDorA=1; driver_computeMERRA2_monthly_trends_desc_or_asc; exit"
 elif [[ "$1" -eq "6" ]]; then
-  echo "cmd line arg = 6; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN SLOW"
-  matlab -nodisplay -r "iSlowORFast = +1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
+  echo "cmd line arg = 6; iDorA=1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN FAST"
+  matlab -nodisplay -r "iCmdLineOption = $1; iSlowORFast = -1; iDorA=1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
+elif [[ "$1" -eq "7" ]]; then
+  echo "cmd line arg = 7; iDorA=-1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN FAST"
+  matlab -nodisplay -r "iCmdLineOption = $1; iSlowORFast = -1; iDorA=-1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
+elif [[ "$1" -eq "8" ]]; then
+  echo "cmd line arg = 8;  iDorA=1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN SLOW"
+  matlab -nodisplay -r "iCmdLineOption = $1; iSlowORFast = +1;  iDorA=1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
+elif [[ "$1" -eq "9" ]]; then
+  echo "cmd line arg = 9;  iDorA=-1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN SLOW"
+  matlab -nodisplay -r "iCmdLineOption = $1; iSlowORFast = +1;  iDorA=-1; driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN; exit"
+elif [[ "$1" -eq "10" ]]; then
+  echo "cmd line arg = 10;  iDorA=1; driver_compute_AIRSL3_trends_desc_or_asc.m FAST"
+  matlab -nodisplay -r "iCmdLineOption = $1; iSlowORFast = -1;  iDorA=1; driver_compute_AIRSL3_trends_desc_or_asc; exit"
+elif [[ "$1" -eq "11" ]]; then
+  echo "cmd line arg = 11;  iDorA=-1; driver_compute_AIRSL3_trends_desc_or_asc.m FAST"
+  matlab -nodisplay -r "iCmdLineOption = $1; iSlowORFast = -1;  iDorA=-1; driver_compute_AIRSL3_trends_desc_or_asc; exit"
 fi

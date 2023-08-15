@@ -410,6 +410,6 @@ if ~exist(foutname)
   fprintf(1,'%s \n',saver');
   eval(saver)
 else
-  fprintf(1,'%s alewady exists, not saving \n',foutname)
+  fprintf(1,'%s already exists, not saving \n',foutname)
   eval(saver)
 end

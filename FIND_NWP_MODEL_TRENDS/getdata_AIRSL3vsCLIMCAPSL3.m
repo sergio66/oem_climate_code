@@ -78,31 +78,54 @@ end
 %  iNumYears = 19;
 %end
 
+iNumYears0 = iNumYears;
+zoo = [05 10 12 15 19 20];
+moo = abs(iNumYears - zoo);
+moo = find(moo == min(moo));
+iNumYears = zoo(moo);
+if iNumYears ~= iNumYears0
+  fprintf(1,'getdata_AIRSL3vsCLIMCAPSL3.m : You want trends for %2i years but can only find closest = %2i years \n',iNumYears0,iNumYears);
+end
+
 %% airsL3 : 'native' = 180 bins from L3, 'zonal' = 40 equal area latbins, [] = 64x72
 if iNorD > 0
   strNorD = 'NIGHT';
   if iA == 1
-    if iNumYears == 19
-      %airsL3native = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
-      %airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
-      %airsL3       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
-      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_desc.mat';
-      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat';
-      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat';
-    elseif iNumYears == 20
-      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2022_20yr_desc.mat';
-    elseif iNumYears == 12
-      fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat';
+    if length(intersect(iNumYears,[05 10 12 15 18 19 20])) == 1
+      fAIRS = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
     else
-      error('need 12 or 19 years')
+      iaJunk = [5 10 15 20 12 18 19];
+      moo = abs(iaJunk-iNumYears);
+      moo = find(moo == min(moo),1);    
+      iNumYearsPowWow = 2002+iaJunk(moo);
+      fAIRS = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYearsPowWow) '_' num2str(iNumYearsPowWow) 'yr_desc.mat'];
+      disp('AIRS L3 : needs 12,18,19 or 05,10,15,20 years, subbing in closest year')
     end
+    % if iNumYears == 19
+    %   %airsL3native = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+    %   %airsL3zonal  = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+    %   %airsL3       = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Jul2021_19yr_desc.mat');
+    %   fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_native_rates_stats_Sept2002_Jul2021_19yr_desc.mat';
+    %   fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_zonal_rates_stats_Sept2002_Jul2021_19yr_desc.mat';
+    %   fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat';
+    % elseif iNumYears == 20
+    %   fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2022_20yr_desc.mat';
+    % elseif iNumYears == 12
+    %   fAIRS = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat';
+    % else
+    %   iNumYears
+    %   error('need 12, 19, 20 years')
+    % end
   else
-    if iNumYears == 19
-      fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat';
-    elseif iNumYears == 12
-      fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2014_12yr_desc.mat';
+    if length(intersect(iNumYears,[05 10 12 15 19 20])) == 1
+      fAIRS = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
     else
-      error('need 12 or 19 years')
+      iaJunk = [5 10 15 20 12 18 19];
+      moo = abs(iaJunk-iNumYears);
+      moo = find(moo == min(moo),1);    
+      iNumYearsPowWow = 2002+iaJunk(moo);
+      fAIRS = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYearsPowWow) '_' num2str(iNumYearsPowWow) 'yr_desc.mat'];
+      disp('CLIMCAPS L3 : need 05 10 12 15 19 or 20 years, subbing in closest year')
     end    
   end
 else

@@ -40,6 +40,7 @@ fprintf(1,'driverchoose_AIRSvsNWPvsXMIP6.m : iNumYears = %2i \n',iNumYears)
 %else
 %  airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
 %end
+
 airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
 
 nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL,iNumYears);

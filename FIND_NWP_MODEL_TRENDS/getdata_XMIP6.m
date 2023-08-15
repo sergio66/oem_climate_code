@@ -84,7 +84,7 @@ else
   error('unknown XMIP6 choice')
 end
 
-fprintf(1,' getdata_XMIP6.m : iXMIP = %2i iNumYears = %2i : fAIRS = %s \n',iXMIP6,12,fXMIP6);
+fprintf(1,' getdata_XMIP6.m : iXMIP = %2i iNumYears = %2i : fXMIP6 = %s \n',iXMIP6,12,fXMIP6);
 xmip6Choice = load(fXMIP6);
 
 load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
