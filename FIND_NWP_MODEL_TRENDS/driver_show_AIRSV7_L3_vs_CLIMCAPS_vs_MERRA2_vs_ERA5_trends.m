@@ -11,11 +11,14 @@ if nargin == 0
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_feedback.mat';              %% not too bad at lower atm/polar!!!!
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q05_newERA5_2021jacs_startwith_MLSL3_TOA_guessWV_dRH_zero_bot_50fatlayers.mat';  %% too much oomph at gnd : use MLS L3 TOA and dRH/dt = 0 at bottom
 
-  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_ERA5calcs_spectraltrends.mat'; iNumYears = 20; %% compare geophysical trends from ERA5 spectral trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_ERA5calcs_spectraltrends.mat';       iNumYears = 20; %% compare geophysical trends from ERA5     spectral trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_MERRA2calcs_spectraltrends.mat';     iNumYears = 20; %% compare geophysical trends from MERRA2   spectral trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_AIRSL3calcs_spectraltrends.mat';     iNumYears = 20; %% compare geophysical trends from AIRS L3  spectral trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_CLIMCAPSL3calcs_spectraltrends.mat'; iNumYears = 20; %% compare geophysical trends from CLIMCAPS spectral trends
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20;         %% use CarbonTracker CO2 trends
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 05;         %% use CarbonTracker CO2 trends
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 10;         %% use CarbonTracker CO2 trends
-  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 15;          %% use CarbonTracker CO2 trends
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 15;         %% use CarbonTracker CO2 trends
 
   strUMBC = [];
   iUMBC = -1;
@@ -1152,3 +1155,31 @@ if iUMBC > 0
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+iPrint = -1;
+if iPrint > 0
+  dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/PAPER17_TRENDS/Figs/';
+  figure(50); aslprint([dir0 'obs_spectralavg_'        num2str(iNumYears) '_years.pdf']);
+  figure(51); aslprint([dir0 'umbc_spectralavg_'       num2str(iNumYears) '_years.pdf']);
+  figure(52); aslprint([dir0 'era5_spectralavg_'       num2str(iNumYears) '_years.pdf']);
+  figure(53); aslprint([dir0 'merra2_spectralavg_'     num2str(iNumYears) '_years.pdf']);
+  figure(54); aslprint([dir0 'airsL3_spectralavg_'     num2str(iNumYears) '_years.pdf']);
+  figure(55); aslprint([dir0 'climcapsL3_spectralavg_' num2str(iNumYears) '_years.pdf']);
+
+  figure(07); aslprint([dir0 'rh_trends_zonal_p_4panels' num2str(iNumYears) '_years.pdf']);
+  figure(08); aslprint([dir0 'fracWV_trends_zonal_p_4panels' num2str(iNumYears) '_years.pdf']);
+  figure(09); aslprint([dir0 'tz_trends_zonal_p_4panels' num2str(iNumYears) '_years.pdf']);
+  figure(20); aslprint([dir0 'sst_trends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+
+  figure(21); aslprint([dir0 '200mb_rhtrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+  figure(22); aslprint([dir0 '200mb_fracWVtrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+  figure(23); aslprint([dir0 '200mb_tztrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+
+  figure(24); aslprint([dir0 '500mb_rhtrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+  figure(25); aslprint([dir0 '500mb_fracWVtrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+  figure(26); aslprint([dir0 '500mb_tztrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+
+  figure(27); aslprint([dir0 '800mb_rhtrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+  figure(28); aslprint([dir0 '800mb_fracWVtrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+  figure(29); aslprint([dir0 '800mb_tztrends_lat_lon_6panels' num2str(iNumYears) '_years.pdf']);
+
+end

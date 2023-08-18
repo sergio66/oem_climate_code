@@ -55,7 +55,7 @@ iType = +07;   %% sergio Q16 20 year trends         I     ran for me in Sep 2022
 iType = +08;   %% sergio Q16 06 year trends         I     ran for me in Sep 2022, 2015/01 to 2021/12 FULL, 06 years, OCO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iType = +09;   %% sergio iQAX_3 Q05 20 year trends  I     ran for me in Oct 2022, 2002/09 to 2022/08 FULL, 20 years, with newer defn of quantiles
-iType = +19;   %% sergio iQAX_3 Q05 05 year trends  I     ran for me in June 2023, 2002/09 to 2007/08 FULL, 05 years, with newer defn of quantiles
+iType = +10;   %% sergio iQAX_3 Q05 05 year trends  I     ran for me in June 2023, 2002/09 to 2007/08 FULL, 05 years, with newer defn of quantiles
 iType = +11;   %% sergio iQAX_3 Q05 10 year trends  I     ran for me in June 2023, 2002/09 to 2012/08 FULL, 10 years, with newer defn of quantiles
 iType = +12;   %% sergio iQAX_3 Q05 15 year trends  I     ran for me in June 2023, 2002/09 to 2015/08 FULL, 15 years, with newer defn of quantiles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

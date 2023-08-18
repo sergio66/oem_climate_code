@@ -1,9 +1,9 @@
 function driver = get_rates(driver,settings,iNoiseType)
 
 %% iUseNWP = -1 for use AIRS obs/cal rates
-%%         = +3 for AIRS L3
-%%         = +5 for ERA5
-%%         = +6 for CMIP6
+%%         = +3 for AIRS L3, -3 for CLIMCAPS L3
+%%         = +5 for ERA5, +2 for MERRA2
+%%         = +6 for CMIP6, -6 for AMIP6
 %%             1 for N, 2 for D
 
 if ~isfield(driver,'iDebugRatesUseNWP')

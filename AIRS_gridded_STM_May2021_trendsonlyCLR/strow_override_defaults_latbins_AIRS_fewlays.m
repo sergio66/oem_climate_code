@@ -33,6 +33,11 @@ elseif abs(settings.ocb_set) > 1
 end
 %---------------------------------------------------------------------------
 % Raw rate data file        
+%% iUseNWP = -1 for use AIRS obs/cal rates
+%%         = +3 for AIRS L3, -3 for CLIMCAPS L3
+%%         = +5 for ERA5, +2 for MERRA2
+%%         = +6 for CMIP6, -6 for AMIP6
+%%             1 for N, 2 for D
 [driver,settings] = set_driver_rateset_datafile(driver,settings);
 
 fprintf(1,'[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i %3i \n',[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset])
@@ -44,6 +49,11 @@ driver.rateset.ncfile   = driver.rateset.datafile;
 
 %driver
 % Get rate data, do Q/A elsewhere
+%% iUseNWP = -1 for use AIRS obs/cal rates
+%%         = +3 for AIRS L3, -3 for CLIMCAPS L3
+%%         = +5 for ERA5, +2 for MERRA2
+%%         = +6 for CMIP6, -6 for AMIP6
+%%             1 for N, 2 for D
 driver = get_rates(driver,settings,settings.iNoiseType);  %% this gets spectral rates (driver.rateset.rates), and uncertainty (driver.rateset.unc_rates)
 
 %---------------------------------------------------------------------------
@@ -170,7 +180,19 @@ set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical   %% can set a priori to the M
 iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
-set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
+driver.co2adj_ESRL = -9999;
+if driver.ia_OorC_DataSet_Quantile(1) == 0
+  %% these are obs, so use CO2 trends!!
+  set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
+%elseif driver.ia_OorC_DataSet_Quantile(1) == 1 & driver.ia_OorC_DataSet_Quantile(4) == 5
+%  %% these are ERA5 simulations with CO2, so use CO2 trends!!
+%  set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
+%elseif driver.ia_OorC_DataSet_Quantile(1) == 1 & driver.ia_OorC_DataSet_Quantile(4) ~= 5
+%  disp('using simulated spectra which are not ERA5 sims, so do not have CO2 in them')
+elseif driver.ia_OorC_DataSet_Quantile(1) == 1
+  %% these are ERA5 simulations with CO2, so use CO2 trends!!
+  set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
+end
 
 %{
 disp('WV xb WV xb WV xb')

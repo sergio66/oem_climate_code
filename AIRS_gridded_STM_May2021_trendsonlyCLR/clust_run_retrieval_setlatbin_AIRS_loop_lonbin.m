@@ -128,21 +128,26 @@ iDebug = -1;
 %iDebug = 2268; %% T
 %iDebug = 1082
 %iDebug = 1009   %% Southern Midlats
+%iDebug = 15
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
-ia_OorC_DataSet_Quantile = [+0 04 16]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
-ia_OorC_DataSet_Quantile = [+0 05 50]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
+ia_OorC_DataSet_Quantile = [+0 04 16 -9999]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
+ia_OorC_DataSet_Quantile = [+0 05 50 -9999]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
 %%
-ia_OorC_DataSet_Quantile = [+0 07 16]; %% ocb_set = 0 : obs fit, dataset = 7, iQuantile = 16    20 year rates, AIRS obs Q16
-ia_OorC_DataSet_Quantile = [+1 09 16]; %% ocb_set = 1 : cal fit, dataset = 9, iQuantile = 16    20 year rates, ERA5 synthetic
-ia_OorC_DataSet_Quantile = [+0 09 05]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
+ia_OorC_DataSet_Quantile = [+0 07 16 -9999]; %% ocb_set = 0 : obs fit, dataset = 7, iQuantile = 16    20 year rates, AIRS obs Q16
+ia_OorC_DataSet_Quantile = [+0 09 05 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
 
-ia_OorC_DataSet_Quantile = [+0 10 03]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 11 03]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 12 03]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+
+ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9, iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9, iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
+ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -282,8 +287,9 @@ for iInd = iXX1 : idX : iXX2
   topts.dataset   = +11;   %% (+11) AIRS 10 year quantile dataset, Sergio May 2023   2002/09-2012/08 FULL 10 years, new way of douning quantile iQAX = 3  ************************
   topts.dataset   = +12;   %% (+12) AIRS 15 year quantile dataset, Sergio May 2023   2002/09-2017/08 FULL 15 years, new way of douning quantile iQAX = 3  ************************
 
-  topts.dataset   = ia_OorC_DataSet_Quantile(2);
-  iQuantile = ia_OorC_DataSet_Quantile(3);
+  topts.model   = ia_OorC_DataSet_Quantile(4);
+  topts.dataset = ia_OorC_DataSet_Quantile(2);
+  iQuantile     = ia_OorC_DataSet_Quantile(3);
 
   %%%%%%%%%%
 
@@ -572,7 +578,8 @@ end
     end
   end
 
-  if sum(abs(driver.rateset.rates)) > 0 & ~exist(driver.outfilename)
+%%%%   if sum(abs(driver.rateset.rates)) > 0 & ~exist(driver.outfilename)  till Aug 2023
+  if nansum(abs(driver.rateset.rates)) >= 0 & ~exist(driver.outfilename)
     fprintf(1,'saving to %s \n',driver.outfilename)
     save(driver.outfilename,'-struct','driver');
   elseif sum(abs(driver.rateset.rates)) < eps & ~exist(driver.outfilename)

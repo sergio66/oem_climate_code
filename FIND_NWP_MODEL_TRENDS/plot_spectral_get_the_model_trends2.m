@@ -107,6 +107,7 @@ plot(fchanx,nanmean(cosYYNPolar.*obsrates.rates,2),'k',fchanx,nanmean(cosYYNPola
  xlabel('Wavenumber cm-1'); ylabel('dBT/dt K/yr')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp('just showing all 4608 lats Figs 40-45')
 figure(iOffSet+10); clf;
   pcolor(fchanx,YY,obsrates.rates');                       shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 figure(iOffSet+11); clf;
@@ -120,3 +121,31 @@ figure(iOffSet+14); clf;
 figure(iOffSet+15); clf;
   pcolor(fchanx,YY,climcapsL3.climcapsL3_spectral_rates'); shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('CLIMCAPS L3 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp('doing zonal average Figs 50-55')
+figure(iOffSet+20); clf;
+  pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(obsrates.rates',72,64,2645),1)));                       
+  shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+figure(iOffSet+21); clf;
+  pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(umbcL3.umbcL3_spectral_rates',72,64,2645),1)));         
+  shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('UMBC Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+figure(iOffSet+22); clf;
+  pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(era5.era5_spectral_rates',72,64,2645),1)));             
+  shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('ERA5 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+figure(iOffSet+23); clf;
+  pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(merra2.merra2_spectral_rates',72,64,2645),1)));         
+  shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('MERRA2 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+figure(iOffSet+24); clf;
+  pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(airsL3.airsL3_spectral_rates',72,64,2645),1)));         
+  shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('AIRS L3 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+figure(iOffSet+25); clf;
+  pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(climcapsL3.climcapsL3_spectral_rates',72,64,2645),1))); 
+  shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('CLIMCAPS L3 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%figure(iOffSet+30); clf;
+%  wah = obsrates.rates; wah = reshape(wah,2645,72,64); wah = squeeze(nanmean(wah,2));
+%  pcolor(fchanx,nanmean(reshape(YY,72,64),1),wah);
+%  shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+%keyboard_nowindow

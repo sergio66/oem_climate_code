@@ -7,7 +7,7 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 
 system_slurm_stats
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID')); %JOB = 1 -- 64
-JOB = 3
+%JOB = 1
 
 % ls -lt /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_15*.rp.rtp
 % -rw-rw-r-- 1 sergio pi_strow 316109325 Oct 29 15:35 /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_15_2002_09_2022_08.rp.rtp
@@ -21,9 +21,9 @@ end
 if ~exist('iModel')
   iModel = 5;   %% ERA5
   iModel = 2;   %% MERRA2
-  iModel = +3;  %% AIRS v7
-  iModel = -3;  %% CLIMCAPS
   iModel = 1;   %% UMBC
+  iModel = -3;  %% CLIMCAPS
+  iModel = +3;  %% AIRS v7
 end
 
 if iModel == 1
@@ -123,7 +123,7 @@ for xx = 1 : 72
       thesave.const(iii,xx)     = NaN;
     end
   end
-  fprintf(1,'\n');
+  fprintf(1,' 1231 cm-1 trend (AIRS L1C Ch 1520) = %8.6f \n',thesave.xtrend(1520,xx));
 end
 
 if iModel == 1

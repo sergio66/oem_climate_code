@@ -3,6 +3,9 @@ topts = [];
 
 topts = struct;
 
+topts.model = -9999; %% if using synthetic spectral rates for retrieval
+topts.model = +5;    %% ERA5 = 5, MERRA2 = 2, AIRS/CLIMCAPS = +3/-3
+
 topts.rCoupleT_WV = 0.25; %% yes    couple in the covariance matrix, before Oct 2002 default
 topts.rCoupleT_WV = 0.00; %% do not couple in the covariance matrix
 

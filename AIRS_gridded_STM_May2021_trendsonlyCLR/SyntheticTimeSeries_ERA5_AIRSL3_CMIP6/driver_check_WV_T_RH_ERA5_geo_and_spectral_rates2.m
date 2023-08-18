@@ -340,23 +340,23 @@ for ii = JOB
   %%%%%%%%%%%%%%%%%%%%%%%%%
     days = (1:numtimesteps)*30/365;
 
-    polyfit(days,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
-    Math_tsfit_lin_robust(days*365,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
-  
-    stempjunk = reshape(p72x.stemp,72,numtimesteps);
-    polyfit(days,nanmean(stempjunk,1),1); ans(1)
-    Math_tsfit_lin_robust(days*365,nanmean(stempjunk),4); ans(2)
+%%     polyfit(days,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
+%%     Math_tsfit_lin_robust(days*365,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
+%%   
+%%     stempjunk = reshape(p72x.stemp,72,numtimesteps);
+%%     polyfit(days,nanmean(stempjunk,1),1); ans(1)
+%%     Math_tsfit_lin_robust(days*365,nanmean(stempjunk),4); ans(2)
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
     dayOFtime = change2days(yy,mm,dd,2002);
-    disp('dude I just computed dayOFtime')
-
-    polyfit(dayOFtime/365.25,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
-    Math_tsfit_lin_robust(dayOFtime,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
-  
-    stempjunk = reshape(p72x.stemp,72,numtimesteps);
-    polyfit(dayOFtime/365.25,nanmean(stempjunk,1),1); ans(1)
-    Math_tsfit_lin_robust(dayOFtime,nanmean(stempjunk),4); ans(2)
+%%     disp('dude I just computed dayOFtime')
+%% 
+%%     polyfit(dayOFtime/365.25,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
+%%     Math_tsfit_lin_robust(dayOFtime,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
+%%   
+%%     stempjunk = reshape(p72x.stemp,72,numtimesteps);
+%%     polyfit(dayOFtime/365.25,nanmean(stempjunk,1),1); ans(1)
+%%     Math_tsfit_lin_robust(dayOFtime,nanmean(stempjunk),4); ans(2)
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
 

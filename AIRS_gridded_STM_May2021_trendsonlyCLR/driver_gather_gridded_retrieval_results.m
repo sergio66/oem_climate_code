@@ -99,9 +99,9 @@ end
 disp('quants for dataset 1-8        = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00]');
 disp('quants for dataset 9,10,11,12 = [0.50 0.80 0.90 0.95 0.97 1.00]');
 
-dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n    :::  [4 = Default] : ');
+dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n    :::  [9 = Default] : ');
 if length(dataset) == 0
-  dataset = 4;
+  dataset = 9;
 end
 
 if dataset == 1 | dataset == -1

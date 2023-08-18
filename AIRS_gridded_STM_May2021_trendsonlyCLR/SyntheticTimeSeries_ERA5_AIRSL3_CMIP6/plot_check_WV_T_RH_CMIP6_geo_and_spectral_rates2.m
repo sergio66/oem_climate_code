@@ -1,6 +1,8 @@
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
+disp('plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2 : did preliminaries, starting the spectral and geophysical trends ...')
+
 fchanx = h72x.vchan;
 plevsx = p72x.plevs(1:97,20);
 rlatx  = unique(p72.rlat);

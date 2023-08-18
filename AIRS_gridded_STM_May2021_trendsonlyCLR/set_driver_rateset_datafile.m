@@ -1,5 +1,11 @@
 function [driver,settings] = set_driver_rateset_datafile(driver0,settings0);
 
+%% iUseNWP = -1 for use AIRS obs/cal rates
+%%         = +3 for AIRS L3, -3 for CLIMCAPS L3
+%%         = +5 for ERA5, +2 for MERRA2
+%%         = +6 for CMIP6, -6 for AMIP6
+%%             1 for N, 2 for D
+
 driver = driver0;
 settings = settings0;
 
@@ -198,9 +204,18 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 12
       driver.rateset.datafile  = 'AHAH';
       disp(' settings.dataset == 9,10,11,12 but settings.ocb_set == 1 so set rateset = 2002/09-2021/08 clr (Q16)')
       strlatbin                = num2str(floor((driver.iibin-1)/72)+1,'%02d');
-      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
-      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                                %% co2/n2o/ch4 change in time
-      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 unchanging
+
+      if settings.model == 5
+        driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
+        driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                %% co2/n2o/ch4 change in time
+        driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 unchanging
+      elseif settings.model == 2
+        driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/MERRA2_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 changing
+      elseif settings.model == 3
+        driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/AIRSL3_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 changing
+      elseif settings.model == -3
+        driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/CLIMCAPSL3_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 changing
+      end
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end

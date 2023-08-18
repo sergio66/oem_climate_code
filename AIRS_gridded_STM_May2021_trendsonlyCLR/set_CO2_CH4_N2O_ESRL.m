@@ -32,7 +32,22 @@ elseif iAdjCo2 > -1 & iAdjCo2 < +0.99
 end
 driver.co2adj_ESRL = iAdjCo2;
 
-if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
+if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 1 & settings.model ~= 5
+  %% have an ERA5 simulation with NO co2 changing, so put xb(1:6) = 0 got that
+  %% for MERRA2, AIRSL3, CLIMCAPSL3 have included "realistic" CO2
+    xb(1) = co2x;  % Set CO2 apriori
+    xb(2) = 1;
+    xb(3) = ch4x;
+    xb(4) = 0.0; %% clouds, so dunno value
+    xb(5) = 0.0; %% clouds, so dunno value
+
+    xb(1) = co2x * 1;    % Set CO2 apriori
+    xb(2) = n2ox * 1;    % set N2O 
+    xb(3) = ch4x * 1;    % set CH4
+    xb(4) = 0.0; %% clouds, so dunno value
+    xb(5) = 0.0; %% clouds, so dunno value
+
+elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
   fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  N2O = %8.6f   CH4 = %8.6f \n',co2x,n2ox,ch4x)
   if settings.co2lays == 1
     xb(1) = co2x;  % Set CO2 apriori

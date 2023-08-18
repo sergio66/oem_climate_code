@@ -131,7 +131,7 @@ elif [[ "$1" -eq "12" ]]; then
   ## makes driver_spectral_trends_latbin_1_64_sarta.m, make sure you set iModel correctly
   echo "cmd line arg = 8, driver_spectral_trends_latbin_1_64_sarta"
   ## srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta; exit"
-  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iModel = +2; iNumYears = 05; driver_spectral_trends_latbin_1_64_sarta; exit"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iModel = -3; iNumYears = 20; driver_spectral_trends_latbin_1_64_sarta; exit"
 
 elif [[ "$1" -eq "13" ]]; then
   # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
