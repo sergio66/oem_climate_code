@@ -92,6 +92,15 @@ numdatapts = iNumYears * 12 * 72; %% eg 19 years --> 16416 points
 
 [ppmvLAY,ppmvAVG,ppmvMAX,pavgLAY,tavgLAY,ppmv500,ppmv75,ppmvSURF] = layers2ppmv(h,pppp,1:length(pppp.stemp),2);
 
+bad_lonbins = [];
+if isfield(pppp,'verybad')
+  bad_lonbins = find(pppp.verybad > 0);
+  if length(bad_lonbins) > 0
+    disp('the are the verybad lonbins, so you may not want to believe the spectral or geophysical trends from this set of routines')
+    bad_lonbins = unique(pppp.lonbin(bad_lonbins));
+  end
+end
+
 for xx = 1 : 72
   fprintf(1,'JOB ( = latbin) = %2i       : Lonbin %2i of 72 : doing 2645 chans : ',JOB,xx)
   ind = (1:72:numdatapts);
@@ -152,7 +161,7 @@ comment = 'see MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/Syn
 % elseif iNumYears == 20
 %   saver = ['save ' dirout '/sarta_spectral_trends_latbin' num2str(JOB,'%02d') '_2002_09_2022_08.mat thesave comment'];
 % end
-saver = ['save ' dirout '/sarta_spectral_trends_latbin' num2str(JOB,'%02d') '_2002_09_' num2str(2002+iNumYears) '_08.mat thesave comment'];
+saver = ['save ' dirout '/sarta_spectral_trends_latbin' num2str(JOB,'%02d') '_2002_09_' num2str(2002+iNumYears) '_08.mat thesave comment bad_lonbins'];
 
 saver
 eval(saver);

@@ -1,4 +1,4 @@
-## this deleteds stuff from Output/QuantileXYZ/ploar leats where XYZ is 1-16; 
+## this deleteds stuff from Output/QuantileXYZ/polar lats where XYZ is 1-16; 
 ## so run it as        rmer_rerun_polar.sc $1
 
 clear

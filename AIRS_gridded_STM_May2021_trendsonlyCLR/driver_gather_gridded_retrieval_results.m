@@ -135,9 +135,9 @@ if dataset == -3
 elseif dataset >= 9
   iQuantile = 05; 
   if iOCBset == 0
-    iQuantile = input('Dataset = 9,10,11,12, iOCBset = 0 (obs)  ==> Which quantile 1..5   [5 = Default] : ');
+    iQuantile = input('Dataset = 9,10,11,12, iOCBset = 0 (obs)  ==> Which quantile 1..5   [3 = Default] : ');
     if length(iQuantile) == 0
-      iQuantile = 5;
+      iQuantile = 3;
     end
   elseif iOCBset == 1
     iQuantile = input('Dataset = 9,10,11,12, iOCBset = 1 (cal)  ==> Which quantile 1..16   [16 = Default] : ');

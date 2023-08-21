@@ -22,7 +22,7 @@ else
 fi
 
 ls -lt Output_CAL/Quantile$c/test*.mat | wc -l
-echo "removing latbins 01 .. 64 from Output/Quantile$c/"
+echo "removing latbins 01 .. 64 from Output_CAL/Quantile$c/"
 /bin/rm Output_CAL/Quantile$c/test*.mat
 
 /bin/rm slurm*.out

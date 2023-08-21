@@ -128,7 +128,7 @@ iDebug = -1;
 %iDebug = 2268; %% T
 %iDebug = 1082
 %iDebug = 1009   %% Southern Midlats
-%iDebug = 15
+%iDebug = 2843
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -139,15 +139,17 @@ ia_OorC_DataSet_Quantile = [+0 05 50 -9999]; %% ocb_set = 0 : obs fit, dataset =
 ia_OorC_DataSet_Quantile = [+0 07 16 -9999]; %% ocb_set = 0 : obs fit, dataset = 7, iQuantile = 16    20 year rates, AIRS obs Q16
 ia_OorC_DataSet_Quantile = [+0 09 05 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
 
-ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9, iQuantile = 16  20 year rates
 ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
 ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9, iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
 ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
+
+ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -352,9 +354,9 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3 = 3;           %% use AIRSL3   a priori
   topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
   topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
-  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori
   topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
   topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
+  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori
 
   if ia_OorC_DataSet_Quantile(1) == 1 & topts.set_era5_cmip6_airsL3 ~= 0
     %% this is synthetic rates, and starting with big a-priori .... so do not mess with lower atm WV!!!

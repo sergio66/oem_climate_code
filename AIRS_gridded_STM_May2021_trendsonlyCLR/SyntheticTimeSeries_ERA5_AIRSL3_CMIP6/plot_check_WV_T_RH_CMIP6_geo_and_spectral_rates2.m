@@ -3,6 +3,15 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 
 disp('plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2 : did preliminaries, starting the spectral and geophysical trends ...')
 
+thesave.bad_lonbins = [];
+if isfield(p72x,'verybad')
+  bad_lonbins = find(p72x.verybad > 0);
+  if length(bad_lonbins) > 0
+    disp('the are the verybad lonbins, so you may not want to believe the spectral or geophysical trends from this set of routines')
+    thesave.bad_lonbins = unique(p72x.lonbin(bad_lonbins))
+  end
+end
+
 fchanx = h72x.vchan;
 plevsx = p72x.plevs(1:97,20);
 rlatx  = unique(p72.rlat);
@@ -16,6 +25,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp(' .... stemp trends ...')
 warning off
 t = p72x.stemp; t = reshape(t,72,numtimesteps);
 for iii = 1 : 72
@@ -57,6 +67,7 @@ figure(6); plot(rlon,thesave.xst_trend,rlon,thesave.xbt1231_trend); title('dST/d
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp(' .... 2645 channel trends ...')
 warning off
 for iii = 1 : 2645
   if mod(iii,1000) == 0
@@ -115,6 +126,7 @@ figure(2); plot(fchanx,thesave.xtrend); grid;  axis([640 1640 -0.1 +0.05]); plot
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp(' .... Tz trends ...')
 t = p72.ptemp; t = reshape(t,iNlev,72,numtimesteps); 
 for jj = 1 : iNlev
   for ll = 1 : 72
@@ -163,6 +175,7 @@ figure(4); pcolor(rlon,plevsx,thesave.t2d_xtrend(1:97,:)); shading interp; color
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp(' .... WV(z) trends ...')
 t = p72.gas_1; t = reshape(t,iNlev,72,numtimesteps); tX = squeeze(nanmean(t,3));
 [~,~,kk] = size(t); clear tXX
 for kkk = 1 : kk
@@ -214,6 +227,7 @@ figure(4); pcolor(rlon,plevsx,thesave.wv2d_xtrend(1:97,:)); shading interp; colo
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp(' .... other trends if needed ...')
 if iType ~= 4
   t = p72.gas_3; t = reshape(t,iNlev,72,numtimesteps); tX = squeeze(nanmean(t,3));
   [~,~,kk] = size(t); clear tXX
@@ -267,6 +281,7 @@ end
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp(' .... RH trends ...')
 rh = p72.rh; rh = reshape(rh,iNlev,72,numtimesteps); 
 for jj = 1 : iNlev
   for ll = 1 : 72
@@ -317,7 +332,8 @@ figure(4); pcolor(rlon,plevsx,thesave.rh2d_xtrend(1:97,:)); shading interp; colo
   xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('RH rates from rtp after klayers')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+disp(' .... NOW 101 trends ...')
+disp(' .... RH 101 trends ...')
 rh = p72x.rh; rh = reshape(rh,100,72,numtimesteps); rh = squeeze(nanmean(rh,2)); 
 for iii = 1 : 97
   data = rh(iii,:);
@@ -340,6 +356,8 @@ end
 figure(5); subplot(122); semilogy(thesave.rh_xtrend(1:97),plevsx,'r','linewidth',2); ylim([100 1000]); set(gca,'ydir','reverse'); plotaxis2;
   title('dRH/dt'); xlim([-0.25 +0.25])
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp(' .... TZ 101 trends ...')
 
 t = p72x.ptemp; t = reshape(t,101,72,numtimesteps); t = squeeze(nanmean(t,2)); 
 for iii = 1 : 97
@@ -366,6 +384,8 @@ warning on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp(' ... finally done!! saving ....')
 
 diroutX = dirout;
 %diroutX = ' ';

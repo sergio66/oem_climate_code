@@ -136,9 +136,9 @@ YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
 YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
 YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
 YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
-YMStart = [2002 09];  YMEnd = [2017 08];  %% 15 years
-YMStart = [2002 09];  YMEnd = [2012 08];  %% 10 years
 YMStart = [2002 09];  YMEnd = [2007 08];  %% 05 years
+YMStart = [2002 09];  YMEnd = [2012 08];  %% 10 years
+YMStart = [2002 09];  YMEnd = [2017 08];  %% 15 years
 
 daysSince2002Start = change2days(YMStart(1),YMStart(2),15,2002);
 daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),  15,2002);
@@ -194,7 +194,6 @@ else
   n2oppm = 323 * ones(size(co2ppm))/1000;
   ch4ppm = 1813 * ones(size(co2ppm))/1000;
 end
-
 
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
@@ -297,7 +296,15 @@ for ii = JOB
   p72.spres = reshape(p.spres,72,64); p72.spres = p72.spres(:,ii) * ones(1,1*numtimesteps); p72.spres = p72.spres(:)';
   p72.salti = reshape(p.salti,72,64); p72.salti = p72.salti(:,ii) * ones(1,1*numtimesteps); p72.salti = p72.salti(:)';
 
-  verybad = find(isnan(p72.ptemp(50,:)) | isnan(p72.gas_1(50,:)) | isnan(p72.rh(50,:)))
+  iCheck = 50; %% CLIMCAPS has 100 levels for T, 66 for WV
+  p72.verybad = zeros(size(p72.salti));
+  p72.lonbin = zeros(size(p72.salti));
+  for jjj = 1 : 72
+    lonbinx = (jjj-1) + (1:72:length(p72.stemp));
+    p72.lonbin(lonbinx) = jjj;
+  end
+  verybad = find(isnan(p72.ptemp(iCheck,:)) | isnan(p72.gas_1(iCheck,:)) | isnan(p72.rh(iCheck,:))
+  p72.verybad(verybad) = 1;
   if length(verybad) > 0  
     for jjj = 1 : length(verybad)
       bah = verybad(jjj);
@@ -307,13 +314,13 @@ for ii = JOB
         p72.stemp(bah)   = p72.stemp(badah(I2-1));
         p72.ptemp(:,bah) = p72.ptemp(:,badah(I2-1));
         p72.gas_1(:,bah) = p72.gas_1(:,badah(I2-1));
-        p72.gas_3(:,bah) = p72.gas_3(:,badah(I2-1));
+%        p72.gas_3(:,bah) = p72.gas_3(:,badah(I2-1));
         p72.rh(:,bah)    = p72.rh(:,badah(I2-1));
       else
         p72.stemp(bah)   = p72.stemp(badah(I2+1));
         p72.ptemp(:,bah) = p72.ptemp(:,badah(I2+1));
         p72.gas_1(:,bah) = p72.gas_1(:,badah(I2+1));
-        p72.gas_3(:,bah) = p72.gas_3(:,badah(I2+1));
+%        p72.gas_3(:,bah) = p72.gas_3(:,badah(I2+1));
         p72.rh(:,bah)    = p72.rh(:,badah(I2+1));
       end
     end    
@@ -381,77 +388,7 @@ for ii = JOB
   fop = [dirout '/simulate64binsCLIM_' num2str(ii) fstr '.op.rtp'];
   frp = [dirout '/simulate64binsCLIM_' num2str(ii) fstr '.rp.rtp'];
 
-  rtpwrite(fip,h72,[],p72,[]);
-
-  klayerser = ['!' klayers ' fin=' fip ' fout=' fop];
-  sartaer   = ['!' sarta '   fin=' fop ' fout=' frp];
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-  eval(klayerser);
-  [h72I,ha72I,p72I,pa72I] = rtpread(fop);
-  ppmvLAY_2 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),2);
-  ppmvLAY_4 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),4);
-  ppmvLAY_6 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),6);
-  
-  i500 = find(p72I.plevs(:,1) >= 500,1);
-  p72I.gas_4 = p72I.gas_4 .* (ones(101,1)*(n2oppm_t./ppmvLAY_4(i500,:)));
-  p72I.gas_6 = p72I.gas_6 .* (ones(101,1)*(ch4ppm_t./ppmvLAY_6(i500,:)));  %% use AIRS L3 CH4
-
-  ppmvLAY_2 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),2);
-  ppmvLAY_4 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),4);
-  ppmvLAY_6 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),6);
-  
-  rtpwrite(fop,h72I,ha72I,p72I,pa72I);
-  eval(sartaer);
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-
-  % numtimesteps = 144
-  % [h72,~,p72,~] = rtpread(fip);
-  [h72x,~,p72x,~] = rtpread(frp);
-  p72x.rh = layeramt2RH(h72x,p72x);
-  p72x.mmw = mmwater_rtp(h72x,p72x);
-  plot(p72x.rlat,p72x.mmw,'.')
-  plot(p72x.rlat,p72x.stemp,'.')
-  plot(p72x.rlat,p72x.ptemp(80,:),'.')
-  plot(p72x.rlat,p72x.gas_1(80,:),'.')
-  
-  ppmvLAY_1 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),1);
-  ppmvLAY_2 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),2);
-  ppmvLAY_3 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),3);
-  ppmvLAY_4 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),4);
-  ppmvLAY_5 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),5);
-  ppmvLAY_6 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),6);
-  
-  tcalc = reshape(rad2bt(h72x.vchan,p72x.rcalc),2645,72,numtimesteps);;
-  tcalcavg = squeeze(nanmean(tcalc,2));
-  
-  plot(squeeze(nanmean(tcalc(1520,:,:),3)))
-  plot(1:numtimesteps,tcalcavg(1520,:),1:numtimesteps,squeeze(tcalc(1520,:,:)))
-  plot(1:numtimesteps,squeeze(tcalc(1520,:,:)),'b.-',1:numtimesteps,tcalcavg(1520,:),'r')
-  plot(1:numtimesteps,nanmean(squeeze(tcalc(1520,:,:))),'b.-',1:numtimesteps,tcalcavg(1520,:),'r')
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-  days = (1:numtimesteps)*30/365;
-
-%%   polyfit(days,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
-%%   %Math_tsfit_lin_robust(days*365,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
-%%   
-%%   stempjunk = reshape(p72x.stemp,72,numtimesteps);
-%%   polyfit(days,nanmean(stempjunk,1),1); ans(1)
-%%   %Math_tsfit_lin_robust(days*365,nanmean(stempjunk),4); ans(2)
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%
-  dayOFtime = change2days(yy,mm,dd,2002);
-%%   disp('dude I just computed dayOFtime')
-%% 
-%%   polyfit(dayOFtime/365.25,nanmean(squeeze(tcalc(1520,:,:))),1); ans(1)
-%%   %Math_tsfit_lin_robust(dayOFtime,nanmean(squeeze(tcalc(1520,:,:))),4); ans(2)
-%%   
-%%   stempjunk = reshape(p72x.stemp,72,numtimesteps);
-%%   polyfit(dayOFtime/365.25,nanmean(stempjunk,1),1); ans(1)
-%%   %Math_tsfit_lin_robust(dayOFtime,nanmean(stempjunk),4); ans(2)
-  
-  %%%%%%%%%%%%%%%%%%%%%%%%%
+  klayers_sarta_check_WV_T_RH_geo_and_spectral_rates2
 
   iType = 4;
   plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
