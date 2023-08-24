@@ -808,8 +808,8 @@ savesmallFATfile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% then look at model data
-disp('if you really only want feedbacks then all you have to do is run "simple_look_at_other_model_data.m" which gets the model trends, then runs do_feedbacks');
-iX = input('do all the complicated stuff (+1) or just the simple stuff/feedbacks (defaault, -1) : ');
+disp('if you really only want feedbacks then all you have to do is run "simple_get_the_model_trends_do_feedbacks" which gets the model trends, then runs do_feedbacks');
+iX = input('do all the complicated stuff (+1) or just the simple stuff/feedbacks (default, -1) : ');
 if length(iX) == 0
   iX = -1;
 end

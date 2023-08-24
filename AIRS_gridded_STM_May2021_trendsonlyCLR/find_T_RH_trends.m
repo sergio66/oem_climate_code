@@ -3,7 +3,7 @@ addpath /asl/matlib/rtptools
 
 load('llsmap5');
 
-get_the_mean_profiles
+get_the_mean_profiles   %%% in the end, it uses pMean17years whichh came in from read_fileMean17years at beginning of code
 %h = hMean17years; p = pMean17years;
 %h = hTimeStep1; p = pTimeStep1;
 
@@ -44,6 +44,7 @@ clear px RHx RH1kmx colwaterx
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 interp_resultsT_WV_O3_to_p         %% interp the 50 layer resultT,resultWV retrievals      to 100 layer p
 interp_resultsT_WV_O3_to_p_xb      %% interp the 50 layer xbT,xbWV,xbO3    initializations to 100 layer p
+get_deltaO3                        %% this technically should be done in find_O3_trends.m but do it here
 
 % rtpwrite('summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_PERTv1.rtp',h,ha,pert,pa);
 

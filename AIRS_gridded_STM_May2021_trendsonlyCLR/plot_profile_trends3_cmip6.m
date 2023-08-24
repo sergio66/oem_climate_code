@@ -8,6 +8,38 @@ iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom10
 iFig = iFig + 1; figure(iFig); clf;  subplot(121); semilogy(nanmean(nan_bottom097.*deltaO3(1:97,mask),2),plays(1:97),'linewidth',2);    ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
                                      subplot(122); semilogy(nanmean(nan_bottom097.*deltaO3unc(1:97,mask),2),plays(1:97),'linewidth',2); ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+iFig = 50;
+
+junk = nan(100,4608);
+[mmjunk,nnjunk] = size(ppmvLAY1);
+junk(1:mmjunk,:) = ppmvLAY1;
+junk(junk < 0) = NaN;
+iFig = iFig + 1; figure(iFig); clf;  subplot(131); semilogy(nanmean(nan_bottom100.*fracWV(1:100,mask),2),plays,'linewidth',2);          ylim([100 1000]); set(gca,'ydir','reverse'); title('WV_{\mu} frac pert');
+                                     subplot(132); semilogy(1+nanmean(nan_bottom100.*fracWVunc(1:100,mask),2),plays,'linewidth',2);     ylim([100 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} frac pert');
+                                     subplot(133); loglog(nanmean(nan_bottom100.*junk(1:100,mask),2),plays,'linewidth',2);              ylim([100 1000]); set(gca,'ydir','reverse'); title('WV_{\sigma} ppmv');
+
+iFig = iFig + 1; figure(iFig); clf;  subplot(131); semilogy(nanmean(nan_bottom100.*deltaRH(1:100,mask),2),plays,'linewidth',2);         ylim([100 1000]); set(gca,'ydir','reverse'); title('RH_{\mu} pert (%)');
+                                     subplot(132); semilogy(nanmean(nan_bottom100.*abs(deltaRHunc(1:100,mask)),2),plays,'linewidth',2); ylim([100 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} pert (%)');
+                                     subplot(133); semilogy(nanmean(nan_bottom100.*xRH0(1:100,mask),2),plays,'linewidth',2);            ylim([100 1000]); set(gca,'ydir','reverse'); title('RH_{\sigma} (%)');
+
+junk = p.ptemp;
+junk(junk < 0) = NaN;
+iFig = iFig + 1; figure(iFig); clf;  subplot(131); semilogy(nanmean(nan_bottom100.*deltaT(1:100,mask),2),plays,'linewidth',2);          ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\mu} pert');
+                                     subplot(132); semilogy(nanmean(nan_bottom100.*deltaTunc(1:100,mask),2),plays,'linewidth',2);       ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma} pert');
+                                     subplot(133); semilogy(nanmean(nan_bottom100.*junk(1:100,mask),2),plays,'linewidth',2);            ylim([1 1000]); set(gca,'ydir','reverse'); title('T_{\sigma}'); xlim([200 300])
+
+junk = nan(100,4608);
+[mmjunk,nnjunk] = size(ppmvLAY3);
+junk(1:mmjunk,:) = ppmvLAY3;
+junk(junk < 0) = NaN;
+iFig = iFig + 1; figure(iFig); clf;  subplot(131); semilogy(nanmean(nan_bottom097.*deltaO3(1:97,mask),2),plays(1:97),'linewidth',2);    ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\mu} ppm pert');
+                                     subplot(132); semilogy(nanmean(nan_bottom097.*deltaO3unc(1:97,mask),2),plays(1:97),'linewidth',2); ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppm pert');
+                                     subplot(133); semilogy(nanmean(nan_bottom097.*junk(1:97,mask),2),plays(1:97),'linewidth',2);       ylim([0.01 1000]); set(gca,'ydir','reverse'); title('O3_{\sigma} ppmv');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if exist('airsL3')
   iFig = 50;
   Tlevs = airsL3.Tlevs; lenTlevs = length(Tlevs);

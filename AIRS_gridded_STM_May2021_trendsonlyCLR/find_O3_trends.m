@@ -1,23 +1,17 @@
-duO3_col0   = dobson_gas_rtp(h, p, 3);
-duO3_300mb0 = dobson_gas_rtp(h, p, 3, 300);
-[ppmvLAY,ppmvAVG,ppmvMAX,pavgLAY,tavgLAY,ppmv500,ppmv75,ppmvSURF] = layers2ppmv(h,p,1:length(p.stemp),3);
+% get_deltaO3   %%% already done in find_T_RH_trends
 
-duO3_colpert   = dobson_gas_rtp(h, pert, 3);
-duO3_300mbpert = dobson_gas_rtp(h, pert, 3, 300);
-[ppmvLAYpert,ppmvAVGpert,ppmvMAXpert,pavgLAYpert,tavgLAYpert,ppmv500pert,ppmv75pert,ppmvSURFpert] = layers2ppmv(h,pert,1:length(p.stemp),3);
-[ppmvLAYpert_unc,ppmvAVGpert_unc,ppmvMAXpert_unc,pavgLAYpert_unc,tavgLAYpert_unc,ppmv500pert_unc,ppmv75pert_unc,ppmvSURFpert_unc] = layers2ppmv(h,pert_unc,1:length(p.stemp),3);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(25); clf; simplemap(Y(:),X(:),duO3_col0'.*maskLF',5); colorbar; title(['O3 column du']); caxis([250 350]); colormap jet; plotaxis2;
-[nlayO3,~] = size(ppmvLAY);
 if nlayO3 > 97
-  ppmvLAY     = ppmvLAY(1:97,:);
-  ppmvLAYpert = ppmvLAYpert(1:97,:);
-  ppmvLAYpert_unc = ppmvLAYpert_unc(1:97,:);
+  ppmvLAY3         = ppmvLAY3(1:97,:);
+  ppmvLAYpert3     = ppmvLAYpert3(1:97,:);
+  ppmvLAYpert_unc3 = ppmvLAYpert_unc3(1:97,:);
   nlayO3 = 97;
 end
 boo = zeros(nlayO3,72,64); for ijunk = 1 : nlayO3; boo(ijunk,:,:) = maskLFmatr'; end
-junk0    = boo.*reshape(ppmvLAY,nlayO3,72,64);
-junkpert = boo.*reshape(ppmvLAYpert,nlayO3,72,64);
+junk0    = boo.*reshape(ppmvLAY3,nlayO3,72,64);
+junkpert = boo.*reshape(ppmvLAYpert3,nlayO3,72,64);
 pcolor(1:64,1:nlayO3,squeeze(nanmean(junk0,2)));
 pcolor(unique(Y(:)),playsjunk,squeeze(nanmean(junk0,2))); shading flat; colorbar; set(gca,'ydir','reverse'); set(gca,'yscale','log'); title('O3 ppmv'); xlabel('Latitude'); ylabel('p(mb)')
   ylim([1 100])
@@ -31,19 +25,15 @@ figure(27); clf; pcolor(unique(Y(:)),p2h(playsjunk)/1000,100*squeeze(nanmean(jun
   shading flat; colorbar; title('\delta O3 percent/yr'); xlabel('Latitude'); ylabel('h(km)')
   ylim([16 48]); ylim([10 60]); colormap(llsmap5); caxis([-2 +2]*1e-1)
 
-deltaO3 = (duO3_colpert - duO3_col0).*maskLF;
-figure(25); clf; simplemap(Y(:),X(:),deltaO3'.*maskLF',5); colorbar; title(['d(O3)/dt column du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
-deltaO3 = (duO3_300mbpert - duO3_300mb0).*maskLF;
-figure(26); clf; simplemap(Y(:),X(:),deltaO3'.*maskLF',5); colorbar; title(['d(O3)/dt TOA->300mb  du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
+junk = (duO3_colpert - duO3_col0).*maskLF;
+figure(25); clf; simplemap(Y(:),X(:),junk'.*maskLF',5); colorbar; title(['d(O3)/dt column du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
+junk = (duO3_300mbpert - duO3_300mb0).*maskLF;
+figure(26); clf; simplemap(Y(:),X(:),junk'.*maskLF',5); colorbar; title(['d(O3)/dt TOA->300mb  du/yr']); caxis([-0.05 +0.05]*10); plotaxis2;
 
 %% https://acp.copernicus.org/articles/19/3257/2019/   tropospheric column O3
 
 plot(nanmean(abs(resultsO3)),1:iNumLay,nanmean(resultsO3unc),1:iNumLay); set(gca,'ydir','reverse');
-fracO3 = pert.gas_3 ./ p.gas_3 - 1;
-fracO3 = fracO3 .* (ones(101,1) * maskLF);
 
-fracO3unc = pert_unc.gas_3 ./ p.gas_3 - 1;
-fracO3unc = pert.gas_3_unc ./ p.gas_3;
 plot(pert.gas_3 ./ p.gas_3 - 1,1:101,'b',pert.gas_3_unc./p.gas_3,1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101])
 plot(nanmean(abs(pert.gas_3' ./ p.gas_3' - 1)),1:101,nanmean(pert.gas_3_unc'./p.gas_3'),1:101,'r'); set(gca,'ydir','reverse'); ylim([1 101]); grid; plotaxis2;
 
@@ -63,12 +53,6 @@ area_wgt_fracO3 = nansum(fracO3lat.*junk,1)./nansum(junk,1);
 hold on; plot(area_wgt_fracO3(1:nlayO3)*10000,pavgLAY(1:nlayO3,1000),'color','r','linewidth',2); hold off
 ylim([1 100]); caxis([-2 +2]*1e-3); colorbar; plotaxis2;
 
-deltaO3 = ppmvLAYpert - ppmvLAY;
-deltaO3 = deltaO3 .* (ones(nlayO3,1) * maskLF);
-
-deltaO3unc = ppmvLAYpert_unc - ppmvLAY;
-deltaO3unc = deltaO3unc .* (ones(nlayO3,1) * maskLF);
-
 figure(25); clf; simplemap(Y(:),X(:),deltaO3(i050,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 050 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
 figure(26); clf; simplemap(Y(:),X(:),deltaO3(i100,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 100 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
 figure(27); clf; simplemap(Y(:),X(:),deltaO3(i200,:)'.*maskLF',5); colorbar; title(['d(O3)/dt ppm/yr 200 mb']); caxis([-0.50 +0.50]/100); plotaxis2;
@@ -83,9 +67,6 @@ for ii = 1 : length(rlat)
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-duO3_0 = dobson_rtp(h,p);
-duO3_F = dobson_rtp(h,pert);
-
 figure(31); clf; aslmap(31,rlat65,rlon73,maskLFmatr.*smoothn(reshape(duO3_F-duO3_0,72,64)',1), [-90 +90],[-180 +180]);
 caxis([-1 +1]*1); colormap(cmap);  title('d/dt colO3 (du/year)'); 
 

@@ -2,11 +2,18 @@ clear airsL3 era5 cmip6
 clear *spectral_olr
 clear nwp_spectral_trends_cmip6_era5_airsL3_umbc
 
-iNumYears = 19; %% 2002 - 2021
 if a.topts.dataset == 4
   iNumYears = 19; %% 2002 - 2021
 elseif a.topts.dataset == 5
   iNumYears = 12;  %% 2002 - 2014
+elseif a.topts.dataset >= 9
+  iNumYears = 20;  %% 2002 - 2022
+end
+
+if ~exist('iNumYears')
+  a.topts.dataset
+  fprintf(1,'setting iNumYears = 20 for a.topts.dataset = %2i \n',a.topts.dataset)
+  iNumYears = 20; %% 2002 - 2021
 end
 
 addpath ../FIND_NWP_MODEL_TRENDS

@@ -144,3 +144,12 @@ title(tafov(4),'\lambda SKT', 'Units', 'normalized', 'Position', [0.5, +1.025, 0
 %% figure(2); figname = [printdir '/tiled_feedbackparams.pdf'];     aslprint(figname)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(4);
+plot(rlat,[swonk11+swonk12+swonk13+swonk14; swonk21+swonk22+swonk23+swonk24; swonk31+swonk32+swonk33+swonk34; swonk41+swonk42+swonk43+swonk44],'linewidth',2); 
+  plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); title('Sum \lambda')
+junk = [swonk11+swonk12+swonk13+swonk14; swonk21+swonk22+swonk23+swonk24; swonk31+swonk32+swonk33+swonk34; swonk41+swonk42+swonk43+swonk44];
+globalavg_lambda = sum((ones(4,1)*cosrlat).*junk) ./ sum((ones(4,1)*cosrlat));
+globalavg_lambda = sum((ones(4,1)*cosrlat).*junk,2) ./ sum((ones(4,1)*cosrlat),2);
+fprintf(1,' do_avg_feedback2cos.m : global avg feedback = %8.6f %8.6f %8.6f %8.6f W/m2/K for UMBC/AIRSL3/ERA5/CMIP6 \n',globalavg_lambda)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

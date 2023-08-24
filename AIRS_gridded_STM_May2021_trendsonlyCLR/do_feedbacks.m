@@ -8,6 +8,19 @@ disp('make sure you do this before starting Matlab, if you want to run ecRad!!!'
 disp('module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('  ')
 
+disp('WARNING : remember my "compute_olr" code simply uses SARTA and multiplies by pi ie has BAND GAPS, is NOT doing FIR calcs, iit is NOT true OLR calc')
+disp('          you really need RRTM or ecRad for that')
+disp('          so in eg compute_feedbacks_X_ecRad, X = umbc,era5,airsl3,cmip6 .. the "spectral_olr" calc is bunk/rubbish/nonsense')
+disp('  ')
+disp('WARNING : remember my "compute_olr" code simply uses SARTA and multiplies by pi ie has BAND GAPS, is NOT doing FIR calcs, iit is NOT true OLR calc')
+disp('          you really need RRTM or ecRad for that')
+disp('          so in eg compute_feedbacks_X_ecRad, X = umbc,era5,airsl3,cmip6 .. the "spectral_olr" calc is bunk/rubbish/nonsense')
+disp('  ')
+disp('WARNING : remember my "compute_olr" code simply uses SARTA and multiplies by pi ie has BAND GAPS, is NOT doing FIR calcs, iit is NOT true OLR calc')
+disp('          you really need RRTM or ecRad for that')
+disp('          so in eg compute_feedbacks_X_ecRad, X = umbc,era5,airsl3,cmip6 .. the "spectral_olr" calc is bunk/rubbish/nonsense')
+disp('  ')
+
 if ~exist('umbc_spectral_olr')
   compute_feedbacks_umbc_ecRad   ; pause(0.1)
 end
@@ -124,11 +137,13 @@ figure(81); colormap(colormap_soden_held_jclim2007); caxis([-4.5 -3]); figure(82
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% make sure you use _ecRad because that uses all 10-3000 cm-1, rather than _spectral_olr which only uses SARTA (645-2830 cm-1)
 do_avg_feedback1     %% crude attempt at zonal avg
 do_avg_feedback1cos  %% crude attempt at zonal avg with cosine(lat) wgt
 do_avg_feedback2     %% better attempt at zonal avg
 do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
+figure(4); 
 %%% Ryan suggested normalizing using dERASST for all, instead of the individual dXSST X=ERA or CMIP6 or UMBC or AIRSL3 
 %%% iERAnorm = input('Do you wish to redo the feedback by using only dERA SKT instead of individual d SKT? (-1/default) no (+1) yes : ');
 %%% if length(iERAnorm) == 0
@@ -141,6 +156,12 @@ do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+if ifield(umbc_spectral_olr,'allperts_no_tracegas_ecRad')
+  quick_regress_OLR_SST_for_feedbacks
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 junk = input('save the OLR feedbacks??? (-1/+1) : ');
 if junk > 0
   %{
@@ -150,9 +171,17 @@ if junk > 0
   %%%% this is how I made  olr_feedbacks_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
   %}
 
-  feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '.mat'];
-  saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];
-
+  iSaveAll = input('save ERA5, CMIP,airsL3 as well? (-1 default/+1) : ');
+  if length(iSaveAll) == 0
+    iSaveAll = -1;
+  end
+  if iSaveAll == -1
+    feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '_numyears_' num2str(iNumYears) '.mat'];
+    saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];
+  else
+    feedbackname = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '_ALL_numyears_' num2str(iNumYears) '.mat'];
+    saver = ['save ' feedbackname ' era5_spectral_olr cmip6_spectral_olr airsL3_spectral_olr umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];
+  end
   fprintf(1,'saving to %s \n',feedbackname);
   eval(saver);
 end

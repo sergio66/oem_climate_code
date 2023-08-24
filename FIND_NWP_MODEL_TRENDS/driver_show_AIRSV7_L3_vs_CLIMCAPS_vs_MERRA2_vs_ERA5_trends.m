@@ -1372,7 +1372,7 @@ if iUMBC  > 0
     tfov(1).XTickLabel = '';  tfov(1).XLabel.String = [];      tfov(2).XTickLabel = '';  tfov(2).XLabel.String = [];
     set(gca,'xtick',[1:5],'xticklabel',names)
     ta.Padding = 'none';
-    td.TileSpacing = 'tight';
+    ta.TileSpacing = 'tight';
 
 keyboard_nowindow
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

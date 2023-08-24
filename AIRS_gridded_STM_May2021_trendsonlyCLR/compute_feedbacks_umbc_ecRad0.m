@@ -3,29 +3,23 @@
 %% GRL eevanjee, N., Koll, D. D. B., & Lutsko, N. (2021). “Simpson's Law” and
 %%  the spectral cancellation of climate feedbacks. Geophysical Research Letters, 48, e2021GL093699. https://doi. org/10.1029/2021GL093699
 
-if ~exist('umbc_spectral_olr')
-  error('assumes you have already run compute_feedbacks_umbc_ecRad')
-end
-
 cdRRTMback = ['cd ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/'];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if ~exist('iLambda_UseGlobalSST_regress')
-  iLambda_UseGlobalSST_regress = +1;   %% new way, use global avg SST, much safer (less likely to be 0)
-  iLambda_UseGlobalSST_regress = -1;   %% old way till March 2022, using computed SST per tile instead of glabal average; dangerous because if dSST = 0 oopsie when dividing
+if ~exist('iLambda_UseGlobalSST')
+  iLambda_UseGlobalSST = +1;   %% new way, use global avg SST, much safer (less likely to be 0)
+  iLambda_UseGlobalSST = -1;   %% old way till March 2022, using computed SST per tile instead of glabal average; dangerous because if dSST = 0 oopie when dividing
 end
 
 addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RobinHoganECMWF/ECRAD_ECMWF_version_of_flux/ecRad/create_ecrad_inputSergio/
 addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RRTM/v3.3/rrtm_lw/DRIVER_CODE_RRTM_Band17/
 
-% px = p;
-% umbc_spectral_olr.olr0 = compute_olr(h,px);
-% %umbc_spectral_olr.olr0_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0); %%% <<<<<<<<<<<<<<<<<<<<<<<<<<<
-% umbc_spectral_olr.olr0_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-% eval(cdRRTMback);
-umbc_spectral_olr.olr0 = umbc_spectral_olr.olr0;
-umbc_spectral_olr.olr0_ecRad = umbc_spectral_olr.olr0_ecRad;
+px = p;
+umbc_spectral_olr.olr0 = compute_olr(h,px);
+%umbc_spectral_olr.olr0_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0); %%% <<<<<<<<<<<<<<<<<<<<<<<<<<<
+umbc_spectral_olr.olr0_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+eval(cdRRTMback);
 
 %% trying a faster method see     jaja = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);    driver_run_ecRad_rtp_loop_over_profiles.m iMethod = -1
 %% scatter_coast(p.rlon,p.rlat,50,(umbc_spectral_olr.olr0_ecRad.clr-jaja.clr)./umbc_spectral_olr.olr0_ecRad.clr*100); colormap(usa2); caxis([-1 +1])
@@ -35,9 +29,69 @@ indSST    = results(:,6)';
 globalSST = nanmean(results(:,6));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% all perts
+
+px = p;
+
+%px.gas_2 = px.gas_2*(1+2.2/400);
+%if iLambda_UseGlobalSST == -1
+%  px.stemp = px.stemp + indSST;
+%else
+%  px.stemp = px.stemp + globalSST;
+%end
+
+px.gas_2 = px.gas_2 .* (ones(101,1)*(1+results(:,1)'/400));
+px.gas_4 = px.gas_4 .* (ones(101,1)*(1+results(:,2)'/300));
+px.gas_6 = px.gas_6 .* (ones(101,1)*(1+results(:,3)'/1800));
+px.stemp = px.stemp + indSST;
+px.ptemp = px.ptemp + deltaT;
+fracJUNK = fracWV; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+  px.gas_1 = px.gas_1 .* (1 + fracJUNK);
+fracJUNK = fracO3; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+  px.gas_3 = px.gas_3 .* (1 + fracJUNK);
+umbc_spectral_olr.allperts_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+eval(cdRRTMback);
+
+boo0 = -(umbc_spectral_olr.allperts_ecRad.clr - umbc_spectral_olr.olr0_ecRad.clr);
+scatter_coast(p.rlon,p.rlat,100,boo0./indSST); colormap jet
+junk0 = polyfit(indSST,boo0,1);
+[nn,nx,ny,nmean,nstd] = myhist2d(indSST,boo0,-0.15:0.01:+0.15,-0.4:0.05:+0.4);
+xlabel('dSST'); ylabel('d(OLR)'); title(['UMBC all and GHG \newline d(OLR) = ' num2str(junk0(1)) ' d(SST) + ' num2str(junk0(2))])
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% no tracegas perts
+
+px = p;
+
+%px.gas_2 = px.gas_2*(1+2.2/400);
+%if iLambda_UseGlobalSST == -1
+%  px.stemp = px.stemp + indSST;
+%else
+%  px.stemp = px.stemp + globalSST;
+%end
+
+%px.gas_2 = px.gas_2 .* (ones(101,1)*(1+results(:,1)'/400));
+%px.gas_4 = px.gas_4 .* (ones(101,1)*(1+results(:,2)'/300));
+%px.gas_6 = px.gas_6 .* (ones(101,1)*(1+results(:,3)'/1800));
+px.stemp = px.stemp + indSST;
+px.ptemp = px.ptemp + deltaT;
+fracJUNK = fracWV; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+  px.gas_1 = px.gas_1 .* (1 + fracJUNK);
+fracJUNK = fracO3; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+  px.gas_3 = px.gas_3 .* (1 + fracJUNK);
+umbc_spectral_olr.allperts_no_tracegas_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+eval(cdRRTMback);
+
+boo1 = -(umbc_spectral_olr.allperts_no_tracegas_ecRad.clr - umbc_spectral_olr.olr0_ecRad.clr);
+scatter_coast(p.rlon,p.rlat,100,boo1./indSST); colormap jet
+junk1 = polyfit(indSST,boo1,1);
+[nn,nx,ny,nmean,nstd] = myhist2d(indSST,boo1,-0.15:0.01:+0.15,-0.4:0.05:+0.4);
+xlabel('dSST'); ylabel('d(OLR)'); title(['UMBC all but GHG \newline d(OLR) = ' num2str(junk1(1)) ' d(SST) + ' num2str(junk1(2))])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-if iLambda_UseGlobalSST_regress == -1
+if iLambda_UseGlobalSST == -1
   px.stemp = px.stemp + indSST;
 else
   px.stemp = px.stemp + globalSST;
@@ -47,38 +101,23 @@ umbc_spectral_olr.skt = compute_olr(h,px);
 umbc_spectral_olr.skt_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
 eval(cdRRTMback);
 
-%%%%%%%%%% 
-
-%%% Jeevanjee, N., Koll, D. D. B., & Lutsko, N. (2021). “Simpson's Law” and
-%%% the spectral cancellation of climate  feedbacks. Geophysical Research
-%%% Letters, 48, e2021GL093699. https://doi.org/10.1029/2021GL093699
-
-%%% Assuming linearity in the finite differences, we then have the total feedback is summ of following three : 
-
-% The Planck feedback λplanck is minus the (ΔTs-normalized) OLR response to a uniform change in surface and
-% atmospheric temperatures, with qv held fixed at the initial profile.
-% SO THIS IS UNIFORM PERTURBATION RESPONSE
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-%if iLambda_UseGlobalSST_regress == -1
-%  px.stemp = px.stemp + indSST;
-%  px.ptemp = px.ptemp + ones(101,1)*indSST;
-%else
+if iLambda_UseGlobalSST == -1
+  px.stemp = px.stemp + indSST;
+  px.ptemp = px.ptemp + ones(101,1)*indSST;
+else
   px.stemp = px.stemp + globalSST;
   px.ptemp = px.ptemp + ones(101,4608)*globalSST;
-%end
+end
 umbc_spectral_olr.planck = compute_olr(h,px);
 %umbc_spectral_olr.planck_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
 umbc_spectral_olr.planck_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
 eval(cdRRTMback);
 
-% The lapse-rate feedback λlapse is minus the OLR response to the
-% difference between the actual temperature response and the uniform
-% Planck response, still holding qv fixed.
-% SO HERE I COMPUTE ACTUAL RESPONSE TO TA(z) and SKT, AND LATER SUBTRACT OUT THE UNIFORM PLANCK RESPONSE
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
-if iLambda_UseGlobalSST_regress == -1
+if iLambda_UseGlobalSST == -1
   %% need the final state
   px.stemp = px.stemp + indSST;
   px.ptemp = px.ptemp + deltaT;
@@ -92,13 +131,11 @@ umbc_spectral_olr.lapse = compute_olr(h,px);
 umbc_spectral_olr.lapse_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
 eval(cdRRTMback);
 
-% The water vapor feedback λwv is then minus the OLR response to the change in qv,
-% holding temperatures fixed
 px = p;
 %px.gas_2 = px.gas_2*(1+2.2/400);
 %% px.gas_1 = px.gas_1 .* (1 + fracWV);
 fracJUNK = fracWV; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
-if iLambda_UseGlobalSST_regress == -1
+if iLambda_UseGlobalSST == -1
   px.gas_1 = px.gas_1 .* (1 + fracJUNK);
 else
   px.gas_1 = px.gas_1 .* (1 + fracJUNK);
@@ -108,50 +145,62 @@ umbc_spectral_olr.wv = compute_olr(h,px);
 umbc_spectral_olr.wv_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
 eval(cdRRTMback);
 
-%%%%%%%%%% 
-
-px = p;
-px.gas_2 = px.gas_2*(1+2.2/400);
-if iLambda_UseGlobalSST_regress == -1
-  %% need the final state
-  px.ptemp = px.ptemp + deltaT;
-else
-  %% need the final state
-  px.ptemp = px.ptemp + deltaT;
-end
-umbc_spectral_olr.ptemp_co2 = compute_olr(h,px);   
-%umbc_spectral_olr.ptemp_co2_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
-umbc_spectral_olr.ptemp_co2_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-eval(cdRRTMback);
-
-
-px = p;
-fracJUNK = fracO3; bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
-if iLambda_UseGlobalSST_regress == -1
-  px.gas_3 = px.gas_3 .* (1 + fracJUNK);
-else
-  px.gas_3 = px.gas_3 .* (1 + fracJUNK);
-end
-umbc_spectral_olr.o3 = compute_olr(h,px);
-%umbc_spectral_olr.o3_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
-umbc_spectral_olr.o3_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-eval(cdRRTMback);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
-%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
-%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% note Eq 8b of Jevanjee paper shows we need to use 
 %%   umbc_spectral_olr.feedback.lapse == umbc_spectral_olr.lapse - umbc_spectral_olr.planck
 %% and not
 %%   umbc_spectral_olr.feedback.lapse == umbc_spectral_olr.lapse - umbc_spectral_olr.olr0
 
+%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
+%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
+%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
 %% change radiance mW --> W and then multiply by pi for flux
 ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
 
-umbc_spectral_olr = compute_feedbacks_regress_calcs_olr(umbc_spectral_olr,results(:,6)',iLambda_UseGlobalSST_regress,h);
+%junk = pi/1000*sum(umbc_spectral_olr.planck - umbc_spectral_olr.olr0,1);
+%junk = -junk./indSST;
+%umbc_spectral_olr.feedback.planck = junk;
+
+junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.planck(ix1,:) - umbc_spectral_olr.olr0(ix1,:));
+junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.planck(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
+junk = junk1 + junk2;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
+umbc_spectral_olr.feedback.planck = junk;
+
+junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.lapse(ix1,:) - umbc_spectral_olr.planck(ix1,:));
+junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.lapse(ix2,:) - umbc_spectral_olr.planck(ix2,:));
+junk = junk1 + junk2;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
+umbc_spectral_olr.feedback.lapse = junk;
+
+junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.wv(ix1,:) - umbc_spectral_olr.olr0(ix1,:));
+junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.wv(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
+junk = junk1 + junk2;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
+umbc_spectral_olr.feedback.wv = junk;
+
+junk1 = pi/1000*trapz(h.vchan(ix1),umbc_spectral_olr.skt(ix1,:) - umbc_spectral_olr.olr0(ix1,:));
+junk2 = pi/1000*trapz(h.vchan(ix2),umbc_spectral_olr.skt(ix2,:) - umbc_spectral_olr.olr0(ix2,:));
+junk = junk1 + junk2;
+if iLambda_UseGlobalSST == -1
+  junk = -junk./indSST;
+else
+  junk = -junk/globalSST;
+end
+umbc_spectral_olr.feedback.skt = junk;
 
 figure(71); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.planck); caxis([-4 0]*1);  colormap(jet);  title('UMBC \lambda_{Planck}')
 figure(72); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.lapse);  caxis([-5 +5]*1); colormap(usa2); title('UMBC \lambda_{Lapse}')
@@ -160,14 +209,38 @@ figure(74); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.skt);    c
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-umbc_spectral_olr = compute_feedbacks_regress_ecRad_calcs(umbc_spectral_olr,results(:,6)',iLambda_UseGlobalSST_regress);
+umbc_spectral_olr.feedback.planck_ecRad = umbc_spectral_olr.planck_ecRad.clr-umbc_spectral_olr.olr0_ecRad.clr; 
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.planck_ecRad = -umbc_spectral_olr.feedback.planck_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.planck_ecRad = -umbc_spectral_olr.feedback.planck_ecRad/globalSST;
+end
+
+umbc_spectral_olr.feedback.lapse_ecRad = umbc_spectral_olr.lapse_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr;
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.lapse_ecRad = -umbc_spectral_olr.feedback.lapse_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.lapse_ecRad = -umbc_spectral_olr.feedback.lapse_ecRad/globalSST;
+end
+
+umbc_spectral_olr.feedback.wv_ecRad = umbc_spectral_olr.wv_ecRad.clr-umbc_spectral_olr.olr0_ecRad.clr;
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.wv_ecRad = -umbc_spectral_olr.feedback.wv_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.wv_ecRad = -umbc_spectral_olr.feedback.wv_ecRad/globalSST;
+end
+
+umbc_spectral_olr.feedback.skt_ecRad = umbc_spectral_olr.skt_ecRad.clr-umbc_spectral_olr.olr0_ecRad.clr;
+if iLambda_UseGlobalSST == -1
+  umbc_spectral_olr.feedback.skt_ecRad = -umbc_spectral_olr.feedback.skt_ecRad./indSST;
+else
+  umbc_spectral_olr.feedback.skt_ecRad = -umbc_spectral_olr.feedback.skt_ecRad/globalSST;
+end
 
 figure(75); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.planck_ecRad); caxis([-4 0]*1.5); colormap(jet);  title('UMBC \lambda_{Planck}')
 figure(76); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.lapse_ecRad);  caxis([-5 +5]*2);  colormap(usa2); title('UMBC \lambda_{Lapse}')
 figure(77); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.wv_ecRad);     caxis([-2 +2]*2);  colormap(usa2); title('UMBC \lambda_{WV}')
 figure(78); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.skt_ecRad);    caxis([-2 0]*1);   colormap(jet);  title('UMBC \lambda_{Skt}')
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(75); colormap(colormap_soden_held_jclim2007); caxis([-4 -3])
 figure(77); colormap(colormap_soden_held_jclim2007); caxis([-1 +1])
@@ -189,7 +262,7 @@ figure(78); colormap(colormap_soden_held_jclim2007); caxis([-2 0])
 figure(75); colormap(colormap_soden_held_jclim2007); caxis([-4 -3])
 figure(77); colormap(colormap_soden_held_jclim2007); caxis([-1 +1])
 
-if iLambda_UseGlobalSST_regress == -1
+if iLambda_UseGlobalSST == -1
   bad = find(abs(indSST) < 1e-4);
 else
   bad = [];

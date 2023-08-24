@@ -86,8 +86,16 @@ cmip6_spectral_olr.wv = compute_olr(h,px);
 cmip6_spectral_olr.wv_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);              
 eval(cdRRTMback);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% note Eq 8b of Jevanjee paper shows we need to use 
+%%   umbc_spectral_olr.feedback.lapse == umbc_spectral_olr.lapse - umbc_spectral_olr.planck
+%% and not
+%%   umbc_spectral_olr.feedback.lapse == umbc_spectral_olr.lapse - umbc_spectral_olr.olr0
+
+%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
+%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
+%% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
 %% change radiance mW --> W and then multiply by pi for flux
 ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
 
@@ -144,24 +152,29 @@ figure(72); scatter_coast(p.rlon,p.rlat,50,cmip6_spectral_olr.feedback.lapse);  
 figure(73); scatter_coast(p.rlon,p.rlat,50,cmip6_spectral_olr.feedback.wv);     caxis([-2 +2]*1); colormap(usa2); title('CMIP6 \lambda_{WV}')
 figure(74); scatter_coast(p.rlon,p.rlat,50,cmip6_spectral_olr.feedback.skt);    caxis([-2 0]*1);  colormap(jet);  title('CMIP6 \lambda_{Skt}')
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 cmip6_spectral_olr.feedback.planck_ecRad = cmip6_spectral_olr.planck_ecRad.clr-cmip6_spectral_olr.olr0_ecRad.clr; 
 if iLambda_UseGlobalSST == -1
   cmip6_spectral_olr.feedback.planck_ecRad = -cmip6_spectral_olr.feedback.planck_ecRad./indSST;
 else
   cmip6_spectral_olr.feedback.planck_ecRad = -cmip6_spectral_olr.feedback.planck_ecRad/globalSST;
 end
+
 cmip6_spectral_olr.feedback.lapse_ecRad = cmip6_spectral_olr.lapse_ecRad.clr-cmip6_spectral_olr.planck_ecRad.clr;
 if iLambda_UseGlobalSST == -1
   cmip6_spectral_olr.feedback.lapse_ecRad = -cmip6_spectral_olr.feedback.lapse_ecRad./indSST;
 else
   cmip6_spectral_olr.feedback.lapse_ecRad = -cmip6_spectral_olr.feedback.lapse_ecRad/globalSST;
 end
+
 cmip6_spectral_olr.feedback.wv_ecRad = cmip6_spectral_olr.wv_ecRad.clr-cmip6_spectral_olr.olr0_ecRad.clr;
 if iLambda_UseGlobalSST == -1
   cmip6_spectral_olr.feedback.wv_ecRad = -cmip6_spectral_olr.feedback.wv_ecRad./indSST;
 else
   cmip6_spectral_olr.feedback.wv_ecRad = -cmip6_spectral_olr.feedback.wv_ecRad/globalSST;
 end
+
 cmip6_spectral_olr.feedback.skt_ecRad = cmip6_spectral_olr.skt_ecRad.clr-cmip6_spectral_olr.olr0_ecRad.clr;
 if iLambda_UseGlobalSST == -1
   cmip6_spectral_olr.feedback.skt_ecRad = -cmip6_spectral_olr.feedback.skt_ecRad./indSST;
