@@ -1,4 +1,4 @@
-function xout = compute_feedbacks_umbc_ecRad_regress_calcs_olr(x0,indSST,iLambda_UseGlobalSST_regress,h)
+function xout = compute_feedbacks_regress_sarta_calcs(x0,indSST,iLambda_UseGlobalSST_regress,h)
 
 %% change radiance mW --> W and then multiply by pi for flux
 %% THIS IS FOR 2645 AIRS only!!!!
@@ -10,6 +10,8 @@ xout = x0;
 %junk = pi/1000*sum(xout.planck - xout.olr0,1);
 %junk = -junk./indSST;
 %xout.feedback.planck = junk;
+
+globalSST = nanmean(indSST);
 
 junk1 = pi/1000*trapz(h.vchan(ix1),xout.planck(ix1,:) - xout.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),xout.planck(ix2,:) - xout.olr0(ix2,:));

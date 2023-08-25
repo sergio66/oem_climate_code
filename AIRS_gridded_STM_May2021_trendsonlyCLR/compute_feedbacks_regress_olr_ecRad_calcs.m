@@ -1,4 +1,4 @@
-function xout = compute_feedbacks_umbc_ecRad_regress_ecRad_calcs_olr(x0,indSST,iLambda_UseGlobalSST_regress)
+function xout = compute_feedbacks_regress_olr_ecRad_calcs(x0,indSST,iLambda_UseGlobalSST_regress)
 
 xout = x0;
 
@@ -14,6 +14,8 @@ clear nmeanval nstdval
 %xlabel('dSST'); ylabel('d(OLR)'); title(['UMBC all and GHG \newline d(OLR) = ' num2str(junk0U(1)) ' d(SST) + ' num2str(junk0U(2))])
 
 dx = -1 : 0.025 : +1;
+
+globalSST = nanmean(indSST);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 

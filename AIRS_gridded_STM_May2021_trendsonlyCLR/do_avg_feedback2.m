@@ -45,3 +45,20 @@ subplot(221); plot(rlat,[wonk11; wonk21; wonk31; wonk41],'linewidth',2); ylabel(
 subplot(222); plot(rlat,[wonk12; wonk22; wonk32; wonk42],'linewidth',2); ylabel('\lambda Lapse');  xlabel('latitude'); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); xlim([-90 +90])
 subplot(223); plot(rlat,[wonk13; wonk23; wonk33; wonk43],'linewidth',2); ylabel('\lambda WV');     xlabel('latitude'); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); xlim([-90 +90])
 subplot(224); plot(rlat,[wonk14; wonk24; wonk34; wonk44],'linewidth',2); ylabel('\lambda SKT');    xlabel('latitude'); plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); xlim([-90 +90])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp(' ')
+disp('do_avg_feedback2.m : remember feedback = lapse + planck + wv, do NOT INCLUDE skt as it is already in lapse')
+disp('do_avg_feedback2.m : remember feedback = lapse + planck + wv, do NOT INCLUDE skt as it is already in lapse')
+disp('do_avg_feedback2.m : remember feedback = lapse + planck + wv, do NOT INCLUDE skt as it is already in lapse')
+disp(' ')
+
+figure(4);
+plot(rlat,[swonk11+swonk12+swonk13+swonk14*0; swonk21+swonk22+swonk23+swonk24*0; swonk31+swonk32+swonk33+swonk34*0; swonk41+swonk42+swonk43+swonk44*0],'linewidth',2); 
+  plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); title('Sum \lambda')
+junk = [swonk11+swonk12+swonk13+swonk14*0; swonk21+swonk22+swonk23+swonk24*0; swonk31+swonk32+swonk33+swonk34*0; swonk41+swonk42+swonk43+swonk44*0;];
+globalavg_lambda = sum((ones(4,1)*cosrlat).*junk) ./ sum((ones(4,1)*cosrlat));
+globalavg_lambda = sum((ones(4,1)*cosrlat).*junk,2) ./ sum((ones(4,1)*cosrlat),2);
+fprintf(1,' do_avg_feedback2.m : global avg feedback = %8.6f %8.6f %8.6f %8.6f W/m2/K for UMBC/AIRSL3/ERA5/CMIP6 \n',globalavg_lambda)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

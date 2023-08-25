@@ -26,66 +26,71 @@ eval(cdRRTMback);
 %% scatter_coast(p.rlon,p.rlat,50,(era5_spectral_olr.olr0_rrtm-jaja.clr)./era5_spectral_olr.olr0_rrtm*100); colormap(usa2); caxis([-1 +1])
 
 indSST    = era5.trend_stemp;
-globalSST = nanmean(era5.trend_stemp);
+globalSST = nanmean(indSST);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% all perts
 
-px = p;
+iDoThis = -1;
+if iDoThis > 0
+  %% all perts
+  
+  px = p;
+  
+  %px.gas_2 = px.gas_2*(1+2.2/400);
+  %if iLambda_UseGlobalSST == -1
+  %  px.stemp = px.stemp + indSST;
+  %else
+  %  px.stemp = px.stemp + globalSST;
+  %end
+  
+  px.gas_2 = px.gas_2 .* (ones(101,1)*(1+results(:,1)'/400));
+  px.gas_4 = px.gas_4 .* (ones(101,1)*(1+results(:,2)'/300));
+  px.gas_6 = px.gas_6 .* (ones(101,1)*(1+results(:,3)'/1800));
+  px.stemp = px.stemp + indSST;
+  px.ptemp(1:100,:) = px.ptemp(1:100,:) + era5.trend_ptemp(1:100,:);
+  fracJUNK = era5.trend_gas_1(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+    px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + fracJUNK);
+  fracJUNK = era5.trend_gas_3(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+    px.gas_3(1:100,:) = px.gas_3(1:100,:) .* (1 + fracJUNK);
+  era5_spectral_olr.allperts_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+  eval(cdRRTMback);
+  
+  boo0 = -(era5_spectral_olr.allperts_ecRad.clr - era5_spectral_olr.olr0_ecRad.clr);
+  scatter_coast(p.rlon,p.rlat,100,boo0./indSST); colormap jet
+  junk0 = polyfit(indSST,boo0,1);
+  [nn,nx,ny,nmean,nstd] = myhist2d(indSST,boo0,-0.15:0.01:+0.15,-0.4:0.05:+0.4);
+  xlabel('dSST'); ylabel('d(OLR)'); title(['ERA5 all and GHG \newline d(OLR) = ' num2str(junk0(1)) ' d(SST) + ' num2str(junk0(2))])
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% no tracegas perts
+  
+  px = p;
+  
+  %px.gas_2 = px.gas_2*(1+2.2/400);
+  %if iLambda_UseGlobalSST == -1
+  %  px.stemp = px.stemp + indSST;
+  %else
+  %  px.stemp = px.stemp + globalSST;
+  %end
+  
+  %px.gas_2 = px.gas_2 .* (ones(101,1)*(1+results(:,1)'/400));
+  %px.gas_4 = px.gas_4 .* (ones(101,1)*(1+results(:,2)'/300));
+  %px.gas_6 = px.gas_6 .* (ones(101,1)*(1+results(:,3)'/1800));
+  px.stemp = px.stemp + indSST;
+  px.ptemp(1:100,:) = px.ptemp(1:100,:) + era5.trend_ptemp(1:100,:);
+  fracJUNK = era5.trend_gas_1(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+    px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + fracJUNK);
+  fracJUNK = era5.trend_gas_3(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+    px.gas_3(1:100,:) = px.gas_3(1:100,:) .* (1 + fracJUNK);
+  era5_spectral_olr.allperts_no_tracegas_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+  eval(cdRRTMback);
+  
+  boo1 = -(era5_spectral_olr.allperts_no_tracegas_ecRad.clr - era5_spectral_olr.olr0_ecRad.clr);
+  scatter_coast(p.rlon,p.rlat,100,boo1./indSST); colormap jet
+  junk1 = polyfit(indSST,boo1,1);
+  [nn,nx,ny,nmean,nstd] = myhist2d(indSST,boo1,-0.15:0.01:+0.15,-0.4:0.05:+0.4);
+  xlabel('dSST'); ylabel('d(OLR)'); title(['ERA5 all but GHG \newline d(OLR) = ' num2str(junk1(1)) ' d(SST) + ' num2str(junk1(2))])
+end
 
-%px.gas_2 = px.gas_2*(1+2.2/400);
-%if iLambda_UseGlobalSST == -1
-%  px.stemp = px.stemp + indSST;
-%else
-%  px.stemp = px.stemp + globalSST;
-%end
-
-px.gas_2 = px.gas_2 .* (ones(101,1)*(1+results(:,1)'/400));
-px.gas_4 = px.gas_4 .* (ones(101,1)*(1+results(:,2)'/300));
-px.gas_6 = px.gas_6 .* (ones(101,1)*(1+results(:,3)'/1800));
-px.stemp = px.stemp + indSST;
-px.ptemp(1:100,:) = px.ptemp(1:100,:) + era5.trend_ptemp(1:100,:);
-fracJUNK = era5.trend_gas_1(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
-  px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + fracJUNK);
-fracJUNK = era5.trend_gas_3(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
-  px.gas_3(1:100,:) = px.gas_3(1:100,:) .* (1 + fracJUNK);
-era5_spectral_olr.allperts_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-eval(cdRRTMback);
-
-boo0 = -(era5_spectral_olr.allperts_ecRad.clr - era5_spectral_olr.olr0_ecRad.clr);
-scatter_coast(p.rlon,p.rlat,100,boo0./indSST); colormap jet
-junk0 = polyfit(indSST,boo0,1);
-[nn,nx,ny,nmean,nstd] = myhist2d(indSST,boo0,-0.15:0.01:+0.15,-0.4:0.05:+0.4);
-xlabel('dSST'); ylabel('d(OLR)'); title(['ERA5 all and GHG \newline d(OLR) = ' num2str(junk0(1)) ' d(SST) + ' num2str(junk0(2))])
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% no tracegas perts
-
-px = p;
-
-%px.gas_2 = px.gas_2*(1+2.2/400);
-%if iLambda_UseGlobalSST == -1
-%  px.stemp = px.stemp + indSST;
-%else
-%  px.stemp = px.stemp + globalSST;
-%end
-
-%px.gas_2 = px.gas_2 .* (ones(101,1)*(1+results(:,1)'/400));
-%px.gas_4 = px.gas_4 .* (ones(101,1)*(1+results(:,2)'/300));
-%px.gas_6 = px.gas_6 .* (ones(101,1)*(1+results(:,3)'/1800));
-px.stemp = px.stemp + indSST;
-px.ptemp(1:100,:) = px.ptemp(1:100,:) + era5.trend_ptemp(1:100,:);
-fracJUNK = era5.trend_gas_1(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
-  px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + fracJUNK);
-fracJUNK = era5.trend_gas_3(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
-  px.gas_3(1:100,:) = px.gas_3(1:100,:) .* (1 + fracJUNK);
-era5_spectral_olr.allperts_no_tracegas_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-eval(cdRRTMback);
-
-boo1 = -(era5_spectral_olr.allperts_no_tracegas_ecRad.clr - era5_spectral_olr.olr0_ecRad.clr);
-scatter_coast(p.rlon,p.rlat,100,boo1./indSST); colormap jet
-junk1 = polyfit(indSST,boo1,1);
-[nn,nx,ny,nmean,nstd] = myhist2d(indSST,boo1,-0.15:0.01:+0.15,-0.4:0.05:+0.4);
-xlabel('dSST'); ylabel('d(OLR)'); title(['ERA5 all but GHG \newline d(OLR) = ' num2str(junk1(1)) ' d(SST) + ' num2str(junk1(2))])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 px = p;

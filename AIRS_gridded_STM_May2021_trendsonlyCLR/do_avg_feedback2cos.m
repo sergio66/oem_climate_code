@@ -145,11 +145,46 @@ title(tafov(4),'\lambda SKT', 'Units', 'normalized', 'Position', [0.5, +1.025, 0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp(' ')
+disp('do_avg_feedback2cos.m : remember feedback = lapse + planck + wv, do NOT INCLUDE skt as it is already in lapse')
+disp('do_avg_feedback2cos.m : remember feedback = lapse + planck + wv, do NOT INCLUDE skt as it is already in lapse')
+disp('do_avg_feedback2cos.m : remember feedback = lapse + planck + wv, do NOT INCLUDE skt as it is already in lapse')
+disp(' ')
+
 figure(4);
-plot(rlat,[swonk11+swonk12+swonk13+swonk14; swonk21+swonk22+swonk23+swonk24; swonk31+swonk32+swonk33+swonk34; swonk41+swonk42+swonk43+swonk44],'linewidth',2); 
+plot(rlat,[swonk11+swonk12+swonk13+swonk14*0; swonk21+swonk22+swonk23+swonk24*0; swonk31+swonk32+swonk33+swonk34*0; swonk41+swonk42+swonk43+swonk44*0],'linewidth',2); 
   plotaxis2; hl = legend('UMBC','AIRSL3','ERA5','CMIP6','location','best','fontsize',6); title('Sum \lambda')
-junk = [swonk11+swonk12+swonk13+swonk14; swonk21+swonk22+swonk23+swonk24; swonk31+swonk32+swonk33+swonk34; swonk41+swonk42+swonk43+swonk44];
+junk = [swonk11+swonk12+swonk13+swonk14*0; swonk21+swonk22+swonk23+swonk24*0; swonk31+swonk32+swonk33+swonk34*0; swonk41+swonk42+swonk43+swonk44*0;];
 globalavg_lambda = sum((ones(4,1)*cosrlat).*junk) ./ sum((ones(4,1)*cosrlat));
 globalavg_lambda = sum((ones(4,1)*cosrlat).*junk,2) ./ sum((ones(4,1)*cosrlat),2);
 fprintf(1,' do_avg_feedback2cos.m : global avg feedback = %8.6f %8.6f %8.6f %8.6f W/m2/K for UMBC/AIRSL3/ERA5/CMIP6 \n',globalavg_lambda)
+
+figure(5);
+model = 1; 
+  wonk11 = umbc_spectral_olr.feedback.planck_ecRad;   
+  wonk12 = umbc_spectral_olr.feedback.lapse_ecRad;    
+  wonk13 = umbc_spectral_olr.feedback.wv_ecRad;       
+  wonk14 = umbc_spectral_olr.feedback.skt_ecRad;      
+  wonk1  = wonk11 + wonk12 + wonk13;
+model = 2; 
+  wonk21 = airsL3_spectral_olr.feedback.planck_ecRad; 
+  wonk22 = airsL3_spectral_olr.feedback.lapse_ecRad;  
+  wonk23 = airsL3_spectral_olr.feedback.wv_ecRad;     
+  wonk24 = airsL3_spectral_olr.feedback.skt_ecRad;    
+  wonk2  = wonk21 + wonk22 + wonk23;
+model = 3; 
+  wonk31 = era5_spectral_olr.feedback.planck_ecRad;   
+  wonk32 = era5_spectral_olr.feedback.lapse_ecRad;    
+  wonk33 = era5_spectral_olr.feedback.wv_ecRad;       
+  wonk34 = era5_spectral_olr.feedback.skt_ecRad;      
+  wonk3  = wonk31 + wonk32 + wonk33;
+model = 4; 
+  wonk41 = cmip6_spectral_olr.feedback.planck_ecRad;  
+  wonk42 = cmip6_spectral_olr.feedback.lapse_ecRad;   
+  wonk43 = cmip6_spectral_olr.feedback.wv_ecRad;      
+  wonk44 = cmip6_spectral_olr.feedback.skt_ecRad;     
+  wonk4  = wonk41 + wonk42 + wonk43;
+
+aslmap_2x2tiledlayout(wonk11,wonk21,wonk31,wonk41,5);
+aslmap_2x2tiledlayout(wonk1,wonk2,wonk3,wonk4,5);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
