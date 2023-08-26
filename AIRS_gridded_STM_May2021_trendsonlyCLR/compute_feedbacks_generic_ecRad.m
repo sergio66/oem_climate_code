@@ -1,5 +1,7 @@
-function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,trend_ptemp,trend_gas_1,trend_gas_3,x_spectral_olr0,iaComputeWhichFeedback,rlat65,rlon73)
+function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,trend_ptemp,trend_gas_1,trend_gas_3,x_spectral_olr0,iaComputeWhichFeedback,rlat65,rlon73,iPlotResults)
 
+%% function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,trend_ptemp,trend_gas_1,trend_gas_3,x_spectral_olr0,iaComputeWhichFeedback,rlat65,rlon73,iPlotResults)
+%%                                                           1 2   3        4           5           6           7             8               9               [10      11     12       ]
 %% input
 %%   h,p       = average profile used for jacobians
 %%   results   = results(1:6,1:4608) which will have CO/N2O/CH4 trends in first three
@@ -12,46 +14,53 @@ function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,
 %%   iaComputeWhichFeedback = use compute_olr+superdriver_run_ecRad_rtp_loop_over_profiles to compute every feedback,   -1 for all    or
 %%                                                               [[1      2     3   4] [5    6    ] [9999       0          ]]           to compute 
 %%                                                               [[planck lapse o3 wv] [skt tz/co2] [allsimult  LAMBDA ONLY]]
-
+%%
+%%   [rlat65,rlon73,iPlotRresults] are optional args if you need to plot results
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %{
-%% STARTING FROM SCRATCH
-umbc_spectral_olr = structure;    %% so it hs no fields
+%% STARTING FROM SCRATCH  --- for complete list see  make_olr_ecrad_dfeedback.m
+
+umbc_spectral_olr = struct;    %% so it has no fields
 umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,-1,rlat65,rlon73);
 
-era5_spectral_olr = structure;    %% so it hs no fields
-era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,-1,rlat65,rlon73);
-
-aL3trend.stemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
-aL3trend.ptemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp;
-aL3trend.gas_1 = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_1;
-aL3trend.gas_3 = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_3;
-airsL3_spectral_olr = structure;    %% so it hs no fields
-airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,-1,rlat65,rlon73);
-
-c6trend.stemp = cmip6.trend_stemp;
-c6trend.ptemp = cmip6.trend_ptemp;
-c6trend.gas_1 = cmip6.trend_gas_1;
-c6trend.gas_3 = cmip6.trend_gas_3;
-cmip6_spectral_olr = structure;    %% so it hs no fields
-cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,-1,rlat65,rlon73);
+era5_spectral_olr = struct;    %% so it has no fields
+era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,-1);
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
 %% RE-DOING EG planck,wv
-iaComputeWhichFeedback = [0];     %% compute feedbacks only
 iaComputeWhichFeedback = [+1 +4]; %% compute planck (uniform pert) and wv ecRads
 iaComputeWhichFeedback = [+1];    %% compute planck (uniform pert) ecRads
-umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73);
-era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73);
-airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73);
-cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73);
+umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback);
+era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback);
+airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,iaComputeWhichFeedback);
+cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,iaComputeWhichFeedback);
 %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%{
+%% RE-DOING EG regressions and plots -- for complete list see      show_olr_ecRad_feedback.m        
+iaComputeWhichFeedback = [0];     %% compute + plot feedbacks only
+disp(' ')
+disp('umbc')
+umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1);
+
+disp(' ')
+disp('era5')
+era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1);
+%}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if nargin < 9
+  error('need at least 9 args')
+end
 
 %% see “Simpson's Law” and the Spectral Cancellation of Climate Feedbacks
 %% Nadir Jeevanjee1 , Daniel D. B. Koll2, and Nicholas Lutsko3
@@ -334,19 +343,25 @@ figure(78); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.skt_ecRad);  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iDoThis = -1;
-if iDoThis > 0
+if nargin < 12
+  iPlotResults = -1;
+end
+
+if iPlotResults > 0
   figure(75); colormap(colormap_soden_held_jclim2007); caxis([-4 -3])
   figure(77); colormap(colormap_soden_held_jclim2007); caxis([-1 +1])
-  
+
+  maskLF = ones(1,4608);
+  maskLFmatr = reshape(maskLF,72,64)';
+    
   wonk = x_spectral_olr.feedback.planck_ecRad; wonk(wonk < -10) = NaN; wonk(wonk > 0) = NaN; 
-    ns = 500; aslmap(75,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-4 0]*1.5);  title('UMBC \lambda_{Planck}')
+    ns = 500; aslmap(75,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-4 0]*1.5);  title('XYZ \lambda_{Planck}')
   wonk = x_spectral_olr.feedback.lapse_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
-    ns = 500; aslmap(76,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-5 5]*1);    title('UMBC \lambda_{Lapse}')
+    ns = 500; aslmap(76,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-5 5]*1);    title('XYZ \lambda_{Lapse}')
   wonk = x_spectral_olr.feedback.wv_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
-    ns = 500; aslmap(77,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-2 2]*1);    title('UMBC \lambda_{WV}')
+    ns = 500; aslmap(77,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-2 2]*1);    title('XYZ \lambda_{WV}')
   wonk = x_spectral_olr.feedback.skt_ecRad; wonk(wonk < -3) = NaN; wonk(wonk > +3) = NaN; 
-    ns = 500; aslmap(78,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-2 0]*1.5);  title('UMBC \lambda_{Skt}')
+    ns = 500; aslmap(78,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-2 0]*1.5);  title('XYZ \lambda_{Skt}')
   
   figure(75); colormap(colormap_soden_held_jclim2007); caxis([-6.5 -1])
   figure(76); colormap(colormap_soden_held_jclim2007); caxis([-2 +2])
@@ -367,7 +382,7 @@ if iDoThis > 0
     junk = x_spectral_olr.feedback.lapse_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);   junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'g','linewidth',2); hold on
     junk = x_spectral_olr.feedback.wv_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);      junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'r','linewidth',2); hold on
     junk = x_spectral_olr.feedback.skt_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);     junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'k','linewidth',2); hold off
-  ylim([-10 +10]/2); plotaxis2; title('UMBC \lambda'); xlabel('Latitude'); hl = legend('Planck','Lapse','WV','SKT','location','best','fontsize',8);
+  ylim([-10 +10]/2); plotaxis2; title('XYZ \lambda'); xlabel('Latitude'); hl = legend('Planck','Lapse','WV','SKT','location','best','fontsize',8);
   
   junk = x_spectral_olr.feedback.planck_ecRad; junk(bad) = NaN;
   if ~exist('lps0')
@@ -380,4 +395,5 @@ if iDoThis > 0
   addpath /home/sergio/MATLABCODE/SHOWSTATS
   [n,nx,ny,nmean,nstd] = myhist2d(mean(lps0.lapse1(80:97,:),1),junk,0:0.25:10,-6:0.1:-3); errorbar(0:0.25:10,nmean,nstd); xlabel('Lower Trop Lapse Rate K/km'); ylabel('\lambda_{Planck}'); plotaxis2;
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,4 +1,5 @@
 clear wonk* mean_feedback
+cosrlat = cos(rlat'*pi/180);
 figure(2); clf
 
 model = 1; 

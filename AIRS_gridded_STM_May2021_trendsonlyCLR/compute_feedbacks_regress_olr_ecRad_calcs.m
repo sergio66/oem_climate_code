@@ -14,6 +14,7 @@ clear nmeanval nstdval
 %xlabel('dSST'); ylabel('d(OLR)'); title(['UMBC all and GHG \newline d(OLR) = ' num2str(junk0U(1)) ' d(SST) + ' num2str(junk0U(2))])
 
 dx = -1 : 0.025 : +1;
+ind0 = 1 : 72;
 
 globalSST = nanmean(indSST);
 
@@ -34,6 +35,11 @@ junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
 xout.feedback.planck_ecRad_polyfit = junk(1);
 [nn,nx,ny,nmeanval(ix,:),nstdval(ix,:)] = myhist2d(indSST,-savenums(ix,:),dx,dx);
+for jj = 1 : 64
+  ind = (jj-1)*72 + ind0;
+  junk = polyfit(indSST(ind),-savenums(ix,ind),1);
+  xout.feedback.planck_ecRad_polyfit_latbin(jj) = junk(1);
+end
 
 % The lapse-rate feedback λlapse is minus the OLR response to the
 % difference between the actual temperature response and the uniform
@@ -51,6 +57,11 @@ junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
 xout.feedback.lapse_ecRad_polyfit = junk(1);
 [nn,nx,ny,nmeanval(ix,:),nstdval(ix,:)] = myhist2d(indSST,-savenums(ix,:),dx,dx);
+for jj = 1 : 64
+  ind = (jj-1)*72 + ind0;
+  junk = polyfit(indSST(ind),-savenums(ix,ind),1);
+  xout.feedback.lapse_ecRad_polyfit_latbin(jj) = junk(1);
+end
 
 xout.feedback.o3_ecRad = xout.o3_ecRad.clr-xout.olr0_ecRad.clr; 
 if iLambda_UseGlobalSST_regress == -1
@@ -64,6 +75,11 @@ junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
 xout.feedback.o3_ecRad_polyfit = junk(1);
 [nn,nx,ny,nmeanval(ix,:),nstdval(ix,:)] = myhist2d(indSST,-savenums(ix,:),dx,dx);
+for jj = 1 : 64
+  ind = (jj-1)*72 + ind0;
+  junk = polyfit(indSST(ind),-savenums(ix,ind),1);
+  xout.feedback.o3_ecRad_polyfit_latbin(jj) = junk(1);
+end
 
 xout.feedback.wv_ecRad = xout.wv_ecRad.clr-xout.olr0_ecRad.clr;
 if iLambda_UseGlobalSST_regress == -1
@@ -77,6 +93,11 @@ junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
 xout.feedback.wv_ecRad_polyfit = junk(1);
 [nn,nx,ny,nmeanval(ix,:),nstdval(ix,:)] = myhist2d(indSST,-savenums(ix,:),dx,dx);
+for jj = 1 : 64
+  ind = (jj-1)*72 + ind0;
+  junk = polyfit(indSST(ind),-savenums(ix,ind),1);
+  xout.feedback.wv_ecRad_polyfit_latbin(jj) = junk(1);
+end
 
 xout.feedback.skt_ecRad = xout.skt_ecRad.clr-xout.olr0_ecRad.clr;
 if iLambda_UseGlobalSST_regress == -1
@@ -90,6 +111,11 @@ junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
 xout.feedback.skt_ecRad_polyfit = junk(1);
 [nn,nx,ny,nmeanval(ix,:),nstdval(ix,:)] = myhist2d(indSST,-savenums(ix,:),dx,dx);
+for jj = 1 : 64
+  ind = (jj-1)*72 + ind0;
+  junk = polyfit(indSST(ind),-savenums(ix,ind),1);
+  xout.feedback.skt_ecRad_polyfit_latbin(jj) = junk(1);
+end
 
 xout.feedback.ptemp_co2_ecRad = xout.ptemp_co2_ecRad.clr-xout.olr0_ecRad.clr; 
 if iLambda_UseGlobalSST_regress == -1
@@ -103,6 +129,11 @@ junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
 xout.feedback.ptemp_co2_ecRad_polyfit = junk(1);
 [nn,nx,ny,nmeanval(ix,:),nstdval(ix,:)] = myhist2d(indSST,-savenums(ix,:),dx,dx);
+for jj = 1 : 64
+  ind = (jj-1)*72 + ind0;
+  junk = polyfit(indSST(ind),-savenums(ix,ind),1);
+  xout.feedback.ptemp_co2_ecRad_polyfit_latbin(jj) = junk(1);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%$
 
@@ -117,11 +148,34 @@ figure(1); clf;
 plot(indSST,-savenums,'.'); plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
 
 figure(2); clf
-factor = [1 0.2 1 1 0.2 1]'; factor = factor * ones(1,length(dx));
-plot(dx,nmeanval,'o-','linewidth',2); plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
-plot(dx,nmeanval.*factor,'o-','linewidth',2); plotaxis2; hl= legend('planck','0.2*lapse','o3','wv','0.2*skt','t/co2','location','best','fontsize',10); ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
+factor = [0.2 0.2 1 1 0.2 1]'; factor = factor * ones(1,length(dx));
+plot(dx,nmeanval,'o-','linewidth',2);         
+  plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10);             ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
+plot(dx,nmeanval.*factor,'o-','linewidth',2); 
+  axis([-1 +1 -1 +1]*0.25); 
+  plotaxis2; hl= legend('0.2*planck','0.2*lapse','o3','wv','0.2*skt','t/co2','location','south','fontsize',10); ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
 
 xout.ecRadresults.regressed_feedbacks = regressed_feedbacks;
 xout.ecRadresults.dbins               = dx;
 xout.ecRadresults.nmeanval            = nmeanval;
 xout.ecRadresults.nstdval             = nstdval;
+
+figure(3); clf
+plot(1:64,xout.feedback.planck_ecRad_polyfit_latbin,...
+     1:64,xout.feedback.lapse_ecRad_polyfit_latbin,...
+     1:64,xout.feedback.o3_ecRad_polyfit_latbin,...
+     1:64,xout.feedback.wv_ecRad_polyfit_latbin,...
+     1:64,xout.feedback.skt_ecRad_polyfit_latbin,...
+     1:64,xout.feedback.ptemp_co2_ecRad_polyfit_latbin,...
+     'linewidth',2); 
+plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin');
+
+figure(4); clf
+factor = [0.2 0.2 1 1 0.2 1]'; factor = factor * ones(1,length(dx));
+plot(dx,nmeanval(1:4,:),'o-','linewidth',2);         
+  plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10);             ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
+plot(dx,nmeanval(1:4,:).*factor(1:4,:),'o-','linewidth',2); 
+  plotaxis2; hl= legend('0.2*Planck','0.2*Lapse','Ozone','WV','location','south','fontsize',10); ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

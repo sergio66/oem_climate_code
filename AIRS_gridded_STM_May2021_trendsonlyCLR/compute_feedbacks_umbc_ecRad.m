@@ -208,7 +208,7 @@ eval(cdRRTMback);
 %% change radiance mW --> W and then multiply by pi for flux
 ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
 
-umbc_spectral_olr = compute_feedbacks_regress_calcs_olr(umbc_spectral_olr,results(:,6)',iLambda_UseGlobalSST_regress,h);
+umbc_spectral_olr = compute_feedbacks_regress_calcs_sarta_olr(umbc_spectral_olr,results(:,6)',iLambda_UseGlobalSST_regress,h);
 
 figure(71); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.planck); caxis([-4 0]*1);  colormap(jet);  title('UMBC \lambda_{Planck}')
 figure(72); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.lapse);  caxis([-5 +5]*1); colormap(usa2); title('UMBC \lambda_{Lapse}')
@@ -217,7 +217,7 @@ figure(74); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.skt);    c
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-umbc_spectral_olr = compute_feedbacks_regress_ecRad_calcs(umbc_spectral_olr,results(:,6)',iLambda_UseGlobalSST_regress);
+umbc_spectral_olr = compute_feedbacks_regress_ecRad_ecRad(umbc_spectral_olr,results(:,6)',iLambda_UseGlobalSST_regress);
 
 figure(75); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.planck_ecRad); caxis([-4 0]*1.5); colormap(jet);  title('UMBC \lambda_{Planck}')
 figure(76); scatter_coast(p.rlon,p.rlat,50,umbc_spectral_olr.feedback.lapse_ecRad);  caxis([-5 +5]*2);  colormap(usa2); title('UMBC \lambda_{Lapse}')

@@ -1607,6 +1607,7 @@ end
 iPrint = -1;
 if iPrint > 0
   dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/PAPER17_TRENDS/Figs/';
+  dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
   figure(60); aslprint([dir0 'obs_spectralavg_'        num2str(iNumYears) '_years.pdf']);
   figure(61); aslprint([dir0 'umbc_spectralavg_'       num2str(iNumYears) '_years.pdf']);
   figure(62); aslprint([dir0 'era5_spectralavg_'       num2str(iNumYears) '_years.pdf']);
@@ -1616,6 +1617,7 @@ if iPrint > 0
 
 %%%% this is ughugh
   dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/PAPER17_TRENDS/Figs/';
+  dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
 
 %%  figure(07); aslprint([dir0 'rh_trends_zonal_p_4panels' num2str(iNumYears) '_years.pdf']);
 %%  figure(08); aslprint([dir0 'fracWV_trends_zonal_p_4panels' num2str(iNumYears) '_years.pdf']);
