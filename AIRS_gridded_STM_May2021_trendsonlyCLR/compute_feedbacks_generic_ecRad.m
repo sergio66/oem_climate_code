@@ -19,7 +19,8 @@ function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-%% STARTING FROM SCRATCH  --- for complete list see  make_olr_ecrad_dfeedback.m
+%% STARTING FROM SCRATCH  
+     for complete list see  make_olr_ecrad_feedback.m
 
 umbc_spectral_olr = struct;    %% so it has no fields
 umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,-1,rlat65,rlon73);
@@ -32,18 +33,21 @@ era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp
 
 %{
 %% RE-DOING EG planck,wv
+     for complete list see  make_olr_ecrad_feedback.m
 iaComputeWhichFeedback = [+1 +4]; %% compute planck (uniform pert) and wv ecRads
 iaComputeWhichFeedback = [+1];    %% compute planck (uniform pert) ecRads
-umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback);
-era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback);
-airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,iaComputeWhichFeedback);
-cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,iaComputeWhichFeedback);
+iaComputeWhichFeedback = [+1 +2]; %% compute planck (uniform pert) and lapse ecRads
+umbc_spectral_olr    = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback);
+era5_spectral_olr    = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback);
+airsL3_spectral_olr  = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,iaComputeWhichFeedback);
+cmip6_spectral_olr   = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,iaComputeWhichFeedback);
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-%% RE-DOING EG regressions and plots -- for complete list see      show_olr_ecRad_feedback.m        
+%% RE-DOING EG regressions and plots 
+  for complete list see      show_olr_ecRad_feedback.m        
 iaComputeWhichFeedback = [0];     %% compute + plot feedbacks only
 disp(' ')
 disp('umbc')

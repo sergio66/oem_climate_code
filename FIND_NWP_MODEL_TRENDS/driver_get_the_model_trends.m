@@ -78,7 +78,7 @@ if iSpectra == 1
   %% see eg driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
   dirout = '../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
 
-  if ~exist(strUMBC)
+  if ~exist('strUMBC')
     strUMBC = '/asl/s1/sergio/JUNK/test9_guessstartWV_Vers1_march22_2023.mat';
   end
   fprintf(1,'driver_get_the_model_trends.m is using obs rates from %s \n',strUMBC)

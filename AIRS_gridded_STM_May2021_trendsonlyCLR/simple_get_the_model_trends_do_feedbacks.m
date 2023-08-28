@@ -27,6 +27,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath ../FIND_NWP_MODEL_TRENDS
+disp(' ')
 driver_get_the_model_trends
 figure(8); plot_profile_trends3_cmip6    %% CMIP6_ERA5_AIRSL3,       with mask, but uses mean as mean(profile) and unc as mean(unc_profile),,,, I could call plot_profile_trends3_amip6 but I have cleared the variable
 
@@ -35,42 +36,14 @@ if length(junkCLIMCAPS_MERRA_AMIP) == 0
   junkCLIMCAPS_MERRA_AMIP = -1;
 end
 if junkCLIMCAPS_MERRA_AMIP > 0
-  strMODELScopy = strMODELS;
-
-  if exist('era5')
-    era5copy = era5;
-  end
-  if exist('cmip6')
-    cmip6copy = cmip6;
-  end
-  if exist('airsL3')
-    airsL3copy = airsL3;
-  end
-
-  driver_get_the_model_trends
+  get_the_MERRA2_CLIMCAPSL3_AMIP6_model_trends
   figure(8); plot_profile_trends3_amip6    %% AMIP6_MERRA2_CLIMCAPSL3, with mask, but uses mean as mean(profile) and unc as mean(unc_profile),,,, I could call plot_profile_trends3_amip6 but I have cleared the variable
-
-  strMODELSX = strMODELS;  
-  strMODELS  = strMODELScopy;
-
-  if exist('era5copy')
-    merra2 = era5;
-    era5   = era5copy;
-  end
-  if exist('cmip6copy')
-    amip6 = cmip6;
-    cmip6 = cmip6copy;
-  end
-  if exist('airsL3copy')
-    climcapsL3 = airsL3;
-    airsL3     = airsL3copy;
-  end
 end
 
 %figure(8); plot_profile_trends          %% ERA_ERA5_AIRSL3,         with mask
 %figure(8); plot_profile_trends2         %% CMIP6_ERA5_AIRSL3,       with mask, but uses mean as mean(profile) and unc as std(profile)
   
-junk = input('Do you want to compute OLR feedbacks using ecRad (-1 /+1 [default]) : ');
+junk = input('Do you want to compute OLR feedbacks using ecRad (-1 /+1 [all default]) : ');
 if length(junk) == 0
   junk = +1;
 end

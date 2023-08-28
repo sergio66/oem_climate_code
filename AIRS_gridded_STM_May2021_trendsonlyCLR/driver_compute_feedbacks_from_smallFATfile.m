@@ -1,5 +1,21 @@
 %% see ../FIND_NWP_MODEL_TRENDS/driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
 
+%%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+%{
+if you already have saved off your ecRad runs, and just want to update the regressions/save them .... then 
+1) set eg a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20
+2) just run "driver_compute_feedbacks_from_smallFATfile.m"
+3) when you get to "do_feedbacks_wrt_globalSST.m" just load in all the files eg
+     /asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_20.mat
+     /asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_20.mat
+     /asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_20.mat
+4) Now run "show_olr_ecRad_feedback"  (which is a chip off the "compute_feedbacks_generic_ecRad.m" code)
+5) Save as needed using  "quick_save_olr_feedbacks_umbc_NWP_L3_XMIP6.m"!!!!
+%}
+%%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 addpath /asl/matlib/maps
 addpath /asl/matlib/h4tools
 addpath /home/sergio/MATLABCODE
@@ -9,10 +25,10 @@ addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
-a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 15;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 10;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 05;  %% use CarbonTracker CO2 trends
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20;  %% use CarbonTracker CO2 trends
 
 fprintf(1,'iNumYears = %2i .. reading in %s \n',iNumYears,strUMBC);
 loader = ['load ' strUMBC];
