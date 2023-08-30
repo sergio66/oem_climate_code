@@ -1,4 +1,4 @@
-clear showfeedbacks strfeedbacks
+clear showfeedbacks* strfeedbacks
 
 if ~exist('iNumYears')
   disp('WARNING iNumYears DNE ... setting to 20')

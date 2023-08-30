@@ -1,4 +1,4 @@
-clear showfeedbacks strfeedbacks
+clear showfeedbacks* strfeedbacks
 
 ix = 1; iNumYears = 05; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '05 years ';

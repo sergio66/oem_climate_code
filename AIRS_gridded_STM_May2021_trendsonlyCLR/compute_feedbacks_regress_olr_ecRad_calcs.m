@@ -1,4 +1,4 @@
-function xout = compute_feedbacks_regress_olr_ecRad_calcs(x0,indSST,iLambda_UseGlobalSST_regress)
+function xout = compute_feedbacks_regress_olr_ecRad_calcs(x0,indSST,iLambda_UseGlobalSST_regress,caModelStr)
 
 xout = x0;
 
@@ -37,14 +37,14 @@ poles   = find(abs(YY) >= 60);
 figure(1); clf;
 
 % SO THIS IS UNIFORM PERTURBATION RESPONSE
-xout.feedback.planck_ecRad = xout.planck_ecRad.clr-xout.olr0_ecRad.clr; 
+xout.feedback.planck_ecRad = xout.planck_ecRad.clr - xout.olr0_ecRad.clr; 
 if iLambda_UseGlobalSST_regress == -1
   xout.feedback.planck_ecRad = -xout.feedback.planck_ecRad./indSST;
 else
   xout.feedback.planck_ecRad = -xout.feedback.planck_ecRad/globalSST;
 end
 ix = ix + 1;
-savenums(ix,:) = (xout.planck_ecRad.clr-xout.olr0_ecRad.clr);
+savenums(ix,:) = (xout.planck_ecRad.clr - xout.olr0_ecRad.clr);
 %%%%%
 junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
@@ -70,11 +70,11 @@ for jj = 1 : 64
   xout.feedback.planck_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 
-% The lapse-rate feedback λlapse is minus the OLR response to the
+% The lapse-rate feedback  is minus the OLR response to the
 % difference between the actual temperature response and the uniform
 % Planck response, still holding qv fixed.
 % SO HERE I COMPUTE ACTUAL RESPONSE TO TA(z) and SKT, AND LATER SUBTRACT OUT THE UNIFORM PLANCK RESPONSE
-xout.feedback.lapse_ecRad = xout.lapse_ecRad.clr-xout.planck_ecRad.clr;
+xout.feedback.lapse_ecRad = xout.lapse_ecRad.clr - xout.planck_ecRad.clr;
 if iLambda_UseGlobalSST_regress == -1
   xout.feedback.lapse_ecRad = -xout.feedback.lapse_ecRad./indSST;
 else
@@ -106,15 +106,19 @@ for jj = 1 : 64
   junk = robustfit(indSST(ind),-savenums(ix,ind));
   xout.feedback.lapse_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
+%%%%
+junk = sum(-savenums(ix,:).*cos(YY*pi/180))/sum(cos(YY*pi/180));
+%'here'
+%keyboard_nowindow
 
-xout.feedback.o3_ecRad = xout.o3_ecRad.clr-xout.olr0_ecRad.clr; 
+xout.feedback.o3_ecRad = xout.o3_ecRad.clr - xout.olr0_ecRad.clr; 
 if iLambda_UseGlobalSST_regress == -1
   xout.feedback.o3_ecRad = -xout.feedback.o3_ecRad./indSST;
 else
   xout.feedback.o3_ecRad = -xout.feedback.o3_ecRad/globalSST;
 end
 ix = ix + 1;
-savenums(ix,:) = (xout.o3_ecRad.clr-xout.olr0_ecRad.clr);
+savenums(ix,:) = (xout.o3_ecRad.clr - xout.olr0_ecRad.clr);
 %%%%%
 junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
@@ -140,14 +144,14 @@ for jj = 1 : 64
   xout.feedback.o3_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 
-xout.feedback.wv_ecRad = xout.wv_ecRad.clr-xout.olr0_ecRad.clr;
+xout.feedback.wv_ecRad = xout.wv_ecRad.clr - xout.olr0_ecRad.clr;
 if iLambda_UseGlobalSST_regress == -1
   xout.feedback.wv_ecRad = -xout.feedback.wv_ecRad./indSST;
 else
   xout.feedback.wv_ecRad = -xout.feedback.wv_ecRad/globalSST;
 end
 ix = ix + 1;
-savenums(ix,:) = (xout.wv_ecRad.clr-xout.olr0_ecRad.clr);
+savenums(ix,:) = (xout.wv_ecRad.clr - xout.olr0_ecRad.clr);
 %%%%%
 junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
@@ -172,15 +176,16 @@ for jj = 1 : 64
   junk = robustfit(indSST(ind),-savenums(ix,ind));
   xout.feedback.wv_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
+junk = sum(-savenums(ix,:).*cos(YY*pi/180))/sum(cos(YY*pi/180));
 
-xout.feedback.skt_ecRad = xout.skt_ecRad.clr-xout.olr0_ecRad.clr;
+xout.feedback.skt_ecRad = xout.skt_ecRad.clr - xout.olr0_ecRad.clr;
 if iLambda_UseGlobalSST_regress == -1
   xout.feedback.skt_ecRad = -xout.feedback.skt_ecRad./indSST;
 else
   xout.feedback.skt_ecRad = -xout.feedback.skt_ecRad/globalSST;
 end
 ix = ix + 1;
-savenums(ix,:) = (xout.skt_ecRad.clr-xout.olr0_ecRad.clr);
+savenums(ix,:) = (xout.skt_ecRad.clr - xout.olr0_ecRad.clr);
 %%%%%
 junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
@@ -206,14 +211,14 @@ for jj = 1 : 64
   xout.feedback.skt_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 
-xout.feedback.ptemp_co2_ecRad = xout.ptemp_co2_ecRad.clr-xout.olr0_ecRad.clr; 
+xout.feedback.ptemp_co2_ecRad = xout.ptemp_co2_ecRad.clr - xout.olr0_ecRad.clr; 
 if iLambda_UseGlobalSST_regress == -1
   xout.feedback.ptemp_co2_ecRad = -xout.feedback.ptemp_co2_ecRad./indSST;
 else
   xout.feedback.ptemp_co2_ecRad = -xout.feedback.ptemp_co2_ecRad/globalSST;
 end
 ix = ix + 1;
-savenums(ix,:) = (xout.ptemp_co2_ecRad.clr-xout.olr0_ecRad.clr);
+savenums(ix,:) = (xout.ptemp_co2_ecRad.clr - xout.olr0_ecRad.clr);
 %%%%%
 junk = polyfit(indSST,-savenums(ix,:),1);
 plot(indSST,-savenums(ix,:),'.')
@@ -239,7 +244,119 @@ for jj = 1 : 64
   xout.feedback.ptemp_co2_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 
+%%%%%%%%%%
+if isfield(xout,'perts9999')
+  iy = 0;
+
+  xout.feedback9999.atm_skt_ghg_ecRad = xout.perts9999.atm_skt_ghg_ecRad.clr - xout.olr0_ecRad.clr; 
+  if iLambda_UseGlobalSST_regress == -1
+    xout.feedback9999.atm_skt_ghg_ecRad = -xout.feedback9999.atm_skt_ghg_ecRad./indSST;
+  else
+    xout.feedback9999.atm_skt_ghg_ecRad = -xout.feedback9999.atm_skt_ghg_ecRad/globalSST;
+  end
+  iy = iy + 1;
+  savenums9999(iy,:) = (xout.perts9999.atm_skt_ghg_ecRad.clr - xout.olr0_ecRad.clr);
+  %%%%%
+  junk = polyfit(indSST,-savenums9999(iy,:),1);
+  plot(indSST,-savenums9999(iy,:),'.')
+  xout.feedback9999.atm_skt_ghg_ecRad_polyfit = junk(1);
+  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,-savenums9999(iy,:),dx,dx);
+  for jj = 1 : 64
+    ind = (jj-1)*72 + ind0;
+    junk = polyfit(indSST(ind),-savenums9999(iy,ind),1);
+    xout.feedback9999.atm_skt_ghg_ecRad_polyfit_latbin(jj) = junk(1);
+  end
+  %%%%%
+  [junk junkB] = robustfit(indSST,-savenums9999(iy,:));
+    xout.feedback9999.atm_skt_ghg_ecRad_robustfit_all = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(tropics),-savenums9999(iy,tropics));
+    xout.feedback9999.atm_skt_ghg_ecRad_robustfit_tropics = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(midlats),-savenums9999(iy,midlats));
+    xout.feedback9999.atm_skt_ghg_ecRad_robustfit_midlats = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(poles),-savenums9999(iy,poles));
+    xout.feedback9999.atm_skt_ghg_ecRad_robustfit_poles = [junk(2) junkB.se(2)];
+  for jj = 1 : 64
+    ind = (jj-1)*72 + ind0;
+    junk = robustfit(indSST(ind),-savenums9999(iy,ind));
+    xout.feedback9999.atm_skt_ghg_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
+  end
+
+  %%%%%%%%%%
+
+  xout.feedback9999.atm_skt_ecRad = xout.perts9999.atm_skt_ecRad.clr - xout.olr0_ecRad.clr; 
+  if iLambda_UseGlobalSST_regress == -1
+    xout.feedback9999.atm_skt_ecRad = -xout.feedback9999.atm_skt_ecRad./indSST;
+  else
+    xout.feedback9999.atm_skt_ecRad = -xout.feedback9999.atm_skt_ecRad/globalSST;
+  end
+  iy = iy + 1;
+  savenums9999(iy,:) = (xout.perts9999.atm_skt_ecRad.clr - xout.olr0_ecRad.clr);
+  %%%%%
+  junk = polyfit(indSST,-savenums9999(iy,:),1);
+  plot(indSST,-savenums9999(iy,:),'.')
+  xout.feedback9999.atm_skt_ecRad_polyfit = junk(1);
+  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,-savenums9999(iy,:),dx,dx);
+  for jj = 1 : 64
+    ind = (jj-1)*72 + ind0;
+    junk = polyfit(indSST(ind),-savenums9999(iy,ind),1);
+    xout.feedback9999.atm_skt_ecRad_polyfit_latbin(jj) = junk(1);
+  end
+  %%%%%
+  [junk junkB] = robustfit(indSST,-savenums9999(iy,:));
+    xout.feedback9999.atm_skt_ecRad_robustfit_all = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(tropics),-savenums9999(iy,tropics));
+    xout.feedback9999.atm_skt_ecRad_robustfit_tropics = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(midlats),-savenums9999(iy,midlats));
+    xout.feedback9999.atm_skt_ecRad_robustfit_midlats = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(poles),-savenums9999(iy,poles));
+    xout.feedback9999.atm_skt_ecRad_robustfit_poles = [junk(2) junkB.se(2)];
+  for jj = 1 : 64
+    ind = (jj-1)*72 + ind0;
+    junk = robustfit(indSST(ind),-savenums9999(iy,ind));
+    xout.feedback9999.atm_skt_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
+  end
+
+  %%%%%%%%%%
+
+  xout.feedback9999.atm_only_ecRad = xout.perts9999.atm_only_ecRad.clr - xout.olr0_ecRad.clr; 
+  if iLambda_UseGlobalSST_regress == -1
+    xout.feedback9999.atm_only_ecRad = -xout.feedback9999.atm_only_ecRad./indSST;
+  else
+    xout.feedback9999.atm_only_ecRad = -xout.feedback9999.atm_only_ecRad/globalSST;
+  end
+  iy = iy + 1;
+  savenums9999(iy,:) = (xout.perts9999.atm_only_ecRad.clr - xout.olr0_ecRad.clr);
+  %%%%%
+  junk = polyfit(indSST,-savenums9999(iy,:),1);
+  plot(indSST,-savenums9999(iy,:),'.')
+  xout.feedback9999.atm_only_ecRad_polyfit = junk(1);
+  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,-savenums9999(iy,:),dx,dx);
+  for jj = 1 : 64
+    ind = (jj-1)*72 + ind0;
+    junk = polyfit(indSST(ind),-savenums9999(iy,ind),1);
+    xout.feedback9999.atm_only_ecRad_polyfit_latbin(jj) = junk(1);
+  end
+  %%%%%
+  [junk junkB] = robustfit(indSST,-savenums9999(iy,:));
+    xout.feedback9999.atm_only_ecRad_robustfit_all = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(tropics),-savenums9999(iy,tropics));
+    xout.feedback9999.atm_only_ecRad_robustfit_tropics = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(midlats),-savenums9999(iy,midlats));
+    xout.feedback9999.atm_only_ecRad_robustfit_midlats = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(poles),-savenums9999(iy,poles));
+    xout.feedback9999.atm_only_ecRad_robustfit_poles = [junk(2) junkB.se(2)];
+  for jj = 1 : 64
+    ind = (jj-1)*72 + ind0;
+    junk = robustfit(indSST(ind),-savenums9999(iy,ind));
+    xout.feedback9999.atm_only_ecRad_robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
+  end
+
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 figure(1); clf
 factor = [0.2 0.2 1 1 0.2 1]'; factor = factor * ones(1,length(dx));
 plot(dx,nmeanval,'o-','linewidth',2);         
@@ -302,8 +419,13 @@ xout.ecRadresults.nstdval                     = nstdval;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+if nargin == 3
+  caModelStr = 'XYZ';
+end
+
 figure(3); clf; 
 plot(indSST,-savenums,'.'); plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
+title(caModelStr);
 
 figure(4); clf
 plot(1:64,xout.feedback.planck_ecRad_polyfit_latbin,...
@@ -313,7 +435,7 @@ plot(1:64,xout.feedback.planck_ecRad_polyfit_latbin,...
      1:64,xout.feedback.skt_ecRad_polyfit_latbin,...
      1:64,xout.feedback.ptemp_co2_ecRad_polyfit_latbin,...
      'linewidth',2); 
-plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title('POLYFIT')
+plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title([caModelStr ' POLYFIT'])
 
 figure(5); clf
 plot(1:64,xout.feedback.planck_ecRad_robustfit_latbin(:,1),...
@@ -323,7 +445,7 @@ plot(1:64,xout.feedback.planck_ecRad_robustfit_latbin(:,1),...
      1:64,xout.feedback.skt_ecRad_robustfit_latbin(:,1),...
      1:64,xout.feedback.ptemp_co2_ecRad_robustfit_latbin(:,1),...
      'linewidth',2); 
-plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title('ROBUSTFIT')
+plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title([caModelStr ' ROBUSTFIT'])
 
 figure(6); clf
 plot(1:64,xout.feedback.planck_ecRad_robustfit_latbin(:,2),...
@@ -333,7 +455,7 @@ plot(1:64,xout.feedback.planck_ecRad_robustfit_latbin(:,2),...
      1:64,xout.feedback.skt_ecRad_robustfit_latbin(:,2),...
      1:64,xout.feedback.ptemp_co2_ecRad_robustfit_latbin(:,2),...
      'linewidth',2); 
-plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title('ROBUSTFIT UNC')
+plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title([caModelStr ' ROBUSTFIT UNC'])
 
 figure(7); clf
 factor = [0.2 0.2 1 1 0.2 1]'; factor = factor * ones(1,length(dx));
@@ -341,5 +463,6 @@ plot(dx,nmeanval(1:4,:),'o-','linewidth',2);
   plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10);             ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
 plot(dx,nmeanval(1:4,:).*factor(1:4,:),'o-','linewidth',2); 
   plotaxis2; hl= legend('0.2*Planck','0.2*Lapse','Ozone','WV','location','south','fontsize',10); ylabel('\delta OLR W/m2'); xlabel('\delta SKT K');
+title(caModelStr)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

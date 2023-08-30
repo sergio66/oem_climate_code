@@ -31,10 +31,18 @@ disp(' ')
 driver_get_the_model_trends
 figure(8); plot_profile_trends3_cmip6    %% CMIP6_ERA5_AIRSL3,       with mask, but uses mean as mean(profile) and unc as mean(unc_profile),,,, I could call plot_profile_trends3_amip6 but I have cleared the variable
 
-junkCLIMCAPS_MERRA_AMIP = input('if you choose eg AIRSL3/ERA5/CMIP6 .. can have another go to get eg CLIMCAPSL3/MERRA2/XMIP6 : 20 years only right now : (-1 [default] / +1) : ');
-if length(junkCLIMCAPS_MERRA_AMIP) == 0
-  junkCLIMCAPS_MERRA_AMIP = -1;
+if iNumYears == 20 
+  junkCLIMCAPS_MERRA_AMIP = input(' 20 years data : if you choose eg AIRSL3/ERA5/CMIP6 .. can have another go to get eg CLIMCAPSL3/MERRA2/XMIP6 : 20 years only right now : (-1 / +1 [default] ) : ');
+  if length(junkCLIMCAPS_MERRA_AMIP) == 0
+    junkCLIMCAPS_MERRA_AMIP = +1;
+  end
+else
+  junkCLIMCAPS_MERRA_AMIP = input(' 05/10/15 years data : if you choose eg AIRSL3/ERA5/CMIP6 .. cannot have another go to get eg CLIMCAPSL3/MERRA2/XMIP6 : 20 years only right now : (-1 [default] / +1) : ');
+  if length(junkCLIMCAPS_MERRA_AMIP) == 0
+    junkCLIMCAPS_MERRA_AMIP = -1;
+  end
 end
+
 if junkCLIMCAPS_MERRA_AMIP > 0
   get_the_MERRA2_CLIMCAPSL3_AMIP6_model_trends
   figure(8); plot_profile_trends3_amip6    %% AMIP6_MERRA2_CLIMCAPSL3, with mask, but uses mean as mean(profile) and unc as mean(unc_profile),,,, I could call plot_profile_trends3_amip6 but I have cleared the variable
@@ -42,7 +50,9 @@ end
 
 %figure(8); plot_profile_trends          %% ERA_ERA5_AIRSL3,         with mask
 %figure(8); plot_profile_trends2         %% CMIP6_ERA5_AIRSL3,       with mask, but uses mean as mean(profile) and unc as std(profile)
-  
+
+disp(' ')
+disp('Done reading in MODEL/L3 (eg ERA5/AIRSL3/CMIP6 stuff ...')  
 junk = input('Do you want to compute OLR feedbacks using ecRad (-1 /+1 [all default]) : ');
 if length(junk) == 0
   junk = +1;
