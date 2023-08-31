@@ -23,9 +23,9 @@ if you already have     saved off your ecRad runs, and just want to update the r
 AND THEN WHEN HAPPY
 AND THEN WHEN HAPPY
 AND THEN WHEN HAPPY
-clear all; for ii = 1 : 4; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit
+clear all; for ii = 1 : 4; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit
 or
-clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_robustfit
+clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit
 %}
 %%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

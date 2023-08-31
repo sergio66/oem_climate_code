@@ -11,12 +11,12 @@ if ~exist('era5_spectral_olr')
 end
 ix = 1; junk = era5_spectral_olr;
 strfeedbacks{ix} = 'ERA5       ';
-showfeedbacks(ix,1) = junk.feedback_ecRad.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.feedback_ecRad.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.feedback_ecRad.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.feedback_ecRad.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.feedback_ecRad.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.feedback_ecRad.planck.polyfit;
+showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.polyfit;
+showfeedbacks(ix,3) = junk.feedback_ecRad.o3.polyfit;
+showfeedbacks(ix,4) = junk.feedback_ecRad.wv.polyfit;
+showfeedbacks(ix,5) = junk.feedback_ecRad.skt.polyfit;
+showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 
 if ~exist('merra2_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'merra2_spectral_olr');
@@ -24,12 +24,12 @@ if ~exist('merra2_spectral_olr')
 end
 ix = 2; junk = merra2_spectral_olr;
 strfeedbacks{ix} = 'MERRA2     ';
-showfeedbacks(ix,1) = junk.feedback_ecRad.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.feedback_ecRad.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.feedback_ecRad.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.feedback_ecRad.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.feedback_ecRad.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.feedback_ecRad.planck.polyfit;
+showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.polyfit;
+showfeedbacks(ix,3) = junk.feedback_ecRad.o3.polyfit;
+showfeedbacks(ix,4) = junk.feedback_ecRad.wv.polyfit;
+showfeedbacks(ix,5) = junk.feedback_ecRad.skt.polyfit;
+showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 
 if ~exist('umbc_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat'],'umbc_spectral_olr');
@@ -37,12 +37,12 @@ if ~exist('umbc_spectral_olr')
 end
 ix = 3; junk = umbc_spectral_olr;
 strfeedbacks{ix} = 'THIS WORK  ';
-showfeedbacks(ix,1) = junk.feedback_ecRad.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.feedback_ecRad.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.feedback_ecRad.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.feedback_ecRad.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.feedback_ecRad.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.feedback_ecRad.planck.polyfit;
+showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.polyfit;
+showfeedbacks(ix,3) = junk.feedback_ecRad.o3.polyfit;
+showfeedbacks(ix,4) = junk.feedback_ecRad.wv.polyfit;
+showfeedbacks(ix,5) = junk.feedback_ecRad.skt.polyfit;
+showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 
 if ~exist('airsL3_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'airsL3_spectral_olr');
@@ -50,12 +50,12 @@ if ~exist('airsL3_spectral_olr')
 end
 ix = 4; junk = airsL3_spectral_olr;
 strfeedbacks{ix} = 'AIRS L3    ';
-showfeedbacks(ix,1) = junk.feedback_ecRad.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.feedback_ecRad.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.feedback_ecRad.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.feedback_ecRad.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.feedback_ecRad.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.feedback_ecRad.planck.polyfit;
+showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.polyfit;
+showfeedbacks(ix,3) = junk.feedback_ecRad.o3.polyfit;
+showfeedbacks(ix,4) = junk.feedback_ecRad.wv.polyfit;
+showfeedbacks(ix,5) = junk.feedback_ecRad.skt.polyfit;
+showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 
 if ~exist('climcapsL3_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'climcapsL3_spectral_olr');
@@ -63,12 +63,12 @@ if ~exist('climcapsL3_spectral_olr')
 end
 ix = 5; junk = climcapsL3_spectral_olr;
 strfeedbacks{ix} = 'CLIMCAPS L3';
-showfeedbacks(ix,1) = junk.feedback_ecRad.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.feedback_ecRad.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.feedback_ecRad.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.feedback_ecRad.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.feedback_ecRad.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.feedback_ecRad.planck.polyfit;
+showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.polyfit;
+showfeedbacks(ix,3) = junk.feedback_ecRad.o3.polyfit;
+showfeedbacks(ix,4) = junk.feedback_ecRad.wv.polyfit;
+showfeedbacks(ix,5) = junk.feedback_ecRad.skt.polyfit;
+showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 
 if ~exist('cmip6_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'cmip6_spectral_olr');
@@ -76,12 +76,12 @@ if ~exist('cmip6_spectral_olr')
 end
 ix = 6; junk = cmip6_spectral_olr;
 strfeedbacks{ix} = 'CMIP6      ';
-showfeedbacks(ix,1) = junk.feedback_ecRad.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.feedback_ecRad.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.feedback_ecRad.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.feedback_ecRad.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.feedback_ecRad.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.feedback_ecRad.planck.polyfit;
+showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.polyfit;
+showfeedbacks(ix,3) = junk.feedback_ecRad.o3.polyfit;
+showfeedbacks(ix,4) = junk.feedback_ecRad.wv.polyfit;
+showfeedbacks(ix,5) = junk.feedback_ecRad.skt.polyfit;
+showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 
 if ~exist('amip6_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'amip6_spectral_olr');
@@ -89,12 +89,12 @@ if ~exist('amip6_spectral_olr')
 end
 ix = 7; junk = amip6_spectral_olr;
 strfeedbacks{ix} = 'AMIP6      ';
-showfeedbacks(ix,1) = junk.feedback_ecRad.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.feedback_ecRad.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.feedback_ecRad.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.feedback_ecRad.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.feedback_ecRad.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.feedback_ecRad.planck.polyfit;
+showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.polyfit;
+showfeedbacks(ix,3) = junk.feedback_ecRad.o3.polyfit;
+showfeedbacks(ix,4) = junk.feedback_ecRad.wv.polyfit;
+showfeedbacks(ix,5) = junk.feedback_ecRad.skt.polyfit;
+showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 
 %% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
 %% but longwave feedback is um of first 4
@@ -124,27 +124,27 @@ if ~exist('rlat')
   X = X; Y = Y;
 end
 figure(2); clf;
-subplot(221); plot(rlat,era5_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin,...
-                     rlat,umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin,...
-                     rlat,climcapsL3_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin);
+subplot(221); plot(rlat,era5_spectral_olr.feedback_ecRad.planck.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.planck.polyfit_latbin,...
+                     rlat,umbc_spectral_olr.feedback_ecRad.planck.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin,...
+                     rlat,climcapsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin);
   plotaxis2; %hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','south','fontsize',8);
   title('Planck'); xlim([-90 +90])
 
-subplot(222); plot(rlat,era5_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin,...
-                     rlat,umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin,...
-                     rlat,climcapsL3_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin)
+subplot(222); plot(rlat,era5_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,...
+                     rlat,umbc_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,...
+                     rlat,climcapsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin)
   plotaxis2; %hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','south','fontsize',8);
   title('Lapse'); xlim([-90 +90])
 
-subplot(223); plot(rlat,era5_spectral_olr.feedback_ecRad.o3_ecRad_polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.o3_ecRad_polyfit_latbin,...
-                     rlat,umbc_spectral_olr.feedback_ecRad.o3_ecRad_polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.o3_ecRad_polyfit_latbin,...
-                     rlat,climcapsL3_spectral_olr.feedback_ecRad.o3_ecRad_polyfit_latbin)
+subplot(223); plot(rlat,era5_spectral_olr.feedback_ecRad.o3.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.o3.polyfit_latbin,...
+                     rlat,umbc_spectral_olr.feedback_ecRad.o3.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin,...
+                     rlat,climcapsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin)
   plotaxis2; hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','south','fontsize',8);
   title('Ozone'); xlim([-90 +90])
 
-subplot(224); plot(rlat,era5_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,...
-                     rlat,umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,...
-                     rlat,climcapsL3_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin)
+subplot(224); plot(rlat,era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.wv.polyfit_latbin,...
+                     rlat,umbc_spectral_olr.feedback_ecRad.wv.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin,...
+                     rlat,climcapsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin)
   plotaxis2; %hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','south','fontsize',8);
   title('WV'); xlim([-90 +90])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

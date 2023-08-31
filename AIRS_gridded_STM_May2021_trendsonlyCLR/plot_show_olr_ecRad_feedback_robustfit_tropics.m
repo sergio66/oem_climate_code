@@ -16,19 +16,19 @@ end
 ix = 1; junk = era5_spectral_olr;
 strfeedbacks{ix} = 'ERA5       ';
 %% the value
-showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(1);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck.robustfit_tropics(1);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(1);
 %% the unc
-showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(2);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck.robustfit_tropics(2);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(2);
 
 if ~exist('merra2_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'merra2_spectral_olr');
@@ -37,19 +37,19 @@ end
 ix = 2; junk = merra2_spectral_olr;
 strfeedbacks{ix} = 'MERRA2     ';
 %% the value
-showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(1);
 %% the unc
-showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(2);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck.robustfit_tropics(2);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(2);
 
 if ~exist('umbc_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat'],'umbc_spectral_olr');
@@ -58,19 +58,19 @@ end
 ix = 3; junk = umbc_spectral_olr;
 strfeedbacks{ix} = 'THIS WORK  ';
 %% the value
-showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(1);
 %% the unc
-showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(2);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck.robustfit_tropics(2);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(2);
 
 if ~exist('airsL3_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'airsL3_spectral_olr');
@@ -79,19 +79,19 @@ end
 ix = 4; junk = airsL3_spectral_olr;
 strfeedbacks{ix} = 'AIRS L3    ';
 %% the value
-showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(1);
 %% the unc
-showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(2);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck.robustfit_tropics(2);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(2);
 
 if ~exist('climcapsL3_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'climcapsL3_spectral_olr');
@@ -100,19 +100,19 @@ end
 ix = 5; junk = climcapsL3_spectral_olr;
 strfeedbacks{ix} = 'CLIMCAPS L3';
 %% the value
-showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(1);
 %% the unc
-showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(2);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck.robustfit_tropics(2);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(2);
 
 if ~exist('cmip6_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'cmip6_spectral_olr');
@@ -121,19 +121,19 @@ end
 ix = 6; junk = cmip6_spectral_olr;
 strfeedbacks{ix} = 'CMIP6      ';
 %% the value
-showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(1);
 %% the unc
-showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(2);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck.robustfit_tropics(2);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(2);
 
 if ~exist('amip6_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'amip6_spectral_olr');
@@ -142,19 +142,19 @@ end
 ix = 7; junk = amip6_spectral_olr;
 strfeedbacks{ix} = 'AMIP6      ';
 %% the value
-showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(1);
-showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,1,1) = junk.feedback_ecRad.planck.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,2,1) = junk.feedback_ecRad.lapse.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,3,1) = junk.feedback_ecRad.o3.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,4,1) = junk.feedback_ecRad.wv.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,5,1) = junk.feedback_ecRad.skt.robustfit_tropics(1);
+showfeedbacks_robustfit_tropics(ix,6,1) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(1);
 %% the unc
-showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck_ecRad_robustfit_tropics(2);   %% (1 == value, 2 == unc)
-showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt_ecRad_robustfit_tropics(2);
-showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2_ecRad_robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,1,2) = junk.feedback_ecRad.planck.robustfit_tropics(2);   %% (1 == value, 2 == unc)
+showfeedbacks_robustfit_tropics(ix,2,2) = junk.feedback_ecRad.lapse.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,3,2) = junk.feedback_ecRad.o3.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,4,2) = junk.feedback_ecRad.wv.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,5,2) = junk.feedback_ecRad.skt.robustfit_tropics(2);
+showfeedbacks_robustfit_tropics(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_tropics(2);
 
 %% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
 %% but longwave feedback is um of first 4
