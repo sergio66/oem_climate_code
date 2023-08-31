@@ -7,9 +7,19 @@ ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
 
 xout = x0;
 
-%junk = pi/1000*sum(xout.planck - xout.olr0,1);
-%junk = -junk./indSST;
-%xout.feedback.planck = junk;
+if isfield(xout,'feedback')
+  xout = rmfield(xout,'feedback');
+end
+%if isfield(xout,'ecRadresults')
+%  xout = rmfield(xout,'ecRadresults');
+%end
+
+% junk = pi/1000*sum(xout.planck - xout.olr0,1);
+% junk = -junk./indSST;
+% xout.feedback_sarta.planck = junk;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 globalSST = nanmean(indSST);
 
@@ -21,11 +31,11 @@ if iLambda_UseGlobalSST_regress == -1
 else
   junk = -junk12/globalSST;
 end
-xout.feedback.planck = junk;
+xout.feedback_sarta.planck = junk;
 good = abs(junk) < 10;
-xout.feedback.planck_nanmean_global = nanmean(junk(good));
+xout.feedback_sarta.planck_nanmean_global = nanmean(junk(good));
 bunk = polyfit(indSST(good),-junk12(good),1);
-xout.feedback.planck_polyfit_global = bunk(1);
+xout.feedback_sarta.planck_polyfit_global = bunk(1);
 
 junk1 = pi/1000*trapz(h.vchan(ix1),xout.o3(ix1,:) - xout.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),xout.o3(ix2,:) - xout.olr0(ix2,:));
@@ -35,10 +45,10 @@ if iLambda_UseGlobalSST_regress == -1
 else
   junk = -junk12/globalSST;
 end
-xout.feedback.o3 = junk;
-xout.feedback.o3_nanmean_global = nanmean(junk);
+xout.feedback_sarta.o3 = junk;
+xout.feedback_sarta.o3_nanmean_global = nanmean(junk);
 bunk = polyfit(indSST,-junk12,1);
-xout.feedback.o3_polyfit_global = bunk(1);
+xout.feedback_sarta.o3_polyfit_global = bunk(1);
 
 junk1 = pi/1000*trapz(h.vchan(ix1),xout.ptemp_co2(ix1,:) - xout.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),xout.ptemp_co2(ix2,:) - xout.olr0(ix2,:));
@@ -48,10 +58,10 @@ if iLambda_UseGlobalSST_regress == -1
 else
   junk = -junk12/globalSST;
 end
-xout.feedback.ptemp_co2 = junk;
-xout.feedback.ptemp_co2_nanmean_global = nanmean(junk);
+xout.feedback_sarta.ptemp_co2 = junk;
+xout.feedback_sarta.ptemp_co2_nanmean_global = nanmean(junk);
 bunk = polyfit(indSST,-junk12,1);
-xout.feedback.ptemp_co2_polyfit_global = bunk(1);
+xout.feedback_sarta.ptemp_co2_polyfit_global = bunk(1);
 
 junk1 = pi/1000*trapz(h.vchan(ix1),xout.lapse(ix1,:) - xout.planck(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),xout.lapse(ix2,:) - xout.planck(ix2,:));
@@ -61,10 +71,10 @@ if iLambda_UseGlobalSST_regress == -1
 else
   junk = -junk/globalSST;
 end
-xout.feedback.lapse = junk;
-xout.feedback.lapse_nanmean_gobal = nanmean(junk);
+xout.feedback_sarta.lapse = junk;
+xout.feedback_sarta.lapse_nanmean_gobal = nanmean(junk);
 bunk = polyfit(indSST,-junk12,1);
-xout.feedback.lapse_polyfit_global = bunk(1);
+xout.feedback_sarta.lapse_polyfit_global = bunk(1);
 
 junk1 = pi/1000*trapz(h.vchan(ix1),xout.wv(ix1,:) - xout.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),xout.wv(ix2,:) - xout.olr0(ix2,:));
@@ -74,12 +84,12 @@ if iLambda_UseGlobalSST_regress == -1
 else
   junk = -junk/globalSST;
 end
-xout.feedback.wv = junk;
-xout.feedback.wv_nanmean_gobal = nanmean(junk);
+xout.feedback_sarta.wv = junk;
+xout.feedback_sarta.wv_nanmean_gobal = nanmean(junk);
 bunk = polyfit(indSST,-junk12,1);
-xout.feedback.wv_polyfit_global = bunk(1);
+xout.feedback_sarta.wv_polyfit_global = bunk(1);
 
-xout.feedback.wv = junk;
+xout.feedback_sarta.wv = junk;
 
 junk1 = pi/1000*trapz(h.vchan(ix1),xout.skt(ix1,:) - xout.olr0(ix1,:));
 junk2 = pi/1000*trapz(h.vchan(ix2),xout.skt(ix2,:) - xout.olr0(ix2,:));
@@ -89,7 +99,7 @@ if iLambda_UseGlobalSST_regress == -1
 else
   junk = -junk/globalSST;
 end
-xout.feedback.skt = junk;
-xout.feedback.skt_nanmean_gobal = nanmean(junk);
+xout.feedback_sarta.skt = junk;
+xout.feedback_sarta.skt_nanmean_gobal = nanmean(junk);
 bunk = polyfit(indSST,-junk12,1);
-xout.feedback.skt_polyfit_global = bunk(1);
+xout.feedback_sarta.skt_polyfit_global = bunk(1);

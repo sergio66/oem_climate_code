@@ -356,9 +356,9 @@ end
 %% remember this "spectral_olr" is only 645-2780 cm-1, at AIRS res!!!!!!
 
 %% note Eq 8b of Jevanjee paper shows we need to use 
-%%   x_spectral_olr.feedback.lapse == x_spectral_olr.lapse - x_spectral_olr.planck
+%%   x_spectral_olr.feedback_ecRad.lapse == x_spectral_olr.lapse - x_spectral_olr.planck
 %% and not
-%%   x_spectral_olr.feedback.lapse == x_spectral_olr.lapse - x_spectral_olr.olr0
+%%   x_spectral_olr.feedback_ecRad.lapse == x_spectral_olr.lapse - x_spectral_olr.olr0
 
 %% change radiance mW --> W and then multiply by pi for flux
 ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
@@ -368,10 +368,10 @@ x_spectral_olr = compute_feedbacks_regress_olr_sarta_calcs(x_spectral_olr,deltaS
 if nargin <= 12  
   caModelStr = 'XYZ';
 end
-figure(71); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.planck); caxis([-4 0]*1);  colormap(jet);  title([caModelStr ' \lambda_{Planck} sarta'])
-figure(72); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.lapse);  caxis([-5 +5]*1); colormap(usa2); title([caModelStr ' \lambda_{Lapse} sarta'])
-figure(73); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.wv);     caxis([-2 +2]*1); colormap(usa2); title([caModelStr ' \lambda_{WV} sarta'])
-figure(74); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.skt);    caxis([-2 0]*1);  colormap(jet);  title([caModelStr ' \lambda_{Skt} sarta'])
+figure(71); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.planck); caxis([-4 0]*1);  colormap(jet);  title([caModelStr ' \lambda_{Planck} sarta'])
+figure(72); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.lapse);  caxis([-5 +5]*1); colormap(usa2); title([caModelStr ' \lambda_{Lapse} sarta'])
+figure(73); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.wv);     caxis([-2 +2]*1); colormap(usa2); title([caModelStr ' \lambda_{WV} sarta'])
+figure(74); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.skt);    caxis([-2 0]*1);  colormap(jet);  title([caModelStr ' \lambda_{Skt} sarta'])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% COMPUTE COMPLETE FEEDBACKS FROM ECRAD %%%%%%%%%%%%%%%%%%%%
@@ -379,10 +379,10 @@ figure(74); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.skt);    caxi
 
 x_spectral_olr = compute_feedbacks_regress_olr_ecRad_calcs(x_spectral_olr,deltaST,iLambda_UseGlobalSST_regress,caModelStr);
 
-figure(75); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.planck_ecRad); caxis([-4 0]*1.5); colormap(jet);  title([caModelStr ' \lambda_{Planck} ecRad'])
-figure(76); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.lapse_ecRad);  caxis([-5 +5]*2);  colormap(usa2); title([caModelStr ' \lambda_{Lapse} ecRad'])
-figure(77); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.wv_ecRad);     caxis([-2 +2]*2);  colormap(usa2); title([caModelStr ' \lambda_{WV} ecRad'])
-figure(78); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback.skt_ecRad);    caxis([-2 0]*1);   colormap(jet);  title([caModelStr ' \lambda_{Skt} ecRad'])
+figure(75); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.planck_ecRad); caxis([-4 0]*1.5); colormap(jet);  title([caModelStr ' \lambda_{Planck} ecRad'])
+figure(76); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.lapse_ecRad);  caxis([-5 +5]*2);  colormap(usa2); title([caModelStr ' \lambda_{Lapse} ecRad'])
+figure(77); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.wv_ecRad);     caxis([-2 +2]*2);  colormap(usa2); title([caModelStr ' \lambda_{WV} ecRad'])
+figure(78); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.skt_ecRad);    caxis([-2 0]*1);   colormap(jet);  title([caModelStr ' \lambda_{Skt} ecRad'])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -397,13 +397,13 @@ if iPlotResults > 0
   maskLF = ones(1,4608);
   maskLFmatr = reshape(maskLF,72,64)';
     
-  wonk = x_spectral_olr.feedback.planck_ecRad; wonk(wonk < -10) = NaN; wonk(wonk > 0) = NaN; 
+  wonk = x_spectral_olr.feedback_ecRad.planck_ecRad; wonk(wonk < -10) = NaN; wonk(wonk > 0) = NaN; 
     ns = 500; aslmap(75,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-4 0]*1.5);  title([caModelStr '  \lambda_{Planck}'])
-  wonk = x_spectral_olr.feedback.lapse_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
+  wonk = x_spectral_olr.feedback_ecRad.lapse_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
     ns = 500; aslmap(76,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-5 5]*1);    title([caModelStr '  \lambda_{Lapse}'])
-  wonk = x_spectral_olr.feedback.wv_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
+  wonk = x_spectral_olr.feedback_ecRad.wv_ecRad; wonk(wonk < -5) = NaN; wonk(wonk > +5) = NaN; 
     ns = 500; aslmap(77,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(usa2); caxis([-2 2]*1);    title([caModelStr '  \lambda_{WV}'])
-  wonk = x_spectral_olr.feedback.skt_ecRad; wonk(wonk < -3) = NaN; wonk(wonk > +3) = NaN; 
+  wonk = x_spectral_olr.feedback_ecRad.skt_ecRad; wonk(wonk < -3) = NaN; wonk(wonk > +3) = NaN; 
     ns = 500; aslmap(78,rlat65,rlon73,maskLFmatr.*smoothn((reshape(wonk,72,64)'),ns),[-90 +90],[-180 +180]);  colormap(jet);  caxis([-2 0]*1.5);  title([caModelStr '  \lambda_{Skt}'])
   
   figure(75); colormap(colormap_soden_held_jclim2007); caxis([-6.5 -1])
@@ -421,13 +421,13 @@ if iPlotResults > 0
   end
   junklat = reshape(p.rlat,72,64); junklat = mean(junklat,1);
   figure(79); clf
-    junk = x_spectral_olr.feedback.planck_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);  junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'b','linewidth',2); hold on
-    junk = x_spectral_olr.feedback.lapse_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);   junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'g','linewidth',2); hold on
-    junk = x_spectral_olr.feedback.wv_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);      junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'r','linewidth',2); hold on
-    junk = x_spectral_olr.feedback.skt_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);     junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'k','linewidth',2); hold off
+    junk = x_spectral_olr.feedback_ecRad.planck_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);  junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'b','linewidth',2); hold on
+    junk = x_spectral_olr.feedback_ecRad.lapse_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);   junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'g','linewidth',2); hold on
+    junk = x_spectral_olr.feedback_ecRad.wv_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);      junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'r','linewidth',2); hold on
+    junk = x_spectral_olr.feedback_ecRad.skt_ecRad; junk(bad) = NaN; junk = reshape(junk,72,64);     junk = nanmean(junk,1); junk = smooth(junk,5); plot(junklat,junk,'k','linewidth',2); hold off
   ylim([-10 +10]/2); plotaxis2; title([caModelStr ' \lambda']); xlabel('Latitude'); hl = legend('Planck','Lapse','WV','SKT','location','best','fontsize',8);
   
-  junk = x_spectral_olr.feedback.planck_ecRad; junk(bad) = NaN;
+  junk = x_spectral_olr.feedback_ecRad.planck_ecRad; junk(bad) = NaN;
   if ~exist('lps0')
     [mmw0,lps0] = mmwater_rtp_pstop_lapse(h,p);
   end

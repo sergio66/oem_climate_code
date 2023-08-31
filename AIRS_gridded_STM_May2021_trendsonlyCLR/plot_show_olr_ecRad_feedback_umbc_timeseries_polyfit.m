@@ -2,39 +2,39 @@ clear showfeedbacks* strfeedbacks
 
 ix = 1; iNumYears = 05; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '05 years ';
-showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit;
+showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit;
+showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback_ecRad.o3_ecRad_polyfit;
+showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit;
+showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback_ecRad.skt_ecRad_polyfit;
+showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2_ecRad_polyfit;
 
 ix = 2; iNumYears = 10; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '10 years ';
-showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit;
+showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit;
+showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback_ecRad.o3_ecRad_polyfit;
+showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit;
+showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback_ecRad.skt_ecRad_polyfit;
+showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2_ecRad_polyfit;
 
 ix = 3; iNumYears = 15; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '15 years ';
-showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit;
+showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit;
+showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback_ecRad.o3_ecRad_polyfit;
+showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit;
+showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback_ecRad.skt_ecRad_polyfit;
+showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2_ecRad_polyfit;
 
 ix = 4; iNumYears = 20; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '20 years ';
-showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback.planck_ecRad_polyfit;
-showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback.lapse_ecRad_polyfit;
-showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback.o3_ecRad_polyfit;
-showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback.wv_ecRad_polyfit;
-showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback.skt_ecRad_polyfit;
-showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback.ptemp_co2_ecRad_polyfit;
+showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit;
+showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit;
+showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback_ecRad.o3_ecRad_polyfit;
+showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit;
+showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback_ecRad.skt_ecRad_polyfit;
+showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2_ecRad_polyfit;
 
 %% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
 %% but longwave feedback is um of first 4

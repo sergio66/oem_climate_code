@@ -1,4 +1,4 @@
-function xout = compute_feedbacks_regress_calcs_sarta_olr(x0,indSST,iLambda_UseGlobalSST_regress,h)
+function xout = compute_feedbacks_regress_calcs_ecRad_olr(x0,indSST,iLambda_UseGlobalSST_regress,h)
 
 %% change radiance mW --> W and then multiply by pi for flux
 %% THIS IS FOR 2645 AIRS only!!!!

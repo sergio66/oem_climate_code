@@ -47,3 +47,4 @@ eval(klayerser);
 
 [hout,~,pout,~] = rtpread('junk.op.rtp');
 
+eval(['!/bin/rm junk.ip.rtp junk.op.rtp ugh'])

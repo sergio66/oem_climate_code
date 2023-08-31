@@ -27,10 +27,10 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 [Y,X] = meshgrid(rlat,rlon);
 X = X; Y = Y;
 
-imagesc(reshape(junk.umbc_spectral_olr.feedback.ptemp_co2_ecRad,72,64)); colorbar; colormap(usa2); caxis([-1 +1]*2)
-imagesc(reshape(smooth_72x64(junk.umbc_spectral_olr.feedback.ptemp_co2_ecRad),72,64)); colorbar; colormap(usa2); caxis([-1 +1]*2)
+imagesc(reshape(junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2_ecRad,72,64)); colorbar; colormap(usa2); caxis([-1 +1]*2)
+imagesc(reshape(smooth_72x64(junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2_ecRad),72,64)); colorbar; colormap(usa2); caxis([-1 +1]*2)
 
-boo0 = junk.umbc_spectral_olr.feedback.planck_ecRad + junk.umbc_spectral_olr.feedback.lapse_ecRad + junk.umbc_spectral_olr.feedback.o3_ecRad + junk.umbc_spectral_olr.feedback.wv_ecRad;
+boo0 = junk.umbc_spectral_olr.feedback_ecRad.planck_ecRad + junk.umbc_spectral_olr.feedback_ecRad.lapse_ecRad + junk.umbc_spectral_olr.feedback_ecRad.o3_ecRad + junk.umbc_spectral_olr.feedback_ecRad.wv_ecRad;
 
 N=1; figure(1); clf; imagesc(reshape(smooth_72x64(boo0,N),72,64)'); colorbar; colormap(usa2); caxis([-1 +1]*4)
 N=2; figure(2); clf; imagesc(reshape(smooth_72x64(boo0,N),72,64)'); colorbar; colormap(usa2); caxis([-1 +1]*4)

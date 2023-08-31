@@ -87,3 +87,5 @@ pavg.gas_5 = gas_5/12;
 pavg.gas_6 = gas_6/12;
 pavg.gas_9 = gas_9/12;
 pavg.gas_12= gas_12/12;
+
+eval(['!/bin/rm junk.ip.rtp junk.op.rtp ugh'])

@@ -90,6 +90,10 @@ disp('POLYFIT results GLOBAL')
 plot_show_olr_ecRad_feedback_polyfit
 
 disp(' ')
+disp('GLOBAL(SST) FIT results GLOBAL')
+plot_show_olr_ecRad_feedback_globalsstfit
+
+disp(' ')
 disp('ROBUSTFIT results GLOBAL')
 plot_show_olr_ecRad_feedback_robustfit
 
@@ -103,8 +107,8 @@ plot_show_olr_ecRad_feedback_robustfit_tropics
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if isfield(umbc_spectral_olr,'perts9999')
   figure(10); clf
-    plot(rlat,umbc_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin + umbc_spectral_olr.feedback.skt_ecRad_polyfit_latbin,'mx-',rlat,umbc_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,'r',...
-         rlat,era5_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin + era5_spectral_olr.feedback.skt_ecRad_polyfit_latbin,'cx-',rlat,era5_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,'b','linewidth',2)
+    plot(rlat,umbc_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin + umbc_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin,'mx-',rlat,umbc_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,'r',...
+         rlat,era5_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin + era5_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin,'cx-',rlat,era5_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,'b','linewidth',2)
     xlim([-90 +90]); plotaxis2; hl = legend('UMBC atm+skt','UMBC','ERA5 atm+skt','ERA5','location','best','fontsize',10); xlabel('Latitude'); ylabel('Feedback \newline W/m2/K'); 
 
    %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,12 +120,12 @@ if isfield(umbc_spectral_olr,'perts9999')
    figure(11); clf
     subplot(121)
     plot(umbc_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,rlat,'b','linewidth',6); hold on;
-    plot(umbc_spectral_olr.feedback.skt_ecRad_polyfit_latbin,rlat,'k',umbc_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin,rlat,'r','linewidth',2); hold off
+    plot(umbc_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin,rlat,'k',umbc_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin,rlat,'r','linewidth',2); hold off
     ylim([-90 +90]); plotaxis2; hl = legend('atm+skt','skt','atm','location','best','fontsize',8); ylabel('Latitude'); xlabel('Feedback \newline W/m2/K'); title('UMBC')
 
     subplot(122)
     plot(era5_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,rlat,'b','linewidth',6); hold on;
-    plot(era5_spectral_olr.feedback.skt_ecRad_polyfit_latbin,rlat,'k',era5_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin,rlat,'r','linewidth',2); hold off
+    plot(era5_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin,rlat,'k',era5_spectral_olr.feedback9999.atm_only_ecRad_polyfit_latbin,rlat,'r','linewidth',2); hold off
     ylim([-90 +90]); plotaxis2; hl = legend('atm+skt','skt','atm','location','best','fontsize',8); ylabel('Latitude'); xlabel('Feedback \newline W/m2/K'); title('ERA5')
 
    %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,14 +144,14 @@ if isfield(umbc_spectral_olr,'perts9999')
 
   figure(12); clf
     subplot(211)
-    plot(rlat,umbc_spectral_olr.feedback.planck_ecRad_polyfit_latbin,'r',rlat,umbc_spectral_olr.feedback.lapse_ecRad_polyfit_latbin,'k',rlat,umbc_spectral_olr.feedback.wv_ecRad_polyfit_latbin,'g','linewidth',2); hold on
-    plot(rlat,umbc_spectral_olr.feedback.planck_ecRad_polyfit_latbin + umbc_spectral_olr.feedback.lapse_ecRad_polyfit_latbin + umbc_spectral_olr.feedback.wv_ecRad_polyfit_latbin,'cx-',...
+    plot(rlat,umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin,'r',rlat,umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin,'k',rlat,umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,'g','linewidth',2); hold on
+    plot(rlat,umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin + umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin + umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,'cx-',...
          rlat,umbc_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,'b','linewidth',4); hold off
     xlim([-90 +90]); plotaxis2; hl = legend('planck','lapse','wv','planck+lapse+wv','atm+skt','location','best','fontsize',8); xlabel('Latitude'); ylabel('Feedback \newline W/m2/K'); title('UMBC')
 
     subplot(212)
-    plot(rlat,era5_spectral_olr.feedback.planck_ecRad_polyfit_latbin,'r',rlat,era5_spectral_olr.feedback.lapse_ecRad_polyfit_latbin,'k',rlat,era5_spectral_olr.feedback.wv_ecRad_polyfit_latbin,'g','linewidth',2); hold on
-    plot(rlat,era5_spectral_olr.feedback.planck_ecRad_polyfit_latbin + era5_spectral_olr.feedback.lapse_ecRad_polyfit_latbin + era5_spectral_olr.feedback.wv_ecRad_polyfit_latbin,'cx-',...
+    plot(rlat,era5_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin,'r',rlat,era5_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin,'k',rlat,era5_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,'g','linewidth',2); hold on
+    plot(rlat,era5_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin + era5_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin + era5_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin,'cx-',...
          rlat,era5_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,'b','linewidth',4); hold off
     xlim([-90 +90]); plotaxis2; hl = legend('planck','lapse','wv','planck+lapse+wv','atm+skt','location','best','fontsize',8); xlabel('Latitude'); ylabel('Feedback \newline W/m2/K'); title('ERA5')
 end
