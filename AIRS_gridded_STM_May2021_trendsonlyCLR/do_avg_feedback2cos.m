@@ -6,25 +6,25 @@ nmcos = 1/nanmean(cosrlat);
 figure(2); clf
 
 model = 1; 
-  wonk11 = umbc_spectral_olr.feedback_ecRad.planck_ecRad; wonk11(wonk11 < -10) = NaN; wonk11(wonk11 > +00) = NaN; wonk11 = reshape(wonk11,72,64); wonk11 = nanmean(wonk11,1); plot(rlat,wonk11); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk11); 
-  wonk12 = umbc_spectral_olr.feedback_ecRad.lapse_ecRad;  wonk12(wonk12 < -05) = NaN; wonk12(wonk12 > +05) = NaN; wonk12 = reshape(wonk12,72,64); wonk12 = nanmean(wonk12,1); plot(rlat,wonk12); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk12); 
-  wonk13 = umbc_spectral_olr.feedback_ecRad.wv_ecRad;     wonk13(wonk13 < -05) = NaN; wonk13(wonk13 > +05) = NaN; wonk13 = reshape(wonk13,72,64); wonk13 = nanmean(wonk13,1); plot(rlat,wonk13); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk13); 
-  wonk14 = umbc_spectral_olr.feedback_ecRad.skt_ecRad;    wonk14(wonk14 < -05) = NaN; wonk14(wonk14 > +00) = NaN; wonk14 = reshape(wonk14,72,64); wonk14 = nanmean(wonk14,1); plot(rlat,wonk14); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk14); 
+  wonk11 = umbc_spectral_olr.feedback_ecRad.planck.individual; wonk11(wonk11 < -10) = NaN; wonk11(wonk11 > +00) = NaN; wonk11 = reshape(wonk11,72,64); wonk11 = nanmean(wonk11,1); plot(rlat,wonk11); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk11); 
+  wonk12 = umbc_spectral_olr.feedback_ecRad.lapse.individual;  wonk12(wonk12 < -05) = NaN; wonk12(wonk12 > +05) = NaN; wonk12 = reshape(wonk12,72,64); wonk12 = nanmean(wonk12,1); plot(rlat,wonk12); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk12); 
+  wonk13 = umbc_spectral_olr.feedback_ecRad.wv.individual;     wonk13(wonk13 < -05) = NaN; wonk13(wonk13 > +05) = NaN; wonk13 = reshape(wonk13,72,64); wonk13 = nanmean(wonk13,1); plot(rlat,wonk13); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk13); 
+  wonk14 = umbc_spectral_olr.feedback_ecRad.skt.individual;    wonk14(wonk14 < -05) = NaN; wonk14(wonk14 > +00) = NaN; wonk14 = reshape(wonk14,72,64); wonk14 = nanmean(wonk14,1); plot(rlat,wonk14); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk14); 
 model = 2; 
-  wonk21 = airsL3_spectral_olr.feedback_ecRad.planck_ecRad; wonk21(wonk21 < -10) = NaN; wonk21(wonk21 > +00) = NaN; wonk21 = reshape(wonk21,72,64); wonk21 = nanmean(wonk21,1); plot(rlat,wonk21); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk21); 
-  wonk22 = airsL3_spectral_olr.feedback_ecRad.lapse_ecRad;  wonk22(wonk22 < -05) = NaN; wonk22(wonk22 > +05) = NaN; wonk22 = reshape(wonk22,72,64); wonk22 = nanmean(wonk22,1); plot(rlat,wonk22); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk22); 
-  wonk23 = airsL3_spectral_olr.feedback_ecRad.wv_ecRad;     wonk23(wonk23 < -05) = NaN; wonk23(wonk23 > +05) = NaN; wonk23 = reshape(wonk23,72,64); wonk23 = nanmean(wonk23,1); plot(rlat,wonk23); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk23); 
-  wonk24 = airsL3_spectral_olr.feedback_ecRad.skt_ecRad;    wonk24(wonk24 < -05) = NaN; wonk24(wonk24 > +00) = NaN; wonk24 = reshape(wonk24,72,64); wonk24 = nanmean(wonk24,1); plot(rlat,wonk24); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk24); 
+  wonk21 = airsL3_spectral_olr.feedback_ecRad.planck.individual; wonk21(wonk21 < -10) = NaN; wonk21(wonk21 > +00) = NaN; wonk21 = reshape(wonk21,72,64); wonk21 = nanmean(wonk21,1); plot(rlat,wonk21); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk21); 
+  wonk22 = airsL3_spectral_olr.feedback_ecRad.lapse.individual;  wonk22(wonk22 < -05) = NaN; wonk22(wonk22 > +05) = NaN; wonk22 = reshape(wonk22,72,64); wonk22 = nanmean(wonk22,1); plot(rlat,wonk22); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk22); 
+  wonk23 = airsL3_spectral_olr.feedback_ecRad.wv.individual;     wonk23(wonk23 < -05) = NaN; wonk23(wonk23 > +05) = NaN; wonk23 = reshape(wonk23,72,64); wonk23 = nanmean(wonk23,1); plot(rlat,wonk23); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk23); 
+  wonk24 = airsL3_spectral_olr.feedback_ecRad.skt.individual;    wonk24(wonk24 < -05) = NaN; wonk24(wonk24 > +00) = NaN; wonk24 = reshape(wonk24,72,64); wonk24 = nanmean(wonk24,1); plot(rlat,wonk24); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk24); 
 model = 3; 
-  wonk31 = era5_spectral_olr.feedback_ecRad.planck_ecRad; wonk31(wonk31 < -10) = NaN; wonk31(wonk31 > +00) = NaN; wonk31 = reshape(wonk31,72,64); wonk31 = nanmean(wonk31,1); plot(rlat,wonk31); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk31); 
-  wonk32 = era5_spectral_olr.feedback_ecRad.lapse_ecRad;  wonk32(wonk32 < -05) = NaN; wonk32(wonk32 > +05) = NaN; wonk32 = reshape(wonk32,72,64); wonk32 = nanmean(wonk32,1); plot(rlat,wonk32); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk32); 
-  wonk33 = era5_spectral_olr.feedback_ecRad.wv_ecRad;     wonk33(wonk33 < -05) = NaN; wonk33(wonk33 > +05) = NaN; wonk33 = reshape(wonk33,72,64); wonk33 = nanmean(wonk33,1); plot(rlat,wonk33); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk33); 
-  wonk34 = era5_spectral_olr.feedback_ecRad.skt_ecRad;    wonk34(wonk34 < -05) = NaN; wonk34(wonk34 > +00) = NaN; wonk34 = reshape(wonk34,72,64); wonk34 = nanmean(wonk34,1); plot(rlat,wonk34); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk34); 
+  wonk31 = era5_spectral_olr.feedback_ecRad.planck.individual; wonk31(wonk31 < -10) = NaN; wonk31(wonk31 > +00) = NaN; wonk31 = reshape(wonk31,72,64); wonk31 = nanmean(wonk31,1); plot(rlat,wonk31); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk31); 
+  wonk32 = era5_spectral_olr.feedback_ecRad.lapse.individual;  wonk32(wonk32 < -05) = NaN; wonk32(wonk32 > +05) = NaN; wonk32 = reshape(wonk32,72,64); wonk32 = nanmean(wonk32,1); plot(rlat,wonk32); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk32); 
+  wonk33 = era5_spectral_olr.feedback_ecRad.wv.individual;     wonk33(wonk33 < -05) = NaN; wonk33(wonk33 > +05) = NaN; wonk33 = reshape(wonk33,72,64); wonk33 = nanmean(wonk33,1); plot(rlat,wonk33); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk33); 
+  wonk34 = era5_spectral_olr.feedback_ecRad.skt.individual;    wonk34(wonk34 < -05) = NaN; wonk34(wonk34 > +00) = NaN; wonk34 = reshape(wonk34,72,64); wonk34 = nanmean(wonk34,1); plot(rlat,wonk34); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk34); 
 model = 4; 
-  wonk41 = cmip6_spectral_olr.feedback_ecRad.planck_ecRad; wonk41(wonk41 < -10) = NaN; wonk41(wonk41 > +00) = NaN; wonk41 = reshape(wonk41,72,64); wonk41 = nanmean(wonk41,1); plot(rlat,wonk41); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk41); 
-  wonk42 = cmip6_spectral_olr.feedback_ecRad.lapse_ecRad;  wonk42(wonk42 < -05) = NaN; wonk42(wonk42 > +05) = NaN; wonk42 = reshape(wonk42,72,64); wonk42 = nanmean(wonk42,1); plot(rlat,wonk42); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk42); 
-  wonk43 = cmip6_spectral_olr.feedback_ecRad.wv_ecRad;     wonk43(wonk43 < -05) = NaN; wonk43(wonk43 > +05) = NaN; wonk43 = reshape(wonk43,72,64); wonk43 = nanmean(wonk43,1); plot(rlat,wonk43); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk43); 
-  wonk44 = cmip6_spectral_olr.feedback_ecRad.skt_ecRad;    wonk44(wonk44 < -05) = NaN; wonk44(wonk44 > +00) = NaN; wonk44 = reshape(wonk44,72,64); wonk44 = nanmean(wonk44,1); plot(rlat,wonk44); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk44); 
+  wonk41 = cmip6_spectral_olr.feedback_ecRad.planck.individual; wonk41(wonk41 < -10) = NaN; wonk41(wonk41 > +00) = NaN; wonk41 = reshape(wonk41,72,64); wonk41 = nanmean(wonk41,1); plot(rlat,wonk41); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk41); 
+  wonk42 = cmip6_spectral_olr.feedback_ecRad.lapse.individual;  wonk42(wonk42 < -05) = NaN; wonk42(wonk42 > +05) = NaN; wonk42 = reshape(wonk42,72,64); wonk42 = nanmean(wonk42,1); plot(rlat,wonk42); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk42); 
+  wonk43 = cmip6_spectral_olr.feedback_ecRad.wv.individual;     wonk43(wonk43 < -05) = NaN; wonk43(wonk43 > +05) = NaN; wonk43 = reshape(wonk43,72,64); wonk43 = nanmean(wonk43,1); plot(rlat,wonk43); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk43); 
+  wonk44 = cmip6_spectral_olr.feedback_ecRad.skt.individual;    wonk44(wonk44 < -05) = NaN; wonk44(wonk44 > +00) = NaN; wonk44 = reshape(wonk44,72,64); wonk44 = nanmean(wonk44,1); plot(rlat,wonk44); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk44); 
 
 for ii = 1 : 4
   for jj = 1 : 4
@@ -161,28 +161,28 @@ fprintf(1,' do_avg_feedback2cos.m : global avg feedback = %8.6f %8.6f %8.6f %8.6
 
 figure(5);
 model = 1; 
-  wonk11 = umbc_spectral_olr.feedback_ecRad.planck_ecRad;   junk(1)=mean(nanmean(wonk11(:))+nanmedian(wonk11(:))); junk(2)=nanstd(wonk11(:)); bad=find(wonk11 < (junk(1)-junk(2)) | wonk11 > (junk(1)+junk(2))); wonk11(bad)=NaN;
-  wonk12 = umbc_spectral_olr.feedback_ecRad.lapse_ecRad;    junk(1)=mean(nanmean(wonk12(:))+nanmedian(wonk12(:))); junk(2)=nanstd(wonk12(:)); bad=find(wonk12 < (junk(1)-junk(2)) | wonk12 > (junk(1)+junk(2))); wonk12(bad)=NaN;
-  wonk13 = umbc_spectral_olr.feedback_ecRad.wv_ecRad;       junk(1)=mean(nanmean(wonk13(:))+nanmedian(wonk13(:))); junk(2)=nanstd(wonk13(:)); bad=find(wonk13 < (junk(1)-junk(2)) | wonk13 > (junk(1)+junk(2))); wonk13(bad)=NaN;
-  wonk14 = umbc_spectral_olr.feedback_ecRad.skt_ecRad;      junk(1)=mean(nanmean(wonk14(:))+nanmedian(wonk14(:))); junk(2)=nanstd(wonk14(:)); bad=find(wonk14 < (junk(1)-junk(2)) | wonk14 > (junk(1)+junk(2))); wonk14(bad)=NaN;
+  wonk11 = umbc_spectral_olr.feedback_ecRad.planck.individual;   junk(1)=mean(nanmean(wonk11(:))+nanmedian(wonk11(:))); junk(2)=nanstd(wonk11(:)); bad=find(wonk11 < (junk(1)-junk(2)) | wonk11 > (junk(1)+junk(2))); wonk11(bad)=NaN;
+  wonk12 = umbc_spectral_olr.feedback_ecRad.lapse.individual;    junk(1)=mean(nanmean(wonk12(:))+nanmedian(wonk12(:))); junk(2)=nanstd(wonk12(:)); bad=find(wonk12 < (junk(1)-junk(2)) | wonk12 > (junk(1)+junk(2))); wonk12(bad)=NaN;
+  wonk13 = umbc_spectral_olr.feedback_ecRad.wv.individual;       junk(1)=mean(nanmean(wonk13(:))+nanmedian(wonk13(:))); junk(2)=nanstd(wonk13(:)); bad=find(wonk13 < (junk(1)-junk(2)) | wonk13 > (junk(1)+junk(2))); wonk13(bad)=NaN;
+  wonk14 = umbc_spectral_olr.feedback_ecRad.skt.individual;      junk(1)=mean(nanmean(wonk14(:))+nanmedian(wonk14(:))); junk(2)=nanstd(wonk14(:)); bad=find(wonk14 < (junk(1)-junk(2)) | wonk14 > (junk(1)+junk(2))); wonk14(bad)=NaN;
   wonk1  = wonk11 + wonk12 + wonk13;
 model = 2; 
-  wonk21 = airsL3_spectral_olr.feedback_ecRad.planck_ecRad; junk(1)=mean(nanmean(wonk21(:))+nanmedian(wonk21(:))); junk(2)=nanstd(wonk21(:)); bad=find(wonk21 < (junk(1)-junk(2)) | wonk21 > (junk(1)+junk(2))); wonk21(bad)=NaN;
-  wonk22 = airsL3_spectral_olr.feedback_ecRad.lapse_ecRad;  junk(1)=mean(nanmean(wonk22(:))+nanmedian(wonk22(:))); junk(2)=nanstd(wonk22(:)); bad=find(wonk22 < (junk(1)-junk(2)) | wonk22 > (junk(1)+junk(2))); wonk22(bad)=NaN;
-  wonk23 = airsL3_spectral_olr.feedback_ecRad.wv_ecRad;     junk(1)=mean(nanmean(wonk23(:))+nanmedian(wonk23(:))); junk(2)=nanstd(wonk23(:)); bad=find(wonk23 < (junk(1)-junk(2)) | wonk23 > (junk(1)+junk(2))); wonk23(bad)=NaN;
-  wonk24 = airsL3_spectral_olr.feedback_ecRad.skt_ecRad;    junk(1)=mean(nanmean(wonk24(:))+nanmedian(wonk24(:))); junk(2)=nanstd(wonk24(:)); bad=find(wonk24 < (junk(1)-junk(2)) | wonk24 > (junk(1)+junk(2))); wonk24(bad)=NaN;
+  wonk21 = airsL3_spectral_olr.feedback_ecRad.planck.individual; junk(1)=mean(nanmean(wonk21(:))+nanmedian(wonk21(:))); junk(2)=nanstd(wonk21(:)); bad=find(wonk21 < (junk(1)-junk(2)) | wonk21 > (junk(1)+junk(2))); wonk21(bad)=NaN;
+  wonk22 = airsL3_spectral_olr.feedback_ecRad.lapse.individual;  junk(1)=mean(nanmean(wonk22(:))+nanmedian(wonk22(:))); junk(2)=nanstd(wonk22(:)); bad=find(wonk22 < (junk(1)-junk(2)) | wonk22 > (junk(1)+junk(2))); wonk22(bad)=NaN;
+  wonk23 = airsL3_spectral_olr.feedback_ecRad.wv.individual;     junk(1)=mean(nanmean(wonk23(:))+nanmedian(wonk23(:))); junk(2)=nanstd(wonk23(:)); bad=find(wonk23 < (junk(1)-junk(2)) | wonk23 > (junk(1)+junk(2))); wonk23(bad)=NaN;
+  wonk24 = airsL3_spectral_olr.feedback_ecRad.skt.individual;    junk(1)=mean(nanmean(wonk24(:))+nanmedian(wonk24(:))); junk(2)=nanstd(wonk24(:)); bad=find(wonk24 < (junk(1)-junk(2)) | wonk24 > (junk(1)+junk(2))); wonk24(bad)=NaN;
   wonk2  = wonk21 + wonk22 + wonk23;
 model = 3; 
-  wonk31 = era5_spectral_olr.feedback_ecRad.planck_ecRad;   junk(1)=mean(nanmean(wonk31(:))+nanmedian(wonk31(:))); junk(2)=nanstd(wonk31(:)); bad=find(wonk31 < (junk(1)-junk(2)) | wonk31 > (junk(1)+junk(2))); wonk31(bad)=NaN;
-  wonk32 = era5_spectral_olr.feedback_ecRad.lapse_ecRad;    junk(1)=mean(nanmean(wonk32(:))+nanmedian(wonk32(:))); junk(2)=nanstd(wonk32(:)); bad=find(wonk32 < (junk(1)-junk(2)) | wonk32 > (junk(1)+junk(2))); wonk32(bad)=NaN;
-  wonk33 = era5_spectral_olr.feedback_ecRad.wv_ecRad;       junk(1)=mean(nanmean(wonk33(:))+nanmedian(wonk33(:))); junk(2)=nanstd(wonk33(:)); bad=find(wonk33 < (junk(1)-junk(2)) | wonk33 > (junk(1)+junk(2))); wonk33(bad)=NaN;
-  wonk34 = era5_spectral_olr.feedback_ecRad.skt_ecRad;      junk(1)=mean(nanmean(wonk34(:))+nanmedian(wonk34(:))); junk(2)=nanstd(wonk34(:)); bad=find(wonk34 < (junk(1)-junk(2)) | wonk34 > (junk(1)+junk(2))); wonk34(bad)=NaN;
+  wonk31 = era5_spectral_olr.feedback_ecRad.planck.individual;   junk(1)=mean(nanmean(wonk31(:))+nanmedian(wonk31(:))); junk(2)=nanstd(wonk31(:)); bad=find(wonk31 < (junk(1)-junk(2)) | wonk31 > (junk(1)+junk(2))); wonk31(bad)=NaN;
+  wonk32 = era5_spectral_olr.feedback_ecRad.lapse.individual;    junk(1)=mean(nanmean(wonk32(:))+nanmedian(wonk32(:))); junk(2)=nanstd(wonk32(:)); bad=find(wonk32 < (junk(1)-junk(2)) | wonk32 > (junk(1)+junk(2))); wonk32(bad)=NaN;
+  wonk33 = era5_spectral_olr.feedback_ecRad.wv.individual;       junk(1)=mean(nanmean(wonk33(:))+nanmedian(wonk33(:))); junk(2)=nanstd(wonk33(:)); bad=find(wonk33 < (junk(1)-junk(2)) | wonk33 > (junk(1)+junk(2))); wonk33(bad)=NaN;
+  wonk34 = era5_spectral_olr.feedback_ecRad.skt.individual;      junk(1)=mean(nanmean(wonk34(:))+nanmedian(wonk34(:))); junk(2)=nanstd(wonk34(:)); bad=find(wonk34 < (junk(1)-junk(2)) | wonk34 > (junk(1)+junk(2))); wonk34(bad)=NaN;
   wonk3  = wonk31 + wonk32 + wonk33;
 model = 4; 
-  wonk41 = cmip6_spectral_olr.feedback_ecRad.planck_ecRad;  junk(1)=mean(nanmean(wonk41(:))+nanmedian(wonk41(:))); junk(2)=nanstd(wonk41(:)); bad=find(wonk41 < (junk(1)-junk(2)) | wonk41 > (junk(1)+junk(2))); wonk41(bad)=NaN;
-  wonk42 = cmip6_spectral_olr.feedback_ecRad.lapse_ecRad;   junk(1)=mean(nanmean(wonk42(:))+nanmedian(wonk42(:))); junk(2)=nanstd(wonk42(:)); bad=find(wonk42 < (junk(1)-junk(2)) | wonk42 > (junk(1)+junk(2))); wonk42(bad)=NaN;
-  wonk43 = cmip6_spectral_olr.feedback_ecRad.wv_ecRad;      junk(1)=mean(nanmean(wonk43(:))+nanmedian(wonk43(:))); junk(2)=nanstd(wonk43(:)); bad=find(wonk43 < (junk(1)-junk(2)) | wonk43 > (junk(1)+junk(2))); wonk43(bad)=NaN;
-  wonk44 = cmip6_spectral_olr.feedback_ecRad.skt_ecRad;     junk(1)=mean(nanmean(wonk44(:))+nanmedian(wonk44(:))); junk(2)=nanstd(wonk44(:)); bad=find(wonk44 < (junk(1)-junk(2)) | wonk44 > (junk(1)+junk(2))); wonk44(bad)=NaN;
+  wonk41 = cmip6_spectral_olr.feedback_ecRad.planck.individual;  junk(1)=mean(nanmean(wonk41(:))+nanmedian(wonk41(:))); junk(2)=nanstd(wonk41(:)); bad=find(wonk41 < (junk(1)-junk(2)) | wonk41 > (junk(1)+junk(2))); wonk41(bad)=NaN;
+  wonk42 = cmip6_spectral_olr.feedback_ecRad.lapse.individual;   junk(1)=mean(nanmean(wonk42(:))+nanmedian(wonk42(:))); junk(2)=nanstd(wonk42(:)); bad=find(wonk42 < (junk(1)-junk(2)) | wonk42 > (junk(1)+junk(2))); wonk42(bad)=NaN;
+  wonk43 = cmip6_spectral_olr.feedback_ecRad.wv.individual;      junk(1)=mean(nanmean(wonk43(:))+nanmedian(wonk43(:))); junk(2)=nanstd(wonk43(:)); bad=find(wonk43 < (junk(1)-junk(2)) | wonk43 > (junk(1)+junk(2))); wonk43(bad)=NaN;
+  wonk44 = cmip6_spectral_olr.feedback_ecRad.skt.individual;     junk(1)=mean(nanmean(wonk44(:))+nanmedian(wonk44(:))); junk(2)=nanstd(wonk44(:)); bad=find(wonk44 < (junk(1)-junk(2)) | wonk44 > (junk(1)+junk(2))); wonk44(bad)=NaN;
   wonk4  = wonk41 + wonk42 + wonk43;
 
 iS = 72; iS = 72/4; plotoptions.str11 = 'UMBC'; plotoptions.str12 = 'AIRS L3'; plotoptions.str21 = 'ERA5'; plotoptions.str22 = 'CMIP6';

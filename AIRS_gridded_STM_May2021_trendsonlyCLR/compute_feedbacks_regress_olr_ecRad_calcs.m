@@ -61,11 +61,11 @@ figure(1); clf;
 ix = ix + 1;
 xout.feedback_ecRad.savestr{ix}    = 'PLANCK';
 xout.feedback_ecRad.savenums(ix,:) = -(xout.planck_ecRad.clr - xout.olr0_ecRad.clr);
-xout.feedback_ecRad.planck_ecRad = xout.feedback_ecRad.savenums(ix,:);
+xout.feedback_ecRad.planck.individual = xout.feedback_ecRad.savenums(ix,:);
 if iLambda_UseGlobalSST_regress == -1
-  xout.feedback_ecRad.planck_ecRad = xout.feedback_ecRad.planck_ecRad./indSST;
+  xout.feedback_ecRad.planck.individual = xout.feedback_ecRad.planck.individual./indSST;
 else
-  xout.feedback_ecRad.planck_ecRad = xout.feedback_ecRad.planck_ecRad/globalSST;
+  xout.feedback_ecRad.planck.individual = xout.feedback_ecRad.planck.individual/globalSST;
 end
 %%%%%
 junk = polyfit(indSST,xout.feedback_ecRad.savenums(ix,:),1);
@@ -107,11 +107,11 @@ end
 ix = ix + 1;
 xout.feedback_ecRad.savestr{ix}    = 'LAPSE';
 xout.feedback_ecRad.savenums(ix,:) = -(xout.lapse_ecRad.clr-xout.planck_ecRad.clr);
-xout.feedback_ecRad.lapse_ecRad = xout.feedback_ecRad.savenums(ix,:);
+xout.feedback_ecRad.lapse.individual = xout.feedback_ecRad.savenums(ix,:);
 if iLambda_UseGlobalSST_regress == -1
-  xout.feedback_ecRad.lapse_ecRad = xout.feedback_ecRad.lapse_ecRad./indSST;
+  xout.feedback_ecRad.lapse.individual = xout.feedback_ecRad.lapse.individual./indSST;
 else
-  xout.feedback_ecRad.lapse_ecRad = xout.feedback_ecRad.lapse_ecRad/globalSST;
+  xout.feedback_ecRad.lapse.individual = xout.feedback_ecRad.lapse.individual/globalSST;
 end
 %%%%%
 junk = polyfit(indSST,xout.feedback_ecRad.savenums(ix,:),1);
@@ -149,11 +149,11 @@ end
 ix = ix + 1;
 xout.feedback_ecRad.savestr{ix}    = 'O3';
 xout.feedback_ecRad.savenums(ix,:) = -(xout.o3_ecRad.clr - xout.olr0_ecRad.clr);
-xout.feedback_ecRad.o3_ecRad = xout.feedback_ecRad.savenums(ix,:);
+xout.feedback_ecRad.o3.individual = xout.feedback_ecRad.savenums(ix,:);
 if iLambda_UseGlobalSST_regress == -1
-  xout.feedback_ecRad.o3_ecRad = xout.feedback_ecRad.o3_ecRad./indSST;
+  xout.feedback_ecRad.o3.individual = xout.feedback_ecRad.o3.individual./indSST;
 else
-  xout.feedback_ecRad.o3_ecRad = xout.feedback_ecRad.o3_ecRad/globalSST;
+  xout.feedback_ecRad.o3.individual = xout.feedback_ecRad.o3.individual/globalSST;
 end
 %%%%%
 junk = polyfit(indSST,xout.feedback_ecRad.savenums(ix,:),1);
@@ -191,11 +191,11 @@ end
 ix = ix + 1;
 xout.feedback_ecRad.savestr{ix}    = 'WV';
 xout.feedback_ecRad.savenums(ix,:) = -(xout.wv_ecRad.clr - xout.olr0_ecRad.clr);
-xout.feedback_ecRad.wv_ecRad = xout.feedback_ecRad.savenums(ix,:);
+xout.feedback_ecRad.wv.individual = xout.feedback_ecRad.savenums(ix,:);
 if iLambda_UseGlobalSST_regress == -1
-  xout.feedback_ecRad.wv_ecRad = xout.feedback_ecRad.wv_ecRad./indSST;
+  xout.feedback_ecRad.wv.individual = xout.feedback_ecRad.wv.individual./indSST;
 else
-  xout.feedback_ecRad.wv_ecRad = xout.feedback_ecRad.wv_ecRad/globalSST;
+  xout.feedback_ecRad.wv.individual = xout.feedback_ecRad.wv.individual/globalSST;
 end
 %%%%%
 junk = polyfit(indSST,xout.feedback_ecRad.savenums(ix,:),1);
@@ -233,11 +233,11 @@ end
 ix = ix + 1;
 xout.feedback_ecRad.savestr{ix}    = 'SKT';
 xout.feedback_ecRad.savenums(ix,:) = -(xout.skt_ecRad.clr - xout.olr0_ecRad.clr);
-xout.feedback_ecRad.skt_ecRad = xout.feedback_ecRad.savenums(ix,:);
+xout.feedback_ecRad.skt.individual = xout.feedback_ecRad.savenums(ix,:);
 if iLambda_UseGlobalSST_regress == -1
-  xout.feedback_ecRad.skt_ecRad = xout.feedback_ecRad.skt_ecRad./indSST;
+  xout.feedback_ecRad.skt.individual = xout.feedback_ecRad.skt.individual./indSST;
 else
-  xout.feedback_ecRad.skt_ecRad = xout.feedback_ecRad.skt_ecRad/globalSST;
+  xout.feedback_ecRad.skt.individual = xout.feedback_ecRad.skt.individual/globalSST;
 end
 %%%%%
 junk = polyfit(indSST,xout.feedback_ecRad.savenums(ix,:),1);
@@ -275,11 +275,11 @@ end
 ix = ix + 1;
 xout.feedback_ecRad.savestr{ix}    = 'PTEMP_CO2';
 xout.feedback_ecRad.savenums(ix,:) = -(xout.ptemp_co2_ecRad.clr - xout.olr0_ecRad.clr);
-xout.feedback_ecRad.ptemp_co2_ecRad = xout.feedback_ecRad.savenums(ix,:);
+xout.feedback_ecRad.ptemp_co2.individual = xout.feedback_ecRad.savenums(ix,:);
 if iLambda_UseGlobalSST_regress == -1
-  xout.feedback_ecRad.ptemp_co2_ecRad = xout.feedback_ecRad.ptemp_co2_ecRad./indSST;
+  xout.feedback_ecRad.ptemp_co2.individual = xout.feedback_ecRad.ptemp_co2.individual./indSST;
 else
-  xout.feedback_ecRad.ptemp_co2_ecRad = xout.feedback_ecRad.ptemp_co2_ecRad/globalSST;
+  xout.feedback_ecRad.ptemp_co2.individual = xout.feedback_ecRad.ptemp_co2.individual/globalSST;
 end
 %%%%%
 junk = polyfit(indSST,xout.feedback_ecRad.savenums(ix,:),1);
@@ -322,11 +322,11 @@ if isfield(xout,'perts9999')
   iy = iy + 1;
   xout.feedback_ecRad.savestr9999{iy}    = 'atm_skt_ghg';
   xout.feedback_ecRad.savenums9999(iy,:) = -(xout.perts9999.atm_skt_ghg_ecRad.clr - xout.olr0_ecRad.clr);
-  xout.feedback9999_ecRad.atm_skt_ghg_ecRad = xout.feedback_ecRad.savenums9999(iy,:);
+  xout.feedback9999_ecRad.atm_skt_ghg.individual = xout.feedback_ecRad.savenums9999(iy,:);
   if iLambda_UseGlobalSST_regress == -1
-    xout.feedback9999_ecRad.atm_skt_ghg_ecRad = xout.feedback9999_ecRad.atm_skt_ghg_ecRad./indSST;
+    xout.feedback9999_ecRad.atm_skt_ghg.individual = xout.feedback9999_ecRad.atm_skt_ghg.individual./indSST;
   else
-    xout.feedback9999_ecRad.atm_skt_ghg_ecRad = xout.feedback9999_ecRad.atm_skt_ghg_ecRad/globalSST;
+    xout.feedback9999_ecRad.atm_skt_ghg.individual = xout.feedback9999_ecRad.atm_skt_ghg.individual/globalSST;
   end
   %%%%%
   junk = polyfit(indSST,xout.feedback_ecRad.savenums9999(iy,:),1);
@@ -364,11 +364,11 @@ if isfield(xout,'perts9999')
   iy = iy + 1;
   xout.feedback_ecRad.savestr9999{iy}    = 'atm_skt';
   xout.feedback_ecRad.savenums9999(iy,:) = -(xout.perts9999.atm_skt_ecRad.clr - xout.olr0_ecRad.clr);
-  xout.feedback9999_ecRad.atm_skt_ecRad = xout.feedback_ecRad.savenums9999(iy,:);
+  xout.feedback9999_ecRad.atm_skt.individual = xout.feedback_ecRad.savenums9999(iy,:);
   if iLambda_UseGlobalSST_regress == -1
-    xout.feedback9999_ecRad.atm_skt_ecRad = xout.feedback9999_ecRad.atm_skt_ecRad./indSST;
+    xout.feedback9999_ecRad.atm_skt.individual = xout.feedback9999_ecRad.atm_skt.individual./indSST;
   else
-    xout.feedback9999_ecRad.atm_skt_ecRad = xout.feedback9999_ecRad.atm_skt_ecRad/globalSST;
+    xout.feedback9999_ecRad.atm_skt.individual = xout.feedback9999_ecRad.atm_skt.individual/globalSST;
   end
   %%%%%
   junk = polyfit(indSST,xout.feedback_ecRad.savenums9999(iy,:),1);
@@ -406,11 +406,11 @@ if isfield(xout,'perts9999')
   iy = iy + 1;
   xout.feedback_ecRad.savestr9999{iy}    = 'atm_only';
   xout.feedback_ecRad.savenums9999(iy,:) = (xout.perts9999.atm_only_ecRad.clr - xout.olr0_ecRad.clr);
-  xout.feedback9999_ecRad.atm_only_ecRad = xout.feedback_ecRad.savenums9999(iy,:);
+  xout.feedback9999_ecRad.atm_only.individual = xout.feedback_ecRad.savenums9999(iy,:);
   if iLambda_UseGlobalSST_regress == -1
-    xout.feedback9999_ecRad.atm_only_ecRad = xout.feedback9999_ecRad.atm_only_ecRad./indSST;
+    xout.feedback9999_ecRad.atm_only.individual = xout.feedback9999_ecRad.atm_only.individual./indSST;
   else
-    xout.feedback9999_ecRad.atm_only_ecRad = xout.feedback9999_ecRad.atm_only_ecRad/globalSST;
+    xout.feedback9999_ecRad.atm_only.individual = xout.feedback9999_ecRad.atm_only.individual/globalSST;
   end
   %%%%%
   junk = polyfit(indSST,xout.feedback_ecRad.savenums9999(iy,:),1);
