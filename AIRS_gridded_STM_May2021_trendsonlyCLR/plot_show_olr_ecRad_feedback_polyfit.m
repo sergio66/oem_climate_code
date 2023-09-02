@@ -149,6 +149,167 @@ subplot(224); plot(rlat,era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin,rlat,
   title('WV'); xlim([-90 +90])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+figure(4); clf;
+ta = tiledlayout(2,2,'TileSpacing','compact', 'Padding','None');
+  ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
+
+tafov(1) = nexttile;
+plot(rlat,era5_spectral_olr.feedback_ecRad.planck.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.planck.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.planck.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin,...
+     rlat,climcapsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on; hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','north','fontsize',8);
+  xlim([-90 +90]); 
+
+tafov(2) = nexttile;
+plot(rlat,era5_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,...
+     rlat,climcapsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on;
+  xlim([-90 +90])
+
+tafov(3) = nexttile;
+plot(rlat,era5_spectral_olr.feedback_ecRad.o3.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.o3.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.o3.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin,...
+     rlat,climcapsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on;
+  xlim([-90 +90])
+
+tafov(4) = nexttile;
+plot(rlat,era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.wv.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.wv.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin,...
+      rlat,climcapsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on;
+  xlim([-90 +90])
+
+% Remove all ytick labels except for 1st column
+%for ii = [2 4]
+%   tafov(ii).YTickLabel = '';
+%   tafov(ii).YLabel.String = [];
+%end
+
+% Remove all xtick labels except for 3rd row
+for ii = [1 2]
+   tafov(ii).XTickLabel = '';
+   tafov(ii).XLabel.String = [];
+end
+
+xstr = 'Latitude';
+ystr = 'W/m2/K';
+
+tafov(1).YLabel.String = ystr; tafov(1).YLabel.FontSize = 18;
+tafov(3).YLabel.String = ystr; tafov(3).YLabel.FontSize = 18;
+tafov(3).XLabel.String = xstr; tafov(3).XLabel.FontSize = 18;
+tafov(4).XLabel.String = xstr; tafov(4).XLabel.FontSize = 18;
+
+plotoptions.str11 = 'Planck';
+plotoptions.str12 = 'Lapse';
+plotoptions.str21 = 'Ozone';
+plotoptions.str22 = 'Water';
+
+yposn = 0.8; %% inside, just below top line
+yposn = 0.9; %% straddling top line
+yposn = 1.0; %% outside, just above top line
+
+title(tafov(1), plotoptions.str11, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+title(tafov(2), plotoptions.str12, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+title(tafov(3), plotoptions.str21, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+title(tafov(4), plotoptions.str22, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% see  ~sergio/MATLABCODE/PLOTTER/TILEDPLOTS/profile_plots_2x1x2tiledlayout_wide.m
+figure(5); clf;
+ta = tiledlayout(3,4);
+ta = tiledlayout(3,4,'TileSpacing','None', 'Padding','None');
+ta = tiledlayout(3,4,'TileSpacing','compact', 'Padding','compact');
+  ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
+
+tafov(1) = nexttile([1,2]);
+plot(rlat,era5_spectral_olr.feedback_ecRad.planck.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.planck.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.planck.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin,...
+     rlat,climcapsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on; 
+  xlim([-90 +90]); 
+
+tafov(2) = nexttile([1,2]);
+plot(rlat,era5_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,...
+     rlat,climcapsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on;
+  xlim([-90 +90])
+
+nexttile([1,1]);
+axis off
+tafov(3) = nexttile([1,2]);
+boo1 = era5_spectral_olr.feedback_ecRad.planck.polyfit_latbin + era5_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+       era5_spectral_olr.feedback_ecRad.o3.polyfit_latbin + era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin;
+boo2 = merra2_spectral_olr.feedback_ecRad.planck.polyfit_latbin + merra2_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+       merra2_spectral_olr.feedback_ecRad.o3.polyfit_latbin + merra2_spectral_olr.feedback_ecRad.wv.polyfit_latbin;
+boo3 = umbc_spectral_olr.feedback_ecRad.planck.polyfit_latbin + umbc_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+       umbc_spectral_olr.feedback_ecRad.o3.polyfit_latbin + umbc_spectral_olr.feedback_ecRad.wv.polyfit_latbin;
+boo4 = airsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin + airsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+       airsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin + airsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin;
+boo5 = climcapsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin + climcapsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+       climcapsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin + climcapsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin;
+plot(rlat,boo1,rlat,boo2,rlat,boo3,rlat,boo4,rlat,boo5,'linewidth',2);
+  plotaxis2; box on;
+     hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','eastoutside','fontsize',8);
+  xlim([-90 +90])
+nexttile([1,1]);
+axis off
+
+tafov(4) = nexttile([1,2]);
+plot(rlat,era5_spectral_olr.feedback_ecRad.o3.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.o3.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.o3.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin,...
+     rlat,climcapsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on;
+  xlim([-90 +90])
+
+tafov(5) = nexttile([1,2]);
+plot(rlat,era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin,rlat,merra2_spectral_olr.feedback_ecRad.wv.polyfit_latbin,...
+     rlat,umbc_spectral_olr.feedback_ecRad.wv.polyfit_latbin,rlat,airsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin,...
+      rlat,climcapsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin,'linewidth',2);
+  plotaxis2; box on;
+  xlim([-90 +90])
+
+% Remove all ytick labels except for 1st column
+%for ii = [2 4]
+%   tafov(ii).YTickLabel = '';
+%   tafov(ii).YLabel.String = [];
+%end
+
+% Remove all xtick labels except for 3rd row
+for ii = [1 2]
+   tafov(ii).XTickLabel = '';
+   tafov(ii).XLabel.String = [];
+end
+
+xstr = 'Latitude';
+ystr = 'W/m2/K';
+
+tafov(1).YLabel.String = ystr; tafov(1).YLabel.FontSize = 10;
+tafov(3).YLabel.String = ystr; tafov(3).YLabel.FontSize = 10;
+tafov(4).YLabel.String = ystr; tafov(4).YLabel.FontSize = 18;
+tafov(4).XLabel.String = xstr; tafov(3).XLabel.FontSize = 10;
+tafov(5).XLabel.String = xstr; tafov(4).XLabel.FontSize = 10;
+
+plotoptions.str11 = 'Planck';
+plotoptions.str12 = 'Lapse';
+plotoptions.strXY = 'LongWave';
+plotoptions.str21 = 'Ozone';
+plotoptions.str22 = 'Water';
+
+yposn = 0.8; %% inside, just below top line
+yposn = 0.9; %% straddling top line
+yposn = 1.0; %% outside, just above top line
+
+title(tafov(1), plotoptions.str11, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+title(tafov(2), plotoptions.str12, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+title(tafov(3), plotoptions.strXY, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+title(tafov(4), plotoptions.str21, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+title(tafov(5), plotoptions.str22, 'Units', 'normalized', 'Position', [0.5, yposn, 0]);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %{
 dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
 aslprint([dir0 'feedbackparams_20yrs_UMBC_ERA5_MERRA2_L3.pdf'])

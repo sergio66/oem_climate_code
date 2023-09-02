@@ -34,7 +34,7 @@ load latB64.mat
   YY = Y(:)';
 coslat  = cos(YY*pi/180);
 
-xout.feedback_sarta.global_coslat_wgt_skt  = sum(indSST .* coslat)/sum(coslat);
+xout.feedback_ecRad.global_coslat_wgt_skt  = sum(indSST .* coslat)/sum(coslat);
 
 globalSST = nanmean(indSST);
 globalSST = xout.feedback_ecRad.global_coslat_wgt_skt;

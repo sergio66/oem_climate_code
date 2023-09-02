@@ -58,12 +58,13 @@ if junk == 1
       junk2 = -1;
     end
   end
+
   if junk2 > 0
     saver = ['save -v7.3 ' genericoutname];
-    saver = [saver ' deltaRH deltaRHlat deltaRHunc results resultsunc resultsO3 resultsO3unc resultsT resultsTunc resultsWV resultsWVunc rlat rlat65 rlon rlon73 '];
-    saver = [saver ' topts fracO3 fracWV fracWVunc fracO3 fracO3unc deltaT deltaTunc save_cov_set chisqrR'];
-    saver = [saver ' rates fits nedt'];
-    saver = [saver ' pavg iNumLay xb pert pjunk20 maskLF'];
+    saver = [saver ' deltaRH deltaRHlat deltaRHunc results resultsunc resultsO3 resultsO3unc resultsT resultsTunc resultsWV resultsWVunc '];
+    saver = [saver ' topts fracWV fracWVunc fracO3 fracO3unc deltaT deltaTunc save_cov_set chisqrR pert_unc'];
+    saver = [saver ' rates fits nedt']
+    saver = [saver ' pavg iNumLay xb pert pjunk20 maskLF rlat rlat65 rlon rlon73 '];
     if iAK > 0
       figure(29); figure(30); 
       figure(45); figure(46); 

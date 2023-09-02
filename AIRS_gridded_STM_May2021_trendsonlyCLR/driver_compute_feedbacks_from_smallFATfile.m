@@ -20,22 +20,31 @@ if you already have     saved off your ecRad runs, and just want to update the r
      This is eg for 05,10,15 years of trends
 5) Save as needed using  "quick_save_olr_feedbacks_umbc_NWP_L3_XMIP6.m"!!!!
 
+%% Feldl, N., and G. H. Roe (2013), Four perspectives on climate feedbacks, Geophys. Res. Lett., 40, 4007–4011, doi:10.1002/grl.50711.
 AND THEN WHEN HAPPY
 AND THEN WHEN HAPPY
 AND THEN WHEN HAPPY
+
+FOR GLOBAL DEFN
 clear all; for ii = 1 : 4; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit
 or
 clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit
+
+FOR LOCAL DEFN
+clear all; for ii = 1 : 5; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit      %%% local feedbacks
+clear all; for ii = 1 : 5; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit    %%% local feedbacks
+clear all; for ii = 1 : 5; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit %%% global feedbacks
+or
+clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_robustfit    %%% local feedbacks
+clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit %%% global feedbacks
+
 %}
 %%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 %%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 %{
-if you do have [h,p] then can you run it through a generic ERA or ECM rtpmake??????
-
-iNumYears = 20;
-read_fileMean17years
-
+if you want to re-do the UMBC time series (because you have updated eg compute_feedbacks_regress_olr_ecRad_calcs.m)
+then simply call quick_redo_regressions_umbc_feedbacks_timeseries.m
 %}
 %%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -50,10 +59,10 @@ addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
-a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 05;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 10;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 15;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20;  %% use CarbonTracker CO2 trends ****
+a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 05;  %% use CarbonTracker CO2 trends
+a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 15;  %% use CarbonTracker CO2 trends
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****
+a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2v2.mat';    iNumYears = 10;  %% use CarbonTracker CO2 trends
 
 fprintf(1,'iNumYears = %2i .. reading in %s \n',iNumYears,strUMBC);
 loader = ['load ' strUMBC];
@@ -117,8 +126,8 @@ p.plays(p.plays <= eps) = NaN;
 plays = nanmean(p.plays,2);
 plays = plays(1:100);
 
-if ~exist('deltaO3')
-  disp('computing deltaO3')
+if ~exist('fracO3')
+  disp('computing fracO3')
   if ~exist('maskLF')
     disp('  warning : setting maskLF = ones(1,4608)')
     maskLF = ones(1,4608);
@@ -142,6 +151,22 @@ if ~exist('deltaO3')
   end
   interp_resultsT_WV_O3_to_p
   get_deltaO3
+end
+
+if ~exist('deltaO3')
+  [ppmvLAY1,ppmvAVG1,ppmvMAX1,pavgLAY1,tavgLAY1,ppmv500_1,ppmv75_1,ppmvSURF_1] = layers2ppmv(h,p,1:length(p.stemp),1);
+  [ppmvLAY3,ppmvAVG3,ppmvMAX3,pavgLAY3,tavgLAY3,ppmv500_3,ppmv75_3,ppmvSURF_3] = layers2ppmv(h,p,1:length(p.stemp),3);
+  [ppmvLAYpert3,ppmvAVGpert3,ppmvMAXpert3,pavgLAYpert3,tavgLAYpert3,ppmv500pert3,ppmv75pert3,ppmvSURFpert3] = layers2ppmv(h,pert,1:length(p.stemp),3);
+  [ppmvLAYpert_unc3,ppmvAVGpert_unc3,ppmvMAXpert_unc3,pavgLAYpert_unc3,tavgLAYpert_unc3,ppmv500pert_unc3,ppmv75pert_unc3,ppmvSURFpert_unc3] = layers2ppmv(h,pert_unc,1:length(p.stemp),3);
+  [nlayO3,~] = size(ppmvLAY3);
+  deltaO3 = ppmvLAYpert3 - ppmvLAY3;
+  deltaO3 = deltaO3 .* (ones(nlayO3,1) * maskLF);
+  deltaO3unc = ppmvLAYpert_unc3 - ppmvLAY3;
+  deltaO3unc = deltaO3unc .* (ones(nlayO3,1) * maskLF);
+end
+
+if ~exist('maskLFmatr')
+  maskLFmatr = reshape(maskLF,72,64)';
 end
 
 if ~exist('xRH0')

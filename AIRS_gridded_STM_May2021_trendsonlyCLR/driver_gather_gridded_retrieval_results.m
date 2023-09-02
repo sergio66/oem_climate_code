@@ -798,9 +798,17 @@ disp('ret to continue to gridded results'); pause
 
 %% look at current AIRS UMBC trend retrievals
 show_unc
-plot_driver_gather_gridded_retrieval_results
 
-%% give a chance for a quick save
+%%% <<<< THE BIG MAJOR ONE >>>>
+%%% <<<< THE BIG MAJOR ONE >>>>
+%%% <<<< THE BIG MAJOR ONE >>>>
+  plot_driver_gather_gridded_retrieval_results   
+%%% <<<< THE BIG MAJOR ONE >>>>
+%%% <<<< THE BIG MAJOR ONE >>>>
+%%% <<<< THE BIG MAJOR ONE >>>>
+
+%% give a chance for a quick save, can save this sit back .. then call eg 
+%%   driver_compute_feedbacks_from_smallFATfile.m
 savesmallFATfile
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
