@@ -31,7 +31,8 @@ load latB64.mat
 
   [Y,X] = meshgrid(rlat,rlon);
   X = X; Y = Y;
-  YY = Y(:)';
+  YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
+  YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
 coslat  = cos(YY*pi/180);
 
 xout.feedback_ecRad.global_coslat_wgt_skt  = sum(indSST .* coslat)/sum(coslat);

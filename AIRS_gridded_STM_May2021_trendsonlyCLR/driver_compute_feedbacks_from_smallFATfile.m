@@ -1,6 +1,21 @@
 %% see ../FIND_NWP_MODEL_TRENDS/driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
 
-%%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+%%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
+%{
+if you want to re-do the 05/10/15/20 year UMBC time series 
+(because you have updated eg compute_feedbacks_regress_olr_ecRad_calcs.m)
+then simply call 
+  driver_quick_redo_regressions_umbc_feedbacks_timeseries.m
+
+if you want to re-do the 20 year UMBC and ERA5/AIRSL3/CMIP6 and MERRA2/CLIMCAPSL3/AMIP6 
+(because you have updated eg compute_feedbacks_regress_olr_ecRad_calcs.m)
+then simply call 
+  driver_quick_redo_regressions_20year_umbc_models.m
+%}
+%%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
+
+
+%%% README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>>
 %{
 
 if you         have not saved off your ecRad runs, and      want to do fresh   regressions/save them .... do most of these steps, using [default] till (3) = do_feedbacks_wrt_globalSST.m, then DO NOT load the file you want to change
@@ -39,14 +54,7 @@ clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_um
 clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit %%% global feedbacks
 
 %}
-%%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-%%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-%{
-if you want to re-do the UMBC time series (because you have updated eg compute_feedbacks_regress_olr_ecRad_calcs.m)
-then simply call quick_redo_regressions_umbc_feedbacks_timeseries.m
-%}
-%%% README >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+%%% README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

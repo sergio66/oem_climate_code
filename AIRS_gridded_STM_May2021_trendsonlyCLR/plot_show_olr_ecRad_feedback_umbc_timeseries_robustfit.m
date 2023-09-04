@@ -17,6 +17,7 @@ showfeedbacks_robustfit_all(ix,4,2) = junk.umbc_spectral_olr.feedback_ecRad.wv.r
 showfeedbacks_robustfit_all(ix,5,2) = junk.umbc_spectral_olr.feedback_ecRad.skt.robustfit_all(2);
 showfeedbacks_robustfit_all(ix,6,2) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2.robustfit_all(2);
 umbc05_spectral_olr = junk.umbc_spectral_olr;
+umbc05_spectral_olr.deltaSKT = junk.results(:,6);
 
 ix = 2; iNumYears = 10; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '10 years ';
@@ -35,6 +36,7 @@ showfeedbacks_robustfit_all(ix,4,2) = junk.umbc_spectral_olr.feedback_ecRad.wv.r
 showfeedbacks_robustfit_all(ix,5,2) = junk.umbc_spectral_olr.feedback_ecRad.skt.robustfit_all(2);
 showfeedbacks_robustfit_all(ix,6,2) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2.robustfit_all(2);
 umbc10_spectral_olr = junk.umbc_spectral_olr;
+umbc10_spectral_olr.deltaSKT = junk.results(:,6);
 
 ix = 3; iNumYears = 15; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '15 years ';
@@ -53,6 +55,7 @@ showfeedbacks_robustfit_all(ix,4,2) = junk.umbc_spectral_olr.feedback_ecRad.wv.r
 showfeedbacks_robustfit_all(ix,5,2) = junk.umbc_spectral_olr.feedback_ecRad.skt.robustfit_all(2);
 showfeedbacks_robustfit_all(ix,6,2) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2.robustfit_all(2);
 umbc15_spectral_olr = junk.umbc_spectral_olr;
+umbc15_spectral_olr.deltaSKT = junk.results(:,6);
 
 ix = 4; iNumYears = 20; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
 strfeedbacks{ix} = '20 years ';
@@ -71,6 +74,7 @@ showfeedbacks_robustfit_all(ix,4,2) = junk.umbc_spectral_olr.feedback_ecRad.wv.r
 showfeedbacks_robustfit_all(ix,5,2) = junk.umbc_spectral_olr.feedback_ecRad.skt.robustfit_all(2);
 showfeedbacks_robustfit_all(ix,6,2) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2.robustfit_all(2);
 umbc20_spectral_olr = junk.umbc_spectral_olr;
+umbc20_spectral_olr.deltaSKT = junk.results(:,6);
 
 %% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
 %% but longwave feedback is um of first 4
@@ -80,6 +84,25 @@ junk = showfeedbacks_robustfit_all(1:ixx,[1 2 3 4],2);
 junk = sqrt(sum(junk.*junk,2));
 showfeedbacks_robustfit_all(1:ixx,7,2) = junk;
 
+if ~exist('rlat') | ~exist('Y')
+  load latB64.mat
+  rlat65 = latB2; rlon73 = -180 : 5 : +180;
+  rlon = -180 : 5 : +180;  rlat = latB2;
+  rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+  rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+  [Y,X] = meshgrid(rlat,rlon);
+  X = X; Y = Y;
+end
+YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
+YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
+  coslat  = cos(YY*pi/180);
+  indSST = umbc05_spectral_olr.deltaSKT'; boo(1) = sum(indSST .* coslat)/sum(coslat);
+  indSST = umbc10_spectral_olr.deltaSKT'; boo(2) = sum(indSST .* coslat)/sum(coslat);
+  indSST = umbc15_spectral_olr.deltaSKT'; boo(3) = sum(indSST .* coslat)/sum(coslat);
+  indSST = umbc20_spectral_olr.deltaSKT'; boo(4) = sum(indSST .* coslat)/sum(coslat);
+  fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f K/yr for 05/10/15/20 years \n',boo)
+
+disp('         Planck Lapse Ozone Water |  Total')
 for ix = 1 : 4
   %fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},showfeedbacks_robustfit_all(ix,[1 2 3 4 7],1));
   junk = [showfeedbacks_robustfit_all(ix,[1 2 3 4 7],1) showfeedbacks_robustfit_all(ix,[1 2 3 4 7],2)];

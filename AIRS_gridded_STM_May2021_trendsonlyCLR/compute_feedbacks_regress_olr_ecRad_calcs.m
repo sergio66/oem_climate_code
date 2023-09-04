@@ -34,7 +34,8 @@ load latB64.mat
 
   [Y,X] = meshgrid(rlat,rlon);
   X = X; Y = Y;
-  YY = Y(:)';
+  YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
+  YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
 coslat  = cos(YY*pi/180);
 
 allind = 1 : length(YY);
@@ -540,6 +541,7 @@ plot(rlat,xout.feedback_ecRad.planck.polyfit_latbin,...
      rlat,xout.feedback_ecRad.ptemp_co2.polyfit_latbin,...
      'linewidth',2); 
 plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title([caModelStr ' POLYFIT'])
+axis([-90 +90 -5 +5])
 
 figure(5); clf
 plot(rlat,xout.feedback_ecRad.planck.globalSST_weighted_latbin,...
@@ -550,6 +552,7 @@ plot(rlat,xout.feedback_ecRad.planck.globalSST_weighted_latbin,...
      rlat,xout.feedback_ecRad.ptemp_co2.globalSST_weighted_latbin,...
      'linewidth',2); 
 plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title([caModelStr ' GLOBALSST WEIGHTED'])
+axis([-90 +90 -5 +5])
 
 figure(6); clf
 plot(rlat,xout.feedback_ecRad.planck.robustfit_latbin(:,1),...
@@ -560,6 +563,7 @@ plot(rlat,xout.feedback_ecRad.planck.robustfit_latbin(:,1),...
      rlat,xout.feedback_ecRad.ptemp_co2.robustfit_latbin(:,1),...
      'linewidth',2); 
 plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title([caModelStr ' ROBUSTFIT'])
+axis([-90 +90 -5 +5])
 
 figure(7); clf
 plot(rlat,xout.feedback_ecRad.planck.robustfit_latbin(:,2),...
@@ -570,6 +574,7 @@ plot(rlat,xout.feedback_ecRad.planck.robustfit_latbin(:,2),...
      rlat,xout.feedback_ecRad.ptemp_co2.robustfit_latbin(:,2),...
      'linewidth',2); 
 plotaxis2; hl= legend('planck','lapse','o3','wv','skt','t/co2','location','best','fontsize',10); ylabel('\lambda W/m2/K'); xlabel('Latbin'); title([caModelStr ' ROBUSTFIT UNC'])
+xlim([-90 +90])
 
 figure(8); clf
 factor = [0.2 0.2 1 1 0.2 1]'; factor = factor * ones(1,length(dx));

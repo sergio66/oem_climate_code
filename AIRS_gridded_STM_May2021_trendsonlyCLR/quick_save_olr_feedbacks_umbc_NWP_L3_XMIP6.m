@@ -21,8 +21,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    aL3trend.stemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
-    c6trend.stemp = cmip6.trend_stemp;
+    if isfield('nwp_spectral_trends_cmip6_era5_airsL3_umbc','airsL3_100_layertrends')
+      %% this test is more because of deriver_quick_redo_regressions_umbc_feedbacks_timeseries.m
+      aL3trend.stemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
+      c6trend.stemp = cmip6.trend_stemp;
+    end
 
       junk2 = +1;
       if exist(feedbacknameNWP_ERA5)
@@ -47,9 +50,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     disp('might fail here if you do not have MERRA2/CLIMCAPSL3/AMIP6')
-    cL3trend.stemp = nwp_spectral_trends_amip6_merra2_climcapsL3_umbc.airsL3_100_layertrends.stemp;
-    a6trend.stemp = amip6.trend_stemp;
-
+    if isfield('nwp_spectral_trends_amip6_merra2_climcapsL3_umbc','airsL3_100_layertrends')
+      %% this test is more because of deriver_quick_redo_regressions_umbc_feedbacks_timeseries.m
+      cL3trend.stemp = nwp_spectral_trends_amip6_merra2_climcapsL3_umbc.airsL3_100_layertrends.stemp;
+      a6trend.stemp = amip6.trend_stemp;
+    end
       junk2 = +1;
       if exist(feedbacknameNWP_MERRA2)
         lser = ['!ls -lth ' feedbacknameNWP_MERRA2];

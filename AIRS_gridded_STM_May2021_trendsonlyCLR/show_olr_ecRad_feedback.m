@@ -46,38 +46,52 @@ disp(' ')
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('umbc')
-umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'UMBC');
+%umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'UMBC');
+ umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',[]    ,[]    ,[]    ,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'UMBC');
 % dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
 % figure(4); aslprint([dir0 'umbc_feedback_linearity_20yrs_UMBC.pdf'])
+figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp(' ')
 disp('era5')
-era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'ERA5');
+%era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'ERA5');
+ era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,[]              ,[]              ,[]              ,era5_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'ERA5');
+figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
 
 disp(' ')
 disp('airsL3')
-airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'AIRS L3');
+%airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'AIRS L3');
+ airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,[]            ,[]             ,[]           ,airsL3_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'AIRS L3');
+figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
 
 disp(' ')
 disp('cmip6')
-cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'CMIP6');
+%cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'CMIP6');
+ cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,[]           ,[]           ,[]           ,cmip6_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'CMIP6');
+figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 if exist('amip6')
   disp(' ')
   disp('merra2')
-  merra2_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,merra2.trend_stemp,merra2.trend_ptemp,merra2.trend_gas_1,merra2.trend_gas_3,merra2_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'MERRA2');
-  
+  %merra2_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,merra2.trend_stemp,merra2.trend_ptemp,merra2.trend_gas_1,merra2.trend_gas_3,merra2_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'MERRA2');
+   merra2_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,merra2.trend_stemp,[]                ,[]                ,[]                ,merra2_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'MERRA2');
+  figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause  
+
   disp(' ')
   disp('climcapsL3')
-  climcapsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,cL3trend.stemp,cL3trend.ptemp,cL3trend.gas_1,cL3trend.gas_3,climcapsL3_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'CLIMCAPS L3');
+  %climcapsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,cL3trend.stemp,cL3trend.ptemp,cL3trend.gas_1,cL3trend.gas_3,climcapsL3_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'CLIMCAPS L3');
+   climcapsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,cL3trend.stemp,[]            ,[]            ,[]            ,climcapsL3_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'CLIMCAPS L3');
+  figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
   
   disp(' ')
   disp('amip6')
-  amip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,a6trend.stemp,a6trend.ptemp,a6trend.gas_1,a6trend.gas_3,amip6_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'AMIP6');
+  %amip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,a6trend.stemp,a6trend.ptemp,a6trend.gas_1,a6trend.gas_3,amip6_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'AMIP6');
+   amip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,a6trend.stemp,[]           ,[]           ,[]           ,amip6_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'AMIP6');
+  figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
 end
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,5 +168,3 @@ if isfield(umbc_spectral_olr,'perts9999')
          rlat,era5_spectral_olr.feedback9999.atm_skt_ecRad_polyfit_latbin,'b','linewidth',4); hold off
     xlim([-90 +90]); plotaxis2; hl = legend('planck','lapse','wv','planck+lapse+wv','atm+skt','location','best','fontsize',8); xlabel('Latitude'); ylabel('Feedback \newline W/m2/K'); title('ERA5')
 end
-
-    

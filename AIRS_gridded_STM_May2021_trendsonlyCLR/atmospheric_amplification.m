@@ -38,7 +38,8 @@ if iCosWgt > 0
   rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
   [Y,X] = meshgrid(rlat,rlon);
   X = X; Y = Y;
-  YY = Y(:)'; 
+  YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
+  YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
   YY = cos(YY*pi/180);
 elseif iCosWgt == -1
   YY = ones(1,4608);; %% everything equally weighted
