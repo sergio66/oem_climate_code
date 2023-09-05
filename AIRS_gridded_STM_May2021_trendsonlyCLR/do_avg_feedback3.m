@@ -8,25 +8,25 @@ nmcos = 1/nanmean(cosrlat);
 figure(2); clf
 
 model = 1; 
-  wonk11 = umbc_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin;   plot(rlat,wonk11); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk11); 
-  wonk12 = umbc_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin;    plot(rlat,wonk12); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk12); 
-  wonk13 = umbc_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin;       plot(rlat,wonk13); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk13); 
-  wonk14 = umbc_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin;      plot(rlat,wonk14); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk14); 
+  wonk11 = umbc_spectral_olr.feedback_ecRad.planck.polyfit_latbin;   plot(rlat,wonk11); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk11); 
+  wonk12 = umbc_spectral_olr.feedback_ecRad.lapse.polyfit_latbin;    plot(rlat,wonk12); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk12); 
+  wonk13 = umbc_spectral_olr.feedback_ecRad.wv.polyfit_latbin;       plot(rlat,wonk13); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk13); 
+  wonk14 = umbc_spectral_olr.feedback_ecRad.skt.polyfit_latbin;      plot(rlat,wonk14); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk14); 
 model = 2; 
-  wonk21 = airsL3_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin; plot(rlat,wonk21); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk21); 
-  wonk22 = airsL3_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin;  plot(rlat,wonk22); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk22); 
-  wonk23 = airsL3_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin;     plot(rlat,wonk23); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk23); 
-  wonk24 = airsL3_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin;    plot(rlat,wonk24); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk24); 
+  wonk21 = airsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin; plot(rlat,wonk21); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk21); 
+  wonk22 = airsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin;  plot(rlat,wonk22); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk22); 
+  wonk23 = airsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin;     plot(rlat,wonk23); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk23); 
+  wonk24 = airsL3_spectral_olr.feedback_ecRad.skt.polyfit_latbin;    plot(rlat,wonk24); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk24); 
 model = 3; 
-  wonk31 = era5_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin;   plot(rlat,wonk31); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk31); 
-  wonk32 = era5_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin;    plot(rlat,wonk32); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk32); 
-  wonk33 = era5_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin;       plot(rlat,wonk33); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk33); 
-  wonk34 = era5_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin;      plot(rlat,wonk34); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk34); 
+  wonk31 = era5_spectral_olr.feedback_ecRad.planck.polyfit_latbin;   plot(rlat,wonk31); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk31); 
+  wonk32 = era5_spectral_olr.feedback_ecRad.lapse.polyfit_latbin;    plot(rlat,wonk32); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk32); 
+  wonk33 = era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin;       plot(rlat,wonk33); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk33); 
+  wonk34 = era5_spectral_olr.feedback_ecRad.skt.polyfit_latbin;      plot(rlat,wonk34); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk34); 
 model = 4; 
-  wonk41 = cmip6_spectral_olr.feedback_ecRad.planck_ecRad_polyfit_latbin;  plot(rlat,wonk41); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk41); 
-  wonk42 = cmip6_spectral_olr.feedback_ecRad.lapse_ecRad_polyfit_latbin;   plot(rlat,wonk42); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk42); 
-  wonk43 = cmip6_spectral_olr.feedback_ecRad.wv_ecRad_polyfit_latbin;      plot(rlat,wonk43); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk43); 
-  wonk44 = cmip6_spectral_olr.feedback_ecRad.skt_ecRad_polyfit_latbin;     plot(rlat,wonk44); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk44); 
+  wonk41 = cmip6_spectral_olr.feedback_ecRad.planck.polyfit_latbin;  plot(rlat,wonk41); mean_feedback(model,1) = nmcos * nanmean(cosrlat.*wonk41); 
+  wonk42 = cmip6_spectral_olr.feedback_ecRad.lapse.polyfit_latbin;   plot(rlat,wonk42); mean_feedback(model,2) = nmcos * nanmean(cosrlat.*wonk42); 
+  wonk43 = cmip6_spectral_olr.feedback_ecRad.wv.polyfit_latbin;      plot(rlat,wonk43); mean_feedback(model,3) = nmcos * nanmean(cosrlat.*wonk43); 
+  wonk44 = cmip6_spectral_olr.feedback_ecRad.skt.polyfit_latbin;     plot(rlat,wonk44); mean_feedback(model,4) = nmcos * nanmean(cosrlat.*wonk44); 
 
 for ii = 1 : 4
   for jj = 1 : 4

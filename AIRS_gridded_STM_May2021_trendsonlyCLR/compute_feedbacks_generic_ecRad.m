@@ -397,6 +397,8 @@ figure(77); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenum
 figure(78); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(5,:)/junkSKT); caxis([-2 0]*1);   colormap(jet);  title([caModelStr ' \lambda_{Skt} ecRad'])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%  DONE, EITHER EXIT OR MAKE PLOTS %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if nargin < 12
   iPlotResults = -1;

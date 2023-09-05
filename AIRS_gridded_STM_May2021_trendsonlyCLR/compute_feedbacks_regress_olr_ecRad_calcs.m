@@ -36,6 +36,8 @@ load latB64.mat
   X = X; Y = Y;
   YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
   YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
+  XX = X(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
+  XX = X'; XX = XX(:); XX = XX';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
 coslat  = cos(YY*pi/180);
 
 allind = 1 : length(YY);
@@ -93,7 +95,10 @@ for jj = 1 : 64
   xout.feedback_ecRad.planck.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 %%%%
-xout.feedback_ecRad.planck.globalSST_weighted = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.planck.globalSST_weighted_all     = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.planck.globalSST_weighted_tropics = sum(xout.feedback_ecRad.savenums(ix,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.planck.globalSST_weighted_midlats = sum(xout.feedback_ecRad.savenums(ix,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.planck.globalSST_weighted_poles   = sum(xout.feedback_ecRad.savenums(ix,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
 for jj = 1 : 64
   ind = (jj-1)*72 + ind0;
   xout.feedback_ecRad.planck.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums(ix,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
@@ -139,10 +144,17 @@ for jj = 1 : 64
   xout.feedback_ecRad.lapse.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 %%%%
-xout.feedback_ecRad.lapse.globalSST_weighted = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.lapse.globalSST_weighted_all     = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.lapse.globalSST_weighted_tropics = sum(xout.feedback_ecRad.savenums(ix,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  wah = sum(xout.feedback_ecRad.savenums(ix,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  plot(indSST,xout.feedback_ecRad.savenums(ix,:),'b.',indSST(tropics),xout.feedback_ecRad.savenums(ix,tropics),'ro'); title(['lapse rate : tropics : ' num2str(wah)]); plotaxis2; pause(0.1);  
+xout.feedback_ecRad.lapse.globalSST_weighted_midlats = sum(xout.feedback_ecRad.savenums(ix,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.lapse.globalSST_weighted_poles   = sum(xout.feedback_ecRad.savenums(ix,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
 for jj = 1 : 64
   ind = (jj-1)*72 + ind0;
-  xout.feedback_ecRad.lapse.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums(ix,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  wah = sum(xout.feedback_ecRad.savenums(ix,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.feedback_ecRad.lapse.globalSST_weighted_latbin(jj) = wah;
+  plot(indSST,xout.feedback_ecRad.savenums(ix,:),'b.',indSST(ind),xout.feedback_ecRad.savenums(ix,ind),'ro'); title(['lapse rate : latbin' num2str(jj,'%02d') ' ' num2str(wah)]); plotaxis2; pause(0.1);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,7 +193,10 @@ for jj = 1 : 64
   xout.feedback_ecRad.o3.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 %%%%
-xout.feedback_ecRad.o3.globalSST_weighted = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.o3.globalSST_weighted_all     = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.o3.globalSST_weighted_tropics = sum(xout.feedback_ecRad.savenums(ix,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.o3.globalSST_weighted_midlats = sum(xout.feedback_ecRad.savenums(ix,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.o3.globalSST_weighted_poles   = sum(xout.feedback_ecRad.savenums(ix,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
 for jj = 1 : 64
   ind = (jj-1)*72 + ind0;
   xout.feedback_ecRad.o3.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums(ix,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
@@ -223,7 +238,10 @@ for jj = 1 : 64
   xout.feedback_ecRad.wv.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 %%%%
-xout.feedback_ecRad.wv.globalSST_weighted = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.wv.globalSST_weighted_all     = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.wv.globalSST_weighted_tropics = sum(xout.feedback_ecRad.savenums(ix,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.wv.globalSST_weighted_midlats = sum(xout.feedback_ecRad.savenums(ix,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.wv.globalSST_weighted_poles   = sum(xout.feedback_ecRad.savenums(ix,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
 for jj = 1 : 64
   ind = (jj-1)*72 + ind0;
   xout.feedback_ecRad.wv.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums(ix,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
@@ -265,7 +283,10 @@ for jj = 1 : 64
   xout.feedback_ecRad.skt.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 %%%%
-xout.feedback_ecRad.skt.globalSST_weighted = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.skt.globalSST_weighted_all     = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.skt.globalSST_weighted_tropics = sum(xout.feedback_ecRad.savenums(ix,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.skt.globalSST_weighted_midlats = sum(xout.feedback_ecRad.savenums(ix,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.skt.globalSST_weighted_poles   = sum(xout.feedback_ecRad.savenums(ix,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
 for jj = 1 : 64
   ind = (jj-1)*72 + ind0;
   xout.feedback_ecRad.skt.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums(ix,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
@@ -307,7 +328,10 @@ for jj = 1 : 64
   xout.feedback_ecRad.ptemp_co2.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
 end
 %%%%
-xout.feedback_ecRad.ptemp_co2.globalSST_weighted = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.ptemp_co2.globalSST_weighted_all     = sum(xout.feedback_ecRad.savenums(ix,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.ptemp_co2.globalSST_weighted_tropics = sum(xout.feedback_ecRad.savenums(ix,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.ptemp_co2.globalSST_weighted_midlats = sum(xout.feedback_ecRad.savenums(ix,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+xout.feedback_ecRad.ptemp_co2.globalSST_weighted_poles   = sum(xout.feedback_ecRad.savenums(ix,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
 for jj = 1 : 64
   ind = (jj-1)*72 + ind0;
   xout.feedback_ecRad.ptemp_co2.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums(ix,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
@@ -317,131 +341,148 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+% if isfield(xout,'perts9999')
+%   'yay'
+% else
+%   'nay'
+% end
+% 
+% keyboard_nowindow
+ 
 if isfield(xout,'perts9999')
   iy = 0;
 
   iy = iy + 1;
-  xout.feedback_ecRad.savestr9999{iy}    = 'atm_skt_ghg';
-  xout.feedback_ecRad.savenums9999(iy,:) = -(xout.perts9999.atm_skt_ghg_ecRad.clr - xout.olr0_ecRad.clr);
-  xout.feedback9999_ecRad.atm_skt_ghg.individual = xout.feedback_ecRad.savenums9999(iy,:);
+  xout.perts9999.savestr9999{iy}    = 'atm_skt_ghg';
+  xout.perts9999.savenums9999(iy,:) = -(xout.perts9999.atm_skt_ghg_ecRad.clr - xout.olr0_ecRad.clr);
+  xout.perts9999.atm_skt_ghg.individual = xout.perts9999.savenums9999(iy,:);
   if iLambda_UseGlobalSST_regress == -1
-    xout.feedback9999_ecRad.atm_skt_ghg.individual = xout.feedback9999_ecRad.atm_skt_ghg.individual./indSST;
+    xout.perts9999.atm_skt_ghg.individual = xout.perts9999.atm_skt_ghg.individual./indSST;
   else
-    xout.feedback9999_ecRad.atm_skt_ghg.individual = xout.feedback9999_ecRad.atm_skt_ghg.individual/globalSST;
+    xout.perts9999.atm_skt_ghg.individual = xout.perts9999.atm_skt_ghg.individual/globalSST;
   end
   %%%%%
-  junk = polyfit(indSST,xout.feedback_ecRad.savenums9999(iy,:),1);
-  plot(indSST,xout.feedback_ecRad.savenums9999(iy,:),'.')
-  xout.feedback9999_ecRad.atm_skt_ghg.polyfit = junk(1);
-  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,xout.feedback_ecRad.savenums9999(iy,:),dx,dx);
+  junk = polyfit(indSST,xout.perts9999.savenums9999(iy,:),1);
+  plot(indSST,xout.perts9999.savenums9999(iy,:),'.')
+  xout.perts9999.atm_skt_ghg.polyfit = junk(1);
+  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,xout.perts9999.savenums9999(iy,:),dx,dx);
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    junk = polyfit(indSST(ind),xout.feedback_ecRad.savenums9999(iy,ind),1);
-    xout.feedback9999_ecRad.atm_skt_ghg.polyfit_latbin(jj) = junk(1);
+    junk = polyfit(indSST(ind),xout.perts9999.savenums9999(iy,ind),1);
+    xout.perts9999.atm_skt_ghg.polyfit_latbin(jj) = junk(1);
   end
   %%%%%
-  [junk junkB] = robustfit(indSST,xout.feedback_ecRad.savenums9999(iy,:));
-    xout.feedback9999_ecRad.atm_skt_ghg.robustfit_all = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(tropics),xout.feedback_ecRad.savenums9999(iy,tropics));
-    xout.feedback9999_ecRad.atm_skt_ghg.robustfit_tropics = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(midlats),xout.feedback_ecRad.savenums9999(iy,midlats));
-    xout.feedback9999_ecRad.atm_skt_ghg.robustfit_midlats = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(poles),xout.feedback_ecRad.savenums9999(iy,poles));
-    xout.feedback9999_ecRad.atm_skt_ghg.robustfit_poles = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST,xout.perts9999.savenums9999(iy,:));
+    xout.perts9999.atm_skt_ghg.robustfit_all = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(tropics),xout.perts9999.savenums9999(iy,tropics));
+    xout.perts9999.atm_skt_ghg.robustfit_tropics = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(midlats),xout.perts9999.savenums9999(iy,midlats));
+    xout.perts9999.atm_skt_ghg.robustfit_midlats = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(poles),xout.perts9999.savenums9999(iy,poles));
+    xout.perts9999.atm_skt_ghg.robustfit_poles = [junk(2) junkB.se(2)];
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    junk = robustfit(indSST(ind),xout.feedback_ecRad.savenums9999(iy,ind));
-    xout.feedback9999_ecRad.atm_skt_ghg.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
+    junk = robustfit(indSST(ind),xout.perts9999.savenums9999(iy,ind));
+    xout.perts9999.atm_skt_ghg.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
   end
   %%%%
-  xout.feedback9999_ecRad.atm_skt_ghg.globalSST_weighted = sum(xout.feedback_ecRad.savenums9999(iy,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt_ghg.globalSST_weighted_all     = sum(xout.perts9999.savenums9999(iy,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt_ghg.globalSST_weighted_tropics = sum(xout.perts9999.savenums9999(iy,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt_ghg.globalSST_weighted_midlats = sum(xout.perts9999.savenums9999(iy,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt_ghg.globalSST_weighted_poles   = sum(xout.perts9999.savenums9999(iy,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    xout.feedback9999_ecRad.atm_skt_ghg.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums9999(iy,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
+    xout.perts9999.atm_skt_ghg.globalSST_weighted_latbin(jj) = sum(xout.perts9999.savenums9999(iy,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
   end
 
   %%%%%%%%%%
 
   iy = iy + 1;
-  xout.feedback_ecRad.savestr9999{iy}    = 'atm_skt';
-  xout.feedback_ecRad.savenums9999(iy,:) = -(xout.perts9999.atm_skt_ecRad.clr - xout.olr0_ecRad.clr);
-  xout.feedback9999_ecRad.atm_skt.individual = xout.feedback_ecRad.savenums9999(iy,:);
+  xout.perts9999.savestr9999{iy}    = 'atm_skt';
+  xout.perts9999.savenums9999(iy,:) = -(xout.perts9999.atm_skt_ecRad.clr - xout.olr0_ecRad.clr);
+  xout.perts9999.atm_skt.individual = xout.perts9999.savenums9999(iy,:);
   if iLambda_UseGlobalSST_regress == -1
-    xout.feedback9999_ecRad.atm_skt.individual = xout.feedback9999_ecRad.atm_skt.individual./indSST;
+    xout.perts9999.atm_skt.individual = xout.perts9999.atm_skt.individual./indSST;
   else
-    xout.feedback9999_ecRad.atm_skt.individual = xout.feedback9999_ecRad.atm_skt.individual/globalSST;
+    xout.perts9999.atm_skt.individual = xout.perts9999.atm_skt.individual/globalSST;
   end
   %%%%%
-  junk = polyfit(indSST,xout.feedback_ecRad.savenums9999(iy,:),1);
-  plot(indSST,xout.feedback_ecRad.savenums9999(iy,:),'.')
-  xout.feedback9999_ecRad.atm_skt.polyfit = junk(1);
-  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,xout.feedback_ecRad.savenums9999(iy,:),dx,dx);
+  junk = polyfit(indSST,xout.perts9999.savenums9999(iy,:),1);
+  plot(indSST,xout.perts9999.savenums9999(iy,:),'.')
+  xout.perts9999.atm_skt.polyfit = junk(1);
+  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,xout.perts9999.savenums9999(iy,:),dx,dx);
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    junk = polyfit(indSST(ind),xout.feedback_ecRad.savenums9999(iy,ind),1);
-    xout.feedback9999_ecRad.atm_skt.polyfit_latbin(jj) = junk(1);
+    junk = polyfit(indSST(ind),xout.perts9999.savenums9999(iy,ind),1);
+    xout.perts9999.atm_skt.polyfit_latbin(jj) = junk(1);
   end
   %%%%%
-  [junk junkB] = robustfit(indSST,xout.feedback_ecRad.savenums9999(iy,:));
-    xout.feedback9999_ecRad.atm_skt.robustfit_all = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(tropics),xout.feedback_ecRad.savenums9999(iy,tropics));
-    xout.feedback9999_ecRad.atm_skt.robustfit_tropics = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(midlats),xout.feedback_ecRad.savenums9999(iy,midlats));
-    xout.feedback9999_ecRad.atm_skt.robustfit_midlats = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(poles),xout.feedback_ecRad.savenums9999(iy,poles));
-    xout.feedback9999_ecRad.atm_skt.robustfit_poles = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST,xout.perts9999.savenums9999(iy,:));
+    xout.perts9999.atm_skt.robustfit_all = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(tropics),xout.perts9999.savenums9999(iy,tropics));
+    xout.perts9999.atm_skt.robustfit_tropics = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(midlats),xout.perts9999.savenums9999(iy,midlats));
+    xout.perts9999.atm_skt.robustfit_midlats = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(poles),xout.perts9999.savenums9999(iy,poles));
+    xout.perts9999.atm_skt.robustfit_poles = [junk(2) junkB.se(2)];
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    junk = robustfit(indSST(ind),xout.feedback_ecRad.savenums9999(iy,ind));
-    xout.feedback9999_ecRad.atm_skt.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
+    junk = robustfit(indSST(ind),xout.perts9999.savenums9999(iy,ind));
+    xout.perts9999.atm_skt.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
   end
   %%%%
-  xout.feedback9999_ecRad.atm_skt.globalSST_weighted = sum(xout.feedback_ecRad.savenums9999(iy,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt.globalSST_weighted_all     = sum(xout.perts9999.savenums9999(iy,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt.globalSST_weighted_tropics = sum(xout.perts9999.savenums9999(iy,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt.globalSST_weighted_midlats = sum(xout.perts9999.savenums9999(iy,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_skt.globalSST_weighted_poles   = sum(xout.perts9999.savenums9999(iy,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    xout.feedback9999_ecRad.atm_skt.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums9999(iy,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
+    xout.perts9999.atm_skt.globalSST_weighted_latbin(jj) = sum(xout.perts9999.savenums9999(iy,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
   end
 
   %%%%%%%%%%
 
   iy = iy + 1;
-  xout.feedback_ecRad.savestr9999{iy}    = 'atm_only';
-  xout.feedback_ecRad.savenums9999(iy,:) = (xout.perts9999.atm_only_ecRad.clr - xout.olr0_ecRad.clr);
-  xout.feedback9999_ecRad.atm_only.individual = xout.feedback_ecRad.savenums9999(iy,:);
+  xout.perts9999.savestr9999{iy}    = 'atm_only';
+  xout.perts9999.savenums9999(iy,:) = -(xout.perts9999.atm_only_ecRad.clr - xout.olr0_ecRad.clr);
+  xout.perts9999.atm_only.individual = xout.perts9999.savenums9999(iy,:);
   if iLambda_UseGlobalSST_regress == -1
-    xout.feedback9999_ecRad.atm_only.individual = xout.feedback9999_ecRad.atm_only.individual./indSST;
+    xout.perts9999.atm_only.individual = xout.perts9999.atm_only.individual./indSST;
   else
-    xout.feedback9999_ecRad.atm_only.individual = xout.feedback9999_ecRad.atm_only.individual/globalSST;
+    xout.perts9999.atm_only.individual = xout.perts9999.atm_only.individual/globalSST;
   end
   %%%%%
-  junk = polyfit(indSST,xout.feedback_ecRad.savenums9999(iy,:),1);
-  plot(indSST,xout.feedback_ecRad.savenums9999(iy,:),'.')
-  xout.feedback9999_ecRad.atm_only.polyfit = junk(1);
-  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,xout.feedback_ecRad.savenums9999(iy,:),dx,dx);
+  junk = polyfit(indSST,xout.perts9999.savenums9999(iy,:),1);
+  plot(indSST,xout.perts9999.savenums9999(iy,:),'.')
+  xout.perts9999.atm_only.polyfit = junk(1);
+  [nn,nx,ny,nmeanval(iy,:),nstdval(iy,:)] = myhist2d(indSST,xout.perts9999.savenums9999(iy,:),dx,dx);
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    junk = polyfit(indSST(ind),xout.feedback_ecRad.savenums9999(iy,ind),1);
-    xout.feedback9999_ecRad.atm_only.polyfit_latbin(jj) = junk(1);
+    junk = polyfit(indSST(ind),xout.perts9999.savenums9999(iy,ind),1);
+    xout.perts9999.atm_only.polyfit_latbin(jj) = junk(1);
   end
   %%%%%
-  [junk junkB] = robustfit(indSST,xout.feedback_ecRad.savenums9999(iy,:));
-    xout.feedback9999_ecRad.atm_only.robustfit_all = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(tropics),xout.feedback_ecRad.savenums9999(iy,tropics));
-    xout.feedback9999_ecRad.atm_only.robustfit_tropics = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(midlats),xout.feedback_ecRad.savenums9999(iy,midlats));
-    xout.feedback9999_ecRad.atm_only.robustfit_midlats = [junk(2) junkB.se(2)];
-  [junk junkB] = robustfit(indSST(poles),xout.feedback_ecRad.savenums9999(iy,poles));
-    xout.feedback9999_ecRad.atm_only.robustfit_poles = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST,xout.perts9999.savenums9999(iy,:));
+    xout.perts9999.atm_only.robustfit_all = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(tropics),xout.perts9999.savenums9999(iy,tropics));
+    xout.perts9999.atm_only.robustfit_tropics = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(midlats),xout.perts9999.savenums9999(iy,midlats));
+    xout.perts9999.atm_only.robustfit_midlats = [junk(2) junkB.se(2)];
+  [junk junkB] = robustfit(indSST(poles),xout.perts9999.savenums9999(iy,poles));
+    xout.perts9999.atm_only.robustfit_poles = [junk(2) junkB.se(2)];
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    junk = robustfit(indSST(ind),xout.feedback_ecRad.savenums9999(iy,ind));
-    xout.feedback9999_ecRad.atm_only.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
+    junk = robustfit(indSST(ind),xout.perts9999.savenums9999(iy,ind));
+    xout.perts9999.atm_only.robustfit_latbin(jj,:) = [junk(2) junkB.se(2)];
   end
   %%%%
-  xout.feedback9999_ecRad.atm_only.globalSST_weighted = sum(xout.feedback_ecRad.savenums9999(iy,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_only.globalSST_weighted_all     = sum(xout.perts9999.savenums9999(iy,:).*coslat)/sum(coslat)/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_only.globalSST_weighted_tropics = sum(xout.perts9999.savenums9999(iy,tropics).*coslat(tropics))/sum(coslat(tropics))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_only.globalSST_weighted_midlats = sum(xout.perts9999.savenums9999(iy,midlats).*coslat(midlats))/sum(coslat(midlats))/xout.feedback_ecRad.global_coslat_wgt_skt;
+  xout.perts9999.atm_only.globalSST_weighted_poles   = sum(xout.perts9999.savenums9999(iy,poles).*coslat(poles))/sum(coslat(poles))/xout.feedback_ecRad.global_coslat_wgt_skt;
   for jj = 1 : 64
     ind = (jj-1)*72 + ind0;
-    xout.feedback9999_ecRad.atm_only.globalSST_weighted_latbin(jj) = sum(xout.feedback_ecRad.savenums9999(iy,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
+    xout.perts9999.atm_only.globalSST_weighted_latbin(jj) = sum(xout.perts9999.savenums9999(iy,ind).*coslat(ind))/sum(coslat(ind))/xout.feedback_ecRad.global_coslat_wgt_skt;
   end
 
 end
@@ -467,14 +508,40 @@ fprintf(1,'polyfit feedbacks ALL   : planck lapse o3 wv skt tz/co2 = %5.2f %5.2f
 fprintf(1,'Jevanjee 2021 GRL : sum(polyfit_feedbacks([1 2 3 4])) = %5.2f W/m2/K \n',sum(polyfit_feedbacks([1 2 3 4])))
 fprintf(1,'Sergio Test       : sum(polyfit_feedbacks([3 4 5 6])) = %5.2f W/m2/K \n',sum(polyfit_feedbacks([3 4 5 6])))
 
+disp('<<<<       >>>>')
 disp(' ')
-globalSST_weighted_feedbacks = [xout.feedback_ecRad.planck.globalSST_weighted xout.feedback_ecRad.lapse.globalSST_weighted ...
-                       xout.feedback_ecRad.o3.globalSST_weighted     xout.feedback_ecRad.wv.globalSST_weighted ...
-                       xout.feedback_ecRad.skt.globalSST_weighted    xout.feedback_ecRad.ptemp_co2.globalSST_weighted];
-fprintf(1,'globalSST_weighted feedbacks ALL   : planck lapse o3 wv skt tz/co2 = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f  W/m2/K \n',globalSST_weighted_feedbacks);
-fprintf(1,'Jevanjee 2021 GRL : sum(globalSST_weighted_feedbacks([1 2 3 4])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks([1 2 3 4])))
-fprintf(1,'Sergio Test       : sum(globalSST_weighted_feedbacks([3 4 5 6])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks([3 4 5 6])))
+globalSST_weighted_feedbacks_all = [xout.feedback_ecRad.planck.globalSST_weighted_all xout.feedback_ecRad.lapse.globalSST_weighted_all ...
+                                   xout.feedback_ecRad.o3.globalSST_weighted_all     xout.feedback_ecRad.wv.globalSST_weighted_all ...
+                                   xout.feedback_ecRad.skt.globalSST_weighted_all    xout.feedback_ecRad.ptemp_co2.globalSST_weighted_all];
+fprintf(1,'globalSST_weighted feedbacks ALL   : planck lapse o3 wv skt tz/co2 = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f  W/m2/K \n',globalSST_weighted_feedbacks_all);
+fprintf(1,'Jevanjee 2021 GRL : sum(globalSST_weighted_feedbacks_all([1 2 3 4])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_all([1 2 3 4])))
+fprintf(1,'Sergio Test       : sum(globalSST_weighted_feedbacks_all([3 4 5 6])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_all([3 4 5 6])))
 
+disp(' ')
+globalSST_weighted_feedbacks_tropics = [xout.feedback_ecRad.planck.globalSST_weighted_tropics xout.feedback_ecRad.lapse.globalSST_weighted_tropics ...
+                                   xout.feedback_ecRad.o3.globalSST_weighted_tropics     xout.feedback_ecRad.wv.globalSST_weighted_tropics ...
+                                   xout.feedback_ecRad.skt.globalSST_weighted_tropics    xout.feedback_ecRad.ptemp_co2.globalSST_weighted_tropics];
+fprintf(1,'globalSST_weighted feedbacks TROPICS   : planck lapse o3 wv skt tz/co2 = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f  W/m2/K \n',globalSST_weighted_feedbacks_tropics);
+fprintf(1,'Jevanjee 2021 GRL : sum(globalSST_weighted_feedbacks_tropics([1 2 3 4])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_tropics([1 2 3 4])))
+fprintf(1,'Sergio Test       : sum(globalSST_weighted_feedbacks_tropics([3 4 5 6])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_tropics([3 4 5 6])))
+
+disp(' ')
+globalSST_weighted_feedbacks_midlats = [xout.feedback_ecRad.planck.globalSST_weighted_midlats xout.feedback_ecRad.lapse.globalSST_weighted_midlats ...
+                                   xout.feedback_ecRad.o3.globalSST_weighted_midlats     xout.feedback_ecRad.wv.globalSST_weighted_midlats ...
+                                   xout.feedback_ecRad.skt.globalSST_weighted_midlats    xout.feedback_ecRad.ptemp_co2.globalSST_weighted_midlats];
+fprintf(1,'globalSST_weighted feedbacks MIDLATS   : planck lapse o3 wv skt tz/co2 = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f  W/m2/K \n',globalSST_weighted_feedbacks_midlats);
+fprintf(1,'Jevanjee 2021 GRL : sum(globalSST_weighted_feedbacks_midlats([1 2 3 4])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_midlats([1 2 3 4])))
+fprintf(1,'Sergio Test       : sum(globalSST_weighted_feedbacks_midlats([3 4 5 6])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_midlats([3 4 5 6])))
+
+disp(' ')
+globalSST_weighted_feedbacks_poles = [xout.feedback_ecRad.planck.globalSST_weighted_poles xout.feedback_ecRad.lapse.globalSST_weighted_poles ...
+                                   xout.feedback_ecRad.o3.globalSST_weighted_poles     xout.feedback_ecRad.wv.globalSST_weighted_poles ...
+                                   xout.feedback_ecRad.skt.globalSST_weighted_poles    xout.feedback_ecRad.ptemp_co2.globalSST_weighted_poles];
+fprintf(1,'globalSST_weighted feedbacks POLES   : planck lapse o3 wv skt tz/co2 = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f  W/m2/K \n',globalSST_weighted_feedbacks_poles);
+fprintf(1,'Jevanjee 2021 GRL : sum(globalSST_weighted_feedbacks_poles([1 2 3 4])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_poles([1 2 3 4])))
+fprintf(1,'Sergio Test       : sum(globalSST_weighted_feedbacks_poles([3 4 5 6])) = %5.2f W/m2/K \n',sum(globalSST_weighted_feedbacks_poles([3 4 5 6])))
+
+disp('<<<<       >>>>')
 disp(' ')
 ixix = [1];  %% values
 iyiy = [2];  %% unc
@@ -509,16 +576,19 @@ fprintf(1,'robustfit feedbacks POL : planck lapse o3 wv skt tz/co2 = %5.2f %5.2f
 fprintf(1,'Jevanjee 2021 GRL : sum(robustfit_feedbacks_poles([1 2 3 4])) = %5.2f W/m2/K \n',sum(robustfit_feedbacks_poles([1 2 3 4])))
 fprintf(1,'Sergio Test       : sum(robustfit_feedbacks_poles([3 4 5 6])) = %5.2f W/m2/K \n',sum(robustfit_feedbacks_poles([3 4 5 6])))
 
-xout.ecRadresults.savestr                       = xout.feedback_ecRad.savestr;
-xout.ecRadresults.polyfit_feedbacks             = polyfit_feedbacks;
-xout.ecRadresults.globalSST_weighted_feedbacks  = globalSST_weighted_feedbacks;
-xout.ecRadresults.robustfit_feedbacks_all       = robustfit_feedbacks_all;
-xout.ecRadresults.robustfit_feedbacks_tropics   = robustfit_feedbacks_tropics;
-xout.ecRadresults.robustfit_feedbacks_midlats   = robustfit_feedbacks_midlats;
-xout.ecRadresults.robustfit_feedbacks_poles     = robustfit_feedbacks_poles;
-xout.ecRadresults.dbins                         = dx;
-xout.ecRadresults.nmeanval                      = nmeanval;
-xout.ecRadresults.nstdval                       = nstdval;
+xout.ecRadresults.savestr                              = xout.feedback_ecRad.savestr;
+xout.ecRadresults.polyfit_feedbacks                    = polyfit_feedbacks;
+xout.ecRadresults.globalSST_weighted_feedbacks_all     = globalSST_weighted_feedbacks_all;
+xout.ecRadresults.globalSST_weighted_feedbacks_tropics = globalSST_weighted_feedbacks_tropics;
+xout.ecRadresults.globalSST_weighted_feedbacks_midlats = globalSST_weighted_feedbacks_midlats;
+xout.ecRadresults.globalSST_weighted_feedbacks_poles   = globalSST_weighted_feedbacks_poles;
+xout.ecRadresults.robustfit_feedbacks_all              = robustfit_feedbacks_all;
+xout.ecRadresults.robustfit_feedbacks_tropics          = robustfit_feedbacks_tropics;
+xout.ecRadresults.robustfit_feedbacks_midlats          = robustfit_feedbacks_midlats;
+xout.ecRadresults.robustfit_feedbacks_poles            = robustfit_feedbacks_poles;
+xout.ecRadresults.dbins                                = dx;
+xout.ecRadresults.nmeanval                             = nmeanval;
+xout.ecRadresults.nstdval                              = nstdval;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 

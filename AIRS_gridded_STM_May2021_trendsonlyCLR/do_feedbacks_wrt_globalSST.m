@@ -26,6 +26,8 @@ if ~exist('umbc_spectral_olr')
   if exist(feedbacknameUMBC)
     iUMBCexist = +1;
     fprintf(1,'for %2i years the UMBC OLR ecRad file %s exists \n',iNumYears,feedbacknameUMBC)
+    lser = ['!ls -lt ' feedbacknameUMBC];
+    eval(lser)
     junk = input('re-do the OLR feedbacks??? (-1 [default] /+1) : ');    
     if junk > 0
       umbc_spectral_olr = struct;    %% so it has no fields
@@ -92,6 +94,8 @@ else
   feedbacknameNWP_ERA5 = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
 end
 if exist(feedbacknameNWP_ERA5)
+  lser = ['!ls -lt ' feedbacknameNWP_ERA5];
+  eval(lser)
   fprintf(1,'for %2i years ERA/AIRSL3/CMIP6 file %s already exists \n',iNumYears,feedbacknameNWP_ERA5)
 end
 
@@ -102,6 +106,8 @@ if exist('strMODELSX')
     feedbacknameNWP_MERRA2 = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELSX '_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
   end
   if exist(feedbacknameNWP_MERRA2)
+    lser = ['!ls -lt ' feedbacknameNWP_MERRA2];
+    eval(lser)
     fprintf(1,'for %2i years MERRA2/CLIMCAPSL3/AMIP6 file %s already exists \n',iNumYears,feedbacknameNWP_MERRA2)
   end
 else

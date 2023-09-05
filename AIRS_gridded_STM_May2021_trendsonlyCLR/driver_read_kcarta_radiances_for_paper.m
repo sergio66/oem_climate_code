@@ -26,6 +26,7 @@ cd /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 addpath /home/sergio/MATLABCODE/PLOTMISC
+addpath /home/sergio/MATLABCODE
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/aslutil
 addpath /asl/matlib/plotutils
@@ -235,9 +236,10 @@ else
   plot(fc,nanmean(radF-rad0,2),'b',h.vchan,moo,'r'); hold on;
   plot(fc,ttorad(fc,284+0.02)-ttorad(fc,284),'color',gray); hold off
   ylabel('d(Radiance)/dt \newline [yr-1]')
-  xlim([0 2800])
-  xlabel('Wavenumber [cm-1]'); plotaxis2; hl = legend('Simulated','Observed','location','best','fontsize',10);
+  xlim([0 2800]); ylim([-0.1 +0.051])
+  xlabel('Wavenumber [cm-1]'); plotaxis2; 
   shade2(5,0,-0.1,650,0.15,gray,0.3);
+  hl = legend('Simulated','Observed','location','best','fontsize',10);
 
   % Get rid of all extra space I can
   ta.Padding = 'none';

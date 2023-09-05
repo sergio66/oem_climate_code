@@ -176,7 +176,7 @@ trends_paper_show = showfeedbacks_robustfit_tropics(1:ixshow,[1 2 3 4 7]);
 
 figure(1); clf
 bar(trends_paper_show')
-ylabel('Feedback W/m2/K');
+ylabel('TROPICS Feedback W/m2/K');
 hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','south');
 xstr = {'Planck','Lapse','Ozone','Water Vapor','SUM'};
 set(gca,'xticklabels',xstr)

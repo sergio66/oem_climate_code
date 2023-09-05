@@ -31,7 +31,7 @@ eval(loader)
 saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];  %% if you only want to save UMBC
 eval(saver)
 
-figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
+figure(4); figure(5); figure(6); figure(80); rett(2); %% disp('RET to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('10 years')
@@ -49,7 +49,7 @@ eval(loader)
 saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];  %% if you only want to save UMBC
 eval(saver)
 
-figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
+figure(4); figure(5); figure(6); figure(80); rett(2); %% disp('RET to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('15 years')
@@ -67,7 +67,7 @@ eval(loader)
 saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];  %% if you only want to save UMBC
 eval(saver)
 
-figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
+figure(4); figure(5); figure(6); figure(80); rett(2); %% disp('RET to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('20 years')
@@ -85,9 +85,10 @@ eval(loader)
 saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];  %% if you only want to save UMBC
 eval(saver)
 
-figure(4); figure(5); figure(6); figure(80); disp('RET to continue'); pause
+figure(4); figure(5); figure(6); figure(80); rett(2); %% disp('RET to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('DONE, now showing results')
-plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit
+%plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit
+plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit_smooth
 

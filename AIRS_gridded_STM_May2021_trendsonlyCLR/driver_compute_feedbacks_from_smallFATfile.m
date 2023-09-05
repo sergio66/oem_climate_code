@@ -1,6 +1,8 @@
 %% see ../FIND_NWP_MODEL_TRENDS/driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
 
 %%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
+%%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
+%%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
 %{
 if you want to re-do the 05/10/15/20 year UMBC time series 
 (because you have updated eg compute_feedbacks_regress_olr_ecRad_calcs.m)
@@ -13,7 +15,10 @@ then simply call
   driver_quick_redo_regressions_20year_umbc_models.m
 %}
 %%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
+%%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
+%%% README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>> README QUICK REDO >>>>>>>>>>>>>>>
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>>
 %{
@@ -41,9 +46,9 @@ AND THEN WHEN HAPPY
 AND THEN WHEN HAPPY
 
 FOR GLOBAL DEFN
-clear all; for ii = 1 : 4; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit
+clear all; for ii = 1 : 4; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth
 or
-clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit
+clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit_smooth
 
 FOR LOCAL DEFN
 clear all; for ii = 1 : 5; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit      %%% local feedbacks
@@ -56,7 +61,11 @@ clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_um
 %}
 %%% README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>>
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath /asl/matlib/maps
 addpath /asl/matlib/h4tools
@@ -69,8 +78,8 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
 a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 05;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 15;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****
 a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2v2.mat';    iNumYears = 10;  %% use CarbonTracker CO2 trends
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****
 
 fprintf(1,'iNumYears = %2i .. reading in %s \n',iNumYears,strUMBC);
 loader = ['load ' strUMBC];
@@ -134,13 +143,24 @@ p.plays(p.plays <= eps) = NaN;
 plays = nanmean(p.plays,2);
 plays = plays(1:100);
 
+if ~exist('pavg')
+  disp('  warning : setting pavg = pjunk20')
+  pavg = pjunk20;
+
+  resultsTunc  = 0 * resultsT;
+  resultsWVunc = 0 * resultsT;
+  resultsO3unc = 0 * resultsT;
+  resultsunc   = 0 * results;
+end
+
+if ~exist('maskLF')
+  disp('  warning : setting maskLF = ones(1,4608)')
+  maskLF = ones(1,4608);
+  maskLFmatr = reshape(maskLF,72,64)';
+end
+
 if ~exist('fracO3')
   disp('computing fracO3')
-  if ~exist('maskLF')
-    disp('  warning : setting maskLF = ones(1,4608)')
-    maskLF = ones(1,4608);
-    maskLFmatr = reshape(maskLF,72,64)';
-  end
   if ~exist('iNumLay')
     disp('  warning : setting iNumLay = 49')
     iNumLay = 49; 
@@ -149,32 +169,29 @@ if ~exist('fracO3')
     disp('  warning : setting xb = 0')
     xb = zeros(iNumLay,4608);
   end
-  if ~exist('pavg')
-    disp('  warning : setting pavg = pjunk20')
-    pavg = pjunk20;
-  end
   if ~exist('resultsunc')
     disp('  warning : setting resultsunc = results/100')
     resultsunc = results/100;
   end
+
   interp_resultsT_WV_O3_to_p
   get_deltaO3
 end
 
 if ~exist('deltaO3')
+  interp_resultsT_WV_O3_to_p
   [ppmvLAY1,ppmvAVG1,ppmvMAX1,pavgLAY1,tavgLAY1,ppmv500_1,ppmv75_1,ppmvSURF_1] = layers2ppmv(h,p,1:length(p.stemp),1);
   [ppmvLAY3,ppmvAVG3,ppmvMAX3,pavgLAY3,tavgLAY3,ppmv500_3,ppmv75_3,ppmvSURF_3] = layers2ppmv(h,p,1:length(p.stemp),3);
+
+  [nlayO3,~] = size(ppmvLAY3);
+
   [ppmvLAYpert3,ppmvAVGpert3,ppmvMAXpert3,pavgLAYpert3,tavgLAYpert3,ppmv500pert3,ppmv75pert3,ppmvSURFpert3] = layers2ppmv(h,pert,1:length(p.stemp),3);
   [ppmvLAYpert_unc3,ppmvAVGpert_unc3,ppmvMAXpert_unc3,pavgLAYpert_unc3,tavgLAYpert_unc3,ppmv500pert_unc3,ppmv75pert_unc3,ppmvSURFpert_unc3] = layers2ppmv(h,pert_unc,1:length(p.stemp),3);
-  [nlayO3,~] = size(ppmvLAY3);
-  deltaO3 = ppmvLAYpert3 - ppmvLAY3;
-  deltaO3 = deltaO3 .* (ones(nlayO3,1) * maskLF);
   deltaO3unc = ppmvLAYpert_unc3 - ppmvLAY3;
   deltaO3unc = deltaO3unc .* (ones(nlayO3,1) * maskLF);
-end
 
-if ~exist('maskLFmatr')
-  maskLFmatr = reshape(maskLF,72,64)';
+  deltaO3 = ppmvLAYpert3 - ppmvLAY3;
+  deltaO3 = deltaO3 .* (ones(nlayO3,1) * maskLF);
 end
 
 if ~exist('xRH0')

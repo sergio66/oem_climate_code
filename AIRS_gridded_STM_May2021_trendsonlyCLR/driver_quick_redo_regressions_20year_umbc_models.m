@@ -65,5 +65,6 @@ show_olr_ecRad_feedback
 quick_save_olr_feedbacks_umbc_NWP_L3_XMIP6
 
 disp('DONE, now showing results <RET> to continue'); pause
-plot_show_olr_ecRad_feedback_globalsstfit
+%plot_show_olr_ecRad_feedback_globalsstfit
+plot_show_olr_ecRad_feedback_globalsstfit_smooth
 
