@@ -134,21 +134,28 @@ iSmooth = 10;
 disp(' ')
 disp('POLYFIT results GLOBAL')
 %plot_show_olr_ecRad_feedback_polyfit
-plot_show_olr_ecRad_feedback_polyfit_smooth
+%plot_show_olr_ecRad_feedback_polyfit_smooth
+plot_show_olr_ecRad_feedback_polyfit_smooth2
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp(' ')
 disp('GLOBAL(SST) FIT results GLOBAL')
 %plot_show_olr_ecRad_feedback_globalsstfit
-plot_show_olr_ecRad_feedback_globalsstfit_smooth
+%plot_show_olr_ecRad_feedback_globalsstfit_smooth
+plot_show_olr_ecRad_feedback_globalsstfit_smooth2
 
 disp(' ')
 disp('GLOBAL(SST) FIT results TROPICS')
 plot_show_olr_ecRad_feedback_globalsstfit_tropics
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 disp(' ')
 disp('ROBUSTFIT results GLOBAL')
 %plot_show_olr_ecRad_feedback_robustfit
-plot_show_olr_ecRad_feedback_robustfit_smooth
+%plot_show_olr_ecRad_feedback_robustfit_smooth
+plot_show_olr_ecRad_feedback_robustfit_smooth2
 
 disp(' ')
 disp('ROBUSTFIT results TROPICS')

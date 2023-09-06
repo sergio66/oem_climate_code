@@ -83,12 +83,20 @@ eval(loader)
 %umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'UMBC');
  umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',[]    ,[]    ,[]    ,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'UMBC');
 saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];  %% if you only want to save UMBC
-eval(saver)
+iSave = input('Save 20 year stuff??? (default -1) : ');
+if length(iSave) == 0
+  iSave = -1;
+end
+if iSave > 0
+  eval(saver)
+end
 
 figure(4); figure(5); figure(6); figure(80); rett(2); %% disp('RET to continue'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('DONE, now showing results')
 %plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit
-plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit_smooth
+%plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit_smooth
+%plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfitsmooth
+plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfitsmooth2
 

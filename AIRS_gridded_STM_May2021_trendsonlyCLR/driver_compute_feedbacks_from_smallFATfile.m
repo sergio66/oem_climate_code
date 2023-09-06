@@ -46,17 +46,37 @@ AND THEN WHEN HAPPY
 AND THEN WHEN HAPPY
 
 FOR GLOBAL DEFN
-clear all; for ii = 1 : 4; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth2
 or
-clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit_smooth
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit_smooth    these two are symbolic links
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfitsmooth     these two are symbolic links
+
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit_smooth2    these two are symbolic links
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfitsm2         these two are symbolic links
 
 FOR LOCAL DEFN
-clear all; for ii = 1 : 5; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit      %%% local feedbacks
-clear all; for ii = 1 : 5; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit    %%% local feedbacks
-clear all; for ii = 1 : 5; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit %%% global feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit              %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit            %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit         %%% global feedbacks
+
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit_smooth       %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit_smooth     %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth  %%% global feedbacks
+
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit_smooth2      %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit_smooth2    %%% local feedbacks   >>> used for paper
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth2 %%% global feedbacks  >>> used for paper
+ 
 or
-clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_robustfit    %%% local feedbacks
-clear all; for ii = 1 : 5; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit %%% global feedbacks
+
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_robustfit           %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfit        %%% global feedbacks
+
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_robustfit_smooth    %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfitsmooth  %%% global feedbacks
+
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_robustfit_smooth2   %%% local feedbacks   >>> used for paper
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfitsm2     %%% global feedbacks  >>> used for paper
 
 %}
 %%% README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>>

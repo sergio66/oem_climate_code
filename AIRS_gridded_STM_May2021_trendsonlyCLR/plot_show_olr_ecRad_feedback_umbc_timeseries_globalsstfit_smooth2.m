@@ -92,6 +92,11 @@ xtickangle(45)
 
 factor = 1;
 
+xsin = sin(rlat*pi/180);
+  xtick = [-1 -sqrt(3)/2 -sqrt(2)/2 -1/2 -(0.25+0.01) 0 +(0.25+0.01) +1/2 +sqrt(2)/2 +sqrt(3)/2 +1]; %% -90 -60 -45 -30 -15 0 +15 +30 +45 +60 +90
+  xtick = [-1            -sqrt(2)/2      -(0.25+0.01) 0 +(0.25+0.01)      +sqrt(2)/2            +1]; %% -90     -45     -15 0 +15     +45     +90
+  xticklab = cellstr(num2str(round(180/pi*asin((xtick(:)))), '%d'));
+
 %% fixed on 9/2/2023
 %% disp('since weighted global SST change for 10 years is about x10 smaller than rest, will divide by this factor')
 %% disp('since weighted global SST change for 10 years is about x10 smaller than rest, will divide by this factor')
@@ -100,32 +105,32 @@ factor = 1;
 
 figure(2); clf;
 subplot(221); 
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; %hl = legend('05','10','15','20','location','south','fontsize',8);
-  title('Planck'); xlim([-90 +90])
+  title('Planck'); xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');
 
 subplot(222); 
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; %hl = legend('05','10','15','20','location','south','fontsize',8);
-  title('Lapse'); xlim([-90 +90])
+  title('Lapse'); xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');
 
 subplot(223); 
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; hl = legend('05','10','15','20','location','south','fontsize',8);
-  title('Ozone'); xlim([-90 +90])
+  title('Ozone'); xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');
 
 subplot(224); 
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; %hl = legend('05','10','15','20','location','south','fontsize',8);
-  title('WV'); xlim([-90 +90])
+  title('WV'); xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(3); clf
@@ -137,34 +142,34 @@ ta = tiledlayout(2,2,'TileSpacing','compact', 'Padding','None');
   ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
 
 tafov(1) = nexttile;
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; box on;
-  xlim([-90 +90]); 
+  xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');; 
   ylim([-40 +10])
 
 tafov(2) = nexttile;
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; box on; hl = legend('05','10','15','20','location','north','fontsize',8);
-  xlim([-90 +90])
+  xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');
   ylim([-05 +25])
 
 tafov(3) = nexttile;
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; box on;
-  xlim([-90 +90])
+  xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');
 
 tafov(4) = nexttile;
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
   plotaxis2; box on;
-  xlim([-90 +90])
+  xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');
 
 % Remove all ytick labels except for 1st column
 %for ii = [2 4]
@@ -203,15 +208,14 @@ title(tafov(4), plotoptions.str22, 'Units', 'normalized', 'Position', [0.5, ypos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(5); clf
 
-xsin = sin(rlat*pi/180);
-  xtick = [-1            -sqrt(2)/2      -(0.25+0.01) 0 +(0.25+0.01)      +sqrt(2)/2            +1]; %% -90     -45     -15 0 +15     +45     +90
+xtick = [-1            -sqrt(2)/2      -(0.25+0.01) 0 +(0.25+0.01)      +sqrt(2)/2            +1]; %% -90     -45     -15 0 +15     +45     +90
   xtick = [-1 -sqrt(3)/2 -sqrt(2)/2 -1/2 -(0.25+0.01) 0 +(0.25+0.01) +1/2 +sqrt(2)/2 +sqrt(3)/2 +1]; %% -90 -60 -45 -30 -15 0 +15 +30 +45 +60 +90
   xticklab = cellstr(num2str(round(180/pi*asin((xtick(:)))), '%d'));
 
 plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc05_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
           umbc05_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc05_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
      xsin,smooth(umbc10_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc10_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
-          umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),'x-',...
+          umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
      xsin,smooth(umbc15_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc15_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
           umbc15_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc15_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
      xsin,smooth(umbc20_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc20_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
@@ -226,24 +230,25 @@ plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_la
 
 figure(6); clf;
 subplot(211)
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc10_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),rlat,smooth(umbc20_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc10_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),xsin,smooth(umbc20_spectral_olr.feedback_ecRad.skt.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
-  xlim([-90 +90]); ylim([-10 2])
+  xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');; ylim([-10 2])
   plotaxis2; %hl = legend('05','10','15','20','location','south','fontsize',8);
   title('Skt'); 
 
 subplot(212)
-plot(rlat,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc05_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
+plot(xsin,smooth(umbc05_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc05_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
           umbc05_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc05_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
-     rlat,smooth(umbc10_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc10_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
-          umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),'x-',...
-     rlat,smooth(umbc15_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc15_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
+     xsin,smooth(umbc10_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc10_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
+          umbc10_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc10_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
+     xsin,smooth(umbc15_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc15_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
           umbc15_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc15_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
-     rlat,smooth(umbc20_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc20_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
+     xsin,smooth(umbc20_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc20_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
           umbc20_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin     + umbc20_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin,iSmooth),...
      'linewidth',2);
-  xlim([-1 +1]*90); ylim([-1 +1]*7.5)
+    xlim([-1 +1]); set(gca,'XTick',xtick,'XTickLabel',xticklab,'TickLabelInterpreter','tex');; 
+    ylim([-1 +1]*7.5)
   plotaxis2; hl = legend('05','10','15','20','location','south','fontsize',8);
   title('Sum Feedbacks'); 
 
@@ -260,7 +265,7 @@ if iDebug10 > 0
   
   plot(dbt,histc(coslat'.*umbc05_spectral_olr.deltaSKT,dbt),dbt,histc(coslat'.*umbc10_spectral_olr.deltaSKT,dbt),dbt,histc(coslat'.*umbc15_spectral_olr.deltaSKT,dbt),dbt,histc(coslat'.*umbc20_spectral_olr.deltaSKT,dbt),'linewidth',2)
   semilogy(dbt,histc(coslat'.*umbc05_spectral_olr.deltaSKT,dbt),dbt,histc(coslat'.*umbc10_spectral_olr.deltaSKT,dbt),dbt,histc(coslat'.*umbc15_spectral_olr.deltaSKT,dbt),dbt,histc(coslat'.*umbc20_spectral_olr.deltaSKT,dbt),'linewidth',2)
-  plotaxis2; hl = legend('05','10','15','20','location','best'); title('hist of cos(rlat)*d(SKT)'); xlabel('cos(rlat)*dSKT')
+  plotaxis2; hl = legend('05','10','15','20','location','best'); title('hist of cos(xsin)*d(SKT)'); xlabel('cos(xsin)*dSKT')
   
   %plot(1:4608,umbc20_spectral_olr.deltaSKT,1:4608,umbc10_spectral_olr.deltaSKT)
   %plot(1:4608,umbc20_spectral_olr.planck_ecRad.clr-umbc20_spectral_olr.olr0_ecRad.clr,1:4608,umbc10_spectral_olr.planck_ecRad.clr-umbc10_spectral_olr.olr0_ecRad.clr)
@@ -293,7 +298,7 @@ if iDebug10 > 0
   aslmap_2x2tiledlayout(z11,z12,z21,z22,9,plotoptions);
   
   zz11 = nanmean(reshape(z11,72,64),1); zz12 = nanmean(reshape(z12,72,64),1); zz21 = nanmean(reshape(z21,72,64),1); zz22 = nanmean(reshape(z22,72,64),1);
-  figure(10); clf; plot(rlat,zz11,'b',rlat,zz12,'g',rlat,zz21,'r',rlat,zz22,'k','linewidth',2); hl = legend('05','10','15','20','location','best'); axis([-90 +90 -5 -2.5]); 
+  figure(10); clf; plot(xsin,zz11,'b',xsin,zz12,'g',xsin,zz21,'r',xsin,zz22,'k','linewidth',2); hl = legend('05','10','15','20','location','best'); axis([-90 +90 -5 -2.5]); 
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
   z11 = -(umbc05_spectral_olr.wv_ecRad.clr-umbc05_spectral_olr.olr0_ecRad.clr); %z11 = z11./umbc05_spectral_olr.deltaSKT';
@@ -313,13 +318,13 @@ if iDebug10 > 0
   aslmap_2x2tiledlayout(z11,z12,z21,z22,12,plotoptions);
   
   zz11 = nanmean(reshape(z11,72,64),1); zz12 = nanmean(reshape(z12,72,64),1); zz21 = nanmean(reshape(z21,72,64),1); zz22 = nanmean(reshape(z22,72,64),1);
-  figure(13); clf; plot(rlat,smooth(zz11,10),'b',rlat,smooth(zz12,10),'g',rlat,smooth(zz21,10),'r',rlat,smooth(zz22,10),'k','linewidth',2); plotaxis2;
+  figure(13); clf; plot(xsin,smooth(zz11,10),'b',xsin,smooth(zz12,10),'g',xsin,smooth(zz21,10),'r',xsin,smooth(zz22,10),'k','linewidth',2); plotaxis2;
   hl = legend('05','10','15','20','location','best'); axis([-90 +90 -10 +10]); 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
-figure(1); aslprint([dir0 'feedbackparams_05_10_15_20yrs.pdf'])
+figure(4); aslprint([dir0 'global_feedbackparams_05_10_15_20yrs.pdf'])
 %}
 
