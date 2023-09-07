@@ -34,6 +34,7 @@ for ii = 1 : 4
 end
 
 disp('<<<<<<<<<<<<< ---- do_avg_feedback1.m ----- >>>>>>>>>>>>>>')
+disp('     uses eg feedback_ecRad.planck.individual * cos(rlat)')
 disp('           Planck          Lapse           WV            SKT')
 fprintf(1,'UMBC     %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(1,:))
 fprintf(1,'AIRS L3  %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(2,:))

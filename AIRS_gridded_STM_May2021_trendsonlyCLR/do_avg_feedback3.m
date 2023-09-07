@@ -40,6 +40,7 @@ for ii = 1 : 4
 end
 
 disp('<<<<<<<<<<<<< ---- do_avg_feedback3.m ----- >>>>>>>>>>>>>>')
+disp('     uses eg feedback_ecRad.planck.polyfit * cos(rlat)')
 disp('           Planck          Lapse           WV            SKT')
 fprintf(1,'UMBC     %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(1,:))
 fprintf(1,'AIRS L3  %9.2f      %9.2f     %9.2f    %9.2f \n',mean_feedback(2,:))

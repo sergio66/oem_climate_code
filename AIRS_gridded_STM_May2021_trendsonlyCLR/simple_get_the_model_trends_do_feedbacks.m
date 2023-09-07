@@ -55,6 +55,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+if iRaw_or_Unc == -1
+  update_deltaT_WV_O3_SKT_using_uncertainty
+end
+
 disp(' ')
 disp('Done reading in MODEL/L3 (eg ERA5/AIRSL3/CMIP6 stuff ...')  
 junk = input('Do you want to compute OLR feedbacks using ecRad (-1 /+1 [all default]) : ');

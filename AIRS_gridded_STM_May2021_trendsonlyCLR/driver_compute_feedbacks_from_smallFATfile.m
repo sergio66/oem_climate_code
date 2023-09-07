@@ -34,11 +34,12 @@ if you already have     saved off your ecRad runs, and just want to update the r
      /asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_20.mat
      /asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_20.mat
      /asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_20.mat
-4) To recompute the regressions (polyfit/robutfit etc and any other new stuff) run 
+4) Depending on whether this is "raw" deltaX ecRad calcs, or "unc" deltaX + deltaXunc ecRad calcs, update_deltaT_WV_O3_SKT_using_uncertainty.m will be called <<<<<<<<<<<<<
+5) To recompute the regressions (polyfit/robutfit etc and any other new stuff) run 
        "show_olr_ecRad_feedback"  (which is a chip off the "compute_feedbacks_generic_ecRad.m" code)
      WARNING : if you do not have MERRA2/CLIMCAPSL3/AMIP6 it will get annoyed towards the end (when it is plotting) but else things should be fine
      This is eg for 05,10,15 years of trends
-5) Save as needed using  "quick_save_olr_feedbacks_umbc_NWP_L3_XMIP6.m"!!!!
+6) Save as needed using  "quick_save_olr_feedbacks_umbc_NWP_L3_XMIP6.m"!!!!
 
 %% Feldl, N., and G. H. Roe (2013), Four perspectives on climate feedbacks, Geophys. Res. Lett., 40, 4007–4011, doi:10.1002/grl.50711.
 AND THEN WHEN HAPPY
@@ -66,6 +67,12 @@ clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_e
 clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit_smooth2      %%% local feedbacks
 clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit_smooth2    %%% local feedbacks   >>> used for paper
 clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth2 %%% global feedbacks  >>> used for paper
+
+or 
+
+clear all; for ii = 1 : 8; figure(ii); clf; end; iNumYears = 20; plot_unc_olr_ecRad_feedback_polyfit_smooth2      %%% local feedbacks   
+clear all; for ii = 1 : 8; figure(ii); clf; end; iNumYears = 20; plot_unc_olr_ecRad_feedback_robustfit_smooth2    %%% local feedbacks   >>> used for paper, to show unc
+clear all; for ii = 1 : 8; figure(ii); clf; end; iNumYears = 20; plot_unc_olr_ecRad_feedback_globalsstfit_smooth2 %%% global feedbacks  >>> used for paper, to show unc
  
 or
 
@@ -99,7 +106,8 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 05;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 15;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2v2.mat';    iNumYears = 10;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
 
 fprintf(1,'iNumYears = %2i .. reading in %s \n',iNumYears,strUMBC);
 loader = ['load ' strUMBC];
@@ -108,6 +116,9 @@ eval(loader);
 read_fileMean17years
 h = hMean17years;
 p = pMean17years;
+
+iRaw_or_Unc = +1; %% use raw profiles, and then perturbations,     in the ecRad or SARTA calcs
+iRaw_or_Unc = -1; %% use raw profiles, and then perturbations+unc, in the ecRad or SARTA calcs
 
 % iSwap_ERA_2012_08_15 = +1;
 iSwap_ERA_2012_08_15 = input('swap from 20 year AVG profile used for jacs .... to profiles on 2012/08/15 (-1 [default] / +1) : ');
@@ -166,18 +177,40 @@ plays = plays(1:100);
 if ~exist('pavg')
   disp('  warning : setting pavg = pjunk20')
   pavg = pjunk20;
+end
 
+if ~exist('resultsTunc') 
   resultsTunc  = 0 * resultsT;
+  if iRaw_or_Unc == -1
+    error('resultsTunc DNE and you want to use it!!!')
+  end
+end
+if ~exist('resultsWVunc') 
   resultsWVunc = 0 * resultsT;
+  if iRaw_or_Unc == -1
+    error('resultsWVunc DNE and you want to use it!!!')
+  end
+end
+if ~exist('resultsO3unc') 
   resultsO3unc = 0 * resultsT;
+  if iRaw_or_Unc == -1
+    error('resultsO3unc DNE and you want to use it!!!')
+  end
+end
+if ~exist('resultsunc') 
   resultsunc   = 0 * results;
+  if iRaw_or_Unc == -1
+    disp('WARNING resultsunc DNE and you want to use it!!!, set to 0.2 * stemp')
+    resultsunc      = 0.005 * ones(4608,6);
+    resultsunc(:,6) = 0.2 * results(:,6);
+  end
 end
 
 if ~exist('maskLF')
   disp('  warning : setting maskLF = ones(1,4608)')
   maskLF = ones(1,4608);
-  maskLFmatr = reshape(maskLF,72,64)';
 end
+maskLFmatr = reshape(maskLF,72,64)';
 
 if ~exist('fracO3')
   disp('computing fracO3')
@@ -213,6 +246,11 @@ if ~exist('deltaO3')
   deltaO3 = ppmvLAYpert3 - ppmvLAY3;
   deltaO3 = deltaO3 .* (ones(nlayO3,1) * maskLF);
 end
+
+if iRaw_or_Unc == -1
+  interp_resultsT_WV_O3_to_p
+  get_deltaO3
+end  
 
 if ~exist('xRH0')
   [xRH0,xRH1km0,xcolwater0] = layeramt2RH(h,p);

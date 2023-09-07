@@ -148,8 +148,8 @@ ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, d
 
 ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
@@ -325,9 +325,9 @@ for iInd = iXX1 : idX : iXX2
 
   iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
   iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
-  iAdjLowerAtmWVfrac = 0;                             %% << WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac >>
   iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), but I think tooooo much
-  iAdjLowerAtmWVfrac = 0.25;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment
+  iAdjLowerAtmWVfrac = 0;                             %% << WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac >>
+  iAdjLowerAtmWVfrac = 0.25;                          %% WAARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT

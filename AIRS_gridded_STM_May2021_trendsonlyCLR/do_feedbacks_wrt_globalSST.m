@@ -13,6 +13,16 @@ disp('make sure you do this before starting Matlab, if you want to run ecRad!!!'
 disp('module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('  ')
 
+disp('each model takes about 15 minutes for SARTA and ecRad to run completely ie 15 min for UMBC, 45 min for ERA5/AIRSL3/CMIP6, 45 min for MERRA2/CLIMCAPSL3/AMIP6')
+disp('so much better if you can read in pre-computed ERA5/AIRSL3/CMIP6 and MERRA2/CLIMCAPSL3/AMIP6')
+disp('  ')
+disp('each model takes about 15 minutes for SARTA and ecRad to run completely ie 15 min for UMBC, 45 min for ERA5/AIRSL3/CMIP6, 45 min for MERRA2/CLIMCAPSL3/AMIP6')
+disp('so much better if you can read in pre-computed ERA5/AIRSL3/CMIP6 and MERRA2/CLIMCAPSL3/AMIP6')
+disp('  ')
+disp('each model takes about 15 minutes for SARTA and ecRad to run completely ie 15 min for UMBC, 45 min for ERA5/AIRSL3/CMIP6, 45 min for MERRA2/CLIMCAPSL3/AMIP6')
+disp('so much better if you can read in pre-computed ERA5/AIRSL3/CMIP6 and MERRA2/CLIMCAPSL3/AMIP6')
+disp('  ')
+
 clear feedbackname*
 iLambda_UseGlobalSST = +1;
 
@@ -22,6 +32,11 @@ if iSwap_ERA_2012_08_15 < 0
 else
   feedbacknameUMBC = ['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
 end
+if iRaw_or_Unc == -1
+  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
+  feedbacknameUMBC = [feedbacknameUMBC '_unc_factor' num2str(maxratio,'%0.2f') '.mat'];
+end
+  
 if ~exist('umbc_spectral_olr') 
   if exist(feedbacknameUMBC)
     iUMBCexist = +1;
@@ -56,6 +71,10 @@ if junk > 0
     feedbacknameUMBC = ['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat'];
   else
     feedbacknameUMBC = ['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
+  end
+  if iRaw_or_Unc == -1
+    feedbacknameUMBC = feedbacknameUMBC(1:end-4);
+    feedbacknameUMBC = [feedbacknameUMBC '_unc_factor' num2str(maxratio,'%0.2f') '.mat'];
   end
   saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
   saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
@@ -93,6 +112,10 @@ if iSwap_ERA_2012_08_15 < 0
 else
   feedbacknameNWP_ERA5 = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
 end
+if iRaw_or_Unc == -1
+  feedbacknameNWP_ERA5 = feedbacknameNWP_ERA5(1:end-4);
+  feedbacknameNWP_ERA5 = [feedbacknameNWP_ERA5 '_unc_factor' num2str(maxratio,'%0.2f') '.mat'];
+end
 if exist(feedbacknameNWP_ERA5)
   lser = ['!ls -lt ' feedbacknameNWP_ERA5];
   eval(lser)
@@ -104,6 +127,10 @@ if exist('strMODELSX')
     feedbacknameNWP_MERRA2 = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELSX '_numyears_' num2str(iNumYears,'%02d') '.mat'];
   else
     feedbacknameNWP_MERRA2 = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELSX '_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
+  end
+  if iRaw_or_Unc == -1
+    feedbacknameNWP_MERRA2 = feedbacknameNWP_MERRA2(1:end-4);
+    feedbacknameNWP_MERRA2 = [feedbacknameNWP_MERRA2 '_unc_factor' num2str(maxratio,'%0.2f') '.mat'];
   end
   if exist(feedbacknameNWP_MERRA2)
     lser = ['!ls -lt ' feedbacknameNWP_MERRA2];
@@ -368,25 +395,7 @@ figure(81); colormap(colormap_soden_held_jclim2007); caxis([-4.5 -3]); figure(82
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-cosrlat = cos(rlat'*pi/180);
-
-do_avg_feedback1     %% crude attempt at zonal avg
-do_avg_feedback1cos  %% crude attempt at zonal avg with cosine(lat) wgt
-do_avg_feedback2     %% better attempt at zonal avg
-do_avg_feedback2cos  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
-
-do_avg_feedback3     %% used in trends paper, try 1 : (robustfit)
-do_avg_feedback4     %% used in trends paper, try 2 : (globalSST division)
-
-%%% Ryan suggested normalizing using dERASST for all, instead of the individual dXSST X=ERA or CMIP6 or UMBC or AIRSL3 
-%%% iERAnorm = input('Do you wish to redo the feedback by using only dERA SKT instead of individual d SKT? (-1/default) no (+1) yes : ');
-%%% if length(iERAnorm) == 0
-%%%   iERAnorm = -1;
-%%% end
-%%% if iERAnorm > 0
-%%%   redo_feedbacks_dERA5ST_dt
-%%%   do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
-%%% end
+show_avg_feedbacks_plethora
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

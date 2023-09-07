@@ -6,7 +6,7 @@ clear
 date
 
 if [[ "$1" -eq "" ]]; then
-  echo "no arguments, set $1 = 16"
+  echo "no arguments, set first arg to 16"
   c=16
 else
   #echo "the argument is $1"
@@ -16,7 +16,7 @@ else
 fi
 
 if [[ "$2" -eq "" ]]; then
-  echo "no arguments, set $2 = 1 (cpu_highmem)"
+  echo "no or one argument, set second arg to 1, send jobs to cpu2021"
 else
   echo "the second argument is $2"
 fi
