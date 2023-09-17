@@ -1,13 +1,14 @@
-miaow.debug          = 'false';     %% no debuging
-miaow.debug_dir      = '../Debug/'; %% no debuging
-miaow.iQuantile         = +16;      %% 1-16 for coldest-warmest, 00 for mean
-miaow.NorD = +1;                    %% [+1] night/desc   -1 : day/asc
-miaow.iDebugRatesUseNWP = -1;       %% [-1] use AIRS observed trends
-                                       %% 31,32 use reconstructed spectral trends from night/day AIRS L3
-                                       %% 51,52 use reconstructed spectral trends from night/day ERA5
-                                       %% 61,62 use reconstructed spectral trends from night/day CMIP6 (technically they are the same)
+miaow.iAllorSeasonal    = +1;          %% +1 = trends over 12 months, -1/-2/-3/-4 = DJF, MAM, JJA, SON
+miaow.debug             = 'false';     %% no debuging
+miaow.debug_dir         = '../Debug/'; %% no debuging
+miaow.iQuantile         = +16;         %% 1-16 for coldest-warmest, 00 for mean
+miaow.NorD = +1;                       %% [+1] night/desc   -1 : day/asc
+miaow.iDebugRatesUseNWP = -1;          %% [-1] use AIRS observed trends
+                                       %%   31,32 use reconstructed spectral trends from night/day AIRS L3
+                                       %%   51,52 use reconstructed spectral trends from night/day ERA5
+                                       %%   61,62 use reconstructed spectral trends from night/day CMIP6 (technically they are the same)
 
-driver_allowedparams = [{'debug'},{'debug_dir'},{'iDebugRatesUseNWP'},{'NorD'},{'iQuantile'}];
+driver_allowedparams = [{'debug'},{'debug_dir'},{'iDebugRatesUseNWP'},{'NorD'},{'iQuantile'},{'iAllorSeasonal'}];
 
 %disp('miaow before')
 %miaow

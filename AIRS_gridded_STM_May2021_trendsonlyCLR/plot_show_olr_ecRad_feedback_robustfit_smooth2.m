@@ -156,6 +156,11 @@ showfeedbacks_robustfit_all(ix,4,2) = junk.feedback_ecRad.wv.robustfit_all(2);
 showfeedbacks_robustfit_all(ix,5,2) = junk.feedback_ecRad.skt.robustfit_all(2);
 showfeedbacks_robustfit_all(ix,6,2) = junk.feedback_ecRad.ptemp_co2.robustfit_all(2);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp(' ')
+disp('showing means from fits, 64 latbins')
+
 %% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
 %% but longwave feedback is um of first 4
 ixx = ix;
@@ -199,43 +204,56 @@ if ~exist('iSmooth')
   iSmooth = 10;
 end
 
-disp('showing means from weighted rlat fits')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear cosavg
 cosrlat = cos(rlat*pi/180);
-cosavg(1,1) = sum(era5_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(1,2) = sum(merra2_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(1,3) = sum(umbc_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(1,4) = sum(airsL3_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(1,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
 
-cosavg(2,1) = sum(era5_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(2,2) = sum(merra2_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(2,3) = sum(umbc_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(2,4) = sum(airsL3_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(2,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
+cosxrlat = cosrlat;
+cosxrlat = ones(size(cosrlat));
+%cosxrlat = cosrlat.^0.5;
 
-cosavg(3,1) = sum(era5_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(3,2) = sum(merra2_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(3,3) = sum(umbc_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(3,4) = sum(airsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(3,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
+disp(' ')
+disp('THIS IS WIERD since we have already done the cosine weighting, and doing more cosine weighting')
+disp('BUT IF YOU MAKE cosrlat == 1 then DOING the MEAN and ANSWERS still are BAD, compared to plot_show_olr_ecRad_feedback_globalsstfit_smooth2')
+disp('<<<< showing means from weighted rlat fits, 64 latbins >>> ')
+disp('BUT IF YOU MAKE cosrlat == 1 then DOING the MEAN and ANSWERS come out GOOD')
+disp('THIS IS WIERD since we have already done the cosine weighting, and doing more cosine weighting')
 
-cosavg(4,1) = sum(era5_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(4,2) = sum(merra2_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(4,3) = sum(umbc_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(4,4) = sum(airsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
-cosavg(4,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosrlat) / sum(cosrlat);
+cosavg(1,1) = sum(era5_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(1,2) = sum(merra2_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(1,3) = sum(umbc_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(1,4) = sum(airsL3_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(1,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+
+cosavg(2,1) = sum(era5_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(2,2) = sum(merra2_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(2,3) = sum(umbc_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(2,4) = sum(airsL3_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(2,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+
+cosavg(3,1) = sum(era5_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(3,2) = sum(merra2_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(3,3) = sum(umbc_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(3,4) = sum(airsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(3,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+
+cosavg(4,1) = sum(era5_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(4,2) = sum(merra2_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(4,3) = sum(umbc_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(4,4) = sum(airsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
+cosavg(4,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1) .* cosxrlat) / sum(cosxrlat);
 
 cosavg(5,:) = sum(cosavg(1:4,:));
 cosavg(5,1) = sum((era5_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) + era5_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) + ...
-                   era5_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + era5_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosrlat) / sum(cosrlat);
+                   era5_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + era5_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosxrlat) / sum(cosxrlat);
 cosavg(5,2) = sum((merra2_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) + merra2_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) + ...
-                   merra2_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + merra2_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosrlat) / sum(cosrlat);
+                   merra2_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + merra2_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosxrlat) / sum(cosxrlat);
 cosavg(5,3) = sum((umbc_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) + umbc_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) + ...
-                   umbc_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + umbc_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosrlat) / sum(cosrlat);
+                   umbc_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + umbc_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosxrlat) / sum(cosxrlat);
 cosavg(5,4) = sum((airsL3_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) + airsL3_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) + ...
-                   airsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + airsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosrlat) / sum(cosrlat);
+                   airsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + airsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosxrlat) / sum(cosxrlat);
 cosavg(5,5) = sum((climcapsL3_spectral_olr.feedback_ecRad.planck.robustfit_latbin(:,1) + climcapsL3_spectral_olr.feedback_ecRad.lapse.robustfit_latbin(:,1) + ...
-                   climcapsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + climcapsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosrlat) / sum(cosrlat);
+                   climcapsL3_spectral_olr.feedback_ecRad.o3.robustfit_latbin(:,1) + climcapsL3_spectral_olr.feedback_ecRad.wv.robustfit_latbin(:,1)).* cosxrlat) / sum(cosxrlat);
 cosavg = cosavg';
 
 for ix = 1 : 5

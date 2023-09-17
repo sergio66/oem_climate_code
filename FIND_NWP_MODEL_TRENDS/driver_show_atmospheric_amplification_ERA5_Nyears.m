@@ -14,18 +14,21 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 [Y,X] = meshgrid(rlat,rlon);
 X = X; Y = Y;
 
+addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
+[salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
+% YY = Y(:);
+% XX = X(:);
+XX = X'; XX = XX(:); XX = XX';
+YY = Y'; YY = YY(:); YY = YY';
+
 iCosWgt = +1;
 if iCosWgt > 0
-  YY = Y(:)'; 
+  % YY = Y(:)'; 
+  YY = Y'; YY = YY(:); YY = YY';
   YY = cos(YY*pi/180);
 else
   YY = ones(1,4608);
 end
-
-addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
-[salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
-Ylat = Y(:);
-Xlon = X(:);
 
 N_01 = load('ERA5_atm_N_cld_data_2002_09_to_2003_08_trends_desc.mat');
 N_02 = load('ERA5_atm_N_cld_data_2002_09_to_2004_08_trends_desc.mat');
@@ -119,16 +122,16 @@ end
 clear maskLF
 maskLF = zeros(1,4608);
 maskLF = nan(1,4608);    %% MODIFICATION 1
-if size(landfrac) ~= size(Xlon)
-  Xlon = Xlon';
-  Ylat = Ylat';
+if size(landfrac) ~= size(XX)
+  XX = XX';
+  YY = YY';
 end
 if iAorOorL == -7
-  maskLF(abs(Ylat) > 60) = 1;
+  maskLF(abs(YY) > 60) = 1;
 elseif iAorOorL == -6
-  maskLF(abs(Ylat) > 30 & abs(Ylat) <= 60) = 1;
+  maskLF(abs(YY) > 30 & abs(YY) <= 60) = 1;
 elseif iAorOorL == -5
-  maskLF(abs(Ylat) < 30) = 1;
+  maskLF(abs(YY) < 30) = 1;
 elseif iAorOorL == 0
   maskLF = ones(1,4608);
 elseif iAorOorL == -1
@@ -136,17 +139,17 @@ elseif iAorOorL == -1
 elseif iAorOorL == +1
   maskLF(landfrac == 0) = 1;
 elseif iAorOorL == -2
-  maskLF(landfrac == 1 & abs(Ylat) <= 30) = 1;
+  maskLF(landfrac == 1 & abs(YY) <= 30) = 1;
 elseif iAorOorL == +2
-  maskLF(landfrac == 0 & abs(Ylat) <= 30) = 1;
+  maskLF(landfrac == 0 & abs(YY) <= 30) = 1;
 elseif iAorOorL == -3
-  maskLF(landfrac == 1 & abs(Ylat) > 30 & abs(Ylat) <= 60) = 1;
+  maskLF(landfrac == 1 & abs(YY) > 30 & abs(YY) <= 60) = 1;
 elseif iAorOorL == +3
-  maskLF(landfrac == 0 & abs(Ylat) > 30 & abs(Ylat) <= 60) = 1;
+  maskLF(landfrac == 0 & abs(YY) > 30 & abs(YY) <= 60) = 1;
 elseif iAorOorL == -4
-  maskLF(landfrac == 1 & abs(Ylat) > 60) = 1;
+  maskLF(landfrac == 1 & abs(YY) > 60) = 1;
 elseif iAorOorL == +4
-  maskLF(landfrac == 0 & abs(Ylat) > 60) = 1;
+  maskLF(landfrac == 0 & abs(YY) > 60) = 1;
 end
 maskLFmatr = reshape(maskLF,72,64)';
 mask = find(maskLF == 1);

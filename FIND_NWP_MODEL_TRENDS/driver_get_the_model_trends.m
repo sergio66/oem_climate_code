@@ -86,6 +86,7 @@ if iSpectra == 1
   obsrates = load(strUMBC,'rates');  
   obslat = load(strUMBC,'rlat');
   obslon = load(strUMBC,'rlon');
+
   [YY,XX] = meshgrid(obslat.rlat,obslon.rlon);
   YY = YY(:);
   cosYY = cos(YY*pi/180)';

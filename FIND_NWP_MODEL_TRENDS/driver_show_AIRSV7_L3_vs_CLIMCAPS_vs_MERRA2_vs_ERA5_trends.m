@@ -11,12 +11,12 @@ function [era5,merra2,airsL3,climcapsL3,umbc,thecorr,amp] = driver_show_AIRSV7_L
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_AIRSL3calcs_spectraltrends.mat';     iNumYears = 20; %% compare geophysical trends from AIRS L3  spectral trends
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_CLIMCAPSL3calcs_spectraltrends.mat'; iNumYears = 20; %% compare geophysical trends from CLIMCAPS spectral trends
 
-  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat'; iNumYears = 20;     %% use CarbonTracker CO2 trends, MLS a priori
-  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20;         %% use CarbonTracker CO2 trends
-
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 05;         %% use CarbonTracker CO2 trends
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 10;         %% use CarbonTracker CO2 trends
   strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 15;         %% use CarbonTracker CO2 trends
+
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat'; iNumYears = 20;     %% use CarbonTracker CO2 trends, MLS a priori
+  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat'; iNumYears = 20;         %% use CarbonTracker CO2 trends
 
   driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears);  
 %}
@@ -78,10 +78,15 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 X = X; Y = Y;
 
 addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
-[salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
-Ylat = Y(:);
-Xlon = X(:);
-mu = cos(Ylat*pi/180); mu = mu';
+[salti, landfrac] = usgs_deg10_dem(Y,X);
+
+XX = X; XX = XX(:); XX = XX'; %% WRONG WRONG WRONG WRONG 
+YY = Y; YY = YY(:); YY = YY'; %% WRONG WRONG WRONG WRONG 
+
+XX = X'; XX = XX(:); XX = XX'; %% RIGHT RIGHT RIGHT RIGHT 
+YY = Y'; YY = YY(:); YY = YY'; %% RIGHT RIGHT RIGHT RIGHT 
+
+mu = cos(YY*pi/180);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -104,6 +109,7 @@ iX = -1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+clear ajunk
 if iX > 0
   %load /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat
   fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
@@ -115,7 +121,7 @@ if iX > 0
     fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
     iNumYearsPowWow = 2002+iaJunk(moo);
   end
-  loader = ['load ' fin];
+  loader = ['ajunk = load(' fin ');'];
   eval(loader)
   fprintf(1,'loaded %2i years AIRS     geophysical trends from %s \n',iNumYearsPowWow,fin)
 else
@@ -128,25 +134,30 @@ else
     iNumYearsPowWow = 2002+iaJunk(moo);
     fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
   end
-  loader = ['load ' fin];
+  loader = ['ajunk = load(''' fin ''');'];
   eval(loader)
   fprintf(1,'loaded %2i years AIRS     geophysical trends from %s \n',iNumYearsPowWow,fin)
 end
 
-z11 = thestats64x72.stemprate(:);
+%%%%% <<<<< z11 is AIRS L3, now make it newz21 = z11 >>>>>
+z11 = ajunk.thestats64x72.stemprate(:);
 z11 = z11';
+z11unc = ajunk.thestats64x72.stempratestd(:);
+z11unc = z11unc';
+newz21    = z11;
+newz21unc = z11unc;
 
 for ii = 1 : 72
   for jj = 1 : 64
-    junk = squeeze(thestats64x72.RHrate(ii,jj,:));
-    airsL3.RHrate(ii,jj,:) = interp1(log10(Qlevs),junk,log10(plays100),[],'extrap');
-    junk = squeeze(thestats64x72.waterrate(ii,jj,:));
-    airsL3.waterrate(ii,jj,:) = interp1(log10(Qlevs),junk,log10(plays100),[],'extrap');
-    junk = squeeze(thestats64x72.ptemprate(ii,jj,:));
-    airsL3.ptemprate(ii,jj,:) = interp1(log10(Tlevs),junk,log10(plays100),[],'extrap');
+    junk = squeeze(ajunk.thestats64x72.RHrate(ii,jj,:));
+    airsL3.RHrate(ii,jj,:) = interp1(log10(ajunk.Qlevs),junk,log10(plays100),[],'extrap');
+    junk = squeeze(ajunk.thestats64x72.waterrate(ii,jj,:));
+    airsL3.waterrate(ii,jj,:) = interp1(log10(ajunk.Qlevs),junk,log10(plays100),[],'extrap');
+    junk = squeeze(ajunk.thestats64x72.ptemprate(ii,jj,:));
+    airsL3.ptemprate(ii,jj,:) = interp1(log10(ajunk.Tlevs),junk,log10(plays100),[],'extrap');
   end
 end
-airsL3.stemprate = thestats64x72.stemprate(:)';
+airsL3.stemprate = ajunk.thestats64x72.stemprate(:)';
 bad = find(isnan(airsL3.stemprate) | isinf(airsL3.stemprate)); airsL3.stemprate(bad) = 0;
 bad = find(isnan(airsL3.ptemprate) | isinf(airsL3.ptemprate)); airsL3.ptemprate(bad) = 0;
 bad = find(isnan(airsL3.waterrate) | isinf(airsL3.waterrate)); airsL3.waterrate(bad) = 0;
@@ -161,6 +172,7 @@ figure(13); dmmw_dST_airsL3 = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,mmw0,airs
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+clear ajunk
 fin = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
 iNumYearsPowWow = iNumYears;
 if ~exist(fin)
@@ -170,24 +182,29 @@ if ~exist(fin)
   fin = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
   iNumYearsPowWow = 2002+iaJunk(moo);
 end
-loader = ['load ' fin];
+loader = ['ajunk = load(''' fin ''');'];
 eval(loader)
 fprintf(1,'loaded %2i years CLIMCAPS geophysical trends from %s \n',iNumYearsPowWow,fin)
 
-z12 = thestats64x72.stemprate(:);
+%%%%% <<<<< z12 is AIRS L3, now make it newz22 = z12 >>>>>
+z12 = ajunk.thestats64x72.stemprate(:);
 z12 = z12';
+z12unc = ajunk.thestats64x72.stempratestd(:);
+z12unc = z12unc';
+newz22    = z12;
+newz22unc = z12unc;
 
 for ii = 1 : 72
   for jj = 1 : 64
-    junk = squeeze(thestats64x72.RHrate(ii,jj,:));
-    climcapsL3.RHrate(ii,jj,:) = interp1(log10(Qlevs/100),100*junk,log10(plays100),[],'extrap');
-    junk = squeeze(thestats64x72.waterrate(ii,jj,:));
-    climcapsL3.waterrate(ii,jj,:) = interp1(log10(Qlevs/100),junk,log10(plays100),[],'extrap');
-    junk = squeeze(thestats64x72.ptemprate(ii,jj,:));
-    climcapsL3.ptemprate(ii,jj,:) = interp1(log10(Tlevs/100),junk,log10(plays100),[],'extrap');
+    junk = squeeze(ajunk.thestats64x72.RHrate(ii,jj,:));
+    climcapsL3.RHrate(ii,jj,:) = interp1(log10(ajunk.Qlevs/100),100*junk,log10(plays100),[],'extrap');
+    junk = squeeze(ajunk.thestats64x72.waterrate(ii,jj,:));
+    climcapsL3.waterrate(ii,jj,:) = interp1(log10(ajunk.Qlevs/100),junk,log10(plays100),[],'extrap');
+    junk = squeeze(ajunk.thestats64x72.ptemprate(ii,jj,:));
+    climcapsL3.ptemprate(ii,jj,:) = interp1(log10(ajunk.Tlevs/100),junk,log10(plays100),[],'extrap');
   end
 end
-climcapsL3.stemprate = thestats64x72.stemprate(:)';
+climcapsL3.stemprate = ajunk.thestats64x72.stemprate(:)';
 bad = find(isnan(climcapsL3.stemprate) | isinf(climcapsL3.stemprate)); climcapsL3.stemprate(bad) = 0;
 bad = find(isnan(climcapsL3.ptemprate) | isinf(climcapsL3.ptemprate)); climcapsL3.ptemprate(bad) = 0;
 bad = find(isnan(climcapsL3.waterrate) | isinf(climcapsL3.waterrate)); climcapsL3.waterrate(bad) = 0;
@@ -202,6 +219,7 @@ figure(13); clf; dmmw_dST_climcapsL3 = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+clear ajunk
 fin = ['MERRA2_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
 iNumYearsPowWow = iNumYears;
 if ~exist(fin)
@@ -211,16 +229,20 @@ if ~exist(fin)
   fin = ['MERRA2_atm_data_2002_09_to_' num2str(2002+iaJunk(moo)) '_08_trends_desc.mat']; 
   iNumYearsPowWow = 2002+iaJunk(moo);
 end
-loader = ['load ' fin];
+loader = ['ajunk = load(''' fin ''');'];
 eval(loader)
 fprintf(1,'loaded %2i years MERRA2   geophysical trends from %s \n',iNumYearsPowWow,fin)
 
-z21 = trend_stemp;
-merra2.stemprate = trend_stemp;
-merra2.RHrate   = trend_RH;
-merra2.waterrate = trend_gas_1;
-merra2.ptemprate = trend_ptemp;
-merra2.trend_mmw = trend_mmw;
+%%%%% <<<<< z21 is MERRA2, now make it newz12 = z21 >>>>>
+z21    = ajunk.trend_stemp;
+z21unc = ajunk.trend_stemp_err;
+merra2.stemprate = ajunk.trend_stemp;
+merra2.RHrate   = ajunk.trend_RH;
+merra2.waterrate = ajunk.trend_gas_1;
+merra2.ptemprate = ajunk.trend_ptemp;
+merra2.trend_mmw = ajunk.trend_mmw;
+newz12    = z21;
+newz12unc = z21unc;
 
 bad = find(isnan(merra2.stemprate) | isinf(merra2.stemprate)); merra2.stemprate(bad) = 0;
 bad = find(isnan(merra2.ptemprate) | isinf(merra2.ptemprate)); merra2.ptemprate(bad) = 0;
@@ -234,22 +256,28 @@ figure(13); clf; dmmw_dST_MERRA2 = dmmw_dsst_VS_lat(lfmaskA,lfmaskL,lfmaskO,mmw0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+clear ajunk
 if iNumYears > 0
   eraX = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
   eraX = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
 else
   eraX = ['ERA5_atm_data_2002_09_to_' num2str(2022) '_08_trends_desc.mat'];
 end
-loader = ['load ' eraX];
+loader = ['ajunk = load(''' eraX ''');'];
 fprintf(1,'loaded %2i years ERA5     geophysical trends from %s \n',iNumYears,eraX)
 eval(loader);
 
-z22 = trend_stemp;
-era5.stemprate = trend_stemp;
-era5.RHrate    = trend_RH;
-era5.waterrate = trend_gas_1;
-era5.ptemprate = trend_ptemp;
-era5.trend_mmw = trend_mmw;
+%%%%% <<<<< z22 is ERA5, now make it newz11 = z11 >>>>>
+z22    = ajunk.trend_stemp;
+z22unc = ajunk.trend_stemp_err;
+era5.stemprate = ajunk.trend_stemp;
+era5.RHrate    = ajunk.trend_RH;
+era5.waterrate = ajunk.trend_gas_1;
+era5.ptemprate = ajunk.trend_ptemp;
+era5.trend_mmw = ajunk.trend_mmw;
+trend_rlat64   = ajunk.trend_rlat64;
+newz11    = z22;
+newz11unc = z22unc;
 
 bad = find(isnan(era5.stemprate) | isinf(era5.stemprate)); era5.stemprate(bad) = 0;
 bad = find(isnan(era5.ptemprate) | isinf(era5.ptemprate)); era5.ptemprate(bad) = 0;
@@ -301,26 +329,26 @@ aslmap_2x2tiledlayout(z11,z12,z21,z22,iFig,plotoptions);
 disp('SKT trend K/yr  | AIRS   CLIMCAPS   MERRA2      ERA5    ');
 disp('----------------|---------------------------------------');
 junk = [nanmean(z11)  nanmean(z12) nanmean(z21)  nanmean(z22)];
-fprintf(1,'(ALL  )         |  %8.6f %8.6f %8.6f %8.6f \n',junk);
+fprintf(1,'(ALL  )         |  %8.3f %8.3f %8.3f %8.3f \n',junk);
 boo = find(landfrac == 0);  
 junk = [nanmean(z11(boo))  nanmean(z12(boo)) nanmean(z21(boo))  nanmean(z22(boo))];
-fprintf(1,'(OCEAN)         |  %8.6f %8.6f %8.6f %8.6f \n',junk);
+fprintf(1,'(OCEAN)         |  %8.3f %8.3f %8.3f %8.3f \n',junk);
 boo = find(landfrac > 0.99);  
 junk = [nanmean(z11(boo))  nanmean(z12(boo)) nanmean(z21(boo))  nanmean(z22(boo))];
-fprintf(1,'(LAND )         |  %8.6f %8.6f %8.6f %8.6f \n',junk);
+fprintf(1,'(LAND )         |  %8.3f %8.3f %8.3f %8.3f \n',junk);
 disp('----------------|---------------------------------------');
 
 disp('SKT trend K/yr  | AIRS   CLIMCAPS   MERRA2      ERA5    ');
 disp('area weighted with cos(lat)')
 disp('----------------|---------------------------------------');
 junk = [nansum(z11.*mu)/nansum(mu)  nansum(z12.*mu)/nansum(mu) nansum(z21.*mu)/nansum(mu)  nansum(z22.*mu)/nansum(mu)];
-fprintf(1,'(ALL  )         |  %8.6f %8.6f %8.6f %8.6f \n',junk);
+fprintf(1,'(ALL  )         |  %8.3f %8.3f %8.3f %8.3f \n',junk);
 boo = find(landfrac == 0);  
 junk = [nansum(z11(boo).*mu(boo))/nansum(mu(boo))  nansum(z12(boo).*mu(boo))/nansum(mu(boo)) nansum(z21(boo).*mu(boo))/nansum(mu(boo))  nansum(z22(boo).*mu(boo))/nansum(mu(boo))];
-fprintf(1,'(OCEAN)         |  %8.6f %8.6f %8.6f %8.6f \n',junk);
+fprintf(1,'(OCEAN)         |  %8.3f %8.3f %8.3f %8.3f \n',junk);
 boo = find(landfrac > 0.99);  
 junk = [nansum(z11(boo).*mu(boo))/nansum(mu(boo))  nansum(z12(boo).*mu(boo))/nansum(mu(boo)) nansum(z21(boo).*mu(boo))/nansum(mu(boo))  nansum(z22(boo).*mu(boo))/nansum(mu(boo))];
-fprintf(1,'(LAND )         |  %8.6f %8.6f %8.6f %8.6f \n',junk);
+fprintf(1,'(LAND )         |  %8.3f %8.3f %8.3f %8.3f \n',junk);
 disp('----------------|---------------------------------------');
 
 clear plotoptions
@@ -380,7 +408,7 @@ profile_plots_2x2tiledlayout(trend_rlat64,plays100,miaow11,miaow12,miaow21,miaow
 if iUMBC  > 0
   %strUMBC = input('Enter UMBC results fname eg ''/asl/s1/sergio/JUNK/test5_march9_2023.mat'' : ');
   fprintf(1,'<<< loading in %s >>> \n',strUMBC);
-  umbcX        = load(strUMBC,'deltaRH','deltaT','fracWV','results');
+  umbcX        = load(strUMBC,'deltaRH','deltaT','fracWV','results','resultsunc');
 
   strGISS = ['ChrisHTrends/giss_trends_2002_' num2str(2002+iNumYears) '.mat'];
   iNumYearsPowWow = iNumYears;
@@ -392,8 +420,9 @@ if iUMBC  > 0
     iNumYearsPowWow = 2002+iaJunk(moo);
   end
 
+  clear ajunk agiss
   fprintf(1,'loaded %2i years %s \n',iNumYearsPowWow,strGISS);
-  loader = ['load ' strGISS];
+  loader = ['agiss = load(''' strGISS ''');'];
   eval(loader);
 
   if isfield(umbcX,'fracWV')
@@ -410,15 +439,22 @@ if iUMBC  > 0
     umbcX.fracWV = umbcX.fracWV';
     umbcX.deltaT = umbcX.deltaT';
   end
-  umbcX.fracWV = umbcX.fracWV(1:100,:);
-  umbcX.stemprate = umbcX.results(:,6)';
+  umbcX.fracWV       = umbcX.fracWV(1:100,:);
+  umbcX.stemprate    = umbcX.results(:,6)';
+  umbcX.stemprateunc = umbcX.resultsunc(:,6)';
 
-  umbc.stemprate  = umbcX.stemprate;
-  umbc.ptemprate  = umbcX.deltaT;
-  umbc.RHrate     = umbcX.deltaRH;
-  umbc.waterrate  = umbcX.fracWV;
+  umbc.stemprate    = umbcX.stemprate;
+  umbc.stemprateunc = umbcX.stemprateunc;
+  umbc.ptemprate    = umbcX.deltaT;
+  umbc.RHrate       = umbcX.deltaRH;
+  umbc.waterrate    = umbcX.fracWV;
 
   clear umbcX
+
+  z11x       = umbc.stemprate;
+  z11xunc    = umbc.stemprateunc;
+  newz11x    = umbc.stemprate;
+  newz11xunc = umbc.stemprateunc;
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
   figure(13); clf
@@ -457,7 +493,6 @@ if iUMBC  > 0
   plotoptions.str22 = 'ERA5';
   plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
-  z11x = umbc.stemprate;
   aslmap_2x2tiledlayout(z11x,z12,z21,z22,iFig,plotoptions);
   
   clear plotoptions
@@ -624,12 +659,12 @@ if iUMBC  > 0
   %%%%%%%%%%%%%%%%%%%%%%%%%
   %% do correlations
 
-  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,era5.stemprate);        thecorr.ST(1) = r;
-  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,merra2.stemprate);      thecorr.ST(2) = r;
-  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,airsL3.stemprate);      thecorr.ST(3) = r;
-  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,climcapsL3.stemprate);  thecorr.ST(4) = r;
-  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate',giss_trend4608(:));    thecorr.ST(5) = r;
-  [r,chisqr,P] = nanlinearcorrelation(era5.stemprate',giss_trend4608(:));    thecorr.ST_ERA5_GISS = r;
+  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,era5.stemprate);           thecorr.ST(1) = r;
+  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,merra2.stemprate);         thecorr.ST(2) = r;
+  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,airsL3.stemprate);         thecorr.ST(3) = r;
+  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,climcapsL3.stemprate);     thecorr.ST(4) = r;
+  [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate',agiss.giss_trend4608(:)); thecorr.ST(5) = r;
+  [r,chisqr,P] = nanlinearcorrelation(era5.stemprate',agiss.giss_trend4608(:)); thecorr.ST_ERA5_GISS = r;
 
   iFig = iFig + 1;
   figure(iFig); plot(umbc.stemprate,era5.stemprate,'r.',umbc.stemprate,merra2.stemprate,'g.',...
@@ -671,8 +706,8 @@ if iUMBC  > 0
  
   iFig = iFig + 1;
   figure(iFig); clf;
-   fprintf(1,'ST correlations vs UMBC : ERA5/MERRA2/AIRSL3/CLIMCAPSL3/GISS =  %8.6f %8.6f %8.6f %8.6f %8.6f\n',thecorr.ST);
-   fprintf(1,'ST correlations         : ERA5 vs GISS =  %8.6f\n',thecorr.ST_ERA5_GISS);
+   fprintf(1,'ST correlations vs UMBC : ERA5/MERRA2/AIRSL3/CLIMCAPSL3/GISS =  %8.2f %8.2f %8.2f %8.2f %8.2f\n',thecorr.ST);
+   fprintf(1,'ST correlations         : ERA5 vs GISS =  %8.2f\n',thecorr.ST_ERA5_GISS);
    subplot(131); plot(thecorr.RH',plays100(i100),'linewidth',2); plotaxis2; hl = legend('ERA5','MERRA2','AIRSL3','CLIMCAPSL3','location','best','fontsize',8); set(gca,'ydir','reverse'); title('RH corr');
    subplot(132); plot(thecorr.water',plays100(i100),'linewidth',2); plotaxis2; hl = legend('ERA5','MERRA2','AIRSL3','CLIMCAPSL3','location','best','fontsize',8); set(gca,'ydir','reverse'); title('water corr');
    subplot(133); plot(thecorr.ptemp',plays100(i10),'linewidth',2); plotaxis2; hl = legend('ERA5','MERRA2','AIRSL3','CLIMCAPSL3','location','best','fontsize',8); set(gca,'ydir','reverse'); title('ptemp corr');
@@ -733,78 +768,84 @@ if iUMBC  > 0
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  % z11 = AIRS, z12 = climcaps   z21 = MERRA2     z22 = ERA5      z11x = umbc   z32 = giss
+  % z11 = AIRS,       z12 = climcaps      z21 = MERRA2        z22 = ERA5            z11x/z31 = umbc      z32 = giss
+  % newz11 = ERA5, newz12 = MERRA2     newz21 = AIRSL3     newz22 = CLIMCAPS  newz11x/newz31 = umbc   newz32 = giss
+
+  % z31 = z11x;    z31unc = z11xunc; 
+  % z32 = z32;
+  % z32    = agiss.giss_trend4608(:);     z32 = z32';
+  % z32unc = agiss.giss_trend_err4608(:); z32unc = z32unc';
+
+  newz31 = newz11x;                        newz31unc = newz11xunc; 
+  newz32    = agiss.giss_trend4608(:);     newz32 = newz32';
+  newz32unc = agiss.giss_trend_err4608(:); newz32unc = newz32unc';
+
+  %%%%%%%%%%
 
   iFig = iFig + 1;
   figure(iFig); clf;
-  z32 = giss_trend4608(:); z32 = z32';
   clear plotoptions
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  % plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
+  % plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
+  plotoptions.str11 = 'ERA5';      plotoptions.str22 = 'MERRA2';
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
-  plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'UMBC';      plotoptions.str32 = 'GISS';
   plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
-  z31 = z11x; z32 = z32;
-  aslmap_3x2tiledlayout(z11,z12,z21,z22,z31,z32,iFig,plotoptions);
+  aslmap_3x2tiledlayout(newz11,newz12,newz21,newz22,newz31,newz32,iFig,plotoptions);
 
-  figure(20); clf; aslmap(20,rlat65,rlon73,smoothn(reshape(z31,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.151); %% UMBC
-  figure(21); clf; aslmap(21,rlat65,rlon73,smoothn(reshape(z32,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.151); %% GISS
+  figure(20); clf; aslmap(20,rlat65,rlon73,smoothn(reshape(newz31,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.151); %% UMBC
+  figure(21); clf; aslmap(21,rlat65,rlon73,smoothn(reshape(newz32,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.151); %% GISS
   
   %%%%%%%%%% 
 
   clear plotoptions
   plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
-  plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3'; plotoptions.str13 = 'MERRA2';    
-  plotoptions.str21 = 'ERA5';      plotoptions.str22 = 'UMBC';        plotoptions.str23 = 'GISS';
   plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
-  z31 = z11x; z32 = z32;
-  aslmap_2x3tiledlayout(z11,z12,z21,z22,z31,z32,iFig,plotoptions);
+  % plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3'; plotoptions.str13 = 'MERRA2';    
+  % plotoptions.str21 = 'ERA5';      plotoptions.str22 = 'UMBC';        plotoptions.str23 = 'GISS';
+  % z31 = z11x;    z31unc = z11xunc;  z32 = z32;
+  % z31 = z11x;    z31unc = z11xunc;  z32 = z32;
+  plotoptions.str11 = 'ERA5';         plotoptions.str12 = 'MERRA2';      plotoptions.str13 = 'AIRS L3';    
+  plotoptions.str21 = 'CLIMCAPS L3';  plotoptions.str22 = 'UMBC';        plotoptions.str23 = 'GISS';
+
+  aslmap_2x3tiledlayout(newz11,newz12,newz21,newz22,newz31,newz32,iFig,plotoptions);
 
   %%%%%%%%%% 
 
   clear plotoptions
-  plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
-  plotoptions.str11 = 'AIRS L3';       plotoptions.str12 = 'ERA5';          plotoptions.str13 = 'UMBC';    
-  plotoptions.str21 = 'CLIMCAPS L3';   plotoptions.str22 = 'MERRA2';        plotoptions.str23 = 'GISS';
   plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
-  z31 = z11x; z32 = z32;
-  aslmap_2x3tiledlayout(z11,z22,z31,z12,z21,z32,iFig,plotoptions);
+  plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  % plotoptions.str11 = 'AIRS L3';       plotoptions.str12 = 'ERA5';          plotoptions.str13 = 'UMBC';    
+  % plotoptions.str21 = 'CLIMCAPS L3';   plotoptions.str22 = 'MERRA2';        plotoptions.str23 = 'GISS';
+  % z31 = z11x;    z31unc = z11xunc; 
+  % z32 = z32;
+  plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'UMBC';        plotoptions.str13 = 'AIRS L3';    
+  plotoptions.str21 = 'MERRA2';  plotoptions.str22 = 'GISS';        plotoptions.str23 = 'CLIMCAPSL3';
+
+  aslmap_2x3tiledlayout(newz11,newz31,newz21,newz12,newz32,newz22,iFig,plotoptions);
 
   %%%%%%%%%% 
 
-  disp('SKT trend K/yr  | AIRS   CLIMCAPS   MERRA2      ERA5    UMBC     GISS');
-  disp('----------------|-------------------------------------------------------');
-  junk = [nanmean(z11)  nanmean(z12) nanmean(z21)  nanmean(z22) nanmean(z31)  nanmean(z32)];
-  fprintf(1,'(ALL  )         |  %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n',junk);
-  boo = find(landfrac == 0);  
-  junk = [nanmean(z11(boo))  nanmean(z12(boo)) nanmean(z21(boo))  nanmean(z22(boo)) nanmean(z31(boo))  nanmean(z32(boo))];
-  fprintf(1,'(OCEAN)         |  %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n',junk);
-  boo = find(landfrac > 0.99);  
-  junk = [nanmean(z11(boo))  nanmean(z12(boo)) nanmean(z21(boo))  nanmean(z22(boo)) nanmean(z31(boo))  nanmean(z32(boo))];
-  fprintf(1,'(LAND )         |  %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n',junk);
-  disp('----------------|-------------------------------------------------------');
-  
-  disp('SKT trend K/yr  | AIRS   CLIMCAPS   MERRA2      ERA5    UMBC     GISS');
-  disp('(area weighted with cos(lat)')
-  disp('----------------|--------------------------------------------------------');
-  junk = [nansum(z11.*mu)/nansum(mu)  nansum(z12.*mu)/nansum(mu) nansum(z21.*mu)/nansum(mu)  ...
-          nansum(z22.*mu)/nansum(mu) nansum(z31.*mu)/nansum(mu)  nansum(z32.*mu)/nansum(mu)];
-  fprintf(1,'(ALL  )         |  %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n',junk);
-  boo = find(landfrac == 0);  
-  junk = [nansum(z11(boo).*mu(boo))/nansum(mu(boo))  nansum(z12(boo).*mu(boo))/nansum(mu(boo)) ...
-          nansum(z21(boo).*mu(boo))/nansum(mu(boo))  nansum(z22(boo).*mu(boo))/nansum(mu(boo)) ...
-          nansum(z31(boo).*mu(boo))/nansum(mu(boo))  nansum(z32(boo).*mu(boo))/nansum(mu(boo))];
-  fprintf(1,'(OCEAN)         |  %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n',junk);
-  boo = find(landfrac > 0.99);  
-  junk = [nansum(z11(boo).*mu(boo))/nansum(mu(boo))  nansum(z12(boo).*mu(boo))/nansum(mu(boo)) ...
-          nansum(z21(boo).*mu(boo))/nansum(mu(boo))  nansum(z22(boo).*mu(boo))/nansum(mu(boo))...
-          nansum(z31(boo).*mu(boo))/nansum(mu(boo))  nansum(z32(boo).*mu(boo))/nansum(mu(boo))];
-  fprintf(1,'(LAND )         |  %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n',junk);
-  disp('----------------|--------------------------------------------------------');
+  tropics = find(abs(YY) <= 30);          
+  midlatsNtropics = find(abs(YY) <= 60); 
+  midlats = setdiff(midlatsNtropics,tropics); 
+  poles = find(abs(YY) > 60);             
 
+  iNewOrOld = +1;
+  if iNewOrOld < 0
+    show_skt_trends_6models_old
+  else
+    show_skt_trends_6models_new
+  end
+
+  disp('hit RET to continue to RH/Tz/Wvz plots at 200/500/800 mb '); pause
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
   [p.salti, p.landfrac] = usgs_deg10_dem(p.rlat, p.rlon);
@@ -859,31 +900,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'200 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
   
   iY = iY+1; iX = 0;
   iFig = iFig + 1;
@@ -913,31 +954,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dWVfrac/dt                   correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk); 
+    fprintf(1,'200 mb dWVfrac/dt                   correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk); 
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dWVfrac/dt   TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dWVfrac/dt   TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dWVfrac/dt   MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dWVfrac/dt   MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dWVfrac/dt   MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dWVfrac/dt   MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dWVfrac/dt   POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'200 mb dWVfrac/dt   POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
  
   iY = iY+1; iX = 0;
   iFig = iFig + 1;
@@ -967,31 +1008,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dT/dt                        correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dT/dt                        correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dT/dt        TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dT/dt        TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dT/dt        MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dT/dt        MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dT/dt        MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'200 mb dT/dt        MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'200 mb dT/dt        POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'200 mb dT/dt        POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
   %%%%%%%%%%
   iY = iY+1; iX = 0;
@@ -1022,31 +1063,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'500 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
   
   iY = iY+1; iX = 0;
   iFig = iFig + 1;
@@ -1076,31 +1117,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dWVfrac/dt                   correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dWVfrac/dt                   correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dWVfrac/dt   TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dWVfrac/dt   TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dWVfrac/dt   MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dWVfrac/dt   MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dWVfrac/dt   MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dWVfrac/dt   MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dWVfrac/dt   POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'500 mb dWVfrac/dt   POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
   iY = iY+1; iX = 0;
   iFig = iFig + 1;
@@ -1130,31 +1171,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dT/dt                        correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dT/dt                        correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dT/dt        TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dT/dt        TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dT/dt        MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dT/dt        MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dT/dt        MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'500 mb dT/dt        MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'500 mb dT/dt        POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'500 mb dT/dt        POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
   %%%%%%%%%%
   iY = iY+1; iX = 0;
@@ -1185,31 +1226,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'800 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
   iY = iY+1; iX = 0;
   iFig = iFig + 1;
@@ -1239,31 +1280,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dWVfrac/dt                   correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dWVfrac/dt                   correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dWVfrac/dt   TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dWVfrac/dt   TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dWVfrac/dt   MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dWVfrac/dt   MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dWVfrac/dt   MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dWVfrac/dt   MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dWVfrac/dt   POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'800 mb dWVfrac/dt   POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
   
   iY = iY+1; iX = 0;
   iFig = iFig + 1;
@@ -1293,31 +1334,31 @@ if iUMBC  > 0
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx21(:));  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:),zyx31(:));  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dT/dt                        correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dT/dt                        correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx11(:).*tropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx12(:).*tropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx21(:).*tropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*tropics,zyx31(:).*tropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dT/dt        TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dT/dt        TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx11(:).*midlats);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx12(:).*midlats);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx21(:).*midlats);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlats,zyx31(:).*midlats);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dT/dt        MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dT/dt        MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx11(:).*midlatsNtropics);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx12(:).*midlatsNtropics);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx21(:).*midlatsNtropics);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*midlatsNtropics,zyx31(:).*midlatsNtropics);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dT/dt        MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n',thecorr.junk);
+    fprintf(1,'800 mb dT/dt        MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx11(:).*poles);  thecorr.junk(1) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx12(:).*poles);  thecorr.junk(2) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx21(:).*poles);  thecorr.junk(3) = r;
     [r,chisqr,P] = nanlinearcorrelation(zyx22(:).*poles,zyx31(:).*poles);  thecorr.junk(4) = r;
     iX = iX + 1; allXchi(iY,iX,:) = thecorr.junk;
-    fprintf(1,'800 mb dT/dt        POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.6f %8.6f %8.6f %8.6f\n\n',thecorr.junk);
+    fprintf(1,'800 mb dT/dt        POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% iX = 1,2,3,4,5 === all, tropics,midlats,midlats+tropics,poles  = 5 total
@@ -1374,7 +1415,7 @@ if iUMBC  > 0
     ta.Padding = 'none';
     ta.TileSpacing = 'tight';
 
-keyboard_nowindow
+    disp('may as well hit dbquit'); keyboard_nowindow
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
   iY = input('Show 5 panel plots? (-1 default/+1) : ');

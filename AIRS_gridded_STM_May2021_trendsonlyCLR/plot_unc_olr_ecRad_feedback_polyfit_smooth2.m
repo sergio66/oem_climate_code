@@ -238,6 +238,12 @@ for ix = 1 : 5
 end
 trends_paper_show_withunc = showfeedbacks_withunc(1:5,[1 2 3 4 7]);
 
+disp(' ')
+disp('difference between the two')
+for ix = 1 : 5
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},abs(showfeedbacks(ix,[1 2 3 4 7])-showfeedbacks_withunc(ix,[1 2 3 4 7])));
+end
+
 figure(2); clf
 bar(trends_paper_show_withunc')
 ylabel('Feedback W/m2/K');

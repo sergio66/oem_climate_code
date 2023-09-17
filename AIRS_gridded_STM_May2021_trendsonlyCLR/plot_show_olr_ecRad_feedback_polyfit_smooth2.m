@@ -101,6 +101,7 @@ showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.polyfit;
 ixx = ix;
 showfeedbacks(1:ixx,7) = sum(showfeedbacks(1:ixx,[1 2 3 4]),2);
 
+disp('showing means from fits, 64 latbins')
 for ix = 1 : 5
   fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
 end
@@ -130,6 +131,69 @@ if ~exist('rlat')
   [Y,X] = meshgrid(rlat,rlon);
   X = X; Y = Y;
 end
+
+XX = X;  XX = XX(:); XX = XX';   %%%% WRONG WRONG WRONG WRONG
+YY = Y;  YY = YY(:); YY = YY';   %%%% WRONG WRONG WRONG WRONG
+
+XX = X'; XX = XX(:); XX = XX';   %%%% RIGHT RIGHT RIGHT RIGHT 
+YY = Y'; YY = YY(:); YY = YY';   %%%% RIGHT RIGHT RIGHT RIGHT 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+clear cosavg
+cosrlat = cos(rlat'*pi/180);
+
+cosxrlat = cosrlat;
+cosxrlat = ones(size(cosrlat));
+
+disp(' ')
+disp('THIS IS WIERD since we have already done the cosine weighting, and doing more cosine weighting')
+disp('BUT IF YOU MAKE cosrlat == 1 then DOING the MEAN and ANSWERS still come out BAD, unlike plot_show_olr_ecRad_feedback_slobalfitSSTavg_smooth2.m')
+disp('<<<< showing means from weighted rlat fits, 64 latbins >>> ')
+disp('BUT IF YOU MAKE cosrlat == 1 then DOING the MEAN and ANSWERS still come out BAD, unlike plot_show_olr_ecRad_feedback_slobalfitSSTavg_smooth2.m')
+disp('THIS IS WIERD since we have already done the cosine weighting, and doing more cosine weighting')
+
+cosavg(1,1) = sum(era5_spectral_olr.feedback_ecRad.planck.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,2) = sum(merra2_spectral_olr.feedback_ecRad.planck.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,3) = sum(umbc_spectral_olr.feedback_ecRad.planck.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,4) = sum(airsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+
+cosavg(2,1) = sum(era5_spectral_olr.feedback_ecRad.lapse.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,2) = sum(merra2_spectral_olr.feedback_ecRad.lapse.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,3) = sum(umbc_spectral_olr.feedback_ecRad.lapse.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,4) = sum(airsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+
+cosavg(3,1) = sum(era5_spectral_olr.feedback_ecRad.o3.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,2) = sum(merra2_spectral_olr.feedback_ecRad.o3.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,3) = sum(umbc_spectral_olr.feedback_ecRad.o3.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,4) = sum(airsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+
+cosavg(4,1) = sum(era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,2) = sum(merra2_spectral_olr.feedback_ecRad.wv.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,3) = sum(umbc_spectral_olr.feedback_ecRad.wv.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,4) = sum(airsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin .* cosxrlat) / sum(cosxrlat);
+
+cosavg(5,:) = sum(cosavg(1:4,:));
+cosavg(5,1) = sum((era5_spectral_olr.feedback_ecRad.planck.polyfit_latbin + era5_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+                   era5_spectral_olr.feedback_ecRad.o3.polyfit_latbin + era5_spectral_olr.feedback_ecRad.wv.polyfit_latbin).* cosxrlat) / sum(cosxrlat);
+cosavg(5,2) = sum((merra2_spectral_olr.feedback_ecRad.planck.polyfit_latbin + merra2_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+                   merra2_spectral_olr.feedback_ecRad.o3.polyfit_latbin + merra2_spectral_olr.feedback_ecRad.wv.polyfit_latbin).* cosxrlat) / sum(cosxrlat);
+cosavg(5,3) = sum((umbc_spectral_olr.feedback_ecRad.planck.polyfit_latbin + umbc_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+                   umbc_spectral_olr.feedback_ecRad.o3.polyfit_latbin + umbc_spectral_olr.feedback_ecRad.wv.polyfit_latbin).* cosxrlat) / sum(cosxrlat);
+cosavg(5,4) = sum((airsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin + airsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+                   airsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin + airsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin).* cosxrlat) / sum(cosxrlat);
+cosavg(5,5) = sum((climcapsL3_spectral_olr.feedback_ecRad.planck.polyfit_latbin + climcapsL3_spectral_olr.feedback_ecRad.lapse.polyfit_latbin + ...
+                   climcapsL3_spectral_olr.feedback_ecRad.o3.polyfit_latbin + climcapsL3_spectral_olr.feedback_ecRad.wv.polyfit_latbin).* cosxrlat) / sum(cosxrlat);
+cosavg = cosavg';
+
+for ix = 1 : 5
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},cosavg(ix,:));
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 xsin = sin(rlat*pi/180);
   xtick = [-1 -sqrt(3)/2 -sqrt(2)/2 -1/2 -(0.25+0.01) 0 +(0.25+0.01) +1/2 +sqrt(2)/2 +sqrt(3)/2 +1]; %% -90 -60 -45 -30 -15 0 +15 +30 +45 +60 +90

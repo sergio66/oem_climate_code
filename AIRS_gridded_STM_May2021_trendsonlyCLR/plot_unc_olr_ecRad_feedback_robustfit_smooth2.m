@@ -367,6 +367,13 @@ for ix = 1 : ixshow
 end
 trends_paper_show_withunc = showfeedbacks_robustfit_all_withunc(1:ixshow,[1 2 3 4 7]);
 
+disp(' ')
+disp('difference between the two')
+for ix = 1 : 5
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},abs(showfeedbacks_robustfit_all_withunc(ix,[1 2 3 4 7])-showfeedbacks_robustfit_all(ix,[1 2 3 4 7])));
+end
+
+
 figure(2); clf
 bar(trends_paper_show_withunc')
 ylabel('Feedback W/m2/K');

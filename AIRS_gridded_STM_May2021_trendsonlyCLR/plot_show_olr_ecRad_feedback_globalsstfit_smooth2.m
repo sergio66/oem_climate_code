@@ -6,11 +6,13 @@ if ~exist('iNumYears')
 end
 
 if ~exist('era5_spectral_olr')
-  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'era5_spectral_olr');
+  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'era5_spectral_olr','stemptrend');
   era5_spectral_olr = junk.era5_spectral_olr;
+  era5_spectral_olr.stemptrend = junk.stemptrend.era5;
 end
 ix = 1; junk = era5_spectral_olr;
 strfeedbacks{ix} = 'ERA5       ';
+thename{ix}      = 'era5';
 showfeedbacks(ix,1) = junk.feedback_ecRad.planck.globalSST_weighted_all;
 showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.globalSST_weighted_all;
 showfeedbacks(ix,3) = junk.feedback_ecRad.o3.globalSST_weighted_all;
@@ -19,11 +21,13 @@ showfeedbacks(ix,5) = junk.feedback_ecRad.skt.globalSST_weighted_all;
 showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 
 if ~exist('merra2_spectral_olr')
-  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'merra2_spectral_olr');
+  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'merra2_spectral_olr','stemptrend');
   merra2_spectral_olr = junk.merra2_spectral_olr;
+  merra2_spectral_olr.stemptrend = junk.stemptrend.era5;
 end
 ix = 2; junk = merra2_spectral_olr;
 strfeedbacks{ix} = 'MERRA2     ';
+thename{ix}      = 'merra2';
 showfeedbacks(ix,1) = junk.feedback_ecRad.planck.globalSST_weighted_all;
 showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.globalSST_weighted_all;
 showfeedbacks(ix,3) = junk.feedback_ecRad.o3.globalSST_weighted_all;
@@ -34,9 +38,14 @@ showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 if ~exist('umbc_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat'],'umbc_spectral_olr');
   umbc_spectral_olr = junk.umbc_spectral_olr;
+
+  a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
+  junk = load(strUMBC,'results');
+  umbc_spectral_olr.stemptrend = junk.results(:,6)';
 end
 ix = 3; junk = umbc_spectral_olr;
 strfeedbacks{ix} = 'THIS WORK  ';
+thename{ix}      = 'umbc';
 showfeedbacks(ix,1) = junk.feedback_ecRad.planck.globalSST_weighted_all;
 showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.globalSST_weighted_all;
 showfeedbacks(ix,3) = junk.feedback_ecRad.o3.globalSST_weighted_all;
@@ -45,11 +54,13 @@ showfeedbacks(ix,5) = junk.feedback_ecRad.skt.globalSST_weighted_all;
 showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 
 if ~exist('airsL3_spectral_olr')
-  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'airsL3_spectral_olr');
+  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'airsL3_spectral_olr','stemptrend');
   airsL3_spectral_olr = junk.airsL3_spectral_olr;
+  airsL3_spectral_olr.stemptrend = junk.stemptrend.airsL3;
 end
 ix = 4; junk = airsL3_spectral_olr;
 strfeedbacks{ix} = 'AIRS L3    ';
+thename{ix}      = 'airsL3';
 showfeedbacks(ix,1) = junk.feedback_ecRad.planck.globalSST_weighted_all;
 showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.globalSST_weighted_all;
 showfeedbacks(ix,3) = junk.feedback_ecRad.o3.globalSST_weighted_all;
@@ -58,11 +69,13 @@ showfeedbacks(ix,5) = junk.feedback_ecRad.skt.globalSST_weighted_all;
 showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 
 if ~exist('climcapsL3_spectral_olr')
-  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'climcapsL3_spectral_olr');
+  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'climcapsL3_spectral_olr','stemptrend');
   climcapsL3_spectral_olr = junk.climcapsL3_spectral_olr;
+  climcapsL3_spectral_olr.stemptrend = junk.stemptrend.airsL3;
 end
 ix = 5; junk = climcapsL3_spectral_olr;
 strfeedbacks{ix} = 'CLIMCAPS L3';
+thename{ix}      = 'climcapsL3';
 showfeedbacks(ix,1) = junk.feedback_ecRad.planck.globalSST_weighted_all;
 showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.globalSST_weighted_all;
 showfeedbacks(ix,3) = junk.feedback_ecRad.o3.globalSST_weighted_all;
@@ -71,11 +84,13 @@ showfeedbacks(ix,5) = junk.feedback_ecRad.skt.globalSST_weighted_all;
 showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 
 if ~exist('cmip6_spectral_olr')
-  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'cmip6_spectral_olr');
+  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'cmip6_spectral_olr','stemptrend');
   cmip6_spectral_olr = junk.cmip6_spectral_olr;
+  cmip6_spectral_olr.stemptrend = junk.stemptrend.cmip6;
 end
 ix = 6; junk = cmip6_spectral_olr;
 strfeedbacks{ix} = 'CMIP6      ';
+thename{ix}      = 'cmip6';
 showfeedbacks(ix,1) = junk.feedback_ecRad.planck.globalSST_weighted_all;
 showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.globalSST_weighted_all;
 showfeedbacks(ix,3) = junk.feedback_ecRad.o3.globalSST_weighted_all;
@@ -84,11 +99,13 @@ showfeedbacks(ix,5) = junk.feedback_ecRad.skt.globalSST_weighted_all;
 showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 
 if ~exist('amip6_spectral_olr')
-  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'amip6_spectral_olr');
+  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'amip6_spectral_olr','stemptrend');
   amip6_spectral_olr = junk.amip6_spectral_olr;
+  amip6_spectral_olr.stemptrend = junk.stemptrend.cmip6;
 end
 ix = 7; junk = amip6_spectral_olr;
 strfeedbacks{ix} = 'AMIP6      ';
+thename{ix}      = 'amip6';
 showfeedbacks(ix,1) = junk.feedback_ecRad.planck.globalSST_weighted_all;
 showfeedbacks(ix,2) = junk.feedback_ecRad.lapse.globalSST_weighted_all;
 showfeedbacks(ix,3) = junk.feedback_ecRad.o3.globalSST_weighted_all;
@@ -96,23 +113,9 @@ showfeedbacks(ix,4) = junk.feedback_ecRad.wv.globalSST_weighted_all;
 showfeedbacks(ix,5) = junk.feedback_ecRad.skt.globalSST_weighted_all;
 showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 
-%% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
-%% but longwave feedback is um of first 4
-ixx = ix;
-showfeedbacks(1:ixx,7) = sum(showfeedbacks(1:ixx,[1 2 3 4]),2);
+clear junk
 
-for ix = 1 : 5
-  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
-end
-trends_paper_show = showfeedbacks(1:5,[1 2 3 4 7]);
-
-figure(1); clf
-bar(trends_paper_show')
-ylabel('Feedback W/m2/K');
-hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','south');
-xstr = {'Planck','Lapse','Ozone','Water Vapor','SUM'};
-set(gca,'xticklabels',xstr)
-xtickangle(45)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~exist('rlat')
   load latB64.mat
@@ -129,45 +132,189 @@ if ~exist('iSmooth')
   iSmooth = 10;
 end
 
+XX = X;  XX = XX(:); XX = XX';   %%%% WRONG WRONG WRONG WRONG
+YY = Y;  YY = YY(:); YY = YY';   %%%% WRONG WRONG WRONG WRONG
+
+XX = X'; XX = XX(:); XX = XX';   %%%% RIGHT RIGHT RIGHT RIGHT 
+YY = Y'; YY = YY(:); YY = YY';   %%%% RIGHT RIGHT RIGHT RIGHT 
+cosYY = cos(YY*pi/180);
+tropics = find(abs(YY) < 30);
+poles   = find(abs(YY) >= 60);
+midlats = find(abs(YY) >= 30 & abs(YY) < 60);
+
+
+disp(' ')
+disp('---------------|---------------------|---------------------|---------------------|---------------------')
+disp('               |       GLOBAL        |         TROPICS             MIDLATS       |       POLAR         ')
+disp(' <SKT>  K/yr   |    raw      coswgt  |    raw      coswgt  |    raw      coswgt  |    raw      coswgt  ')
+disp('---------------|---------------------|---------------------|---------------------|---------------------')
+for ix = 1 : 7
+  str = ['boo = ' thename{ix} '_spectral_olr.stemptrend;'];
+  eval(str);
+  bah0 = sum(cosYY.*boo)/sum(cosYY);
+  bahT = sum(cosYY(tropics).*boo(tropics))/sum(cosYY(tropics));
+  bahM = sum(cosYY(midlats).*boo(midlats))/sum(cosYY(midlats));
+  bahP = sum(cosYY(poles).*boo(poles))/sum(cosYY(poles));
+  junkSKT(ix,:) = [mean(boo) bah0 mean(boo(tropics)) bahT mean(boo(midlats)) bahM mean(boo(poles)) bahP];
+  fprintf(1,'  %12s | %8.3f   %8.3f | %8.3f   %8.3f | %8.3f   %8.3f | %8.3f   %8.3f \n',strfeedbacks{ix},junkSKT(ix,:))
+end
+disp('---------------|---------------------|---------------------|---------------------|---------------------')
+disp(' ')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
+%% but longwave feedback is um of first 4
+ixx = ix;
+showfeedbacks(1:ixx,7) = sum(showfeedbacks(1:ixx,[1 2 3 4]),2);
+
+disp('showing means from fits, 64 latbins')
+for ix = 1 : 5
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
+end
+trends_paper_show = showfeedbacks(1:5,[1 2 3 4 7]);
+
+figure(1); clf
+bar(trends_paper_show')
+ylabel('Feedback W/m2/K');
+hl = legend('ERA5','MERRA2','THIS WORK','AIRS L3','CLIMCAPS L3','location','south');
+xstr = {'Planck','Lapse','Ozone','Water Vapor','SUM'};
+set(gca,'xticklabels',xstr)
+xtickangle(45)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
+plot(era5_spectral_olr.stemptrend,era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.planck_ecRad.clr,'.',...
+     merra2_spectral_olr.stemptrend,merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.planck_ecRad.clr,'.',...
+     umbc_spectral_olr.stemptrend,umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr,'.',...
+     airsL3_spectral_olr.stemptrend,airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.planck_ecRad.clr,'.',...
+     climcapsL3_spectral_olr.stemptrend,climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.planck_ecRad.clr,'.')
+plotaxis2; axis([-0.2 +0.2 -0.4 +0.4]); title('Planck')
+sum_all4608(1,1) = sum((era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(1,2) = sum((merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(1,3) = sum((umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(1,4) = sum((airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(1,5) = sum((climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
 
-disp('showing means from weighted rlat fits')
+plot(era5_spectral_olr.stemptrend,era5_spectral_olr.lapse_ecRad.clr-era5_spectral_olr.planck_ecRad.clr,'.',...
+     merra2_spectral_olr.stemptrend,merra2_spectral_olr.lapse_ecRad.clr-merra2_spectral_olr.planck_ecRad.clr,'.',...
+     umbc_spectral_olr.stemptrend,umbc_spectral_olr.lapse_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr,'.',...
+     airsL3_spectral_olr.stemptrend,airsL3_spectral_olr.lapse_ecRad.clr-airsL3_spectral_olr.planck_ecRad.clr,'.',...
+     climcapsL3_spectral_olr.stemptrend,climcapsL3_spectral_olr.lapse_ecRad.clr-climcapsL3_spectral_olr.planck_ecRad.clr,'.')
+plotaxis2; axis([-0.2 +0.2 -0.4 +0.4]); title('Lapse')
+sum_all4608(2,1) = -sum((era5_spectral_olr.lapse_ecRad.clr-era5_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(2,2) = -sum((merra2_spectral_olr.lapse_ecRad.clr-merra2_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(2,3) = -sum((umbc_spectral_olr.lapse_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(2,4) = -sum((airsL3_spectral_olr.lapse_ecRad.clr-airsL3_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(2,5) = -sum((climcapsL3_spectral_olr.lapse_ecRad.clr-climcapsL3_spectral_olr.planck_ecRad.clr).*cos(YY*pi/180));
+
+plot(era5_spectral_olr.stemptrend,era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.o3_ecRad.clr,'.',...
+     merra2_spectral_olr.stemptrend,merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.o3_ecRad.clr,'.',...
+     umbc_spectral_olr.stemptrend,umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.o3_ecRad.clr,'.',...
+     airsL3_spectral_olr.stemptrend,airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.o3_ecRad.clr,'.',...
+     climcapsL3_spectral_olr.stemptrend,climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.o3_ecRad.clr,'.')
+plotaxis2; axis([-0.2 +0.2 -0.4 +0.4]); title('O3')
+sum_all4608(3,1) = sum((era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.o3_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(3,2) = sum((merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.o3_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(3,3) = sum((umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.o3_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(3,4) = sum((airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.o3_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(3,5) = sum((climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.o3_ecRad.clr).*cos(YY*pi/180));
+
+plot(era5_spectral_olr.stemptrend,era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.wv_ecRad.clr,'.',...
+     merra2_spectral_olr.stemptrend,merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.wv_ecRad.clr,'.',...
+     umbc_spectral_olr.stemptrend,umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.wv_ecRad.clr,'.',...
+     airsL3_spectral_olr.stemptrend,airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.wv_ecRad.clr,'.',...
+     climcapsL3_spectral_olr.stemptrend,climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.wv_ecRad.clr,'.')
+plotaxis2; axis([-0.2 +0.2 -0.4 +0.4]); title('Wv')
+sum_all4608(4,1) = sum((era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.wv_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(4,2) = sum((merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.wv_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(4,3) = sum((umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.wv_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(4,4) = sum((airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.wv_ecRad.clr).*cos(YY*pi/180));
+sum_all4608(4,5) = sum((climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.wv_ecRad.clr).*cos(YY*pi/180));
+
+junk = (era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.planck_ecRad.clr) - (era5_spectral_olr.lapse_ecRad.clr-era5_spectral_olr.planck_ecRad.clr) + ...
+       (era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.o3_ecRad.clr) + (era5_spectral_olr.olr0_ecRad.clr-era5_spectral_olr.wv_ecRad.clr);
+  sum_all4608(5,1) = sum(junk.*cos(YY*pi/180));
+junk = (merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.planck_ecRad.clr) - (merra2_spectral_olr.lapse_ecRad.clr-merra2_spectral_olr.planck_ecRad.clr) + ...
+       (merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.o3_ecRad.clr) + (merra2_spectral_olr.olr0_ecRad.clr-merra2_spectral_olr.wv_ecRad.clr);
+  sum_all4608(5,2) = sum(junk.*cos(YY*pi/180));
+junk = (umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr) - (umbc_spectral_olr.lapse_ecRad.clr-umbc_spectral_olr.planck_ecRad.clr) + ...
+       (umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.o3_ecRad.clr) + (umbc_spectral_olr.olr0_ecRad.clr-umbc_spectral_olr.wv_ecRad.clr);
+  sum_all4608(5,3) = sum(junk.*cos(YY*pi/180));
+junk = (airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.planck_ecRad.clr) - (airsL3_spectral_olr.lapse_ecRad.clr-airsL3_spectral_olr.planck_ecRad.clr) + ...
+       (airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.o3_ecRad.clr) + (airsL3_spectral_olr.olr0_ecRad.clr-airsL3_spectral_olr.wv_ecRad.clr);
+  sum_all4608(5,4) = sum(junk.*cos(YY*pi/180));
+junk = (climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.planck_ecRad.clr) - (climcapsL3_spectral_olr.lapse_ecRad.clr-climcapsL3_spectral_olr.planck_ecRad.clr) + ...
+       (climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.o3_ecRad.clr) + (climcapsL3_spectral_olr.olr0_ecRad.clr-climcapsL3_spectral_olr.wv_ecRad.clr);
+  sum_all4608(5,5) = sum(junk.*cos(YY*pi/180));
+
+disp(' ')
+disp('showing means from weighted rlat fits, all 4608 elements')
+sum_all4608 = sum_all4608';
+sum_all4608_deltaOLR = sum_all4608;
+sum_all4608 = sum_all4608./(junkSKT(1:5,2)*ones(1,5))/sum(cos(YY*pi/180));
+for ix = 1 : 5
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},sum_all4608(ix,:));
+end
+
+disp('showing {cos{SKT)} {delta(OLR)=numerator}, {means}, {stddev}, {normalized deviations} from weighted rlat fits, all 4608 elements')
+fprintf(1,'if sum(delta(OLR) looks large, remember we divide by sum(cos(YY*pi/180) which is %8.3f \n',sum(cos(YY*pi/180))
+wawoo  = sum_all4608_deltaOLR;
+mwawoo = ones(5,1) * mean(sum_all4608_deltaOLR,1);
+swawoo = ones(5,1) * std(sum_all4608_deltaOLR,1);
+nwawoo = (sum_all4608_deltaOLR - mwawoo)./(swawoo);
+for ix = 1 : 5
+  kaboo = [junkSKT(ix,2) wawoo(ix,:) mwawoo(ix,:) swawoo(ix,:) nwawoo(ix,:)];
+  fprintf(1,'%s || %7.4f ||  %7.2f %7.2f %7.2f %7.2f    %7.2f | %7.2f %7.2f %7.2f %7.2f    %7.2f | %7.2f %7.2f %7.2f %7.2f    %7.2f | %7.2f %7.2f %7.2f %7.2f    %7.2f \n',strfeedbacks{ix},kaboo)
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%
+clear cosavg
 cosrlat = cos(rlat'*pi/180);
-cosavg(1,1) = sum(era5_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(1,2) = sum(merra2_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(1,3) = sum(umbc_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(1,4) = sum(airsL3_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(1,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
 
-cosavg(2,1) = sum(era5_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(2,2) = sum(merra2_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(2,3) = sum(umbc_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(2,4) = sum(airsL3_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(2,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
+cosxrlat = cosrlat;
+cosxrlat = ones(size(cosrlat));
 
-cosavg(3,1) = sum(era5_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(3,2) = sum(merra2_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(3,3) = sum(umbc_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(3,4) = sum(airsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(3,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
+disp(' ')
+disp('THIS IS WIERD since we have already done the cosine weighting, and doing more cosine weighting')
+disp('BUT IF YOU MAKE cosrlat == 1 then DOING the MEAN and ANSWERS come out GOOD')
+disp('<<<< showing means from weighted rlat fits, 64 latbins >>> ')
+disp('BUT IF YOU MAKE cosrlat == 1 then DOING the MEAN and ANSWERS come out GOOD')
+disp('THIS IS WIERD since we have already done the cosine weighting, and doing more cosine weighting')
 
-cosavg(4,1) = sum(era5_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(4,2) = sum(merra2_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(4,3) = sum(umbc_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(4,4) = sum(airsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
-cosavg(4,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosrlat) / sum(cosrlat);
+cosavg(1,1) = sum(era5_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,2) = sum(merra2_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,3) = sum(umbc_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,4) = sum(airsL3_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(1,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+
+cosavg(2,1) = sum(era5_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,2) = sum(merra2_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,3) = sum(umbc_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,4) = sum(airsL3_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(2,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+
+cosavg(3,1) = sum(era5_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,2) = sum(merra2_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,3) = sum(umbc_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,4) = sum(airsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(3,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+
+cosavg(4,1) = sum(era5_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,2) = sum(merra2_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,3) = sum(umbc_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,4) = sum(airsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
+cosavg(4,5) = sum(climcapsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin .* cosxrlat) / sum(cosxrlat);
 
 cosavg(5,:) = sum(cosavg(1:4,:));
 cosavg(5,1) = sum((era5_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + era5_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
-                   era5_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + era5_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosrlat) / sum(cosrlat);
+                   era5_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + era5_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosxrlat) / sum(cosxrlat);
 cosavg(5,2) = sum((merra2_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + merra2_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
-                   merra2_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + merra2_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosrlat) / sum(cosrlat);
+                   merra2_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + merra2_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosxrlat) / sum(cosxrlat);
 cosavg(5,3) = sum((umbc_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + umbc_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
-                   umbc_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + umbc_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosrlat) / sum(cosrlat);
+                   umbc_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + umbc_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosxrlat) / sum(cosxrlat);
 cosavg(5,4) = sum((airsL3_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + airsL3_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
-                   airsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + airsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosrlat) / sum(cosrlat);
+                   airsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + airsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosxrlat) / sum(cosxrlat);
 cosavg(5,5) = sum((climcapsL3_spectral_olr.feedback_ecRad.planck.globalSST_weighted_latbin + climcapsL3_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_latbin + ...
-                   climcapsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + climcapsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosrlat) / sum(cosrlat);
+                   climcapsL3_spectral_olr.feedback_ecRad.o3.globalSST_weighted_latbin + climcapsL3_spectral_olr.feedback_ecRad.wv.globalSST_weighted_latbin).* cosxrlat) / sum(cosxrlat);
 cosavg = cosavg';
 
 for ix = 1 : 5

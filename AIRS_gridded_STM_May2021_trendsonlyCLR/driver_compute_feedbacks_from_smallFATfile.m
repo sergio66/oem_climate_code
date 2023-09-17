@@ -85,6 +85,11 @@ clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_um
 clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_robustfit_smooth2   %%% local feedbacks   >>> used for paper
 clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_timeseries_globalsstfitsm2     %%% global feedbacks  >>> used for paper
 
+or 
+
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_seasonal_robustfit_smooth2   %%% local feedbacks   >>> used for paper
+clear all; for ii = 1 : 6; figure(ii); clf; end; plot_show_olr_ecRad_feedback_umbc_seasonal_globalsstfitsm2     %%% global feedbacks  >>> used for paper
+
 %}
 %%% README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>>
 
@@ -103,11 +108,27 @@ addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
+iRaw_or_Unc = -1; %% use raw profiles, and then perturbations+unc, in the ecRad or SARTA calcs
+iRaw_or_Unc = +1; %% use raw profiles, and then perturbations,     in the ecRad or SARTA calcs
+
+iGet_ERA5_AIRSL3_AMIP = +1;  %% to do UMBC and also load in eg MERRA2/ERA5 model trends
+iGet_ERA5_AIRSL3_AMIP = -1;  %% default
+
+iAllorSeasonal = +1;
 a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 05;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 15;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2v2.mat';    iNumYears = 10;  %% use CarbonTracker CO2 trends
 a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
-a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
+
+%% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_SON.mat';  iNumYears = 20;  iAllorSeasonal = -4;
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_JJA.mat';  iNumYears = 20;  iAllorSeasonal = -3;
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MAM.mat';  iNumYears = 20;  iAllorSeasonal = -2;
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_DJF.mat';  iNumYears = 20;  iAllorSeasonal = -1;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fprintf(1,'iNumYears = %2i .. reading in %s \n',iNumYears,strUMBC);
 loader = ['load ' strUMBC];
@@ -116,9 +137,6 @@ eval(loader);
 read_fileMean17years
 h = hMean17years;
 p = pMean17years;
-
-iRaw_or_Unc = +1; %% use raw profiles, and then perturbations,     in the ecRad or SARTA calcs
-iRaw_or_Unc = -1; %% use raw profiles, and then perturbations+unc, in the ecRad or SARTA calcs
 
 % iSwap_ERA_2012_08_15 = +1;
 iSwap_ERA_2012_08_15 = input('swap from 20 year AVG profile used for jacs .... to profiles on 2012/08/15 (-1 [default] / +1) : ');

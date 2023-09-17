@@ -231,6 +231,12 @@ for iInd = iXX1 : idX : iXX2
   driver.ia_OorC_DataSet_Quantile = ia_OorC_DataSet_Quantile;
   driver.iibin     = iInd;
 
+  driver.iAllorSeasonal = -1; %% DJF
+  driver.iAllorSeasonal = -2; %% MAM
+  driver.iAllorSeasonal = -3; %% JJA
+  driver.iAllorSeasonal = -4; %% SON
+  driver.iAllorSeasonal = +1; %% default
+
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   if iDoAnomalyOrRates == +1
     driver.i16daytimestep = JOB;  %% this is when doing anomaly
@@ -653,6 +659,7 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
   %disp('Hit return for next latitude'); pause
   pause(0.1)
 
+  iNumYears = settings.iNumYears;
   read_fileMean17years
 
   print_cloud_params(hMean17years,pMean17years,driver.iibin); 

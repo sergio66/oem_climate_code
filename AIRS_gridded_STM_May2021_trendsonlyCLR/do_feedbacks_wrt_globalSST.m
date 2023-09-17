@@ -36,6 +36,19 @@ if iRaw_or_Unc == -1
   feedbacknameUMBC = feedbacknameUMBC(1:end-4);
   feedbacknameUMBC = [feedbacknameUMBC '_unc_factor' num2str(maxratio,'%0.2f') '.mat'];
 end
+if iAllorSeasonal == -1
+  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
+  feedbacknameUMBC = [feedbacknameUMBC '_DJF.mat'];
+elseif iAllorSeasonal == -2
+  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
+  feedbacknameUMBC = [feedbacknameUMBC '_MAM.mat'];
+elseif iAllorSeasonal == -3
+  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
+  feedbacknameUMBC = [feedbacknameUMBC '_JJA.mat'];
+elseif iAllorSeasonal == -4
+  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
+  feedbacknameUMBC = [feedbacknameUMBC '_SON.mat'];
+end
   
 if ~exist('umbc_spectral_olr') 
   if exist(feedbacknameUMBC)

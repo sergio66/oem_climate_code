@@ -53,6 +53,10 @@ i0900 = find(f >= 0900,1);
 load llsmap5
 figure(5); clf;
 moo = b_desc(:,:,i1231);
+if ~isreal(moo)
+  disp('warning : b_desc(:,:,i1231) is complex')
+  moo = real(moo);
+end
 aslmap(5,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['dBT1231/dt Quantile ' num2str(iQuantile,'%02d')]); caxis([-1 +1]*0.15); colormap(llsmap5)
 
 if exist('b_cal_desc')
