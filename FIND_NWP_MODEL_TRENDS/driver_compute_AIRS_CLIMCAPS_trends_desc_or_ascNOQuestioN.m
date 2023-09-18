@@ -8,6 +8,8 @@ addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/FIND_TRENDS/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
+clear all
+
 load('llsmap5.mat');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -15,19 +17,21 @@ load('llsmap5.mat');
 
 system_slurm_stats
 
-JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
 %JOB = 5
-fprintf(1,'JOB = %2i \n',JOB)
+JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
+if length(JOB) == 0
+  JOB = 20;
+end
+
+iNumYears = JOB;
+timespan = iNumYears;
+fprintf(1,'timespan = %2i years \n',timespan)
 
 disp('may need to do  srun -p high_mem --qos=long+ --mem=350000 --time=2-00:00:00 --cpus-per-task 1 -N 1 --pty /bin/bash')
 
 for ii = 1 : 6
   figure(ii); colormap jet
 end
-
-iNumYears = JOB;
-timespan = iNumYears;
-fprintf(1,'timespan = %2i years \n',timespan)
 
 % if timespan == 20
 %   savestr_version = 'Sept2002_Aug2022_20yr';

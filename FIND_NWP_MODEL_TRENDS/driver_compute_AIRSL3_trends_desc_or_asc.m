@@ -17,19 +17,21 @@ load('llsmap5.mat');
 
 system_slurm_stats
 
-JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
 %JOB = 5
-fprintf(1,'JOB = %2i \n',JOB)
+JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
+if length(JOB) == 0
+  JOB = 20;
+end
+
+iNumYears = JOB;
+timespan = iNumYears;
+fprintf(1,'timespan = %2i years \n',timespan)
 
 disp('may need to do  srun -p high_mem --qos=long+ --mem=350000 --time=2-00:00:00 --cpus-per-task 1 -N 1 --pty /bin/bash')
 
 for ii = 1 : 6
   figure(ii); colormap jet
 end
-
-iNumYears = JOB;
-timespan = iNumYears;
-fprintf(1,'timespan = %2i years \n',timespan)
 
 % if timespan == 07
 %   savestr_version = 'May2012_07yr';
@@ -65,6 +67,12 @@ fprintf(1,'timespan = %2i years \n',timespan)
 savestr_version = ['Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(timespan) 'yr'];
 StartY = 2002;             StartYM = 9;   %% start 09/2002
 StopY  = StartY+iNumYears; StopYM  = 8;   %% stop  08/2021  
+
+iAllorSeasonal = -4;  %% SON
+iAllorSeasonal = -3;  %% JJA
+iAllorSeasonal = -2;  %% MAM
+iAllorSeasonal = -1;  %% DJF
+iAllorSeasonal = +1;  %% all
 
 %%% TEMPERATURE AND WATER VAPOR LEVELS
 

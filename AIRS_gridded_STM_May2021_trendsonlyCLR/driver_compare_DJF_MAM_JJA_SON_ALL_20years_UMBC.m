@@ -11,6 +11,13 @@ addpath /asl/matlib/maps
 load llsmap5
 clear plotoptions
 
+iAbsOrPercent = +1;
+if iAbsOrPercent == 1
+  strdiff = ' absolute';
+else
+  strdiff = ' percent';
+end
+
 if ~exist('aALL')
   dir0 = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2';
 
@@ -57,12 +64,24 @@ iFig = iFig + 1; mooJJA = squeeze(aJJA.results(:,6)); aslmap(iFig,rlat65,rlon73,
 iFig = iFig + 1; mooSON = squeeze(aSON.results(:,6)); aslmap(iFig,rlat65,rlon73,smoothn((reshape(mooSON,72,64)') ,1), [-90 +90],[-180 +180]); colormap(usa2); caxis([-1 +1]*0.15); title('SON BT1231 trend')
 iFig = iFig + 1; mooALL = squeeze(aALL.results(:,6)); aslmap(iFig,rlat65,rlon73,smoothn((reshape(mooALL,72,64)') ,1), [-90 +90],[-180 +180]); colormap(usa2); caxis([-1 +1]*0.15); title('ALL BT1231 trend')
 aXYZ.results = (aDJF.results + aMAM.results + aJJA.results + aSON.results)/4;
-iFig = iFig + 1; mooALL = squeeze(aXYZ.results(:,6)); aslmap(iFig,rlat65,rlon73,smoothn((reshape(aXYZ.results(:,6),72,64)') ,1), [-90 +90],[-180 +180]); colormap(usa2); caxis([-1 +1]*0.15); title('<SEASON> BT1231 trend')
+iFig = iFig + 1; mooALL = squeeze(aXYZ.results(:,6));      aslmap(iFig,rlat65,rlon73,smoothn((reshape(aXYZ.results(:,6),72,64)') ,1), [-90 +90],[-180 +180]); colormap(usa2); caxis([-1 +1]*0.15); title('<SEASON> BT1231 trend')
+iFig = iFig;  junk = aALL.results(:,6) - aXYZ.results(:,6);
+cx = [-1 +1]*0.15/10;
+if iAbsOrPercent == -1
+  junk = 100./mooALL;
+  cx = [-1 +1]*100;
+end
+junk = junk';
+aslmap(iFig,rlat65,rlon73,smoothn((reshape(junk,72,64)') ,1), [-90 +90],[-180 +180]); colormap(usa2); caxis(cx); title(['(ALL-SUM) dSKT/dt : ' strdiff])
 
 iFig = iFig + 1; 
 plotoptions.yLinearOrLog = +1;
 plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
 aslmap_2x2tiledlayout(mooDJF,mooMAM,mooJJA,mooSON,iFig,plotoptions);
+
+iFig = iFig+1;
+aslmap_polar_2x2tiledlayout(mooDJF,mooMAM,mooJJA,mooSON,iFig,plotoptions);
+
 disp('ret to continue'); pause
 
 %iFig = iFig + 1; 
@@ -91,6 +110,16 @@ iFig = iFig + 1; figure(iFig); clf;
 iFig = iFig + 1; figure(iFig); clf; 
   moo = 1/4*(aDJF.deltaT + aMAM.deltaT + aJJA.deltaT + aSON.deltaT); moo = squeeze(nanmean(reshape(moo,101,72,64),2)); 
   pcolor(rlat,pavgLAY(1:97,1000),smoothn(moo(1:97,:),1)); set(gca,'ydir','reverse'); set(gca,'yscale','log'); caxis([-1 +1]*0.15); shading interp; ylim([10 1000]); colormap(usa2); colorbar; title('<SEASONAL> dT/dt');
+
+moo = aALL.deltaT - 1/4*(aDJF.deltaT + aMAM.deltaT + aJJA.deltaT + aSON.deltaT); 
+cx = [-1 +1]*0.15/10;
+if iAbsOrPercent == -1
+  moo = 100./aALL.deltaT;
+  cx = [-1 +1]*100;
+end
+moo = squeeze(nanmean(reshape(moo,101,72,64),2));
+pcolor(rlat,pavgLAY(1:97,1000),smoothn(moo(1:97,:),1)); set(gca,'ydir','reverse'); set(gca,'yscale','log'); caxis(cx); shading interp; ylim([10 1000]); colormap(usa2); colorbar; 
+title(['ALL-<SEASONAL> dT/dt : ' strdiff]);
 
 iFig = iFig + 1; 
 plotoptions.yLinearOrLog = -1;
@@ -129,6 +158,16 @@ iFig = iFig + 1; figure(iFig); clf;
   moo = 1/4*(aDJF.fracWV + aMAM.fracWV + aJJA.fracWV + aSON.fracWV); moo = squeeze(nanmean(reshape(moo,101,72,64),2)); 
   pcolor(rlat,pavgLAY(1:97,1000),smoothn(moo(1:97,:),1)); set(gca,'ydir','reverse'); set(gca,'yscale','linear'); caxis([-1 +1]*0.15/10); shading interp; ylim([10 1000]); colormap(usa2); colorbar; title('<SEASONAL> d(fracWV)/dt');
 
+moo = aALL.fracWV - 1/4*(aDJF.fracWV + aMAM.fracWV + aJJA.fracWV + aSON.fracWV); 
+cx = [-1 +1]*0.015/10;
+if iAbsOrPercent == -1
+  moo = 100./aALL.fracWV;
+  cx = [-1 +1]*100;
+end
+moo = squeeze(nanmean(reshape(moo,101,72,64),2));
+pcolor(rlat,pavgLAY(1:97,1000),smoothn(moo(1:97,:),1)); set(gca,'ydir','reverse'); set(gca,'yscale','log'); caxis(cx); shading interp; ylim([10 1000]); colormap(usa2); colorbar; 
+title(['ALL-<SEASONAL> dfracWV/dt : ' strdiff]);
+
 iFig = iFig + 1; 
 plotoptions.yLinearOrLog = +1;
 plotoptions.yReverseDir  = +1;
@@ -166,6 +205,16 @@ iFig = iFig + 1; figure(iFig); clf;
   moo = 1/4*(aDJF.fracO3 + aMAM.fracO3 + aJJA.fracO3 + aSON.fracO3); moo = squeeze(nanmean(reshape(moo,101,72,64),2)); 
   pcolor(rlat,pavgLAY(1:97,1000),smoothn(moo(1:97,:),1)); set(gca,'ydir','reverse'); set(gca,'yscale','log'); caxis([-1 +1]*0.15/10); shading interp; ylim([0.01 100]); colormap(usa2); colorbar; title('<SEASONAL> d(fracO3)/dt');
 
+moo = aALL.fracO3 - 1/4*(aDJF.fracO3 + aMAM.fracO3 + aJJA.fracO3 + aSON.fracO3); 
+cx = [-1 +1]*0.015/10;
+if iAbsOrPercent == -1
+  moo = 100./aALL.fracO3;
+  cx = [-1 +1]*100;
+end
+moo = squeeze(nanmean(reshape(moo,101,72,64),2));
+pcolor(rlat,pavgLAY(1:97,1000),smoothn(moo(1:97,:),1)); set(gca,'ydir','reverse'); set(gca,'yscale','log'); caxis(cx); shading interp; ylim([10 1000]); colormap(usa2); colorbar; 
+title(['ALL-<SEASONAL> dfracO3/dt : ' strdiff]);
+
 iFig = iFig + 1; 
 plotoptions.yLinearOrLog = -1;
 plotoptions.yReverseDir  = +1;
@@ -188,7 +237,8 @@ disp('ret to continue'); pause
 iPrint = -1;
 if iPrint > 0
   figure(07); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/skt_trends_lat_lon_4panels20_years_seasonal.pdf');
-  figure(14); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/tz_trends_zonal_p_4panels20_years_seasonal.pdf')
-  figure(21); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/fracWV_trends_zonal_p_4panels20_years_seasonal.pdf');
-  figure(28); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/fracO3_trends_zonal_p_4panels20_years_seasonal.pdf');
+  figure(08); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/skt_trends_lat_lon_4panels20_years_seasonal_polar.pdf');
+  figure(15); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/tz_trends_zonal_p_4panels20_years_seasonal.pdf')
+  figure(23); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/fracWV_trends_zonal_p_4panels20_years_seasonal.pdf');
+  figure(29); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/fracO3_trends_zonal_p_4panels20_years_seasonal.pdf');
 end

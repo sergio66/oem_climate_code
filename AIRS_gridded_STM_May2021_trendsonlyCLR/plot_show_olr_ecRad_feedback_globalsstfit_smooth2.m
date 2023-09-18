@@ -137,6 +137,15 @@ YY = Y;  YY = YY(:); YY = YY';   %%%% WRONG WRONG WRONG WRONG
 
 XX = X'; XX = XX(:); XX = XX';   %%%% RIGHT RIGHT RIGHT RIGHT 
 YY = Y'; YY = YY(:); YY = YY';   %%%% RIGHT RIGHT RIGHT RIGHT 
+
+  coslat  = cos(YY*pi/180);
+  indSST = era5_spectral_olr.stemptrend; boo(1) = sum(indSST .* coslat)/sum(coslat);
+  indSST = merra2_spectral_olr.stemptrend; boo(2) = sum(indSST .* coslat)/sum(coslat);
+  indSST = umbc_spectral_olr.stemptrend; boo(3) = sum(indSST .* coslat)/sum(coslat);
+  indSST = airsL3_spectral_olr.stemptrend; boo(4) = sum(indSST .* coslat)/sum(coslat);
+  indSST = climcapsL3_spectral_olr.stemptrend; boo(5) = sum(indSST .* coslat)/sum(coslat);
+  fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f  %8.6f K/yr for ERA5/MERRA2/UMBC/AIRSL3/CLIMCAPSL3 \n',boo)
+
 cosYY = cos(YY*pi/180);
 tropics = find(abs(YY) < 30);
 poles   = find(abs(YY) >= 60);
@@ -257,7 +266,7 @@ for ix = 1 : 5
 end
 
 disp('showing {cos{SKT)} {delta(OLR)=numerator}, {means}, {stddev}, {normalized deviations} from weighted rlat fits, all 4608 elements')
-fprintf(1,'if sum(delta(OLR) looks large, remember we divide by sum(cos(YY*pi/180) which is %8.3f \n',sum(cos(YY*pi/180))
+fprintf(1,'if sum(delta(OLR) looks large, remember we divide by sum(cos(YY*pi/180) which is %8.3f \n',sum(cos(YY*pi/180)))
 wawoo  = sum_all4608_deltaOLR;
 mwawoo = ones(5,1) * mean(sum_all4608_deltaOLR,1);
 swawoo = ones(5,1) * std(sum_all4608_deltaOLR,1);

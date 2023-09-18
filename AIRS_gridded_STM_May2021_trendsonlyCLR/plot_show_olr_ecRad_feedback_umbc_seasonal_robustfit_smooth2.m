@@ -95,14 +95,14 @@ if ~exist('rlat') | ~exist('Y')
   [Y,X] = meshgrid(rlat,rlon);
   X = X; Y = Y;
 end
-YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for DJF/MAM/JJA/SON years   WRONG
-YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for DJF/MAM/JJA/SON years   CORRECT
+YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for DJF/MAM/JJA/SON seasons   WRONG
+YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for DJF/MAM/JJA/SON seasons   CORRECT
   coslat  = cos(YY*pi/180);
   indSST = umbc05_spectral_olr.deltaSKT'; boo(1) = sum(indSST .* coslat)/sum(coslat);
   indSST = umbc10_spectral_olr.deltaSKT'; boo(2) = sum(indSST .* coslat)/sum(coslat);
   indSST = umbc15_spectral_olr.deltaSKT'; boo(3) = sum(indSST .* coslat)/sum(coslat);
   indSST = umbc20_spectral_olr.deltaSKT'; boo(4) = sum(indSST .* coslat)/sum(coslat);
-  fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f K/yr for DJF/MAM/JJA/SON years \n',boo)
+  fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f K/yr for DJF/MAM/JJA/SON seasons \n',boo)
 
 disp('         Planck Lapse Ozone Water |  Total')
 for ix = 1 : 4

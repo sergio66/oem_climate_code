@@ -17,6 +17,8 @@ load('llsmap5.mat');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp('takes about 2-3 hours')
+
 system_slurm_stats
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
@@ -43,6 +45,9 @@ iNumYears = 20; %% 2002/09 to 2022/08
 %iaMax = iNumYears*12;
 
 % iNumYears = input('Enter iNumYears : ');
+if length(JOB) == 0
+  JOB = 20;
+end
 iNumYears = JOB;
 
 fprintf(1,'iNumYears = %2i \n',iNumYears);
@@ -52,7 +57,22 @@ if iNumYears <= 69
 elseif iNumYears == 70
   iaMax = 7*12;
 end
+
+iAllorSeasonal = +1;  %% all
+iAllorSeasonal = -1;  %% DJF
+iAllorSeasonal = -2;  %% MAM
+
+iAllorSeasonal = -4;  %% SON
+iAllorSeasonal = -3;  %% JJA
+
 [iDorA iaMax]
+
+find_computeMERRA2_monthly_trends_foutname
+if exist(fout_trendjunk)
+  fout_trendjunk
+  error('fout_trendjunk exists')
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
 for ii = 1 : iaMax
@@ -220,11 +240,12 @@ trend_rlon = all.rlon;
 trend_rlat64 = rlat; trend_rlon72 = rlon;
 %trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
 
-find_computeMERRA2_monthly_trends_foutname
-fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
-saver = ['save ' fout_trendjunk ' comment trend*'];
-eval(saver);
-
+%find_computeMERRA2_monthly_trends_foutname
+if ~exist(fout_trendjunk)
+  fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
+  saver = ['save ' fout_trendjunk ' comment trend*'];
+  eval(saver);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

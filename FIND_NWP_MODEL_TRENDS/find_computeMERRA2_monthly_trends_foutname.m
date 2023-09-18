@@ -8,6 +8,20 @@ else
   error('gugugug')
 end
 
+if iAllorSeasonal == -1
+  fout_trendjunk = fout_trendjunk(1:end-4);
+  fout_trendjunk = [fout_trendjunk '_DJF.mat'];
+elseif iAllorSeasonal == -2
+  fout_trendjunk = fout_trendjunk(1:end-4);
+  fout_trendjunk = [fout_trendjunk '_MAM.mat'];
+elseif iAllorSeasonal == -3
+  fout_trendjunk = fout_trendjunk(1:end-4);
+  fout_trendjunk = [fout_trendjunk '_JJA.mat'];
+elseif iAllorSeasonal == -4
+  fout_trendjunk = fout_trendjunk(1:end-4);
+  fout_trendjunk = [fout_trendjunk '_SON.mat'];
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 if iNumYears == 12

@@ -22,6 +22,8 @@ load('llsmap5.mat');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp('takes about 2 hours')
+
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
 
 if ~exist('iDorA')
@@ -40,6 +42,9 @@ iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iNumYears = 20; %% 2002/09-2022/08
 
 % iNumYears = input('Enter iNumYears : ');
+if length(JOB) == 0
+  JOB = 20;
+end
 iNumYears = JOB;
 
 fprintf(1,'iNumYears = %2i \n');
@@ -50,10 +55,23 @@ elseif iNumYears == 70
   iaMax = 7*12;
 end
 
+iAllorSeasonal = -4;  %% SON
+iAllorSeasonal = -3;  %% JJA
+iAllorSeasonal = -2;  %% MAM
+iAllorSeasonal = -1;  %% DJF
+iAllorSeasonal = +1;  %% all
+
 if ~exist('iCldORClr')
   iCldORClr = -1; %% clear only
   iCldORClr = +1; %% include cloud fields
 end
+
+find_computeERA5_monthly_trends_foutname
+if exist(fout_trendjunk)
+  fout_trendjunk
+  error('fout_trendjunk exists')
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
 for ii = 1 : iaMax
@@ -75,7 +93,9 @@ if sum(iaFound) < length(iaFound)
   error('not enough')
 end
 
-disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
+disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
+disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
+disp('  "x" are the 100, "." are tens .. need to read in 4608')
 for ii = 1 : iaMax
   if iDorA > 0
     fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
@@ -231,10 +251,12 @@ trend_rlon = all.rlon;
 trend_rlat64 = rlat; trend_rlon72 = rlon;
 %trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
 
-find_computeERA5_monthly_trends_foutname
-fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
-saver = ['save ' fout_trendjunk ' comment trend*'];
-eval(saver);
+%find_computeERA5_monthly_trends_foutname
+if ~exist(fout_trendjunk)
+  fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
+  saver = ['save ' fout_trendjunk ' comment trend*'];
+  eval(saver);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
