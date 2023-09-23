@@ -229,7 +229,6 @@ miaow21 = squeeze(nanmean(reshape(aJJA.fracO3,101,72,64),2));
 miaow22 = squeeze(nanmean(reshape(aSON.fracO3,101,72,64),2)); 
 profile_plots_2x2tiledlayout(rlat,pavgLAY(1:97,1000),miaow11(1:97,:),miaow12(1:97,:),miaow21(1:97,:),miaow22(1:97,:),iFig,plotoptions);
 
-
 disp('ret to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -239,6 +238,6 @@ if iPrint > 0
   figure(07); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/skt_trends_lat_lon_4panels20_years_seasonal.pdf');
   figure(08); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/skt_trends_lat_lon_4panels20_years_seasonal_polar.pdf');
   figure(15); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/tz_trends_zonal_p_4panels20_years_seasonal.pdf')
-  figure(23); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/fracWV_trends_zonal_p_4panels20_years_seasonal.pdf');
+  figure(22); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/fracWV_trends_zonal_p_4panels20_years_seasonal.pdf');
   figure(29); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/fracO3_trends_zonal_p_4panels20_years_seasonal.pdf');
 end

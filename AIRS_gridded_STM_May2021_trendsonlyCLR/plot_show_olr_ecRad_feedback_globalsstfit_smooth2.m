@@ -1,4 +1,11 @@
+addpath /home/sergio/MATLABCODE/COLORMAP
+addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+addpath  /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
+
+load llsmap5
+
 clear showfeedbacks* strfeedbacks
+%clear all
 
 if ~exist('iNumYears')
   disp('WARNING iNumYears DNE ... setting to 20')
@@ -146,11 +153,98 @@ YY = Y'; YY = YY(:); YY = YY';   %%%% RIGHT RIGHT RIGHT RIGHT
   indSST = climcapsL3_spectral_olr.stemptrend; boo(5) = sum(indSST .* coslat)/sum(coslat);
   fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f  %8.6f K/yr for ERA5/MERRA2/UMBC/AIRSL3/CLIMCAPSL3 \n',boo)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+boox = input('For feedback plots, Divide sum(all tile) by 1/meanSST or divide by 1 (-1[default]/+1) : ');
+if length(boox) == 0
+  boox = -1;
+end
+if boox == -1
+  boox = boo;
+  dascale = 1;
+else
+  boox = ones(size(boo));
+  dascale = 1/20;
+end
+
+%% remember we do delta(OLR) so we need 3xolr0, and we actually do not need planck when summing
+%% see compute_feedbacks_regress_olr_ecRad_calcs.m : 
+%%  Planck = -F_planck + F_0
+%%  Lapse  = -F_Lapse + F_planck
+%%  ozone  = -F_ozone + F_0 
+%%  water  = -F_water + F_0 
+%% -------------------------
+%%   SUM  = +3*F_0 + 0*F_planck -F_Lapse -F_ozone -F_water
+%% -------------------------%% ------------------------- 
+era5_spectral_olr.allsum       = 3*era5_spectral_olr.olr0_ecRad.clr - (0*era5_spectral_olr.planck_ecRad.clr + era5_spectral_olr.lapse_ecRad.clr  + era5_spectral_olr.o3_ecRad.clr + era5_spectral_olr.wv_ecRad.clr);
+merra2_spectral_olr.allsum     = 3*merra2_spectral_olr.olr0_ecRad.clr - (0*merra2_spectral_olr.planck_ecRad.clr + merra2_spectral_olr.lapse_ecRad.clr  + merra2_spectral_olr.o3_ecRad.clr + merra2_spectral_olr.wv_ecRad.clr);
+umbc_spectral_olr.allsum       = 3*umbc_spectral_olr.olr0_ecRad.clr - (0*umbc_spectral_olr.planck_ecRad.clr + umbc_spectral_olr.lapse_ecRad.clr  + umbc_spectral_olr.o3_ecRad.clr + umbc_spectral_olr.wv_ecRad.clr);
+airsL3_spectral_olr.allsum     = 3*airsL3_spectral_olr.olr0_ecRad.clr - (0*airsL3_spectral_olr.planck_ecRad.clr + airsL3_spectral_olr.lapse_ecRad.clr  + airsL3_spectral_olr.o3_ecRad.clr + airsL3_spectral_olr.wv_ecRad.clr);
+climcapsL3_spectral_olr.allsum = 3*climcapsL3_spectral_olr.olr0_ecRad.clr - (0*climcapsL3_spectral_olr.planck_ecRad.clr + climcapsL3_spectral_olr.lapse_ecRad.clr  + climcapsL3_spectral_olr.o3_ecRad.clr + climcapsL3_spectral_olr.wv_ecRad.clr);
+z11  = era5_spectral_olr.allsum;
+z12  = merra2_spectral_olr.allsum;
+zMID = umbc_spectral_olr.allsum;
+z21  = airsL3_spectral_olr.allsum;
+z22  = climcapsL3_spectral_olr.allsum;
+  plotoptions5.str11 = 'ERA5'; plotoptions5.str12 = 'MERRA2';
+  plotoptions5.strzz = 'UMBC'; 
+  plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
+  plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
+  plotoptions5.maintitle = '\lambda W/m2/K';
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),7,plotoptions5);
+
+z11  = -era5_spectral_olr.wv_ecRad.clr       + era5_spectral_olr.olr0_ecRad.clr;
+z12  = -merra2_spectral_olr.wv_ecRad.clr     + merra2_spectral_olr.olr0_ecRad.clr;
+zMID = -umbc_spectral_olr.wv_ecRad.clr       + umbc_spectral_olr.olr0_ecRad.clr;
+z21  = -airsL3_spectral_olr.wv_ecRad.clr     + airsL3_spectral_olr.olr0_ecRad.clr;
+z22  = -climcapsL3_spectral_olr.wv_ecRad.clr + climcapsL3_spectral_olr.olr0_ecRad.clr;
+  plotoptions5.str11 = 'ERA5'; plotoptions5.str12 = 'MERRA2';
+  plotoptions5.strzz = 'UMBC'; 
+  plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
+  plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
+  plotoptions5.maintitle = '\lambda_{wv} W/m2/K';
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),8,plotoptions5);
+
+z11  = -era5_spectral_olr.planck_ecRad.clr       + era5_spectral_olr.olr0_ecRad.clr;
+z12  = -merra2_spectral_olr.planck_ecRad.clr     + merra2_spectral_olr.olr0_ecRad.clr;
+zMID = -umbc_spectral_olr.planck_ecRad.clr       + umbc_spectral_olr.olr0_ecRad.clr;
+z21  = -airsL3_spectral_olr.planck_ecRad.clr     + airsL3_spectral_olr.olr0_ecRad.clr;
+z22  = -climcapsL3_spectral_olr.planck_ecRad.clr + climcapsL3_spectral_olr.olr0_ecRad.clr;
+  plotoptions5.str11 = 'ERA5'; plotoptions5.str12 = 'MERRA2';
+  plotoptions5.strzz = 'UMBC'; 
+  plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
+  plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
+  plotoptions5.maintitle = '\lambda_{planck} W/m2/K';
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),9,plotoptions5);
+
+z11  = -era5_spectral_olr.planck_ecRad.clr       + era5_spectral_olr.lapse_ecRad.clr;
+z12  = -merra2_spectral_olr.planck_ecRad.clr     + merra2_spectral_olr.lapse_ecRad.clr;
+zMID = -umbc_spectral_olr.planck_ecRad.clr       + umbc_spectral_olr.lapse_ecRad.clr;
+z21  = -airsL3_spectral_olr.planck_ecRad.clr     + airsL3_spectral_olr.lapse_ecRad.clr;
+z22  = -climcapsL3_spectral_olr.planck_ecRad.clr + climcapsL3_spectral_olr.lapse_ecRad.clr;
+  plotoptions5.str11 = 'ERA5'; plotoptions5.str12 = 'MERRA2';
+  plotoptions5.strzz = 'UMBC'; 
+  plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
+  plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
+  plotoptions5.maintitle = '\lambda_{lapse} W/m2/K';
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),10,plotoptions5);
+
+%junk = [sum(era5_spectral_olr.allsum .* coslat)/sum(coslat) sum(merra2_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbc_spectral_olr.allsum .* coslat)/sum(coslat) sum(airsL3_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boox(1:4);
+%fprintf(1,'feedbacks for ERA5/MERRA2/AIRS L3/CLIMCAPS L3 = %8.5f %8.5f %8.5f %8.5f W/m2/K \n',junk);
+junk = [sum(era5_spectral_olr.allsum .* coslat)/sum(coslat) sum(merra2_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbc_spectral_olr.allsum .* coslat)/sum(coslat) ...
+        sum(airsL3_spectral_olr.allsum .* coslat)/sum(coslat) sum(climcapsL3_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boo(1:5);
+fprintf(1,'feedbacks for ERA5/MERRA2/UMBC/AIRSL3/CLIMCAPSL3 = %8.5f %8.5f %8.5f %8.5f %8.5f W/m2/K \n',junk);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 cosYY = cos(YY*pi/180);
 tropics = find(abs(YY) < 30);
 poles   = find(abs(YY) >= 60);
 midlats = find(abs(YY) >= 30 & abs(YY) < 60);
-
 
 disp(' ')
 disp('---------------|---------------------|---------------------|---------------------|---------------------')
@@ -553,7 +647,19 @@ plot(xsin2,smooth(boo1,iSmooth),xsin2,smooth(boo2,iSmooth),xsin2,smooth(boo3,iSm
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
+addpath /asl/matlib/plotutils
+
 dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
-figure(4); aslprint([dir0 'global_feedbackparams_20yrs_UMBC_ERA5_MERRA2_L3.pdf'])
+if dascale == +1
+  figure(7);  aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_total_correct_deltaSKT.pdf'])
+  figure(8);  aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_water_correct_deltaSKT.pdf'])
+  figure(9);  aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_planck_correct_deltaSKT.pdf'])
+  figure(10); aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_lapse_correct_deltaSKT.pdf'])
+else
+  figure(7);  aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_total_unity_deltaSKT.pdf'])
+  figure(8);  aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_water_unity_deltaSKT.pdf'])
+  figure(9);  aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_planck_unity_deltaSKT.pdf'])
+  figure(10); aslprint([dir0 'global_feedbackparams_20yrs_ERA5_MERRA2_UMBC_AIRSL3_CLIMCAPSL3_lapse_unity_deltaSKT.pdf'])
+end
 %}
 

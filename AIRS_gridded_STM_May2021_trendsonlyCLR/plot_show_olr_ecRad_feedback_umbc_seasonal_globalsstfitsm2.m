@@ -1,4 +1,12 @@
+addpath /home/sergio/MATLABCODE/COLORMAP
+addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+addpath  /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
+
+load llsmap5
+
 clear showfeedbacks* strfeedbacks
+%clear all
+
 for ii = 1 : 6; figure(ii); clf; end
 
 ix = 1; iNumYears = 20; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '_DJF.mat']);
@@ -45,6 +53,17 @@ showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2.globalSST_
 umbcSON_spectral_olr = junk.umbc_spectral_olr;
 umbcSON_spectral_olr.deltaSKT = junk.results(:,6);
 
+ix = 5; iNumYears = 20; junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat']);
+strfeedbacks{ix} = 'ALL';
+showfeedbacks(ix,1) = junk.umbc_spectral_olr.feedback_ecRad.planck.globalSST_weighted_all;
+showfeedbacks(ix,2) = junk.umbc_spectral_olr.feedback_ecRad.lapse.globalSST_weighted_all;
+showfeedbacks(ix,3) = junk.umbc_spectral_olr.feedback_ecRad.o3.globalSST_weighted_all;
+showfeedbacks(ix,4) = junk.umbc_spectral_olr.feedback_ecRad.wv.globalSST_weighted_all;
+showfeedbacks(ix,5) = junk.umbc_spectral_olr.feedback_ecRad.skt.globalSST_weighted_all;
+showfeedbacks(ix,6) = junk.umbc_spectral_olr.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
+umbcALL_spectral_olr = junk.umbc_spectral_olr;
+umbcALL_spectral_olr.deltaSKT = junk.results(:,6);
+
 %% the 6 feedbacks are feedbacks : planck lapse o3 wv skt tz/co2
 %% but longwave feedback is um of first 4
 ixx = ix;
@@ -73,10 +92,53 @@ YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.02
   indSST = umbcMAM_spectral_olr.deltaSKT'; boo(2) = sum(indSST .* coslat)/sum(coslat);
   indSST = umbcJJA_spectral_olr.deltaSKT'; boo(3) = sum(indSST .* coslat)/sum(coslat);
   indSST = umbcSON_spectral_olr.deltaSKT'; boo(4) = sum(indSST .* coslat)/sum(coslat);
-  fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f K/yr for DJF/MAM/JJA/SON seasons \n',boo)
+  indSST = umbcALL_spectral_olr.deltaSKT'; boo(5) = sum(indSST .* coslat)/sum(coslat);
+fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f %8.6f K/yr for DJF/MAM/JJA/SON/ALL seasons \n',boo)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% remember we do delta(OLR) so we need 3xolr0, and we actually do not need planck when summing
+%% see compute_feedbacks_regress_olr_ecRad_calcs.m : 
+%%  Planck = -F_planck + F_0
+%%  Lapse  = -F_Lapse + F_planck
+%%  ozone  = -F_ozone + F_0 
+%%  water  = -F_water + F_0 
+%% -------------------------
+%%   SUM  = +3*F_0 + 0*F_planck -F_Lapse -F_ozone -F_water
+%% -------------------------%% ------------------------- 
+umbcDJF_spectral_olr.allsum = 3*umbcDJF_spectral_olr.olr0_ecRad.clr - (0*umbcDJF_spectral_olr.planck_ecRad.clr + umbcDJF_spectral_olr.lapse_ecRad.clr  + umbcDJF_spectral_olr.o3_ecRad.clr + umbcDJF_spectral_olr.wv_ecRad.clr);
+umbcMAM_spectral_olr.allsum = 3*umbcMAM_spectral_olr.olr0_ecRad.clr - (0*umbcMAM_spectral_olr.planck_ecRad.clr + umbcMAM_spectral_olr.lapse_ecRad.clr  + umbcMAM_spectral_olr.o3_ecRad.clr + umbcMAM_spectral_olr.wv_ecRad.clr);
+umbcJJA_spectral_olr.allsum = 3*umbcJJA_spectral_olr.olr0_ecRad.clr - (0*umbcJJA_spectral_olr.planck_ecRad.clr + umbcJJA_spectral_olr.lapse_ecRad.clr  + umbcJJA_spectral_olr.o3_ecRad.clr + umbcJJA_spectral_olr.wv_ecRad.clr);
+umbcSON_spectral_olr.allsum = 3*umbcSON_spectral_olr.olr0_ecRad.clr - (0*umbcSON_spectral_olr.planck_ecRad.clr + umbcSON_spectral_olr.lapse_ecRad.clr  + umbcSON_spectral_olr.o3_ecRad.clr + umbcSON_spectral_olr.wv_ecRad.clr);
+umbcALL_spectral_olr.allsum = 3*umbcALL_spectral_olr.olr0_ecRad.clr - (0*umbcALL_spectral_olr.planck_ecRad.clr + umbcALL_spectral_olr.lapse_ecRad.clr  + umbcALL_spectral_olr.o3_ecRad.clr + umbcALL_spectral_olr.wv_ecRad.clr);
+z11 = umbcDJF_spectral_olr.allsum;
+z12 = umbcMAM_spectral_olr.allsum;
+zMID = umbcALL_spectral_olr.allsum;
+z21 = umbcJJA_spectral_olr.allsum;
+z22 = umbcSON_spectral_olr.allsum;
+plotoptions.str11 = 'DJF'; plotoptions.str12 = 'MAM';
+plotoptions.str21 = 'JJA'; plotoptions.str22 = 'SON';
+plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Longitude';
+plotoptions.cx = [-1 +1]*20; plotoptions.maintitle = '\lambda'; plotoptions.plotcolors = llsmap5; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1;
+aslmap_2x2tiledlayout(z11/boo(1),z12/boo(2),z21/boo(3),z22/boo(4),7,plotoptions);
+plotoptions5.str11 = 'DJF'; plotoptions5.str12 = 'MAM';
+plotoptions5.strzz = 'ALL'; 
+plotoptions5.str21 = 'JJA'; plotoptions5.str22 = 'SON';
+plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
+plotoption5.maintitle = '\lambda W/m2/K';
+plotoptions5.cx = [-1 +1]*20; plotoptions5.maintitle = '\lambda'; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+aslmap_2x1x2tiledlayout(z11/boo(1),z12/boo(2),zMID/boo(5),z21/boo(3),z22/boo(4),7,plotoptions5);
+
+%junk = [sum(umbcDJF_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcMAM_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcJJA_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcSON_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boo(1:4);
+%fprintf(1,'feedbacks for DJF/MAM/JJA/SON = %8.5f %8.5f %8.5f %8.5f W/m2/K \n',junk);
+junk = [sum(umbcDJF_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcMAM_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcJJA_spectral_olr.allsum .* coslat)/sum(coslat) ...
+        sum(umbcSON_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcALL_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boo(1:5);
+fprintf(1,'feedbacks for DJF/MAM/JJA/SON/ALL = %8.5f %8.5f %8.5f %8.5f %8.5f W/m2/K \n',junk);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('         Planck Lapse Ozone Water |  Total')
-for ix = 1 : 4
+for ix = 1 : 5
   fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
 end
 trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 7]);
@@ -84,7 +146,7 @@ trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 7]);
 figure(1); clf
 bar(trends_paper_show');
 ylabel('Feedback W/m2/K');
-hl = legend('DJF','MAM','JJA','SON','location','north','fontsize',10);
+hl = legend('DJF','MAM','JJA','SON','ALL','location','north','fontsize',10);
 xstr = {'Planck','Lapse','Ozone','Water Vapor','SUM'};
 set(gca,'xticklabels',xstr)
 xtickangle(45)
@@ -257,5 +319,6 @@ plot(xsin,smooth(umbcDJF_spectral_olr.feedback_ecRad.planck.globalSST_weighted_l
 %{
 dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
 figure(4); aslprint([dir0 'global_feedbackparams_seasonal_20yrs.pdf'])
+figure(7); aslprint([dir0 'global_feedbackparams_seasonal_20yrs_latlon.pdf'])
 %}
 

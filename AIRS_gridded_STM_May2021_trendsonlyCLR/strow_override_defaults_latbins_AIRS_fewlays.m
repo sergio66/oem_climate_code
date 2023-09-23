@@ -15,7 +15,12 @@ driver.topts  = topts;
 
 %---------------------------------------------------------------------------
 % Which latitude bin
-ix = driver.iibin;
+if driver.ia_OorC_DataSet_Quantile(1) <= 1
+  ix = driver.iibin;
+else
+  ix = driver.anomalylocation;
+end
+
 %---------------------------------------------------------------------------
 % Fitting [obs][cal][bias], pick one
 if settings.ocb_set == -1
@@ -27,7 +32,11 @@ elseif settings.ocb_set == 0
 elseif settings.ocb_set == +1
   driver.rateset.ocb_set  = 'cal';
   disp('cal')
-elseif abs(settings.ocb_set) > 1
+elseif abs(settings.ocb_set) == +2
+  driver.rateset.ocb_set  = 'anom';
+  driver.rateset.ocb_set  = 'obs';
+  disp('anomaly')
+elseif abs(settings.ocb_set) > 2
   settings.ocb_set
   error('incorrect settings.ocb_set')
 end

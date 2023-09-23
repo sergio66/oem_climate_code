@@ -193,6 +193,10 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 12
       driver.rateset.datafile  = 'AHAH';
     end
 
+  elseif settings.descORasc == +1 & driver.i16daytimestep >= 0 & settings.dataset == 9
+    disp('doing Sergio FULL 20 year anomalies')
+    driver.rateset.datafile  = ['anomaly_ALL_quantile_globalavg_and_18_averages_timeseries_Q' num2str(driver.iQuantile,'%02d') '.mat'];
+
   elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & (settings.dataset >= 9 & settings.dataset <= 12)
     disp('doing Sergio FULL 20/05/10/15 year gridded quantile rates 2002/09-2022/2007/2012/2017-08 , NEW WAY of doing quantile iQAX = 3')
     fprintf(1,'dataset = %2i where 09,10,11,12 are for 20,05,10,15 years of AIRS data .... \n',settings.dataset)

@@ -174,7 +174,7 @@ plotoptions.yReverseDir  = +1;
 plotoptions.yLimits = [100 1000];
 plotoptions.xaxis_metric = 'sine';
 
-plotoptions.maintitle = 'dtrend_gas_1/dt trends [1/yr]';
+plotoptions.maintitle = 'dfracWV/dt trends [1/yr]';
 plotoptions.cx = [-1 +1]*0.151/10;
 miaow11 = squeeze(nanmean(reshape(aDJF.trend_gas_1,100,72,64),2)); 
 miaow12 = squeeze(nanmean(reshape(aMAM.trend_gas_1,100,72,64),2)); 
@@ -221,7 +221,7 @@ plotoptions.yReverseDir  = +1;
 plotoptions.yLimits = [0.010 100];
 plotoptions.xaxis_metric = 'sine';
 
-plotoptions.maintitle = 'dtrend_gas_3/dt trends [1/yr]';
+plotoptions.maintitle = 'dfracO3/dt trends [1/yr]';
 plotoptions.cx = [-1 +1]*0.151/10;
 miaow11 = squeeze(nanmean(reshape(aDJF.trend_gas_3,100,72,64),2)); 
 miaow12 = squeeze(nanmean(reshape(aMAM.trend_gas_3,100,72,64),2)); 
@@ -239,6 +239,6 @@ if iPrint > 0
   figure(07); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_skt_trends_lat_lon_4panels20_years_seasonal.pdf');
   figure(08); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_skt_trends_lat_lon_4panels20_years_seasonal_polar.pdf');
   figure(15); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_tz_trends_zonal_p_4panels20_years_seasonal.pdf')
-  figure(23); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_trend_gas_1_trends_zonal_p_4panels20_years_seasonal.pdf');
-  figure(29); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_trend_gas_3_trends_zonal_p_4panels20_years_seasonal.pdf');
+  figure(22); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_gas_1_trends_zonal_p_4panels20_years_seasonal.pdf');
+  figure(29); aslprint('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_gas_3_trends_zonal_p_4panels20_years_seasonal.pdf');
 end
