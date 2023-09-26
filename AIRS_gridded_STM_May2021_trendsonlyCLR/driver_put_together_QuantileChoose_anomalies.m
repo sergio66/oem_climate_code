@@ -194,5 +194,15 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if iHuge > 0
-  make_globalavg_and_N_averages
+  iX = input('Do you wish to do global and (+1/default) N zonal averages or (-1) one tile : ');
+  iX = 1;
+  if lenth(iX) == 0
+    iX = 1;
+  end
+  if iX > 0
+    make_globalavg_and_N_average_anomalies
+  else
+    make_globalavg_and_onetile_anomaly
+    %make_onetile_anomaly
+  end
 end

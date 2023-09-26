@@ -22,9 +22,16 @@ load('llsmap5.mat');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('takes about 2 hours')
+disp('takes about 2 hours for trends')
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
+
+if ~exist('iTrendsOrAnoms')
+  iTrendsOrAnoms = -1;  %% surface and atmospheric anomalies
+  iTrendsOrAnoms = -10; %% surface                 anomalies
+  iTrendsOrAnoms = +10; %% surface                 trends
+  iTrendsOrAnoms = +1;  %% surface and atmospheric trends
+end
 
 if ~exist('iDorA')
   iDorA = -1; %% asc
@@ -38,7 +45,7 @@ clear iaFound
 iNumYears = 18; %% 2002/09-2020/08
 iNumYears = 19; %% 2002/09-2021/08
 iNumYears = 12; %% 2002/09-2014/08
-iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iNumYears = 20; %% 2002/09-2022/08
 
 % iNumYears = input('Enter iNumYears : ');
@@ -224,38 +231,68 @@ figure(10); clf; junk = reshape(a.pnew_op.RH,100,72,64); junk = squeeze(nanmean(
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
 
-computeERA5_surface_trends
+if iTrendsOrAnoms > 0
+  computeERA5_surface_trends
 
-figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
-figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
-figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+  figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
+  figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+  figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+  figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
 
-figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
-figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
-figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
-pause(0.1)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
+  figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
+  figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
+  figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+  pause(0.1)
 
-computeERA5_atmos_trends
-
-if isfield(all,'nwp_plevs')
-  trend_nwp_plevs_mean = mean(squeeze(nanmean(all.nwp_plevs,1)),2);
+elseif iTrendsOrAnoms < 0
+  computeERA5_surface_anoms
 end
 
-trend_plays = flipud(pN./pD);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-trend_rlat = all.rlat;
-trend_rlon = all.rlon;
-trend_rlat64 = rlat; trend_rlon72 = rlon;
-%trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
+if iTrendsOrAnoms == 1 
+  computeERA5_atmos_trends
 
-%find_computeERA5_monthly_trends_foutname
-if ~exist(fout_trendjunk)
-  fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
-  saver = ['save ' fout_trendjunk ' comment trend*'];
-  eval(saver);
+  if isfield(all,'nwp_plevs')
+    trend_nwp_plevs_mean = mean(squeeze(nanmean(all.nwp_plevs,1)),2);
+  end
+  
+  trend_plays = flipud(pN./pD);
+  
+  trend_rlat = all.rlat;
+  trend_rlon = all.rlon;
+  trend_rlat64 = rlat; trend_rlon72 = rlon;
+  %trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
+  
+  %find_computeERA5_monthly_trends_foutname
+  if ~exist(fout_trendjunk)
+    fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
+    saver = ['save ' fout_trendjunk ' comment trend*'];
+    eval(saver);
+  end
+  
+elseif iTrendsOrAnoms == 1 
+  computeERA5_atmos_anoms
+
+  if isfield(all,'nwp_plevs')
+    anom_nwp_plevs_mean = mean(squeeze(nanmean(all.nwp_plevs,1)),2);
+  end
+  
+  anom_plays = flipud(pN./pD);
+  
+  anom_rlat = all.rlat;
+  anom_rlon = all.rlon;
+  anom_rlat64 = rlat; anom_rlon72 = rlon;
+  %anom_plevs37 = permute(all.nwp_plevs,[2 1 3]); anom_plevs37 = reshape(anom_plevs37,37,227*4608); anom_plevs37 = mean(anom_plevs37,2);
+  
+  %find_computeERA5_monthly_anoms_foutname
+  if ~exist(fout_anomjunk)
+    fprintf(1,'saving anom file : can type in a separate window         watch "ls -lt %s " \n',fout_anomjunk)
+    saver = ['save ' fout_anomjunk ' comment anom*'];
+    eval(saver);
+  end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

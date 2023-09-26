@@ -111,20 +111,21 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 iRaw_or_Unc = -1; %% use raw profiles, and then perturbations+unc, in the ecRad or SARTA calcs
 iRaw_or_Unc = +1; %% use raw profiles, and then perturbations,     in the ecRad or SARTA calcs
 
-iGet_ERA5_AIRSL3_AMIP = +1;  %% to do UMBC and also load in eg MERRA2/ERA5 model trends
 iGet_ERA5_AIRSL3_AMIP = -1;  %% default
-
-iAllorSeasonal = +1;
-a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 05;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 15;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2v2.mat';    iNumYears = 10;  %% use CarbonTracker CO2 trends
-a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
+iGet_ERA5_AIRSL3_AMIP = +1;  %% to do UMBC and also load in eg MERRA2/ERA5 model trends
 
 %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25
 a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_SON.mat';  iNumYears = 20;  iAllorSeasonal = -4;
 a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_JJA.mat';  iNumYears = 20;  iAllorSeasonal = -3;
 a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MAM.mat';  iNumYears = 20;  iAllorSeasonal = -2;
 a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_DJF.mat';  iNumYears = 20;  iAllorSeasonal = -1;
+
+%% ****, topts.iAdjLowerAtmWVfrac=0.25
+iAllorSeasonal = +1;
+a.topts.dataset = 10; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset10_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 05;  %% use CarbonTracker CO2 trends
+a.topts.dataset = 12; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset12_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 15;  %% use CarbonTracker CO2 trends
+a.topts.dataset = 11; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset11_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2v2.mat';    iNumYears = 10;  %% use CarbonTracker CO2 trends
+a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';      iNumYears = 20;  %% use CarbonTracker CO2 trends 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

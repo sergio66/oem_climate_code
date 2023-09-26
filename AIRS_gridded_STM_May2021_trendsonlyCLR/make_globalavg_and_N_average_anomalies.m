@@ -1,14 +1,31 @@
-rlat = load('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat'); 
-rlat65 = rlat.latB2; rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
-rlon73 = (1:73); rlon73 = -180 + (rlon73-1)*5;  rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
-[Y,X] = meshgrid(rlat,rlon);
-[salti, landfrac] = usgs_deg10_dem(Y,X);
+addpath /asl/matlib/science/
+addpath /home/sergio/MATLABCODE/TIME
 
-lf = landfrac; lf = lf(:);
-%% XX = X'; XX = XX(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
-%% YY = Y'; YY = YY(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
-XX = X; XX = XX(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
-YY = Y; YY = YY(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
+if ~exist('btanom')
+  load /asl/s1/sergio/JUNK/anomaly_ALL_QO3.mat
+  daysSince2002 = change2days(yy,mm,dd,2002);
+  load h2645structure.mat
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if ~exist('rlat65')
+  rlat = load('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat'); 
+  rlat65 = rlat.latB2; rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
+  rlon73 = (1:73); rlon73 = -180 + (rlon73-1)*5;  rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
+  [Y,X] = meshgrid(rlat,rlon);
+  [salti, landfrac] = usgs_deg10_dem(Y,X);
+  
+  lf = landfrac; lf = lf(:);
+  %% XX = X'; XX = XX(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
+  %% YY = Y'; YY = YY(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
+  XX = X; XX = XX(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
+  YY = Y; YY = YY(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
+end
+
+coslat = cos(YY*pi/180)*ones(1,454);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 oni = load('ONI_sep2023.txt');
   [aaa,bbb] = size(oni);
@@ -43,6 +60,7 @@ plotaxis2; hl = legend('ONI','BT1231 anomaly vers1','BT1231 anomaly vers2','loca
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 newLatGrid = [-90 -70 -50 -30 -10 +10 +30 +50 +70 +90];
 newLatGrid = [-90:+10:+90];
+newLatGrid = [-90 -75 -60 [-55:5:+55] +60 +75 +90];
 
 for iCnt = 1 : length(newLatGrid)-1
   clear junk
@@ -103,7 +121,7 @@ iCnt = 1;
 iSave = input('save -1/+1  : ');
 if iSave > 0
   comment = 'see make_global_avg_and_9_averages.m';
-  fout = ['anomaly_ALL_quantile_globalavg_and_' num2str(length(newLatGrid)-1) '_averages_timeseries_Q' num2str(iQuant,'%02d') '.mat'];
+  fout = ['anomaly_globalavg_and_' num2str(length(newLatGrid)-1) '_averages_timeseries_Q' num2str(iQuant,'%02d') '.mat'];
   saver = ['save -v7.3 ' fout ' btavgAnomFinal yy mm dd hh rtime comment usethese newLatGrid anomavg'];
   eval(saver);
 end

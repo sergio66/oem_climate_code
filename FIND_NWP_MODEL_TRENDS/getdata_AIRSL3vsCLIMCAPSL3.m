@@ -1,6 +1,9 @@
 function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
 
-%% function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);   iA = +1 (AIRS L3) or -1 CLIMCAPS
+%% function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);   
+%%  iA = +1 (AIRS L3) 
+%%       -1 CLIMCAPS
+%%       +3 CESM3                                                                                   
 
 addpath /asl/matlib/maps/
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
@@ -25,8 +28,10 @@ end
 
 if iA == 1
   strXL3 = 'AIRS L3';
-else
+elseif iA == -1
   strXL3 = 'CLIMCAPS';
+elseif iA == 3
+  strXL3 = 'CESM3';
 end
 
 %iFirstTime = -1;
@@ -116,7 +121,7 @@ if iNorD > 0
     %   iNumYears
     %   error('need 12, 19, 20 years')
     % end
-  else
+  elseif iA == -1
     if length(intersect(iNumYears,[05 10 12 15 19 20])) == 1
       fAIRS = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
     else
@@ -127,6 +132,14 @@ if iNorD > 0
       fAIRS = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYearsPowWow) '_' num2str(iNumYearsPowWow) 'yr_desc.mat'];
       disp('CLIMCAPS L3 : need 05 10 12 15 19 or 20 years, subbing in closest year')
     end    
+  elseif iA == 3
+    if length(intersect(iNumYears,[19])) == 1
+      %         /asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat
+      fAIRS = ['/asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
+    else
+      fAIRS = ['/asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat'];
+      disp('CESM3 : need 19 years, subbing in closest year')
+    end      
   end
 else
   strNorD = 'DAY';
@@ -140,7 +153,7 @@ else
     else
       error('need 12 or 19 years')
     end
-  else
+  elseif iA == -1
     if iNumYears == 19  
       fAIRS = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_stats_Sept2002_Aug2021_19yr_asc.mat';
     elseif iNumYears == 20
@@ -150,6 +163,14 @@ else
     else
       error('need 12 or 19 years')
     end
+  elseif iA == 3
+    if length(intersect(iNumYears,[19])) == 1
+      %         /asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat
+      fAIRS = ['/asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(iNumYears) 'yr_desc.mat'];
+    else
+      fAIRS = ['/asl/s1/sergio/CESM3/cesm3_64x72_rates_stats_Sept2002_Aug2021_19yr_desc.mat'];
+      disp('CESM3 : need 19 years, subbing in closest year')
+    end      
   end
 end
 
@@ -166,19 +187,26 @@ if iA == 1
   iT = 24;
   iW = 12;
   %% pressure units already in mb, RH units already in percent
-else
+elseif iA == -1
   iT = 100;
   iW = 66;
   airsChoice.Tlevs = airsChoice.Tlevs/100;  %% Pa --> mb
   airsChoice.Qlevs = airsChoice.Qlevs/100;  %% Pa --> mb
   airsChoice.thestats64x72.RHrate = airsChoice.thestats64x72.RHrate * 100;           %% fraction --> percent
   airsChoice.thestats64x72.RHSurfrate = airsChoice.thestats64x72.RHSurfrate * 100;   %% fraction --> percent
+elseif iA == 3
+  iT = 58;
+  iW = 58;
+  airsChoice.Tlevs = airsChoice.Tlevs/100;  %% Pa --> mb
+  airsChoice.Qlevs = airsChoice.Qlevs/100;  %% Pa --> mb
 end
 
 load llsmap5;
 iFig = 0;
-%iFig = iFig + 1; figure(iFig); clf;  aslmap(iFig,rlat65,rlon73,maskLFmatr.*smoothn(airsChoice.thestats64x72.RHSurfrate',1), [-90 +90],[-180 +180]);  colormap(llsmap5); caxis([-0.5 +0.5]);   title([strNorD ' RHsurf d/dt ' strXL3 ' /yr']);   
-iFig = iFig + 1; figure(iFig); clf;  aslmap(iFig,rlat65,rlon73,maskLFmatr.*smoothn(airsChoice.thestats64x72.stemprate',1), [-90 +90],[-180 +180]);   colormap(llsmap5); caxis([-0.15 +0.15]); title([strNorD ' stemp d/dt ' strXL3 ' K/yr']);
+%iFig = iFig + 1; figure(iFig); clf;  aslmap(iFig,rlat65,rlon73,maskLFmatr.*smoothn(airsChoice.thestats64x72.RHSurfrate',1), [-90 +90],[-180 +180]);  
+%   colormap(llsmap5); caxis([-0.5 +0.5]);   title([strNorD ' RHsurf d/dt ' strXL3 ' /yr']);   
+iFig = iFig + 1; figure(iFig); clf;  aslmap(iFig,rlat65,rlon73,maskLFmatr.*smoothn(airsChoice.thestats64x72.stemprate',1), [-90 +90],[-180 +180]);   
+  colormap(llsmap5); caxis([-0.15 +0.15]); title([strNorD ' stemp d/dt ' strXL3 ' K/yr']);
 
 %if ~exist('pavgLAY')
 %  boo = load('/home/sergio/MATLABCODE/airslevels.dat');

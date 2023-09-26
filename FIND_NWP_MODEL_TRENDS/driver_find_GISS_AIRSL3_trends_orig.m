@@ -1,16 +1,23 @@
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE/FIND_TRENDS
+addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies
 addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /asl/matlib/aslutil/
 addpath /asl/matlib/maps
 
-iDoGiss   = -1;
+iDoAnom = -1;
+iDoAnom = +1;
+
+iDoGiss   = +1;
 iDoAIRSL3 = +1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iDoGiss > 0
+
+  iNumCyclesFit = 4; %% standard fit
+  iNumCyclesFit = 1; %% giss data is already an anomaly
 
   fname = '/asl/models/gistemp4/gistemp1200_GHCNv4_ERSSTv5.nc';
   fname = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/GISTEMP/F77/gistemp1200_ERSST.nc';
@@ -18,12 +25,17 @@ if iDoGiss > 0
   figure(1); clf; 
   
   giss = read_netcdf_lls(fname);
-  
+  giss.lat = double(giss.lat);
+  giss.lon = double(giss.lon);
+  giss.time = double(giss.time);
+  giss.time_bnds = double(giss.time_bnds);
+
   %% want to do doy since 01/01/1800
   yS = 2002; doyS = change2days(yS,09,01,1800);
   yE = 2022; doyE = change2days(yE,08,31,1800);
   
   iaNumYears = [05 10 15 20];
+  iaNumYears = [20];
   for tt = 1 : length(iaNumYears)
     iNumYears = iaNumYears(tt);
     yE = yS + iNumYears; doyE = change2days(yE,08,31,1800);
@@ -36,6 +48,7 @@ if iDoGiss > 0
     [Y,X] = meshgrid(giss.lat,giss.lon);
     
     warning off
+    disp(' "+" = 50, "." = 10 .. till 180 lonbins')
     for ii = 1 : 180
       if mod(ii,50) == 0
         fprintf(1,'+')
@@ -46,10 +59,16 @@ if iDoGiss > 0
         data = squeeze(giss.tempanomaly(ii,jj,:));
         aha = find(isfinite(data(oo)));
         if length(aha) > 20
-          [B stats] = Math_tsfit_lin_robust(double(giss.time(oo(aha))),double(data(oo(aha))),4);
+          [B stats] = Math_tsfit_lin_robust(double(giss.time(oo(aha))),double(data(oo(aha))),iNumCyclesFit);
+          if iDoAnom > 0
+            [giss_anom(ii,jj,:) Bjunk statsjunk] = generic_compute_anomaly(giss.time,data,oo(aha),1,iNumCyclesFit);
+          end
           giss_trend(ii,jj) = B(2);  
           giss_trend_err(ii,jj) = stats.se(2);  
         else
+          if iDoAnom > 0
+            giss_anom(ii,jj,:) = NaN;
+          end
           giss_trend(ii,jj) = NaN;  
           giss_trend_err(ii,jj) = NaN;
         end
@@ -79,21 +98,47 @@ if iDoGiss > 0
     [Y4608,X4608] = meshgrid(rlat,rlon);
     giss_trend4608     = interp2(Y,X,giss_trend,Y4608,X4608);
     giss_trend_err4608 = interp2(Y,X,giss_trend_err,Y4608,X4608);
-    
+    if iDoAnom > 0
+      for ii = 1 : length(aha)
+        boo = giss_anom(:,:,ii);
+        moo = interp2(Y,X,boo,Y4608,X4608);
+        giss_anom4608(:,:,ii) = moo;
+      end
+      giss_time = giss.time(oo(aha));
+    end
+
     aslmap(1,rlat65,rlon73,smoothn(giss_trend4608',1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt GISS K/yr'); 
     caxis([-1 +1] * 0.15);
     
     comment = 'see find_GISS_AIRSL3_trends.m';
-    saver = ['save ChrisHTrends/giss_trends.mat giss_* X Y comment'];  %% this is 2002-2019
-    saver = ['save ChrisHTrends/giss_trends_2002_' num2str(yE) '.mat giss_* X Y comment'];  %% this is 2002-2019
-    eval(saver);
+    if iDoAnom < 0
+      saver = ['save ChrisHTrends/giss_trends.mat giss_* X Y comment'];                       %% this is 2002-2019
+      saver = ['save ChrisHTrends/giss_trends_2002_' num2str(yE) '.mat giss_* X Y comment'];  %% this is 2002-2019
+    else
+      saver = ['save ChrisHTrends/giss_trends_plus_anom.mat giss_* X Y comment'];                       %% this is 2002-2019
+      saver = ['save ChrisHTrends/giss_trends_plus_anom_2002_' num2str(yE) '.mat giss_* X Y comment'];  %% this is 2002-2019
+    end
+
+  eval(saver);
+
+  %% larrabee says this tile is in TWP so it is typically cloudy
+  wawooY = find(giss.lat >= rlat(35),1) - 1;
+  wawooX = find(giss.lon >= rlon(67),1) - 1;
+  wawooY = find(giss.lat >= rlat(35),1);
+  wawooX = find(giss.lon >= rlon(67),1);
+  figure(2); clf
+  plot(giss.time,squeeze(giss.tempanomaly(wawooX,wawooY,:)),giss.time,squeeze(giss_anom(67,35,:)))
+  plot(giss.time,squeeze(giss.tempanomaly(wawooX,wawooY,:)),giss.time,squeeze(giss_anom(67,35,:)),'g',giss.time,smooth(squeeze(giss_anom(67,35,:)),23*0.25),'r','linewidth',2)
+  %keyboard_nowindow
+
   end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if iDoAIRSL3 > 0
   x = load('/home/chepplew/data/rates_anomalies/tiled/airs_l3_skt_d_fit_results.mat')
-  iaNumYears = [05 10 15];
+  iaNumYears = [05 10 15 20];
+  iaNumYears = [20];
 
   for tt = 1 : length(iaNumYears)
     iNumYears = iaNumYears(tt);

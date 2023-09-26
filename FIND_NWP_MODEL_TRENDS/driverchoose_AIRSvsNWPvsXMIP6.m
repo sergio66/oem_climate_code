@@ -6,32 +6,34 @@ function [airsChoice,nwpChoice,xmip6Choice] = driverchoose_AIRSvsNWPvsXMIP6(iA,i
 % function [airsChoice,nwpChoice,xmip6Choice] = driverchoose_AIRSvsNWPvsXMIP6(iA,iNWP,iXMIP6)
 %   iA  = airs L3 choice = +1 Joel Susskind AIRS L3 (default)
 %                          -1 Chris Barnet CLIMCAPS
-%   iNWP = 1   ERA-I
-%          2   MERRA2
-%          5   ERA5 (default)
-%   iXMIP6 = CMIP -1 default
-%            AMIP +1
+%                          +3 CESM3/19 years
+%   iNWP                 =  1 ERA-I
+%                           2 MERRA2
+%                           5 ERA5 (default)
+%   iXMIP6               = -1 CMIP/14 years  default
+%                          +1 AMIP/14 years  
 
 if nargin == 0
   iA     = 1;
   iNWP   = 5;
   iXMIP6 = -1;
-  iNumYears = 19;
+  iNumYears = 20;
 elseif nargin == 1
   iNWP   = 5;
   iXMIP6 = -1;
-  iNumYears = 19;
+  iNumYears = 20;
 elseif nargin == 2
   iXMIP6 = -1;
-  iNumYears = 19;
+  iNumYears = 20;
 elseif nargin == 3
-  iNumYears = 19;
+  iNumYears = 20;
 end
 
 iNorD = 1;
 iAorOrL = 0;
 
 %%iNumYears = 19;
+%%iNumYears = 20;
 
 fprintf(1,'driverchoose_AIRSvsNWPvsXMIP6.m : iNumYears = %2i \n',iNumYears)
 

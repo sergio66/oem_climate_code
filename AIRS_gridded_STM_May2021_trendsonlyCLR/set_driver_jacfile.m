@@ -135,15 +135,18 @@ elseif driver.i16daytimestep > 0
 
     %% kcarta time vary jac
     junk = load(driver.rateset.datafile);
-    junk = junk.usethese{driver.anomalylatbin};
-    
-    YYmean = nanmean(YY(junk));
-    junk = find(rlat65 >= YYmean,1) - 1;
-
+    if ~strfind(driver.anomalydatafile,'_tile_')    
+      junk = junk.usethese{driver.anomalylatbin};
+      
+      YYmean = nanmean(YY(junk));
+      junk = find(rlat65 >= YYmean,1) - 1;
+    else
+      junk = junk.LatBin;
+    end
     driver.jacobian.filename = [];
     AHA = '/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/';
     AHA = '/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/';
-
+  
     AHA = [AHA '/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(junk,'%02i') '.mat']; %% ERA5,  2002-2022 20 year <avg cld = Q09> and NOT Q05
     driver.jacobian.filename = AHA;
     fprintf(1,'iXJac == 2 reading in timestep kcarta jac file %s \n',driver.jacobian.filename)

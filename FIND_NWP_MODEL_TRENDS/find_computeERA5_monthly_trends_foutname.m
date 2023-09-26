@@ -30,6 +30,11 @@ elseif iAllorSeasonal == -4
   fout_trendjunk = [fout_trendjunk '_SON.mat'];
 end
 
+if iTrendsOrAnoms < 0
+  fout_trendjunk = fout_trendjunk(1:end-4);
+  fout_trendjunk = [fout_trendjunk '_anomaly.mat'];
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

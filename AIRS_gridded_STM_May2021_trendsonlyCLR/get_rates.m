@@ -89,14 +89,23 @@ if driver.i16daytimestep < 0
   end
 
 elseif driver.i16daytimestep > 0
-  anom = load(driver.rateset.datafile);
-  iVersAnom = +1;
-  if iVersAnom == 1
-    iiAnomBins = (driver.anomalylatbin-1)*driver.anomalytimesteps + (1:driver.anomalytimesteps);
-    fprintf(1,' get_rates.m : subsetting iiAnomBins between %6i and %6i \n',iiAnomBins(1),iiAnomBins(end));
-    anom.avg16_btanom = (anom.btavgAnomFinal(:,iiAnomBins))';
+  if ~strfind(driver.anomalydatafile,'_tile_')
+    anom = load(driver.rateset.datafile);
+    iVersAnom = +1;
+    if iVersAnom == 1
+      iiAnomBins = (driver.anomalylatbin-1)*driver.anomalytimesteps + (1:driver.anomalytimesteps);
+      fprintf(1,' get_rates.m : subsetting iiAnomBins between %6i and %6i \n',iiAnomBins(1),iiAnomBins(end));
+      anom.avg16_btanom = (anom.btavgAnomFinal(:,iiAnomBins))';
+    end
+    get_anom_data_V0   %% orig, before Sept 2023 only had one anomaly time series
+  else
+    anom = load(driver.rateset.datafile);
+    driver.rateset.rates = anom.btavgAnomFinal(:,driver.i16daytimestep);
+    %anom_noise = load('noise_16day_avg_mission.mat');
+    anom_noise = load('btn_avg.mat');
+    anom_noise = squeeze(nanmean(squeeze(nanmean(anom_noise.btn_avg,1)),1));
+    driver.rateset.unc_rates = anom_noise;
   end
-  get_anom_data_V0   %% orig, before Sept 2023 only had one anomaly time series
 end
 
 %% disp('TESTING driver.rateset.unc_rates = 0.01')

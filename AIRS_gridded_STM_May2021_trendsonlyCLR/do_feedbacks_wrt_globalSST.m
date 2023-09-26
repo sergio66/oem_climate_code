@@ -3,6 +3,10 @@
 % do_avg_feedback2cos_dERA5ST_dt  %% better attempt at zonal avg with cosine(rlat) wgt  BEST
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp('  ')
+disp('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!!')
 disp('module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('  ')
@@ -22,8 +26,13 @@ disp('  ')
 disp('each model takes about 15 minutes for SARTA and ecRad to run completely ie 15 min for UMBC, 45 min for ERA5/AIRSL3/CMIP6, 45 min for MERRA2/CLIMCAPSL3/AMIP6')
 disp('so much better if you can read in pre-computed ERA5/AIRSL3/CMIP6 and MERRA2/CLIMCAPSL3/AMIP6')
 disp('  ')
+disp('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+disp('  ')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear feedbackname*
+clear *spectral_olr
 iLambda_UseGlobalSST = +1;
 
 iUMBCexist = -1;
@@ -49,76 +58,14 @@ elseif iAllorSeasonal == -4
   feedbacknameUMBC = feedbacknameUMBC(1:end-4);
   feedbacknameUMBC = [feedbacknameUMBC '_SON.mat'];
 end
-  
-if ~exist('umbc_spectral_olr') 
-  if exist(feedbacknameUMBC)
-    iUMBCexist = +1;
-    fprintf(1,'for %2i years the UMBC OLR ecRad file %s exists \n',iNumYears,feedbacknameUMBC)
-    lser = ['!ls -lt ' feedbacknameUMBC];
-    eval(lser)
-    junk = input('re-do the OLR feedbacks??? (-1 [default] /+1) : ');    
-    if junk > 0
-      umbc_spectral_olr = struct;    %% so it has no fields
-      umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,-1,rlat65,rlon73,'UMBC');
-      %%% compute_feedbacks_umbc_ecRad   ; pause(0.1)
-    else
-      fprintf(1,'  reading in %s \n',feedbacknameUMBC)
-      loader = ['load ' feedbacknameUMBC];
-      eval(loader);
-    end
-  else
-    umbc_spectral_olr = struct;    %% so it has no fields
-    umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,-1,rlat65,rlon73,'UMBC');
-    %%% compute_feedbacks_umbc_ecRad   ; pause(0.1)
-  end
-end
 
-junk = input('save the OLR feedbacks??? (-1 [default] /+1) : ');
-if length(junk) == 0
-  junk = -1;
-end
-if junk > 0
-  %{
-  %%%% this is how I made  olr_feedbacks_globalSST_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
-  if iSwap_ERA_2012_08_15 < 0
-    feedbacknameUMBC = ['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat'];
-  else
-    feedbacknameUMBC = ['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
-  end
-  if iRaw_or_Unc == -1
-    feedbacknameUMBC = feedbacknameUMBC(1:end-4);
-    feedbacknameUMBC = [feedbacknameUMBC '_unc_factor' num2str(maxratio,'%0.2f') '.mat'];
-  end
-  saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
-  saver = ['save ' feedbackname ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays   airsL3_spectral_olr era5_spectral_olr cmip6_spectral_olr airsL3 era5 cmip6'];
-  %%%% this is how I made  olr_feedbacks_globalSST_AIRSL3_ERA5_CMIP6_save.mat olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_save.mat %%%%
-  %}
-  
-  if junk > 0
-    junk2 = +1;
-    if exist(feedbacknameUMBC)
-      lser = ['!ls -lth ' feedbacknameUMBC];
-      eval(lser);
-      junk2 = input('file already exists, overwrite (-1 default/+1) : ');
-      if length(junk2) == 0
-        junk2 = -1;
-      end
-    end       
-    saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];  %% if you only want to save UMBC
-    if junk2 > 0
-      fprintf(1,'saving to %s \n',feedbacknameUMBC);
-      eval(saver);
-    else
-      fprintf(1,'this already exists %s not saving \n',feedbacknameUMBC);
-    end
-  end
-end
-
-fprintf(1,'models string = %s \n',strMODELS);
+do_compute_save_UMBC_feedbacks
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% FRESH COMPUTE  NWP/AIRSL3/XMIP6 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fprintf(1,'models string = %s \n',strMODELS);
 
 if iSwap_ERA_2012_08_15 < 0
   feedbacknameNWP_ERA5 = ['/asl/s1/sergio/JUNK/olr_feedbacks_' strMODELS '_numyears_' num2str(iNumYears,'%02d') '.mat'];
@@ -154,10 +101,16 @@ else
   disp('hmm, guess you did not read in MERRA2/CLIMCAPSL3/AMIP6 trends ....')
 end
 
-iFreshComputeNWP_L3_feedbacks = input('(-1/default) read in old files or (+1) freshly brew compute ERA5/AIRSL3/CMIP6 or MERRA2/CLIMCAPSL3/AMIP6 feedbacks : ');
+iFreshComputeNWP_L3_feedbacks = input('(-1/default) read in old files or (+1) freshly brew compute one or both of ERA5/AIRSL3/CMIP6 or MERRA2/CLIMCAPSL3/AMIP6 feedbacks : ');
 if length(iFreshComputeNWP_L3_feedbacks) == 0
   iFreshComputeNWP_L3_feedbacks = -1;
+  iXFreshComputeNWP_L3_feedbacks = -10;
 end
+
+if iFreshComputeNWP_L3_feedbacks > 0
+  iXFreshComputeNWP_L3_feedbacks = input(' freshly brew compute (0) ERA5/AIRSL3/CMIP6 and MERRA2/CLIMCAPSL3/AMIP6 feedbacks (+1) ERA5/AIRSL3/CMIP6 only (+2) MERRA2/CLIMCAPSL3/AMIP6 only : ');
+end
+
 if iFreshComputeNWP_L3_feedbacks < 0
   fprintf(1,'  loading in %s \n',feedbacknameNWP_ERA5);
   loader = ['load ' feedbacknameNWP_ERA5];
@@ -167,132 +120,26 @@ if iFreshComputeNWP_L3_feedbacks < 0
     loader = ['load ' feedbacknameNWP_MERRA2];
     eval(loader)
   end
-elseif iFreshComputeNWP_L3_feedbacks > 0
-  if ~exist('airsL3_spectral_olr')
-    disp('WARNING : computing feedbacks needs an UP-TO-DATE nwp_spectral_trends_cmip6_era5_airsL3_umbc so make sure you have re-run make_profile_spectral_trends');
-    junk = input('(+1/default) Go ahead with the calcs, you have run make_profile_spectral_trends or (-1) oops, re-run it here : ');
-    if length(junk) == 0
-      junk == 1;
-    end
-    if junk < 0
-      clear nwp_spectral_trends_cmip6_era5_airsL3_umbc
-      nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
-    end
-  
-    % compute_feedbacks_airsL3_ecRad  ; pause(0.1)
-    % compute_feedbacks_era5_ecRad    ; pause(0.1)
-    % compute_feedbacks_cmip6_ecRad   ; pause(0.1)
-  
-    era5_spectral_olr = struct;    %% so it has no fields
-    era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,-1,'ERA5');
-    
-    aL3trend.stemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
-    aL3trend.ptemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp;
-    aL3trend.gas_1 = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_1;
-    aL3trend.gas_3 = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_3;
-    airsL3_spectral_olr = struct;    %% so it has no fields
-    airsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,aL3trend.stemp,aL3trend.ptemp,aL3trend.gas_1,aL3trend.gas_3,airsL3_spectral_olr,-1,'AIRS L3');
-    
-    c6trend.stemp = cmip6.trend_stemp;
-    c6trend.ptemp = cmip6.trend_ptemp;
-    c6trend.gas_1 = cmip6.trend_gas_1;
-    c6trend.gas_3 = cmip6.trend_gas_3;
-    cmip6_spectral_olr = struct;    %% so it has no fields
-    cmip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,c6trend.stemp,c6trend.ptemp,c6trend.gas_1,c6trend.gas_3,cmip6_spectral_olr,-1,'CMIP6');
-  
-    junk = input('save ERA3/AIRSL3/CMIP6 only (-1 [default]/+1) : ');
-    if length(junk) == 0
-      junk = -1;
-    end
-    if junk > 0
-      junk2 = +1;
-      if exist(feedbacknameNWP_ERA5)
-        lser = ['!ls -lth ' feedbacknameNWP_ERA5];
-        eval(lser);
-        junk2 = input('file already exists, overwrite (-1 default/+1) : ');
-        if length(junk2) == 0
-          junk2 = -1;
-        end
-      end       
-      stemptrend.era5   = era5.trend_stemp;
-      stemptrend.airsL3 = aL3trend.stemp;
-      stemptrend.cmip6  = c6trend.stemp;
-      saver = ['save ' feedbacknameNWP_ERA5 ' era5_spectral_olr cmip6_spectral_olr airsL3_spectral_olr pavg plays stemptrend'];  %% if you want to save models/NWP only
-      if junk2 > 0
-        fprintf(1,'saving to %s \n',feedbacknameNWP_ERA5);
-        eval(saver);
-      else
-        fprintf(1,'this already exists %s not saving \n',feedbacknameNWP_ERA5);
-      end
-    end  
-  end
-  
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  if ~exist('climcapsL3_spectral_olr') & exist('amip6')
-    disp('WARNING : computing feedbacks needs an UP-TO-DATE nwp_spectral_trends_cmip6_era5_airsL3_umbc so make sure you have re-run make_profile_spectral_trends');
-    junk = input('(+1/default) Go ahead with the calcs, you have run make_profile_spectral_trends or (-1) oops, re-run it here : ');
-    if length(junk) == 0
-      junk == 1;
-    end
-    if junk < 0
-      clear nwp_spectral_trends_amip6_merra2_climcapsL3_umbc
-      nwp_spectral_trends_amip6_merra2_climcapsL3_umbc = make_profile_spectral_trends(amip6,merra2,climcapsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
-    end
-  
-    % compute_feedbacks_airsL3_ecRad  ; pause(0.1)
-    % compute_feedbacks_era5_ecRad    ; pause(0.1)
-    % compute_feedbacks_cmip6_ecRad   ; pause(0.1)
-  
-    merra2_spectral_olr = struct;    %% so it has no fields
-    merra2_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,merra2.trend_stemp,merra2.trend_ptemp,merra2.trend_gas_1,merra2.trend_gas_3,merra2_spectral_olr,-1,'MERRA2');
-
-    if ~exist('nwp_spectral_trends_amip6_merra2_climcapsL3_umbc')
-     nwp_spectral_trends_amip6_merra2_climcapsL3_umbc = make_profile_spectral_trends(amip6,merra2,climcapsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
-    end
-    cL3trend.stemp = nwp_spectral_trends_amip6_merra2_climcapsL3_umbc.airsL3_100_layertrends.stemp;
-    cL3trend.ptemp = nwp_spectral_trends_amip6_merra2_climcapsL3_umbc.airsL3_100_layertrends.ptemp;
-    cL3trend.gas_1 = nwp_spectral_trends_amip6_merra2_climcapsL3_umbc.airsL3_100_layertrends.gas_1;
-    cL3trend.gas_3 = nwp_spectral_trends_amip6_merra2_climcapsL3_umbc.airsL3_100_layertrends.gas_3;
-    climcapsL3_spectral_olr = struct;    %% so it has no fields
-    climcapsL3_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,cL3trend.stemp,cL3trend.ptemp,cL3trend.gas_1,cL3trend.gas_3,climcapsL3_spectral_olr,-1,'CLIMCAPS L3');
-    
-    a6trend.stemp = amip6.trend_stemp;
-    a6trend.ptemp = amip6.trend_ptemp;
-    a6trend.gas_1 = amip6.trend_gas_1;
-    a6trend.gas_3 = amip6.trend_gas_3;
-    amip6_spectral_olr = struct;    %% so it has no fields
-    amip6_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,a6trend.stemp,a6trend.ptemp,a6trend.gas_1,a6trend.gas_3,amip6_spectral_olr,-1,'AMIP6');
-  
-    junk = input('save MERRA2/CLIMCAPSL3/AMIP6 only (-1 [default]/+1) : ');
-    if length(junk) == 0
-      junk = -1;
-    end
-    if junk > 0
-      junk2 = +1;
-      if exist(feedbacknameNWP_MERRA2)
-        lser = ['!ls -lth ' feedbacknameNWP_MERRA2];
-        eval(lser);
-        junk2 = input('file already exists, overwrite (-1 default/+1) : ');
-        if length(junk2) == 0
-          junk2 = -1;
-        end
-      end       
-      stemptrend.era5   = merra2.trend_stemp;
-      stemptrend.airsL3 = cL3trend.stemp;
-      stemptrend.cmip6  = a6trend.stemp;
-      saver = ['save ' feedbacknameNWP_MERRA2 ' merra2_spectral_olr amip6_spectral_olr climcapsL3_spectral_olr pavg plays stemptrend'];  %% if you want to save models/NWP only
-      if junk2 > 0
-        fprintf(1,'saving to %s \n',feedbacknameNWP_MERRA2);
-        eval(saver);
-      else
-        fprintf(1,'this already exists %s not saving \n',feedbacknameNWP_MERRA2);
-      end
-    end
-  
-  end
-  
+elseif iFreshComputeNWP_L3_feedbacks > 0 & iXFreshComputeNWP_L3_feedbacks == 2
+  fprintf(1,'  loading in %s \n',feedbacknameNWP_ERA5);
+  loader = ['load ' feedbacknameNWP_ERA5];
+  eval(loader)
+elseif iFreshComputeNWP_L3_feedbacks > 0 & iXFreshComputeNWP_L3_feedbacks == 1 & exist('strMODELSX')
+  fprintf(1,'  loading in %s \n',feedbacknameNWP_MERRA2);
+  loader = ['load ' feedbacknameNWP_MERRA2];
+  eval(loader)
 end
+
+if iFreshComputeNWP_L3_feedbacks >= 0
+  if ~exist('airsL3_spectral_olr')
+    do_compute_save_AIRSL3_ERA5_CMIP6_feedbacks
+  end
+  if ~exist('climcapsL3_spectral_olr') & exist('amip6')
+    do_compute_save_CLIMCAPSL3_MERRA2_AMIP6_feedbacks
+  end  
+end
+
+whos *spectral_olr
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% LOAD IN OLDER NWP/AIRSL3/XMIP6 %%%%%%%%%%%%%%%%%%%%%%%%%%%

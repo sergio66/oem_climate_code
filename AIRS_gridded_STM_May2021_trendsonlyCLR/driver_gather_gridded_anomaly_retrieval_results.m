@@ -14,6 +14,17 @@ addpath /asl/matlib/h4tools
 addpath /asl/matlib/maps
 addpath /home/sergio/MATLABCODE/TIME
 
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_globalavg_and_9_averages_timeseries_Q03.mat';   %% needs 454*10/72 = 64 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_globalavg_and_18_averages_timeseries_Q03.mat';  %% needs 454*19/72 = 120 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 29; iNumAnomJobsPerProc =  110; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_globalavg_and_28_averages_timeseries_Q03.mat';  %% needs 454*29/110 = 120 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_tile_2515_timeseries_Q03.mat';  %% needs 454/20 = 23 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_tile_2515_timeseries_Q04.mat';  %% needs 454/20 = 23 processors
+
 disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
@@ -155,13 +166,14 @@ else
   iQuantile = [];
 end
 
-if iOCBset == 0
-  data_anom = load('anomaly_ALL_quantile_globalavg_and_18_averages_timeseries_Q03.mat');
+data_anom = load(anomalydatafile);
+if ~strfind(anomalydatafile,'_tile')
   rlat = [0 meanvaluebin(data_anom.newLatGrid)];
-  daysSince2002 = change2days(data_anom.yy,data_anom.mm,data_anom.dd,2002);
+else
+  rlat = [data_anom.LatBin];
 end
+daysSince2002 = change2days(data_anom.yy,data_anom.mm,data_anom.dd,2002);
 
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
 iNumAnomData = iNumAnomTimeSteps * iNumAnomTiles;
 
 fnamelastloaded = 'none';
@@ -460,7 +472,11 @@ while iDoAgain > 0
   if sum(iaFound) < iNumAnomData
     jett = jet(64); jett(1,:) = 1;
 
-    plot_anomalies_A
+    if ~strfind(anomalydatafile,'_tile')
+      plot_anomalies_A
+    else
+      plot_anomalies_1
+    end
 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
@@ -474,4 +490,8 @@ fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-plot_anomalies_A
+if ~strfind(anomalydatafile,'_tile')
+  plot_anomalies_A
+else
+  plot_anomalies_1
+end

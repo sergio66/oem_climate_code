@@ -90,7 +90,7 @@ end
 % JOB = 39
 % JOB = 12
 
-% JOB = 70
+% JOB = 70 %% for anomalies, > 64)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -154,34 +154,21 @@ ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset =
 ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 575; iNumAnomTiles = 20; iNumAnomJobsPerProc = 100; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    25 year anomalies== > 20yrs* 23steps/yr = 575; AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_globalavg_and_9_averages_timeseries_Q03.mat';   %% needs 454*10/72 = 64 processors
 ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_globalavg_and_18_averages_timeseries_Q03.mat';  %% needs 454*19/72 = 120 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 29; iNumAnomJobsPerProc =  110; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_globalavg_and_28_averages_timeseries_Q03.mat';  %% needs 454*29/110 = 120 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_tile_2515_timeseries_Q03.mat';  %% needs 454/20 = 23 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_tile_2515_timeseries_Q04.mat';  %% needs 454/20 = 23 processors
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  anomalydatafile = 'anomaly_tile_2515_timeseries_Q05.mat';  %% needs 454/20 = 23 processors
 
 if ia_OorC_DataSet_Quantile(1) == 2
-  disp('I suggest running test_run_retrieval_setlatbin_AIRS_loop_anomaly.m BEFOREHAND to see how many processors you need')
-  disp('may be more than your usual 64!')
-  clear mapperAnom2Processor
-  iPreviouslatnumber = 0;
-  for input_spectrum_number = 1 : iNumAnomTimeSteps * iNumAnomTiles
-    procnumber = floor((input_spectrum_number-1)/(iNumAnomJobsPerProc) + 1);
-    latnumber = floor((input_spectrum_number-1)/(iNumAnomTimeSteps) + 1);
-    if latnumber == iPreviouslatnumber
-      iLocalTimeStep = iLocalTimeStep  + 1;
-    else  
-      iLocalTimeStep = 1;
-    end
-    iPreviouslatnumber = latnumber;
-    fprintf(1,'input_spectrum_number : locallatbin localtimestep ---> procnumber = %4i : %4i %4i -----> %4i \n',input_spectrum_number,latnumber,iLocalTimeStep,procnumber);
-    mapAnomData_to_processor(input_spectrum_number,1) = latnumber;
-    mapAnomData_to_processor(input_spectrum_number,2) = iLocalTimeStep;
-    mapAnomData_to_processor(input_spectrum_number,3) = procnumber;
-  end
-  clear latnumber iLocalTimeStep procnumber iPreviouslatnumber input_spectrum_number
-
-  fprintf(1,' << ANOMALIES : with this configuration you need %3i processors! >>> \n',max(mapAnomData_to_processor(:,3)))
-  fprintf(1,' << ANOMALIES : with this configuration you need %3i processors! >>> \n',max(mapAnomData_to_processor(:,3)))
-  fprintf(1,' << ANOMALIES : with this configuration you need %3i processors! >>> \n',max(mapAnomData_to_processor(:,3)))
+  get_anomaly_processors
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -322,14 +309,21 @@ for iInd = iXX1 : idX : iXX2
     XX = X; XX = XX(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
     YY = Y; YY = YY(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
 
-    driver.rateset_datafile0 = 'anomaly_ALL_quantile_globalavg_and_18_averages_timeseries_Q03.mat';
-    junk = load(driver.rateset_datafile0,'usethese');
-    junk = junk.usethese{driver.anomalylatbin};
-    YYmean = nanmean(YY(junk));
-    junk = find(rlat65 >= YYmean,1) - 1;
+    driver.anomalydatafile = anomalydatafile;
+    if ~strfind(driver.anomalydatafile,'_tile_')
+      junk = load(driver.anomalydatafile,'usethese');
+      junk = junk.usethese{driver.anomalylatbin};
+      YYmean = nanmean(YY(junk));
+      junk = find(rlat65 >= YYmean,1) - 1;
     
-    driver.iLon = 36;
-    driver.iLat = junk;
+      driver.iLon = 36;
+      driver.iLat = junk;
+
+    elseif strfind(driver.anomalydatafile,'_tile_')
+      junk = load(driver.anomalydatafile,'LatBin','LonBin');
+      driver.iLon = junk.LonBin;
+      driver.iLat = junk.LatBin;
+    end
 
   end
 

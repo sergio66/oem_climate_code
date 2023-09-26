@@ -11,11 +11,12 @@ drwxrwxr-x 2 sergio pi_strow 12288 Mar 31 07:21 ERA5
 %}
 
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/COLORMAP
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% superceded driver_get_the_model_trends_orig
-iJorC = input('(+1, default) J.Susskind AIRS L3  or (-1) C.Barnet CLIMCAPS  : ');
+iJorC = input('(+1, default) J.Susskind AIRS L3   or (-1) C.Barnet CLIMCAPS  or (+3) CESM3 19 years : ');
 if length(iJorC) == 0
   iJorC = +1;
 end
@@ -30,7 +31,7 @@ else
   iJorCFstr = '/reconstruct_airsL3_spectra_geo_rlat';
 end
 
-iEorM = input('(5,default) ERA5                  or (2) MERRA2 or (1) ERA-I  : ');
+iEorM = input('(5,default) ERA5                   or (2) MERRA2 or (1) ERA-I  : ');
 if length(iEorM) == 0
   iEorM = +5;
 end
@@ -47,11 +48,15 @@ elseif iEorM == 5
 end
 iEorMstrSPECTRA = iEorMstr;
 
-iAorC = input('(-1,default) CMIP6                or (+1) AMIP6 : ');
+iAorC = input('(-1,default) CMIP6 14 years        or (+1) AMIP6 14 years : ');
 if length(iAorC) == 0
   iAorC = -1;
 end
-if iAorC == +1
+if iAorC == +3
+  iAorCstr = 'CESM3';
+  iAorCFstr = '/reconstruct_cesm3_spectra_geo_rlat';
+  disp('remember all your plots with title CMIP6 should really be CESM3');
+elseif iAorC == +1
   iAorCstr = 'AMIP6';
   iAorCFstr = '/reconstruct_amip6_spectra_geo_rlat';
   disp('remember all your plots with title CMIP6 should really be AMIP6');
