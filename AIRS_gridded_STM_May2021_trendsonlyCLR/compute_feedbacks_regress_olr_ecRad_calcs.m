@@ -26,18 +26,9 @@ clear nmeanval nstdval
 dx = -1 : 0.025 : +1;
 ind0 = 1 : 72;
 
-load latB64.mat
-  rlat65 = latB2; rlon73 = -180 : 5 : +180;
-  rlon = -180 : 5 : +180;  rlat = latB2;
-  rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-  rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+% OHOH before Sept 28, 2023 I had this backwards so may need to recompute this part all over again and save
+do_XX_YY_from_X_Y
 
-  [Y,X] = meshgrid(rlat,rlon);
-  X = X; Y = Y;
-  YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
-  XX = X(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
-  YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
-  XX = X'; XX = XX(:); XX = XX';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
 coslat  = cos(YY*pi/180);
 
 allind = 1 : length(YY);

@@ -41,14 +41,10 @@ amip6.stempjunk    = cL3trend.stemp;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 load latB64.mat
-  rlat65 = latB2; rlon73 = -180 : 5 : +180;
-  rlon = -180 : 5 : +180;  rlat = latB2;
-  rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-  rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-  [Y,X] = meshgrid(rlat,rlon);
-  X = X; Y = Y;
-  YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
-  YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
+  %% I think before Sept 2023 I had this wrong
+  %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG?? CORRECT?? 
+  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT? WRONG??
+  do_XX_YY_from_X_Y
 
 disp(' ')
 disp('PLEASE NOTE!!!!! calling show_olr_ecRad_feedback : do NOT do NOT do NOT    clear nwp_spectral_trends_cmip6_era5_airsL3_umbc or nwp_spectral_trends_amip6_merra2_climcapsL3_umbc');

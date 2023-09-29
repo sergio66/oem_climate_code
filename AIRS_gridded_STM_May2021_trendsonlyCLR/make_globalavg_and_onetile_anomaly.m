@@ -17,10 +17,12 @@ if ~exist('rlat65')
   [salti, landfrac] = usgs_deg10_dem(Y,X);
   
   lf = landfrac; lf = lf(:);
-  %% XX = X'; XX = XX(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
-  %% YY = Y'; YY = YY(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
-  XX = X; XX = XX(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
-  YY = Y; YY = YY(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
+  do_XX_YY_from_X_Y
+  [mmjunk,nnjunk] = size(XX);
+  if mmjunk == 1
+    XX = XX';
+    YY = YY';
+  end
 end
 
 coslat = cos(YY*pi/180)*ones(1,454);

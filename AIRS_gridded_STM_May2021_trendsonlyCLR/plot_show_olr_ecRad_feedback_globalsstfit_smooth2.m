@@ -125,13 +125,7 @@ clear junk
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~exist('rlat')
-  load latB64.mat
-  rlat65 = latB2; rlon73 = -180 : 5 : +180;
-  rlon = -180 : 5 : +180;  rlat = latB2;
-  rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-  rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-  [Y,X] = meshgrid(rlat,rlon);
-  X = X; Y = Y;
+  do_XX_YY_from_X_Y
 end
 
 if ~exist('iSmooth')
@@ -139,11 +133,6 @@ if ~exist('iSmooth')
   iSmooth = 10;
 end
 
-XX = X;  XX = XX(:); XX = XX';   %%%% WRONG WRONG WRONG WRONG
-YY = Y;  YY = YY(:); YY = YY';   %%%% WRONG WRONG WRONG WRONG
-
-XX = X'; XX = XX(:); XX = XX';   %%%% RIGHT RIGHT RIGHT RIGHT 
-YY = Y'; YY = YY(:); YY = YY';   %%%% RIGHT RIGHT RIGHT RIGHT 
 
   coslat  = cos(YY*pi/180);
   indSST = era5_spectral_olr.stemptrend; boo(1) = sum(indSST .* coslat)/sum(coslat);

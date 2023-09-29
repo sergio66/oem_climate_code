@@ -8,9 +8,11 @@ figure(1); pcolor(unique(X),unique(Y),squeeze(b_asc(:,:,1520))'); colorbar; colo
 figure(2); pcolor(unique(X),unique(Y),squeeze(b_desc(:,:,1520))'); colorbar; colormap(usa2); caxis([-0.25 +0.25]); shading flat
 
 addpath /home/sergio/MATLABCODE/PLOTTER
-XX = X'; YY = Y'; figure(1);  z = squeeze(b_asc(:,:,1520))'; z = z(:); scatter_coast(XX(:),YY(:),50,z); title('dBT1231/dt ASC');
-XX = X'; YY = Y'; figure(2);  z = squeeze(b_desc(:,:,1520))'; z = z(:); scatter_coast(XX(:),YY(:),50,z); title('dBT1231/dt DESC');
+%% I think before Sept 2023 I had this wrong
+do_XX_YY_from_X_Y
 
+figure(1);  z = squeeze(b_asc(:,:,1520))'; z = z(:); scatter_coast(XX(:),YY(:),50,z); title('dBT1231/dt ASC');
+figure(2);  z = squeeze(b_desc(:,:,1520))'; z = z(:); scatter_coast(XX(:),YY(:),50,z); title('dBT1231/dt DESC');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(3); scatter_coast(X(:),Y(:),50,reshape(squeeze(airs_noiseTtrue(:,:,1520)),1,4608)/sqrt(120)); title('AIRS NeDTtrue /sqrt(120)')

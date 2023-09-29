@@ -69,22 +69,11 @@ plays100 = load('ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat','trend_plays'
 plays100 = plays100.trend_plays;
 
 %load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat
-load latB64.mat
-rlat65 = latB2; rlon73 = -180 : 5 : +180;
-rlon = -180 : 5 : +180;  rlat = latB2; 
-rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-[Y,X] = meshgrid(rlat,rlon);
-X = X; Y = Y;
+%% oh oh I had this backwards before Sept 28, 2023
+do_XX_YY_from_X_Y
 
 addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
 [salti, landfrac] = usgs_deg10_dem(Y,X);
-
-XX = X; XX = XX(:); XX = XX'; %% WRONG WRONG WRONG WRONG 
-YY = Y; YY = YY(:); YY = YY'; %% WRONG WRONG WRONG WRONG 
-
-XX = X'; XX = XX(:); XX = XX'; %% RIGHT RIGHT RIGHT RIGHT 
-YY = Y'; YY = YY(:); YY = YY'; %% RIGHT RIGHT RIGHT RIGHT 
 
 mu = cos(YY*pi/180);
 

@@ -6,25 +6,14 @@ pavg = flipud(plevs2plays(pavg));
 
 load llsmap5
 
-load latB64.mat
-rlat65 = latB2; rlon73 = -180 : 5 : +180;
-rlon = -180 : 5 : +180;  rlat = latB2; 
-rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-[Y,X] = meshgrid(rlat,rlon);
-X = X; Y = Y;
+%% oh oh I had this backwards before Sept 28, 2023
+do_XX_YY_from_X_Y
 
 addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
 [salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
-% YY = Y(:);
-% XX = X(:);
-XX = X'; XX = XX(:); XX = XX';
-YY = Y'; YY = YY(:); YY = YY';
 
 iCosWgt = +1;
 if iCosWgt > 0
-  % YY = Y(:)'; 
-  YY = Y'; YY = YY(:); YY = YY';
   YY = cos(YY*pi/180);
 else
   YY = ones(1,4608);
@@ -122,10 +111,12 @@ end
 clear maskLF
 maskLF = zeros(1,4608);
 maskLF = nan(1,4608);    %% MODIFICATION 1
+
 if size(landfrac) ~= size(XX)
   XX = XX';
   YY = YY';
 end
+
 if iAorOorL == -7
   maskLF(abs(YY) > 60) = 1;
 elseif iAorOorL == -6

@@ -408,15 +408,10 @@ if iPlotResults > 0
   figsmap = colormap_soden_held_jclim2007;
   figsmap = usa2;
 
-  %% rlon = -180 : 5 : +180;  rlat = latB2;
-  rlon = rlon73;  rlat = rlat65;
-  rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-  rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-
-  [Y,X] = meshgrid(rlat,rlon);
-  X = X; Y = Y;
-  YY = Y(:)';                     %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
-  YY = Y'; YY = YY(:); YY = YY';  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
+  do_XX_YY_from_X_Y
+  %% oh oh may have done this wrong before Sept 28, 2023 
+  %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG?? CORRECT???
+  %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT?? WRONG ??
 
   figure(75); colormap(figsmap); caxis([-6 -2])   %% planck
   figure(77); colormap(figsmap); caxis([-3 +3])   %% wv

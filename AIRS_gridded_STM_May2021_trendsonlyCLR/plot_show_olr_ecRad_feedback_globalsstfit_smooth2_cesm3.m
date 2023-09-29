@@ -99,7 +99,7 @@ showfeedbacks(ix,6) = junk.feedback_ecRad.ptemp_co2.globalSST_weighted_all;
 if ~exist('cesm3_spectral_olr')
   junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CESM3_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'climcapsL3_spectral_olr','stemptrend');
   cesm3_spectral_olr = junk.climcapsL3_spectral_olr;
-  cesm3_spectral_olr.stemptrend = junk.stemptrend.cmip6;
+  cesm3_spectral_olr.stemptrend = junk.stemptrend.airsL3;
 end
 ix = ix + 1; junk = cesm3_spectral_olr;
 strfeedbacks{ix} = 'CESM3      ';
@@ -146,13 +146,7 @@ clear junk
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~exist('rlat')
-  load latB64.mat
-  rlat65 = latB2; rlon73 = -180 : 5 : +180;
-  rlon = -180 : 5 : +180;  rlat = latB2;
-  rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-  rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-  [Y,X] = meshgrid(rlat,rlon);
-  X = X; Y = Y;
+  do_XX_YY_from_X_Y
 end
 
 if ~exist('iSmooth')
@@ -160,16 +154,10 @@ if ~exist('iSmooth')
   iSmooth = 10;
 end
 
-XX = X'; XX = XX(:); XX = XX';   %%%% MUST BE WRONG!T MUST BE WRONG!T MUST BE WRONG!T MUST BE WRONG!T 
-YY = Y'; YY = YY(:); YY = YY';   %%%% MUST BE WRONG!T MUST BE WRONG!T MUST BE WRONG!T MUST BE WRONG!T 
-
-XX = X;  XX = XX(:); XX = XX';   %%%% MUST BE RIGHT MUST BE RIGHT MUST BE RIGHT MUST BE RIGHT
-YY = Y;  YY = YY(:); YY = YY';   %%%% MUST BE RIGHT MUST BE RIGHT MUST BE RIGHT MUST BE RIGHT
-
 figure(1); clf; pcolor(reshape(cos(YY*pi/180),72,64)'); colormap jet; colorbar
 plot(cos(YY*pi/180))
 
-  coslat  = cos(YY*pi/180);
+  coslat = cos(YY*pi/180);
   indSST = era5_spectral_olr.stemptrend;       boo(1) = sum(indSST .* coslat)/sum(coslat);
   indSST = merra2_spectral_olr.stemptrend;     boo(2) = sum(indSST .* coslat)/sum(coslat);
   indSST = umbc_spectral_olr.stemptrend;       boo(3) = sum(indSST .* coslat)/sum(coslat);

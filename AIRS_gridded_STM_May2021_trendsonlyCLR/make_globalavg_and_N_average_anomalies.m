@@ -10,17 +10,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~exist('rlat65')
-  rlat = load('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat'); 
-  rlat65 = rlat.latB2; rlat = 0.5*(rlat.latB2(1:end-1)+rlat.latB2(2:end));
-  rlon73 = (1:73); rlon73 = -180 + (rlon73-1)*5;  rlon = (1:72); rlon = -177.5 + (rlon-1)*5;
-  [Y,X] = meshgrid(rlat,rlon);
-  [salti, landfrac] = usgs_deg10_dem(Y,X);
-  
+  do_XX_YY_from_X_Y
+  [salti, landfrac] = usgs_deg10_dem(Y,X);  
   lf = landfrac; lf = lf(:);
-  %% XX = X'; XX = XX(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
-  %% YY = Y'; YY = YY(:); %% MAN THIS IS CONFUSING??  ie do XX = X'; see pcolor below
-  XX = X; XX = XX(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
-  YY = Y; YY = YY(:); %% MAN THIS IS CONFUSING BUT IT IS RIGHT  ie do not do XX = X'; see pcolor below
+  [mmjunk,nnjunk] = size(XX);
+  if mmjunk == 1
+    XX = XX';
+    YY = YY';
+  end
 end
 
 coslat = cos(YY*pi/180)*ones(1,454);

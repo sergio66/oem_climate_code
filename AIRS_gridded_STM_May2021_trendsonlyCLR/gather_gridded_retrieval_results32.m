@@ -78,15 +78,12 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat
-load latB64.mat
-rlon = -180 : 5 : +180;  rlat = latB2; 
-rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-[Y,X] = meshgrid(rlat,rlon);
-X = X; Y = Y;
-
-XX = X(:);
-YY = Y(:);
+do_XX_YY_from_X_Y
+[mmjunk,nnjunk] = size(XX);
+if mmjunk == 1
+  XX = XX';
+  YY = YY';
+end
 
 addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/matlib/rtp_prod2/util/
