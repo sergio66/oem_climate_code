@@ -37,7 +37,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iDefault = 0;
-iaComputeWhichFeedback = [9999];  %% do the things for the direct comparisons
+iaComputeWhichFeedback = [9999];  %% do the things for the direct comparisons ie ALL perturbations together
 iaComputeWhichFeedback = [0];     %% compute + plot feedbacks only  DEFAULT
 
 if iaComputeWhichFeedback ~= iDefault

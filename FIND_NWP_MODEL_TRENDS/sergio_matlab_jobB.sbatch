@@ -18,6 +18,9 @@
 # run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 10    for driver_compute_AIRSL3_trends_desc_or_asc.m which is 5 days/tons of memory, iDorA = +1, FAST
 # run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 11    for driver_compute_AIRSL3_trends_desc_or_asc.m which is 5 days/tons of memory, iDorA = -1, FAST
 #
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 12    for driver_computeMERRA2_monthly_OLR.m 1 .. 240
+# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 13    for driver_computeERA5_monthly_OLR.m 1 .. 240
+#
 
 #  Name of the job:
 #SBATCH --job-name=RUN_ERA_TRENDS
@@ -31,21 +34,30 @@
 ###SBATCH --cpus-per-task 1
 
 #  Specify the desired partition develop/batch/prod
-#SBATCH --partition=batch
+##SBATCH --partition=batch
 ##SBATCH --partition=strow
+##SBATCH --partition=batch
+##SBATCH --partition=high_mem
+#SBATCH --partition=cpu2021
 
 #  Specify the qos and run time (format:  dd-hh:mm:ss)
 # trying 20 trapezoid layer jacs, less aggressive mem in MB
-#SBATCH --qos=medium+
-#SBATCH --time=15:59:00 
-#SBATCH --mem-per-cpu=16000    
-#SBATCH --cpus-per-task 1
+##SBATCH --qos=medium+
+##SBATCH --time=15:59:00 
+##SBATCH --mem-per-cpu=16000    
+##SBATCH --cpus-per-task 1
 
 ### this is for sbatch 5 6 (ie the long laborious jobs)
 ##SBATCH --qos=long+
 ##SBATCH --time=10-00:00:00
 ##SBATCH --mem-per-cpu=360000    
 ##SBATCH --cpus-per-task 1
+
+### this is for sbatch 12 13 (ie the short fast jobs)
+#SBATCH --qos=short+
+#SBATCH --time=00:30:00
+#SBATCH --mem-per-cpu=12000    
+#SBATCH --cpus-per-task 1
 
 ########################################################################
 ### check the number of input arguments
@@ -93,4 +105,11 @@ elif [[ "$1" -eq "10" ]]; then
 elif [[ "$1" -eq "11" ]]; then
   echo "cmd line arg = 11;  iDorA=-1; driver_compute_AIRSL3_trends_desc_or_asc.m FAST"
   matlab -nodisplay -r "iCmdLineOption = $1; iSlowORFast = -1;  iDorA=-1; driver_compute_AIRSL3_trends_desc_or_asc; exit"
+##
+elif [[ "$1" -eq "12" ]]; then
+  echo "cmd line arg = 1, driver_computeMERRA2_monthly_OLR.m"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -r "driver_computeMERRA2_monthly_OLR; exit"
+elif [[ "$1" -eq "13" ]]; then
+  echo "cmd line arg = 1, driver_computeERA5_monthly_OLR.m"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -r "driver_computeERA5_monthly_OLR; exit"
 fi

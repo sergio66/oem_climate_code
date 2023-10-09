@@ -1,4 +1,3 @@
-  
 if ~exist('umbc_spectral_olr') 
   if exist(feedbacknameUMBC)
     iUMBCexist = +1;
@@ -12,8 +11,10 @@ if ~exist('umbc_spectral_olr')
       %%% compute_feedbacks_umbc_ecRad   ; pause(0.1)
     else
       fprintf(1,'  reading in %s \n',feedbacknameUMBC)
-      loader = ['load ' feedbacknameUMBC];
-      eval(loader);
+      junk = load(feedbacknameUMBC,'umbc_spectral_olr','results');
+      umbc_spectral_olr = junk.umbc_spectral_olr;
+      umbc_spectral_olr.stemptrend = junk.results(:,6)';
+      clear junk
     end
   else
     umbc_spectral_olr = struct;    %% so it has no fields

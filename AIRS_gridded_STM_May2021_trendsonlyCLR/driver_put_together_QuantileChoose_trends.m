@@ -38,8 +38,6 @@ addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem
 [salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
 figure(1); scatter_coast(X(:),Y(:),50,landfrac); colorbar; title('landfrac');  caxis([0 1])
 
-quants =  [0.0100 0.0200 0.0300 0.0400 0.0500 0.1000 0.2500 0.5000 0.7500 0.9000 0.9500 0.9600 0.9700 0.9800 0.9900 1]
-
 b_asc = nan(72,64,2645);
 b_desc = nan(72,64,2645);
 
@@ -59,6 +57,7 @@ iType = +10;   %% sergio iQAX_3 Q05 05 year trends  I     ran for me in June 202
 iType = +11;   %% sergio iQAX_3 Q05 10 year trends  I     ran for me in June 2023, 2002/09 to 2012/08 FULL, 10 years, with newer defn of quantiles
 iType = +12;   %% sergio iQAX_3 Q05 15 year trends  I     ran for me in June 2023, 2002/09 to 2015/08 FULL, 15 years, with newer defn of quantiles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+iType = +13;   %% sergio iQAX_4 Q03 08 year trends  I     ran for me in Oct 2023, 2002/09 to 2010/08 08 years, with alternate defn of quantiles, beginning 8 years of mission, SW drifting
 
 disp('Choices DataSet to use ')
 disp(' see  ../../oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_fits_quantiles.m, and set_iQAX');
@@ -86,7 +85,16 @@ disp('                       (10) Sergio Quantile Jun 2023 2002/09 to 2007/08 Fu
 disp('                       (11) Sergio Quantile Jun 2023 2002/09 to 2012/08 Full 10 years, new quantile defn **** ');
 disp('                       (12) Sergio Quantile Jun 2023 2002/09 to 2017/08 Full 15 years, new quantile defn **** ');
 disp(' <---------------------------------------------------------------------------------------> ')
-iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9,+10,+11,+12   or +3,-3) : ');
+disp('                       (13) Sergio Quantile Sep 2023 2002/09 to 2010/08 First 08 years, three quantiles defn **** ');
+iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9,+10,+11,+12   or +3,-3   or +13) : ');
+
+if iType <= 8
+  quants =  [0.0100 0.0200 0.0300 0.0400 0.0500 0.1000 0.2500 0.5000 0.7500 0.9000 0.9500 0.9600 0.9700 0.9800 0.9900 1];
+elseif iType >=9 & iType <= 12
+  quants =  [0.5000 0.7000 0.9000 0.9500 0.9700 1];
+elseif iType == 13
+  quants =  [0.0000 0.0300 0.5000 0.9700 1];
+end
 
 if iType ~= 3 & iType < 9
   iQuantile = 16;  %% hottest, used for AIRS STM May 21
@@ -96,11 +104,17 @@ if iType ~= 3 & iType < 9
 elseif iType >= 9 & iType <= 12
   iQuantile = 03;  %% Q0.95, used for AIRS STM May 22
   iQuantile = input('Enter iQuantile to make (1-5, 1 = mean (Q0.50) , 5 = clearest (Q0.99) : ');
+elseif iType == 13
+  iQuantile = 03;  %% Q0.97, used for AIRS STM Oct 2023
+  iQuantile = input('Enter iQuantile to make (1-3, 1 = average, 2 = Q0.03, 3 = Q0.97 : ');
 end
 
-iAllorSeasonal = input('Enter ALL (+1/default) or (-1) DJF (-2) MAM (-3) JJA (-4) SON : ');
-if length(iAllorSeasonal) == 0
-  iAllorSeasonal = 1;
+iAllorSeasonal = 1;
+if iQuantile == 09
+  iAllorSeasonal = input('Enter ALL (+1/default) or (-1) DJF (-2) MAM (-3) JJA (-4) SON : ');
+  if length(iAllorSeasonal) == 0
+    iAllorSeasonal = 1;
+  end
 end
 
 iKeepPlotting = -1;
@@ -130,6 +144,9 @@ elseif iType == 11
   fnamePROCESS = ['iType_11_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d')];
 elseif iType == 12
   fnamePROCESS = ['iType_12_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d')];
+%%%%
+elseif iType == 13
+  fnamePROCESS = ['iType_13_iQAX_4_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d')];
 %%%%
 elseif iType == 3
   fnamePROCESS = ['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat'];
@@ -191,7 +208,7 @@ for iLat = 1 : 64
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0    = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
     thedirERA5 = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/SimulateTimeSeries/ERA5_ConstTracegas/'];
-  elseif iType == 10 | iType == 11 | iType == 12
+  elseif iType == 10 | iType == 11 | iType == 12 | iType == 13
     % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0    = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
@@ -261,6 +278,10 @@ for iLat = 1 : 64
       %% full AIRS 15 year
       %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_3_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200200090001_201700080031_TimeStepsX342.mat'];
+    elseif iType == 13
+      %% AIRS 08 year, beginning of mission when SW drifting
+      %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
+      thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_4_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200200090001_201000080031_TimeStepsX183.mat'];
     end
 
     iBoo = (iLat-1)*72 + iLon;

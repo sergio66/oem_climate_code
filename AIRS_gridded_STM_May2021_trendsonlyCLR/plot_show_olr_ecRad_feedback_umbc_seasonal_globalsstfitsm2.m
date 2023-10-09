@@ -132,7 +132,8 @@ plotoption5.maintitle = '\lambda W/m2/K';
 plotoptions5.cx = [-1 +1]*20; plotoptions5.maintitle = '\lambda'; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
 aslmap_2x1x2tiledlayout(z11/boo(1),z12/boo(2),zMID/boo(5),z21/boo(3),z22/boo(4),7,plotoptions5);
 
-%junk = [sum(umbcDJF_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcMAM_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcJJA_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcSON_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boo(1:4);
+%junk = [sum(umbcDJF_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcMAM_spectral_olr.allsum .* coslat)/sum(coslat) ...
+%         sum(umbcJJA_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcSON_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boo(1:4);
 %fprintf(1,'feedbacks for DJF/MAM/JJA/SON = %8.5f %8.5f %8.5f %8.5f W/m2/K \n',junk);
 junk = [sum(umbcDJF_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcMAM_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcJJA_spectral_olr.allsum .* coslat)/sum(coslat) ...
         sum(umbcSON_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcALL_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boo(1:5);
@@ -140,11 +141,18 @@ fprintf(1,'feedbacks for DJF/MAM/JJA/SON/ALL = %8.5f %8.5f %8.5f %8.5f %8.5f W/m
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+%disp('         Planck Lapse Ozone Water |  Total')
+%for ix = 1 : 5
+%  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
+%end
+%trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 7]);
+
+showfeedbacks(1:5,8) = junk; 
 disp('         Planck Lapse Ozone Water |  Total')
 for ix = 1 : 5
-  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 8]));
 end
-trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 7]);
+trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 8]);
 
 figure(1); clf
 bar(trends_paper_show');

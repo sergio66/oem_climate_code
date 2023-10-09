@@ -205,6 +205,7 @@ if ~exist('iSmooth')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+return
 clear cosavg
 cosrlat = cos(rlat*pi/180);
 

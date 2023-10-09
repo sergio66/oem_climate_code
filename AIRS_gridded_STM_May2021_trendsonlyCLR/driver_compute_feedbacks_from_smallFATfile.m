@@ -23,7 +23,8 @@ then simply call
 %%% README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>> README SLOW rerun ecRad etc >>>>>>>>>>>>>>>>
 %{
 
-if you         have not saved off your ecRad runs, and      want to do fresh   regressions/save them .... do most of these steps, using [default] till (3) = do_feedbacks_wrt_globalSST.m, then DO NOT load the file you want to change
+if you         have not saved off your ecRad runs, and      want to do fresh   regressions/save them .... do most of these steps, using [default] till (3) = do_feedbacks_wrt_globalSST.m, 
+  then DO NOT load the file you want to change
 if you already have     saved off your ecRad runs, and just want to update the regressions/save them .... do all     these steps, using [default]
 
 
@@ -35,10 +36,19 @@ if you already have     saved off your ecRad runs, and just want to update the r
      /asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_20.mat
      /asl/s1/sergio/JUNK/olr_feedbacks_CLIMCAPS_MERRA2_AMIP6_numyears_20.mat
 4) Depending on whether this is "raw" deltaX ecRad calcs, or "unc" deltaX + deltaXunc ecRad calcs, update_deltaT_WV_O3_SKT_using_uncertainty.m will be called <<<<<<<<<<<<<
-5) To recompute the regressions (polyfit/robutfit etc and any other new stuff) run 
-       "show_olr_ecRad_feedback"  (which is a chip off the "compute_feedbacks_generic_ecRad.m" code)
+
+>>>>>>>>>>>>>>>>>>>>>>>>>
+5) To ONLY recompute the regressions (polyfit/robutfit etc and any other new stuff) WITHOUT RERUNNING ecRad (timeconsuming), you should run  
+
+     >>>>>>>>>>>>>>>>>>>>>>>>>
+     "driver_compute_feedbacks_from_smallFATfile" and allow it to load in the spectral OLR files 
+     then run "show_olr_ecRad_feedback"  (which is a chip off the "compute_feedbacks_generic_ecRad.m" code)
+     >>>>>>>>>>>>>>>>>>>>>>>>>
+
      WARNING : if you do not have MERRA2/CLIMCAPSL3/AMIP6 it will get annoyed towards the end (when it is plotting) but else things should be fine
-     This is eg for 05,10,15 years of trends
+     This is eg for 05,10,15 years of trends, or if you have changed the code in compute_feedbacks_generic_ecRad.m or you have eg hanged the matrices XX,YY from which cos(rlat) is computed etc
+>>>>>>>>>>>>>>>>>>>>>>>>>
+
 6) Save as needed using  "quick_save_olr_feedbacks_umbc_NWP_L3_XMIP6.m"!!!!
 
 %% Feldl, N., and G. H. Roe (2013), Four perspectives on climate feedbacks, Geophys. Res. Lett., 40, 4007–4011, doi:10.1002/grl.50711.
@@ -64,9 +74,10 @@ clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_e
 clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit_smooth     %%% local feedbacks
 clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth  %%% global feedbacks
 
-clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit_smooth2      %%% local feedbacks
-clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit_smooth2    %%% local feedbacks   >>> used for paper
-clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth2 %%% global feedbacks  >>> used for paper
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_polyfit_smooth2               %%% local feedbacks
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_robustfit_smooth2             %%% local feedbacks   >>> used for paper
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth2          %%% global feedbacks  >>> used for paper
+clear all; for ii = 1 : 6; figure(ii); clf; end; iNumYears = 20; plot_show_olr_ecRad_feedback_globalsstfit_smooth2_cesm3.m  %%% global feedbacks  >>> used for paper/STM talk
 
 or 
 
@@ -109,9 +120,9 @@ addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 
 iRaw_or_Unc = -1; %% use raw profiles, and then perturbations+unc, in the ecRad or SARTA calcs
-iRaw_or_Unc = +1; %% use raw profiles, and then perturbations,     in the ecRad or SARTA calcs
+iRaw_or_Unc = +1; %% use raw profiles, and then perturbations,     in the ecRad or SARTA calcs DEFAULT
 
-iGet_ERA5_AIRSL3_AMIP = -1;  %% default
+iGet_ERA5_AIRSL3_AMIP = -1;  %% DEFAULT, only umbc calcs FASTEST
 iGet_ERA5_AIRSL3_AMIP = +1;  %% to do UMBC and also load in eg MERRA2/ERA5 model trends
 
 %% use CarbonTracker CO2 trends ****, topts.iAdjLowerAtmWVfrac=0.25

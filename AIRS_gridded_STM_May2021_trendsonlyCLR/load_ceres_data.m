@@ -1,6 +1,7 @@
 function ceres = load_ceres_data(ceres_fname,iCorT)
 
 addpath /home/sergio/MATLABCODE
+
 %% see /asl/s1/sergio/CERES_OLR_15year/Readme
 
 %https://ceres.larc.nasa.gov/order_data.php
@@ -38,12 +39,27 @@ addpath /home/sergio/MATLABCODE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if nargin == 1
-  iCorT = 1;  %% just get down the clear filled region in a pixel .. rather than em[irically filed "Total" clear sky
+if nargin == 0
+  error('need one argin')
+  ceres_fname = '/asl/s1/sergio/CERES_OLR_15year/CERES_EBAF-TOA_Ed4.1_Subset_200209-202108.nc'; 
+    Y0 = 2002; M0 = 09; YE = 2021; ME = 09; iNumY = 19; index = 1 : 228;
+  ceres_fname = '/asl/s1/sergio/CERES_OLR_15year/CERES_EBAF-TOA_Ed4.2_Subset_200003-202307.nc'; 
+    Y0 = 2000; M0 = 03; YE = 2023; ME = 07; iNumY = 20; index = 31 : 31-1+240;
+  iCorT = 1;  %% just get down the clear filled region in a pixel .. rather than em[irically filed "Total" clear sky  
+elseif nargin == 1
+  iCorT = 1;  %% just get down the clear filled region in a pixel .. rather than empirically filed "Total" clear sky
 end
 
 a = read_netcdf_lls(ceres_fname)
-index = 1 : 228;
+
+[mmm] = length(a.time);
+
+if ~isfield(a,'toa_lw_clr_t_mon')
+  disp('toa_lw_clr_t_mon DNW so not getting the empirically filled total clear sky')
+  iCorT = 1;
+end
+
+index = 1 : mmm;
 
 ceres.lon = a.lon;
 ceres.lat = a.lat;

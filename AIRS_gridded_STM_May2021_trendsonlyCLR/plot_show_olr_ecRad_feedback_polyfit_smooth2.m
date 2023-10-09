@@ -127,6 +127,7 @@ if ~exist('rlat')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
+return
 clear cosavg
 cosrlat = cos(rlat'*pi/180);
 

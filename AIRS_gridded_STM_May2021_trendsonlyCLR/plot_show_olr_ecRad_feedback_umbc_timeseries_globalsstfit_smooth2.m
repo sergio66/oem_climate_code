@@ -63,6 +63,7 @@ end
 %% mean weighted delta SST rate = 0.031962  0.003305  0.023971  0.019594 K/yr for 05/10/15/20 years   WRONG
 %% mean weighted delta SST rate = 0.069633  0.020002  0.028442  0.024870 K/yr for 05/10/15/20 years   CORRECT
 
+clear boo
   coslat  = cos(YY*pi/180);
   indSST = umbc05_spectral_olr.deltaSKT'; boo(1) = sum(indSST .* coslat)/sum(coslat);
   indSST = umbc10_spectral_olr.deltaSKT'; boo(2) = sum(indSST .* coslat)/sum(coslat);
@@ -70,11 +71,30 @@ end
   indSST = umbc20_spectral_olr.deltaSKT'; boo(4) = sum(indSST .* coslat)/sum(coslat);
   fprintf(1,'mean weighted delta SST rate = %8.6f  %8.6f  %8.6f  %8.6f K/yr for 05/10/15/20 years \n',boo)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+umbc05_spectral_olr.allsum = 3*umbc05_spectral_olr.olr0_ecRad.clr - (0*umbc05_spectral_olr.planck_ecRad.clr + umbc05_spectral_olr.lapse_ecRad.clr  + umbc05_spectral_olr.o3_ecRad.clr + umbc05_spectral_olr.wv_ecRad.clr); 
+umbc10_spectral_olr.allsum = 3*umbc10_spectral_olr.olr0_ecRad.clr - (0*umbc10_spectral_olr.planck_ecRad.clr + umbc10_spectral_olr.lapse_ecRad.clr  + umbc10_spectral_olr.o3_ecRad.clr + umbc10_spectral_olr.wv_ecRad.clr);
+umbc15_spectral_olr.allsum = 3*umbc15_spectral_olr.olr0_ecRad.clr - (0*umbc15_spectral_olr.planck_ecRad.clr + umbc15_spectral_olr.lapse_ecRad.clr  + umbc15_spectral_olr.o3_ecRad.clr + umbc15_spectral_olr.wv_ecRad.clr);
+umbc20_spectral_olr.allsum = 3*umbc20_spectral_olr.olr0_ecRad.clr - (0*umbc20_spectral_olr.planck_ecRad.clr + umbc20_spectral_olr.lapse_ecRad.clr  + umbc20_spectral_olr.o3_ecRad.clr + umbc20_spectral_olr.wv_ecRad.clr);
+junk = [sum(umbc05_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbc10_spectral_olr.allsum .* coslat)/sum(coslat) ...
+        sum(umbc15_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbc20_spectral_olr.allsum .* coslat)/sum(coslat)]  ./ boo(1:4);
+fprintf(1,'feedbacks for 05/10/15/20 = %8.5f %8.5f %8.5f %8.5f W/m2/K \n',junk);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%disp('         Planck Lapse Ozone Water |  Total')
+%for ix = 1 : 4
+%  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
+%end
+%trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 7]);
+
+showfeedbacks(1:4,8) = junk; 
 disp('         Planck Lapse Ozone Water |  Total')
 for ix = 1 : 4
-  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 8]));
 end
-trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 7]);
+trends_paper_show = showfeedbacks(1:ixx,[1 2 3 4 8]);
 
 figure(1); clf
 bar(trends_paper_show');

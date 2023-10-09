@@ -101,7 +101,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if iERAorCMIP6 == 2
   %% this was CMIP6 so rename
-  nwp_spectral_trends.cmip6_spectral_rates = nwp_spectral_trends.era_spectral_rates; nwp_spectral_trends = rmfield(nwp_spectral_trends,'era_spectral_rates');
+  nwp_spectral_trends.cmip6_spectral_rates  = nwp_spectral_trends.era_spectral_rates;  nwp_spectral_trends = rmfield(nwp_spectral_trends,'era_spectral_rates');
   nwp_spectral_trends.cmip6_100_layertrends = nwp_spectral_trends.era_100_layertrends; nwp_spectral_trends = rmfield(nwp_spectral_trends,'era_100_layertrends');
 end
 

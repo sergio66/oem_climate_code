@@ -1,4 +1,5 @@
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+addpath /asl/matlib/maps/
 
 load llsmap5
 
@@ -44,3 +45,11 @@ aha = indSST.*cosY;
 %  junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_CESM3_MERRA2_AMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'climcapsL3_spectral_olr','stemptrend');
 %  cesm3_spectral_olr = junk.climcapsL3_spectral_olr;
 %  cesm3_spectral_olr.stemptrend = junk.stemptrend.cesm;
+%{
+addpath /asl/matlib/plotutils
+
+dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
+figure(15); aslprint([dir0 'cesm19year_Trates.pdf']);
+figure(16); aslprint([dir0 'cesm19year_WVrates.pdf']);
+figure(17); aslprint([dir0 'cesm19year_sktrates.pdf']);
+%}

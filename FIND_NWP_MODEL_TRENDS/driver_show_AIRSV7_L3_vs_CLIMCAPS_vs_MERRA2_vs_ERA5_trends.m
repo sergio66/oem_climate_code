@@ -1,4 +1,4 @@
-function [era5,merra2,airsL3,climcapsL3,umbc,thecorr,amp] = driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears,iPentagonPlot);
+function [era5,merra2,airsL3,climcapsL3,umbc,thecorr,amp,saverates_rlat_pres] = driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears,iPentagonPlot);
 
 %{
   strUMBC = '/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithMLSL3_uncX100_50fatlayers_AIRSL3_ERA5_CMIP6_globalSSTfeedback.mat';
@@ -24,6 +24,7 @@ function [era5,merra2,airsL3,climcapsL3,umbc,thecorr,amp] = driver_show_AIRSV7_L
 set(0,'DefaultaxesLineWidth',1);
 set(0,'DefaultaxesFontSize',16);
 
+saverates_rlat_pres = [];
 amp = [];
 
 if nargin == 0
@@ -1404,7 +1405,7 @@ if iUMBC  > 0
     ta.Padding = 'none';
     ta.TileSpacing = 'tight';
 
-    disp('may as well hit dbquit'); keyboard_nowindow
+    disp('may as well hit dbquit, after this are the socer pentagon plots'); keyboard_nowindow
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
   iY = input('Show 5 panel plots? (-1 default/+1) : ');
@@ -1448,6 +1449,14 @@ if iUMBC  > 0
       profile_plots_2x1x2tiledlayout_tall(trend_rlat64,plays100,miaow11,miaow15,miaow12,miaow13,miaow14,iFig,plotoptions2x1x2);
     end
 
+    saverates_rlat_pres.trend_rlat64            = trend_rlat64;
+    saverates_rlat_pres.plays100                = plays100;
+    saverates_rlat_pres.RH_z_lat.airsL3     = miaow11;
+    saverates_rlat_pres.RH_z_lat.umbc       = miaow15;
+    saverates_rlat_pres.RH_z_lat.climcapsL3 = miaow12;
+    saverates_rlat_pres.RH_z_lat.merra2     = miaow13;
+    saverates_rlat_pres.RH_z_lat.era5       = miaow14;
+
     iFig = iFig + 1;
     figure(iFig); clf;   
     plotoptions.maintitle = 'd(log(WV))/dt [1/yr]'; 
@@ -1469,6 +1478,14 @@ if iUMBC  > 0
       plotoptions2x1x2.cstr  = 'dWVfrac/dt';
       profile_plots_2x1x2tiledlayout_tall(trend_rlat64,plays100,miaow11,miaow15,miaow12,miaow13,miaow14,iFig,plotoptions2x1x2);
     end
+
+    saverates_rlat_pres.trend_rlat64            = trend_rlat64;
+    saverates_rlat_pres.plays100                = plays100;
+    saverates_rlat_pres.WVfrac_z_lat.airsL3     = miaow11;
+    saverates_rlat_pres.WVfrac_z_lat.umbc       = miaow15;
+    saverates_rlat_pres.WVfrac_z_lat.climcapsL3 = miaow12;
+    saverates_rlat_pres.WVfrac_z_lat.merra2     = miaow13;
+    saverates_rlat_pres.WVfrac_z_lat.era5       = miaow14;
     
     iFig = iFig + 1;
     figure(iFig); clf;
@@ -1493,7 +1510,15 @@ if iUMBC  > 0
       plotoptions2x1x2.cstr  = 'dT/dt';
       profile_plots_2x1x2tiledlayout_tall(trend_rlat64,plays100,miaow11,miaow15,miaow12,miaow13,miaow14,iFig,plotoptions2x1x2);
     end
-  
+
+    saverates_rlat_pres.trend_rlat64       = trend_rlat64;
+    saverates_rlat_pres.plays100           = plays100;
+    saverates_rlat_pres.T_z_lat.airsL3     = miaow11;
+    saverates_rlat_pres.T_z_lat.umbc       = miaow15;
+    saverates_rlat_pres.T_z_lat.climcapsL3 = miaow12;
+    saverates_rlat_pres.T_z_lat.merra2     = miaow13;
+    saverates_rlat_pres.T_z_lat.era5       = miaow14;
+
     %{ 
     %  quick_print_figs_compare_trends.m
     addpath /asl/matlib/plotutils
@@ -1516,7 +1541,7 @@ if iUMBC  > 0
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';    
   plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
-  aslmap_2x2tiledlayout(z11,z32,z21,z22,iFig,plotoptions);
+  aslmap_2x2tiledlayout(z11,newz32,z21,z22,iFig,plotoptions);
 
   iY = input('Show 3 panel plots? (-1 default/+1) : ');
   if length(iY) == 0
@@ -1633,6 +1658,15 @@ if iUMBC > 0
   end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+iKB = input('separate the pentagon T(z) or WV(z) or RH(z) plots usimg saverates_rlat_pres (-1 [default]/+1) : ');
+if length(iKB) == 0
+  iKB = -1;
+end
+if iKB > 0
+  split_saverates_rlat_pres_T_WV_plots
+  keyboard_nowindow
+end
 
 iPrint = -1;
 if iPrint > 0

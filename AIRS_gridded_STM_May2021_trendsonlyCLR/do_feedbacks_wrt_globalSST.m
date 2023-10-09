@@ -101,7 +101,7 @@ else
   disp('hmm, guess you did not read in MERRA2/CLIMCAPSL3/AMIP6 trends ....')
 end
 
-iFreshComputeNWP_L3_feedbacks = input('(-1/default) read in old files or (+1) freshly brew compute one or both of ERA5/AIRSL3/CMIP6 or MERRA2/CLIMCAPSL3/AMIP6 feedbacks : ');
+iFreshComputeNWP_L3_feedbacks = input('(-1 [default]) read in old files or (+1) freshly brew compute one or both of ERA5/AIRSL3/CMIP6 or MERRA2/CLIMCAPSL3/AMIP6 feedbacks : ');
 if length(iFreshComputeNWP_L3_feedbacks) == 0
   iFreshComputeNWP_L3_feedbacks = -1;
   iXFreshComputeNWP_L3_feedbacks = -10;
@@ -113,12 +113,22 @@ end
 
 if iFreshComputeNWP_L3_feedbacks < 0
   fprintf(1,'  loading in %s \n',feedbacknameNWP_ERA5);
+  clear stemptrend
   loader = ['load ' feedbacknameNWP_ERA5];
   eval(loader)
+  airsL3_spectral_olr.stemptrend = stemptrend.airsL3;
+  cmip6_spectral_olr.stemptrend  = stemptrend.cmip6;
+  era5_spectral_olr.stemptrend   = stemptrend.era5;
+  clear stemptrend
   if exist('strMODELSX')
+    clear stemptrend
     fprintf(1,'  loading in %s \n',feedbacknameNWP_MERRA2);
     loader = ['load ' feedbacknameNWP_MERRA2];
     eval(loader)
+    climcapsL3_spectral_olr.stemptrend = stemptrend.airsL3;
+    amip6_spectral_olr.stemptrend  = stemptrend.cmip6;
+    merra2_spectral_olr.stemptrend   = stemptrend.era5;    
+    clear stemptrend
   end
 elseif iFreshComputeNWP_L3_feedbacks > 0 & iXFreshComputeNWP_L3_feedbacks == 2
   fprintf(1,'  loading in %s \n',feedbacknameNWP_ERA5);
@@ -140,13 +150,25 @@ if iFreshComputeNWP_L3_feedbacks >= 0
 end
 
 whos *spectral_olr
+iOhOh = -1;
+if ~isfield(umbc_spectral_olr,'stemptrend')
+  iOhOh = +1;
+  disp('warning .. umbc_spectral_olr does not have field stemptrend')
+end
+if ~isfield(era5_spectral_olr,'stemptrend')
+  iOhOh = +1;
+  disp('warning .. era5_spectral_olr does not have field stemptrend')
+end
+if iOhOh > 0
+  error('someone does not have field stemptrend')
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% LOAD IN OLDER NWP/AIRSL3/XMIP6 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~exist('airsL3_spectral_olr') & iFreshComputeNWP_L3_feedbacks < 0
-  junkx = input('need to load in airsL3, era5, cmip6 flux calcs from earlier (-1/+1 default) : ? ');
+  junkx = input('need to load in airsL3, era5, cmip6 flux calcs from earlier (-1/+1 [default]) : ? ');
   if length(junkx) == 0
     junkx = 1;
   end
@@ -259,6 +281,10 @@ show_avg_feedbacks_plethora
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
-disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
-disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
+disp('now you can eg run "show_olr_ecRad_feedback" ')
+disp('now you can eg run "show_olr_ecRad_feedback" ')
+disp('now you can eg run "show_olr_ecRad_feedback" ')
+
+%disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
+%disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')
+%disp('now you can clear the memory and run driver_olr_fluxchanges.m to make comparisons against CERES trends')

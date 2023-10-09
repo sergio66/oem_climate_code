@@ -491,7 +491,7 @@ fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~strfind(anomalydatafile,'_tile')
-  plot_anomalies_A
+  plot_anomalies_All
 else
   plot_anomalies_1
 end

@@ -124,6 +124,7 @@ clear junk
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+clear rlat
 if ~exist('rlat')
   do_XX_YY_from_X_Y
 end
@@ -133,7 +134,7 @@ if ~exist('iSmooth')
   iSmooth = 10;
 end
 
-
+clear boo
   coslat  = cos(YY*pi/180);
   indSST = era5_spectral_olr.stemptrend; boo(1) = sum(indSST .* coslat)/sum(coslat);
   indSST = merra2_spectral_olr.stemptrend; boo(2) = sum(indSST .* coslat)/sum(coslat);
@@ -170,6 +171,9 @@ merra2_spectral_olr.allsum     = 3*merra2_spectral_olr.olr0_ecRad.clr - (0*merra
 umbc_spectral_olr.allsum       = 3*umbc_spectral_olr.olr0_ecRad.clr - (0*umbc_spectral_olr.planck_ecRad.clr + umbc_spectral_olr.lapse_ecRad.clr  + umbc_spectral_olr.o3_ecRad.clr + umbc_spectral_olr.wv_ecRad.clr);
 airsL3_spectral_olr.allsum     = 3*airsL3_spectral_olr.olr0_ecRad.clr - (0*airsL3_spectral_olr.planck_ecRad.clr + airsL3_spectral_olr.lapse_ecRad.clr  + airsL3_spectral_olr.o3_ecRad.clr + airsL3_spectral_olr.wv_ecRad.clr);
 climcapsL3_spectral_olr.allsum = 3*climcapsL3_spectral_olr.olr0_ecRad.clr - (0*climcapsL3_spectral_olr.planck_ecRad.clr + climcapsL3_spectral_olr.lapse_ecRad.clr  + climcapsL3_spectral_olr.o3_ecRad.clr + climcapsL3_spectral_olr.wv_ecRad.clr);
+junk = [sum(era5_spectral_olr.allsum .* coslat)/sum(coslat) sum(merra2_spectral_olr.allsum .* coslat)/sum(coslat) ...
+        sum(umbc_spectral_olr.allsum .* coslat)/sum(coslat) sum(airsL3_spectral_olr.allsum .* coslat)/sum(coslat) sum(climcapsL3_spectral_olr.allsum .* coslat)/sum(coslat)]  ./ boo(1:5);
+
 z11  = era5_spectral_olr.allsum;
 z12  = merra2_spectral_olr.allsum;
 zMID = umbc_spectral_olr.allsum;
@@ -261,10 +265,18 @@ ixx = ix;
 showfeedbacks(1:ixx,7) = sum(showfeedbacks(1:ixx,[1 2 3 4]),2);
 
 disp('showing means from fits, 64 latbins')
+%disp('         Planck Lapse Ozone Water |  Total')
+%for ix = 1 : 5
+%  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
+%end
+%trends_paper_show = showfeedbacks(1:5,[1 2 3 4 7]);
+
+showfeedbacks(1:5,8) = junk; 
+disp('         Planck Lapse Ozone Water |  Total')
 for ix = 1 : 5
-  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f    %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 7]));
+  fprintf(1,'%s %5.2f %5.2f %5.2f %5.2f |  %5.2f \n',strfeedbacks{ix},showfeedbacks(ix,[1 2 3 4 8]));
 end
-trends_paper_show = showfeedbacks(1:5,[1 2 3 4 7]);
+trends_paper_show = showfeedbacks(1:5,[1 2 3 4 8]);
 
 figure(1); clf
 bar(trends_paper_show')
@@ -358,7 +370,9 @@ for ix = 1 : 5
   kaboo = [junkSKT(ix,2) wawoo(ix,:) mwawoo(ix,:) swawoo(ix,:) nwawoo(ix,:)];
   fprintf(1,'%s || %7.4f ||  %7.2f %7.2f %7.2f %7.2f    %7.2f | %7.2f %7.2f %7.2f %7.2f    %7.2f | %7.2f %7.2f %7.2f %7.2f    %7.2f | %7.2f %7.2f %7.2f %7.2f    %7.2f \n',strfeedbacks{ix},kaboo)
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
+return
 clear cosavg
 cosrlat = cos(rlat'*pi/180);
 
