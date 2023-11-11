@@ -10,6 +10,10 @@ drwxrwxr-x 2 sergio pi_strow 16384 Mar 31 07:23 AIRSL3
 drwxrwxr-x 2 sergio pi_strow 12288 Mar 31 07:21 ERA5
 %}
 
+%%% see ../AIRS_gridded_STM_May2021_trendsonlyCLR/driver_spectralpatterns_obs_vs_ERA5_AIRSL3_CMIP6
+%%% see ../AIRS_gridded_STM_May2021_trendsonlyCLR/driver_spectralpatterns_obs_vs_ERA5_AIRSL3_CMIP6
+%%% see ../AIRS_gridded_STM_May2021_trendsonlyCLR/driver_spectralpatterns_obs_vs_ERA5_AIRSL3_CMIP6
+
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/COLORMAP
 

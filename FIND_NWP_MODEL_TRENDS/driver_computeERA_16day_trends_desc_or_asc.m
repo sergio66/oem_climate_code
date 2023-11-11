@@ -17,8 +17,8 @@ if ~exist('iDorA')
 end
 
 clear iaFound
-iaMax = 365/16*17;
-iaMax = 365/16*18; iaMax = 412; iaMax = 387;   %% so we only do 17 years that we do have ERA for .....
+iaMax = 365/16*17; iaMax = 387;   %% so we only do 17 years that we do have ERA for .....
+iaMax = 365/16*18; iaMax = 412; 
 
 for ii = 1 : iaMax
   if iDorA > 0
@@ -106,11 +106,30 @@ fprintf(1,'\n');
 monitor_memory_whos
 
 comment = 'see driver_computeERA_16day_trends.m';
-if iDorA > 0
-  save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_desc.mat comment all
-else
-  save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_asc.mat comment all
+if iaMax == 387
+  %% 17 years
+  if iDorA > 0
+    save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_desc.mat comment all
+  else
+    save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_asc.mat comment all
+  end
+elseif iaMax == 412
+  %% 18 years
+  if iDorA > 0
+    save -v7.3 ERA_atm_data_2002_09_to_2020_08_16day_desc.mat comment all
+  else
+    save -v7.3 ERA_atm_data_2002_09_to_2020_08_16day_asc.mat comment all
+  end
+elseif iaMax == 457
+  %% 20 years
+  if iDorA > 0
+    save -v7.3 ERA_atm_data_2002_09_to_2022_08_16day_desc.mat comment all
+  else
+    save -v7.3 ERA_atm_data_2002_09_to_2022_08_16day_asc.mat comment all
+  end
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% point ii=412 may be a little crazy, not enough ERA files
 ii = 200;
@@ -182,10 +201,24 @@ trend_rlat = all.rlat;
 trend_rlon = all.rlon;
 trend_rlat64 = rlat; trend_rlon72 = rlon;
 
-if iDorA > 0
-  save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_trends_desc.mat comment trend*
-else
-  save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_trends_asc.mat comment trend*
+if iaMax == 387
+  if iDorA > 0
+    save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_trends_desc.mat comment trend*
+  else
+    save -v7.3 ERA_atm_data_2002_09_to_2019_08_16day_trends_asc.mat comment trend*
+  ebd
+elseif iaMax == 412
+  if iDorA > 0
+    save -v7.3 ERA_atm_data_2002_09_to_2020_08_16day_trends_desc.mat comment trend*
+  else
+    save -v7.3 ERA_atm_data_2002_09_to_2020_08_16day_trends_asc.mat comment trend*
+  end
+elseif iaMax == 456
+  if iDorA > 0
+    save -v7.3 ERA_atm_data_2002_09_to_2022_08_16day_trends_desc.mat comment trend*
+  else
+    save -v7.3 ERA_atm_data_2002_09_to_2022_08_16day_trends_asc.mat comment trend*
+  end
 end
 
 load('llsmap5.mat');

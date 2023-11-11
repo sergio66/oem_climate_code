@@ -24,14 +24,17 @@ junk = [nansum(newz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz12(zoop).*mu(
         nansum(newz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'ALL             |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);
 zoop = tropics;
+zoop = find(isfinite(zoop));
 junk = [nansum(newz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz12(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz31(zoop).*mu(zoop))/nansum(mu(zoop))  ...
         nansum(newz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'TROPICS         |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);
 zoop = midlats;
+zoop = find(isfinite(zoop));
 junk = [nansum(newz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz12(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz31(zoop).*mu(zoop))/nansum(mu(zoop))  ...
         nansum(newz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'MIDLATS         |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);
 zoop = poles;
+zoop = find(isfinite(zoop));
 junk = [nansum(newz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz12(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz31(zoop).*mu(zoop))/nansum(mu(zoop))  ...
         nansum(newz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(newz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'POLAR           |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);
@@ -66,14 +69,17 @@ junk = [nansum(xnewz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz12(zoop).*m
         nansum(xnewz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'ALL             |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);
 zoop = tropics;
+zoop = find(isfinite(zoop));
 junk = [nansum(xnewz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz12(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz31(zoop).*mu(zoop))/nansum(mu(zoop))  ...
         nansum(xnewz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'TROPICS         |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);
 zoop = midlats;
+zoop = find(isfinite(zoop));
 junk = [nansum(xnewz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz12(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz31(zoop).*mu(zoop))/nansum(mu(zoop))  ...
         nansum(xnewz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'MIDLATS         |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);
 zoop = poles;
+zoop = find(isfinite(zoop));
 junk = [nansum(xnewz11(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz12(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz31(zoop).*mu(zoop))/nansum(mu(zoop))  ...
         nansum(xnewz21(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz22(zoop).*mu(zoop))/nansum(mu(zoop)) nansum(xnewz32(zoop).*mu(zoop))/nansum(mu(zoop))];
 fprintf(1,'POLAR           |  %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f \n',junk);

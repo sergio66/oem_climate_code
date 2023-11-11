@@ -18,8 +18,9 @@
 # run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 10    for driver_compute_AIRSL3_trends_desc_or_asc.m which is 5 days/tons of memory, iDorA = +1, FAST
 # run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 11    for driver_compute_AIRSL3_trends_desc_or_asc.m which is 5 days/tons of memory, iDorA = -1, FAST
 #
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 12    for driver_computeMERRA2_monthly_OLR.m 1 .. 240
-# run this with   sbatch -p high_mem --array=1 sergio_matlab_jobB.sbatch 13    for driver_computeERA5_monthly_OLR.m 1 .. 240
+# run this with   sbatch -p high_mem --array=1-240 sergio_matlab_jobB.sbatch 12    for driver_computeMERRA2_monthly_OLR.m 1 .. 240
+# run this with   sbatch -p high_mem --array=1-240 sergio_matlab_jobB.sbatch 13    for driver_computeERA5_monthly_OLR.m 1 .. 240
+# run this with   sbatch -p high_mem --array=1-240 sergio_matlab_jobB.sbatch 14    for driver_computeAIRSL3_monthly_OLR.m 1 .. 240
 #
 
 #  Name of the job:
@@ -112,4 +113,7 @@ elif [[ "$1" -eq "12" ]]; then
 elif [[ "$1" -eq "13" ]]; then
   echo "cmd line arg = 1, driver_computeERA5_monthly_OLR.m"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -r "driver_computeERA5_monthly_OLR; exit"
+elif [[ "$1" -eq "14" ]]; then
+  echo "cmd line arg = 1, driver_computeAIRSL3_monthly_OLR.m"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -r "driver_computeAIRSL3_monthly_OLR; exit"
 fi

@@ -11,4 +11,8 @@ else
   fprintf(1,'iNumYears = %2i hmmm .... read_fileMean17years.m has not thought about this, so reading default 20 years \n',iNumYears)
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fprintf(1,'in read_fileMean17years.m : iNumYears = %2i \n                            fileMean17years = %s \n',iNumYears,fileMean17years)
+
 [hMean17years,ha,pMean17years,pa] = rtpread(fileMean17years);

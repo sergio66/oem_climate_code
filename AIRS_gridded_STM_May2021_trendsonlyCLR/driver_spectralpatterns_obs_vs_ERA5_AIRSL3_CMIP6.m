@@ -1,4 +1,6 @@
-for ii = 1 : 30; figure(ii); clf; end
+addpath /asl/matlib/h4tools
+
+for ii = 1 : 75; figure(ii); clf; end
 
 moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','b_err_desc');
 b_err_desc = moonoise.b_err_desc; clear moonoise;
@@ -25,6 +27,8 @@ settings.iIgnoreChans_SO2 = -1;
 %chanset = jacobian.chanset;
 chanset = 1 : 2645;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp('ret to continue to comparisons of obs vs : UMBC, ERA/MERRA2, AILSL3/CLIMAPSL3 and AMIP6/CMIP6'); pause
 read_fileMean17years
 
 plotopt.iUpperWavenumLimit = 1620;
