@@ -27,6 +27,33 @@ set(0,'DefaultaxesFontSize',16);
 saverates_rlat_pres = [];
 amp = [];
 
+iWriteCorrelNumbers = +1; iBiasWRT_ERA5orUMBC = -1;   modelnames = {'THIS WORK','AIRS L3','CLIMCAPS L3','MERRA2','ERA5'};
+iWriteCorrelNumbers = +1; iBiasWRT_ERA5orUMBC = +1;   modelnames = {'ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
+
+fprintf(1,'iBiasWRT_ERA5orUMBC == %2i \n',iBiasWRT_ERA5orUMBC)
+
+  %%   Name                   Size             Bytes  Class     Attributes
+  %%   allXSlope              9x5x4              720  single
+  %%   allX_frac_neg0pos      9x5x4             1440  double
+  %%   allXchi                9x5x4              720  single
+  %%   allXmean               9x5x4              720  single
+  %%   allXstd                9x5x4              720  single
+
+  %% allX_BLAH(iY,iX,:) will have size 9 x 5 x 4 
+  %%     == [200/500/800 RH/WV/T] X ['ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'] x [GLOBAL TRP MIDLAT POLAR]
+  %%   first index  (iY)   1 .. 9 is  1:3=200 mb RH/WV/T   4:6=500 mb RH/WV/T   7:9=500 mb RH/WV/T
+  %%   second index (iX)   1 .. 5 is  'ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK' if iBiasWRT_ERA5orUMBC > 0, if iBiasWRT_ERA5orUMBC < 0 then swap UMBC, ERA5
+  %%   third index  (iG)   1 .. 4 is  global,tropical,midlat,polar
+
+  %% iY = 1,2,3  200 mb    4,5,6 500 mb    7,8,9 800 mb             = 9 total   [RH,WVfrac,T][RH,WVfrac,T][RH,WVfrac,T]
+  %% iX = 1,2,3,4,5 === all, tropics,midlats,midlats+tropics,poles  = 5 total
+  %% whos allXchi = 9 x 5 x 4                                       correlate ERA5 with [AIRS L3, CLIMCAPS, MERRA2, UMBC]
+  %%   first index  (iY)   1 .. 9 is  1:3=200 mb RH/WV/T   4:6=500 mb RH/WV/T   7:9=500 mb RH/WV/T
+  %%   second index (iX)   1 .. 5 is  'ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK' if iBiasWRT_ERA5orUMBC > 0, if iBiasWRT_ERA5orUMBC < 0 then swap UMBC, ERA5
+  %%   third index  (iG)   1 .. 4 is  global,tropical,midlat,polar
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if nargin == 0
 
   strUMBC = [];
@@ -870,7 +897,7 @@ if iUMBC  > 0
   fprintf(1,'breakdown : land = %4i ocean = %4i      tropics = %4i midlats = %4i midlatsNtropics = %4i poles = %4i of 4608 \n',junk);
   fprintf(1,'breakdown : land = %4.3f ocean = %4.3f    tropics = %4.3f midlats = %4.3f midlatsNtropics = %4.3f poles = %4.3f of 4608 \n',junk/4608);
 
-%% new new
+%%%%%%%%%%%%%%%%%%%% new new
   tropics = find(abs(YY) <= 30);          
   midlatsNtropics = find(abs(YY) <= 60); 
   midlats = setdiff(midlatsNtropics,tropics); 
@@ -880,12 +907,30 @@ if iUMBC  > 0
   midlatsNtropics = nan(size(YY)); junk = find(abs(YY) <= 60);                midlatsNtropics(junk) = 1;
   midlats = nan(size(YY));         junk = find(abs(YY) > 30 & abs(YY) <= 60); midlats(junk) = 1;
   poles = nan(size(YY));           junk = find(abs(YY) > 60);                 poles(junk) = 1;
-%% new new
+%%%%%%%%%%%%%%%%%%%% new new
+
+  %%% EACH AND EVERYONE OF COMPUTATIONS IN THIS SECTION IS CORRELATING/MEAN/STDDEV/COMPARING to ERA5
+  %%%   zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]'; === [ERA5 AIRS CLIMCAPS MERRA UMBC]
+  %%%   corrplot(zall) use the first column as the standard ===== ERA5
 
   i200 = find(plays100 >= 200,1);
   i500 = find(plays100 >= 500,1);
   i800 = find(plays100 >= 800,1);
 
+  %% allX_BLAH(iY,iX,:) will have size 9 x 5 x 4 
+  %%     == [200/500/800 RH/WV/T] X ['ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'] x [GLOBAL TRP MIDLAT POLAR]
+  %%   first index  (iY)   1 .. 9 is  1:3=200 mb RH/WV/T   4:6=500 mb RH/WV/T   7:9=500 mb RH/WV/T
+  %%   second index (iX)   1 .. 5 is  'ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK' if iBiasWRT_ERA5orUMBC > 0, if iBiasWRT_ERA5orUMBC < 0 then swap UMBC, ERA5
+  %%   third index  (iG)   1 .. 4 is  global,tropical,midlat,polar
+
+  %% iY = 1,2,3  200 mb    4,5,6 500 mb    7,8,9 800 mb             = 9 total   [RH,WVfrac,T][RH,WVfrac,T][RH,WVfrac,T]
+  %% iX = 1,2,3,4,5 === all, tropics,midlats,midlats+tropics,poles  = 5 total
+  %% whos allXchi = 9 x 5 x 4                                       correlate ERA5 with [AIRS L3, CLIMCAPS, MERRA2, UMBC]
+  %%   first index  (iY)   1 .. 9 is  1:3=200 mb RH/WV/T   4:6=500 mb RH/WV/T   7:9=500 mb RH/WV/T
+  %%   second index (iX)   1 .. 5 is  'ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK' if iBiasWRT_ERA5orUMBC > 0, if iBiasWRT_ERA5orUMBC < 0 then swap UMBC, ERA5
+  %%   third index  (iG)   1 .. 4 is  global,tropical,midlat,polar
+
+%%%%%%%%%%%%%%%%%%%% new new
   iX = 0;
   iY = 0;
 
@@ -912,27 +957,30 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dRH/dt 200 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
   
@@ -959,27 +1007,30 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dWVfrac/dt 200 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dWV/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dWV/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dWV/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dWV/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dWV/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
    
@@ -1006,27 +1057,30 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dT/dt 200 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dTz/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dTz/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dTz/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dTz/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'200 mb dTz/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
    
@@ -1054,27 +1108,30 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dRH/dt 500 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
   
@@ -1101,27 +1158,30 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dWVfrac/dt 500 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dWV/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dWV/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dWV/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dWV/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dWV/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
@@ -1148,27 +1208,30 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dT/dt 500 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dTz/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dTz/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dTz/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dTz/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'500 mb dTz/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
@@ -1196,27 +1259,30 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dRH/dt 800 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dRH/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dRH/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dRH/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dRH/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dRH/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
@@ -1243,30 +1309,33 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dWVfrac/dt 500 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dWV/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dWV/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dWV/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dWV/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dWV/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
-  
+
   iY = iY+1; iX = 0;
   iFig = iFig + 1;
   figure(iFig); clf; clear plotoptions
@@ -1290,34 +1359,48 @@ if iUMBC  > 0
     plotoptions.cstr  = 'dT/dt 800 mb';
     aslmap_2x1x2tiledlayout(zyx11,zyx12,zyxzz,zyx21,zyx22,iFig,plotoptions);
   end
-  vvnames = {'AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK'};
-  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';
+  zall0 = [zyx22(:) zyx11(:) zyx12(:) zyx21(:) zyx31(:)]';  %% make ERA5 the center of attraction iBiasWRT_ERA5orUMBC > 0
+  if iBiasWRT_ERA5orUMBC < 0
+    %% make UMBC the center of attraction
+    zall0 = zall0([5 2 3 4 1],:);
+  end
   wall0 = cos(YY*pi/180)';
   zall = zall0; wall = wall0;
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dTz/dt                       correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(tropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dTz/dt       TROPICS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlats)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dTz/dt       MIDLATS         correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(midlatsNtropics)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dTz/dt       MIDLATSNTROPICS correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n',thecorr.junk);
   junk = find(isfinite(poles)); zall = zall0(:,junk); wall = wall0(junk);
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',vvnames); thecorr.junk = R(2:5,1);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames); thecorr.junk = R(2:5,1);
     iX = iX + 1; allXchi(iY,iX,:) = R(2:5,1); allXmean(iY,iX,:) = m(2:5); allXstd(iY,iX,:) = s(2:5); allXSlope(iY,iX,:) = linearfit(2:5,1); allX_frac_neg0pos(iY,iX,:) = frac_neg0pos(2:5,1);
     fprintf(1,'800 mb dTz/dt       POLES           correlations vs ERA5 : AIRSL3/CLIMCAPSL3/MERRA2/UMBC =  %8.2f %8.2f %8.2f %8.2f\n\n',thecorr.junk);
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %% allX_BLAH(iY,iX,:) will have size 9 x 5 x 4
+  %%   first index  (iY)   1 .. 9 is  1:3=200 mb RH/WV/T   4:6=500 mb RH/WV/T   7:9=500 mb RH/WV/T
+  %%   second index (iX)   1 .. 5 is  'ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK' if iBiasWRT_ERA5orUMBC > 0, if iBiasWRT_ERA5orUMBC < 0 then swap UMBC, ERA5  
+  %%   third index  (iG)   1 .. 4 is  global,tropical,midlat,polar
+
   %% iX = 1,2,3,4,5 === all, tropics,midlats,midlats+tropics,poles  = 5 total
   %% iY = 1,2,3  200 mb    4,5,6 500 mb    7,8,9 800 mb             = 9 total   [RH,WVfrac,T][RH,WVfrac,T][RH,WVfrac,T]
   %% whos allXchi = 9 x 5 x 4                                       correlate ERA5 with [AIRS L3, CLIMCAPS, MERRA2, UMBC]
+  %%   first index  (iY)   1 .. 9 is  1:3=200 mb RH/WV/T   4:6=500 mb RH/WV/T   7:9=500 mb RH/WV/T
+  %%   second index (iX)   1 .. 5 is  'ERA5','AIRS L3','CLIMCAPS L3','MERRA2','THIS WORK' if iBiasWRT_ERA5orUMBC > 0, if iBiasWRT_ERA5orUMBC < 0 then swap UMBC, ERA5
+  %%   third index  (iG)   1 .. 4 is  global,tropical,midlat,polar
 
   %iFig = iFig + 1;
   %figure(iFig); clf;   
@@ -1327,13 +1410,14 @@ if iUMBC  > 0
   %adjust(31,h1,h2,h3,'even');
   %set(gca,'xtick',[1:5],'xticklabel',names)
 
-  names = {'ALL','T','ML','ML+T','P'};
+  zonalnames = {'ALL','T','ML','ML+T','P'};
 
-  iType = input('Plot the correlations of 200 mb,500 mb, 800 mb T/WV/RH as (+1/default) bar graphs or as (-1) imagesc : ');
+  iType = input('Plot the correlations of 200 mb,500 mb, 800 mb T/WV/RH as (+1/default) imagesc or as (-1) bargraphs : ');
   if length(iType) == 0
     iType = +1;
   end
-  if iType > 0
+
+  if iType < 0
     iFig = iFig + 1;
     figure(iFig); clf;   
     ta = tiledlayout(3,1,'TileSpacing','None', 'Padding','None');
@@ -1343,7 +1427,7 @@ if iUMBC  > 0
     tfov(2) = nexttile;  bar(1:5,squeeze(allXchi(4,:,:))); ylim([ymin 1]); ylabel('RH 500');  %hl = legend('AIRS v7','CLIMCAPS','MERRA2','THIS WORK','location','best','fontsize',6); ylabel('RH 500')
     tfov(3) = nexttile;  bar(1:5,squeeze(allXchi(7,:,:))); ylim([ymin 1]); ylabel('RH 800');  hl = legend('AIRS v7','CLIMCAPS','MERRA2','THIS WORK','location','best','fontsize',6); ylabel('RH 800')
     tfov(1).XTickLabel = '';  tfov(1).XLabel.String = [];      tfov(2).XTickLabel = '';  tfov(2).XLabel.String = [];
-    set(gca,'xtick',[1:5],'xticklabel',names)
+    set(gca,'xtick',[1:5],'xticklabel',zonalnames)
     ta.Padding = 'none';
     ta.TileSpacing = 'tight';
 
@@ -1357,7 +1441,7 @@ if iUMBC  > 0
     tfov(2) = nexttile;  bar(1:5,squeeze(allXchi(5,:,:))); ylim([ymin2 1]); ylabel('WV 500'); %hl = legend('AIRS v7','CLIMCAPS','MERRA2','THIS WORK','location','best','fontsize',6);
     tfov(3) = nexttile;  bar(1:5,squeeze(allXchi(8,:,:))); ylim([ymin2 1]); ylabel('WV 800'); %hl = legend('AIRS v7','CLIMCAPS','MERRA2','THIS WORK','location','ne','fontsize',5);
     tfov(1).XTickLabel = '';  tfov(1).XLabel.String = [];      tfov(2).XTickLabel = '';  tfov(2).XLabel.String = [];
-    set(gca,'xtick',[1:5],'xticklabel',names)
+    set(gca,'xtick',[1:5],'xticklabel',zonalnames)
     ta.Padding = 'none';
     ta.TileSpacing = 'tight';
 
@@ -1370,15 +1454,17 @@ if iUMBC  > 0
     tfov(2) = nexttile;  bar(1:5,squeeze(allXchi(6,:,:))); ylim([ymin 1]); ylabel('T 500');  %hl = legend('AIRS v7','CLIMCAPS','MERRA2','THIS WORK','location','best','fontsize',6); ylabel('T 500')
     tfov(3) = nexttile;  bar(1:5,squeeze(allXchi(9,:,:))); ylim([ymin 1]); ylabel('T 800');  %hl = legend('AIRS v7','CLIMCAPS','MERRA2','THIS WORK','location','best','fontsize',6); ylabel('T 800')
     tfov(1).XTickLabel = '';  tfov(1).XLabel.String = [];      tfov(2).XTickLabel = '';  tfov(2).XLabel.String = [];
-    set(gca,'xtick',[1:5],'xticklabel',names)
+    set(gca,'xtick',[1:5],'xticklabel',zonalnames)
     ta.Padding = 'none';
     ta.TileSpacing = 'tight';
   
   else  
     ymin = 0;
-    regions = [1 2 4 5];
-    mnames = {'AIRS v7','CLIMCAPS','MERRA2','THIS WORK'};
-    rnames = {'GLOBAL','TROPICAL','MIDLATS','TRP+MDL','POLAR'};
+    %mnames = {'AIRS v7','CLIMCAPS','MERRA2','THIS WORK'};    
+    zonalnames = {'GLOBAL','TROPICAL','MIDLAT','TRP+MDL','POLAR'};
+    regions = [1 2 3 5];    %% ignore region 4 = midlats+tropics
+    mnames = modelnames(2:5);
+    znames = zonalnames(regions);
 
     iFig = iFig + 1;
     figure(iFig); clf;   
@@ -1391,6 +1477,7 @@ if iUMBC  > 0
     iFig = iFig + 1;
     figure(iFig); clf;   
       plot_frac_neg0pos_200_500_800mb_RH_WV_T
+
   end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1534,13 +1621,6 @@ if iUMBC  > 0
   else
     fprintf(1,'currently at iFig = %2i \n',iFig);
   end
-
-  iFig = iFig + 1;
-    figure(iFig); clf;   
-    ta = tiledlayout(3,1,'TileSpacing','None', 'Padding','None');
-    ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
-    ymin = 0;
-    tfov(1) = nexttile; 
 
   iPrint = input('Print plots for trends paper (-1 [default/+1) : ');
   if length(iPrint) == 0

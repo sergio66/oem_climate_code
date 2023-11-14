@@ -13,11 +13,14 @@ junk0 = miaow15(i10_100,:); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanst
              junk2 > javg - 2 * jjavg & junk2 < javg + 2 * jjavg & ...
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
-  zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';  %% so UMBC/AIRSL3/CLIMCAPSL3/MERRA2/ERA5
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_global(:,1) = R(:,1); M_RH_global(:,1) = m'; S_RH_global(:,1) = s'; Slope_RH_global(:,1) = linearfit(:,1); Frac_RH_global(:,1) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i10_100,trend_rlat64_polar); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -32,10 +35,13 @@ junk0 = miaow15(i10_100,trend_rlat64_polar); junk0 = junk0(:);   j0 = nanmean(ju
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_polar(:,1) = R(:,1); M_RH_polar(:,1) = m'; S_RH_polar(:,1) = s'; Slope_RH_polar(:,1) = linearfit(:,1); Frac_RH_polar(:,1) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i10_100,trend_rlat64_midlat); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -50,10 +56,13 @@ junk0 = miaow15(i10_100,trend_rlat64_midlat); junk0 = junk0(:);   j0 = nanmean(j
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_midlat(:,1) = R(:,1); M_RH_midlat(:,1) = m'; S_RH_midlat(:,1) = s'; Slope_RH_midlat(:,1) = linearfit(:,1); Frac_RH_midlat(:,1) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i10_100,trend_rlat64_tropical); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -68,10 +77,13 @@ junk0 = miaow15(i10_100,trend_rlat64_tropical); junk0 = junk0(:);   j0 = nanmean
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_tropical(:,1) = R(:,1); M_RH_tropical(:,1) = m'; S_RH_tropical(:,1) = s'; Slope_RH_tropical(:,1) = linearfit(:,1); Frac_RH_tropical(:,1) = frac_neg0pos(:,1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,10 +100,13 @@ junk0 = miaow15(i100_400,:); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nans
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_global(:,2) = R(:,1); M_RH_global(:,2) = m'; S_RH_global(:,2) = s'; Slope_RH_global(:,2) = linearfit(:,1); Frac_RH_global(:,2) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i100_400,trend_rlat64_polar); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -106,10 +121,13 @@ junk0 = miaow15(i100_400,trend_rlat64_polar); junk0 = junk0(:);   j0 = nanmean(j
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_polar(:,2) = R(:,1); M_RH_polar(:,2) = m'; S_RH_polar(:,2) = s'; Slope_RH_polar(:,2) = linearfit(:,1); Frac_RH_polar(:,2) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i100_400,trend_rlat64_midlat); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -124,10 +142,13 @@ junk0 = miaow15(i100_400,trend_rlat64_midlat); junk0 = junk0(:);   j0 = nanmean(
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_midlat(:,2) = R(:,1); M_RH_midlat(:,2) = m'; S_RH_midlat(:,2) = s'; Slope_RH_midlat(:,2) = linearfit(:,1); Frac_RH_midlat(:,2) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i100_400,trend_rlat64_tropical); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -142,10 +163,13 @@ junk0 = miaow15(i100_400,trend_rlat64_tropical); junk0 = junk0(:);   j0 = nanmea
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_tropical(:,2) = R(:,1); M_RH_tropical(:,2) = m'; S_RH_tropical(:,2) = s'; Slope_RH_tropical(:,2) = linearfit(:,1); Frac_RH_tropical(:,2) = frac_neg0pos(:,1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -162,10 +186,13 @@ junk0 = miaow15(i400_1000,:); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nan
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_global(:,3) = R(:,1); M_RH_global(:,3) = m'; S_RH_global(:,3) = s'; Slope_RH_global(:,3) = linearfit(:,1); Frac_RH_global(:,3) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i400_1000,trend_rlat64_polar); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -180,10 +207,13 @@ junk0 = miaow15(i400_1000,trend_rlat64_polar); junk0 = junk0(:);   j0 = nanmean(
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_polar(:,3) = R(:,1); M_RH_polar(:,3) = m'; S_RH_polar(:,3) = s'; Slope_RH_polar(:,3) = linearfit(:,1); Frac_RH_polar(:,3) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i400_1000,trend_rlat64_midlat); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -198,10 +228,13 @@ junk0 = miaow15(i400_1000,trend_rlat64_midlat); junk0 = junk0(:);   j0 = nanmean
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_midlat(:,3) = R(:,1); M_RH_midlat(:,3) = m'; S_RH_midlat(:,3) = s'; Slope_RH_midlat(:,3) = linearfit(:,1); Frac_RH_midlat(:,3) = frac_neg0pos(:,1);
 
 junk0 = miaow15(i400_1000,trend_rlat64_tropical); junk0 = junk0(:);   j0 = nanmean(junk0); jj0 = nanstd(junk0);
@@ -216,10 +249,13 @@ junk0 = miaow15(i400_1000,trend_rlat64_tropical); junk0 = junk0(:);   j0 = nanme
              junk3 > javg - 2 * jjavg & junk3 < javg + 2 * jjavg & ...
              junk4 > javg - 2 * jjavg & junk4 < javg + 2 * jjavg);
   zall = [junk0(boo) junk1(boo) junk2(boo) junk3(boo) junk4(boo)]';
+  if iBiasWRT_ERA5orUMBC > 0
+    % iBiasWRT_ERA5orUMBC > = ==> wrt ERA5
+    zall = zall([5 2 3 4 1],:);
+  end
   wall = ones(size(junk0(boo)));
   %corr(zall')
-  varnames = {'THIS WORK','AIRS L3','CLIMCAPS','MERRA2','ERA5'};
-  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',varnames);
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
   R_RH_tropical(:,3) = R(:,1); M_RH_tropical(:,3) = m'; S_RH_tropical(:,3) = s'; Slope_RH_tropical(:,3) = linearfit(:,1); Frac_RH_tropical(:,3) = frac_neg0pos(:,1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -238,76 +274,170 @@ smoothPts = 3;
 %% 100 - 400 mb
 tafov(1) = nexttile; imagesc([R_RH_global(2:5,2) R_RH_tropical(2:5,2) R_RH_midlat(2:5,2) R_RH_polar(2:5,2)]); colormap(tafov(1),jet); caxis([0 +1]); 
   %colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   t = title('RH CORRELATION'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [R_RH_global(2:5,2) R_RH_tropical(2:5,2) R_RH_midlat(2:5,2) R_RH_polar(2:5,2)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
 tafov(2) = nexttile; imagesc([Slope_RH_global(2:5,2) Slope_RH_tropical(2:5,2) Slope_RH_midlat(2:5,2) Slope_RH_polar(2:5,2)]); colormap(tafov(2),usa2); caxis([-1 +1]); 
   %colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   t = title('RH SLOPE'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [Slope_RH_global(2:5,2) Slope_RH_tropical(2:5,2) Slope_RH_midlat(2:5,2) Slope_RH_polar(2:5,2)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
 tafov(3) = nexttile; imagesc([M_RH_global(2:5,2) M_RH_tropical(2:5,2) M_RH_midlat(2:5,2) M_RH_polar(2:5,2)]); colormap(tafov(3),usa2); caxis([-1 +1]*0.25); 
   %colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   t = title('RH BIAS'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [M_RH_global(2:5,2) M_RH_tropical(2:5,2) M_RH_midlat(2:5,2) M_RH_polar(2:5,2)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
-tafov(4) = nexttile; imagesc([S_RH_global(2:5,2) S_RH_tropical(2:5,2) S_RH_midlat(2:5,2) S_RH_polar(2:5,2)]); colormap(tafov(4),jet); caxis([0 +1]*0.25); 
+tafov(4) = nexttile; imagesc([S_RH_global(2:5,2) S_RH_tropical(2:5,2) S_RH_midlat(2:5,2) S_RH_polar(2:5,2)]); colormap(tafov(4),jet); caxis([0 +1]*0.1); 
   %colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   t = title('RH STDDEV'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [S_RH_global(2:5,2) S_RH_tropical(2:5,2) S_RH_midlat(2:5,2) S_RH_polar(2:5,2)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
 tafov(5) = nexttile; imagesc([Frac_RH_global(2:5,2) Frac_RH_tropical(2:5,2) Frac_RH_midlat(2:5,2) Frac_RH_polar(2:5,2)]); colormap(tafov(5),jet); caxis([0 +1]); 
   %colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   t = title('RH +/-FRAC'); t.FontSize = 10; t.FontWeight = 'normal';
 t = text(5,4,'100-400 mb','Rotation',90');
+if iWriteCorrelNumbers > 0
+  wah = [Frac_RH_global(2:5,2) Frac_RH_tropical(2:5,2) Frac_RH_midlat(2:5,2) Frac_RH_polar(2:5,2)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 400 - 1000 mb
 tafov(6) = nexttile; imagesc([R_RH_global(2:5,3) R_RH_tropical(2:5,3) R_RH_midlat(2:5,3) R_RH_polar(2:5,3)]); colormap(tafov(6),jet); caxis([0 +1]); 
   colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   %t = title('RH CORRELATION'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [R_RH_global(2:5,3) R_RH_tropical(2:5,3) R_RH_midlat(2:5,3) R_RH_polar(2:5,3)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
-tafov(7) = nexttile; imagesc([Slope_RH_global(2:5,3) Slope_RH_tropical(2:5,3) Slope_RH_midlat(2:5,3) Slope_RH_polar(2:5,3)]); colormap(tafov(7),usa); caxis([-1 +1]); 
+tafov(7) = nexttile; imagesc([Slope_RH_global(2:5,3) Slope_RH_tropical(2:5,3) Slope_RH_midlat(2:5,3) Slope_RH_polar(2:5,3)]); colormap(tafov(7),usa2); caxis([-1 +1]); 
   colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   %t = title('RH SLOPE'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [Slope_RH_global(2:5,3) Slope_RH_tropical(2:5,3) Slope_RH_midlat(2:5,3) Slope_RH_polar(2:5,3)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
 tafov(8) = nexttile; imagesc([M_RH_global(2:5,3) M_RH_tropical(2:5,3) M_RH_midlat(2:5,3) M_RH_polar(2:5,3)]); colormap(tafov(8),usa2); caxis([-1 +1]*0.25); 
   colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   %t = title('RH BIAS'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [M_RH_global(2:5,3) M_RH_tropical(2:5,3) M_RH_midlat(2:5,3) M_RH_polar(2:5,3)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
-tafov(9) = nexttile; imagesc([S_RH_global(2:5,3) S_RH_tropical(2:5,3) S_RH_midlat(2:5,3) S_RH_polar(2:5,3)]); colormap(tafov(9),jet); caxis([0 +1]*0.25); 
+tafov(9) = nexttile; imagesc([S_RH_global(2:5,3) S_RH_tropical(2:5,3) S_RH_midlat(2:5,3) S_RH_polar(2:5,3)]); colormap(tafov(9),jet); caxis([0 +1]*0.1); 
   colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
   %t = title('RH STDDEV'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [S_RH_global(2:5,3) S_RH_tropical(2:5,3) S_RH_midlat(2:5,3) S_RH_polar(2:5,3)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
 
 tafov(10) = nexttile; imagesc([Frac_RH_global(2:5,3) Frac_RH_tropical(2:5,3) Frac_RH_midlat(2:5,3) Frac_RH_polar(2:5,3)]); colormap(tafov(10),jet); caxis([0 +1]); 
   colorbar('southoutside');
-  set(gca,'ytick',[1:4],'yticklabel',varnames(2:5))
+  set(gca,'ytick',[1:4],'yticklabel',modelnames(2:5))
   set(gca,'xtick',[1:4],'xticklabel',{'GLOBAL','TROPICAL','MIDLAT','POLAR'}); 
   ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
-  t = title('RH +/-FRAC'); t.FontSize = 10; t.FontWeight = 'normal';
+  %t = title('RH +/-FRAC'); t.FontSize = 10; t.FontWeight = 'normal';
+if iWriteCorrelNumbers > 0
+  wah = [Frac_RH_global(2:5,3) Frac_RH_tropical(2:5,3) Frac_RH_midlat(2:5,3) Frac_RH_polar(2:5,3)]';
+  for iii = 1 : 4
+    for jjj = 1 : 4
+      junk = wah(iii,jjj); junkstr = num2str(junk,'%4.3f');
+      text(iii-0.10,jjj+0.25,junkstr,'Fontsize',7,'Rotation',90);
+    end
+  end
+end
+
 t = text(5,4,'400-1000 mb','Rotation',90');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Get rid of all extra space I can
 ta.Padding = 'none';
