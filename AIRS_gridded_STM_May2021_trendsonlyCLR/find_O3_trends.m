@@ -13,15 +13,15 @@ boo = zeros(nlayO3,72,64); for ijunk = 1 : nlayO3; boo(ijunk,:,:) = maskLFmatr';
 junk0    = boo.*reshape(ppmvLAY3,nlayO3,72,64);
 junkpert = boo.*reshape(ppmvLAYpert3,nlayO3,72,64);
 pcolor(1:64,1:nlayO3,squeeze(nanmean(junk0,2)));
-pcolor(unique(Y(:)),playsjunk,squeeze(nanmean(junk0,2))); shading flat; colorbar; set(gca,'ydir','reverse'); set(gca,'yscale','log'); title('O3 ppmv'); xlabel('Latitude'); ylabel('p(mb)')
+pcolor(unique(Y(:)),playsjunk(1:nlayO3),squeeze(nanmean(junk0,2))); shading flat; colorbar; set(gca,'ydir','reverse'); set(gca,'yscale','log'); title('O3 ppmv'); xlabel('Latitude'); ylabel('p(mb)')
   ylim([1 100])
-pcolor(unique(Y(:)),p2h(playsjunk)/1000,squeeze(nanmean(junk0,2))); shading flat; colorbar; title('O3 ppmv'); xlabel('Latitude'); ylabel('h(km)')
+pcolor(unique(Y(:)),p2h(playsjunk(1:nlayO3))/1000,squeeze(nanmean(junk0,2))); shading flat; colorbar; title('O3 ppmv'); xlabel('Latitude'); ylabel('h(km)')
   ylim([16 48]); ylim([10 60]); 
 
-figure(26); clf; pcolor(unique(Y(:)),p2h(playsjunk)/1000,squeeze(nanmean(junkpert-junk0,2))); shading flat; colorbar; title('\delta O3 ppmv/yr'); xlabel('Latitude'); ylabel('h(km)')
+figure(26); clf; pcolor(unique(Y(:)),p2h(playsjunk(1:nlayO3))/1000,squeeze(nanmean(junkpert-junk0,2))); shading flat; colorbar; title('\delta O3 ppmv/yr'); xlabel('Latitude'); ylabel('h(km)')
   ylim([16 48]); ylim([10 60]); colormap(llsmap5); caxis([-5 +5]*1e-3)
 
-figure(27); clf; pcolor(unique(Y(:)),p2h(playsjunk)/1000,100*squeeze(nanmean(junkpert-junk0,2))./squeeze(nanmean(junk0,2))); 
+figure(27); clf; pcolor(unique(Y(:)),p2h(playsjunk(1:nlayO3))/1000,100*squeeze(nanmean(junkpert-junk0,2))./squeeze(nanmean(junk0,2))); 
   shading flat; colorbar; title('\delta O3 percent/yr'); xlabel('Latitude'); ylabel('h(km)')
   ylim([16 48]); ylim([10 60]); colormap(llsmap5); caxis([-2 +2]*1e-1)
 
@@ -79,6 +79,7 @@ figure(32); clf; aslmap(32,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(100*(duO
 caxis([-1 +1]*2.5); colormap(cmap);  title('d/dt colO3 (percent/decade)'); 
 usa22 = usa2; usa22 = usa22(60-40:60+40,:); colormap(usa22);
 
+deltaO3lat = deltaO3lat(:,1:nlayO3);
 figure(33); clf; pcolor(rlat,pavgLAY(1:nlayO3,1000),smoothn(deltaO3lat(:,1:nlayO3)',1)); colorbar('horizontal'); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaO3lat)); junk = cos(rlat) * ones(1,nlayO3);
 area_wgtO3 = nansum(deltaO3lat.*junk,1)./nansum(junk,1);

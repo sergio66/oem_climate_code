@@ -299,6 +299,7 @@ newz11unc = z22unc;
     trend_rlat64_polar    = find(abs(trend_rlat64) >= 60);
     trend_rlat64_midlat   = find(abs(trend_rlat64) <  60 & abs(trend_rlat64) >= 30);
     trend_rlat64_tropical = find(abs(trend_rlat64) <  30);
+    i10  = find(plays100 >= 10 & plays100 <= 1000);
     i100 = find(plays100 >= 100 & plays100 <= 1000);
     i400 = find(plays100 >= 400 & plays100 <= 1000);
     i10_100   = find(plays100 >= 10  & plays100 <= 100);
@@ -467,7 +468,11 @@ if iUMBC  > 0
   end
   umbcX.fracWV       = umbcX.fracWV(1:100,:);
   umbcX.stemprate    = umbcX.results(:,6)';
-  umbcX.stemprateunc = umbcX.resultsunc(:,6)';
+  if isfield(umbcX,'resultsunc')
+    umbcX.stemprateunc = umbcX.resultsunc(:,6)';
+  else
+    umbcX.stemprateunc = 0.1*umbcX.results(:,6)';
+  end
 
   umbc.stemprate    = umbcX.stemprate;
   umbc.stemprateunc = umbcX.stemprateunc;
@@ -691,6 +696,13 @@ if iUMBC  > 0
   [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate,climcapsL3.stemprate);     thecorr.ST(4) = r;
   [r,chisqr,P] = nanlinearcorrelation(umbc.stemprate',agiss.giss_trend4608(:)); thecorr.ST(5) = r;
   [r,chisqr,P] = nanlinearcorrelation(era5.stemprate',agiss.giss_trend4608(:)); thecorr.ST_ERA5_GISS = r;
+
+  %% do fractional signs
+  zall = [era5.stemprate; merra2.stemprate; airsL3.stemprate; climcapsL3.stemprate; umbc.stemprate; agiss.giss_trend4608(:)'];
+  wall = ones(size(era5.stemprate));
+  wall = cos(YY*pi/180)';
+  %corr(zall')
+  [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos,frac_neg0pos_mean_std_stemp] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
 
   iFig = iFig + 1;
   figure(iFig); plot(umbc.stemprate,era5.stemprate,'r.',umbc.stemprate,merra2.stemprate,'g.',...
@@ -1502,6 +1514,9 @@ if iUMBC  > 0
   plotoptions.yLimits = [100 1000];  
    
   if iY > 0
+    i10  = find(plays100 >= 10 & plays100 <= 1000);
+    i100 = find(plays100 >= 100 & plays100 <= 1000);
+
     iFig = iFig + 1;
     figure(iFig); clf;   
     plotoptions.maintitle = 'RH trends [%/yr]'; 
@@ -1524,6 +1539,12 @@ if iUMBC  > 0
       profile_plots_2x1x2tiledlayout_tall(trend_rlat64,plays100,miaow11,miaow15,miaow12,miaow13,miaow14,iFig,plotoptions2x1x2);
     end
 
+    %zall = [miaow11(:) miaow15(:) miaow12(:) miaow13(:) miaow14(:)];
+    %wall = ones(size(miaow11(:)));
+    miaow11x = miaow11(i100,:);      miaow15x = miaow15(i100,:);      miaow12x = miaow12(i100,:);      miaow13x = miaow13(i100,:);      miaow14x = miaow14(i100,:); 
+    zall = [miaow11x(:) miaow15x(:) miaow12x(:) miaow13x(:) miaow14x(:)];
+    wall = ones(size(miaow11x(:)));
+    [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos,frac_neg0pos_mean_std_RH] = corrplot_weighted_mean_stddev(zall,wall',modelnames);
     iFig = iFig + 1;
     figure(iFig); clf;   
     plot_corr_mean_std_RH
@@ -1560,6 +1581,12 @@ if iUMBC  > 0
       profile_plots_2x1x2tiledlayout_tall(trend_rlat64,plays100,miaow11,miaow15,miaow12,miaow13,miaow14,iFig,plotoptions2x1x2);
     end
 
+    %zall = [miaow11(:) miaow15(:) miaow12(:) miaow13(:) miaow14(:)];
+    %wall = ones(size(miaow11(:)));
+    miaow11x = miaow11(i100,:);      miaow15x = miaow15(i100,:);      miaow12x = miaow12(i100,:);      miaow13x = miaow13(i100,:);      miaow14x = miaow14(i100,:); 
+    zall = [miaow11x(:) miaow15x(:) miaow12x(:) miaow13x(:) miaow14x(:)];
+    wall = ones(size(miaow11x(:)));
+    [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos,frac_neg0pos_mean_std_WVfrac] = corrplot_weighted_mean_stddev(zall,wall',modelnames);
     iFig = iFig + 1;
     figure(iFig); clf;   
     plot_corr_mean_std_WVfrac
@@ -1598,6 +1625,12 @@ if iUMBC  > 0
       profile_plots_2x1x2tiledlayout_tall(trend_rlat64,plays100,miaow11,miaow15,miaow12,miaow13,miaow14,iFig,plotoptions2x1x2);
     end
 
+    %zall = [miaow11(:) miaow15(:) miaow12(:) miaow13(:) miaow14(:)];
+    %wall = ones(size(miaow11(:)));
+    miaow11x = miaow11(i10,:);      miaow15x = miaow15(i10,:);      miaow12x = miaow12(i10,:);      miaow13x = miaow13(i10,:);      miaow14x = miaow14(i10,:); 
+    zall = [miaow11x(:) miaow15x(:) miaow12x(:) miaow13x(:) miaow14x(:)];
+    wall = ones(size(miaow11x(:)));
+    [R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos,frac_neg0pos_mean_std_T] = corrplot_weighted_mean_stddev(zall,wall',modelnames);
     iFig = iFig + 1;
     figure(iFig); clf;   
     plot_corr_mean_std_T
@@ -1622,6 +1655,9 @@ if iUMBC  > 0
     fprintf(1,'currently at iFig = %2i \n',iFig);
   end
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  plot_avg_over_5_models_mean_std
+
   iPrint = input('Print plots for trends paper (-1 [default/+1) : ');
   if length(iPrint) == 0
     iPrint = -1;
@@ -1630,9 +1666,18 @@ if iUMBC  > 0
     print_for_trendspaper
   end
 
+  figure(40); clf; disp('in case you read in MLS a-priori retrievals .. here is dWVfrac/dt')
+  miaow15 = squeeze(nanmean(reshape(umbc.waterrate,100,72,64),2));
+  pcolor(trend_rlat64,plays100,miaow15); set(gca,'ydir','reverse'); ylim([100 1000]); caxis([-1 +1]*0.015);
+  colormap(llsmap5); xlabel('Latitude'); ylabel('Pressure (mb)'); colorbar; shading interp
+
+  look_at_olr_trends
+
   disp('can dbquit, after this are the panel T(z,lat), WV(z,lat), RH(z,lat) 3x1 plots  ... and amplification'); 
   keyboard_nowindow
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   iFig = iFig + 1;

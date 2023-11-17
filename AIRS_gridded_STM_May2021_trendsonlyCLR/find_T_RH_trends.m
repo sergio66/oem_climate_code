@@ -315,6 +315,11 @@ isaac_held_dRH_dST_pgorman_dcolwater_dST
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 boo = mmwPert - mmw0; 
+mmw_rate_lat = nanmean(reshape(boo,72,64),1);
+figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),'linewidth',2); plotaxis2; hl = legend('mmw','stemp','location','best'); title('Trends of SKT and MMW')
+figure(35); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+pause(1)
+
 boo = boo ./ mmw0; boo = 1 * boo ./ results(:,6)'; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
   bad = find(abs(results(:,6)) < 1e-2); boo(bad) = nan;
 aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
@@ -407,6 +412,10 @@ if iAK > 0
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+boo = mmwPert - mmw0;
+figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),'linewidth',2); plotaxis2; hl = legend('mmw','stemp','location','best'); title('Trends of SKT and MMW')
+figure(35); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 
 disp('if you hit Ctrl C and look at find_T_RH_trends.m, you can save these plots ....')
 disp('ret to continue'); pause

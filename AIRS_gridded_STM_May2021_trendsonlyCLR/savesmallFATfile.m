@@ -69,9 +69,9 @@ if junk == 1
       figure(29); figure(30); 
       figure(45); figure(46); 
       deltaRH = real(deltaRH);
-      figure(54); waha = squeeze(nanmean(reshape(deltaRH,100,72,64),2));        pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('UMBC dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
-      figure(55); waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
-      figure(56); waha = save_cov_set.xb_wvz(2,:);                              aslmap(56,rlat65,rlon73,smoothn(reshape(waha,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.015); title('xb(WVfrac(gnd))')
+      figure(54); clf; waha = squeeze(nanmean(reshape(deltaRH,100,72,64),2));        pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('UMBC dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
+      figure(55); clf; waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
+      figure(56); clf; waha = save_cov_set.xb_wvz(2,:);                              aslmap(56,rlat65,rlon73,smoothn(reshape(waha,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.015); title('xb(WVfrac(gnd))')
       era5_stemprate = era5.trend_stemp;
       saver = [saver ' *_ak*_era5* era5_stemprate pjunk20'];
     end

@@ -132,6 +132,8 @@ iDebug = -1;
 %iDebug = 1082
 %iDebug = 1009   %% Southern Midlats
 %iDebug = 2843
+%iDebug = 3169    %% +34 N, have -ve col WV trends
+%iDebug = 1369    %% -37 S, have -ve col WV trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -143,16 +145,6 @@ ia_OorC_DataSet_Quantile = [+0 07 16 -9999]; %% ocb_set = 0 : obs fit, dataset =
 ia_OorC_DataSet_Quantile = [+0 09 05 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-
-ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9, iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9, iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
-ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
-
-ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 
 ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
   anomalydatafile = 'anomaly_globalavg_and_9_averages_timeseries_Q03.mat';   %% needs 454*10/72 = 64 processors
@@ -166,6 +158,16 @@ ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTi
   anomalydatafile = 'anomaly_tile_2515_timeseries_Q04.mat';  %% needs 454/20 = 23 processors
 ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
   anomalydatafile = 'anomaly_tile_2515_timeseries_Q05.mat';  %% needs 454/20 = 23 processors
+
+ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9, iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9, iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
+ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
+
+ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
 
 if ia_OorC_DataSet_Quantile(1) == 2
   get_anomaly_processors
@@ -337,6 +339,10 @@ for iInd = iXX1 : idX : iXX2
   change_important_topts_settings  % Override many settings and add covariance matrix
 %------------------------------------------------------------------------
 
+  % [150 = T(z)+ST 60 = WV(z) 100 = O3(z)]
+  % [210 = surf temp, T(z)        and lowest WV(z)]
+  % [214 = surf temp, lowest T(z) and lowest WV(z)]
+
   topts.iaSequential = [150 60 100 -1];            %% sequential, like SingleFootprint
   topts.iaSequential = [-1 150 60 100 -1];         %% sequential, like SingleFootprint
   topts.iaSequential = [-1 150 60 100 150 60];     %% sequential, like SingleFootprint
@@ -345,9 +351,12 @@ for iInd = iXX1 : idX : iXX2
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
   topts.iaSequential = [150 60];                   %% sequential, like SingleFootprint
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
-  topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
   topts.iaSequential = [60 150 100];               %% sequential, like SingleFootprint
+
   topts.iaSequential = -1;                         %% default one gulp
+  topts.iaSequential = [214 150 60 100 ];          %% sequential, like SingleFootprint
+  topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
+  topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint, but now use 210 !!!!
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
@@ -400,12 +409,43 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+  %% WARNING : set_CO2_CH4_N2O_ESRL.m has an internal setting iVers = 2 where both T and WV are adjusted in lower atmosphere, but that can be annulled by using topts.TfacAdjAtmosphericAmplification (default 0.5, set it to a smaller value or 0)
   iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
   iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
   iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), but I think tooooo much
   iAdjLowerAtmWVfrac = 0;                             %% << WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac >>
   iAdjLowerAtmWVfrac = 0.25;                          %% WAARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+
+  %% Nov 16, 2023 since the mmw trends in tropics are too large
+  iAdjLowerAtmWVfrac = 0.125;                         %% WAARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment, till Nov 2023
+  iAdjLowerAtmWVfrac = 0.250;                         %% WAARNING this also sets WV in lower part of atmos NEW
+  topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
+  topts.TfacAdjAtmosphericAmplification = 0.5;        %% this is an additional adjutment factor for a-prioro WV believe it or not, default till Nov 2023
+  if length(topts.iaSequential) > 1
+    topts.TfacAdjAtmosphericAmplification = 0.1;        %% this is an additional adjutment factor for a-prioro WV believe it or not
+    topts.TfacAdjAtmosphericAmplification = 0.25;       %% this is an additional adjutment factor for a-prioro WV believe it or not
+    topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-prioro WV believe it or not  
+    topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-prioro WV believe it or not  
+    topts.TfacAdjAtmosphericAmplification = 1.00;       %% this is an additional adjutment factor for a-prioro WV believe it or not , pretty good BUT JUST LEAVE IT AS 1.0
+  end
+  
+  if driver.iLat <= 31
+    %% we seem to need double or triple this factor in the Southern Hemisphere compared to Northern (too much ocean?????)
+
+    %% so let it be triple at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
+    %% so the slope = (3-1)/(32-1) = -2/31
+    intercept = 3;
+
+    %% so let it be double at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
+    %% so the slope = (2-1)/(32-1) = -1/31
+    intercept = 2;
+
+    slope = (1-intercept)/31;
+    yjunk = slope * (driver.iLat - 1) + intercept;
+    topts.TfacAdjAtmosphericAmplification = topts.TfacAdjAtmosphericAmplification * yjunk;
+    fprintf(1,'JOB = %4i latbin = %2i mult = %8.6f topts.TfacAdjAtmosphericAmplification = %8.6f \n',JOB,driver.iLat,yjunk,topts.TfacAdjAtmosphericAmplification);
+  end
 
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT
   topts.tie_sst_lowestlayer = +1;  %% testing dataset=4,iQuantil=16,ocb_set=0 (the JPL SOunder meeting Apr 2022, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
@@ -419,6 +459,16 @@ for iInd = iXX1 : idX : iXX2
   end
 
   topts.ocb_set = ia_OorC_DataSet_Quantile(1);
+
+  % << set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m >>
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == -1   : set all
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +1   : set WV
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +2   : set T/ST
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +3   : set O3
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +4   : set T
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +5   : set ST
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +10  : set lower WV
+  %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +100 : set lower WV/upper WV with MLS
 
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +2;  %% use T+ST
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +40; %% use T only in the lower trop to "start things" in the polar region, based on BT1231
@@ -728,12 +778,13 @@ end
    end
 
    % Plot Results
+
 if (driver.iLat-1)*72 + driver.iLon == iDebug
 
   %disp('Hit return for next latitude'); pause
   pause(0.1)
 
-  iNumYears = settings.iNumYears;
+  iNumYears = driver.iNumYears;
   read_fileMean17years
 
   print_cloud_params(hMean17years,pMean17years,driver.iibin); 

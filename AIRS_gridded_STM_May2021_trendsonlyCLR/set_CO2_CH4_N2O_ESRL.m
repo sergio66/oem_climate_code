@@ -70,6 +70,7 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
       %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
       dBT1231 = 0.0025/2;
       dBT1231 = driver.rateset.rates(1520); 
+      dBT1231 = abs(driver.rateset.rates(1520));  %%% new 
       dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
 
       %%% see my notes, BK 45
@@ -84,9 +85,22 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
       dBT1231_WV = 0.0;
       dBT1231    = 0.0;
     end
+
+    iVers = 0;  %% before noon Mar 11,2023, only sets WV   LOWEST 2 layers
+    iVers = 1;  %% after  noon Mar 11,2023,      sets WV   LOWEST 6 layers
+    iVers = 2;  %% after       Mar 27,2023,      sets WV+T LOWEST 6 layers and till Nov 2023
+    iVers = 3;  %% after       Nov 16, 2023      sets WV   LOWEST LAYERS till about 500 mb
     
     iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;
     iAdjLowerAtmWVfracX = 0.0;
+
+    TfacAdjAtmosphericAmplification = 1/4; %% factor of 1/4 is pretty good *****
+    TfacAdjAtmosphericAmplification = 1/5; %% factor of 1/5, nah not so good, dCOWV/dt << dcolWV/dt for ERA5
+    TfacAdjAtmosphericAmplification = 1/3; %% factor of 1/3 is pretty good *****
+    TfacAdjAtmosphericAmplification = 1/2; %% factor of 1/2 is probably too large, messes up dRH/dt by making that too big at surface     
+      topts.iRHdelta0adjVers = iVers;
+      TfacAdjAtmosphericAmplification = topts.TfacAdjAtmosphericAmplification;
+      topts.TfacAdjAtmosphericAmplification = TfacAdjAtmosphericAmplification;
  
     %% code before 10 July 2023
     %% if abs(iAdjLowerAtmWVfrac-1) < eps
@@ -100,31 +114,26 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     %% code after 10 July 2023
     if iAdjLowerAtmWVfrac > 0
       %% see Bk 46 : dWVfrac/dt =  1/RH dRH/dt + Lo/Rv 
-      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac;
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac;                                          %% orig, too low
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 10;   %% new, little too high
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 8;    %% new, should be ok
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 6;    %% new, should be ok
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 5;    %% new, should be ok
     else
       iAdjLowerAtmWVfracX = 0.0;
     end
 
-    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> WVfractional change needed for constant RH over ocean %8.6f frac/yr with iAdjLowerAtmWVfracX = %8.6f\n',driver.rateset.rates(1520),dBT1231_WV,iAdjLowerAtmWVfracX);
+    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> iVers = %2i WVfractional change needed for constant RH over ocean %8.6f frac/yr with TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac = %8.6f %8.6f\n',...
+           driver.rateset.rates(1520),iVers,dBT1231_WV,TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac);
+    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> iVers = %2i Tadj over ocean                                       %8.6f with TfacAdjAtmosphericAmplification = %8.6f \n',driver.rateset.rates(1520),iVers,dBT1231,TfacAdjAtmosphericAmplification)
+
     if iAdjLowerAtmWVfracX > eps
-      iVers = 0;  %% before noon Mar 11,2023, only sets WV   LOWEST 2 layers
-      iVers = 1;  %% after  noon Mar 11,2023,      sets WV   LOWEST 6 layers
-      iVers = 2;  %% after       Mar 27,2023,      sets WV+T LOWEST 6 layers
-
-      TfacAdjAtmosphericAmplification = 1/4; %% factor of 1/4 is pretty good *****
-      TfacAdjAtmosphericAmplification = 1/5; %% factor of 1/5, nah not so good, dCOWV/dt << dcolWV/dt for ERA5
-      TfacAdjAtmosphericAmplification = 1/3; %% factor of 1/3 is pretty good *****
-      TfacAdjAtmosphericAmplification = 1/2; %% factor of 1/2 is probably too large, messes up dRH/dt by making that too big at surface
-
-      topts.iRHdelta0adjVers = iVers;
-      topts.TfacAdjAtmosphericAmplification = TfacAdjAtmosphericAmplification;
-
-      fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> iVers,TfacAdjAtmosphericAmplification = %2i %8.6f \n',iVers,TfacAdjAtmosphericAmplification)
 
       if iVers == 0
         %% tested and  savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers0_march11_2023.mat, commit on Sat Mar 11 19:17:59 2023 -0500
         xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfracX;
         xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfracX;
+
       elseif iVers == 1
         %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers1_march11_2023.mat, commits on Sun Mar 12 10:01:58 2023 -0400 and Sun Mar 12 09:51:40 2023 -0400
         xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 0/6);
@@ -134,16 +143,11 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
         xb(6+length(driver.jacobian.water_i)-4) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 4/6);
         xb(6+length(driver.jacobian.water_i)-5) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 5/6);      
         xb(6+length(driver.jacobian.water_i)-6) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 6/6);
+        fprintf(1,'miaow1 = %8.6f \n',xb(6+length(driver.jacobian.water_i)-0));
+
       elseif iVers == 2
         %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/test7_guessstartWV_Vers1_march11_2023.mat, commits on Sun Mar 12 10:01:58 2023 -0400 and Sun Mar 12 09:51:40 2023 -0400
-        xb(6+length(driver.jacobian.water_i)-0) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 0/6);
-        xb(6+length(driver.jacobian.water_i)-1) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 1/6);
-        xb(6+length(driver.jacobian.water_i)-2) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 2/6);
-        xb(6+length(driver.jacobian.water_i)-3) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 3/6);
-        xb(6+length(driver.jacobian.water_i)-4) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 4/6);
-        xb(6+length(driver.jacobian.water_i)-5) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 5/6);      
-        xb(6+length(driver.jacobian.water_i)-6) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - 6/6);
-       
+        %% used since March 12, 2023
         xb(6+length(driver.jacobian.temp_i)-0) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 0/6);
         xb(6+length(driver.jacobian.temp_i)-1) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 1/6);
         xb(6+length(driver.jacobian.temp_i)-2) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 2/6);
@@ -151,8 +155,20 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
         xb(6+length(driver.jacobian.temp_i)-4) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 4/6);
         xb(6+length(driver.jacobian.temp_i)-5) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 5/6);      
         xb(6+length(driver.jacobian.temp_i)-6) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 6/6);
-      end
+        fprintf(1,'miaow2 = %8.6f \n',xb(6+length(driver.jacobian.water_i)-0));
 
+      elseif iVers == 3
+        %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/   ....
+        %% used since Nov 16, 2023
+        boo = find(plays >= 500);
+        for ix = 1 : length(boo)+1
+          xb(6+length(driver.jacobian.water_i)-(ix-1)) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - (ix-1)/length(boo));
+        end
+     
+        miaow2 = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX;
+        fprintf(1,'miaow2 = %8.6f from OLD pre Nov 2003 dBTT1231 adj .... while miaow3 = %8.6f from NEW, CORRECT d(RH) based adjustment \n',miaow2,xb(6+length(driver.jacobian.water_i)-0));
+
+      end
     end
 
   elseif settings.co2lays == 3

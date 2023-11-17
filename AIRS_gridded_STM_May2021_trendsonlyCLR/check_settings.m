@@ -67,7 +67,7 @@ topts_allowedparams = [{'ocb_set'},{'numchan'},{'chan_LW_SW'},{'iChSet'},{'set_t
         	       {'addco2jacs'},{'obs_corr_matrix'},{'invtype'},{'tie_sst_lowestlayer'},{'iNlays_retrieve'},...
                        {'descORasc'},{'dataset'},{'iXJac'},{'co2lays'},{'iDoStrowFiniteJac'},...
                        {'iFixTz_NoFit'},{'iFixWV_NoFit'},{'iFixO3_NoFit'},{'iFixTG_NoFit'},{'iaSequential'}...
-                       {'resetnorm2one'},{'UMBCvsERAjac'},{'iSergioCO2'},{'iAdjLowerAtmWVfrac'},{'iVersQRenorm'},{'rCoupleT_WV'},{'iLatX'},{'model'}];
+                       {'resetnorm2one'},{'UMBCvsERAjac'},{'iSergioCO2'},{'iAdjLowerAtmWVfrac'},{'TfacAdjAtmosphericAmplification'},{'iVersQRenorm'},{'rCoupleT_WV'},{'iLatX'},{'model'}];
 
 %disp('settings before')
 %settings
@@ -93,6 +93,11 @@ topts = settings;
 %topts
 %xyz = fieldnames(topts); length(xyz)
 %keyboard_nowindow
+
+if length(topts.iaSequential) > 0
+  disp('topts.iaSequential = ')
+  topts.iaSequential
+end
 
 %disp('settings after')
 %settings

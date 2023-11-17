@@ -21,4 +21,10 @@ figure(23); aslprint([dir0 '/200mb_tztrends_lat_lon_5panels20_years.pdf']);
 figure(26); aslprint([dir0 '/500mb_tztrends_lat_lon_5panels20_years.pdf']);
 figure(29); aslprint([dir0 '/800mb_tztrends_lat_lon_5panels20_years.pdf']);
 
+%figure(1); aslprint([dir0 '/wvfrac_trends_20years_MLS_UA.pdf']);
+%figure(1); aslprint([dir0 '/wvfrac_trends_20years_ZeroAP_UA.pdf']);
 
+figure(41); aslprint([dir0 '/plot_avg_over_6_models_mean_std_skt_trends.pdf']);
+figure(42); aslprint([dir0 '/plot_avg_over_5_models_mean_std_RH_trends.pdf']);
+figure(43); aslprint([dir0 '/plot_avg_over_5_models_mean_std_WVfrac_trends.pdf']);
+figure(44); aslprint([dir0 '/plot_avg_over_5_models_mean_std_T_trends.pdf']);

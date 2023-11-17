@@ -651,25 +651,29 @@ fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f
 
 for ii = 1 : 12;  figure(ii); clf; end;
 
-wah = resultsTunc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2));  figure(1); clf; pcolor(rlat,pavg,wah); title('\sigma T'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp; 
+wah = resultsTunc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2));  
+  figure(1); clf; pcolor(rlat,pavg,wah); title('\sigma T'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp; 
   set(gca,'yscale','log'); ylim([1 1000])
-wah = resultsWVunc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); figure(2); clf; pcolor(rlat,pavg,wah); title('\sigma WV'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
-wah = resultsO3unc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); figure(3); clf; pcolor(rlat,pavg,wah); title('\sigma O3'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+wah = resultsWVunc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
+  figure(2); clf; pcolor(rlat,pavg,wah); title('\sigma WV'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+wah = resultsO3unc'; wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
+  figure(3); clf; pcolor(rlat,pavg,wah); title('\sigma O3'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+
+% load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat
+% load latB64.mat
+% rlat65 = latB2; rlon73 = -180 : 5 : +180;
+% rlon = -180 : 5 : +180;  rlat = latB2; 
+% rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+% rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+% [Y,X] = meshgrid(rlat,rlon);
+% X = X; Y = Y;
+do_XX_YY_from_X_Y
 
 show_S_N
 disp('ret to continue'); pause;
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-%load /home/motteler/shome/obs_stats/airs_tiling/latB64.mat
-load latB64.mat
-rlat65 = latB2; rlon73 = -180 : 5 : +180;
-rlon = -180 : 5 : +180;  rlat = latB2; 
-rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-[Y,X] = meshgrid(rlat,rlon);
-X = X; Y = Y;
 
 addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
 [salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
@@ -765,10 +769,10 @@ figure(11); ylim([-1 +1]*0.1/2)
 figure(12); ylim([-1 +1]*5)
 for ii = 15:20; figure(ii); colormap jet; caxis([0 1]*10); end
 
-figure(21);
+figure(21); clf
 if isfield(oem,'spectral_deltan00')
-  plot(f,mean(rates'),f,mean(spectral_deltan00'))
-  hl = legend('actual data','what was fitted','location','best'); plotaxis2;
+  plot(f,mean(rates'),f,mean(spectral_deltan00')); plotaxis2;
+  hl = legend('actual data','what was fitted','location','best');
   title('After doing data-sum(jac(i)*startxb(i)')
 end
 
