@@ -39,9 +39,18 @@ jett = jet; jett(1,:) = 1; colorbar; colormap(jett);
 %for ii = 19:21; figure(ii); colorbar; shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); end
 
 figure(23); 
-  plot(f,nanmean(rates(:,ind),2),'b',f,nanmean(fits(:,ind),2),'r',f,nanmean(rates(:,ind),2)-nanmean(fits(:,ind),2),'k'); plotaxis2;
+  plot(f,rates(:,ind(1)),'b',f,fits(:,ind(1)),'r',f,rates(:,ind(1))-fits(:,ind(1)),'k',...
+       f,era5spectralrates.rates(:,ind(1)),'g',f,rates(:,ind(1))-era5spectralrates.rates(:,ind(1)),'c','linewidth',2); plotaxis2;
   title(['Latbin ' num2str(iCompare,'%02d') ' SPECTRA dBT/dt K/yr']); 
-  hl = legend('input','fit','diff','location','best'); xlim([650 1650])
+  hl = legend('input','fit','diff','era5 (no CO2/CH4)','obs-era5','location','best'); xlim([650 1650])
+ylim([-0.1 +0.05])
+
+figure(23); 
+  plot(f,nanmean(rates(:,ind),2),'b',f,nanmean(fits(:,ind),2),'r',f,nanmean(rates(:,ind),2)-nanmean(fits(:,ind),2),'k',...
+       f,nanmean(era5spectralrates.rates(:,ind),2),'g',f,nanmean(rates(:,ind),2)-nanmean(era5spectralrates.rates(:,ind),2),'c','linewidth',2); plotaxis2;
+  title(['Latbin ' num2str(iCompare,'%02d') ' SPECTRA dBT/dt K/yr']); 
+  hl = legend('input','fit','diff','era5 (no CO2/CH4)','obs-era5','location','best'); xlim([650 1650])
+ylim([-0.1 +0.05])
 
 figure(24); 
   pcolor(f,rlon,rates(:,ind)'); shading interp; colorbar; caxis([-1 +1]*0.1); xlabel('f cm-1'); ylabel('lonbin'); title('dBT/dt K/yr'); xlim([640 1640])
@@ -72,6 +81,18 @@ figure(26);
   line([-180 +180],[1200 1200],'color','k','linewidth',2);
   line([-180 +180],[1400 1400],'color','k','linewidth',2);
   line([-180 +180],[1600 1600],'color','k','linewidth',2);
+
+figure(27); clf
+  plot(rlon,mmwPert(ind)-mmw0(ind),'b',rlon,mmwPertERA5(ind)-mmw0(ind),'r'); plotaxis2; hl = legend('UMBC','ERA5','location','best'); ylabel('dmmw/dt'); xlabel('lonbin');
+
+figure(28); clf
+  %aslmap(28,rlat65,rlon73,smoothn((reshape(mmwPert-mmw0,72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d mmw/dt');  caxis([-1 +1]*0.2)
+  scatter_coast(reshape(phmm.rlon,72,64),reshape(phmm.rlat,72,64),100,smoothn(reshape(mmwPert-mmw0,72,64),1)); caxis([-1 +1]*0.2); colormap(llsmap5); hold on; plot(phmm.rlon(ind),phmm.rlat(ind),'k.-'); hold off
+
+figure(29); clf
+  aslmap(29,rlat65,rlon73,smoothn((reshape(100*(mmwPert-mmw0)./mmw0,72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d mmw/dt');  caxis([-1 +1]*1.5)
+
+figure(30); plot(p.rlon(ind),p.landfrac(ind)); title('landfrac'); xlabel('longitude');
 
 %iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
 iComparex = input('Enter rlat over which to compare ERA5 vs UMBC trends (-85 : +85, -9999 to stop) : ');

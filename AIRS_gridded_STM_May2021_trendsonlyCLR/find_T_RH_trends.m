@@ -71,6 +71,16 @@ if iAK > 0
   scatter_coast(pertERA5.rlon,pertERA5.rlat,50,colwaterpertERA5-colwater0); title('ERA5 \delta colwater mm/yr');  caxis([-1 +1]*0.2)
 end
 
+%% 1 kg of water over 1 m2 = height of 1/1000 = 0.001 m = 0.1 cm = 1 mm ==> 1 kg/m2 = 1 mm water    ==> eg 0.5 mmw/year = 0.5 kg/m2/year
+[m,s,m0,s0] = weighted_mean_stddev(colwaterpertERA5-colwater0,cos(p.rlat*pi/180));
+  fprintf(1,'cosine weighted ERA5 mmw absolute trends = %8.6f +/- %8.6f mmH2O/yr or kg/m2/yr \n',m,s);
+[m,s,m0,s0] = weighted_mean_stddev(100*(colwaterpertERA5-colwater0)./colwater0,cos(p.rlat*pi/180));
+  fprintf(1,'cosine weighted ERA5 mmw percent  trends = %8.6f +/- %8.6f mmH2O/yr or kg/m2/yr \n',m,s);
+[m,s,m0,s0] = weighted_mean_stddev(mmwPert - colwater0,cos(p.rlat*pi/180));
+  fprintf(1,'cosine weighted UMBC mmw absolute trends = %8.6f +/- %8.6f mmH2O/yr  or kg/m2/yr \n',m,s);
+[m,s,m0,s0] = weighted_mean_stddev(100*(mmwPert-colwater0)./colwater0,cos(p.rlat*pi/180));
+  fprintf(1,'cosine weighted UMBC mmw percent  trends = %8.6f +/- %8.6f mmH2O/yr or kg/m2/yr \n',m,s);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 i005 = find(p.plevs(1:90,2300) >= 005,1);

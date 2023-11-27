@@ -2,7 +2,7 @@ addpath /asl/matlib/science/
 addpath /home/sergio/MATLABCODE/TIME
 
 if ~exist('btanom')
-  load /asl/s1/sergio/JUNK/anomaly_ALL_QO3.mat
+  load /asl/s1/sergio/JUNK/anomaly_ALL_Q03.mat
   daysSince2002 = change2days(yy,mm,dd,2002);
   load h2645structure.mat
 end

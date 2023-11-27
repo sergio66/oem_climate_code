@@ -47,13 +47,59 @@ load h2645structure.mat
 
 iCnt = 0;
 iQuant = 3;
+iChID  = 0213;  %% 0704 cm-1     find(h.vchan >= 0704,1)
+iChID  = 1145;  %% 1040 cm-1     find(h.vchan >= 1040,1)
+iChID  = 2025;  %% 1519 cm-1     find(h.vchan >= 1519,1)
 iChID  = 1861;  %% 1419 cm-1     find(h.vchan >= 1419,1)
 iChID  = 1520;  %% 1231 cm-1     find(h.vchan >= 1231,1)
+iChID  = 1511;  %% 1226.82 cm-1  find(h.vchan >= 1226.65,1)
+
+%{
+addpath /asl/matlib/h4tools
+addpath /asl/matlib/aslutil
+[h,ha,p,pa] = rtpread('/asl/rtp/airs/airs_l1c_v674/clear/2023/ecmwf_airicrad_day022_clear.rtp');
+
+% ~/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/tile_fits_quantiles.m
+% for qi = qi1 : qi2
+%    % r1231 = squeeze(d.rad_quantile_desc(:,1520,qi));
+%    % r1228 = squeeze(d.rad_quantile_desc(:,1513,qi));
+%    r1231 = squeeze(d.rad_quantile_desc(k_desc,1520,qi));
+%    r1228 = squeeze(d.rad_quantile_desc(k_desc,1513,qi));
+%    bt1231 = rad2bt(fairs(1520),r1231);
+%    bt1228 = rad2bt(fairs(1513),r1228);
+% end
+
+boo = [1511 1520];
+
+addpath /home/sergio/MATLABCODE
+load /home/sergio/KCARTA/L2SComparisons/l2s_kc122_H16_605_2830.mat
+[fc,qc] = convolve_airs(double(w),double(d),double(h.ichan));
+semilogy(w,d(:,1),fc,qc(:,1),fc(boo),qc(boo,1),'ro'); xlim([1220 1240])
+
+plot(p.rlon,p.rlat,'.')
+lala = find(p.rlat >= 0,1);
+
+robs = nanmean(p.robs1,2);
+robs = p.robs1(:,lala);
+
+plot(h.vchan,rad2bt(h.vchan,robs),h.vchan(boo),rad2bt(h.vchan(boo),robs(boo)),'ro'); xlim([1220 1235])
+
+%}
 
 if iHuge < 0
-  junk = input('Enter wavenumber to look for : ');
-  iChID = find(h.vchan >= junk,1);
-  fprintf(1,'iChID = %4i corresponds to %6.2f cm-1 \n',h.ichan(iChID),h.vchan(iChID))
+  junk = -1;
+  while junk < 0
+    junk = input('Enter wavenumber to look for : ');
+    iChID = find(h.vchan >= junk,1);
+    fprintf(1,'iChID = %4i corresponds to SARTA ID %4i %6.2f cm-1 \n',iChID,h.ichan(iChID),h.vchan(iChID))
+    junk = input('Proceed (-1/+1[default]) : ');
+    if length(junk) == 0
+      junk = +1;
+    end
+    if junk < 0
+      return
+    end
+  end
 end
 
 for jj = 1 : 64
@@ -91,6 +137,11 @@ rtime = a.rtime_desc;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+addpath /asl/matlib/science
+addpath /home/sergio/MATLABCODE/PLOTTER
+addpath /home/sergio/MATLABCODE/TIME
+addpath /home/sergio/MATLABCODE/COLORMAP
+
 do_XX_YY_from_X_Y
 [salti, landfrac] = usgs_deg10_dem(Y,X);
 lf = landfrac; lf = lf(:);
@@ -122,7 +173,7 @@ if iHuge < 0
   oniS = oni(1,1); oniE = oni(aaa,1);
   oni = oni(1:aaa,2:bbb); oni = oni'; oni = oni(:);
   onidd = 1:length(oni); onidd = (onidd-1)/12 + oniS;
-  plot(onidd,10*oni,'k',2002+daysSince2002/365,smooth(100*nanmean(btanom,1),10),'b','linewidth',2); xlim([2002 2023]);
+  plot(onidd,10*oni,'k',2002+daysSince2002/365,smooth(100*nanmean(btanom,1),10),'b','linewidth',2); plotaxis2; xlim([2002 2023]); ylim([-1 +1]*50)
   
   P = polyfit(daysSince2002,nanmean(btanom,1),1); YP = polyval(P,daysSince2002);
   PX = polyfit(daysSince2002,nanmean(btanom.*coslat,1),1); YPX = polyval(PX,daysSince2002);
@@ -138,7 +189,9 @@ if iHuge < 0
   hl = legend('ONI',['BT' num2str(h.vchan(iChID),'%6.2f') ' cm-1 anomaly'],'location','best');
   hl = legend('ONI',['BT' num2str(h.vchan(iChID),'%6.2f')],'location','best');
 
-else
+  [U,S,V] = svd(btanom,'econ');
+
+elseif iHuge > 0
 
   figure(3);
   daysSince2002 = change2days(yy,mm,dd,2002);

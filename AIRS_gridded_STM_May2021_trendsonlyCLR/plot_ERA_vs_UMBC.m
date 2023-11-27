@@ -52,12 +52,20 @@ end
 
 %iCompare = input('Enter latbin over which to compare ERA5 vs UMBC trends (1:64, -1 to stop) : ');
 iComparex = input('Enter rlat over which to compare ERA5 vs UMBC trends (-85 : +85, -9999 to stop) : ');
-if iComparex > -91
+if iComparex > -91 & iComparex < +91
   iCompare = find(rlat > iComparex,1);
 else
   iCompare = -1;
 end
 fprintf(1,'you entered latitude %8.4f which corresponds to latbin %2i \n',iComparex,iCompare)
+if iCompare > 0
+  if ~exist('era5spectralrates')
+    era5spectralrates    = load('/asl/s1/sergio/JUNK/test7_retrieve_syntheticERA5_march14_2023v2.mat','rates','nedt');
+  end
+  for junk = 19 : 28
+    figure(junk); clf;
+  end
+end
 while iCompare > 0 & iCompare < 65
   do_compare_ERA5_UMBC_latbin
 end

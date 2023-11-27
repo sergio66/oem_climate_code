@@ -102,12 +102,13 @@ if abs(iLoad) <= 1
   ak = driver.oem.ak_water;
   waterrate_akF(ix,:) = (ak * waterrate_ak1(ix,:)')';
   waterratestdF(ix,:) = (ak * waterratestd1(ix,:)')';
+  playsRETW = playsRET(1:length(water));
   figure(2); clf
-    shadedErrorBarYLog10(water,playsRET,watersigs,'bo-');
+    shadedErrorBarYLog10(water,playsRETW,watersigs,'bo-');
     hold on
-    semilogy(water,log10(playsRET),'bo-');
-    shadedErrorBarYLog10(waterrate_ak1(ix,:),playsRET,waterratestd1(ix,:),'rd-');
-    shadedErrorBarYLog10(waterrate_akF(ix,:),playsRET,waterratestdF(ix,:),'gx-');
+    semilogy(water,log10(playsRETW),'bo-');
+    shadedErrorBarYLog10(waterrate_ak1(ix,:),playsRETW,waterratestd1(ix,:),'rd-');
+    shadedErrorBarYLog10(waterrate_akF(ix,:),playsRETW,waterratestdF(ix,:),'gx-');
     hold off; 
     ax = axis; line([ax(1) ax(2)],log10([aux.spres  aux.spres]),'color','g','linewidth',2)
     ax = axis; line([ax(1) ax(2)],log10([aux.trop_P aux.trop_P]),'color','c','linewidth',2)
@@ -133,11 +134,11 @@ if abs(iLoad) <= 1
   ptemprate_akF(ix,:) = (ak * ptemprate_ak1(ix,:)')';
   ptempratestdF(ix,:) = (ak * ptempratestd1(ix,:)')';
   figure(3); clf
-    shadedErrorBarYLog10(temp,playsRET,tempsigs,'bo-');
+    shadedErrorBarYLog10(temp,playsRETW,tempsigs,'bo-');
     hold on
-    semilogy(temp,log10(playsRET),'bo-');
-    shadedErrorBarYLog10(ptemprate_ak1(ix,:),playsRET,ptempratestd1(ix,:),'rd-'); 
-    shadedErrorBarYLog10(ptemprate_akF(ix,:),playsRET,ptempratestdF(ix,:),'gx-'); 
+    semilogy(temp,log10(playsRETW),'bo-');
+    shadedErrorBarYLog10(ptemprate_ak1(ix,:),playsRETW,ptempratestd1(ix,:),'rd-'); 
+    shadedErrorBarYLog10(ptemprate_akF(ix,:),playsRETW,ptempratestdF(ix,:),'gx-'); 
     hold off; 
     ax = axis; line([ax(1) ax(2)],log10([aux.spres  aux.spres]),'color','g','linewidth',2)
     ax = axis; line([ax(1) ax(2)],log10([aux.trop_P aux.trop_P]),'color','c','linewidth',2)
@@ -163,11 +164,11 @@ if abs(iLoad) <= 1
   o3rate_akF(ix,:) = (ak * o3rate_ak1(ix,:)')';
   o3ratestdF(ix,:) = (ak * o3ratestd1(ix,:)')';
   figure(4); clf
-    shadedErrorBarYLog10(ozone,playsRET,ozonesigs,'bo-');
+    shadedErrorBarYLog10(ozone,playsRETW,ozonesigs,'bo-');
     hold on
-    semilogy(ozone,log10(playsRET),'bo-');
-    shadedErrorBarYLog10(o3rate_ak1(ix,:),playsRET,o3ratestd1(ix,:),'rd-'); 
-    shadedErrorBarYLog10(o3rate_akF(ix,:),playsRET,o3ratestdF(ix,:),'gx-'); 
+    semilogy(ozone,log10(playsRETW),'bo-');
+    shadedErrorBarYLog10(o3rate_ak1(ix,:),playsRETW,o3ratestd1(ix,:),'rd-'); 
+    shadedErrorBarYLog10(o3rate_akF(ix,:),playsRETW,o3ratestdF(ix,:),'gx-'); 
     hold off; 
     ax = axis; line([ax(1) ax(2)],log10([aux.spres  aux.spres]),'color','g','linewidth',2)
     ax = axis; line([ax(1) ax(2)],log10([aux.trop_P aux.trop_P]),'color','c','linewidth',2)

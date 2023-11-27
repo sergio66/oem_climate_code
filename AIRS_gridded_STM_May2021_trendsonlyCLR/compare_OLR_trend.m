@@ -1,5 +1,8 @@
 addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+addpath /asl/matlib/h4tools
+
+[~,~,pjunk,~] = rtpread('summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_PERTv1.rtp');
 
 load llsmap5
 load latB64.mat
@@ -71,7 +74,9 @@ junk = load('era5_monthly_olrtrends_directcomputation_20years.mat');
 
 plot(meanvaluebin(latB2),nanmean(reshape(directERA5.trend_olr_clr,72,64),1),'rx-',...
      meanvaluebin(latB2),nanmean(reshape(ecRad_ERA5_20years.trend_olr_ERA5,72,64),1),'m',meanvaluebin(latB2),nanmean(reshape(ecRad_ERA5_20years.trend_olr,72,64),1),'b','linewidth',2)
-title('ERA5 OLR trends'); hl = legend('direct from their OLR timeseries','direct from their OLR timeseries (again)','ERA5 profiles --> ecRad --> trends','location','best');
+     plotaxis2; title('ERA5 OLR trends'); hl = legend('direct from their OLR timeseries','direct from their OLR timeseries (again)','ERA5 profiles --> ecRad --> trends','location','best');
+plot(meanvaluebin(latB2),nanmean(reshape(directERA5.trend_olr_clr,72,64),1),'rx-',meanvaluebin(latB2),nanmean(reshape(ecRad_ERA5_20years.trend_olr,72,64),1),'b','linewidth',2)
+  plotaxis2; title('ERA5 OLR trends'); hl = legend('direct from their OLR timeseries','ERA5 profiles --> ecRad --> trends','location','best');
 
 %% this is from computing ERA5 T(z),WV(z),SKT trends, then computing OLR trends
 junk = load(['/asl/s1/sergio/JUNK/olr_feedbacks_AIRSL3_ERA5_CMIP6_numyears_' num2str(iNumYears,'%02d') '.mat'],'era5_spectral_olr');
@@ -136,16 +141,18 @@ figure(iFig+2); clf
 plot(ceres_trend.trend_lat,ceres_trend.trend_lw_clr,ceres_trend.trend_lat,ceres_trend.trend_lw,'linewidth',6);
   junk64.ceres = (interp1(ceres_trend.trend_lat,ceres_trend.trend_lw_clr,meanvaluebin(latB2),[],'extrap')');
   if iCorT > 0
-    junk4608.ceres = junkC.ceres_trend.trend_toa_lw_clr_4608;
+    junk4608.ceres    = junkC.ceres_trend.trend_toa_lw_clr_4608;
+    junk4608.ceresall = junkC.ceres_trend.trend_toa_lw_all_4608;
   elseif iCorT < 0
-    junk4608.ceres = junkT.ceres_trend.trend_toa_lw_clr_4608;
+    junk4608.ceres    = junkT.ceres_trend.trend_toa_lw_clr_4608;
+    junk4608.ceresall = junkT.ceres_trend.trend_toa_lw_all_4608;
   end
 miaow = era5_spectral_olr.perts9999.atm_skt_ghg_ecRad.clr - era5_spectral_olr.olr0_ecRad.clr;;
   hold on; plot(meanvaluebin(latB2),nanmean(reshape(miaow,72,64),1),'linewidth',2);
   junk64.era5 = nanmean(reshape(miaow,72,64),1);
   junk4608.era5 = miaow;
 miaow = merra2_spectral_olr.perts9999.atm_skt_ghg_ecRad.clr - merra2_spectral_olr.olr0_ecRad.clr;;
-  hold on; plot(meanvaluebin(latB2),nanmean(reshape(miaow,72,64),1),'linewidth',2);
+  hold on; plot(meanvaluebin(latB2),nanmean(reshape(miaow,72,64),1),'s-','linewidth',2);
   junk64.merra2 = nanmean(reshape(miaow,72,64),1);
   junk4608.merra2 = miaow;
 miaow = umbc_spectral_olr.perts9999.atm_skt_ghg_ecRad.clr - umbc_spectral_olr.olr0_ecRad.clr;;
@@ -168,6 +175,12 @@ hold off; plotaxis2;
 hl = legend('CERES clrsky','CERES allsky','ERA5','MERRA2','THIS WORK','AIRSL3','CLIMAPS L3','ERA5 clrsky directly from files','location','best','fontsize',10); 
 xlabel('Latitude'); title('Flux Trend'); ylabel('Flux/yr W/m2/yr'); 
 
+figure(iFig+3); clf;
+plot(ceres_trend.trend_lat,ceres_trend.trend_lw_clr,meanvaluebin(latB2),nanmean(reshape(junk4608.ceres,72,64),1),'linewidth',2); 
+plotaxis2; hl = legend('from 180 latbins','from 72x64','location','best'); title('CERES OLR clr trends')
+plot(ceres_trend.trend_lat,ceres_trend.trend_lw_clr,ceres_trend.trend_lat,smooth(ceres_trend.trend_lw_clr,3),meanvaluebin(latB2),nanmean(reshape(junk4608.ceres,72,64),1),'linewidth',2);
+plotaxis2; hl = legend('from 180 latbins','smmoth(180 latbins,3)','from 72x64','location','best'); title('CERES OLR clr trends')
+
 figure(iFig+3); clf; 
 plot(meanvaluebin(latB2),[junk64.ceres; junk64.era5; junk64.merra2; junk64.umbc; junk64.airsL3; junk64.climcaps; junk64.era5_direct],'linewidth',2);
 plotaxis2; hl = legend('CERES clrsky','ERA5','MERRA2','THIS WORK','AIRSL3','CLIMAPS L3','ERA5 clrsky directly from files','location','best','fontsize',10); 
@@ -178,7 +191,7 @@ plot(meanvaluebin(latB2),junk64.era5_direct - [junk64.ceres; junk64.era5; junk64
 plotaxis2; hl = legend('CERES clrsky','ERA5','MERRA2','THIS WORK','AIRSL3','CLIMAPS L3','ERA5 clrsky directly from files','location','best','fontsize',10); 
 xlabel('Latitude'); title('\delta Flux Trend : ERA5direct - X'); ylabel('Flux/yr W/m2/yr'); 
 
-disp('\n Comparing to ERA_deirect ...')
+disp('\n Comparing to ERA_direct ...')
 thediff = junk64.era5_direct - [junk64.ceres; junk64.era5; junk64.merra2; junk64.umbc; junk64.airsL3; junk64.climcaps; junk64.era5_direct];
 thediff = sum(thediff.*thediff,2);
 fprintf(1,'chisqr with CERES    trends = %8.6f \n',thediff(1));
@@ -198,7 +211,8 @@ fprintf(1,'chisqr with AIRSL3     trends = %8.6f \n',thediff(5));
 fprintf(1,'chisqr with CLIMCAPS   trends = %8.6f \n',thediff(6));
 fprintf(1,'chisqr with ERA5direct trends = %8.6f \n',thediff(7));
 
-z11 = junk4608.ceres;
+z11    = junk4608.ceres;
+z11all = junk4608.ceresall;
 z12 = junk4608.era5;
 z21 = junk4608.merra2;
 z22 = junk4608.umbc;
@@ -213,24 +227,41 @@ z32 = junk4608.climcaps;
   aslmap_3x2tiledlayout(z11,z12,z21,z22,z31,z32,iFig+5,plotoptions6);
 z12x = junk4608.era5_direct;
 zall = [z11; z12; z12x; z21; z22; z31; z32];
-corrcoef(zall')
-corr(zall')
+corrcoef(double(zall'))
+corr(double(zall'))
+
 figure(iFig+6); clf
 varnames = {'CERES','ERA5','ERA5 direct','MERRA2','UMBC','AIRS L3','CLIMCAPS'};
-[R,Pvalue] = corrplot(zall',Varnames = varnames)
+[R,Pvalue] = corrplot(double(zall'),Varnames = varnames)
 hfig = gcf;
 haxes = findobj(hfig, 'Type', 'Axes');
 arrayfun(@(ax) xlim(ax, [-1 +1]*0.5), haxes);
 
+[meanOLR(1) stdOLR(1)] = weighted_mean_stddev(z11,cos(pjunk.rlat*pi/180));
+[meanOLR(2) stdOLR(2)] = weighted_mean_stddev(z11all,cos(pjunk.rlat*pi/180));
+[meanOLR(3) stdOLR(3)] = weighted_mean_stddev(z12,cos(pjunk.rlat*pi/180));
+[meanOLR(4) stdOLR(4)] = weighted_mean_stddev(z21,cos(pjunk.rlat*pi/180));
+[meanOLR(5) stdOLR(5)] = weighted_mean_stddev(z22,cos(pjunk.rlat*pi/180));
+[meanOLR(6) stdOLR(6)] = weighted_mean_stddev(z31,cos(pjunk.rlat*pi/180));
+[meanOLR(7) stdOLR(7)] = weighted_mean_stddev(z32,cos(pjunk.rlat*pi/180));
+fprintf(1,'cosine averaged OLR trends : CERESclr = %8.4f   CERESall = %8.6f    ERA5 = %8.4f   MERRA2 = %8.4f    UMBC = %8.4f   airsL3 = %8.4f   climcapsL3 = %8.4f W/m2/yr \n',meanOLR);
+fprintf(1,'                    stddev : CERESclr = %8.4f   CERESall = %8.6f    ERA5 = %8.4f   MERRA2 = %8.4f    UMBC = %8.4f   airsL3 = %8.4f   climcapsL3 = %8.4f W/m2/yr \n',stdOLR);
+
+figure(iFig+7); clf; 
+plot(meanvaluebin(latB2),nanmean(reshape(z11,72,64),1),meanvaluebin(latB2),nanmean(reshape(z11all,72,64),1),meanvaluebin(latB2),nanmean(reshape(z12,72,64),1),meanvaluebin(latB2),nanmean(reshape(z21,72,64),1),...
+     meanvaluebin(latB2),nanmean(reshape(z22,72,64),1),meanvaluebin(latB2),nanmean(reshape(z31,72,64),1),meanvaluebin(latB2),nanmean(reshape(z32,72,64),1),'linewidth',2);
+plotaxis2; hl = legend('CERES clrsky','CERES allsky','ERA5','MERRA2','THIS WORK','AIRSL3','CLIMAPS L3','location','best','fontsize',10); 
+xlabel('Latitude'); title('Flux Trend'); ylabel('Flux/yr W/m2/yr'); 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(iFig+7); clf
+figure(iFig+8); clf
 axax = load('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat');
 miaow = airsL3_spectral_olr.perts9999.atm_skt_ghg_ecRad.clr - airsL3_spectral_olr.olr0_ecRad.clr;;
-  figure(iFig+7); plot(ceres_trend.trend_lat,ceres_trend.trend_lw,ceres_trend.trend_lat,ceres_trend.trend_lw_clr,...
-                 meanvaluebin(latB2),nanmean(reshape(miaow,72,64),1),'kx-',...
-                 meanvaluebin(latB2),nanmean(reshape(axax.thestats64x72_other.clrolrrate,72,64),1),...
-                 meanvaluebin(latB2),nanmean(reshape(axax.thestats64x72_other.olrrate,72,64),1),'linewidth',2);
+plot(ceres_trend.trend_lat,ceres_trend.trend_lw,ceres_trend.trend_lat,ceres_trend.trend_lw_clr,...
+     meanvaluebin(latB2),nanmean(reshape(miaow,72,64),1),'kx-',...
+     meanvaluebin(latB2),nanmean(reshape(axax.thestats64x72_other.clrolrrate,72,64),1),...
+     meanvaluebin(latB2),nanmean(reshape(axax.thestats64x72_other.olrrate,72,64),1),'linewidth',2);
 plotaxis2; legend('CERES allsky','CERES clrsky','Sergio AIRS L3','Joel AIRS L3 clr','Joel AIRS L3 allsky','location','best','fontsize',10);
 xlabel('Latitude'); title('Flux Trend'); ylabel('Flux/yr W/m2/yr'); 
 

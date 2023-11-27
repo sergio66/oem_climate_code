@@ -134,7 +134,7 @@ iDebug = -1;
 %iDebug = 2843
 %iDebug = 3169    %% +34 N, have -ve col WV trends
 %iDebug = 1369    %% -37 S, have -ve col WV trends
-
+%iDebug = 36
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
@@ -351,12 +351,12 @@ for iInd = iXX1 : idX : iXX2
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
   topts.iaSequential = [150 60];                   %% sequential, like SingleFootprint
   topts.iaSequential = [150 60 100 150 60];        %% sequential, like SingleFootprint
+  topts.iaSequential = [214 150 60 100 ];          %% sequential, like SingleFootprint
   topts.iaSequential = [60 150 100];               %% sequential, like SingleFootprint
 
-  topts.iaSequential = -1;                         %% default one gulp
-  topts.iaSequential = [214 150 60 100 ];          %% sequential, like SingleFootprint
-  topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint
-  topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint, but now use 210 !!!!
+  topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint, decent column water results at tropics!, not so good polar WV results
+  topts.iaSequential = -1;                         %% default one gulp, gives good results at poles but bad column water results at tropics!
+  topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint, but now use 210 !!!! gives slightly better results than 214, decent column water results at tropics!, not so good polar WV results
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
@@ -410,36 +410,47 @@ for iInd = iXX1 : idX : iXX2
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   %% WARNING : set_CO2_CH4_N2O_ESRL.m has an internal setting iVers = 2 where both T and WV are adjusted in lower atmosphere, but that can be annulled by using topts.TfacAdjAtmosphericAmplification (default 0.5, set it to a smaller value or 0)
+  iAdjLowerAtmWVfrac = 0;                             %% << WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac >>
   iAdjLowerAtmWVfrac = 10;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 1 (see bk46)
   iAdjLowerAtmWVfrac = 05;                            %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt ~ 0.5 (see bk46)
   iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), but I think tooooo much
-  iAdjLowerAtmWVfrac = 0;                             %% << WARNING <<< this does not  set WV in lower part of atmos >>> , depending on dBT1231/dt by using iAdjLoweAtmWVfrac >>
   iAdjLowerAtmWVfrac = 0.25;                          %% WAARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment
+  %% Nov 16, 2023 since the mmw trends in tropics are too large
+  iAdjLowerAtmWVfrac = 0.25;                          %% WAARNING this also sets WV in lower part of atmos NEW
+  iAdjLowerAtmWVfrac = 0.125;                         %% WAARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment, till Nov 2023
+  iAdjLowerAtmWVfrac = 0.0625;                        %% WAARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment
+  iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), but I think tooooo much
   topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 
-  %% Nov 16, 2023 since the mmw trends in tropics are too large
-  iAdjLowerAtmWVfrac = 0.125;                         %% WAARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!, this is for dRH/dt = 0 (see bk46), with an adjustment, till Nov 2023
-  iAdjLowerAtmWVfrac = 0.250;                         %% WAARNING this also sets WV in lower part of atmos NEW
-  topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
-  topts.TfacAdjAtmosphericAmplification = 0.5;        %% this is an additional adjutment factor for a-prioro WV believe it or not, default till Nov 2023
+  topts.TfacAdjAtmosphericAmplification = 0.0;        %% this is an additional adjutment factor for a-priori WV believe it or not, TEST TO SEE WHAT HAPPENS
+  topts.TfacAdjAtmosphericAmplification = 0.5;        %% this is an additional adjutment factor for a-priori WV believe it or not, default till Nov 2023
   if length(topts.iaSequential) > 1
-    topts.TfacAdjAtmosphericAmplification = 0.1;        %% this is an additional adjutment factor for a-prioro WV believe it or not
-    topts.TfacAdjAtmosphericAmplification = 0.25;       %% this is an additional adjutment factor for a-prioro WV believe it or not
-    topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-prioro WV believe it or not  
-    topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-prioro WV believe it or not  
-    topts.TfacAdjAtmosphericAmplification = 1.00;       %% this is an additional adjutment factor for a-prioro WV believe it or not , pretty good BUT JUST LEAVE IT AS 1.0
+    topts.TfacAdjAtmosphericAmplification = 0.1;        %% this is an additional adjutment factor for a-priori WV believe it or not
+    topts.TfacAdjAtmosphericAmplification = 0.25;       %% this is an additional adjutment factor for a-priori WV believe it or not
+    topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-priori WV believe it or not  
+    topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-priori WV believe it or not  
+    topts.TfacAdjAtmosphericAmplification = 1.00;       %% this is an additional adjutment factor for a-priori WV believe it or not , pretty good BUT JUST LEAVE IT AS 1.0
   end
-  
+
   if driver.iLat <= 31
     %% we seem to need double or triple this factor in the Southern Hemisphere compared to Northern (too much ocean?????)
 
+    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2.mat
+    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2A.mat
     %% so let it be triple at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
     %% so the slope = (3-1)/(32-1) = -2/31
     intercept = 3;
 
+    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2B.mat
+    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2C.mat
     %% so let it be double at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
     %% so the slope = (2-1)/(32-1) = -1/31
     intercept = 2;
+
+    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat
+    %% so let it be double at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
+    %% so the slope = (1-1)/(32-1) = 0/31
+    intercept = 1;
 
     slope = (1-intercept)/31;
     yjunk = slope * (driver.iLat - 1) + intercept;
@@ -803,22 +814,22 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
   pMean17yearsx.stemp(iDebug) = pMean17years.stemp(iDebug) + driver.oem.finalrates(6);
   junk = driver.oem.finalrates(driver.jacobian.ozone_i);
     njunk = pMean17years.nlevs(driver.iibin);
-    junk2 = interp1(log10(playsRET),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
+    junk2 = interp1(log10(playsRET(1:length(junk))),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
     bad = find(isnan(junk2) | isinf(junk2)); junk2(bad) = 0;    
     pMean17yearsx.gas_3(1:njunk,driver.iibin) = pMean17years.gas_3(1:njunk,driver.iibin) .* (1+junk2);
 
   junk = driver.oem.finalrates(driver.jacobian.temp_i);
     njunk = pMean17years.nlevs(driver.iibin);
-    junk2 = interp1(log10(playsRET),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
+    junk2 = interp1(log10(playsRET(1:length(junk))),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
     bad = find(isnan(junk2) | isinf(junk2)); junk2(bad) = 0;    
     pMean17yearsx.ptemp(1:njunk,driver.iibin) = pMean17years.ptemp(1:njunk,driver.iibin) + junk2;
 
   junk = driver.oem.finalrates(driver.jacobian.water_i);
     njunk = pMean17years.nlevs(driver.iibin);
-    junk2 = interp1(log10(playsRET),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
+    junk2 = interp1(log10(playsRET(1:length(junk))),junk,log10(pMean17years.plays(1:njunk,driver.iibin)),[],'extrap');
     bad = find(isnan(junk2) | isinf(junk2)); junk2(bad) = 0;    
     pMean17yearsx.gas_1(1:njunk,driver.iibin) = pMean17years.gas_1(1:njunk,driver.iibin) .* (1+junk2);
-    semilogy(junk,playsRET,'b.-',junk2,pMean17years.plays(1:njunk,driver.iibin)); set(gca,'ydir','reverse');
+    semilogy(junk,playsRET(1:length(junk)),'b.-',junk2,pMean17years.plays(1:njunk,driver.iibin)); set(gca,'ydir','reverse');
     ylim([10 1050]); axx = axis; line([axx(1) axx(2)],[pMean17years.spres(driver.iibin) pMean17years.spres(driver.iibin)]);
 
   mmw0 = mmwater_rtp(hMean17years,pMean17years);

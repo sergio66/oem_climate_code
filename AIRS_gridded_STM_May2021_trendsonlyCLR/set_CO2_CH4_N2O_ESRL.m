@@ -114,18 +114,26 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     %% code after 10 July 2023
     if iAdjLowerAtmWVfrac > 0
       %% see Bk 46 : dWVfrac/dt =  1/RH dRH/dt + Lo/Rv 
-      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac;                                          %% orig, too low
-      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 10;   %% new, little too high
-      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 8;    %% new, should be ok
-      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 6;    %% new, should be ok
-      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * 5;    %% new, should be ok
+      iWVFudgeMult = 1;    %% too low
+      iWVFudgeMult = 10;   %% little too high
+      iWVFudgeMult = 8;    %% should be ok
+      iWVFudgeMult = 6;    %% should be ok
+      iWVFudgeMult = 5;    %% should be ok
+      iWVFudgeMult = 1;    %%  be honest
+      
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac;                                                    %% orig, too low
+      iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * iWVFudgeMult;   %% new
+      topts.iWVFudgeMult = iWVFudgeMult;
+     
     else
       iAdjLowerAtmWVfracX = 0.0;
     end
 
-    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> iVers = %2i WVfractional change needed for constant RH over ocean %8.6f frac/yr with TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac = %8.6f %8.6f\n',...
-           driver.rateset.rates(1520),iVers,dBT1231_WV,TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac);
-    fprintf(1,'d/dt BT1231 from rates = %8.6f K/year --> iVers = %2i Tadj over ocean                                       %8.6f with TfacAdjAtmosphericAmplification = %8.6f \n',driver.rateset.rates(1520),iVers,dBT1231,TfacAdjAtmosphericAmplification)
+    junk = [iVers driver.rateset.rates(1520)  dBT1231_WV   dBT1231_WV/driver.rateset.rates(1520)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
+    fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean %8.6f frac/yr \n',junk(1:3))
+    fprintf(1,'           (ratio dBT1231_WV/dBT1231 = %8.6f compared to 0.07 percent increase in RH per K at 285 K) yah yah mebbe an additional fudge of 5 applied \n',junk(4))
+    fprintf(1,'           with TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac = %8.6f %8.6f ==> final WV adj factor fudge to multiply "dBT1231_WV" will be %8.6f  \n',junk(5:7));
+    %%%fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> Tadj over ocean %8.6f K/yr    with TfacAdjAtmosphericAmplification = %8.6f \n',iVers,driver.rateset.rates(1520),dBT1231,TfacAdjAtmosphericAmplification)
 
     if iAdjLowerAtmWVfracX > eps
 
@@ -166,9 +174,12 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
         end
      
         miaow2 = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX;
-        fprintf(1,'miaow2 = %8.6f from OLD pre Nov 2003 dBTT1231 adj .... while miaow3 = %8.6f from NEW, CORRECT d(RH) based adjustment \n',miaow2,xb(6+length(driver.jacobian.water_i)-0));
+        fprintf(1,'miaow2 = %8.6f from OLD pre Nov 2003 dBT1231 adj          ....       while miaow3 = %8.6f from NEW, CORRECT d(RH) based adjustment \n',miaow2,xb(6+length(driver.jacobian.water_i)-0));
 
       end
+    else
+      disp('iAdjLowerAtmWVfracX = 0 so NO WV adjustment!!!')
+      disp('iAdjLowerAtmWVfracX = 0 so NO WV adjustment!!!')
     end
 
   elseif settings.co2lays == 3
