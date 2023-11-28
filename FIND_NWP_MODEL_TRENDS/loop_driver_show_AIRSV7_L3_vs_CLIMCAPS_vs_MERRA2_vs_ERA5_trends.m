@@ -1,10 +1,11 @@
 addpath /asl/matlib/h4tools
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/PLOTMISC/
 
 iMin = 0;
 if exist('summary_mmw_stemp_corr_umbc_era5.mat');
   load summary_mmw_stemp_corr_umbc_era5.mat
-  [iMin,~] = size(thesummary.umbc(:,1))
+  [iMin,~] = size(thesummary.umbc_mean(:,1))
   iMin
 end
 
@@ -55,76 +56,138 @@ end
 for ii = iMin+1 : length(strUMBC) 
   fprintf(1,'%2i of %2i : comment %s \n using strUMBC = %s \n',ii,length(strUMBC),comment{ii},strUMBC{ii})
   [era5,merra2,airsL3,climcapsL3,umbc,thecorr,amp,saverates_rlat_pres,summary_olr_mmw_stats] = driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC{ii},20,+1,comment{ii});
-    thesummary.umbc(ii,1) = summary_olr_mmw_stats.umbc.stemp(1);
-    thesummary.umbc(ii,2) = summary_olr_mmw_stats.umbc.mmw(1);
-    thesummary.umbc(ii,3) = summary_olr_mmw_stats.umbc.mmwpc(1);
-    thesummary.era5(ii,1) = summary_olr_mmw_stats.era5.stemp(1);
-    thesummary.era5(ii,2) = summary_olr_mmw_stats.era5.mmw(1);
-    thesummary.era5(ii,3) = summary_olr_mmw_stats.era5.mmwpc(1);
-    thesummary.merra2(ii,1) = summary_olr_mmw_stats.merra2.stemp(1);
-    thesummary.merra2(ii,2) = summary_olr_mmw_stats.merra2.mmw(1);
-    thesummary.merra2(ii,3) = summary_olr_mmw_stats.merra2.mmwpc(1);
 
-    ifoo = 3;
-    thesummary.umbc(ii,ifoo+1) = summary_olr_mmw_stats.umbc.tropical_stemp(1);
-    thesummary.umbc(ii,ifoo+2) = summary_olr_mmw_stats.umbc.tropical_mmw(1);
-    thesummary.umbc(ii,ifoo+3) = summary_olr_mmw_stats.umbc.tropical_mmwpc(1);
-    thesummary.era5(ii,ifoo+1) = summary_olr_mmw_stats.era5.tropical_stemp(1);
-    thesummary.era5(ii,ifoo+2) = summary_olr_mmw_stats.era5.tropical_mmw(1);
-    thesummary.era5(ii,ifoo+3) = summary_olr_mmw_stats.era5.tropical_mmwpc(1);
-    thesummary.merra2(ii,ifoo+1) = summary_olr_mmw_stats.merra2.tropical_stemp(1);
-    thesummary.merra2(ii,ifoo+2) = summary_olr_mmw_stats.merra2.tropical_mmw(1);
-    thesummary.merra2(ii,ifoo+3) = summary_olr_mmw_stats.merra2.tropical_mmwpc(1);
+  thesummary.umbc_era5_corr(ii,:) = summary_olr_mmw_stats.umbc.allXchi;
+  thesummary.umbc_era5_mean(ii,:) = summary_olr_mmw_stats.umbc.allXmean;
+  thesummary.umbc_era5_std(ii,:)  = summary_olr_mmw_stats.umbc.allXstd;
+  thesummary.umbc_era5_frac(ii,:) = summary_olr_mmw_stats.umbc.allX_frac_neg0pos;
+  thesummary.umbc_era5_corr_mmw(ii,:) = summary_olr_mmw_stats.corr_mmw;
 
-    ifoo = 6;
-    thesummary.umbc(ii,ifoo+1) = summary_olr_mmw_stats.umbc.midlat_stemp(1);
-    thesummary.umbc(ii,ifoo+2) = summary_olr_mmw_stats.umbc.midlat_mmw(1);
-    thesummary.umbc(ii,ifoo+3) = summary_olr_mmw_stats.umbc.midlat_mmwpc(1);
-    thesummary.era5(ii,ifoo+1) = summary_olr_mmw_stats.era5.midlat_stemp(1);
-    thesummary.era5(ii,ifoo+2) = summary_olr_mmw_stats.era5.midlat_mmw(1);
-    thesummary.era5(ii,ifoo+3) = summary_olr_mmw_stats.era5.midlat_mmwpc(1);
-    thesummary.merra2(ii,ifoo+1) = summary_olr_mmw_stats.merra2.midlat_stemp(1);
-    thesummary.merra2(ii,ifoo+2) = summary_olr_mmw_stats.merra2.midlat_mmw(1);
-    thesummary.merra2(ii,ifoo+3) = summary_olr_mmw_stats.merra2.midlat_mmwpc(1);
+  ifoo = 0;
+  thesummary.umbc_mean(ii,1) = summary_olr_mmw_stats.umbc.stemp(1);
+  thesummary.umbc_mean(ii,2) = summary_olr_mmw_stats.umbc.mmw(1);
+  thesummary.umbc_mean(ii,3) = summary_olr_mmw_stats.umbc.mmwpc(1);
+  thesummary.era5_mean(ii,1) = summary_olr_mmw_stats.era5.stemp(1);
+  thesummary.era5_mean(ii,2) = summary_olr_mmw_stats.era5.mmw(1);
+  thesummary.era5_mean(ii,3) = summary_olr_mmw_stats.era5.mmwpc(1);
+  thesummary.merra2_mean(ii,1) = summary_olr_mmw_stats.merra2.stemp(1);
+  thesummary.merra2_mean(ii,2) = summary_olr_mmw_stats.merra2.mmw(1);
+  thesummary.merra2_mean(ii,3) = summary_olr_mmw_stats.merra2.mmwpc(1); 
 
-    ifoo = 9;
-    thesummary.umbc(ii,ifoo+1) = summary_olr_mmw_stats.umbc.polar_stemp(1);
-    thesummary.umbc(ii,ifoo+2) = summary_olr_mmw_stats.umbc.polar_mmw(1);
-    thesummary.umbc(ii,ifoo+3) = summary_olr_mmw_stats.umbc.polar_mmwpc(1);
-    thesummary.era5(ii,ifoo+1) = summary_olr_mmw_stats.era5.polar_stemp(1);
-    thesummary.era5(ii,ifoo+2) = summary_olr_mmw_stats.era5.polar_mmw(1);
-    thesummary.era5(ii,ifoo+3) = summary_olr_mmw_stats.era5.polar_mmwpc(1);
-    thesummary.merra2(ii,ifoo+1) = summary_olr_mmw_stats.merra2.polar_stemp(1);
-    thesummary.merra2(ii,ifoo+2) = summary_olr_mmw_stats.merra2.polar_mmw(1);
-    thesummary.merra2(ii,ifoo+3) = summary_olr_mmw_stats.merra2.polar_mmwpc(1);
+  thesummary.umbc_std(ii,1) = summary_olr_mmw_stats.umbc.stemp(2);
+  thesummary.umbc_std(ii,2) = summary_olr_mmw_stats.umbc.mmw(2);
+  thesummary.umbc_std(ii,3) = summary_olr_mmw_stats.umbc.mmwpc(2);
+  thesummary.era5_std(ii,1) = summary_olr_mmw_stats.era5.stemp(2);
+  thesummary.era5_std(ii,2) = summary_olr_mmw_stats.era5.mmw(2);
+  thesummary.era5_std(ii,3) = summary_olr_mmw_stats.era5.mmwpc(2);
+  thesummary.merra2_std(ii,1) = summary_olr_mmw_stats.merra2.stemp(2);
+  thesummary.merra2_std(ii,2) = summary_olr_mmw_stats.merra2.mmw(2);
+  thesummary.merra2_std(ii,3) = summary_olr_mmw_stats.merra2.mmwpc(2); 
 
-    ifoo = 12;
-    thesummary.umbc(ii,ifoo+1) = summary_olr_mmw_stats.umbc.ocean_stemp(1);
-    thesummary.umbc(ii,ifoo+2) = summary_olr_mmw_stats.umbc.ocean_mmw(1);
-    thesummary.umbc(ii,ifoo+3) = summary_olr_mmw_stats.umbc.ocean_mmwpc(1);
-    thesummary.era5(ii,ifoo+1) = summary_olr_mmw_stats.era5.ocean_stemp(1);
-    thesummary.era5(ii,ifoo+2) = summary_olr_mmw_stats.era5.ocean_mmw(1);
-    thesummary.era5(ii,ifoo+3) = summary_olr_mmw_stats.era5.ocean_mmwpc(1);
-    thesummary.merra2(ii,ifoo+1) = summary_olr_mmw_stats.merra2.ocean_stemp(1);
-    thesummary.merra2(ii,ifoo+2) = summary_olr_mmw_stats.merra2.ocean_mmw(1);
-    thesummary.merra2(ii,ifoo+3) = summary_olr_mmw_stats.merra2.ocean_mmwpc(1);
+  ifoo = 3;
+  thesummary.umbc_mean(ii,ifoo+1) = summary_olr_mmw_stats.umbc.tropical_stemp(1);
+  thesummary.umbc_mean(ii,ifoo+2) = summary_olr_mmw_stats.umbc.tropical_mmw(1);
+  thesummary.umbc_mean(ii,ifoo+3) = summary_olr_mmw_stats.umbc.tropical_mmwpc(1);
+  thesummary.era5_mean(ii,ifoo+1) = summary_olr_mmw_stats.era5.tropical_stemp(1);
+  thesummary.era5_mean(ii,ifoo+2) = summary_olr_mmw_stats.era5.tropical_mmw(1);
+  thesummary.era5_mean(ii,ifoo+3) = summary_olr_mmw_stats.era5.tropical_mmwpc(1);
+  thesummary.merra2_mean(ii,ifoo+1) = summary_olr_mmw_stats.merra2.tropical_stemp(1);
+  thesummary.merra2_mean(ii,ifoo+2) = summary_olr_mmw_stats.merra2.tropical_mmw(1);
+  thesummary.merra2_mean(ii,ifoo+3) = summary_olr_mmw_stats.merra2.tropical_mmwpc(1);
 
-    ifoo = 15;
-    thesummary.umbc(ii,ifoo+1) = summary_olr_mmw_stats.umbc.land_stemp(1);
-    thesummary.umbc(ii,ifoo+2) = summary_olr_mmw_stats.umbc.land_mmw(1);
-    thesummary.umbc(ii,ifoo+3) = summary_olr_mmw_stats.umbc.land_mmwpc(1);
-    thesummary.era5(ii,ifoo+1) = summary_olr_mmw_stats.era5.land_stemp(1);
-    thesummary.era5(ii,ifoo+2) = summary_olr_mmw_stats.era5.land_mmw(1);
-    thesummary.era5(ii,ifoo+3) = summary_olr_mmw_stats.era5.land_mmwpc(1);
-    thesummary.merra2(ii,ifoo+1) = summary_olr_mmw_stats.merra2.land_stemp(1);
-    thesummary.merra2(ii,ifoo+2) = summary_olr_mmw_stats.merra2.land_mmw(1);
-    thesummary.merra2(ii,ifoo+3) = summary_olr_mmw_stats.merra2.land_mmwpc(1);
+  thesummary.umbc_std(ii,ifoo+1) = summary_olr_mmw_stats.umbc.tropical_stemp(2);
+  thesummary.umbc_std(ii,ifoo+2) = summary_olr_mmw_stats.umbc.tropical_mmw(2);
+  thesummary.umbc_std(ii,ifoo+3) = summary_olr_mmw_stats.umbc.tropical_mmwpc(2);
+  thesummary.era5_std(ii,ifoo+1) = summary_olr_mmw_stats.era5.tropical_stemp(2);
+  thesummary.era5_std(ii,ifoo+2) = summary_olr_mmw_stats.era5.tropical_mmw(2);
+  thesummary.era5_std(ii,ifoo+3) = summary_olr_mmw_stats.era5.tropical_mmwpc(2);
+  thesummary.merra2_std(ii,ifoo+1) = summary_olr_mmw_stats.merra2.tropical_stemp(2);
+  thesummary.merra2_std(ii,ifoo+2) = summary_olr_mmw_stats.merra2.tropical_mmw(2);
+  thesummary.merra2_std(ii,ifoo+3) = summary_olr_mmw_stats.merra2.tropical_mmwpc(2);
 
-    thesummary.umbc_era5_corr(ii,:) = summary_olr_mmw_stats.umbc.allXchi;
-    thesummary.umbc_era5_mean(ii,:) = summary_olr_mmw_stats.umbc.allXmean;
-    thesummary.umbc_era5_std(ii,:)  = summary_olr_mmw_stats.umbc.allXstd;
-    thesummary.umbc_era5_frac(ii,:) = summary_olr_mmw_stats.umbc.allX_frac_neg0pos;
-    thesummary.umbc_era5_corr_mmw(ii,:) = summary_olr_mmw_stats.corr_mmw;
+  ifoo = 6;
+  thesummary.umbc_mean(ii,ifoo+1) = summary_olr_mmw_stats.umbc.midlat_stemp(1);
+  thesummary.umbc_mean(ii,ifoo+2) = summary_olr_mmw_stats.umbc.midlat_mmw(1);
+  thesummary.umbc_mean(ii,ifoo+3) = summary_olr_mmw_stats.umbc.midlat_mmwpc(1);
+  thesummary.era5_mean(ii,ifoo+1) = summary_olr_mmw_stats.era5.midlat_stemp(1);
+  thesummary.era5_mean(ii,ifoo+2) = summary_olr_mmw_stats.era5.midlat_mmw(1);
+  thesummary.era5_mean(ii,ifoo+3) = summary_olr_mmw_stats.era5.midlat_mmwpc(1);
+  thesummary.merra2_mean(ii,ifoo+1) = summary_olr_mmw_stats.merra2.midlat_stemp(1);
+  thesummary.merra2_mean(ii,ifoo+2) = summary_olr_mmw_stats.merra2.midlat_mmw(1);
+  thesummary.merra2_mean(ii,ifoo+3) = summary_olr_mmw_stats.merra2.midlat_mmwpc(1);
+
+  thesummary.umbc_std(ii,ifoo+1) = summary_olr_mmw_stats.umbc.midlat_stemp(2);
+  thesummary.umbc_std(ii,ifoo+2) = summary_olr_mmw_stats.umbc.midlat_mmw(2);
+  thesummary.umbc_std(ii,ifoo+3) = summary_olr_mmw_stats.umbc.midlat_mmwpc(2);
+  thesummary.era5_std(ii,ifoo+1) = summary_olr_mmw_stats.era5.midlat_stemp(2);
+  thesummary.era5_std(ii,ifoo+2) = summary_olr_mmw_stats.era5.midlat_mmw(2);
+  thesummary.era5_std(ii,ifoo+3) = summary_olr_mmw_stats.era5.midlat_mmwpc(2);
+  thesummary.merra2_std(ii,ifoo+1) = summary_olr_mmw_stats.merra2.midlat_stemp(2);
+  thesummary.merra2_std(ii,ifoo+2) = summary_olr_mmw_stats.merra2.midlat_mmw(2);
+  thesummary.merra2_std(ii,ifoo+3) = summary_olr_mmw_stats.merra2.midlat_mmwpc(2);
+
+  ifoo = 9;
+  thesummary.umbc_mean(ii,ifoo+1) = summary_olr_mmw_stats.umbc.polar_stemp(1);
+  thesummary.umbc_mean(ii,ifoo+2) = summary_olr_mmw_stats.umbc.polar_mmw(1);
+  thesummary.umbc_mean(ii,ifoo+3) = summary_olr_mmw_stats.umbc.polar_mmwpc(1);
+  thesummary.era5_mean(ii,ifoo+1) = summary_olr_mmw_stats.era5.polar_stemp(1);
+  thesummary.era5_mean(ii,ifoo+2) = summary_olr_mmw_stats.era5.polar_mmw(1);
+  thesummary.era5_mean(ii,ifoo+3) = summary_olr_mmw_stats.era5.polar_mmwpc(1);
+  thesummary.merra2_mean(ii,ifoo+1) = summary_olr_mmw_stats.merra2.polar_stemp(1);
+  thesummary.merra2_mean(ii,ifoo+2) = summary_olr_mmw_stats.merra2.polar_mmw(1);
+  thesummary.merra2_mean(ii,ifoo+3) = summary_olr_mmw_stats.merra2.polar_mmwpc(1);
+
+  thesummary.umbc_std(ii,ifoo+1) = summary_olr_mmw_stats.umbc.polar_stemp(2);
+  thesummary.umbc_std(ii,ifoo+2) = summary_olr_mmw_stats.umbc.polar_mmw(2);
+  thesummary.umbc_std(ii,ifoo+3) = summary_olr_mmw_stats.umbc.polar_mmwpc(2);
+  thesummary.era5_std(ii,ifoo+1) = summary_olr_mmw_stats.era5.polar_stemp(2);
+  thesummary.era5_std(ii,ifoo+2) = summary_olr_mmw_stats.era5.polar_mmw(2);
+  thesummary.era5_std(ii,ifoo+3) = summary_olr_mmw_stats.era5.polar_mmwpc(2);
+  thesummary.merra2_std(ii,ifoo+1) = summary_olr_mmw_stats.merra2.polar_stemp(2);
+  thesummary.merra2_std(ii,ifoo+2) = summary_olr_mmw_stats.merra2.polar_mmw(2);
+  thesummary.merra2_std(ii,ifoo+3) = summary_olr_mmw_stats.merra2.polar_mmwpc(2);
+
+  ifoo = 12;
+  thesummary.umbc_mean(ii,ifoo+1) = summary_olr_mmw_stats.umbc.ocean_stemp(1);
+  thesummary.umbc_mean(ii,ifoo+2) = summary_olr_mmw_stats.umbc.ocean_mmw(1);
+  thesummary.umbc_mean(ii,ifoo+3) = summary_olr_mmw_stats.umbc.ocean_mmwpc(1);
+  thesummary.era5_mean(ii,ifoo+1) = summary_olr_mmw_stats.era5.ocean_stemp(1);
+  thesummary.era5_mean(ii,ifoo+2) = summary_olr_mmw_stats.era5.ocean_mmw(1);
+  thesummary.era5_mean(ii,ifoo+3) = summary_olr_mmw_stats.era5.ocean_mmwpc(1);
+  thesummary.merra2_mean(ii,ifoo+1) = summary_olr_mmw_stats.merra2.ocean_stemp(1);
+  thesummary.merra2_mean(ii,ifoo+2) = summary_olr_mmw_stats.merra2.ocean_mmw(1);
+  thesummary.merra2_mean(ii,ifoo+3) = summary_olr_mmw_stats.merra2.ocean_mmwpc(1);
+
+  thesummary.umbc_std(ii,ifoo+1) = summary_olr_mmw_stats.umbc.ocean_stemp(2);
+  thesummary.umbc_std(ii,ifoo+2) = summary_olr_mmw_stats.umbc.ocean_mmw(2);
+  thesummary.umbc_std(ii,ifoo+3) = summary_olr_mmw_stats.umbc.ocean_mmwpc(2);
+  thesummary.era5_std(ii,ifoo+1) = summary_olr_mmw_stats.era5.ocean_stemp(2);
+  thesummary.era5_std(ii,ifoo+2) = summary_olr_mmw_stats.era5.ocean_mmw(2);
+  thesummary.era5_std(ii,ifoo+3) = summary_olr_mmw_stats.era5.ocean_mmwpc(2);
+  thesummary.merra2_std(ii,ifoo+1) = summary_olr_mmw_stats.merra2.ocean_stemp(2);
+  thesummary.merra2_std(ii,ifoo+2) = summary_olr_mmw_stats.merra2.ocean_mmw(2);
+  thesummary.merra2_std(ii,ifoo+3) = summary_olr_mmw_stats.merra2.ocean_mmwpc(2);
+
+  ifoo = 15;
+  thesummary.umbc_mean(ii,ifoo+1) = summary_olr_mmw_stats.umbc.land_stemp(1);
+  thesummary.umbc_mean(ii,ifoo+2) = summary_olr_mmw_stats.umbc.land_mmw(1);
+  thesummary.umbc_mean(ii,ifoo+3) = summary_olr_mmw_stats.umbc.land_mmwpc(1);
+  thesummary.era5_mean(ii,ifoo+1) = summary_olr_mmw_stats.era5.land_stemp(1);
+  thesummary.era5_mean(ii,ifoo+2) = summary_olr_mmw_stats.era5.land_mmw(1);
+  thesummary.era5_mean(ii,ifoo+3) = summary_olr_mmw_stats.era5.land_mmwpc(1);
+  thesummary.merra2_mean(ii,ifoo+1) = summary_olr_mmw_stats.merra2.land_stemp(1);
+  thesummary.merra2_mean(ii,ifoo+2) = summary_olr_mmw_stats.merra2.land_mmw(1);
+  thesummary.merra2_mean(ii,ifoo+3) = summary_olr_mmw_stats.merra2.land_mmwpc(1);
+
+  thesummary.umbc_std(ii,ifoo+1) = summary_olr_mmw_stats.umbc.land_stemp(2);
+  thesummary.umbc_std(ii,ifoo+2) = summary_olr_mmw_stats.umbc.land_mmw(2);
+  thesummary.umbc_std(ii,ifoo+3) = summary_olr_mmw_stats.umbc.land_mmwpc(2);
+  thesummary.era5_std(ii,ifoo+1) = summary_olr_mmw_stats.era5.land_stemp(2);
+  thesummary.era5_std(ii,ifoo+2) = summary_olr_mmw_stats.era5.land_mmw(2);
+  thesummary.era5_std(ii,ifoo+3) = summary_olr_mmw_stats.era5.land_mmwpc(2);
+  thesummary.merra2_std(ii,ifoo+1) = summary_olr_mmw_stats.merra2.land_stemp(2);
+  thesummary.merra2_std(ii,ifoo+2) = summary_olr_mmw_stats.merra2.land_mmw(2);
+  thesummary.merra2_std(ii,ifoo+3) = summary_olr_mmw_stats.merra2.land_mmwpc(2);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,38 +238,6 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(1); clf; plot(1:len,thesummary.umbc(:,1),'bo-',1:len,thesummary.merra2(:,1),'g',1:len,thesummary.era5(:,1),'r','linewidth',2); title('global dSKT/dt'); hl = legend('UMBC','MERRA2','ERA5','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
+iBest = 10; tiled_loop_driver_summary_plots
+iBest = 10; tiled_loop_driver_summary_plots_errorbars
 
-figure(2); clf; plot(1:len,thesummary.umbc(:,2),'bo-',1:len,thesummary.merra2(:,2),'g',1:len,thesummary.era5(:,2),'r','linewidth',2); title('global dmmw/dt'); hl = legend('UMBC','MERRA2','ERA5','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-figure(3); clf; plot(1:len,thesummary.umbc(:,3),'bo-',1:len,thesummary.merra2(:,3),'g',1:len,thesummary.era5(:,3),'r','linewidth',2); title('global dmmw percent/dt'); hl = legend('UMBC','MERRA2','ERA5','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(4); clf; plot(1:len,thesummary.umbc(:,4),'bo-',1:len,thesummary.merra2(:,4),'g',1:len,thesummary.era5(:,4),'r','linewidth',2); title('tropical dSKT/dt'); hl = legend('UMBC','MERRA2','ERA5','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-figure(5); clf; plot(1:len,thesummary.umbc(:,5),'bo-',1:len,thesummary.merra2(:,5),'g',1:len,thesummary.era5(:,5),'r','linewidth',2); title('tropical dmmw/dt'); hl = legend('UMBC','MERRA2','ERA5','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-figure(6); clf; plot(1:len,thesummary.umbc(:,6),'bo-',1:len,thesummary.merra2(:,6),'g',1:len,thesummary.era5(:,6),'r','linewidth',2); title('tropical dmmw percent/dt'); hl = legend('UMBC','MERRA2','ERA5','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(7); clf; plot(1:len,thesummary.umbc_era5_corr(:,[1 4 7]),'--',1:len,thesummary.umbc_era5_corr(:,[2 5 8]),':',1:len,thesummary.umbc_era5_corr(:,[3 6 9 ]),'linewidth',2);
-  title('Global Correlations between UMBC and ERA5'); hl = legend('200 mb RH','500 mb RH','800 mb RH','200 mb WV','500 mb WV','800 mb WV','200 mb T','500 mb T','800 mb T','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-figure(8); clf; plot(1:len,thesummary.umbc_era5_mean(:,[1 4 7]),'--',1:len,thesummary.umbc_era5_mean(:,[2 5 8]),':',1:len,thesummary.umbc_era5_mean(:,[3 6 9 ]),'linewidth',2);
-  title('Global MEAN BIAS between UMBC and ERA5'); hl = legend('200 mb RH','500 mb RH','800 mb RH','200 mb WV','500 mb WV','800 mb WV','200 mb T','500 mb T','800 mb T','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-figure(9); clf; plot(1:len,thesummary.umbc_era5_std(:,[1 4 7]),'--',1:len,thesummary.umbc_era5_std(:,[2 5 8]),':',1:len,thesummary.umbc_era5_std(:,[3 6 9 ]),'linewidth',2);
-  title('Global STD BIAS between UMBC and ERA5'); hl = legend('200 mb RH','500 mb RH','800 mb RH','200 mb WV','500 mb WV','800 mb WV','200 mb T','500 mb T','800 mb T','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);
-
-figure(10); clf; plot(1:len,thesummary.umbc_era5_frac(:,[1 4 7]),'--',1:len,thesummary.umbc_era5_frac(:,[2 5 8]),':',1:len,thesummary.umbc_era5_frac(:,[3 6 9 ]),'linewidth',2);
-  title('Global FRAC AGREEMENT between UMBC and ERA5'); hl = legend('200 mb RH','500 mb RH','800 mb RH','200 mb WV','500 mb WV','800 mb WV','200 mb T','500 mb T','800 mb T','location','best')';
-  set(gca,'xtick',[1:len],'xticklabel',xstrstr,'fontsize',8);

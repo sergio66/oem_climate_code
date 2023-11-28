@@ -64,130 +64,9 @@ junk = load(strUMBC,'fracWVunc');
 umbc_mmwrate_err = mmwater_rtp(h,xpUMBC) - umbc_mmw0;
 umbc_mmwrate_err = abs(umbc_mmwrate_err - umbc_mmwrate);
 
-disp('Recall density water = 1000 kg/m3 ==> 1 kg of water speread over area 1 m2 uses 1 mm ==> 1 mmH2O 1 kg/m2 of water')
-[m,s,m0,s0] = weighted_mean_stddev(umbc.stemprate,cos(p.rlat*pi/180));               fprintf(1,'cosine weighted UMBC SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                 summary_olr_mmw_stats.umbc.stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate,cos(p.rlat*pi/180));                 fprintf(1,'cosine weighted UMBC mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                            summary_olr_mmw_stats.umbc.mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*umbc_mmwrate./umbc_mmw0,cos(p.rlat*pi/180));  fprintf(1,'cosine weighted UMBC mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                          summary_olr_mmw_stats.umbc.mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate+umbc_mmwrate_err,cos(p.rlat*pi/180));                     fprintf(1,'cosine weighted UMBC mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((umbc_mmwrate+umbc_mmwrate_err)./umbc_mmw0),cos(p.rlat*pi/180));  fprintf(1,'cosine weighted UMBC mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_stemp,cos(p.rlat*pi/180));                       fprintf(1,'cosine weighted ERA5 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                  summary_olr_mmw_stats.era5.stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw,cos(p.rlat*pi/180));                         fprintf(1,'cosine weighted ERA5 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                             summary_olr_mmw_stats.era5.mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*olr.trend_mmw./nanmean(olr.xmmw),cos(p.rlat*pi/180));  fprintf(1,'cosine weighted ERA5 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                           summary_olr_mmw_stats.era5.mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw + olr.trend_mmw_err,cos(p.rlat*pi/180));                    fprintf(1,'cosine weighted ERA5 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((olr.trend_mmw + olr.trend_mmw_err)./nanmean(olr.xmmw)),cos(p.rlat*pi/180));  fprintf(1,'cosine weighted ERA5 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(merra2_stemptrend,cos(p.rlat*pi/180));                       fprintf(1,'cosine weighted MERRA2 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                               summary_olr_mmw_stats.merra2.stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend,cos(p.rlat*pi/180));                         fprintf(1,'cosine weighted MERRA2 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                          summary_olr_mmw_stats.merra2.mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*merra2_mmwtrend./nanmean(olr.xmmw),cos(p.rlat*pi/180));  fprintf(1,'cosine weighted MERRA2 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                        summary_olr_mmw_stats.merra2.mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend + merra2_mmwtrend_err,cos(p.rlat*pi/180));                    fprintf(1,'cosine weighted MERRA2 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((merra2_mmwtrend + merra2_mmwtrend_err)./nanmean(olr.xmmw)),cos(p.rlat*pi/180));  fprintf(1,'cosine weighted MERRA2 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-
-%%%%%
-disp(' ')
-boo = find(abs(p.rlat) <= 30);
-[m,s,m0,s0] = weighted_mean_stddev(umbc.stemprate(boo),ones(size(boo)));               fprintf(1,'tropical UMBC SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                 summary_olr_mmw_stats.umbc.tropical_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo),ones(size(boo)));                 fprintf(1,'tropical UMBC mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                            summary_olr_mmw_stats.umbc.tropical_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(umbc_mmwrate(boo)./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'tropical UMBC mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                          summary_olr_mmw_stats.umbc.tropical_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo)+umbc_mmwrate_err(boo),ones(size(boo)));                     fprintf(1,'tropical UMBC mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((umbc_mmwrate(boo)+umbc_mmwrate_err(boo))./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'tropical UMBC mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_stemp(boo),ones(size(boo)));                       fprintf(1,'tropical ERA5 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                  summary_olr_mmw_stats.era5.tropical_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo),ones(size(boo)));                         fprintf(1,'tropical ERA5 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                             summary_olr_mmw_stats.era5.tropical_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(olr.trend_mmw(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'tropical ERA5 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                           summary_olr_mmw_stats.era5.tropical_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo)+olr.trend_mmw_err(boo),ones(size(boo)));                            fprintf(1,'tropical ERA5 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((olr.trend_mmw(boo)+olr.trend_mmw_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'tropical ERA5 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(merra2_stemptrend(boo),ones(size(boo)));                       fprintf(1,'tropical MERRA2 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                               summary_olr_mmw_stats.merra2.tropical_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo),ones(size(boo)));                         fprintf(1,'tropical MERRA2 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                          summary_olr_mmw_stats.merra2.tropical_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(merra2_mmwtrend(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'tropical MERRA2 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                        summary_olr_mmw_stats.merra2.tropical_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo),ones(size(boo)));                    fprintf(1,'tropical MERRA2 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'tropical MERRA2 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-
-%%%%%
-disp(' ')
-boo = find(abs(p.rlat) > 30 & abs(p.rlat) <= 60);
-[m,s,m0,s0] = weighted_mean_stddev(umbc.stemprate(boo),ones(size(boo)));               fprintf(1,'midlat UMBC SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                 summary_olr_mmw_stats.umbc.midlat_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo),ones(size(boo)));                 fprintf(1,'midlat UMBC mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                            summary_olr_mmw_stats.umbc.midlat_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(umbc_mmwrate(boo)./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'midlat UMBC mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                          summary_olr_mmw_stats.umbc.midlat_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo)+umbc_mmwrate_err(boo),ones(size(boo)));                     fprintf(1,'midlat UMBC mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((umbc_mmwrate(boo)+umbc_mmwrate_err(boo))./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'midlat UMBC mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_stemp(boo),ones(size(boo)));                       fprintf(1,'midlat ERA5 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                  summary_olr_mmw_stats.era5.midlat_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo),ones(size(boo)));                         fprintf(1,'midlat ERA5 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                             summary_olr_mmw_stats.era5.midlat_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(olr.trend_mmw(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'midlat ERA5 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                           summary_olr_mmw_stats.era5.midlat_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo)+olr.trend_mmw_err(boo),ones(size(boo)));                            fprintf(1,'midlat ERA5 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((olr.trend_mmw(boo)+olr.trend_mmw_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'midlat ERA5 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(merra2_stemptrend(boo),ones(size(boo)));                       fprintf(1,'midlat MERRA2 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                               summary_olr_mmw_stats.merra2.midlat_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo),ones(size(boo)));                         fprintf(1,'midlat MERRA2 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                          summary_olr_mmw_stats.merra2.midlat_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(merra2_mmwtrend(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'midlat MERRA2 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                        summary_olr_mmw_stats.merra2.midlat_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo),ones(size(boo)));                    fprintf(1,'midlat MERRA2 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'midlat MERRA2 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-
-%%%%%
-disp(' ')
-boo = find(abs(p.rlat) > 60);
-[m,s,m0,s0] = weighted_mean_stddev(umbc.stemprate(boo),ones(size(boo)));               fprintf(1,'polar UMBC SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                 summary_olr_mmw_stats.umbc.polar_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo),ones(size(boo)));                 fprintf(1,'polar UMBC mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                            summary_olr_mmw_stats.umbc.polar_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(umbc_mmwrate(boo)./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'polar UMBC mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                          summary_olr_mmw_stats.umbc.polar_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo)+umbc_mmwrate_err(boo),ones(size(boo)));                     fprintf(1,'polar UMBC mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((umbc_mmwrate(boo)+umbc_mmwrate_err(boo))./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'polar UMBC mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_stemp(boo),ones(size(boo)));                       fprintf(1,'polar ERA5 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                  summary_olr_mmw_stats.era5.polar_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo),ones(size(boo)));                         fprintf(1,'polar ERA5 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                             summary_olr_mmw_stats.era5.polar_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(olr.trend_mmw(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'polar ERA5 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                           summary_olr_mmw_stats.era5.polar_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo)+olr.trend_mmw_err(boo),ones(size(boo)));                            fprintf(1,'polar ERA5 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((olr.trend_mmw(boo)+olr.trend_mmw_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'polar ERA5 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(merra2_stemptrend(boo),ones(size(boo)));                       fprintf(1,'polar MERRA2 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                               summary_olr_mmw_stats.merra2.polar_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo),ones(size(boo)));                         fprintf(1,'polar MERRA2 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                          summary_olr_mmw_stats.merra2.polar_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(merra2_mmwtrend(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'polar MERRA2 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                        summary_olr_mmw_stats.merra2.polar_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo),ones(size(boo)));                    fprintf(1,'polar MERRA2 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'polar MERRA2 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-
-%%%%%
-disp(' ')
-boo = find(p.landfrac == 0);
-[m,s,m0,s0] = weighted_mean_stddev(umbc.stemprate(boo),ones(size(boo)));               fprintf(1,'ocean UMBC SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                 summary_olr_mmw_stats.umbc.ocean_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo),ones(size(boo)));                 fprintf(1,'ocean UMBC mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                            summary_olr_mmw_stats.umbc.ocean_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(umbc_mmwrate(boo)./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'ocean UMBC mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                          summary_olr_mmw_stats.umbc.ocean_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo)+umbc_mmwrate_err(boo),ones(size(boo)));                     fprintf(1,'ocean UMBC mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((umbc_mmwrate(boo)+umbc_mmwrate_err(boo))./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'ocean UMBC mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_stemp(boo),ones(size(boo)));                       fprintf(1,'ocean ERA5 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                  summary_olr_mmw_stats.era5.ocean_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo),ones(size(boo)));                         fprintf(1,'ocean ERA5 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                             summary_olr_mmw_stats.era5.ocean_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(olr.trend_mmw(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'ocean ERA5 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                           summary_olr_mmw_stats.era5.ocean_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo)+olr.trend_mmw_err(boo),ones(size(boo)));                            fprintf(1,'ocean ERA5 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((olr.trend_mmw(boo)+olr.trend_mmw_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'ocean ERA5 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(merra2_stemptrend(boo),ones(size(boo)));                       fprintf(1,'ocean MERRA2 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                               summary_olr_mmw_stats.merra2.ocean_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo),ones(size(boo)));                         fprintf(1,'ocean MERRA2 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                          summary_olr_mmw_stats.merra2.ocean_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(merra2_mmwtrend(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'ocean MERRA2 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                        summary_olr_mmw_stats.merra2.ocean_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo),ones(size(boo)));                    fprintf(1,'ocean MERRA2 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'ocean MERRA2 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-
-%%%%%
-disp(' ')
-boo = find(p.landfrac >= 0.99);
-[m,s,m0,s0] = weighted_mean_stddev(umbc.stemprate(boo),ones(size(boo)));               fprintf(1,'land UMBC SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                 summary_olr_mmw_stats.umbc.land_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo),ones(size(boo)));                 fprintf(1,'land UMBC mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                            summary_olr_mmw_stats.umbc.land_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(umbc_mmwrate(boo)./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'land UMBC mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                          summary_olr_mmw_stats.umbc.land_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(umbc_mmwrate(boo)+umbc_mmwrate_err(boo),ones(size(boo)));                     fprintf(1,'land UMBC mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((umbc_mmwrate(boo)+umbc_mmwrate_err(boo))./umbc_mmw0(boo)),ones(size(boo)));  fprintf(1,'land UMBC mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_stemp(boo),ones(size(boo)));                       fprintf(1,'land ERA5 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                                  summary_olr_mmw_stats.era5.land_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo),ones(size(boo)));                         fprintf(1,'land ERA5 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                             summary_olr_mmw_stats.era5.land_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(olr.trend_mmw(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'land ERA5 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                           summary_olr_mmw_stats.era5.land_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(olr.trend_mmw(boo)+olr.trend_mmw_err(boo),ones(size(boo)));                            fprintf(1,'land ERA5 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((olr.trend_mmw(boo)+olr.trend_mmw_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'land ERA5 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-disp(' ')
-[m,s,m0,s0] = weighted_mean_stddev(merra2_stemptrend(boo),ones(size(boo)));                       fprintf(1,'land MERRA2 SKT absolute trends = %8.4f +/- %8.4f Kyr \n',m,s);                               summary_olr_mmw_stats.merra2.land_stemp = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo),ones(size(boo)));                         fprintf(1,'land MERRA2 mmw absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);                          summary_olr_mmw_stats.merra2.land_mmw   = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(100*(merra2_mmwtrend(boo)./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'land MERRA2 mmw percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);                        summary_olr_mmw_stats.merra2.land_mmwpc = [m s];
-[m,s,m0,s0] = weighted_mean_stddev(merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo),ones(size(boo)));                    fprintf(1,'land MERRA2 mmw + err absolute trends = %8.4f +/- %8.4f mmH2O/yr \n',m,s);
-[m,s,m0,s0] = weighted_mean_stddev(100*((merra2_mmwtrend(boo) + merra2_mmwtrend_err(boo))./nanmean(olr.xmmw(:,boo),1)),ones(size(boo)));  fprintf(1,'land MERRA2 mmw + err percent  trends = %8.4f +/- %8.4f percent/yr \n',m,s);
-
+disp('Recall density water = 1000 kg/m3 ==> 1 kg of water spread over area 1 m2 uses 1 mm ==> 1 mmH2O 1 kg/m2 of water')
+compute_skt_mmw_trends_umbc_era5_merra2_airsL3_climcaps_omi
+compute_deltaRH_surface
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -210,6 +89,13 @@ iFig = iFig + 1; figure(iFig); clf; aslmap(59,rlat65,rlon73,smoothn(reshape(merr
 iFig = iFig + 1; figure(iFig); clf; aslmap(60,rlat65,rlon73,smoothn(reshape(olr.trend_olr,72,64)',1),   [-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('ERA5 trend olr clr');
 
 iFig = iFig + 1; figure(iFig); clf; 
+plot(trend_rlat64,nanmean(reshape(olr.trend_mmw,72,64),1),'b',trend_rlat64,nanmean(reshape(merra2_mmwtrend,72,64),1),'g',trend_rlat64,nanmean(reshape(umbc_mmwrate,72,64),1),'r',...
+     trend_rlat64,nanmean(reshape(airsL3_mmwtrend,72,64),1),'c',trend_rlat64,nanmean(reshape(climcaps_mmwtrend,72,64),1),'m',omi.omi_colwv.lat,nanmean(omi.omi_colwv.trend,1),'k','linewidth',2);
+plotaxis2; hl = legend('ERA5','MERRA2','UMBC','AIRS L3','CLIMCAPS L3','OMI','location','best','fontsize',10); 
+%disp('ret'); pause
+pause(0.1)
+
+figure(iFig); clf
 plot(trend_rlat64,nanmean(reshape(olr.trend_mmw,72,64),1),'b',trend_rlat64,nanmean(reshape(merra2_mmwtrend,72,64),1),'g',trend_rlat64,nanmean(reshape(umbc_mmwrate,72,64),1),'r',...
      trend_rlat64,nanmean(reshape(airsL3_mmwtrend,72,64),1),'c',trend_rlat64,nanmean(reshape(climcaps_mmwtrend,72,64),1),'m','linewidth',2);
 hold on
@@ -273,6 +159,40 @@ iFig = iFig + 1; figure(iFig); clf
   set(gca,'ytick',[1:ymax],'yticklabel',num2str((1:ymax)'),'fontsize',10);
   set(gca,'xtick',[1:6],'xticklabel',{'ERA5','MERRA2','AIRS L3','CLIMCAPSL3','GISS','THIS WORK'},'fontsize',8);
   colormap(llsmap5)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% compute and plot fractional signs for column water
+zall = [olr.trend_mmw; merra2_mmwtrend; airsL3_mmwtrend; climcaps_mmwtrend; umbc_mmwrate];
+wall = ones(size(era5.stemprate));
+wall = cos(YY*pi/180)';
+%corr(zall')
+[R,Pvalue,m,s,m0,s0,linearfit,frac_neg0pos,frac_neg0pos_mean_std_mmw] = corrplot_weighted_mean_stddev(zall',wall',modelnames);
+iFig = iFig + 1; figure(iFig); clf
+  aslmap(iFig,rlat65,rlon73,smoothn(reshape(frac_neg0pos_mean_std_mmw(:,1),72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]);      title('dmmw/dt : sign agreement');
+iFig = iFig + 1; figure(iFig); clf
+  aslmap(iFig,rlat65,rlon73,smoothn(reshape(nanmean(zall,1),72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.15);      title('dmmw/dt : mean');
+iFig = iFig + 1; figure(iFig); clf 
+  aslmap(iFig,rlat65,rlon73,smoothn(reshape(nanstd(zall,[],1),72,64)',1), [-90 +90],[-180 +180]); colormap(jet); caxis([0 +1]*0.15);      title('dmmw/dt : stddev');
+iFig = iFig + 1; figure(iFig); clf
+  bah = nanmean(zall,1);
+  bah = bah ./ nanstd(zall,[],1);
+  aslmap(iFig,rlat65,rlon73,smoothn(reshape(bah,72,64)',1), [-90 +90],[-180 +180]); colormap(jet); caxis([0 +1]*4);      title('dmmw/dt : abs(mean)/stddev');
+
+iFig = iFig + 1; figure(iFig); clf
+  ta = tiledlayout(2,1,'TileSpacing','None', 'Padding','None');
+  ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
+  tfov(1) = nexttile;
+    %aslmap(41,rlat65,rlon73,smoothn(reshape(frac_neg0pos_mean_std_mmw(:,1),72,64)',1), [-90 +90],[-180 +180]); colormap(usa2); caxis([-1 +1]); 
+    aslmapSergio(rlat65,rlon73,smoothn(reshape(frac_neg0pos_mean_std_mmw(:,2),72,64)',1), [-90 +90],[-180 +180]); colormap(tfov(1),llsmap5); caxis([-1 +1]*0.15); colorbar
+    text(-2.5,1.15,'(a)')
+  tfov(2) = nexttile;
+    aslmapSergio(rlat65,rlon73,smoothn(reshape(frac_neg0pos_mean_std_mmw(:,3),72,64)',1), [-90 +90],[-180 +180]); colormap(tfov(2),llsmap5); caxis([ 0 +1]*0.15/2); colorbar
+    text(-2.5,1.15,'(b)')
+colormap(tfov(1),llsmap5);
+colormap(tfov(2),jet);
+ta.Padding = 'compact';
+ta.TileSpacing = 'compact';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

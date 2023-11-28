@@ -1768,11 +1768,15 @@ if iUMBC  > 0
 
   look_at_olr_trends
 
-  disp('can (+1) continue to 3 panel T(z,lat), WV(z,lat), RH(z,lat) 3x1 plots  ... and amplification or (0/default) quit or (-1) keyboard_nowindow : '); 
-  iWhich = input('Enter (+1) to continue (0/default) to return (-1) to examine via keyboard_nowindow : ');
-  if length(iWhich) == 0
-    iWhich = 0;
+  %% iWhich = 0;    %% to speed through all 11 choices with matlab nowindow
+  if ~exist('iWhich')
+    disp('can (+1) continue to 3 panel T(z,lat), WV(z,lat), RH(z,lat) 3x1 plots  ... and amplification or (0/default) quit or (-1) keyboard_nowindow : '); 
+    iWhich = input('Enter (+1) to continue (0/default) to return (-1) to examine via keyboard_nowindow : ');
+    if length(iWhich) == 0
+      iWhich = 0;
+    end
   end
+
   if iWhich == 0
     return
   elseif iWhich == -1

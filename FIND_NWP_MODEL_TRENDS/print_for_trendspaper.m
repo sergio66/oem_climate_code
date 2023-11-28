@@ -41,3 +41,6 @@ figure(44); aslprint([dir0 '/plot_avg_over_5_models_mean_std_T_trends.pdf']);
 figure(54); aslprint([dir0 '/mmw_trends_latlon_era5.pdf']);
 figure(56); aslprint([dir0 '/mmw_trends_latlon_umbc.pdf']);
 figure(62); aslprint([dir0 '/mmw_trends_5results.pdf']);
+%figure(70); aslprint([dir0 '/mmw_trends_5results_latlon_mean.pdf']);
+%figure(71); aslprint([dir0 '/mmw_trends_5results_latlon_stddev.pdf']);
+figure(73); aslprint([dir0 '/plot_avg_over_5_models_mean_std_mmw_trends.pdf']);
