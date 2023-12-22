@@ -22,9 +22,10 @@ load('llsmap5.mat');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('takes about 2 hours for trends')
+disp('takes about 5 hours for trends')
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
+%JOB = 20
 
 if ~exist('iTrendsOrAnoms')
   iTrendsOrAnoms = -1;  %% surface and atmospheric anomalies
@@ -81,19 +82,41 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
+iOLR = +1;
 for ii = 1 : iaMax
-  if iDorA > 0
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+  if iOLR < 0
+    if iDorA > 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    end
   else
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    if iDorA > 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    end
   end
   if exist(fin)
     iaFound(ii) = 1;
+    moo = load(fin,'pnew_op');
+    iaNumProf(ii) = length(moo.pnew_op.stemp);
+    if length(moo.pnew_op.stemp) ~= 4608
+      fprintf(1,'OH NO %s %4i has %4i profiles instead of 4608 \n',fin,ii,iaNumProf(ii))
+    end
   else
     iaFound(ii) = 0;
+    iaNumProf(ii) = -1;
   end
 end
 fprintf(1,'iNumYears = %3i : found %3i of expected %3i files \n',[iNumYears sum(iaFound) length(iaFound)])
+bad = find(iaFound > 0 & iaNumProf ~= 4608);
+if length(bad) > 0
+  fprintf(1,'found the following %3i bad files ... please redo \n',length(bad))
+  bad
+  error('bad files ... redo')
+end
+
 plot(1:iaMax,iaFound,'+-')
 if sum(iaFound) < length(iaFound)
   find(iaFound == 0)
@@ -104,11 +127,20 @@ disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_st
 disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
 disp('  "x" are the 100, "." are tens .. need to read in 4608')
 for ii = 1 : iaMax
-  if iDorA > 0
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+  if iOLR < 0
+    if iDorA > 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    end
   else
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    if iDorA > 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+    end
   end
+
   if exist(fin)
     if mod(ii,100) == 0
       fprintf(1,'+ \n')

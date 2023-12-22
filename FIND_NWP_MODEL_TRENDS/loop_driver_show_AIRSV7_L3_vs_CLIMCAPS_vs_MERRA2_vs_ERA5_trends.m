@@ -10,40 +10,70 @@ if exist('summary_mmw_stemp_corr_umbc_era5.mat');
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% set up the comparison file names
 
 ii = 0; 
-ii = ii + 1; 
+ii = ii + 1; %% ii = 1
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_ERA5calcs_spectraltrends.mat'; comment{ii} = 'GULP use SPECTRAL ERA5 to test code';
-ii = ii + 1; 
+ii = ii + 1; %% ii = 2
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';         comment{ii} = 'GULP this is default GULP used at Sounder STM Oct 2023';
-ii = ii + 1; 
+ii = ii + 1; %% ii = 3
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat';     comment{ii} = 'GULP this is default GULP + MLS';
-ii = ii + 1; 
+ii = ii + 1; %% ii = 4
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2.mat';   
   comment{ii} = 'SEQN : correct channels, test2A should be same as test2 but slope at S.pole maybe 3 (for test2) and 2(for test2A) : so slope probably -2/31';
-ii = ii + 1; 
+ii = ii + 1; %% ii = 5
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2A.mat';   
   comment{ii} = 'SEQN : correct channels, test2A should be same as test2 but slope at S.pole maybe 3 (for test2) and 2(for test2A) : so slope probably -2/31';
-ii = ii + 1; 
-  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test3_xb_WV_000000.mat'; comment{ii} = 'SEQN, with xb(WV) = 0';
-ii = ii + 1; 
-  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test3_xb_WV_000000.mat'; comment{ii} = 'GULP, with xb(WV) = 0';
-ii = ii + 1; 
-  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2B.mat';             comment{ii} = 'SEQN: same as test2A but has iAdjLowerAtmWVfrac = 0.0625, slope = -1/31';
-ii = ii + 1; 
-  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2C.mat';             comment{ii} = 'SEQN: same as test2B but has iAdjLowerAtmWVfrac = 1.0000, slope = -1/31';
-ii = ii + 1; 
-  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat';             comment{ii} = 'SEQN: same as test2C but has iAdjLowerAtmWVfrac = 1.0000, slope = 0';
-ii = ii + 1; 
-  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2E.mat';             comment{ii} = 'GULP: same as test2D with iAdjLowerAtmWVfrac = 1.0000, slope = 0';
+xstrstr = {'GULP ER5 test','GULP SounderSTM10/23','GULP with MLS','SEQN correct channels test2','SEQN correct channels test2A'};
 
-xstrstr = {'GULP ER5 test','GULP SounderSTM10/23','GULP with MLS','SEQN correct channels test2','SEQN correct channels test2A','SEQN xb(WV)=0','GULP xb(WV)=0',...
-           'SEQN test3,iAdj=0.0625,slope=-1/31','SEQN test3,iAdj=1,slope=-1/31','SEQN test3,iAdj=0.0625,slope=0','GULP test3,iAdj=0.0625,slope=0'};
+ii = ii + 1;  %% ii = 6;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test3_xb_WV_000000.mat'; comment{ii} = 'SEQN, with xb(WV) = 0';
+ii = ii + 1; %% ii = 7;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test3_xb_WV_000000.mat'; comment{ii} = 'GULP, with xb(WV) = 0';
+xstrstr = [xstrstr 'SEQN xb(WV)=0','GULP xb(WV)=0'}
+
+ii = ii + 1; %% ii = 8;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2B.mat';             comment{ii} = 'SEQN: same as test2A but has iAdjLowerAtmWVfrac = 0.0625, slope = -1/31';
+ii = ii + 1; %% ii = 9;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2C.mat';             comment{ii} = 'SEQN: same as test2B but has iAdjLowerAtmWVfrac = 1.0000, slope = -1/31';
+xstrstr = [xstrstr 'SEQN test3,iAdj=0.0625,slope=-1/31','SEQN test3,iAdj=1,slope=-1/31'};
+
+%%%%% uSE THESE FOR PAER TRENDS PAPER
+%%%%% uSE THESE FOR PAER TRENDS PAPER
+%%%%% uSE THESE FOR PAER TRENDS PAPER
+ii = ii + 1; %% ii = 10;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat';             comment{ii} = 'SEQN: same as test2C but has iAdjLowerAtmWVfrac = 1.0000, slope = 0';
+ii = ii + 1; %% ii = 11;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2E.mat';             comment{ii} = 'GULP: same as test2D with iAdjLowerAtmWVfrac = 1.0000, slope = 0';
+ii = ii + 1; %% ii = 12;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D_day.mat';         comment{ii} = 'SEQN: same as test2C but has iAdjLowerAtmWVfrac = 1.0000, slope = 0; DAYTIME';
+ii = ii + 1; %% ii = 13;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2E_day.mat';         comment{ii} = 'GULP: same as test2D with iAdjLowerAtmWVfrac = 1.0000, slope = 0; DAYTIME';
+xstrstr = [xstrstr 'SEQN test3,iAdj=1.0,slope=0','GULP test3,iAdj=1.0,slope=0','SEQN test3,iAdj=1.0,slope=0 DAY','GULP test3,iAdj=1.0,slope=0 DAY'};
+%%%%% uSE THESE FOR PAER TRENDS PAPER
+%%%%% uSE THESE FOR PAER TRENDS PAPER
+%%%%% uSE THESE FOR PAER TRENDS PAPER
+
+ii = ii + 1; %% ii = 14;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F.mat';             comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization"
+ii = ii + 1; %% ii = 15;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_day.mat';         comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization"
+xstrstr = [xstrstr 'SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee','SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee DAY'};
+
+ii = ii + 1; %% ii = 16;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_vary_dlnPdST.mat';             comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization"
+ii = ii + 1; %% ii = 17;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_vary_dlnPdSTday.mat';         comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization"
+xstrstr = [xstrstr 'SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT','SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT DAY'};
+
 if length(xstrstr) ~= length(strUMBC)  
   [ii length(strUMBC) length(comment) length(xstrstr)]
   error('need to have length(xstrstr) == length(strUMBC)')
 end
                           
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 for ii = 1 : length(strUMBC) 
   boo{ii} = load(strUMBC{ii},'topts');
 end

@@ -128,7 +128,7 @@ plot(fchanx,nansum(cosYYNPolar.*obsrates.rates,2)./ncYY,'k',fchanx,nansum(cosYYN
  xlabel('Wavenumber cm-1'); ylabel('dBT/dt K/yr')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('just showing all 4608 lats/lons Figs 50-56 so you may see a lot a lot of crazy structure!!!!')
+disp('showing *** ALL *** 4608 lats/lons Figs 50-56 so you may see a lot a lot of crazy structure!!!!')
 figure(iOffSet+10); clf;
   pcolor(fchanx,YY,obsrates.rates');                       shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 figure(iOffSet+11); clf;
@@ -157,10 +157,10 @@ z32 = climcapsL3.climcapsL3_spectral_rates(1:iX,:);;
   plotoptions6.cx = [-1 +1]*0.25; plotoptions6.plotcolors = llsmap5; plotoptions6.yReverseDir = -1; plotoptions6.yLinearOrLog = +1;
   tiled_3x2layout(z11',z12',z21',z22',z31',z32',iOffSet+16,plotoptions6,fchanx(1:iX),YY);
 
-zall = [z11(:) z12(:) z21(:) z22(:) z31(:) z32(:)]';
-corrcoef(zall')
-corr(zall')
-figure(iOffSet+17); clf
+%zall = [z11(:) z12(:) z21(:) z22(:) z31(:) z32(:)]';
+%corrcoef(zall')
+%corr(zall')
+%figure(iOffSet+17); clf
 %%varnames = {'OBS','UMBC','ERA5','MERRA2','AIRS L3','CLIMCAPS'};
 %%[R,Pvalue] = corrplot(zall',Varnames = varnames)
 %%hfig = gcf;
@@ -168,7 +168,7 @@ figure(iOffSet+17); clf
 %%arrayfun(@(ax) xlim(ax, [-1 +1]*0.25), haxes);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('doing zonal average Figs 60-66 : zonally averaged 64 latbins so cleaner than the previous five')
+disp('showing *** zonal averages *** in Figs 60-66 : zonally averaged 64 latbins so cleaner/less structure than the previous five')
 figure(iOffSet+20); clf;
   pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(obsrates.rates',72,64,2645),1)));                       
   shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
@@ -190,7 +190,14 @@ figure(iOffSet+25); clf;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-do_correlations_of_spectra
+junk = input('do the correlations of spectra : takes a while to make the plots but some plots are in eg trends paper ... not needed for OLR calcs .... (-1 [default]/+1) : ');
+if length(junk) == 0
+  junk = -1;
+end
+
+if junk > 0
+  do_correlations_of_spectra
+end
 
 disp(' ... ending plot_spectral_get_the_model_trends2 ...')
 disp(' ')

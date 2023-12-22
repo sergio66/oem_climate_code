@@ -57,6 +57,12 @@ savestr_version = ['Sept2002_Aug' num2str(2002+iNumYears) '_' num2str(timespan) 
 StartY = 2002;             StartYM = 9;   %% start 09/2002
 StopY  = StartY+iNumYears; StopYM  = 8;   %% stop  08/2020
 
+iAllorSeasonal = -4;  %% SON
+iAllorSeasonal = -3;  %% JJA
+iAllorSeasonal = -2;  %% MAM
+iAllorSeasonal = -1;  %% DJF
+iAllorSeasonal = +1;  %% all
+
 %%% TEMPERATURE AND WATER VAPOR LEVELS
 
 a = read_netcdf_lls('/asl/airs/CLIMCAPS_SNDR_AIRS_L3/2002/SNDR.AQUA.AIRS.20021001.M01.L3_CLIMCAPS_QCC.std.v02_38.G.210413175740.nc');
@@ -102,7 +108,7 @@ if i >= abs(timespan)*12 & length(iOK) == abs(timespan)*12
   fprintf(1,'%4i/%2i to %4i/%2i %s \n',[StartY StartYM StopY StopYM],savestr_version)  
   disp('ok, found the files needed for the YEAR timespan you chose')
 else
-  iStop = input('WARNING : oops need to get in more AIRS L3 data, +1 to stop???????? ')
+  iStop = input('WARNING : oops need to get in more AIRS CLIMCAPS L3 data, +1 to stop???????? ')
   if iStop == 1
     error('quitting')
   else
@@ -119,22 +125,35 @@ pause(0.1);
 % if length(iDorA) == 0
 %   iDorA = +1;
 % end
+iDorA = +1;
+iDorA = -1;
 if ~exist('iDorA')
   iDorA = +1;
+end
+if iDorA > 0
+  disp('iDorA = +1 ==> desc')
+else
+  disp('iDorA = -1 ==> asc')
 end
 
 %  iSlowORFast   = -1;  
 %  iSlowORFast   = -1;  
 if ~exist('iSlowORFast')
-  iSlowORFast = +1;
+  iSlowORFast = +1; %% laboriously slow, avg over tiles
+  iSlowORFast = -1; %% much faster, interp2d from 360x180 to tile centers 72x64
+end
+if iSlowORFast > 0
+  disp('iSlowORFast = +1 ==> SLOWLY LABORIOUSLY map 360x180 to tile centers 72x64')
+else
+  disp('iSlowORFast = -1 ==> QUICKLY map 360x180 to tile centers 72x64')
 end
 
 iL3orCLIMCAPS = -1;
 
 %% this is suppose we save 2002/09 to 2021/08 but only want eg AMIP/CMIP time = 2002/09 to 2014/08
 %iSkipTo_64x72_trend = input('Skip directly to trends by reading in earlier files????? (-1 default /+1) : ');
-iSkipTo_64x72_trend = -1;
 iSkipTo_64x72_trend = +1;
+iSkipTo_64x72_trend = -1;
 if length(iSkipTo_64x72_trend) == 0
   iSkipTo_64x72_trend = -1;
 end
@@ -313,12 +332,12 @@ if iSkipTo_64x72_trend == -1
     
   else
   
-    disp('loading in data A')
+    disp('already saved off huge files .... loading in data A')
     %% should be same as /airs_L3v7_March2014.mat
     loader = ['load /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_' savestr_version '.mat'];
     eval(loader);
   
-    disp('loading in data B')
+    disp('already saved off huge files .... loading in data B')
     loader = ['load /asl/s1/sergio/AIRS_CLIMCAPS/airs_climcaps_extra_' savestr_version '.mat'];
     eval(loader);
   

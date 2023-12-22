@@ -131,15 +131,15 @@ disp('ret to continue'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-iDorA = input('Enter Asc(-1) or Desc (+1) : ');
-if length(iDorA) == 0
+% iDorA = input('Enter Asc(-1) or Desc (+1) : ');
+% if length(iDorA) == 0
+%   iDorA = +1;
+% end
+iDorA = +1;
+iDorA = -1;
+if ~exist('iDorA')
   iDorA = +1;
 end
-%iDorA = +1;
-%iDorA = -1;
-%if ~exist('iDorA')
-%  iDorA = +1;
-%end
 if iDorA > 0
   disp('iDorA = +1 ==> desc')
 else
@@ -159,9 +159,9 @@ else
 end
 
 %% this is suppose we save 2002/09 to 2021/08 but only want eg AMIP/CMIP time = 2002/09 to 2014/08
-iSkipTo_64x72_trend = input('Skip directly to trends by reading in earlier files????? (-1 default /+1) : ');
-%iSkipTo_64x72_trend = -1;
-%iSkipTo_64x72_trend = +1;
+%iSkipTo_64x72_trend = input('Skip directly to trends by reading in earlier files????? (-1 default /+1) : ');
+iSkipTo_64x72_trend = +1;
+iSkipTo_64x72_trend = -1;
 if length(iSkipTo_64x72_trend) == 0
   iSkipTo_64x72_trend = -1;
 end
@@ -169,7 +169,6 @@ end
 iL3orCLIMCAPS = +1;
 
 if iSkipTo_64x72_trend == +1
-
   load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
   drlon = 5; 
   rlon = -180 : drlon : +180;      %% 73 edges, so 72 bins
@@ -246,7 +245,8 @@ if iSkipTo_64x72_trend == -1
   
   clear yy mm
   
-  iDo = input('(+1) read in saved mat file or (-1) read in L3 files, one at a time  ? ');
+  %iDo = input('(+1) read in saved mat file or (-1) read in L3 v7 files, one at a time  ? ');
+  iDo = +1;
   if iDo < 0
     clear yy mm
     for ix = 1:length(woo)

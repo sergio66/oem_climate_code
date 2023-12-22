@@ -126,7 +126,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% THIS IS OCEAN
 if ~exist('rtpProfile')
-  [~,~,rtpProfile,~] = rtpread('summary_atm_N_cld_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
+  [~,~,rtpProfile,~] = rtpread('../FIND_NWP_MODEL_TRENDS/summary_atm_N_cld_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
   landfrac = rtpProfile.landfrac';
 end
 

@@ -11,7 +11,8 @@ if exist(feedbacknameUMBC)
     junk2 = -1;
   end
 end       
-saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays'];  %% if you only want to save UMBC
+
+saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays strUMBC iNumYears iAllorSeasonal'];  %% if you only want to save UMBC
 if junk2 > 0
   fprintf(1,'saving to %s \n',feedbacknameUMBC);
   eval(saver);

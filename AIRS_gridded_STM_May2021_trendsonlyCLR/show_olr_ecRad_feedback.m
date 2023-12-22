@@ -6,7 +6,7 @@ if junk > 0
   clear nwp_spectral_trends_*
 end
 
-if ~exist('nwp_spectral_trends_cmip6_era5_airsL3_umbc')
+if ~exist('nwp_spectral_trends_cmip6_era5_airsL3_umbc') & exist('cmip6')
   nwp_spectral_trends_cmip6_era5_airsL3_umbc = make_profile_spectral_trends(cmip6,era5,airsL3,results,resultsWV,resultsT,resultsO3,fits,rates,pavg,plays,f,2,iVersJac,-1);
     aL3trend.stemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
     aL3trend.ptemp = nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp;
@@ -39,6 +39,8 @@ end
 iDefault = 0;
 iaComputeWhichFeedback = [9999];  %% do the things for the direct comparisons ie ALL perturbations together
 iaComputeWhichFeedback = [0];     %% compute + plot feedbacks only  DEFAULT
+
+fprintf(1,'iaComputeWhichFeedback = %6i \n',iaComputeWhichFeedback)
 
 if iaComputeWhichFeedback ~= iDefault
   disp(' ')

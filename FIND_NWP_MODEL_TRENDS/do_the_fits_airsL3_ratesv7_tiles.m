@@ -46,7 +46,7 @@ end
 
 warning off
 for ii = 1 : 72
-  fprintf(1,'lonbin %2i of 72 \n',ii);
+  fprintf(1,' << do_the_fits_airsL3_ratesv7_tiles.m : profile rates and STEMP >> lonbin %2i of 72 \n\n',ii)
   %xthestats       = do_profilerate_fit(squeeze(save64x72_Q(:,ii,:,zonk)),squeeze(save64x72_T(:,ii,:,zonk)),squeeze(save64x72_stemp(:,ii,zonk)),...
   %                                 days(zonk),rlat,iNumCycles);
   if iL3orCLIMCAPS == +1
@@ -115,8 +115,10 @@ for ii = 1 : 72
 end
 
 if iL3orCLIMCAPS > 0
-  %% remember we don't have cloud stuff here so this is sorta a waste
+  %% remember only AIRS L3 has cloud and olr stuff, not climcaps
   for ii = 1 : 72
+    fprintf(1,'   .... do_the_fits_airsL3_ratesv7_tiles.m : cloud and OLR stuff for AIRS L3 only : lonbin %2i of 72 \n\n',ii)
+
     %xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_O3(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat,iNumCycles);
     xthestats64x72_other = do_profilerate_fit_other_fraction(squeeze(save64x72_CH4(:,ii,:,zonk)),squeeze(save64x72_olr(:,ii,zonk)),squeeze(save64x72_clrolr(:,ii,zonk)),days(zonk),rlat,iNumCycles);
     thestats64x72.ch4rate(ii,:,:)        = xthestats.ozonerate;

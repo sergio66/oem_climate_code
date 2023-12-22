@@ -65,9 +65,16 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     %xb(1:5) = xb(1:5)*10;
     %[hhh,~,ppp,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp');
     [hhh,~,ppp,~] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp');
+    RH0  = layeramt2RH(hhh,ppp);
+    for iiii = 1 : length(ppp.stemp)
+      nlay = ppp.nlevs(iiii) - 1;
+      RHSurf(iiii) = 0.5*(RH0(nlay,iiii)+RH0(nlay-1,iiii));
+    end
+
     JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
     if ppp.landfrac(JOBJOBJOB) < eps
       %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
+      %% also see Nadir Jeevanjee : Simple Climate Models, arXiv 2018
       dBT1231 = 0.0025/2;
       dBT1231 = driver.rateset.rates(1520); 
       dBT1231 = abs(driver.rateset.rates(1520));  %%% new 
@@ -90,6 +97,7 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     iVers = 1;  %% after  noon Mar 11,2023,      sets WV   LOWEST 6 layers
     iVers = 2;  %% after       Mar 27,2023,      sets WV+T LOWEST 6 layers and till Nov 2023
     iVers = 3;  %% after       Nov 16, 2023      sets WV   LOWEST LAYERS till about 500 mb
+    iVers = 4;  %% after       Dec 16, 2023      same as iVers == 3 but it adds on d(RH) from Held.Jeevanjee
     
     iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;
     iAdjLowerAtmWVfracX = 0.0;
@@ -165,18 +173,25 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
         xb(6+length(driver.jacobian.temp_i)-6) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 6/6);
         fprintf(1,'miaow2 = %8.6f \n',xb(6+length(driver.jacobian.water_i)-0));
 
-      elseif iVers == 3
+      elseif iVers == 3 | iVers == 4
         %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/   ....
         %% used since Nov 16, 2023
         boo = find(plays >= 500);
+
+        if iVers == 4
+          dlnPdT = precipitation_vs_skt_changes(ppp.rlat(JOBJOBJOB),ppp.landfrac(JOBJOBJOB));
+          [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dBT1231,dlnPdT);
+          dBT1231_WV = dBT1231_WV + lowest_layer_fracwater_dRH_Held_Jeevanjee;          %% dBT1231_WV and lowest_layer_fracwater_dRHzero should be the same if the iAdjustStuff = 1.0
+        end
+
         for ix = 1 : length(boo)+1
           xb(6+length(driver.jacobian.water_i)-(ix-1)) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - (ix-1)/length(boo));
         end
      
         miaow2 = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX;
         fprintf(1,'miaow2 = %8.6f from OLD pre Nov 2003 dBT1231 adj          ....       while miaow3 = %8.6f from NEW, CORRECT d(RH) based adjustment \n',miaow2,xb(6+length(driver.jacobian.water_i)-0));
-
       end
+
     else
       disp('iAdjLowerAtmWVfracX = 0 so NO WV adjustment!!!')
       disp('iAdjLowerAtmWVfracX = 0 so NO WV adjustment!!!')

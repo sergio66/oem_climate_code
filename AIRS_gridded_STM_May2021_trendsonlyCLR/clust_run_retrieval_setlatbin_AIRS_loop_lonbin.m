@@ -381,8 +381,8 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%
 
+  driver.NorD = +1; %% night, desc  DEFAULT
   driver.NorD = -1; %% day, asc
-  driver.NorD = +1; %% night, desc
   driver.iQuantile = iQuantile;
 
   if abs(topts.dataset) == +1
@@ -424,6 +424,7 @@ for iInd = iXX1 : idX : iXX2
 
   topts.TfacAdjAtmosphericAmplification = 0.0;        %% this is an additional adjutment factor for a-priori WV believe it or not, TEST TO SEE WHAT HAPPENS
   topts.TfacAdjAtmosphericAmplification = 0.5;        %% this is an additional adjutment factor for a-priori WV believe it or not, default till Nov 2023
+  topts.TfacAdjAtmosphericAmplification = 1.0;        %% new Dec 2023
   if length(topts.iaSequential) > 1
     topts.TfacAdjAtmosphericAmplification = 0.1;        %% this is an additional adjutment factor for a-priori WV believe it or not
     topts.TfacAdjAtmosphericAmplification = 0.25;       %% this is an additional adjutment factor for a-priori WV believe it or not
@@ -572,7 +573,7 @@ for iInd = iXX1 : idX : iXX2
   elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_OBS_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
-    driver.outfilename = ['OutputAnomaly_CAL_Dat/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+    driver.outfilename = ['OutputAnomaly_CAL_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset ~= 3
     outdir = ['Output_Day/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];

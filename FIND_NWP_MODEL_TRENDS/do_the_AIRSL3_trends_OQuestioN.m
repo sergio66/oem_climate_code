@@ -32,11 +32,16 @@ if iL3orCLIMCAPS == -1
 end
 
 %iDorA = input('Enter Asc(-1) or Desc (+1) : ');
-iDorA = 1;
-if length(iDorA) == 0
+%iDorA = 1;
+if ~exist('iDorA')
   iDorA = +1;
 end
 
+fprintf(1,' << do_the_AIRSL3_trends_OQuestioN.m : iDorA = %2i >>\n',iDorA)
+fprintf(1,' << do_the_AIRSL3_trends_OQuestioN.m : iDorA = %2i >>\n',iDorA)
+fprintf(1,' << do_the_AIRSL3_trends_OQuestioN.m : iDorA = %2i >>\n',iDorA)
+%% disp('ret to continue'); pause
+pause(0.1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %iDo = input('do NATIVE 180 bins? (-1/+1) (-1 = default) : ');
@@ -170,7 +175,7 @@ if iDo > 0
   save_lon64x72 = 0.5*(rlon(1:end-1)+rlon(2:end));
   
   disp(' ')
-  disp('turning AIRS L3 data from gridded Lat/Lon bins to Tiles bins VERY VERY SLOOOOOOOOWWWWWWWWW');
+  disp('interpolating AIRS L3 data from gridded Lat/Lon bins to Tiles bins FAST');
   plot_L3_data_tiles_fast_grib
   
   disp(' ')
