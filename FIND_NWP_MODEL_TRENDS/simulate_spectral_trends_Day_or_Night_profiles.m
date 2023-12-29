@@ -43,21 +43,21 @@ eval(sartaer);
 [~,~,ppradX,~] = rtpread(frp);
 simbiasO = rad2bt(hh2.vchan,ppradX.rcalc)-rad2bt(hh2.vchan,pprad0_ocean.rcalc); 
 
-pprad0.plays = plevs2plays(pprad0.plevs);
+pprad0_ocean.plays = plevs2plays(pprad0_ocean.plevs);
 figure(100); clf; 
   ta = tiledlayout(2,2);
   ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
   
   tafov(1) = nexttile; 
-  plot(ppradX.ptemp(1:97,1)-pprad0.ptemp(1:97,1),pprad0.plays(1:97,1),'g',ppradX.ptemp(1:97,2)-pprad0.ptemp(1:97,2),pprad0.plays(1:97,2),'m--',ppradX.ptemp(1:97,3)-pprad0.ptemp(1:97,3),pprad0.plays(1:97,3),'r',...
-       ppradX.ptemp(1:97,4)-pprad0.ptemp(1:97,4),pprad0.plays(1:97,4),'c--',ppradX.ptemp(1:97,5)-pprad0.ptemp(1:97,5),pprad0.plays(1:97,5),'b','linewidth',2)
+  plot(ppradX.ptemp(1:97,1)-pprad0_ocean.ptemp(1:97,1),pprad0_ocean.plays(1:97,1),'g',ppradX.ptemp(1:97,2)-pprad0_ocean.ptemp(1:97,2),pprad0_ocean.plays(1:97,2),'m--',ppradX.ptemp(1:97,3)-pprad0_ocean.ptemp(1:97,3),pprad0_ocean.plays(1:97,3),'r',...
+       ppradX.ptemp(1:97,4)-pprad0_ocean.ptemp(1:97,4),pprad0_ocean.plays(1:97,4),'c--',ppradX.ptemp(1:97,5)-pprad0_ocean.ptemp(1:97,5),pprad0_ocean.plays(1:97,5),'b','linewidth',2)
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); plotaxis2; title('T'); axis([-0.1 +0.1 10 1000])
   if iFrac == -10;  axis([-0.1/2 +0.1/2 10 1000]); end
   hl = legend('tropical','S Midlat','N Midlat','S Polar','N Polar','location','best','fontsize',6); 
 
   tafov(2) = nexttile; 
-  plot(ppradX.gas_1(1:97,1)./pprad0.gas_1(1:97,1),pprad0.plays(1:97,1),'g',ppradX.gas_1(1:97,2)./pprad0.gas_1(1:97,2),pprad0.plays(1:97,2),'m--',ppradX.gas_1(1:97,3)./pprad0.gas_1(1:97,3),pprad0.plays(1:97,3),'r',...
-       ppradX.gas_1(1:97,4)./pprad0.gas_1(1:97,4),pprad0.plays(1:97,4),'c--',ppradX.gas_1(1:97,5)./pprad0.gas_1(1:97,5),pprad0.plays(1:97,5),'b','linewidth',2); axis([0.99 1.01 10 1000])
+  plot(ppradX.gas_1(1:97,1)./pprad0_ocean.gas_1(1:97,1),pprad0_ocean.plays(1:97,1),'g',ppradX.gas_1(1:97,2)./pprad0_ocean.gas_1(1:97,2),pprad0_ocean.plays(1:97,2),'m--',ppradX.gas_1(1:97,3)./pprad0_ocean.gas_1(1:97,3),pprad0_ocean.plays(1:97,3),'r',...
+       ppradX.gas_1(1:97,4)./pprad0_ocean.gas_1(1:97,4),pprad0_ocean.plays(1:97,4),'c--',ppradX.gas_1(1:97,5)./pprad0_ocean.gas_1(1:97,5),pprad0_ocean.plays(1:97,5),'b','linewidth',2); axis([0.99 1.01 10 1000])
   if iFrac == -10;  axis([1-0.01/2 1+0.01/2 10 1000]); end
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); plotaxis2([1]); title('WV')
 
@@ -111,17 +111,17 @@ eval(sartaer);
 [~,~,ppradX,~] = rtpread(frp);
 simbiasL = rad2bt(hh2.vchan,ppradX.rcalc)-rad2bt(hh2.vchan,pprad0_land.rcalc); 
 
-pprad0.plays = plevs2plays(pprad0.plevs);
+pprad0_land.plays = plevs2plays(pprad0_land.plevs);
   tafov(3) = nexttile;
-  plot(ppradX.ptemp(1:97,1)-pprad0.ptemp(1:97,1),pprad0.plays(1:97,1),'g',ppradX.ptemp(1:97,2)-pprad0.ptemp(1:97,2),pprad0.plays(1:97,2),'m--',ppradX.ptemp(1:97,3)-pprad0.ptemp(1:97,3),pprad0.plays(1:97,3),'r',...
-       ppradX.ptemp(1:97,4)-pprad0.ptemp(1:97,4),pprad0.plays(1:97,4),'c--',ppradX.ptemp(1:97,5)-pprad0.ptemp(1:97,5),pprad0.plays(1:97,5),'b','linewidth',2); axis([-0.1 +0.1 10 1000])
+  plot(ppradX.ptemp(1:97,1)-pprad0_land.ptemp(1:97,1),pprad0_land.plays(1:97,1),'g',ppradX.ptemp(1:97,2)-pprad0_land.ptemp(1:97,2),pprad0_land.plays(1:97,2),'m--',ppradX.ptemp(1:97,3)-pprad0_land.ptemp(1:97,3),pprad0_land.plays(1:97,3),'r',...
+       ppradX.ptemp(1:97,4)-pprad0_land.ptemp(1:97,4),pprad0_land.plays(1:97,4),'c--',ppradX.ptemp(1:97,5)-pprad0_land.ptemp(1:97,5),pprad0_land.plays(1:97,5),'b','linewidth',2); axis([-0.1 +0.1 10 1000])
   if iFrac == -10;  axis([-0.1/2 +0.1/2 10 1000]); end
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); plotaxis2; 
   hl = legend('tropical','S Midlat','N Midlat','S Polar','N Polar','location','best','fontsize',6); 
 
   tafov(4) = nexttile;
-  plot(ppradX.gas_1(1:97,1)./pprad0.gas_1(1:97,1),pprad0.plays(1:97,1),'g',ppradX.gas_1(1:97,2)./pprad0.gas_1(1:97,2),pprad0.plays(1:97,2),'m--',ppradX.gas_1(1:97,3)./pprad0.gas_1(1:97,3),pprad0.plays(1:97,3),'r',...
-       ppradX.gas_1(1:97,4)./pprad0.gas_1(1:97,4),pprad0.plays(1:97,4),'c--',ppradX.gas_1(1:97,5)./pprad0.gas_1(1:97,5),pprad0.plays(1:97,5),'b','linewidth',2); axis([0.99 1.01 10 1000])
+  plot(ppradX.gas_1(1:97,1)./pprad0_land.gas_1(1:97,1),pprad0_land.plays(1:97,1),'g',ppradX.gas_1(1:97,2)./pprad0_land.gas_1(1:97,2),pprad0_land.plays(1:97,2),'m--',ppradX.gas_1(1:97,3)./pprad0_land.gas_1(1:97,3),pprad0_land.plays(1:97,3),'r',...
+       ppradX.gas_1(1:97,4)./pprad0_land.gas_1(1:97,4),pprad0_land.plays(1:97,4),'c--',ppradX.gas_1(1:97,5)./pprad0_land.gas_1(1:97,5),pprad0_land.plays(1:97,5),'b','linewidth',2); axis([0.99 1.01 10 1000])
   if iFrac == -10;  axis([1-0.01/2 1+0.01/2 10 1000]); end
   set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); plotaxis2([1]); 
 

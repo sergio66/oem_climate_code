@@ -201,21 +201,21 @@ z21 = squeeze(nanmean(reshape(results15yrs.resultsWV,72,64,49),1))';
 z22 = squeeze(nanmean(reshape(results20yrs.resultsWV,72,64,49),1))';
 plotoptions.str11 = '05 yrs'; plotoptions.str12 = '10 yrs'; plotoptions.str21 = '15 yrs'; plotoptions.str22 = '20 yrs';
 plotoptions.xstr = 'Latitude'; plotoptions.ystr = 'Pressure (mb)';
-plotoptions.cx = [-1 +1]*0.015; plotoptions.maintitle = 'd/dt WVfrac'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = +1; plotoptions.yLinearOrLog = +1; plotoptions.yLimits = [100 1000]; plotoptions.xLimits = [-90 +90]; 
+plotoptions.cx = [-1 +1]*0.015; plotoptions.maintitle = 'd/dt WVfrac'; plotoptions.cmap = usa2; plotoptions.yReverseDir = +1; plotoptions.yLinearOrLog = +1; plotoptions.yLimits = [100 1000]; plotoptions.xLimits = [-90 +90]; 
 profile_plots_2x2tiledlayout(results10yrs.rlat,results10yrs.pavg,z11,z12,z21,z22,10,plotoptions);
 
 z11 = squeeze(nanmean(reshape(results05yrs.resultsT,72,64,49),1))';
 z12 = squeeze(nanmean(reshape(results10yrs.resultsT,72,64,49),1))';
 z21 = squeeze(nanmean(reshape(results15yrs.resultsT,72,64,49),1))';
 z22 = squeeze(nanmean(reshape(results20yrs.resultsT,72,64,49),1))';
-plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dT/dt'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = +1; plotoptions.yLinearOrLog = -1; plotoptions.yLimits = [10 1000]; plotoptions.xLimits = [-90 +90]; 
+plotoptions.cx = [-1 +1]*0.15; plotoptions.maintitle = 'dT/dt'; plotoptions.cmap = usa2; plotoptions.yReverseDir = +1; plotoptions.yLinearOrLog = -1; plotoptions.yLimits = [10 1000]; plotoptions.xLimits = [-90 +90]; 
 profile_plots_2x2tiledlayout(results10yrs.rlat,results10yrs.pavg,z11,z12,z21,z22,11,plotoptions);
 
 z11 = squeeze(nanmean(reshape(results05yrs.resultsO3,72,64,49),1))';
 z12 = squeeze(nanmean(reshape(results10yrs.resultsO3,72,64,49),1))';
 z21 = squeeze(nanmean(reshape(results15yrs.resultsO3,72,64,49),1))';
 z22 = squeeze(nanmean(reshape(results20yrs.resultsO3,72,64,49),1))';
-plotoptions.cx = [-1 +1]*0.005; plotoptions.maintitle = 'd/dt O3frac'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = +1; plotoptions.yLinearOrLog = -1; plotoptions.yLimits = [1 100]; plotoptions.xLimits = [-90 +90]; 
+plotoptions.cx = [-1 +1]*0.005; plotoptions.maintitle = 'd/dt O3frac'; plotoptions.cmap = usa2; plotoptions.yReverseDir = +1; plotoptions.yLinearOrLog = -1; plotoptions.yLimits = [1 100]; plotoptions.xLimits = [-90 +90]; 
 profile_plots_2x2tiledlayout(results10yrs.rlat,results10yrs.pavg,z11,z12,z21,z22,12,plotoptions);
 
 z11 = reshape(a05.b_desc,4608,2645); z11 = z11(:,1520); 
@@ -223,17 +223,17 @@ z12 = reshape(a10.b_desc,4608,2645); z12 = z12(:,1520);
 z21 = reshape(a15.b_desc,4608,2645); z21 = z21(:,1520); 
 z22 = reshape(a20.b_desc,4608,2645); z22 = z22(:,1520); 
 plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Latitude';
-plotoptions.cx = [-1 +1]*0.2; plotoptions.maintitle = 'dBT1231/dt'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+plotoptions.cx = [-1 +1]*0.2; plotoptions.maintitle = 'dBT1231/dt'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
 aslmap_2x2tiledlayout(z11,z12,z21,z22,13,plotoptions);
 
 z11 = results05yrs.results(:,6); z12 = results10yrs.results(:,6); z21 = results15yrs.results(:,6); z22 = results20yrs.results(:,6); 
 plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Latitude';
-plotoptions.cx = [-1 +1]*0.2; plotoptions.maintitle = 'dSKT/dt'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+plotoptions.cx = [-1 +1]*0.2; plotoptions.maintitle = 'dSKT/dt'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
 aslmap_2x2tiledlayout(z11,z12,z21,z22,14,plotoptions);
 
 plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Wavenumber (cm-1)';
 z11 = a05.b_desc_zonal; z12 = a10.b_desc_zonal; z21 = a15.b_desc_zonal; z22 = a20.b_desc_zonal;
-plotoptions.cx = [-1 +1]*0.2; plotoptions.maintitle = 'dBT/dt'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+plotoptions.cx = [-1 +1]*0.2; plotoptions.maintitle = 'dBT/dt'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
 profile_plots_2x2tiledlayout(a05.h.vchan,results10yrs.rlat,z11,z12,z21,z22,15,plotoptions);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

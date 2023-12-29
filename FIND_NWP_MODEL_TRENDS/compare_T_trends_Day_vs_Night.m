@@ -34,7 +34,7 @@ iFig = 40;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';
@@ -61,7 +61,7 @@ iFig = 41;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'ERA5';        
   plotoptions.str21 = 'AIRS L3';      plotoptions.str22 = 'CLIMCAPS L3'; 
   plotoptions.yLinearOrLog = -1;
@@ -78,7 +78,7 @@ iFig = 42;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
   plotoptions.str21 = 'N/A';          plotoptions.str22 = 'ERA5';        plotoptions.str23 = 'MERRA2';
   plotoptions.yLinearOrLog = -1;

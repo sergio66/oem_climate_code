@@ -12,52 +12,82 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 
 system_slurm_stats
 
+%% kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 5     for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 %JOB = 31
 
-%load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
-wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','h');
-h = wah.h;
-wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','p');
-p = wah.p;
+iNorD = +1; %% default, night
+iNorD = -1; %% day
+iNumYears = 20;
+
+YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
+YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
+YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
+YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 load('llsmap5.mat');
 
-RH000 = layeramt2RH(h,p);
+iOops = +1;
+if iOops < 0
+  
+  %load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
+  wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','h');
+  h = wah.h;
+  wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','p');
+  p = wah.p;
+  
+  load('llsmap5.mat');
+  
+  RH000 = layeramt2RH(h,p);
+  
+  pERA5 = p;
+  %{
+  nwptrend = getdata_NWP(5);
+  %}
+  wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','nwp_spectral_trends_cmip6_era5_airsL3_umbc');
+  nwp_spectral_trends_cmip6_era5_airsL3_umbc = wah.nwp_spectral_trends_cmip6_era5_airsL3_umbc; clear wah;
+  
+  pERA5.stemp          = pERA5.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.stemp;
+  pERA5.ptemp(1:100,:) = pERA5.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
+  pERA5.gas_1(1:100,:) = pERA5.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_1);
+  pERA5.gas_3(1:100,:) = pERA5.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_3);
+    
+  RHERA5 = layeramt2RH(h,pERA5);
+  
+  RHERA5rate = RHERA5 - RH000;
+  zonalRHERA5rate = reshape(RHERA5rate,100,72,64);
+  zonalRHERA5rate = squeeze(nanmean(zonalRHERA5rate,2));
+  
+  kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
+  rlat = kaboom.rlat; 
+  
+  zonalrlat = rlat;
+  zonalplays = p.plays(1:100,3000);
+  figure(1); pcolor(zonalrlat,zonalplays,zonalRHERA5rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+    set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
+  
+  TERA5rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
+  zonalTERA5rate = reshape(TERA5rate,100,72,64);
+  zonalTERA5rate = squeeze(nanmean(zonalTERA5rate,2));
+  figure(2); pcolor(zonalrlat,zonalplays,zonalTERA5rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
+    set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct Trate')
 
-pERA5 = p;
-%{
-nwptrend = getdata_NWP(5);
-%}
-wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','nwp_spectral_trends_cmip6_era5_airsL3_umbc');
-nwp_spectral_trends_cmip6_era5_airsL3_umbc = wah.nwp_spectral_trends_cmip6_era5_airsL3_umbc; clear wah;
+else
+  kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat','h','p','rlat'); 
+  h = kaboom.h;
+  p = kaboom.p;
 
-pERA5.stemp          = pERA5.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.stemp;
-pERA5.ptemp(1:100,:) = pERA5.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
-pERA5.gas_1(1:100,:) = pERA5.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_1);
-pERA5.gas_3(1:100,:) = pERA5.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.gas_3);
+  zonalrlat = kaboom.rlat;   
+  zonalplays = p.plays(1:100,3000);
 
+  zonalRHERA5rate = [];
+  zonalTERA5rate = [];
 
-RHERA5 = layeramt2RH(h,pERA5);
-
-RHERA5rate = RHERA5 - RH000;
-zonalRHERA5rate = reshape(RHERA5rate,100,72,64);
-zonalRHERA5rate = squeeze(nanmean(zonalRHERA5rate,2));
-
-kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
-rlat = kaboom.rlat; 
-
-zonalrlat = rlat;
-zonalplays = p.plays(1:100,3000);
-figure(1); pcolor(zonalrlat,zonalplays,zonalRHERA5rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
-
-TERA5rate = nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends.ptemp;
-zonalTERA5rate = reshape(TERA5rate,100,72,64);
-zonalTERA5rate = squeeze(nanmean(zonalTERA5rate,2));
-figure(2); pcolor(zonalrlat,zonalplays,zonalTERA5rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct Trate')
-
+end
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,10 +105,15 @@ disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs
 iYS = 2002; iYE = 2021;
 iYS = 2002; iYE = 2022;
 
-%% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
-%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
-%era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
-era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
+if iNorD > 0
+  %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m  and do_the_AIRSL3_trends.m
+  %era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+  %era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+  era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
+  era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2022_08_desc.mat');
+else
+  era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2022_08_asc.mat');
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -126,11 +161,6 @@ end
 
 daysSince2002 = change2days(yy,mm,dd,2002);
 whos daysSince2002
-
-YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
-YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
-YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
-YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
 
 daysSince2002Start = change2days(YMStart(1),YMStart(2),15,2002);
 daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),  15,2002);
@@ -190,10 +220,22 @@ end
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
-dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
-dirout = 'SimulateTimeSeries/ERA5/';
 if iConstORVary == +1
-  dirout = 'SimulateTimeSeries/ERA5_ConstTracegas/';
+  if iNorD > 0
+    dirout = 'SimulateTimeSeries/NIGHTorAVG/ERA5_ConstTracegas/';
+  else
+    dirout = 'SimulateTimeSeries/DAY/ERA5_ConstTracegas/';
+  end
+else
+  if iNorD > 0
+    dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+    dirout = 'SimulateTimeSeries/ERA5/';
+    dirout = 'SimulateTimeSeries/NIGHTorAVG/ERA5/';
+    dirout = 'STS/NIGHTorAVG/ERA5/';
+  else
+    dirout = 'SimulateTimeSeries/DAY/ERA5/';
+    dirout = 'STS/DAY/ERA5/';
+  end
 end
 
 co2ppm_t = [];
@@ -295,9 +337,9 @@ for ii = JOB
 
   pwd
   disp(' ')
-  disp('output in eg           SimulateTimeSeries/ERA5/reconstruct_era5_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
-  disp('         also makes eg SimulateTimeSeries/ERA5/simulate64binsERA5_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
-  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 5')
+  disp('output in eg           SimulateTimeSeries/ NIGHTorAVG   or    DAY /ERA5/reconstruct_era5_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
+  disp('         also makes eg SimulateTimeSeries/ NIGHTorAVG   or    DAY /ERA5/simulate64binsERA5_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
+  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 12; make sure you set iModel correctly')
   disp(' ')
 
 end

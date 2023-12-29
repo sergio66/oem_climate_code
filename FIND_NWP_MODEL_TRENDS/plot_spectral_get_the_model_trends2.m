@@ -154,7 +154,7 @@ z32 = climcapsL3.climcapsL3_spectral_rates(1:iX,:);;
   plotoptions6.str31 = 'AIRS L3';   plotoptions6.str32 = 'CLIMCAPS';
   plotoptions6.ystr = 'Latitude';   plotoptions6.xstr = 'Wavenumber / [cm-1]';
   plotoptions6.maintitle = 'dBT/dt / [K/yr]';
-  plotoptions6.cx = [-1 +1]*0.25; plotoptions6.plotcolors = llsmap5; plotoptions6.yReverseDir = -1; plotoptions6.yLinearOrLog = +1;
+  plotoptions6.cx = [-1 +1]*0.25; plotoptions6.cmap = llsmap5; plotoptions6.yReverseDir = -1; plotoptions6.yLinearOrLog = +1;
   tiled_3x2layout(z11',z12',z21',z22',z31',z32',iOffSet+16,plotoptions6,fchanx(1:iX),YY);
 
 %zall = [z11(:) z12(:) z21(:) z22(:) z31(:) z32(:)]';

@@ -415,6 +415,9 @@ ylim([1 1000]); caxis([0 +1]*0.15); colorbar('horizontal'); %plotaxis2;
 title(['Zonal UNC d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 colormap(jet)
 
+figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),'linewidth',2); plotaxis2; hl = legend('mmw','stemp','location','best'); title('Trends of SKT and MMW')
+figure(35); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iAK > 0

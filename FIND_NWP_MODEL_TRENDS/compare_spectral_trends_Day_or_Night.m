@@ -50,17 +50,17 @@ ind = find(abs(p.rlat) < 30);             tropicalbias_lo = nanmean(dayfrac*spec
 figure(96); clf; plot(f,allbias,'k',f,tropicalbias_lo,'g',f,smidlatbias_lo,'m--',f,nmidlatbias_lo,'r',f,spolarbias_lo,'c--',f,npolarbias_lo,'b')
 xlim([640 1620]); plotaxis2; hl = legend('All','tropical','S Midlat','N Midlat','S Polar','N Polar','location','best','fontsize',10); title('Day OCEAN + LAND')
 
-figure(97); clf; 
-  plot(f,0.33*landbias+0.67*oceanbias,f,0.33*tropicalbias_l+0.67*tropicalbias_o,'g',f,0.33*smidlatbias_l+0.67*smidlatbias_o,'m--',f,0.33*nmidlatbias_l+0.67*nmidlatbias_o,'r',...
-       f,0.33*spolarbias_l+0.67*spolarbias_o,'c--',f,0.33*npolarbias_l+0.67*npolarbias_o,'b')
-xlim([640 1620]); plotaxis2; hl = legend('All','tropical','S Midlat','N Midlat','S Polar','N Polar','location','best','fontsize',10); title('Day 0.33LAND+0.67OCEAN')
+%figure(97); clf; 
+%  plot(f,0.33*landbias+0.67*oceanbias,f,0.33*tropicalbias_l+0.67*tropicalbias_o,'g',f,0.33*smidlatbias_l+0.67*smidlatbias_o,'m--',f,0.33*nmidlatbias_l+0.67*nmidlatbias_o,'r',...
+%       f,0.33*spolarbias_l+0.67*spolarbias_o,'c--',f,0.33*npolarbias_l+0.67*npolarbias_o,'b')
+%xlim([640 1620]); plotaxis2; hl = legend('All','tropical','S Midlat','N Midlat','S Polar','N Polar','location','best','fontsize',10); title('Day 0.33LAND+0.67OCEAN')
 
 jett = jet; jett(1,:) = 1;
 maskLF = ones(size(chisqrX));
 figure(98); clf;
 aslmap(98,rlat65,rlon73,smoothn((reshape(maskLF.*chisqrX,72,64)') ,1), [-90 +90],[-180 +180]); title('Chisqr');     caxis([0 +1]*10); colormap(jett)
 clear plotoptions;
-plotoptions.maintitle = '\chi^2'; plotoptions.plotcolors = jet(64); plotoptions.plotcolors = jett;
+plotoptions.maintitle = '\chi^2'; plotoptions.cmap = jet(64); plotoptions.cmap = jett;
 plotoptions.str11 = 'ALL';
 plotoptions.str12 = 'T(z)';
 plotoptions.str21 = 'Window';
@@ -140,6 +140,8 @@ figure(99); clf;
   end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp('now SIMULATING average spectra baased on AVERAGE geophysicsl trends .. should really be reaading in the SAVED spectral trends')
+
 get_avg_profile
 
 simulate_spectral_trends_Day_or_Night_profiles

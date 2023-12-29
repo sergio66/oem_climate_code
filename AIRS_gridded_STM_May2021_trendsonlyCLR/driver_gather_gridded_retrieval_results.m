@@ -780,7 +780,7 @@ maskLF = ones(size(chisqrX));
 figure(52); clf; 
 aslmap(52,rlat65,rlon73,smoothn((reshape(maskLF.*chisqrX,72,64)') ,1), [-90 +90],[-180 +180]); title('Chisqr');     caxis([0 +1]*0.2); colormap(jet)
 clear plotoptions;
-plotoptions.cx = [0 +1]*0.15; plotoptions.maintitle = '\chi^2'; plotoptions.plotcolors = jet(64);
+plotoptions.cx = [0 +1]*0.15; plotoptions.maintitle = '\chi^2'; plotoptions.cmap = jet(64);
 plotoptions.str11 = 'ALL';   
 plotoptions.str12 = 'T(z)';   
 plotoptions.str21 = 'Window';   

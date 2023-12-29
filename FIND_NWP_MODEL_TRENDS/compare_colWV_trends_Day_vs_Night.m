@@ -34,7 +34,7 @@ iFig = 30;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';
@@ -55,7 +55,7 @@ iFig = 30;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';   plotoptions.str31 = '(D-N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';   plotoptions.str32 = '(D-N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';   plotoptions.str33 = '(D-N)';
@@ -76,7 +76,7 @@ iFig = 31;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'ERA5';        
   plotoptions.str21 = 'AIRS L3';      plotoptions.str22 = 'CLIMCAPS L3'; 
   newz11 = (fUMBC_day.mmwtrend-fUMBC_night.mmwtrend)*1.0;                           newz12 = (fERA5_day.mmwtrend-fERA5_night.mmwtrend)*1.0; 
@@ -89,7 +89,7 @@ iFig = 32;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
   plotoptions.str21 = 'N/A';          plotoptions.str22 = 'ERA5';        plotoptions.str23 = 'MERRA2';
   newz11 = (fUMBC_day.mmwtrend+fUMBC_night.mmwtrend)*0.5;    newz12 = (fAIRSL3_day.mmwtrend+fAIRSL3_night.mmwtrend)*0.5;   newz13 = (fCLIMCAPSL3_day.mmwtrend+fCLIMCAPSL3_night.mmwtrend)*0.5;
@@ -102,7 +102,7 @@ clear newz*
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.strzz = 'CHIRP\_A';  
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
@@ -116,7 +116,7 @@ clear newz*
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dcolWV/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'CHIRP\_A';   plotoptions.str12 = 'AIRS L3';   plotoptions.str13 = 'CLIMCAPS L3';  
   plotoptions.str21 = 'ERA5';      plotoptions.str22 = 'MERRA2';
   newz11 = (fUMBC_day.mmwtrend+fUMBC_night.mmwtrend)*0.5;    newz12 = (fAIRSL3_day.mmwtrend+fAIRSL3_night.mmwtrend)*0.5; newz13 = (fCLIMCAPSL3_day.mmwtrend+fCLIMCAPSL3_night.mmwtrend)*0.5;

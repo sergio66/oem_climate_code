@@ -1,33 +1,7 @@
 %%% look_at_olr_trends.m
 clear f*
 
-%% GULP
-%umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2E_day.mat';
-%umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2E.mat';
-
-iV = input('Enter version of UMBC file (0/DEFAULT) for what is in test.pdf (dRHdt = 0 ... trends paper) (1) for (Held/Jeevanjee) with d lnP/dSKT = 0.02 (constant) (2) for (Held/Jeevanjee) with zonally varying d lnP/dSKT from IPCC 2007 : ');
-if length(iV) == 0
-  iV = 0;
-end
-
-if iV == 0
-  %% SEQN
-  %% dRH = 0 (Sergio)
-  umbc_day_file    = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D_day.mat';  
-  umbc_night_file  = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat';
-  
-elseif iV == 1
-  %% dRH = f(dP/dt) (Held/Jeevanjee) with d lnP/dSKT = 0.02 (constant)
-  umbc_day_file    = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_day.mat';
-  umbc_night_file  = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F.mat';
-  
-elseif iV == 2
-  %% dRH = f(dP/dt) (Held/Jeevanjee) with zonally varying d lnP/dSKT from IPCC 2007
-  umbc_day_file    = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_vary_dlnPdST_day.mat';
-  umbc_night_file  = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_vary_dlnPdST.mat';
-
-end  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+get_umbc_day_night_name
 
 era5_day_file    = 'ERA5_atm_N_cld_data_2002_09_to_2022_08_trends_asc.mat';
 era5_night_file  = 'ERA5_atm_N_cld_data_2002_09_to_2022_08_trends_desc.mat';

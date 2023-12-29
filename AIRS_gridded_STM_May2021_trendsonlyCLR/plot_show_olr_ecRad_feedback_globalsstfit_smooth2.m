@@ -184,7 +184,7 @@ z22  = climcapsL3_spectral_olr.allsum;
   plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
   plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
   plotoptions5.maintitle = '\lambda W/m2/K';
-  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.cmap = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
   aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),7,plotoptions5);
 
 z11  = -era5_spectral_olr.wv_ecRad.clr       + era5_spectral_olr.olr0_ecRad.clr;
@@ -197,7 +197,7 @@ z22  = -climcapsL3_spectral_olr.wv_ecRad.clr + climcapsL3_spectral_olr.olr0_ecRa
   plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
   plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
   plotoptions5.maintitle = '\lambda_{wv} W/m2/K';
-  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.cmap = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
   aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),8,plotoptions5);
 
 z11  = -era5_spectral_olr.planck_ecRad.clr       + era5_spectral_olr.olr0_ecRad.clr;
@@ -210,7 +210,7 @@ z22  = -climcapsL3_spectral_olr.planck_ecRad.clr + climcapsL3_spectral_olr.olr0_
   plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
   plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
   plotoptions5.maintitle = '\lambda_{planck} W/m2/K';
-  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.cmap = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
   aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),9,plotoptions5);
 
 z11  = -era5_spectral_olr.planck_ecRad.clr       + era5_spectral_olr.lapse_ecRad.clr;
@@ -223,7 +223,7 @@ z22  = -climcapsL3_spectral_olr.planck_ecRad.clr + climcapsL3_spectral_olr.lapse
   plotoptions5.str21 = 'AIRS L3'; plotoptions5.str22 = 'CLIMCAPS L3';
   plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
   plotoptions5.maintitle = '\lambda_{lapse} W/m2/K';
-  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+  plotoptions5.cx = [-1 +1]*10*dascale; plotoptions5.cmap = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
   aslmap_2x1x2tiledlayout(z11/boox(1),z12/boox(2),zMID/boox(3),z21/boox(4),z22/boox(5),10,plotoptions5);
 
 %junk = [sum(era5_spectral_olr.allsum .* coslat)/sum(coslat) sum(merra2_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbc_spectral_olr.allsum .* coslat)/sum(coslat) sum(airsL3_spectral_olr.allsum .* coslat)/sum(coslat)] ./ boox(1:4);

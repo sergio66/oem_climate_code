@@ -35,8 +35,8 @@ if ~exist('iTrendsOrAnoms')
 end
 
 if ~exist('iDorA')
-  iDorA = -1; %% asc
   iDorA = +1; %% desc
+  iDorA = -1; %% asc
 end
 
 clear iaFound
@@ -53,9 +53,10 @@ iNumYears = 20; %% 2002/09-2022/08
 if length(JOB) == 0
   JOB = 20;
 end
-iNumYears = JOB;
+JOB
+iNumYears = JOB
 
-fprintf(1,'iNumYears = %2i \n');
+fprintf(1,'iNumYears = %2i \n',iNumYears);
 
 if iNumYears <= 69
   iaMax = iNumYears*12;
@@ -82,8 +83,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
+fprintf(1,'seeing how many of the expected %3i files exist \n',iaMax);
+disp('  "+" are the 100, "x" are tens .. ')
+
 iOLR = +1;
 for ii = 1 : iaMax
+  if mod(ii,100) == 0
+    fprintf(1,'+ \n')
+  elseif mod(ii,10) == 0
+    fprintf(1,'x')
+  else
+    fprintf(1,'.')
+  end
+
   if iOLR < 0
     if iDorA > 0
       fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
@@ -125,7 +137,7 @@ end
 
 disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
 disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
-disp('  "x" are the 100, "." are tens .. need to read in 4608')
+fprintf(1, "+" are the 100, "x" are tens .. need to read in %3i \n',iaMax)
 for ii = 1 : iaMax
   if iOLR < 0
     if iDorA > 0
@@ -220,11 +232,12 @@ else
 end
 
 iSave = -1;  %%% unless now you do a whole new set of files Steve brings down from ERA5
+             %%% be careful though, first time you run this, you need it DUDE and iSave should be +1   eg when I did the daytime "asc" I forgot to save, so could not generate spectral trends boo hoo
 
 if iSave > 0
   %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
   fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
-  saver = ['save ' foutjunk ' comment all'];
+  saver = ['save -v7.3 ' foutjunk ' comment all'];
   eval(saver);
 end
 

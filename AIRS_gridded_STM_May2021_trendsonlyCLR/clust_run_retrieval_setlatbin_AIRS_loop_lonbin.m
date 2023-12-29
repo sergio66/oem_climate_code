@@ -134,6 +134,7 @@ iDebug = -1;
 %iDebug = 2843
 %iDebug = 3169    %% +34 N, have -ve col WV trends
 %iDebug = 1369    %% -37 S, have -ve col WV trends
+%iDebug = 1261    %% -37 S, have -ve col WV trends
 %iDebug = 36
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -381,8 +382,8 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%
 
-  driver.NorD = +1; %% night, desc  DEFAULT
   driver.NorD = -1; %% day, asc
+  driver.NorD = +1; %% night, desc  DEFAULT
   driver.iQuantile = iQuantile;
 
   if abs(topts.dataset) == +1

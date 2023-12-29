@@ -124,22 +124,22 @@ elif [[ "$1" -eq "10" ]]; then
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2; exit"
 elif [[ "$1" -eq "11" ]]; then
   # makes driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2.m
-  echo "cmd line arg = 10, driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2"
+  echo "cmd line arg = 11, driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2; exit"
 
 elif [[ "$1" -eq "12" ]]; then
   ## makes driver_spectral_trends_latbin_1_64_sarta.m, make sure you set iModel correctly
-  echo "cmd line arg = 8, driver_spectral_trends_latbin_1_64_sarta"
+  echo "cmd line arg = 12, driver_spectral_trends_latbin_1_64_sarta"
   ## srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta; exit"
-  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iModel = -3; iNumYears = 20; driver_spectral_trends_latbin_1_64_sarta; exit"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "iModel = +3; iNumYears = 20; driver_spectral_trends_latbin_1_64_sarta; exit"
 
 elif [[ "$1" -eq "13" ]]; then
   # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
-  echo "cmd line arg = 5, driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas"
+  echo "cmd line arg = 13, driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas; exit"
 elif [[ "$1" -eq "14" ]]; then
   # makes driver_spectral_trends_latbin_1_64_sarta_const_tracegas.m
-  echo "cmd line arg = 6, driver_spectral_trends_latbin_1_64_sarta_const_tracegas"
+  echo "cmd line arg = 14, driver_spectral_trends_latbin_1_64_sarta_const_tracegas"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_spectral_trends_latbin_1_64_sarta_const_tracegas; exit"
 
 fi

@@ -69,6 +69,7 @@ if driver.i16daytimestep < 0
       elseif settings.ocb_set == 0
         if driver0.iQuantile < 4
           iVersJac = 2022;  iOldORNew = +9;  %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)
+          iVersJac = 2022;  iOldORNew = +5;  %% ERA5 clr from 2002-2022   THIS IS NEW DEC 29, 2023 !!!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< !!!!!
         elseif driver0.iQuantile >= 4
           iVersJac = 2021;                   %% ERA5 CLR  from 2002-2021
           iVersJac = 2022;  iOldORNew = +5;  %% ERA5 clr from 2002-2022

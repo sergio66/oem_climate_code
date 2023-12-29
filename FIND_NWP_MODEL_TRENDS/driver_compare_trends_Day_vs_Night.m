@@ -11,6 +11,9 @@ addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /asl/matlib/science/
 addpath /home/sergio/MATLABCODE/SHOWSTATS
 addpath /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/
+addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
+addpath /home/sergio/MATLABCODE/NANROUTINES
+addpath /asl/matlib/aslutil
 
 load llsmap5
 
@@ -18,6 +21,9 @@ ceres_olr = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_
 ceres_ilr = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_T_ilr.mat');
 
 [h,ha,p,pa] = rtpread('summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp');
+[salti,landfrac] =  usgs_deg10_dem(p.rlat,p.rlon);
+p.landfrac = landfrac;
+
 mmw0 = mmwater_rtp(h,p);
 RH0  = layeramt2RH(h,p);
 
@@ -26,16 +32,12 @@ for ii = 1 : length(p.stemp)
   RHSurf(ii) = RH0(nlay,ii);
 end
 
-umbc_night_file  = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat';
-junk = load(umbc_night_file,'results');
-junkSKTtrend = junk.results(:,6);
-
-[salti,landfrac] =  usgs_deg10_dem(p.rlat,p.rlon);
-p.landfrac = landfrac;
-
-dRH_Ts = jeevanjee_PBL_deltaRH_Ts(p.stemp,RHSurf/100,precipitation_vs_skt_changes(p.rlat,p.landfrac),junkSKTtrend,p);
-figure(1); clf; scatter_coast(p.rlon,p.rlat,100,dRH_Ts); title('Jevanjee dRH per K'); colormap(llsmap5)
-
+% umbc_night_file  = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat';
+% junk = load(umbc_night_file,'results');
+% junkSKTtrend = junk.results(:,6);
+% 
+% dRH_Ts = jeevanjee_PBL_deltaRH_Ts(p.stemp,RHSurf/100,precipitation_vs_skt_changes(p.rlat,p.landfrac),junkSKTtrend,p);
+% figure(1); clf; scatter_coast(p.rlon,p.rlat,100,dRH_Ts); title('Jevanjee dRH per K'); colormap(llsmap5)
 
 ocean = find(p.landfrac == 0);
 land  = find(p.landfrac == 1);
@@ -96,8 +98,11 @@ prep_colWV_T_WV_trends_Day_vs_Night
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('ret to continue to SPECTRAL trends'); pause
-compare_spectral_trends_Day_vs_Night
+disp(' ')
+disp('ret to continue to <<< simulated simulated simulated >>> SPECTRAL trends'); pause
+compare_spectral_trends_Day_or_Night
+disp('run "driver_compare_Day_vs_Night_spectral_trends.m" for the real spectral comparison')
+disp(' ')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

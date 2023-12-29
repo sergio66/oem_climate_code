@@ -267,7 +267,7 @@ if iDebug10 > 0
   z21 = umbc15_spectral_olr.deltaSKT';
   z22 = umbc20_spectral_olr.deltaSKT';
   plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Latitude';
-  plotoptions.cx = [-1 +1]*0.20; plotoptions.maintitle = 'dSKT/dt'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+  plotoptions.cx = [-1 +1]*0.20; plotoptions.maintitle = 'dSKT/dt'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
   aslmap_2x2tiledlayout(z11,z12,z21,z22,7,plotoptions);
    
   %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -276,7 +276,7 @@ if iDebug10 > 0
   z21 = -(umbc15_spectral_olr.planck_ecRad.clr-umbc15_spectral_olr.olr0_ecRad.clr); %z21 = z21./umbc15_spectral_olr.deltaSKT';
   z22 = -(umbc20_spectral_olr.planck_ecRad.clr-umbc20_spectral_olr.olr0_ecRad.clr); %z22 = z22./umbc20_spectral_olr.deltaSKT';
   plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Latitude';
-  plotoptions.cx = [-1 +1]*05; plotoptions.maintitle = '\delta(OLR) planck'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+  plotoptions.cx = [-1 +1]*05; plotoptions.maintitle = '\delta(OLR) planck'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
   aslmap_2x2tiledlayout(z11,z12,z21,z22,8,plotoptions);
   
   z11 = -(umbc05_spectral_olr.planck_ecRad.clr-umbc05_spectral_olr.olr0_ecRad.clr); z11 = z11./umbc05_spectral_olr.deltaSKT';
@@ -284,7 +284,7 @@ if iDebug10 > 0
   z21 = -(umbc15_spectral_olr.planck_ecRad.clr-umbc15_spectral_olr.olr0_ecRad.clr); z21 = z21./umbc15_spectral_olr.deltaSKT';
   z22 = -(umbc20_spectral_olr.planck_ecRad.clr-umbc20_spectral_olr.olr0_ecRad.clr); z22 = z22./umbc20_spectral_olr.deltaSKT';
   plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Latitude';
-  plotoptions.cx = [-1 0]*10; plotoptions.maintitle = '\lambda planck'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+  plotoptions.cx = [-1 0]*10; plotoptions.maintitle = '\lambda planck'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
   aslmap_2x2tiledlayout(z11,z12,z21,z22,9,plotoptions);
   
   zz11 = nanmean(reshape(z11,72,64),1); zz12 = nanmean(reshape(z12,72,64),1); zz21 = nanmean(reshape(z21,72,64),1); zz22 = nanmean(reshape(z22,72,64),1);
@@ -296,7 +296,7 @@ if iDebug10 > 0
   z21 = -(umbc15_spectral_olr.wv_ecRad.clr-umbc15_spectral_olr.olr0_ecRad.clr); %z21 = z21./umbc15_spectral_olr.deltaSKT';
   z22 = -(umbc20_spectral_olr.wv_ecRad.clr-umbc20_spectral_olr.olr0_ecRad.clr); %z22 = z22./umbc20_spectral_olr.deltaSKT';
   plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Latitude';
-  plotoptions.cx = [-1 +1]*05/2; plotoptions.maintitle = '\delta(OLR) wv'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+  plotoptions.cx = [-1 +1]*05/2; plotoptions.maintitle = '\delta(OLR) wv'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
   aslmap_2x2tiledlayout(z11,z12,z21,z22,11,plotoptions);
   
   z11 = -(umbc05_spectral_olr.wv_ecRad.clr-umbc05_spectral_olr.olr0_ecRad.clr); z11 = z11./umbc05_spectral_olr.deltaSKT';
@@ -304,7 +304,7 @@ if iDebug10 > 0
   z21 = -(umbc15_spectral_olr.wv_ecRad.clr-umbc15_spectral_olr.olr0_ecRad.clr); z21 = z21./umbc15_spectral_olr.deltaSKT';
   z22 = -(umbc20_spectral_olr.wv_ecRad.clr-umbc20_spectral_olr.olr0_ecRad.clr); z22 = z22./umbc20_spectral_olr.deltaSKT';
   plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Latitude';
-  plotoptions.cx = [-1 1]*10; plotoptions.maintitle = '\lambda wv'; plotoptions.plotcolors = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
+  plotoptions.cx = [-1 1]*10; plotoptions.maintitle = '\lambda wv'; plotoptions.cmap = usa2; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1; plotoptions.xLimits = [640  1640]; plotoptions.yLimits = [-90 +90];
   aslmap_2x2tiledlayout(z11,z12,z21,z22,12,plotoptions);
   
   zz11 = nanmean(reshape(z11,72,64),1); zz12 = nanmean(reshape(z12,72,64),1); zz21 = nanmean(reshape(z21,72,64),1); zz22 = nanmean(reshape(z22,72,64),1);

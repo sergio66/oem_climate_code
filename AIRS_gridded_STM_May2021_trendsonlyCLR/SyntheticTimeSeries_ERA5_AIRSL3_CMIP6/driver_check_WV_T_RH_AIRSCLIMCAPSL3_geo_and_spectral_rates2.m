@@ -14,57 +14,94 @@ addpath /home/sergio/MATLABCODE/TIME
 
 system_slurm_stats
 
+%% kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 10
+
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 %JOB = 3
 
-% load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
-kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','h','p');
-h = kaboom.h;
-p = kaboom.p;
-clear kaboom;
+iNorD = +1; %% default, night
+iNorD = -1; %% day
+iNumYears = 20;
+
+YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
+YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
+YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
+YMStart = [2002 09];  YMEnd = [2007 08];  %% 05 years
+YMStart = [2002 09];  YMEnd = [2012 08];  %% 10 years
+YMStart = [2002 09];  YMEnd = [2017 08];  %% 15 years
+YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 load('llsmap5.mat');
 
-RH000 = layeramt2RH(h,p);
+iOops = +1;
+if iOops < 0
+  % load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat
+  %%%% kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','h','p');  OOPS DELETERD DAMN
+  h = kaboom.h;
+  p = kaboom.p;
+  clear kaboom;
+    
+  RH000 = layeramt2RH(h,p);
+  
+  pAIRSCLIMCAPSL3 = p;
+  
+  %% function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
+  %%  iA = +1 (AIRS L3)
+  %%       -1 CLIMCAPS
+  %%       +3 CESM3
+  climcapsL3trend = getdata_AIRSL3vsCLIMCAPSL3(-1,iNorD,0,iNumYears);
+  
+  pAIRSCLIMCAPSL3.stemp          = pAIRSCLIMCAPSL3.stemp          + reshape(climcapsL3trend.thestats64x72.stemprate,1,4608);
+  pAIRSCLIMCAPSL3.ptemp(1:100,:) = pAIRSCLIMCAPSL3.ptemp(1:100,:) + reshape(permute(climcapsL3trend.thestats64x72.ptemprate,[3 1 2]),100,4608);
+  pAIRSCLIMCAPSL3.gas_1(35:100,:) = pAIRSCLIMCAPSL3.gas_1(35:100,:).*(1 + reshape(permute(climcapsL3trend.thestats64x72.waterrate,[3 1 2]),66,4608));
+  pAIRSCLIMCAPSL3.gas_3(35:100,:) = pAIRSCLIMCAPSL3.gas_3(35:100,:).*(1 + reshape(permute(climcapsL3trend.thestats64x72.ozonerate,[3 1 2]),66,4608));
+  %{
+  pAIRSCLIMCAPSL3.stemp          = pAIRSCLIMCAPSL3.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
+  pAIRSCLIMCAPSL3.ptemp(1:100,:) = pAIRSCLIMCAPSL3.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp;
+  pAIRSCLIMCAPSL3.gas_1(1:100,:) = pAIRSCLIMCAPSL3.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_1);
+  pAIRSCLIMCAPSL3.gas_3(1:100,:) = pAIRSCLIMCAPSL3.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_3);
+  %}
+  RHAIRSCLIMCAPSL3 = layeramt2RH(h,pAIRSCLIMCAPSL3);
+  
+  RHAIRSCLIMCAPSL3rate = RHAIRSCLIMCAPSL3 - RH000;
+  zonalRHAIRSCLIMCAPSL3rate = reshape(RHAIRSCLIMCAPSL3rate,100,72,64);
+  zonalRHAIRSCLIMCAPSL3rate = squeeze(nanmean(zonalRHAIRSCLIMCAPSL3rate,2));
+  
+  kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
+  rlat = kaboom.rlat; 
+  
+  zonalrlat = rlat;
+  zonalplays = p.plays(1:100,3000);
+  figure(1); clf; pcolor(zonalrlat,zonalplays,zonalRHAIRSCLIMCAPSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+    set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
+  
+  TAIRSCLIMCAPSL3rate = permute(climcapsL3trend.thestats64x72.ptemprate,[3 1 2]);
+  zonalTAIRSCLIMCAPSL3rate = TAIRSCLIMCAPSL3rate;
+  zonalTAIRSCLIMCAPSL3rate = squeeze(nanmean(zonalTAIRSCLIMCAPSL3rate,2));
+  figure(2); clf; pcolor(zonalrlat,zonalplays,zonalTAIRSCLIMCAPSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
+    set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct Trate')
+  
+  WVAIRSCLIMCAPSL3rate = permute(climcapsL3trend.thestats64x72.waterrate,[3 1 2]);
+  zonalWVAIRSCLIMCAPSL3rate = WVAIRSCLIMCAPSL3rate;
+  zonalWVAIRSCLIMCAPSL3rate = squeeze(nanmean(zonalWVAIRSCLIMCAPSL3rate,2));
+  figure(3); clf; pcolor(zonalrlat,zonalplays(35:100),zonalWVAIRSCLIMCAPSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]/10); 
+    set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct WV rate')
 
-pAIRSCLIMCAPSL3 = p;
-climcapsL3trend = getdata_AIRSL3vsCLIMCAPSL3(-1,1,0,20);
-pAIRSCLIMCAPSL3.stemp          = pAIRSCLIMCAPSL3.stemp          + reshape(climcapsL3trend.thestats64x72.stemprate,1,4608);
-pAIRSCLIMCAPSL3.ptemp(1:100,:) = pAIRSCLIMCAPSL3.ptemp(1:100,:) + reshape(permute(climcapsL3trend.thestats64x72.ptemprate,[3 1 2]),100,4608);
-pAIRSCLIMCAPSL3.gas_1(35:100,:) = pAIRSCLIMCAPSL3.gas_1(35:100,:).*(1 + reshape(permute(climcapsL3trend.thestats64x72.waterrate,[3 1 2]),66,4608));
-pAIRSCLIMCAPSL3.gas_3(35:100,:) = pAIRSCLIMCAPSL3.gas_3(35:100,:).*(1 + reshape(permute(climcapsL3trend.thestats64x72.ozonerate,[3 1 2]),66,4608));
-%{
-pAIRSCLIMCAPSL3.stemp          = pAIRSCLIMCAPSL3.stemp          + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.stemp;
-pAIRSCLIMCAPSL3.ptemp(1:100,:) = pAIRSCLIMCAPSL3.ptemp(1:100,:) + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.ptemp;
-pAIRSCLIMCAPSL3.gas_1(1:100,:) = pAIRSCLIMCAPSL3.gas_1(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_1);
-pAIRSCLIMCAPSL3.gas_3(1:100,:) = pAIRSCLIMCAPSL3.gas_3(1:100,:).*(1 + nwp_spectral_trends_cmip6_era5_airsL3_umbc.airsL3_100_layertrends.gas_3);
-%}
-RHAIRSCLIMCAPSL3 = layeramt2RH(h,pAIRSCLIMCAPSL3);
+else
+  kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_startwithERA5trends.mat','h','p','rlat'); 
+  h = kaboom.h;
+  p = kaboom.p;
 
-RHAIRSCLIMCAPSL3rate = RHAIRSCLIMCAPSL3 - RH000;
-zonalRHAIRSCLIMCAPSL3rate = reshape(RHAIRSCLIMCAPSL3rate,100,72,64);
-zonalRHAIRSCLIMCAPSL3rate = squeeze(nanmean(zonalRHAIRSCLIMCAPSL3rate,2));
+  zonalrlat = kaboom.rlat;   
+  zonalplays = p.plays(1:100,3000);
 
-kaboom = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','rlat');
-rlat = kaboom.rlat; 
+  zonalRHAIRSCLIMCAPSL3rate = [];
+  zonalTAIRSCLIMCAPSL3rate = [];
 
-zonalrlat = rlat;
-zonalplays = p.plays(1:100,3000);
-figure(1); clf; pcolor(zonalrlat,zonalplays,zonalRHAIRSCLIMCAPSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('reconstruct Trate,WVrate \newline -> RH rate')
-
-TAIRSCLIMCAPSL3rate = permute(climcapsL3trend.thestats64x72.ptemprate,[3 1 2]);
-zonalTAIRSCLIMCAPSL3rate = TAIRSCLIMCAPSL3rate;
-zonalTAIRSCLIMCAPSL3rate = squeeze(nanmean(zonalTAIRSCLIMCAPSL3rate,2));
-figure(2); clf; pcolor(zonalrlat,zonalplays,zonalTAIRSCLIMCAPSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct Trate')
-
-WVAIRSCLIMCAPSL3rate = permute(climcapsL3trend.thestats64x72.waterrate,[3 1 2]);
-zonalWVAIRSCLIMCAPSL3rate = WVAIRSCLIMCAPSL3rate;
-zonalWVAIRSCLIMCAPSL3rate = squeeze(nanmean(zonalWVAIRSCLIMCAPSL3rate,2));
-figure(3); clf; pcolor(zonalrlat,zonalplays(35:100),zonalWVAIRSCLIMCAPSL3rate); shading interp; colorbar; colormap(llsmap5); caxis([-0.15 +0.15]/10); 
-  set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('reconstruct WV rate')
-
+end
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,8 +118,12 @@ iYS = 2002; iYE = 2022;
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeAIRSCLIMCAPSL3_monthly_trends.m  and do_the_AIRSCLIMCAPSL3_trends.m
 %% see  FIND_NWP_MODEL_TRENDS/driver_compute_AIRS_CLIMCAPS_trends_desc_or_asc.m or FIND_NWP_MODEL_TRENDS/driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m  
 
-%airsclimcapsl3_64x72 = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_Sept2002_Aug2021_19yr_desc.mat');
-airsclimcapsl3_64x72 = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_Sept2002_Aug2022_20yr_desc.mat');
+if iNorD > 0
+  %airsclimcapsl3_64x72 = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_Sept2002_Aug2021_19yr_desc.mat');
+  airsclimcapsl3_64x72 = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_Sept2002_Aug2022_20yr_desc.mat');
+else
+  airsclimcapsl3_64x72 = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_asc.mat');
+end
 
 [numtimesteps0] = length(airsclimcapsl3_64x72.days);
 numtimesteps = numtimesteps0;
@@ -131,14 +172,6 @@ end
 
 daysSince2002 = change2days(yy,mm,dd,2002);
 whos daysSince2002
-
-YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
-YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
-YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
-YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
-YMStart = [2002 09];  YMEnd = [2007 08];  %% 05 years
-YMStart = [2002 09];  YMEnd = [2012 08];  %% 10 years
-YMStart = [2002 09];  YMEnd = [2017 08];  %% 15 years
 
 daysSince2002Start = change2days(YMStart(1),YMStart(2),15,2002);
 daysSince2002End   = change2days(YMEnd(1),  YMEnd(2),  15,2002);
@@ -198,8 +231,15 @@ end
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 
-dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
-dirout = 'SimulateTimeSeries/CLIMCAPSL3/';
+if iNorD > 0
+  dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+  dirout = 'SimulateTimeSeries/CLIMCAPSL3/';
+  dirout = 'SimulateTimeSeries/NIGHTorAVG/CLIMCAPSL3/';
+  dirout = 'STS/NIGHTorAVG/CLIMCAPSL3/';
+else
+  dirout = 'SimulateTimeSeries/DAY/CLIMCAPSL3/';
+  dirout = 'STS/DAY/CLIMCAPSL3/';
+end
 
 co2ppm_t = [];
 n2oppm_t = [];
@@ -303,7 +343,7 @@ for ii = JOB
     lonbinx = (jjj-1) + (1:72:length(p72.stemp));
     p72.lonbin(lonbinx) = jjj;
   end
-  verybad = find(isnan(p72.ptemp(iCheck,:)) | isnan(p72.gas_1(iCheck,:)) | isnan(p72.rh(iCheck,:))
+  verybad = find( isnan(p72.ptemp(iCheck,:)) | isnan(p72.gas_1(iCheck,:)) | isnan(p72.rh(iCheck,:)) );
   p72.verybad(verybad) = 1;
   if length(verybad) > 0  
     for jjj = 1 : length(verybad)
@@ -395,9 +435,9 @@ for ii = JOB
 
   pwd
   disp(' ')
-  disp('output in eg           SimulateTimeSeries/CLIMCAPSL3/reconstruct_climcapsL3_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
-  disp('         also makes eg SimulateTimeSeries/CLIMCAPSL3/simulate64binsAIRSCLIMCAPSL3_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
-  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 12')
+  disp('output in eg           SimulateTimeSeries/ NIGHTorAVG   or    DAY /CLIMCAPSL3/reconstruct_climcapsL3_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
+  disp('         also makes eg SimulateTimeSeries/ NIGHTorAVG   or    DAY /CLIMCAPSL3/simulate64binsAIRSCLIMCAPSL3_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
+  disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 12; make sure you set iModel correctly')
   disp(' ')
 
 end

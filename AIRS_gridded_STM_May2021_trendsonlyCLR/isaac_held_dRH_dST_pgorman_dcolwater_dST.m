@@ -2,7 +2,7 @@ figure(49);  %% 3 panel dT/dt       UMBC, ERA5xAK,ERA5
 figure(50);  %% 3 panel dWVfrac/dt  UMBC, ERA5xAK,ERA5 
 figure(51);  %% 2 panel dRH/dt      UMBC, ERA5 
 
-% plotoptions.cx = [-1 +1]*0.5; plotoptions.maintitle = 'dRH/dt'; plotoptions.plotcolors = llsmap5;
+% plotoptions.cx = [-1 +1]*0.5; plotoptions.maintitle = 'dRH/dt'; plotoptions.cmap = llsmap5;
 % plotoptions.yLimits = [100 1000];
 % plotoptions.yLinearOrLog = +1;
 % plotoptions.str2 = 'ERA5';   

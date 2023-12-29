@@ -380,7 +380,7 @@ plotaxis2; hl = legend('MERRA2','ERA5','AIRS L3','CLIMCAPSL3','location','best',
 iFig = iFig + 1;
 figure(iFig); clf; clear plotoptions
 maskLF = ones(size(z22));
-plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
 plotoptions.str11 = 'AIRS L3';
 plotoptions.str12 = 'CLIMCAPS L3';
 plotoptions.str21 = 'MERRA2';
@@ -415,7 +415,7 @@ fprintf(1,'(LAND )         |  %8.3f %8.3f %8.3f %8.3f \n',junk);
 disp('----------------|---------------------------------------');
 
 clear plotoptions
-plotoptions.plotcolors = llsmap5;
+plotoptions.cmap = llsmap5;
 plotoptions.str11 = 'AIRS L3';
 plotoptions.str12 = 'CLIMCAPS L3';
 plotoptions.str21 = 'ERA5';
@@ -553,7 +553,7 @@ if iUMBC  > 0
   iFig = iFig + 1;
   figure(iFig); clf; clear plotoptions
   maskLF = ones(size(z22));
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'THIS WORK';
   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';
@@ -563,7 +563,7 @@ if iUMBC  > 0
   aslmap_2x2tiledlayout(z11x,z12,z21,z22,iFig,plotoptions);
   
   clear plotoptions
-  plotoptions.plotcolors = llsmap5;
+  plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'THIS WORK';
   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'ERA5';
@@ -800,7 +800,7 @@ if iUMBC  > 0
   zyx21 = reshape(merra2.RHrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
   zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dRH/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';
   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';
@@ -816,7 +816,7 @@ if iUMBC  > 0
   zyx21 = reshape(merra2.waterrate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
   zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '500 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '500 mb dWVfrac/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';
   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';
@@ -832,7 +832,7 @@ if iUMBC  > 0
   zyx21 = reshape(merra2.ptemprate,100,72,64);  zyx21 = permute(zyx21,[2 3 1]); zyx21 = zyx21(:,:,i500);
   zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dT/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';
   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';
@@ -860,7 +860,7 @@ if iUMBC  > 0
   iFig = iFig + 1;
   figure(iFig); clf;
   clear plotoptions
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   % plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   % plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str11 = 'ERA5';        plotoptions.str22 = 'MERRA2';
@@ -876,7 +876,7 @@ if iUMBC  > 0
   %%%%%%%%%% 
 
   clear plotoptions
-  plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
   % plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3'; plotoptions.str13 = 'MERRA2';    
@@ -893,7 +893,7 @@ if iUMBC  > 0
   clear plotoptions
   plotoptions.xstr = ' ';          plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
-  plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151;  plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   % plotoptions.str11 = 'AIRS L3';       plotoptions.str12 = 'ERA5';          plotoptions.str13 = 'THIS WORK';    
   % plotoptions.str21 = 'CLIMCAPS L3';   plotoptions.str22 = 'MERRA2';        plotoptions.str23 = 'GISS';
   % z31 = z11x;    z31unc = z11xunc; 
@@ -1028,7 +1028,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i200);
   zyx31 = reshape(umbc.RHrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i200);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '200 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '200 mb dRH/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1078,7 +1078,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i200);
   zyx31 = reshape(umbc.waterrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i200);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '200 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '200 mb dWVfrac/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1128,7 +1128,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i200);
   zyx31 = reshape(umbc.ptemprate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i200);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '200 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '200 mb dT/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1179,7 +1179,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
   zyx31 = reshape(umbc.RHrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i500);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '500 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '500 mb dRH/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1229,7 +1229,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
   zyx31 = reshape(umbc.waterrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i500);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '500 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '500 mb dWVfrac/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1279,7 +1279,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i500);
   zyx31 = reshape(umbc.ptemprate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i500);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '500 mb dT/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1330,7 +1330,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.RHrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i800);
   zyx31 = reshape(umbc.RHrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i800);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '800 mb dRH/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.251; plotoptions.maintitle = '800 mb dRH/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1380,7 +1380,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.waterrate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i800);
   zyx31 = reshape(umbc.waterrate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i800);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '800 mb dWVfrac/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.0151; plotoptions.maintitle = '800 mb dWVfrac/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1430,7 +1430,7 @@ if iUMBC  > 0
   zyx22 = reshape(era5.ptemprate,100,72,64);    zyx22 = permute(zyx22,[2 3 1]); zyx22 = zyx22(:,:,i800);
   zyx31 = reshape(umbc.ptemprate,100,72,64);    zyx31 = permute(zyx31,[2 3 1]); zyx31 = zyx31(:,:,i800);
   maskLF = ones(size(zyx22));
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '800 mb dT/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = '800 mb dT/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   plotoptions.str31 = 'THIS WORK'; plotoptions.str32 = '    ';
@@ -1574,7 +1574,7 @@ if iUMBC  > 0
 %  end
 
   clear plotoptions
-  plotoptions.plotcolors = llsmap5;
+  plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';
   plotoptions.str12 = 'CLIMCAPS L3';
   plotoptions.str12 = 'CLIMCAPS';
@@ -1792,7 +1792,7 @@ if iUMBC  > 0
   iFig = iFig + 1;
   figure(iFig); clf;
   clear plotoptions
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'GISS';    
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';    
   plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
@@ -1805,7 +1805,7 @@ if iUMBC  > 0
   end
 
   clear plotoptions
-  plotoptions.plotcolors = llsmap5;
+  plotoptions.cmap = llsmap5;
   plotoptions.str1 = 'AIRS L3';
   plotoptions.str2 = 'MERRA2';
   plotoptions.str3 = 'ERA5';

@@ -1,6 +1,6 @@
 function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);
 
-%% function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL);   
+%% function airsChoice  = getdata_AIRSL3vsCLIMCAPSL3(iA,iNorD,iAorOrL,iNumYears);   
 %%  iA = +1 (AIRS L3) 
 %%       -1 CLIMCAPS
 %%       +3 CESM3                                                                                   

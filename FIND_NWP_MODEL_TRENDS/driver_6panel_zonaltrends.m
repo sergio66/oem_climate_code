@@ -32,7 +32,7 @@ if length(llsmap5) == 64
   %% need to center the white 1.0 1.0 1.0 .. right now it is at position 33, so need 65 points, or remove first ... choose that
   llsmap5 = llsmap5(2:64,:);
 end
-plotoptions.plotcolors = llsmap5;
+plotoptions.cmap = llsmap5;
 plotoptions.yLinearOrLog = -1;
 plotoptions.yReverseDir = +1;
 plotoptions.xstr = 'Latitude (deg)';

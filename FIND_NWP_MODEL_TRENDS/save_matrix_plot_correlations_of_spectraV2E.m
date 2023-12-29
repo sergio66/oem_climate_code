@@ -49,7 +49,7 @@ plot(fchanx,smooth(nansum(cosYY.*obsrates.rates,2)./ncYYA,smoothPts),'k.-',fchan
  ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
 
  plotaxis2;
- hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('Observations'); 
+ hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('AIRS L1C'); 
  t.FontSize = 10; t.FontWeight = 'normal'; 
  xlabel('Wavenumber cm-1','Fontsize',10); ylabel('dBT/dt K/yr','Fontsize',10)
 
@@ -82,7 +82,7 @@ plot(fchanx,nansum(cosYY.*umbcL3.umbcL3_spectral_rates,2)./ncYYA,'k.-',fchanx,na
  xlim([645 1608]); xticks([750:250:1500]); ylim([-0.01 +0.005]*10); 
  ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
  plotaxis2;
- hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('This work');
+ hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('CHIRP\_A');
  t.FontSize = 10; t.FontWeight = 'normal'; 
  ylabel('dBT/dt K/yr','Fontsize',10)
 
@@ -180,7 +180,7 @@ plot(fchanx,smooth(nansum(cosYYAll.*obsrates.rates,2)./ncYYA,smoothPts),'k.-',fc
  xlim([645 1608]); xticks([750:250:1500]); ylim([-0.01 +0.005]*10); 
  ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
  plotaxis2;
- hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('Observations');
+ hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('AIRS L1C');
  t.FontSize = 10; t.FontWeight = 'normal'; 
  xlabel('Wavenumber cm-1','Fontsize',10); ylabel('dBT/dt K/yr','Fontsize',10)
 
@@ -213,7 +213,7 @@ plot(fchanx,nansum(cosYYAll.*umbcL3.umbcL3_spectral_rates,2)./ncYYA,'k.-',fchanx
  xlim([645 1608]); xticks([750:250:1500]); ylim([-0.01 +0.005]*10); 
  ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
  plotaxis2;
- hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('This work');
+ hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('CHIRP\_A');
  t.FontSize = 10; t.FontWeight = 'normal'; 
  ylabel('dBT/dt K/yr','Fontsize',10)
 
@@ -306,7 +306,7 @@ plot(fchanx,smooth(nansum(cosYYAll.*obsrates.rates,2)./ncYYA,smoothPts),'k.-',fc
  xlim([645 1608]); xticks([750:250:1500]); ylim([-0.01 +0.005]*10); 
  ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
  plotaxis2;
- hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('Observations');
+ hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('AIRS L1C');
  t.FontSize = 10; t.FontWeight = 'normal'; 
  xlabel('Wavenumber cm-1','Fontsize',10); ylabel('dBT/dt K/yr','Fontsize',10)
 
@@ -339,7 +339,7 @@ plot(fchanx,nansum(cosYYAll.*umbcL3.umbcL3_spectral_rates,2)./ncYYA,'k.-',fchanx
  xlim([645 1608]); xticks([750:250:1500]); ylim([-0.01 +0.005]*10); 
  ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
  plotaxis2;
- hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('This work');
+ hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('CHIRP\_A');
  t.FontSize = 10; t.FontWeight = 'normal'; 
  ylabel('dBT/dt K/yr','Fontsize',10)
 

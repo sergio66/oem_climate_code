@@ -1,6 +1,17 @@
 rtpwrite(fip,h72,[],p72,[]);
-klayerser = ['!' klayers ' fin=' fip ' fout=' fop ' >& ugh'];
-sartaer   = ['!' sarta '   fin=' fop ' fout=' frp];
+klayerser = ['!' klayers ' fin=' fip ' fout=' fop ' >& ugh '];
+sartaer   = ['!' sarta '   fin=' fop ' fout=' frp ' >& ugh2'];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+if exist(fop)
+  fop
+  error('fop exists')
+end
+
+if exist(frp)
+  frp
+  error('frp exists')
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 disp('doing klayers ...')

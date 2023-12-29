@@ -76,7 +76,7 @@ aslmap(iFig,rlat65,rlon73,smoothn((reshape(junk,72,64)') ,1), [-90 +90],[-180 +1
 
 iFig = iFig + 1; 
 plotoptions.yLinearOrLog = +1;
-plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
 aslmap_2x2tiledlayout(mooDJF,mooMAM,mooJJA,mooSON,iFig,plotoptions);
 
 iFig = iFig+1;

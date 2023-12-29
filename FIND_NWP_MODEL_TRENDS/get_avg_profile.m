@@ -28,14 +28,14 @@ pp0 = pp2_1;
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %% ocean
 junk = find(p.landfrac == 0 & abs(p.rlat) < 30 & p.nemis == 19);
-nemis = mean(p.nemis(junk));
-efreq = mean(p.efreq(1:nemis,junk),2);
-emis = mean(p.emis(1:nemis,junk),2);
+  nemis = floor(mean(p.nemis(junk)));
+  efreq = mean(p.efreq(1:nemis,junk),2);
+  emis = mean(p.emis(1:nemis,junk),2);
 
-pp0.nemis = nemis * ones(size(ppX.stemp));
-pp0.emis = emis * ones(size(ppX.stemp));
-pp0.efreq = efreq * ones(size(ppX.stemp));
-pp0.rho = (1-ppX.emis)/pi;
+pp0.nemis = nemis * ones(size(pp0.stemp));
+pp0.emis = emis * ones(size(pp0.stemp));
+pp0.efreq = efreq * ones(size(pp0.stemp));
+pp0.rho = (1-pp0.emis)/pi;
 
 rtpwrite(fop,hh2,hha2,pp0,ppa2);
 eval(sartaer);
@@ -43,7 +43,7 @@ eval(sartaer);
 [~,~,pprad0_ocean,~] = rtpread(frp);
 
 disp('STEMP and MMW for TRP, NML,SML, NP,SP')
-fprintf(1,' %8.4f  %8.4f  %8.4f  %8.4f  %8.4f  \n',[pprad0.stemp; mmwater_rtp(hh2,pprad0)])
+fprintf(1,' %8.4f  %8.4f  %8.4f  %8.4f  %8.4f  \n',[pprad0_ocean.stemp; mmwater_rtp(hh2,pprad0_ocean)])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %% land
@@ -64,7 +64,7 @@ junk = find(p.landfrac == 1 & abs(p.rlat) < 30 & p.nemis > 30);
   pp0.nemis(1) = nemis;
   pp0.emis(1:nemis,1) = emis;
   pp0.efreq(1:nemis,1) = efreq;
-  pp0.rho = (1-ppX.emis)/pi;
+  pp0.rho = (1-pp0.emis)/pi;
 junk = find(p.landfrac == 1 & p.rlat > -60 & p.rlat < -30 & p.nemis > 30);
   nemis = floor(mean(p.nemis(junk)));
   efreq = mean(p.efreq(1:nemis,junk),2);
@@ -73,7 +73,7 @@ junk = find(p.landfrac == 1 & p.rlat > -60 & p.rlat < -30 & p.nemis > 30);
   pp0.nemis(2) = nemis;
   pp0.emis(1:nemis,2) = emis;
   pp0.efreq(1:nemis,2) = efreq;
-  pp0.rho = (1-ppX.emis)/pi;
+  pp0.rho = (1-pp0.emis)/pi;
 junk = find(p.landfrac == 1 & p.rlat > +30 & p.rlat < +60 & p.nemis > 30);
   nemis = floor(mean(p.nemis(junk)));
   efreq = mean(p.efreq(1:nemis,junk),2);
@@ -82,7 +82,7 @@ junk = find(p.landfrac == 1 & p.rlat > +30 & p.rlat < +60 & p.nemis > 30);
   pp0.nemis(3) = nemis;
   pp0.emis(1:nemis,3) = emis;
   pp0.efreq(1:nemis,3) = efreq;
-  pp0.rho = (1-ppX.emis)/pi;
+  pp0.rho = (1-pp0.emis)/pi;
 junk = find(p.landfrac == 1 & p.rlat < -60 & p.nemis > 30);
   nemis = floor(mean(p.nemis(junk)));
   efreq = mean(p.efreq(1:nemis,junk),2);
@@ -91,7 +91,7 @@ junk = find(p.landfrac == 1 & p.rlat < -60 & p.nemis > 30);
   pp0.nemis(4) = nemis;
   pp0.emis(1:nemis,4) = emis;
   pp0.efreq(1:nemis,4) = efreq;
-  pp0.rho = (1-ppX.emis)/pi;
+  pp0.rho = (1-pp0.emis)/pi;
 junk = find(p.landfrac == 1 & p.rlat > +60 & p.nemis > 30);
   nemis = floor(mean(p.nemis(junk)));
   efreq = mean(p.efreq(1:nemis,junk),2);
@@ -100,7 +100,7 @@ junk = find(p.landfrac == 1 & p.rlat > +60 & p.nemis > 30);
   pp0.nemis(5) = nemis;
   pp0.emis(1:nemis,5) = emis;
   pp0.efreq(1:nemis,5) = efreq;
-  pp0.rho = (1-ppX.emis)/pi;
+  pp0.rho = (1-pp0.emis)/pi;
 
 rtpwrite(fop,hh2,hha2,pp0,ppa2);
 eval(sartaer);

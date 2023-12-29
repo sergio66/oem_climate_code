@@ -35,9 +35,9 @@ aslmap(80,rlat65,rlon73,smoothn(reshape(nanmean(dRH_RH_merra2.* RHsurf,1),72,64)
 
 plotRHoptions.str11 = 'ERA5';  plotRHoptions.str12 = 'MERRA2';  plotRHoptions.str21 = 'AIRS L3';  plotRHoptions.str22 = 'CLIMCAPS'; plotRHoptions.str31 = 'This Work';  plotRHoptions.str32 = ' '; 
 
-plotRHoptions.cx = [-1 +1]*0.40; plotRHoptions.plotcolors = colormapOWG2; plotRHoptions.maintitle = 'd colwater/year [mm/year]';
-plotRHoptions.cx = [-1 +1]*0.20; plotRHoptions.plotcolors = colormapOWG2; plotRHoptions.maintitle = 'd colwater/year [mm/year]';
+plotRHoptions.cx = [-1 +1]*0.40; plotRHoptions.cmap = colormapOWG2; plotRHoptions.maintitle = 'd colwater/year [mm/year]';
+plotRHoptions.cx = [-1 +1]*0.20; plotRHoptions.cmap = colormapOWG2; plotRHoptions.maintitle = 'd colwater/year [mm/year]';
 aslmap_3x2tiledlayout(olr.trend_mmw, merra2_mmwtrend, airsL3_mmwtrend, climcaps_mmwtrend, umbc_mmwrate, 0*umbc_mmwrate,80,plotRHoptions);
 
-plotRHoptions.cx = [-1 +1]; plotRHoptions.plotcolors = colormapOWG2; plotRHoptions.maintitle = 'dcolwater/dt --> dRH/dt surface';
+plotRHoptions.cx = [-1 +1]; plotRHoptions.cmap = colormapOWG2; plotRHoptions.maintitle = 'dcolwater/dt --> dRH/dt surface';
 aslmap_3x2tiledlayout(dRH_RH_era5.* RHsurf, dRH_RH_merra2.* RHsurf, dRH_RH_airsL3.* RHsurf, dRH_RH_climcapsL3.* RHsurf, dRH_RH_umbc.*RHsurf, 0*RHsurf,81,plotRHoptions);

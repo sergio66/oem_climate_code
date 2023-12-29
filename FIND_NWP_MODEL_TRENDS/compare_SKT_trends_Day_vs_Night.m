@@ -34,7 +34,7 @@ iFig = 20;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';
@@ -53,7 +53,7 @@ iFig = 20;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';   plotoptions.str31 = '(D-N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';   plotoptions.str32 = '(D-N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';   plotoptions.str33 = '(D-N)';
@@ -74,7 +74,7 @@ iFig = 21;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'ERA5';        
   plotoptions.str21 = 'AIRS L3';      plotoptions.str22 = 'CLIMCAPS L3'; 
   newz11 = (fUMBC_day.results(:,6)-fUMBC_night.results(:,6))*1.0;                           newz12 = (fERA5_day.trend_stemp-fERA5_night.trend_stemp)*1.0; 
@@ -87,10 +87,11 @@ iFig = 22;
   figure(iFig); clf;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
-  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.plotcolors = llsmap5;
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
   plotoptions.str21 = 'GISS';         plotoptions.str22 = 'ERA5';        plotoptions.str23 = 'MERRA2';
-  newz11 = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  newz12 = (fAIRSL3_day.thestats64x72.stemprate+fAIRSL3_night.thestats64x72.stemprate)*0.5; newz13 = (fCLIMCAPSL3_day.thestats64x72.stemprate+fCLIMCAPSL3_night.thestats64x72.stemprate)*0.5;
+  newz11 = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  newz12 = (fAIRSL3_day.thestats64x72.stemprate+fAIRSL3_night.thestats64x72.stemprate)*0.5; 
+    newz13 = (fCLIMCAPSL3_day.thestats64x72.stemprate+fCLIMCAPSL3_night.thestats64x72.stemprate)*0.5;
   newz21 = fGISS.giss_trend4608;                                   newz22 = (fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5;                             newz23 = fMERRA2.trend_stemp;
     newz11 = reshape(newz11,72,64);   newz22 = reshape(newz22,72,64);   newz23 = reshape(newz23,72,64);  
   figure(iFig); clf; aslmap_2x3tiledlayout(newz11,newz12,newz13,newz21,newz22,newz23,iFig,plotoptions);

@@ -122,14 +122,14 @@ z22 = umbcSON_spectral_olr.allsum;
 plotoptions.str11 = 'DJF'; plotoptions.str12 = 'MAM';
 plotoptions.str21 = 'JJA'; plotoptions.str22 = 'SON';
 plotoptions.ystr = 'Latitude'; plotoptions.xstr = 'Longitude';
-plotoptions.cx = [-1 +1]*20; plotoptions.maintitle = '\lambda'; plotoptions.plotcolors = llsmap5; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1;
+plotoptions.cx = [-1 +1]*20; plotoptions.maintitle = '\lambda'; plotoptions.cmap = llsmap5; plotoptions.yReverseDir = -1; plotoptions.yLinearOrLog = +1;
 aslmap_2x2tiledlayout(z11/boo(1),z12/boo(2),z21/boo(3),z22/boo(4),7,plotoptions);
 plotoptions5.str11 = 'DJF'; plotoptions5.str12 = 'MAM';
 plotoptions5.strzz = 'ALL'; 
 plotoptions5.str21 = 'JJA'; plotoptions5.str22 = 'SON';
 plotoptions5.ystr = 'Latitude'; plotoptions5.xstr = 'Longitude';
 plotoption5.maintitle = '\lambda W/m2/K';
-plotoptions5.cx = [-1 +1]*20; plotoptions5.maintitle = '\lambda'; plotoptions5.plotcolors = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
+plotoptions5.cx = [-1 +1]*20; plotoptions5.maintitle = '\lambda'; plotoptions5.cmap = llsmap5; plotoptions5.yReverseDir = -1; plotoptions5.yLinearOrLog = +1;
 aslmap_2x1x2tiledlayout(z11/boo(1),z12/boo(2),zMID/boo(5),z21/boo(3),z22/boo(4),7,plotoptions5);
 
 %junk = [sum(umbcDJF_spectral_olr.allsum .* coslat)/sum(coslat) sum(umbcMAM_spectral_olr.allsum .* coslat)/sum(coslat) ...

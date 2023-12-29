@@ -66,6 +66,7 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     %[hhh,~,ppp,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp');
     [hhh,~,ppp,~] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp');
     RH0  = layeramt2RH(hhh,ppp);
+    mmw0 = mmwater_rtp(hhh,ppp);
     for iiii = 1 : length(ppp.stemp)
       nlay = ppp.nlevs(iiii) - 1;
       RHSurf(iiii) = 0.5*(RH0(nlay,iiii)+RH0(nlay-1,iiii));
@@ -81,11 +82,7 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
       dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
 
       %%% see my notes, BK 45
-      Lo = 2.5e6;  %%% J/kg
-      Rv = 461.52; %%% J/kg/K
-      moo = exp(Lo/Rv * dBT1231/ppp.stemp(JOBJOBJOB)/ppp.stemp(JOBJOBJOB))-1;
-      moo = Lo/Rv * dBT1231/ppp.stemp(JOBJOBJOB)/ppp.stemp(JOBJOBJOB);
-      dBT1231_WV = moo; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+      dBT1231_WV = estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB));
 
     else
       %% land, so whos knows
@@ -97,7 +94,8 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     iVers = 1;  %% after  noon Mar 11,2023,      sets WV   LOWEST 6 layers
     iVers = 2;  %% after       Mar 27,2023,      sets WV+T LOWEST 6 layers and till Nov 2023
     iVers = 3;  %% after       Nov 16, 2023      sets WV   LOWEST LAYERS till about 500 mb
-    iVers = 4;  %% after       Dec 16, 2023      same as iVers == 3 but it adds on d(RH) from Held.Jeevanjee
+    iVers = 4;  %% after       Dec 16, 2023      same as iVers == 3 but it adds on d(RH) from Held.Jeevanjee in lower atm (PBL)
+    iVers = 5;  %% after       Dec 26, 2023      same as iVers == 3 but it adds on d(RH) from Held.Jeevanjee ALL THROUGH THE atmosphere
     
     iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;
     iAdjLowerAtmWVfracX = 0.0;
@@ -137,11 +135,15 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
       iAdjLowerAtmWVfracX = 0.0;
     end
 
+    fprintf(1,'JOBJOBJOB = %4i rlat = %2i p.rlat = %8.6f   mmwater = %8.6f RHSurf = %8.6f  STEMP = %8.6f \n',JOBJOBJOB,driver.iLat,ppp.rlat(JOBJOBJOB),mmw0(JOBJOBJOB),RHSurf(JOBJOBJOB),ppp.stemp(JOBJOBJOB))
     junk = [iVers driver.rateset.rates(1520)  dBT1231_WV   dBT1231_WV/driver.rateset.rates(1520)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
     fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean %8.6f frac/yr \n',junk(1:3))
     fprintf(1,'           (ratio dBT1231_WV/dBT1231 = %8.6f compared to 0.07 percent increase in RH per K at 285 K) yah yah mebbe an additional fudge of 5 applied \n',junk(4))
     fprintf(1,'           with TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac = %8.6f %8.6f ==> final WV adj factor fudge to multiply "dBT1231_WV" will be %8.6f  \n',junk(5:7));
     %%%fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> Tadj over ocean %8.6f K/yr    with TfacAdjAtmosphericAmplification = %8.6f \n',iVers,driver.rateset.rates(1520),dBT1231,TfacAdjAtmosphericAmplification)
+
+    %[hjh,pjp] = subset_rtp(hhh,ppp,[],[],JOBJOBJOB);
+    %jacxjacx = quicksartajac(hjh,pjp,1);
 
     if iAdjLowerAtmWVfracX > eps
 
@@ -173,22 +175,39 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
         xb(6+length(driver.jacobian.temp_i)-6) = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX * (1 - 6/6);
         fprintf(1,'miaow2 = %8.6f \n',xb(6+length(driver.jacobian.water_i)-0));
 
-      elseif iVers == 3 | iVers == 4
+      elseif iVers == 3 | iVers == 4 | iVers == 5
         %% tested and savesmallFATfile --> /asl/s1/sergio/JUNK/   ....
         %% used since Nov 16, 2023
-        boo = find(plays >= 500);
 
-        if iVers == 4
+        if iVers == 4 | iVers == 5
           dlnPdT = precipitation_vs_skt_changes(ppp.rlat(JOBJOBJOB),ppp.landfrac(JOBJOBJOB));
+          dlnPdT = 0.02;
           [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dBT1231,dlnPdT);
+          dBT1231_WV = estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB));
           dBT1231_WV = dBT1231_WV + lowest_layer_fracwater_dRH_Held_Jeevanjee;          %% dBT1231_WV and lowest_layer_fracwater_dRHzero should be the same if the iAdjustStuff = 1.0
         end
 
-        for ix = 1 : length(boo)+1
-          xb(6+length(driver.jacobian.water_i)-(ix-1)) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - (ix-1)/length(boo));
+        if iVers == 3 | iVers == 4
+          boo = find(plays >= 500);
+          for ix = 1 : length(boo)+1
+            xb(6+length(driver.jacobian.water_i)-(ix-1)) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - (ix-1)/length(boo));
+          end
+        elseif iVers == 5
+          boo = find(plays >= 200);
+          for ix = 1 : length(boo)+1
+            xb(6+length(driver.jacobian.water_i)-(ix-1)) = dBT1231_WV * iAdjLowerAtmWVfracX;
+          end
+
+          for ix = length(boo)+2 : 2*length(boo)+1
+            xb(6+length(driver.jacobian.water_i)-(ix-1)) = dBT1231_WV * iAdjLowerAtmWVfracX * (1 - (ix-1-length(boo))/length(boo));
+          end
+
         end
-     
+
         miaow2 = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX;
+        disp(' ')
+        junk = [iVers driver.rateset.rates(1520)  dBT1231_WV   dBT1231_WV/driver.rateset.rates(1520)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
+        fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean %8.6f frac/yr \n',junk(1:3))
         fprintf(1,'miaow2 = %8.6f from OLD pre Nov 2003 dBT1231 adj          ....       while miaow3 = %8.6f from NEW, CORRECT d(RH) based adjustment \n',miaow2,xb(6+length(driver.jacobian.water_i)-0));
       end
 
