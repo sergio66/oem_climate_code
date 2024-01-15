@@ -15,6 +15,7 @@ end
 ii = 0; 
 ii = ii + 1; %% ii = 1
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_ERA5calcs_spectraltrends.mat'; comment{ii} = 'GULP use SPECTRAL ERA5 to test code';
+  %%% now also have /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_startwith0_50fatlayers_ERA5calcs_spectraltrends2.mat with newer Nadir Jeevanjee/Isaac Held apriri WV frac
 ii = ii + 1; %% ii = 2
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';         comment{ii} = 'GULP this is default GULP used at Sounder STM Oct 2023';
 ii = ii + 1; %% ii = 3

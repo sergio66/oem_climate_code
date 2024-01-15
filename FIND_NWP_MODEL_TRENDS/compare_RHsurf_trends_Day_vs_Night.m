@@ -149,8 +149,6 @@ iFig = 78; figure(iFig); clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(mooUMBC_
 iFig = 79; figure(iFig); clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(mooUMBC),72,64)',[-90 +90],[-180 +180]);            cx = (10.^[0 +1]); caxis(cx); colormap(jett);
 iFig = 79; figure(iFig); clf; aslmap(iFig,rlat65,rlon73,reshape(mooUMBC,72,64)',[-90 +90],[-180 +180]);                  cx = ([0 +5]); caxis(cx); colormap(jett);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 figure(96); clf
   ta = tiledlayout(2,1,'TileSpacing','None', 'Padding','None');
   ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
@@ -166,15 +164,17 @@ ta.Padding = 'compact';
 ta.TileSpacing = 'compact';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% OCEAN + LAND
-newzST11 = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  newzST12 = (fAIRSL3_day.thestats64x72.stemprate+fAIRSL3_night.thestats64x72.stemprate)*0.5; newzST13 = (fCLIMCAPSL3_day.thestats64x72.stemprate+fCLIMCAPSL3_night.thestats64x72.stemprate)*0.5;
-newzST21 = (fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5;    newzST22 = fMERRA2.trend_stemp;
-newzST11 = reshape(newzST11,72,64);   newzST12 = reshape(newzST12,72,64);  newzST21 = reshape(newzST21,72,64);   newzST22 = reshape(newzST22,72,64);  newzST13 = reshape(newzST13,72,64);    
 
 figure(80); clf
 plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',2);
 plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dt');
+
+%%% OCEAN + LAND
+newzST11 = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  newzST12 = (fAIRSL3_day.thestats64x72.stemprate+fAIRSL3_night.thestats64x72.stemprate)*0.5; 
+           newzST13 = (fCLIMCAPSL3_day.thestats64x72.stemprate+fCLIMCAPSL3_night.thestats64x72.stemprate)*0.5;
+newzST21 = (fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5;    newzST22 = fMERRA2.trend_stemp;
+newzST11 = reshape(newzST11,72,64);   newzST12 = reshape(newzST12,72,64);  newzST21 = reshape(newzST21,72,64);   newzST22 = reshape(newzST22,72,64);  newzST13 = reshape(newzST13,72,64);    
 
 figure(81); clf
 plot(rlat,nanmean(newzST11,1),'k',rlat,nanmean(newzST12,1),'b',rlat,nanmean(newzST13,1),'gx-',rlat,nanmean(newzST21,1),'r',rlat,nanmean(newzST22,1),'m','linewidth',2);
@@ -207,7 +207,8 @@ xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dST Ocean');
 newz11 = (fUMBC_day.RHsurftrend+fUMBC_night.RHsurftrend)*0.5;    newz12 = (fAIRSL3_day.RHsurftrend+fAIRSL3_night.RHsurftrend)*0.5; newz13 = (fCLIMCAPSL3_day.RHsurftrend+fCLIMCAPSL3_night.RHsurftrend)*0.5;
 newz21 = (fERA5_day.RHsurftrend+fERA5_night.RHsurftrend)*0.5;    newz22 = fMERRA2.RHsurftrend;
   newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
-newzST11 = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  newzST12 = (fAIRSL3_day.thestats64x72.stemprate+fAIRSL3_night.thestats64x72.stemprate)*0.5; newzST13 = (fCLIMCAPSL3_day.thestats64x72.stemprate+fCLIMCAPSL3_night.thestats64x72.stemprate)*0.5;
+newzST11 = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  newzST12 = (fAIRSL3_day.thestats64x72.stemprate+fAIRSL3_night.thestats64x72.stemprate)*0.5; 
+           newzST13 = (fCLIMCAPSL3_day.thestats64x72.stemprate+fCLIMCAPSL3_night.thestats64x72.stemprate)*0.5;
 newzST21 = (fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5;    newzST22 = fMERRA2.trend_stemp;
 newzST11 = reshape(newzST11,72,64);   newzST12 = reshape(newzST12,72,64);  newzST21 = reshape(newzST21,72,64);   newzST22 = reshape(newzST22,72,64);  newzST13 = reshape(newzST13,72,64);    
 
@@ -260,6 +261,19 @@ plot(rlat,smooth(nanmean(newz11,1)./nanmean(newzST11,1),10),'k',rlat,smooth(nanm
 ylim([-1 +1]*10);
 plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dST Ocean'); 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% OCEAN + LAND
+newzBT1231 = 0.5*(spectral_rates_day(1520,:) + spectral_rates_night(1520,:));
+newzBT1231ocean = newzBT1231; newzBT1231ocean(land) = nan;
+newzBT1231 = reshape(newzBT1231,72,64);
+newzBT1231ocean = reshape(newzBT1231ocean,72,64);
+
+figure(86); clf
+plot(rlat,nanmean(newzBT1231,1),'k',rlat,nanmean(newzBT1231ocean,1),'b')
+plotaxis2; hl = legend('AIRS L1C BT1231','AIRS L1C BT1231 ocean','location','best','fontsize',8);
+xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dBT1231/dt');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear junk*

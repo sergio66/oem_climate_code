@@ -35,6 +35,14 @@ fGISS = load(giss_file);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+junk = load(era5_night_file,'trend_ilr_clr');     fERA5_night.ilr_clr  = junk.trend_ilr_clr;
+junk = load(era5_night_file,'trend_ilr_adj');     fERA5_night.ilr_adj  = junk.trend_ilr_adj;
+junk = load(era5_night_file,'trend_ilr_Rld');     fERA5_night.ilr_Rld  = junk.trend_ilr_Rld;
+junk = load(era5_night_file,'trend_e2m');         fERA5_night.e2m      = junk.trend_e2m;
+junk = load(era5_night_file,'trend_frac_e2m');    fERA5_night.frac_e2m = junk.trend_frac_e2m;
+junk = load(era5_night_file,'trend_d2m');         fERA5_night.d2m      = junk.trend_d2m;
+junk = load(era5_night_file,'trend_t2m');         fERA5_night.t2m      = junk.trend_t2m;
+junk = load(era5_night_file,'trend_RH2m');        fERA5_night.RH2m     = junk.trend_RH2m;
 
 junk = load(era5_night_file,'trend_RH');     fERA5_night.RHtrend = junk.trend_RH;
 junk = load(era5_night_file,'trend_RHSurf'); fERA5_night.RHsurftrend = junk.trend_RHSurf;
@@ -53,6 +61,16 @@ QX = 1000 * layers2gg(h,pjunk,1:4608,1);
 QX = Lv * QX + cp * pjunk.ptemp(1:mm,:) + g * p.palts(1:mm,:);
 fERA5_night.MSEtrend                 = QX - Q0;
 fERA5_night.mmwtrend_deux            = mmwX - mmw0;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+junk = load(era5_day_file,'trend_ilr_clr');     fERA5_day.ilr_clr  = junk.trend_ilr_clr;
+junk = load(era5_day_file,'trend_ilr_adj');     fERA5_day.ilr_adj  = junk.trend_ilr_adj;
+junk = load(era5_day_file,'trend_ilr_Rld');     fERA5_day.ilr_Rld  = junk.trend_ilr_Rld;
+junk = load(era5_day_file,'trend_e2m');         fERA5_day.e2m      = junk.trend_e2m;
+junk = load(era5_day_file,'trend_frac_e2m');    fERA5_day.frac_e2m = junk.trend_frac_e2m;
+junk = load(era5_day_file,'trend_d2m');         fERA5_day.d2m      = junk.trend_d2m;
+junk = load(era5_day_file,'trend_t2m');         fERA5_day.t2m      = junk.trend_t2m;
+junk = load(era5_day_file,'trend_RH2m');        fERA5_day.RH2m     = junk.trend_RH2m;
 
 junk = load(era5_day_file,'trend_RH');       fERA5_day.RHtrend = junk.trend_RH;
 junk = load(era5_day_file,'trend_RHSurf');   fERA5_day.RHsurftrend = junk.trend_RHSurf;

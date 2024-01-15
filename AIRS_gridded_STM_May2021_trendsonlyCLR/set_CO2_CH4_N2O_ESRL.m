@@ -32,24 +32,28 @@ elseif iAdjCo2 > -1 & iAdjCo2 < +0.99
 end
 driver.co2adj_ESRL = iAdjCo2;
 
-if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 1 & settings.model ~= 5
-  %% have an ERA5 simulation with NO co2 changing, so put xb(1:6) = 0 got that
-  %% for MERRA2, AIRSL3, CLIMCAPSL3 have included "realistic" CO2
-    xb(1) = co2x;  % Set CO2 apriori
-    xb(2) = 1;
-    xb(3) = ch4x;
-    xb(4) = 0.0; %% clouds, so dunno value
-    xb(5) = 0.0; %% clouds, so dunno value
+%keyboard_nowindow
+%[settings.set_tracegas driver.i16daytimestep settings.ocb_set settings.model]
 
-    xb(1) = co2x * 1;    % Set CO2 apriori
-    xb(2) = n2ox * 1;    % set N2O 
-    xb(3) = ch4x * 1;    % set CH4
-    xb(4) = 0.0; %% clouds, so dunno value
-    xb(5) = 0.0; %% clouds, so dunno value
-
-elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set ~= 1
+% if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 1 & settings.model ~= 5
+%   %% have an ERA5 simulation with NO co2 changing, so put xb(1:6) = 0 got that
+%   %% for MERRA2, AIRSL3, CLIMCAPSL3 have included "realistic" CO2
+%     xb(1) = co2x;  % Set CO2 apriori
+%     xb(2) = 1;
+%     xb(3) = ch4x;
+%     xb(4) = 0.0; %% clouds, so dunno value
+%     xb(5) = 0.0; %% clouds, so dunno value
+% 
+%     xb(1) = co2x * 1;    % Set CO2 apriori
+%     xb(2) = n2ox * 1;    % set N2O 
+%     xb(3) = ch4x * 1;    % set CH4
+%     xb(4) = 0.0; %% clouds, so dunno value
+%     xb(5) = 0.0; %% clouds, so dunno value
+% 
+if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <= 1
   fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  N2O = %8.6f   CH4 = %8.6f \n',co2x,n2ox,ch4x)
-  if settings.co2lays == 1
+
+  if settings.co2lays == 1 & settings.ocb_set == 0
     xb(1) = co2x;  % Set CO2 apriori
     xb(2) = 1;
     xb(3) = ch4x;
@@ -61,7 +65,12 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     xb(3) = ch4x * 1;    % set CH4
     xb(4) = 0.0; %% clouds, so dunno value
     xb(5) = 0.0; %% clouds, so dunno value
+  else
+    disp('this is CAL so no need to offset CO2/CH4/N2O')
+  end
 
+  if settings.co2lays == 1
+    %% disp('now doing apriori WV(RH) settings')
     %xb(1:5) = xb(1:5)*10;
     %[hhh,~,ppp,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp');
     [hhh,~,ppp,~] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp');
@@ -73,7 +82,8 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     end
 
     JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
-    if ppp.landfrac(JOBJOBJOB) < eps
+%%%    if ppp.landfrac(JOBJOBJOB) < eps    till Dec 31, 2023
+    if ppp.landfrac(JOBJOBJOB) < 0.25
       %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
       %% also see Nadir Jeevanjee : Simple Climate Models, arXiv 2018
       dBT1231 = 0.0025/2;
@@ -142,6 +152,8 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
     fprintf(1,'           with TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac = %8.6f %8.6f ==> final WV adj factor fudge to multiply "dBT1231_WV" will be %8.6f  \n',junk(5:7));
     %%%fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> Tadj over ocean %8.6f K/yr    with TfacAdjAtmosphericAmplification = %8.6f \n',iVers,driver.rateset.rates(1520),dBT1231,TfacAdjAtmosphericAmplification)
 
+%keyboard_nowindow
+
     %[hjh,pjp] = subset_rtp(hhh,ppp,[],[],JOBJOBJOB);
     %jacxjacx = quicksartajac(hjh,pjp,1);
 
@@ -182,7 +194,8 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
         if iVers == 4 | iVers == 5
           dlnPdT = precipitation_vs_skt_changes(ppp.rlat(JOBJOBJOB),ppp.landfrac(JOBJOBJOB));
           dlnPdT = 0.02;
-          [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dBT1231,dlnPdT);
+          [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dBT1231,dlnPdT); %% OH OH I HAD IT THIS WAY dec 26, 2023 when showed to LLS
+          [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dlnPdT,dBT1231);
           dBT1231_WV = estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB));
           dBT1231_WV = dBT1231_WV + lowest_layer_fracwater_dRH_Held_Jeevanjee;          %% dBT1231_WV and lowest_layer_fracwater_dRHzero should be the same if the iAdjustStuff = 1.0
         end
@@ -206,10 +219,11 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_se
 
         miaow2 = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX;
         disp(' ')
-        junk = [iVers driver.rateset.rates(1520)  dBT1231_WV   dBT1231_WV/driver.rateset.rates(1520)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
-        fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean %8.6f frac/yr \n',junk(1:3))
+        junk = [iVers driver.rateset.rates(1520)  estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB)) dBT1231_WV   dBT1231_WV/driver.rateset.rates(1520)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
+        fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean, 0.01K/yr  %8.6f %8.6f frac/yr \n',junk(1:4))
         fprintf(1,'miaow2 = %8.6f from OLD pre Nov 2003 dBT1231 adj          ....       while miaow3 = %8.6f from NEW, CORRECT d(RH) based adjustment \n',miaow2,xb(6+length(driver.jacobian.water_i)-0));
       end
+%keyboard_nowindow
 
     else
       disp('iAdjLowerAtmWVfracX = 0 so NO WV adjustment!!!')

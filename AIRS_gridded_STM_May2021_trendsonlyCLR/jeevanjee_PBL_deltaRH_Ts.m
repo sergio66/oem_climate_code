@@ -76,6 +76,8 @@ if nargin >= 4
   %iAdjLowerAtmWVfracX = iAdjLowerAtmWVfrac * TfacAdjAtmosphericAmplification * iWVFudgeMult;   %% new
   iAdjLowerAtmWVfracX = 1.0;
 
+  %[dBT1231_WV estimate_fracWV_for_deltaRH_zero(dBT1231,Ts) iAdjLowerAtmWVfracX]
+
   lowest_layer_fracwater_dRHzero = dBT1231_WV * iAdjLowerAtmWVfracX;
 
   %%%%%%%%%%%%%%%%%%%%%%%%% 

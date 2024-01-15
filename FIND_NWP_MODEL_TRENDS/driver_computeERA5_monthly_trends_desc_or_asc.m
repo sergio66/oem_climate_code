@@ -35,9 +35,10 @@ if ~exist('iTrendsOrAnoms')
 end
 
 if ~exist('iDorA')
-  iDorA = +1; %% desc
   iDorA = -1; %% asc
+  iDorA = +1; %% desc
 end
+fprintf(1,'iDorA = %2i \n',iDorA)
 
 clear iaFound
 %iaMax = 18*12; %% 18 year
@@ -76,9 +77,11 @@ if ~exist('iCldORClr')
 end
 
 find_computeERA5_monthly_trends_foutname
-if exist(fout_trendjunk)
+fout_trendjunk_surface = [fout_trendjunk(1:end-4) '_surf.mat'];
+if exist(fout_trendjunk) & exist(fout_trendjunk_surface)
   fout_trendjunk
-  error('fout_trendjunk exists')
+  fout_trendjunk_surface
+  error('fout_trendjunk,fout_trendjunk_surface exist')
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -137,7 +140,7 @@ end
 
 disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
 disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
-fprintf(1, "+" are the 100, "x" are tens .. need to read in %3i \n',iaMax)
+fprintf(1,' "+" are the 100, "x" are tens .. need to read in %3i \n',iaMax)
 for ii = 1 : iaMax
   if iOLR < 0
     if iDorA > 0
@@ -190,6 +193,30 @@ for ii = 1 : iaMax
     all.TwSurf(ii,:)  = a.pnew_op.TwSurf;
     all.RHSurf(ii,:)  = a.pnew_op.RHSurf;
     
+    if iOLR > 0
+      all.d2m(ii,:)     = a.pnew_op.d2m;
+      all.t2m(ii,:)     = a.pnew_op.t2m;
+      all.olr(ii,:)     = a.pnew_op.olr;
+      all.olr_clr(ii,:) = a.pnew_op.olr_clr;
+      all.ilr(ii,:)     = a.pnew_op.ilr;
+      all.ilr_clr(ii,:) = a.pnew_op.ilr_clr;
+
+      %% Improved Magnus Form Approximation of Saturation Vapor Pressure
+      %% Oleg A. Alduchov  and Robert E. Eskridge
+      %% JAMS 1996, v35 DOI: https://doi.org/10.1175/1520-0450(1996)035<0601:IMFAOS>2.0.CO;2  Page(s): 601–609
+      all.RH2m(ii,:) = 100 * exp((17.625*(a.pnew_op.d2m-273.13)./(243.04+(a.pnew_op.d2m-273.13))));
+      all.RH2m(ii,:) = all.RH2m(ii,:) ./ exp((17.625*(a.pnew_op.t2m-273.13)./(243.04+(a.pnew_op.t2m-273.13))));;
+
+      %% now do adjustments, since I think ILR is a net flux instead of actual downwelling flux
+      all.ilr_adj(ii,:) = -a.pnew_op.ilr_clr + 5.67e-8 * a.pnew_op.stemp.^(4);
+
+      %% from "Understanding variations in downwelling longwave radiation using Brutsaert’s equation"
+      %% Earth Syst. Dynam., 14, 1363–1374, 2023 https://doi.org/10.5194/esd-14-1363-2023, eqn 6
+      all.e2a(ii,:) = 6.1079*exp(17.269 * (a.pnew_op.d2m-273.13)./(237.3 + (a.pnew_op.d2m-273.13)));            
+      all.ecs(ii,:) = 1.24*(all.e2a(ii,:)./a.pnew_op.t2m).^(1/7);
+      all.Rld(ii,:) = 5.67e-8 * all.ecs(ii,:) .* a.pnew_op.t2m.^(4); 
+    end
+
     if iCldORClr == +1
       hunk = a.hnew_op;
       junk = a.pnew_op;
@@ -225,14 +252,22 @@ comment = 'see driver_computeERA5_monthly_trends_desc_or_asc.m';
 
 find_computeERA5_monthly_foutname
 
-if iNumYears <= 100
-  iSave = -1;
-else
-  iSave = input('Save huge file (-1/+1) : ');
-end
-
 iSave = -1;  %%% unless now you do a whole new set of files Steve brings down from ERA5
              %%% be careful though, first time you run this, you need it DUDE and iSave should be +1   eg when I did the daytime "asc" I forgot to save, so could not generate spectral trends boo hoo
+
+%if iNumYears <= 100
+%  iSave = -1;
+%else
+  eeee = exist(foutjunk);
+  if eeee > 0
+    fprintf(1,'foutjunk = %s a HUGE FILE WITH ALL THE 20 years of PROFILE data already exists!!! \n',foutjunk)
+  else
+    fprintf(1,'foutjunk = %s a HUGE FILE WITH ALL THE 20 years of PROFILE data DNE DNE DNE ! \n',foutjunk)
+  end
+  %iSave = input('Save huge file (-1/+1) : ');
+  iSave = +1;
+%end
+
 
 if iSave > 0
   %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
@@ -247,12 +282,12 @@ end
 
 figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('ERA5 mean stemp')
 figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
-figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('ERA5 mean TWSurf DO NOT BELIEVE')
+figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.TwSurf,1)); colormap(jet); title('ERA5 mean TWSurf DO BELIEVE')
 figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.mmw,1)); colormap(jet); title('ERA5 mean mmw')
 
 figure(5); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.stemp); colormap(jet); title('ERA5 mean stemp')
 figure(6); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
-figure(7); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('ERA5 mean TWSurf DO NOT BELIEVE')
+figure(7); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('ERA5 mean TWSurf DO BELIEVE')
 figure(8); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('ERA5 mean mmw')
 
 plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
@@ -289,6 +324,12 @@ if iTrendsOrAnoms > 0
   figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
   figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
   pause(0.1)
+
+  if ~exist(fout_trendjunk_surface)
+    fprintf(1,'saving surface/scalar trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk_surface)
+    saver = ['save ' fout_trendjunk_surface ' comment trend*'];
+    eval(saver);
+  end
 
 elseif iTrendsOrAnoms < 0
   computeERA5_surface_anoms
@@ -342,9 +383,9 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
-disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
-disp('DO NOT BELIEVE RHSURF stuff since I forgot to use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
+disp('PARTIALLY BELIEVE RHSURF stuff since I use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
+disp('PARTIALLY BELIEVE RHSURF stuff since I use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
+disp('PARTIALLY BELIEVE RHSURF stuff since I use t2m and d2m for RHsurf in the CLUSTMAKE_RTP ... so did silly conversions, interpolating RH(p) to surf .. need to go back to orig rtps and fix')
 
 figure(1); clf; scatter_coast(all.rlon,all.rlat,40,trend_stemp); title('ERA5 trend  stemp K/yr');    caxis([-1 +1]*0.15); colormap(llsmap5);
 figure(2); clf; scatter_coast(all.rlon,all.rlat,40,trend_RHSurf); title('ERA5 trend  UGH RHsurf pc/yr'); caxis([-1 +1]*0.4); colormap(llsmap5);

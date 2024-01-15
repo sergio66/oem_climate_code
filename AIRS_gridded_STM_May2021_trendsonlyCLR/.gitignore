@@ -16,6 +16,11 @@ PDF*
 diff_kcarta_results.txt
 diff_results.txt
 
+# from trying uplook instr stuff
+*uplook*.dat
+*uplook*.jac*
+*warning*.msg
+
 # symbolic links
 driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
 driver_check_WV_T_RH_AMIP6_geo_and_spectral_rates2.m

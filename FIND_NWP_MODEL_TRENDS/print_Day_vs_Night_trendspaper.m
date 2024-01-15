@@ -54,6 +54,8 @@ figure(74); aslprint([dir0 '/rhsurf_Day_Night_stddevtrend_over5.pdf']);
 figure(77); aslprint([dir0 '/rhsurf_Day_Night_meantrend_umbc.pdf']);
 figure(78); aslprint([dir0 '/rhsurf_Day_Night_stddevtrend_umbc.pdf']);
 
+figure(81); aslprint([dir0 '/dST_dt_land_ocean_zonal_allmodels.pdf']);
+figure(84); aslprint([dir0 '/dST_dt_ocean_zonal_allmodels.pdf']);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(90); aslprint([dir0 '/plot_avg_over_6_models_mean_std_skt_trends.pdf']);
 figure(91); aslprint([dir0 '/plot_avg_over_5_models_mean_std_mmw_trends.pdf'])
@@ -62,3 +64,10 @@ figure(93); aslprint([dir0 '/plot_avg_over_5_models_mean_std_T_trends.pdf']);
 figure(94); aslprint([dir0 '/plot_avg_over_5_models_mean_std_WVfrac_trends.pdf'])
 figure(95); aslprint([dir0 '/plot_avg_over_5_models_mean_std_RH_trends.pdf'])
 figure(96); aslprint([dir0 '/plot_avg_over_5_models_mean_std_RHSURF_trends.pdf'])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure(101); aslprint([dir0 '/ilr_trends_zonal.pdf']);
+figure(102); aslprint([dir0 '/ilr_trends_umbc.pdf']);
+
+
+

@@ -136,6 +136,21 @@ iDebug = -1;
 %iDebug = 1369    %% -37 S, have -ve col WV trends
 %iDebug = 1261    %% -37 S, have -ve col WV trends
 %iDebug = 36
+%iDebug = 1532    %% this one is strongly negative for ERA5 synthetic rates ... not as negative for CHIRP_A, though spectral rates are very similar. But ERA5 synthtic has much less noise, so retrieval is "truer"
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
+moo0 = load('SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin22/sarta_spectral_trends_const_tracegas_latbin22_2002_09_2022_08.mat');
+moo1 = load('SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/all_4608_desc_2002_09_2022_08.mat');
+dir0 = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/';
+fMERRA2 = load([dir0 'MERRA2_SARTA_SPECTRAL_RATES/all_4608_2002_09_2022_08.mat']);
+umbc_night_file  = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjacV2.mat';
+
+fUMBC_n = load(umbc_night_file,'rates','fits','resultsWV');
+obs_n = fUMBC_n.rates;
+fUMBC_n = fUMBC_n.fits;
+plot(f,moo0.thesave.xtrend(:,20),'b',f,moo1.trend(:,1532),'r',f,fMERRA2.trend(:,1532),'g',f,obs_n(:,1532),'k'); plotaxis2; xlim([640 1630])  %% 20 is the lonbin, 22 is the latbin ... JOBJOBJOB = 1532 = (22-1)*72+20
+%}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
@@ -161,14 +176,16 @@ ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTi
   anomalydatafile = 'anomaly_tile_2515_timeseries_Q05.mat';  %% needs 454/20 = 23 processors
 
 ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9, iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
 ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9, iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
 ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
 
 ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+
+%ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
 
 if ia_OorC_DataSet_Quantile(1) == 2
   get_anomaly_processors
