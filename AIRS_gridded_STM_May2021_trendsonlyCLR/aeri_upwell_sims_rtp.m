@@ -32,14 +32,14 @@ rtpwrite('dnwell.op.rtp',hnew,ha,pdn,pa);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 %% keep updating iRTP and then
-kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up_jacZ.nml   uplook1.dat uplook1.jac']; eval(kcer)
-kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up_coljac.nml uplook1.dat uplook1.jac']; eval(kcer)
+kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up_jacZ.nml   UPLOOKJAC/uplook1.dat UPLOOKJAC/uplook1.jac']; eval(kcer)
+kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up_coljac.nml UPLOOKJAC/uplook1.dat UPLOOKJAC/uplook1.jac']; eval(kcer)
 
-kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml uplook1.dat']; eval(kcer)
-kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml uplook2.dat']; eval(kcer)
-kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml uplook3.dat']; eval(kcer)
-kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml uplook4.dat']; eval(kcer)
-kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml uplook5.dat']; eval(kcer)
+kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml UPLOOKJAC/uplook1.dat']; eval(kcer)
+kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml UPLOOKJAC/uplook2.dat']; eval(kcer)
+kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml UPLOOKJAC/uplook3.dat']; eval(kcer)
+kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml UPLOOKJAC/uplook4.dat']; eval(kcer)
+kcer = ['!time /home/sergio/KCARTA/BIN/kcarta.x_f90_122_400ppmv_H20 quickuse_up.nml UPLOOKJAC/uplook5.dat']; eval(kcer)
 %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

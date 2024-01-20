@@ -42,7 +42,7 @@ junk = load(era5_night_file,'trend_e2m');         fERA5_night.e2m      = junk.tr
 junk = load(era5_night_file,'trend_frac_e2m');    fERA5_night.frac_e2m = junk.trend_frac_e2m;
 junk = load(era5_night_file,'trend_d2m');         fERA5_night.d2m      = junk.trend_d2m;
 junk = load(era5_night_file,'trend_t2m');         fERA5_night.t2m      = junk.trend_t2m;
-junk = load(era5_night_file,'trend_RH2m');        fERA5_night.RH2m     = junk.trend_RH2m;
+%junk = load(era5_night_file,'trend_RH2m');        fERA5_night.RH2m     = junk.trend_RH2m;
 
 junk = load(era5_night_file,'trend_RH');     fERA5_night.RHtrend = junk.trend_RH;
 junk = load(era5_night_file,'trend_RHSurf'); fERA5_night.RHsurftrend = junk.trend_RHSurf;
@@ -70,7 +70,7 @@ junk = load(era5_day_file,'trend_e2m');         fERA5_day.e2m      = junk.trend_
 junk = load(era5_day_file,'trend_frac_e2m');    fERA5_day.frac_e2m = junk.trend_frac_e2m;
 junk = load(era5_day_file,'trend_d2m');         fERA5_day.d2m      = junk.trend_d2m;
 junk = load(era5_day_file,'trend_t2m');         fERA5_day.t2m      = junk.trend_t2m;
-junk = load(era5_day_file,'trend_RH2m');        fERA5_day.RH2m     = junk.trend_RH2m;
+%junk = load(era5_day_file,'trend_RH2m');        fERA5_day.RH2m     = junk.trend_RH2m;
 
 junk = load(era5_day_file,'trend_RH');       fERA5_day.RHtrend = junk.trend_RH;
 junk = load(era5_day_file,'trend_RHSurf');   fERA5_day.RHsurftrend = junk.trend_RHSurf;

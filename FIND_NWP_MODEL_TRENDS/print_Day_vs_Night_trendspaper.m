@@ -66,8 +66,8 @@ figure(95); aslprint([dir0 '/plot_avg_over_5_models_mean_std_RH_trends.pdf'])
 figure(96); aslprint([dir0 '/plot_avg_over_5_models_mean_std_RHSURF_trends.pdf'])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(101); aslprint([dir0 '/ilr_trends_zonal.pdf']);
-figure(102); aslprint([dir0 '/ilr_trends_umbc.pdf']);
+figure(103); aslprint([dir0 '/ilr_trends_zonal.pdf']);
+figure(104); aslprint([dir0 '/ilr_trends_umbc.pdf']);
 
 
 

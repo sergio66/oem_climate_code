@@ -75,7 +75,10 @@ eair = eair0;
 dTx2m_orig = dTx2m;
 dWVsurf_orig = dWVsurf;
 
-[deltaILR,ILR] = compute_ILR_rate_Bruntsaert(eair,Tx2m,dWVsurf,dTx2m);
+[deltaILR,ILR]       = compute_ILR_rate_Bruntsaert(eair,Tx2m,dWVsurf,dTx2m);
+[deltaILR_ST,ILR_ST] = compute_ILR_rate_Bruntsaert(eair,Tx2m,dWVsurf,results(:,6)');
+plot(rlat,nanmean(reshape(ILR_ST,72,64),1),rlat,nanmean(reshape(ILR,72,64),1),'linewidth',2);           hl = legend('using SKT','using T2m','location','best'); title('ILR from CHIRP\_A')
+plot(rlat,nanmean(reshape(deltaILR_ST,72,64),1),rlat,nanmean(reshape(deltaILR,72,64),1),'linewidth',2); hl = legend('using dSKT/dt','using dT2m/dt','location','best'); title('dILR/dt from CHIRP\_A')
 
 aslmap(iFig,rlat65,rlon73,smoothn(reshape(deltaILR,72,64)',1), [-90 +90],[-180 +180]); title('\deltaILR (W/m2) from Brutsaert'); caxis([-1 +1]*0.25); colormap(llsmap5)
   

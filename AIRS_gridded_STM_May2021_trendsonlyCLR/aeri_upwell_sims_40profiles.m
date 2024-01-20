@@ -6,6 +6,7 @@ addpath /asl/matlib/science/
 addpath /asl/matlib/h4tools
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
 addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RobinHoganECMWF/ECRAD_ECMWF_version_of_flux/ecRad/create_ecrad_inputSergio/
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -17,7 +18,7 @@ addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RobinHoganECMWF/ECRAD_ECMWF_version_o
 %%% make the rtp files -- the raw + jacobian, and the one with perturbations
 
 [h5,ha,p5,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/latbin1_40.op_400ppm.rtp');
-[p5.salti,p5.landfrac] = usgs_deg10_dem(p5.rlon,p5.rlat);
+[p5.salti,p5.landfrac] = usgs_deg10_dem(p5.rlat,p5.rlon);
 
 p5.upwell = 2 * ones(size(p5.upwell));
 p5.scanang = 0 * ones(size(p5.scanang));
@@ -298,7 +299,9 @@ if ~exist('ecRad')
   ecRad      = superdriver_run_ecRad_rtp_loop_over_profiles(h5,p5pertX_TS,-1,-1);
 end
 
-%% saver = ['save ilrcalcs_CKD' num2str(iCKD,'%02i') '.mat iCKD ilr0 ilr0bands ilrX ilrXbands ecRad ecRad0 RRTMbands']; eval(saver)
+comment = 'see aeri_upwell_sims_40profles.m';
+saver = ['save ilrcalcs_CKD' num2str(iCKD,'%02i') '.mat iCKD ilr0 ilr0bands ilrX ilrXbands ecRad ecRad0 RRTMbands comment']; 
+% eval(saver)
 
 ecRadWV     = ecRad.clr((1:40)+0*40)-ecRad0.clr;
 ecRadCO2    = ecRad.clr((1:40)+1*40)-ecRad0.clr;
