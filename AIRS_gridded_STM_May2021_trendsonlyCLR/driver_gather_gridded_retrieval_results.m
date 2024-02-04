@@ -48,13 +48,14 @@ if length(iAK) == 0
 end
 if iAK > 0
   %% see Plotutils/plot_retrieval_latbins_fewlays
-  iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 20] ');  
+  iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 20, caln also give =-N for data ending in 2022 (end of mission)] ');  
   if length(iNumYears) == 0
     iNumYears = 20;
   end
-  junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
-  junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
-  era5 = load(junk);
+  %junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
+  %junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
+  %era5 = load(junk);
+  era5 = get_ERA5_trends_thermodynamic_and_spectral(iNumYears);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -775,10 +776,30 @@ figure(12); ylim([-1 +1]*5)
 for ii = 15:20; figure(ii); colormap jet; caxis([0 1]*10); end
 
 figure(21); clf
+if iNumYears >= 0
+  iNumYearsX = roundN(iNumYears,5);  %% only have spectra for 5,10,15,20 ie 2022-2007,2012,2017,2022
+  if iNumYearsX == 0
+    iNumYearsX = 5;
+  end
+else
+  iNumYearsX = -4; %% only have spectra for -4   ie 2018-2022
+end
+if iNumYears ~= iNumYearsX
+  fprintf(1,' WARNING : get_ERA5_trends_thermodynamic_and_spectral.m using ERA5 trends from %2i years in stead of %2i years \n',iNumYearsX,iNumYears);
+end
 if isfield(oem,'spectral_deltan00')
-  plot(f,mean(rates'),f,mean(spectral_deltan00')); plotaxis2;
-  hl = legend('actual data','what was fitted','location','best');
+  plot(f,nanmean(rates'),'b',f,nanmean(spectral_deltan00'),'g',f,nanmean(era5.era5_spectral_rates'),'r',...
+       f,nanstd(rates'),'b--',f,nanstd(spectral_deltan00'),'g--',f,nanstd(era5.era5_spectral_rates'),'r--'); plotaxis2;
+  axis([640 1640 -0.4 +0.4])
+  if iNumYears >= 0
+    hl = legend('actual data','what was fitted',['ERA5 ' num2str(iNumYearsX) 'yrs, vary tracegas'],'location','best');
+  elseif iNumYears < 0
+    hl = legend('actual data','what was fitted',['ERA5 ' num2str(iNumYearsX) 'yrs, const tracegas'],'location','best');
+  end
   title('After doing data-sum(jac(i)*startxb(i)')
+  ylabel('solid : mean; dashed : std [K/yr]');
+  xlabel('Wavenumber cm-1');
+  disp('ret to continue'); pause
 end
 
 maskLF = ones(size(chisqrX));

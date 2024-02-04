@@ -202,7 +202,7 @@ fairs = fairs.h;
 i900 = find(h.vchan >= 900,1);
 i1227 = find(h.vchan >= 1227,1);
 
-  %% see get_spectral_get_the_model_trends.m
+  %% see get_the_model_spectral_trends.m
   iEorMstrSPECTRA = 'ERA5';
   iEorMFstr = 'simulate64binsERA5_';
   iEorMFstr = 'reconstruct_era5_spectra_geo_rlat';

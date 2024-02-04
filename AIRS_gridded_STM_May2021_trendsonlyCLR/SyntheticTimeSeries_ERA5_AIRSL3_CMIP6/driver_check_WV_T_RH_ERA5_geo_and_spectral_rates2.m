@@ -10,21 +10,32 @@ addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 
+disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+
+if length(strfind(pwd,'SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')) == 0
+  error('you need to cd to MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+end
+
 system_slurm_stats
 
 %% kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 5     for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
-%JOB = 31
+if length(JOB) == 0
+  JOB = 31;
+end
 
-iNorD = +1; %% default, night
 iNorD = -1; %% day
+iNorD = +1; %% night DEFAULT
 iNumYears = 20;
 
 YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
 YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
 YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
 YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+YMStart = [2018 09];  YMEnd = [2022 08];  %% last 4 years
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -38,8 +49,6 @@ if iOops < 0
   h = wah.h;
   wah = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','p');
   p = wah.p;
-  
-  load('llsmap5.mat');
   
   RH000 = layeramt2RH(h,p);
   
@@ -205,7 +214,9 @@ co2ppm = 368 + 2.1*time_so_far;
 n2oppm = 315  + (332-315)/(2020-2000)*time_so_far; n2oppm = n2oppm/1000;
 ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
 
-iConstORVary = -1;
+iConstORVary = +1;   %% constant CO2 N2O CH4 as function of time  %% to replace driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
+iConstORVary = -1;   %% vary the CO2 N2O CH4 as function of time  %% DEFAULT
+
 if iConstORVary < 0
   %% see ~/MATLABCODE/CRODGERS_FAST_CLOUD/driver_stage2_ESRL_set_CO2_CH4_N2O.m
   co2ppm = 368 + 2.1*time_so_far;
@@ -223,8 +234,12 @@ sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
 if iConstORVary == +1
   if iNorD > 0
     dirout = 'SimulateTimeSeries/NIGHTorAVG/ERA5_ConstTracegas/';
+    dirout = 'STS/NIGHTorAVG/ERA5_ConstTracegas/';
+    dirout = 'STS/NIGHTorAVG/ERA5_ConstG/';
   else
     dirout = 'SimulateTimeSeries/DAY/ERA5_ConstTracegas/';
+    dirout = 'STS/NIGHTorAVG/ERA5_ConstTracegas/';
+    dirout = 'STS/NIGHTorAVG/ERA5_ConstG/';
   end
 else
   if iNorD > 0
@@ -246,6 +261,9 @@ nemis_t = [];
 emis_t  = [];
 efreq_t = [];
 rho_t   = [];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% THIS IS MAIN LOOP
 
 for ii = JOB
 

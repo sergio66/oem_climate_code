@@ -67,7 +67,7 @@ figure(6); plot(rlon,thesave.xst_trend,rlon,thesave.xbt1231_trend); title('dST/d
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp(' .... 2645 channel trends ...')
+disp(' .... 2645 channel trends for each of the 72 lon bins ... + = 1000 . = 100')
 warning off
 for iii = 1 : 2645
   if mod(iii,1000) == 0
@@ -95,7 +95,13 @@ for iii = 1 : 2645
     end
   end
 end
+thesave.freq =  h72x.vchan;
 
+fprintf(1,'\n');
+figure(1); pcolor(h72x.vchan,1:72,thesave.xtrendSpectral'); shading interp; title('Spectral Rate K/yr')
+  ylabel('72 LonBins'); xlabel('Wavenumber cm-1'); caxis([-1 +1]); colorbar; colormap(llsmap5);
+
+disp(' .... 2645 channel trends for the average katbin (over the 72 lon bins) ... should be fast')
 for iii = 1 : 2645
   data = tcalcavg(iii,:);
 %  junk = polyfit(dayOFtime/365,data,1);
@@ -147,8 +153,9 @@ for jj = 1 : iNlev
   end
 end
 
-figure(3); pcolor(rlon,plevsnwp,thesave.t2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates straight from CMIP6 or ERA5 zonal levels')
+figure(7); pcolor(rlon,plevsnwp,thesave.t2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); 
+  title('T rates straight from CMIP6 or ERA5 zonal levels')
 
 t = p72x.ptemp; t = reshape(t,101,72,numtimesteps); 
 for jj = 1 : 101
@@ -170,7 +177,7 @@ for jj = 1 : 101
   end
 end
 
-figure(4); pcolor(rlon,plevsx,thesave.t2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+figure(8); pcolor(rlon,plevsx,thesave.t2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
   xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -198,7 +205,7 @@ for jj = 1 : iNlev
   end
 end
 
-figure(3); pcolor(rlon,plevsnwp,thesave.wv2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
+figure(9); pcolor(rlon,plevsnwp,thesave.wv2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
   xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('WV frac rates straight from CMIP6 or ERA5 zonal levels')
 
 t = p72x.gas_1; t = reshape(t,101,72,numtimesteps); tX = squeeze(nanmean(t,3));
@@ -222,7 +229,7 @@ for jj = 1 : 101
   end
 end
 
-figure(4); pcolor(rlon,plevsx,thesave.wv2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
+figure(10); pcolor(rlon,plevsx,thesave.wv2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
   xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('T rates from rtp after klayers')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -252,7 +259,8 @@ if iType ~= 4
   end
   
   figure(3); pcolor(rlon,plevsnwp,thesave.oz2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); 
-    xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('OZ frac rates straight from CMIP6 or ERA5 zonal levels')
+    xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); 
+    title('OZ frac rates straight from CMIP6 or ERA5 zonal levels')
   
   t = p72x.gas_3; t = reshape(t,101,72,numtimesteps); tX = squeeze(nanmean(t,3));
   [~,~,kk] = size(t); clear tXX
@@ -303,8 +311,9 @@ for jj = 1 : iNlev
 end
 
 thesave.rh2d_xtrendnwp = real(thesave.rh2d_xtrendnwp);
-figure(3); pcolor(rlon,plevsnwp,thesave.rh2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
-  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('RH rates straight from CMIP6 or ERA5 zonal levels')
+figure(11); pcolor(rlon,plevsnwp,thesave.rh2d_xtrendnwp); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+  xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); 
+  title('RH rates straight from CMIP6 or ERA5 zonal levels')
 
 rh = p72x.rh; rh = reshape(rh,100,72,numtimesteps); 
 for jj = 1 : 100
@@ -328,7 +337,7 @@ for jj = 1 : 100
 end
 
 thesave.rh2d_xtrendnwp = real(thesave.rh2d_xtrendnwp);
-figure(4); pcolor(rlon,plevsx,thesave.rh2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
+figure(12); pcolor(rlon,plevsx,thesave.rh2d_xtrend(1:97,:)); shading interp; colorbar; colormap(llsmap5); caxis([-0.25 +0.25]); 
   xlabel('Longitude (deg)'); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([100 1000]); title('RH rates from rtp after klayers')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -354,7 +363,7 @@ for iii = 1 : 97
 end
 
 figure(5); subplot(122); semilogy(thesave.rh_xtrend(1:97),plevsx,'r','linewidth',2); ylim([100 1000]); set(gca,'ydir','reverse'); plotaxis2;
-  title('dRH/dt'); xlim([-0.25 +0.25])
+  title('dRH/dt'); xlim([-0.5 +0.5])
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp(' .... TZ 101 trends ...')
@@ -378,7 +387,7 @@ for iii = 1 : 97
 end
 
 figure(5); subplot(121); semilogy(thesave.t_xtrend(1:97),plevsx,'r','linewidth',2); ylim([10 1000]); set(gca,'ydir','reverse');  plotaxis2;
-  title('dT/dt'); xlim([-0.05 +0.05])
+  title('dT/dt'); xlim([-0.5 +0.5])
 warning on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -435,3 +444,7 @@ else
   fprintf(1,'%s already exists, not saving \n',foutname)
   eval(saver)
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+make_all_replots_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
+

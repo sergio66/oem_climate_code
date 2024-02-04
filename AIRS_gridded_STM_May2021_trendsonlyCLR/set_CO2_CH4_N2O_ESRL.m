@@ -1,26 +1,21 @@
 %% note this is a SCRIPT
 
-if length(intersect(settings.dataset,[6 8])) == 1
-  [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override0(driver,iVersJac); %% sets co2x,n2ox,ch4x using special CRIS or OCO years
+if driver.iNumYears > 0
+  if length(intersect(settings.dataset,[6 8])) == 1
+    [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override0(driver,iVersJac); %% sets co2x,n2ox,ch4x using special CRIS or OCO years
+  else
+    [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,settings,iVersJac); %% sets co2x,n2ox,ch4x using 2-19 years :: AIRS which starts in 2002/09
+  end
 else
-  [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,settings,iVersJac); %% sets co2x,n2ox,ch4x using 2-19 years :: AIRS which starts in 2002/09
+    [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override_backwards(driver,settings,iVersJac); %% sets co2x,n2ox,ch4x using 2-19 years :: AIRS which starts in 2002/09
 end
 
 iAdjCo2 = +1;
 co2x = co2x * iAdjCo2;
 
 if iAdjCo2 >= 1
-  boo05 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2007_08.mat');
-  boo10 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2012_08.mat');
-  boo15 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2017_08.mat');
-  boo20 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
   JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
-  co2x_05 = boo05.trend(JOBJOBJOB);
-  co2x_10 = boo10.trend(JOBJOBJOB);
-  co2x_15 = boo15.trend(JOBJOBJOB);
-  co2x_20 = boo20.trend(JOBJOBJOB);
-  co2x = interp1([05 10 15 20],[co2x_05 co2x_10 co2x_15 co2x_20],driver.iNumYears,[],'extrap');
-  fprintf(1,'set_CO2_CH4_N2O_ESRL.m : co2 --> co2 CarbonTracker, iNumYears = %2i\n',driver.iNumYears)
+  co2x = get_ESRL_TRACE_GAS_2002_2022(JOBJOBJOB,driver.iNumYears);
 
 elseif iAdjCo2 > -1 & iAdjCo2 < +0.99
   %co2x = co2x * 1.1  %%%% SERGIO PUT THIS JULY 23, 2023  makes WV at surface pretty good across all lats, dT/dt < dT(ERA5)/dt in tropical troposphere
@@ -31,8 +26,12 @@ elseif iAdjCo2 > -1 & iAdjCo2 < +0.99
   %disp('set_CO2_CH4_N2O_ESRL.m : co2 --> co2 x 1.05')  
 end
 driver.co2adj_ESRL = iAdjCo2;
+if driver.iNumYears > 0
+  fprintf(1,'co2x rate in set_CO2_CH4_N2O_ESRL.m = %6.3f ppmv/yr for %2i iNumYears starting forward  from 2002 and ending at %4i \n',co2x,driver.iNumYears,driver.iNumYears+2002);
+else
+  fprintf(1,'co2x rate in set_CO2_CH4_N2O_ESRL.m = %6.3f ppmv/yr for %2i iNumYears starting backward from 2022 and ending at %4i \n',co2x,driver.iNumYears,2022-(-driver.iNumYears));
+end
 
-%keyboard_nowindow
 %[settings.set_tracegas driver.i16daytimestep settings.ocb_set settings.model]
 
 % if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 1 & settings.model ~= 5
@@ -82,14 +81,25 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
     end
 
     JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
-%%%    if ppp.landfrac(JOBJOBJOB) < eps    till Dec 31, 2023
+    %%% if ppp.landfrac(JOBJOBJOB) < eps    till Dec 31, 2023
     if ppp.landfrac(JOBJOBJOB) < 0.25
       %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
       %% also see Nadir Jeevanjee : Simple Climate Models, arXiv 2018
       dBT1231 = 0.0025/2;
       dBT1231 = driver.rateset.rates(1520); 
-      dBT1231 = abs(driver.rateset.rates(1520));  %%% new 
-      dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+     
+      if driver.iNumYears > 0
+        dBT1231 = abs(driver.rateset.rates(1520));  %%% new 
+        dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+      elseif driver.iNumYears < 0
+        if driver.rateset.rates(1520) > 0
+          dBT1231 = abs(driver.rateset.rates(1520));  %%% new 
+          dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+        else
+          dBT1231 = 0;
+          dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+        end
+      end
 
       %%% see my notes, BK 45
       dBT1231_WV = estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB));
@@ -150,7 +160,7 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
     fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean %8.6f frac/yr \n',junk(1:3))
     fprintf(1,'           (ratio dBT1231_WV/dBT1231 = %8.6f compared to 0.07 percent increase in RH per K at 285 K) yah yah mebbe an additional fudge of 5 applied \n',junk(4))
     fprintf(1,'           with TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac = %8.6f %8.6f ==> final WV adj factor fudge to multiply "dBT1231_WV" will be %8.6f  \n',junk(5:7));
-    %%%fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> Tadj over ocean %8.6f K/yr    with TfacAdjAtmosphericAmplification = %8.6f \n',iVers,driver.rateset.rates(1520),dBT1231,TfacAdjAtmosphericAmplification)
+    %% fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> Tadj over ocean %8.6f K/yr    with TfacAdjAtmosphericAmplification = %8.6f \n',iVers,driver.rateset.rates(1520),dBT1231,TfacAdjAtmosphericAmplification)
 
 %keyboard_nowindow
 

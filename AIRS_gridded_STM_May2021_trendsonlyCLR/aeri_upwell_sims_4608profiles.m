@@ -31,6 +31,18 @@ p5.upwell = 2 * ones(size(p5.stemp));
 
 [p5.salti,p5.landfrac] = usgs_deg10_dem(p5.rlat,wrapTo180(p5.rlon));
 
+[ppmvLAY,ppmvAVG,ppmvMAX,pavgLAY,tavgLAY,ppmv500,ppmv75,ppmvSURF] = layers2ppmv(h5,p5,1:length(p5.stemp),2);
+fprintf(1,'mean CO2 ppmvAVG = %8.4f\n',mean(ppmvAVG));
+ppmvAVG0 = ppmvAVG;
+rCO2PPM = input('enter CO2 ppm (-1 for default 400 ppm): ');
+if length(rCO2PPM) == 0
+  rCO2PPM = -1;
+end
+if rCO2PPM > 0
+  p5.gas_2 = p5.gas_2 * rCO2PPM/mean(ppmvAVG0);
+  [ppmvLAY,ppmvAVG,ppmvMAX,pavgLAY,tavgLAY,ppmv500,ppmv75,ppmvSURF] = layers2ppmv(h5,p5,1:length(p5.stemp),2);
+end
+
 %%% make the rtp files -- the raw + jacobian, and the one with perturbations
 %%% make the rtp files -- the raw + jacobian, and the one with perturbations
 %%% make the rtp files -- the raw + jacobian, and the one with perturbations
@@ -89,11 +101,15 @@ hl = legend('WV','CO2','T','location','best','fontsize',10);; xlim([-max(abs(lat
 ylabel('Fractional Contribution \newline to Flux change'); title('for realistic annual change : ecRad'); xlabel('Latitude');
 
 comment = 'see aeri_upwell_sims_4608profiles.m';
-saver = ['save ilr_4608_ecRad.mat ecRad* comment']; 
+if rCO2PPM == -1
+  saver = ['save ilr_4608_ecRad.mat ecRad* comment']; 
+else
+  saver = ['save ilr_4608_ecRad_co2ppm_' num2str(rCO2PPM) '.mat ecRad* comment']; 
+end
 % eval(saver)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iPrint = -1;
 if iPrint > 0
-  print_results
+  print_results_co2ppm_aeri_brutsaert
 end

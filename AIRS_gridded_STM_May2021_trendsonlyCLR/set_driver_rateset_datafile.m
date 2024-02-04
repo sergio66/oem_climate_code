@@ -30,6 +30,7 @@ switch settings.dataset
     settings.iNumYears = 20;
   case +8
     settings.iNumYears = 07; %% though 2015/01 to 2021/12, OCO
+  %%%%%%%%%%%%%%%%%%%%%%%%%
   case +9
     settings.iNumYears = 20;
   case +10
@@ -38,15 +39,25 @@ switch settings.dataset
     settings.iNumYears = 10;
   case +12
     settings.iNumYears = 15;
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  case +13
+    settings.iNumYears = 20;
+  case +14
+    settings.iNumYears = 04;
+  case +15
+    settings.iNumYears = 15;
 end
 
 %fprintf(1,' in set_driver_rateset_datafile.m : [settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i \n',[settings.descORasc driver.i16daytimestep settings.dataset])
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if settings.dataset == -2   
   disp('AIRS 16 year rates or anomalies, NO nu cal done')
   error('oops not done')
 
-elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 12
+elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 15
   disp('AIRS 07 or 18 or 19 or 20 year rates or anomalies, nu cal done in there')
   if settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 1    
     disp('doing Strow 18 yr gridded quantile rates')
@@ -228,6 +239,20 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 12
       elseif settings.model == -3
         driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/CLIMCAPSL3_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 changing
       end
+    elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
+      driver.rateset.datafile  = 'AHAH';
+    end
+
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & (settings.dataset >= 13 & settings.dataset <= 15)
+    disp('doing Sergio FULL 20/05/15 year gridded quantile rates 2002/09-2022/08  2018/09-2022/08  2008/01-2022/12 , NEW WAY of doing quantile iQAX = 3')
+    fprintf(1,'dataset = %2i where 13,14,15 are for 20,04,15 years of AIRS data .... \n',settings.dataset)
+    driver.rateset.datafile  = [];
+    if settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 13
+      driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_4_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 14
+      driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 15
+      driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end

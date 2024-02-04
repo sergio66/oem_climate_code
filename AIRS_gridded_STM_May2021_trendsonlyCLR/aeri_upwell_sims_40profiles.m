@@ -96,64 +96,8 @@ end
 
 %surf_prop_comment: 'stemp mmw co2ppm o3du ch4ppm emiss(900cm-1)  rlat rlon'
 
-iCKD = 1;
-iCKD = 25;
-iCKD = 32;
+load_kcarta_40profs_ILRcalcs
 
-fprintf(1,'iCKD = %2i \n',iCKD)
-
-RRTMbands = [10 250 500 630 700 820 980 1080 1180 1390 1480 1800 2080 2250 2380 2600 3000];
-
-if ~exist('ilrX')
-  disp('need to load 40 x 4 perturbation files , "+" indicates 10, "o" indicates 100')
-  dir0 = ['/umbc/xfs2/strow/asl/s1/sergio/home/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/40profiles_uplook_flux_jacs/CKD' num2str(iCKD) '/PERTURBATIONS/'];
-  for ii = 1 : 160
-    if mod(ii,100) == 0
-      fprintf(1,'o');
-    elseif mod(ii,10) == 0
-      fprintf(1,'+');
-    else
-      fprintf(1,'.');
-    end
-    fin = [dir0 '/allkc5bands_prof' num2str(ii) '.mat'];
-    junk = load(fin);
-    ilrX(ii) = trapz(junk.wall,junk.fluxall(:,1))/1000;  %% to to W/m2
-    for bbb = 1 : length(RRTMbands)-1
-      boo = find(junk.wall >= RRTMbands(bbb) & junk.wall < RRTMbands(bbb+1));
-      ilrXbands(ii,bbb) = trapz(junk.wall(boo),junk.fluxall(boo,1))/1000;  %% to to W/m2
-    end
-  end
-  fprintf(1,'\n');
-end
-
-if ~exist('surfprof')
-  disp('need to load 40 files , "+" indicates 10')
-  dir0 = ['/umbc/xfs2/strow/asl/s1/sergio/home/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/40profiles_uplook_flux_jacs/CKD' num2str(iCKD) '/CALC0_JACOBIANS'];
-  for ii = 1 : 40
-    if mod(ii,10) == 0
-      fprintf(1,'+');
-    else
-      fprintf(1,'.');
-    end
-    fin = [dir0 '/allkc5bands_prof' num2str(ii) '.mat'];
-    junk = load(fin,'surf_properties');
-    surfprof(ii,:) = junk.surf_properties;
-  
-    junk = load(fin);
-    rad0(ii) = trapz(junk.wall,junk.dall);
-    ilr0(ii) = trapz(junk.wall,junk.fluxall(:,1))/1000;  %% to to W/m2
-
-    for bbb = 1 : length(RRTMbands)-1
-      boo = find(junk.wall >= RRTMbands(bbb) & junk.wall < RRTMbands(bbb+1));
-      ilr0bands(ii,bbb) = trapz(junk.wall(boo),junk.fluxall(boo,1))/1000;  %% to to W/m2
-    end
-
-    for jjj = 1 : 6
-      radpert(ii,jjj) = trapz(junk.wall,junk.jall(:,jjj));    
-    end
-  end
-  fprintf(1,'\n');
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

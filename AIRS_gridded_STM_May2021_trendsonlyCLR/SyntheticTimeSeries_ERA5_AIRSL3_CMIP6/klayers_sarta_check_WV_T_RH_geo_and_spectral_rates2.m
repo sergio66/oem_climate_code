@@ -3,6 +3,11 @@ klayerser = ['!' klayers ' fin=' fip ' fout=' fop ' >& ugh '];
 sartaer   = ['!' sarta '   fin=' fop ' fout=' frp ' >& ugh2'];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
+if ~exist(fip)
+  fip
+  error('fip DNE')
+end
+
 if exist(fop)
   fop
   error('fop exists')
@@ -16,6 +21,8 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%
 disp('doing klayers ...')
 eval(klayerser);
+%eval(['!more ugh'])
+
 [h72I,ha72I,p72I,pa72I] = rtpread(fop);
 ppmvLAY_2 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),2);
 ppmvLAY_4 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),4);

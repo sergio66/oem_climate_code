@@ -20,36 +20,8 @@ if driver.i16daytimestep < 0
   %% usual data
   load(driver.rateset.datafile)
   switch driver.rateset.ocb_set
-    case 'bias'
-      error('bias')
-      % driver.rateset.rates = real(squeeze(b_bias(ix,:,2))');
-      % driver.rateset.unc_rates = real(squeeze(b_err_bias(ix,:,2))');
-    case 'cal'
-      % error('cal')   
-      % driver.rateset.rates = real(squeeze(b_cal(ix,:,2))');
-      % driver.rateset.unc_rates = real(squeeze(b_err_cal(ix,:,2))');
 
-      % this is assuming I am reading in  dataset = 4, ocbset = +1
-      %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                %% co2/n2o/ch4 change in time
-      %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
-      if settings.dataset == 4 | settings.dataset == 5 | settings.dataset == 6 | settings.dataset == 7
-        driver.rateset.rates = real(thesave.xtrend(:,ix));
-        driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
-
-      % this is assuming I am reading in  dataset = 9, ocbset = +1
-      %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 unchanging
-      elseif settings.dataset == 9
-        driver.rateset.rates = real(thesave.xtrend(:,ix));
-        driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
-
-      else
-        error('settings.dataset')
-      end      
-
-      % this is assuming I am reading in eg SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbinX/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat'];
-      % dataset = 6,7,8,9, ocbset = +1
-      % driver.rateset.rates = real(squeeze(b_cal_desc(ix,iy,:)));
-      % driver.rateset.unc_rates = real(squeeze(b_cal_err_desc(ix,iy,:)));  %% this is what was used for AIRS STM May 2021
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     case {'obs','tracegas'}
       % driver.rateset.rates = real(squeeze(b_obs(ix,:,2))');
@@ -85,6 +57,42 @@ if driver.i16daytimestep < 0
       driver.rateset.unc_rates = junk/sqrt(N);
 
     end
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    case 'cal'
+      % error('cal')   
+      % driver.rateset.rates = real(squeeze(b_cal(ix,:,2))');
+      % driver.rateset.unc_rates = real(squeeze(b_err_cal(ix,:,2))');
+
+      % this is assuming I am reading in  dataset = 4, ocbset = +1
+      %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];                %% co2/n2o/ch4 change in time
+      %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat']; %% co2/n2o/ch4 unchanging
+      if settings.dataset == 4 | settings.dataset == 5 | settings.dataset == 6 | settings.dataset == 7
+        driver.rateset.rates = real(thesave.xtrend(:,ix));
+        driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
+
+      % this is assuming I am reading in  dataset = 9, ocbset = +1
+      %  driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_const_tracegas_latbin' strlatbin '_2002_09_2022_08.mat']; %% co2/n2o/ch4 unchanging
+      elseif settings.dataset == 9
+        driver.rateset.rates = real(thesave.xtrend(:,ix));
+        driver.rateset.unc_rates = real(thesave.xtrendErr(:,ix));
+
+      else
+        error('settings.dataset')
+      end      
+
+      % this is assuming I am reading in eg SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbinX/sarta_spectral_trends_const_tracegas_latbin' strlatbin '.mat'];
+      % dataset = 6,7,8,9, ocbset = +1
+      % driver.rateset.rates = real(squeeze(b_cal_desc(ix,iy,:)));
+      % driver.rateset.unc_rates = real(squeeze(b_cal_err_desc(ix,iy,:)));  %% this is what was used for AIRS STM May 2021
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    case 'bias'
+      error('bias')
+      % driver.rateset.rates = real(squeeze(b_bias(ix,:,2))');
+      % driver.rateset.unc_rates = real(squeeze(b_err_bias(ix,:,2))');
 
   end
 

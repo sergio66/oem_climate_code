@@ -101,7 +101,7 @@ if iSpectra == 1
   cosYY = cos(YY*pi/180)';
   cosYY = ones(2645,1) * cosYY;
 
-  get_spectral_get_the_model_trends
+  get_the_model_spectral_trends
 
   airsL3.fchanx = fchanx;
   era5.fchanx = fchanx;

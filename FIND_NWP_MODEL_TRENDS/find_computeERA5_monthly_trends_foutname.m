@@ -1,20 +1,38 @@
-if iNumYears <= 069
+if iForwardFrom2002_or_BackwardFrom2022  > 0
+  if iNumYears <= 069
+    if iCldORClr == -1
+      if iDorA > 0
+        fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      else
+        fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      end
+    else
+      if iDorA > 0
+        fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      else
+        fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      end
+    end
+  else
+    error('gugugug')
+  end
+elseif iForwardFrom2002_or_BackwardFrom2022  < 0
   if iCldORClr == -1
     if iDorA > 0
-      fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      fout_trendjunk = ['ERA5_atm_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_desc.mat'];
     else
-      fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      fout_trendjunk = ['ERA5_atm_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_asc.mat'];
     end
   else
     if iDorA > 0
-      fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_desc.mat'];
     else
-      fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_asc.mat'];
     end
   end
-else
-  error('gugugug')
 end
+
+fprintf(1,'will be saving to %s \n',fout_trendjunk)
 
 if iAllorSeasonal == -1
   fout_trendjunk = fout_trendjunk(1:end-4);

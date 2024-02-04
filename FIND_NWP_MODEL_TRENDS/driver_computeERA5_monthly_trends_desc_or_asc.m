@@ -12,6 +12,8 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MATLAB/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+addpath /asl/matlib/plotutils
+addpath /asl/matlib/maps
 
 load('llsmap5.mat');
 
@@ -50,19 +52,35 @@ iNumYears = 12; %% 2002/09-2014/08
 iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iNumYears = 20; %% 2002/09-2022/08
 
+iForwardFrom2002_or_BackwardFrom2022 = +1;    %% default 2002 ----> 20XY
+iForwardFrom2002_or_BackwardFrom2022 = -2022; %% new     2022 <---- 20XY
+
 % iNumYears = input('Enter iNumYears : ');
 if length(JOB) == 0
-  JOB = 20;
+  if iForwardFrom2002_or_BackwardFrom2022 > 0
+    %% we already have 20 years of data from 2002
+    JOB = 20;
+  else
+    %% but Larrabee wants 4 years of data from 2018 to 2022
+    JOB = 4;
+  end
 end
-JOB
-iNumYears = JOB
+iNumYears = JOB;
 
 fprintf(1,'iNumYears = %2i \n',iNumYears);
 
-if iNumYears <= 69
-  iaMax = iNumYears*12;
-elseif iNumYears == 70
-  iaMax = 7*12;
+if iForwardFrom2002_or_BackwardFrom2022 > 0
+  if iNumYears <= 69
+    iaMin = 1;
+    iaMax = iNumYears*12;
+  elseif iNumYears == 70
+    iaMin = 1;
+    iaMax = 7*12;
+  end
+else
+  thelen = 12 * 20;     %% assume our ERA5 data ends on 2022/08 ... might need to revisit this!!!
+  iaMax = thelen - (2022 - abs(iForwardFrom2002_or_BackwardFrom2022))*12;
+  iaMin = iaMax - iNumYears*12 + 1;
 end
 
 iAllorSeasonal = -4;  %% SON
@@ -90,7 +108,7 @@ fprintf(1,'seeing how many of the expected %3i files exist \n',iaMax);
 disp('  "+" are the 100, "x" are tens .. ')
 
 iOLR = +1;
-for ii = 1 : iaMax
+for ii = iaMin : iaMax
   if mod(ii,100) == 0
     fprintf(1,'+ \n')
   elseif mod(ii,10) == 0
@@ -133,15 +151,20 @@ if length(bad) > 0
 end
 
 plot(1:iaMax,iaFound,'+-')
-if sum(iaFound) < length(iaFound)
-  find(iaFound == 0)
+if sum(iaFound) < length(iaFound) & iForwardFrom2002_or_BackwardFrom2022 > 0
+  disp('these not found going forwards')
+  printVariableLengthArray(find(iaFound == 0))
+  error('not enough')
+elseif iForwardFrom2002_or_BackwardFrom2022 < 0 & sum(iaFound) ~= (iaMax-iaMin + 1)
+  disp('these not found going backwards')
+  printVariableLengthArray(find(iaFound == 0))
   error('not enough')
 end
 
 disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
 disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
 fprintf(1,' "+" are the 100, "x" are tens .. need to read in %3i \n',iaMax)
-for ii = 1 : iaMax
+for ii = iaMin : iaMax
   if iOLR < 0
     if iDorA > 0
       fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
@@ -156,6 +179,7 @@ for ii = 1 : iaMax
     end
   end
 
+  iii = ii - iaMin + 1;
   if exist(fin)
     if mod(ii,100) == 0
       fprintf(1,'+ \n')
@@ -173,72 +197,72 @@ for ii = 1 : iaMax
       a.pnew_ip.rh = convert_humidity(a.pnew_ip.plevs*100,a.pnew_ip.ptemp,a.pnew_ip.gas_1,'specific humidity','relative humidity');
     end
 
-    all.yy(ii) = a.thedateS(1);
-    all.mm(ii) = a.thedateS(2);
-    all.dd(ii) = a.thedateS(3);
+    all.yy(iii) = a.thedateS(1);
+    all.mm(iii) = a.thedateS(2);
+    all.dd(iii) = a.thedateS(3);
 
-    all.nwp_ptemp(ii,:,:) = a.pnew_ip.ptemp;
-    all.nwp_gas_1(ii,:,:) = a.pnew_ip.gas_1;
-    all.nwp_gas_3(ii,:,:) = a.pnew_ip.gas_3;
-    all.nwp_rh(ii,:,:)    = a.pnew_ip.rh;
-    all.nwp_plevs(ii,:,:) = a.pnew_ip.plevs;
+    all.nwp_ptemp(iii,:,:) = a.pnew_ip.ptemp;
+    all.nwp_gas_1(iii,:,:) = a.pnew_ip.gas_1;
+    all.nwp_gas_3(iii,:,:) = a.pnew_ip.gas_3;
+    all.nwp_rh(iii,:,:)    = a.pnew_ip.rh;
+    all.nwp_plevs(iii,:,:) = a.pnew_ip.plevs;
 
-    all.gas_1(ii,:,:) = a.pnew_op.gas_1;
-    all.gas_3(ii,:,:) = a.pnew_op.gas_3;
-    all.ptemp(ii,:,:) = a.pnew_op.ptemp;
-    all.stemp(ii,:)   = a.pnew_op.stemp;
-    all.mmw(ii,:)     = a.pnew_op.mmw;
-    all.nlays(ii,:)   = a.pnew_op.nlevs-1;
-    all.RH(ii,:,:)    = a.pnew_op.RH;
-    all.TwSurf(ii,:)  = a.pnew_op.TwSurf;
-    all.RHSurf(ii,:)  = a.pnew_op.RHSurf;
+    all.gas_1(iii,:,:) = a.pnew_op.gas_1;
+    all.gas_3(iii,:,:) = a.pnew_op.gas_3;
+    all.ptemp(iii,:,:) = a.pnew_op.ptemp;
+    all.stemp(iii,:)   = a.pnew_op.stemp;
+    all.mmw(iii,:)     = a.pnew_op.mmw;
+    all.nlays(iii,:)   = a.pnew_op.nlevs-1;
+    all.RH(iii,:,:)    = a.pnew_op.RH;
+    all.TwSurf(iii,:)  = a.pnew_op.TwSurf;
+    all.RHSurf(iii,:)  = a.pnew_op.RHSurf;
     
     if iOLR > 0
-      all.d2m(ii,:)     = a.pnew_op.d2m;
-      all.t2m(ii,:)     = a.pnew_op.t2m;
-      all.olr(ii,:)     = a.pnew_op.olr;
-      all.olr_clr(ii,:) = a.pnew_op.olr_clr;
-      all.ilr(ii,:)     = a.pnew_op.ilr;
-      all.ilr_clr(ii,:) = a.pnew_op.ilr_clr;
+      all.d2m(iii,:)     = a.pnew_op.d2m;
+      all.t2m(iii,:)     = a.pnew_op.t2m;
+      all.olr(iii,:)     = a.pnew_op.olr;
+      all.olr_clr(iii,:) = a.pnew_op.olr_clr;
+      all.ilr(iii,:)     = a.pnew_op.ilr;
+      all.ilr_clr(iii,:) = a.pnew_op.ilr_clr;
 
       %% Improved Magnus Form Approximation of Saturation Vapor Pressure
       %% Oleg A. Alduchov  and Robert E. Eskridge
       %% JAMS 1996, v35 DOI: https://doi.org/10.1175/1520-0450(1996)035<0601:IMFAOS>2.0.CO;2  Page(s): 601–609
-      all.RH2m(ii,:) = 100 * exp((17.625*(a.pnew_op.d2m-273.13)./(243.04+(a.pnew_op.d2m-273.13))));
-      all.RH2m(ii,:) = all.RH2m(ii,:) ./ exp((17.625*(a.pnew_op.t2m-273.13)./(243.04+(a.pnew_op.t2m-273.13))));;
+      all.RH2m(iii,:) = 100 * exp((17.625*(a.pnew_op.d2m-273.13)./(243.04+(a.pnew_op.d2m-273.13))));
+      all.RH2m(iii,:) = all.RH2m(iii,:) ./ exp((17.625*(a.pnew_op.t2m-273.13)./(243.04+(a.pnew_op.t2m-273.13))));;
 
       %% now do adjustments, since I think ILR is a net flux instead of actual downwelling flux
-      all.ilr_adj(ii,:) = -a.pnew_op.ilr_clr + 5.67e-8 * a.pnew_op.stemp.^(4);
+      all.ilr_adj(iii,:) = -a.pnew_op.ilr_clr + 5.67e-8 * a.pnew_op.stemp.^(4);
 
       %% from "Understanding variations in downwelling longwave radiation using Brutsaert’s equation"
       %% Earth Syst. Dynam., 14, 1363–1374, 2023 https://doi.org/10.5194/esd-14-1363-2023, eqn 6
-      all.e2a(ii,:) = 6.1079*exp(17.269 * (a.pnew_op.d2m-273.13)./(237.3 + (a.pnew_op.d2m-273.13)));            
-      all.ecs(ii,:) = 1.24*(all.e2a(ii,:)./a.pnew_op.t2m).^(1/7);
-      all.Rld(ii,:) = 5.67e-8 * all.ecs(ii,:) .* a.pnew_op.t2m.^(4); 
+      all.e2a(iii,:) = 6.1079*exp(17.269 * (a.pnew_op.d2m-273.13)./(237.3 + (a.pnew_op.d2m-273.13)));            
+      all.ecs(iii,:) = 1.24*(all.e2a(iii,:)./a.pnew_op.t2m).^(1/7);
+      all.Rld(iii,:) = 5.67e-8 * all.ecs(iii,:) .* a.pnew_op.t2m.^(4); 
     end
 
     if iCldORClr == +1
       hunk = a.hnew_op;
       junk = a.pnew_op;
       %junk = find_average_rtp(hunk,junk);
-      all.ctype(ii,:)  = a.pnew_op.ctype;
-      all.cfrac(ii,:)  = a.pnew_op.cfrac;
-      all.cpsize(ii,:) = a.pnew_op.cpsize;
-      all.cngwat(ii,:) = a.pnew_op.cngwat;
-      all.cprtop(ii,:) = a.pnew_op.cprtop;
-      all.cprbot(ii,:) = a.pnew_op.cprbot;
+      all.ctype(iii,:)  = a.pnew_op.ctype;
+      all.cfrac(iii,:)  = a.pnew_op.cfrac;
+      all.cpsize(iii,:) = a.pnew_op.cpsize;
+      all.cngwat(iii,:) = a.pnew_op.cngwat;
+      all.cprtop(iii,:) = a.pnew_op.cprtop;
+      all.cprbot(iii,:) = a.pnew_op.cprbot;
 
-      all.ctype2(ii,:)  = a.pnew_op.ctype2;
-      all.cfrac2(ii,:)  = a.pnew_op.cfrac2;
-      all.cpsize2(ii,:) = a.pnew_op.cpsize2;
-      all.cngwat2(ii,:) = a.pnew_op.cngwat2;
-      all.cprtop2(ii,:) = a.pnew_op.cprtop2;
-      all.cprbot2(ii,:) = a.pnew_op.cprbot2;
+      all.ctype2(iii,:)  = a.pnew_op.ctype2;
+      all.cfrac2(iii,:)  = a.pnew_op.cfrac2;
+      all.cpsize2(iii,:) = a.pnew_op.cpsize2;
+      all.cngwat2(iii,:) = a.pnew_op.cngwat2;
+      all.cprtop2(iii,:) = a.pnew_op.cprtop2;
+      all.cprbot2(iii,:) = a.pnew_op.cprbot2;
       
-      all.cfrac12(ii,:)  = a.pnew_op.cfrac12;
+      all.cfrac12(iii,:)  = a.pnew_op.cfrac12;
     end
   else
-    iaFound(ii) = 0;
+    iaFound(iii) = 0;
   end
 end
 fprintf(1,'\n');
@@ -255,19 +279,20 @@ find_computeERA5_monthly_foutname
 iSave = -1;  %%% unless now you do a whole new set of files Steve brings down from ERA5
              %%% be careful though, first time you run this, you need it DUDE and iSave should be +1   eg when I did the daytime "asc" I forgot to save, so could not generate spectral trends boo hoo
 
-%if iNumYears <= 100
-%  iSave = -1;
-%else
+if iNumYears <= 100
+  iSave = -1;
+else
   eeee = exist(foutjunk);
   if eeee > 0
     fprintf(1,'foutjunk = %s a HUGE FILE WITH ALL THE 20 years of PROFILE data already exists!!! \n',foutjunk)
   else
     fprintf(1,'foutjunk = %s a HUGE FILE WITH ALL THE 20 years of PROFILE data DNE DNE DNE ! \n',foutjunk)
   end
-  %iSave = input('Save huge file (-1/+1) : ');
+  iSave = input('Save huge file (-1/+1) : ');
   iSave = +1;
-%end
+end
 
+%%% iSave = +1;
 
 if iSave > 0
   %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
@@ -314,15 +339,20 @@ dayOFtime = change2days(all.yy,all.mm,all.dd,2002);
 if iTrendsOrAnoms > 0
   computeERA5_surface_trends
 
-  figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.2 +0.2]); colormap(usa2);
+  figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');        caxis([-0.2 +0.2]); colormap(usa2);
   figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
   figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.2 +0.2]); colormap(usa2);
-  figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+  figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');      caxis([-0.2 +0.2]); colormap(usa2);
 
-  figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');    caxis([-0.1 +0.1]); colormap(usa2);
-  figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-0.4 +0.4]); colormap(usa2);
-  figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-0.1 +0.1]); colormap(usa2);
-  figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');  caxis([-0.2 +0.2]); colormap(usa2);
+  figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_stemp,1)); title('ERA5 trend  stemp K/yr');        caxis([-1 +1]*0.15); colormap(llsmap5);
+  figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_RHSurf,1)); title('ERA5 trend  RHsurf UGH pc/yr'); caxis([-1 +1]*0.4);  colormap(llsmap5);
+  figure(3); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_TwSurf,1)); title('ERA5 trend  TWSurf UGH K/yr');  caxis([-1 +1]*0.1);  colormap(llsmap5);
+  figure(4); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(trend_mmw,1)); title('ERA5 trend  colwater mm/yr');      caxis([-1 +1]*0.2);  colormap(llsmap5);
+
+  figure(1); clf; aslmap(1,rlat65,rlon73,smoothn((reshape(trend_stemp,72,64)') ,1), [-90 +90],[-180 +180]);, title('ERA5 trend  stemp K/yr');        caxis([-1 +1]*0.15); colormap(llsmap5);
+  figure(2); clf; aslmap(2,rlat65,rlon73,smoothn((reshape(trend_RHSurf,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 trend  RHsurf UGH pc/yr');  caxis([-1 +1]*0.4);  colormap(llsmap5);
+  figure(3); clf; aslmap(3,rlat65,rlon73,smoothn((reshape(trend_TwSurf,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 trend  TWSurf UGH K/yr');   caxis([-1 +1]*0.1);  colormap(llsmap5);
+  figure(4); clf; aslmap(4,rlat65,rlon73,smoothn((reshape(trend_mmw,72,64)') ,1), [-90 +90],[-180 +180]);    title('ERA5 trend  colwater mm/yr');    caxis([-1 +1]*0.2);  colormap(llsmap5);
   pause(0.1)
 
   if ~exist(fout_trendjunk_surface)
@@ -358,7 +388,12 @@ if iTrendsOrAnoms == 1
     eval(saver);
   end
   
-elseif iTrendsOrAnoms == 1 
+  figure(5); clf; pcolor_sin(trend_rlat64,trend_plays,squeeze(nanmean(reshape(trend_ptemp,100,72,64),2))); caxis([-1 +1]*0.150); set(gca,'ydir','reverse'); colormap(llsmap5); title('ERA5 dT/dt'); shading interp
+    set(gca,'yscale','log'); ylim([10 1000]); colorbar('horizontal')
+  figure(6); clf; pcolor_sin(trend_rlat64,trend_plays,squeeze(nanmean(reshape(trend_gas_1,100,72,64),2))); caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colormap(llsmap5); title('ERA5 dWVfrac/dt'); shading interp
+    set(gca,'yscale','linear'); ylim([100 1000]); colorbar('horizontal')
+
+elseif iTrendsOrAnoms == -1 
   computeERA5_atmos_anoms
 
   if isfield(all,'nwp_plevs')
@@ -448,10 +483,10 @@ figure(14); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 %% this is MLS comparisons, Frank Werner JPL
-figure(11); ylim([1 300]); colormap(usa2)
+figure(11); ylim([1 300]); colormap(llsmap5)
 figure(07); ylim([1 300]);
-figure(09); ylim([1 300]); caxis([-1 1]*1e-7); colormap(usa2)
-figure(12); ylim([1 300]); caxis([-1 1]*1e-7); colormap(usa2)
-figure(10); ylim([1 300]); caxis([-1 1]*1e-1); colormap(usa2)
-figure(13); ylim([1 300]); caxis([-1 1]*1e-1); colormap(usa2)
+figure(09); ylim([1 300]); caxis([-1 1]*1e-7); colormap(llsmap5)
+figure(12); ylim([1 300]); caxis([-1 1]*1e-7); colormap(llsmap5)
+figure(10); ylim([1 300]); caxis([-1 1]*1e-1); colormap(llsmap5)
+figure(13); ylim([1 300]); caxis([-1 1]*1e-1); colormap(llsmap5)
 %}

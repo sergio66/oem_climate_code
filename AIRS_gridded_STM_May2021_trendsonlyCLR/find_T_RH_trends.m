@@ -55,6 +55,7 @@ mmwPert = mmwater_rtp(h,pert);
 [xRHpert_unc,xRH1kmpert_unc,xcolwaterpert_unc] = layeramt2RH(h,pert_unc);
 [Twpert_unc,Tw1kmpert_unc,Tdewpert_unc,WBGTpert_unc,RHpert_unc,RH1kmpert_unc,colwaterpert_unc,TwSurfpert_unc,RHSurfpert_unc,TdewSurfpert_unc] = layeramt2RH_wet_bulb_dew_point_temperature(h,pert_unc);
 
+figure(25)
 scatter_coast(pert.rlon,pert.rlat,50,colwaterpert-colwater0); title('UMBC \delta colwater mm/yr'); caxis([-1 +1]*0.2)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -296,7 +297,7 @@ shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
 %area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgtT(1:97)*1000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
-ylim([1 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+ylim([10 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
 
 figure(29); clf
@@ -306,7 +307,7 @@ shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
 junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
 %area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgtT(1:97)*1000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
-ylim([1 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+ylim([10 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
 
 %{

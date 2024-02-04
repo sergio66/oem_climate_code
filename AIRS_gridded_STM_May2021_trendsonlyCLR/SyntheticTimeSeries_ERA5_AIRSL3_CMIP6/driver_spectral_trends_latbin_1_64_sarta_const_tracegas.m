@@ -5,6 +5,19 @@ addpath /asl/matlib/aslutil/
 addpath /home/sergio/MATLABCODE/TIME
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+error('this is kinda superseded by driver_spectral_trends_latbin_1_64_sarta.m if you use iConstORVary = +1')
+error('this is kinda superseded by driver_spectral_trends_latbin_1_64_sarta.m if you use iConstORVary = +1')
+error('this is kinda superseded by driver_spectral_trends_latbin_1_64_sarta.m if you use iConstORVary = +1')
+error('this is kinda superseded by driver_spectral_trends_latbin_1_64_sarta.m if you use iConstORVary = +1')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 system_slurm_stats
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 %JOB = 1 -- 64

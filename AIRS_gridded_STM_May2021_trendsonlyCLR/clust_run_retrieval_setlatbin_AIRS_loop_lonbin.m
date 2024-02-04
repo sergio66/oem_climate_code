@@ -180,12 +180,13 @@ ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, d
 ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
 ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
 
-ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
 
 %ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
 
 if ia_OorC_DataSet_Quantile(1) == 2
   get_anomaly_processors
@@ -423,6 +424,14 @@ for iInd = iXX1 : idX : iXX2
     driver.iNumYears = 10;
   elseif topts.dataset == 12
     driver.iNumYears = 15;
+  elseif topts.dataset == 13
+    driver.iNumYears = 20;
+  elseif topts.dataset == 14
+    driver.iNumYears = -04;  
+    disp(' <<< warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2018')
+  elseif topts.dataset == 15
+    driver.iNumYears = 14;  
+    disp(' <<< warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2008')
   end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -449,6 +458,14 @@ for iInd = iXX1 : idX : iXX2
     topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-priori WV believe it or not  
     topts.TfacAdjAtmosphericAmplification = 0.75;       %% this is an additional adjutment factor for a-priori WV believe it or not  
     topts.TfacAdjAtmosphericAmplification = 1.00;       %% this is an additional adjutment factor for a-priori WV believe it or not , pretty good BUT JUST LEAVE IT AS 1.0
+  end
+
+  %% do this if you want NO WV adj anywaehre, for LLS SARTA report for JPL
+  %% else comment it out if you want to compare to ERA5 trends
+  if driver.iNumYears < 0
+    iAdjLowerAtmWVfrac = 0;
+    topts.iAdjLowerAtmWVfrac = iAdjLowerAtmWVfrac;
+    topts.TfacAdjAtmosphericAmplification = 0.00;
   end
 
   if driver.iLat <= 31

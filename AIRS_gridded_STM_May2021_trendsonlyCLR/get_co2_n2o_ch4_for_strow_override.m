@@ -7,10 +7,30 @@ function [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override(driver,settings,i
 % 2021 : 4608 lonbins/latbins for 19 years AIRS                    pure AIRS   2002/09-2021/08 
 % 2022 : 4608 lonbins/latbins for 20 years AIRS                    pure AIRS   2002/09-2022/08 
 
+%{
+clear junk
+junk.iibin = ((1:64)-1)*72 + 36; %% choose the middle of each latitude set so these are at longitude = 0,latitude = -85 : 3: +85
+llll = 0;
+for years = +(1:20);
+  junk.iNumYears = years;
+  llll = llll + 1;
+  [co2xx,n2oxx,ch4xx] = get_co2_n2o_ch4_for_strow_override(junk,junk,2021);
+  co2x(llll,:) = co2xx;
+  n2ox(llll,:) = n2oxx;
+  ch4x(llll,:) = ch4xx;
+end
+figure(4); clf; pcolor((1:20) + 2002,1:64,co2x'); colorbar; shading interp; ylabel('Latitude'); colormap(jet); xlabel('Time'); title('CO2 trend between 2002 --> 20XY')
+figure(5); clf; pcolor((1:20) + 2002,1:64,n2ox'); colorbar; shading interp; ylabel('Latitude'); colormap(jet); xlabel('Time'); title('N2O trend between 2002 --> 20XY')
+figure(6); clf; pcolor((1:20) + 2002,1:64,ch4x'); colorbar; shading interp; ylabel('Latitude'); colormap(jet); xlabel('Time'); title('CH4 trend between 2002 --> 20XY')
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if iVersJac ~= 2019
   %% 4608
   %strlatbin = num2str(floor((driver.iibin-1)/72)+1,'%02d');
   ilatjunkxy = floor((driver.iibin-1)/72)+1;
+  ilonjunkxy = driver.iibin - 72 * (ilatjunkxy - 1);
   
   load /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat
   rlat65 = latB2; rlon73 = -180 : 5 : +180;
@@ -21,7 +41,7 @@ if iVersJac ~= 2019
   rlatx = rlat(ilatjunkxy);
 
 else
-  addpath /home/sergio/MATLABCODE/PLOTTER
+  addpath /home/sergio/MATLABCODE_Git/PLOTTER
   lats = -90 : 5 : +90;
   lats = equal_area_spherical_bands(20);
   rlat = 0.5*(lats(1:end-1) + lats(2:end));
@@ -55,7 +75,7 @@ if iVersJac == 2019 | iVersJac == 2012
     n2ox = n2ox;
     ch4x = ch4x;
   elseif iVersESRL == 4
-    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+    esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
     n2ox = n2ox;
     n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_cris07,rlatx);
     co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_cris07,rlatx);
@@ -76,7 +96,7 @@ elseif iVersJac == 2015
     n2ox = n2ox;
     ch4x = ch4x;
   elseif iVersESRL == 4
-    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+    esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
     n2ox = n2ox;
     n2ox = interp1(esrl_trend.rlat,esrl_trend.n2otrend_oco2_07,rlatx);
     co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_oco2_07,rlatx);
@@ -85,7 +105,7 @@ elseif iVersJac == 2015
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 else
-  disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2002/09 - 2021/08')
+  disp('get_co2_n2o_ch4_for_strow_override.m : AIRS 2002/09 - 2022/08')
   co2x = 2.262445;
   n2ox = 0.925496;
   ch4x = 6.613673;
@@ -97,7 +117,8 @@ else
     n2ox = n2ox;
     ch4x = ch4x;
   elseif iVersESRL == 4
-    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2021.mat');
+    esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2021.mat');
+    esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2022.mat');
     iNX = settings.iNumYears + 2002;
     if iNX <= esrl_trend.yyE(end)      
       [~,iNX] = intersect(esrl_trend.yyE,iNX);
@@ -114,5 +135,5 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fprintf(1,'iiBin %4i latbin %2i latitude %8.6f : ESRL trends co2x = %8.6f ppm/yr n2ox = %8.6f ppb/yr ch4x = %8.6f ppb/yr \n',driver.iibin,ilatjunkxy,rlatx,co2x,n2ox,ch4x)
+fprintf(1,'iiBin %4i lonbin %2i latbin %2i -->  latitude %8.6f : ESRL trends co2x = %8.6f ppm/yr n2ox = %8.6f ppb/yr ch4x = %8.6f ppb/yr \n',driver.iibin,ilonjunkxy,ilatjunkxy,rlatx,co2x,n2ox,ch4x)
 

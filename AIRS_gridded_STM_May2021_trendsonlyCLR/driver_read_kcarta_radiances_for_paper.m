@@ -2,24 +2,26 @@
 
 %{
 cd /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES
-  set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m : iKCKD =  32; iHITRAN = 2020; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = -1;               %% clrsky, use LBLRTM ODs  ****************************** BEST DEFAULT clrsky         no jacs
+  %% clrsky, use LBLRTM ODs  ****************************** BEST DEFAULT clrsky         no jacs
+  set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m : iKCKD =  32; iHITRAN = 2020; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = -1; 
   
+  %% clear, see /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/read_fileMean17years.m
   rad0 : 
-    set_rtp.m : use_this_rtp = 'RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp';            %% clear, see /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/read_fileMean17years.m
+    set_rtp.m : use_this_rtp = 'RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp';
     rmer_slurm_JUNKconv.sc; rmer_slurm_JUNKrad.sc; sbatch -p cpu2021 --array=1-4608 sergio_matlab_jobB.sbatch 6
     watch 'ls -lt /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/allkcbands_prof* | wc -l'
 
     when done
       mv JUNK/allkcbands_prof* JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly_PAPER_FLUX/Raw/.
 
+  %% clear, see /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/read_fileMean17years.m
   pert : 
-    set_rtp.m : use_this_rtp = 'RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5_pert.rp.rtp';            %% clear, see /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/read_fileMean17years.m
+    set_rtp.m : use_this_rtp = 'RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5_pert.rp.rtp';            
     rmer_slurm_JUNKconv.sc; rmer_slurm_JUNKrad.sc; sbatch -p cpu2021 --array=1-4608 sergio_matlab_jobB.sbatch 6
     watch 'ls -lt /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/allkcbands_prof* | wc -l'
 
     when done
       mv JUNK/allkcbands_prof* JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly_PAPER_FLUX/Pert/.
-
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -240,6 +242,25 @@ else
   xlabel('Wavenumber [cm-1]'); plotaxis2; 
   shade2(5,0,-0.1,650,0.15,gray,0.3);
   hl = legend('Simulated','Observed','location','best','fontsize',10);
+  fairs = h.vchan;
+  trendairs = moo;
+
+  akleidon.fairs     = fairs;
+  akleidon.trendairs = moo;
+  akleidon.kcarta_chan       = fc;
+  akleidon.kcartaradFinal    = nanmean(radF,2);
+  akleidon.kcartarad284      = ttorad(fc,284);
+  akleidon.kcartaradInit     = nanmean(rad0,2);  
+  akleidon.kcartarad284delta = ttorad(fc,284+0.02);
+
+  figure(6); plot(akleidon.kcarta_chan,akleidon.kcartaradFinal-akleidon.kcartaradInit,'b',akleidon.fairs,akleidon.trendairs,'r',akleidon.kcarta_chan,akleidon.kcartarad284delta-akleidon.kcartarad284,'k')
+  fid = fopen('akleidon_airs.txt','w');
+    fprintf(fid,'%8.2f %12.8f \n',akleidon.fairs,akleidon.trendairs);
+    fclose(fid);
+  figure(6); plot(akleidon.kcarta_chan,akleidon.kcartaradFinal,'b',akleidon.kcarta_chan,akleidon.kcartarad284delta,'r',akleidon.kcarta_chan,akleidon.kcartaradInit,'c',akleidon.kcarta_chan,akleidon.kcartarad284,'m')
+  fid = fopen('akleidon_kcarta.txt','w');
+    fprintf(fid,'%8.2f %12.8f %12.8f %12.8f %12.8f \n',akleidon.kcarta_chan,akleidon.kcartaradInit,akleidon.kcartaradFinal,akleidon.kcartarad284,akleidon.kcartarad284delta);
+    fclose(fid);
 
   % Get rid of all extra space I can
   ta.Padding = 'none';

@@ -11,13 +11,23 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/TIME
 
+disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+
+if length(strfind(pwd,'SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')) == 0
+  error('you need to cd to MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
+end
+
 system_slurm_stats
 
 %% kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 7
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
-%JOB = 40
-%JOB = 41
+if length(JOB) == 0
+  JOB = 40;
+  JOB = 41;
+end
 
 iNorD = +1; %% default, night
 iNorD = -1; %% day
