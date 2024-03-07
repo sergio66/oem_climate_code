@@ -1,7 +1,7 @@
 ii = 0; 
 
-ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_day.RHsurftrend,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : CHIRP\_A DAY');
-ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_night.RHsurftrend,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : CHIRP\_A NIGHT');
+ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_day.RHsurftrend,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : AIRS\_RT DAY');
+ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_night.RHsurftrend,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : AIRS\_RT NIGHT');
 
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_day.RHsurftrend,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : ERA5 DAY');
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_night.RHsurftrend,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : ERA5 NIGHT');
@@ -14,12 +14,12 @@ ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fCLIMCAPSL
 
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fMERRA2.RHsurftrend,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : MERRA2 DAY/NIGHT');
 
-ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.RHsurftrend+fUMBC_night.RHsurftrend)*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : CHIRP\_A DAY/NIGHT');
+ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.RHsurftrend+fUMBC_night.RHsurftrend)*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : AIRS\_RT DAY/NIGHT');
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fAIRSL3_day.RHsurftrend+fAIRSL3_night.RHsurftrend)*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : AIRS L3 DAY/NIGHT');
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fCLIMCAPSL3_day.RHsurftrend+fCLIMCAPSL3_night.RHsurftrend)*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : CLIMCAPS L3 DAY/NIGHT');
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fERA5_day.RHsurftrend+fERA5_night.RHsurftrend)*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : ERA5 DAY/NIGHT');
 
-ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.RHsurftrend-fUMBC_night.RHsurftrend)*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : CHIRP\_A DAY - NIGHT');
+ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.RHsurftrend-fUMBC_night.RHsurftrend)*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : AIRS\_RT DAY - NIGHT');
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fAIRSL3_day.RHsurftrend-fAIRSL3_night.RHsurftrend)*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : AIRS L3 DAY - NIGHT');
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fCLIMCAPSL3_day.RHsurftrend-fCLIMCAPSL3_night.RHsurftrend)*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : CLIMCAPS L3 DAY - NIGHT');
 ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fERA5_day.RHsurftrend-fERA5_night.RHsurftrend)*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dRHsurf/dt : ERA5 DAY - NIGHT');
@@ -35,11 +35,11 @@ iFig = 70;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dRHsurf/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';
+  plotoptions.str11 = '(D) AIRS\_RT';     plotoptions.str21 = '(N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';
   plotoptions.str14 = '(D) ERA5';         plotoptions.str24 = '(N)';
-
+  plotoption.barstr = 'dRH/dt [%/yr]';
   newz11 = fUMBC_day.RHsurftrend;         newz21 = fUMBC_night.RHsurftrend;                           
   newz12 = fAIRSL3_day.RHsurftrend;       newz22 = fAIRSL3_night.RHsurftrend; 
   newz13 = fCLIMCAPSL3_day.RHsurftrend;   newz23 = fCLIMCAPSL3_night.RHsurftrend;
@@ -56,11 +56,11 @@ iFig = 70;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';   plotoptions.str31 = '(D-N)';
+  plotoptions.str11 = '(D) AIRS\_RT';     plotoptions.str21 = '(N)';   plotoptions.str31 = '(D-N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';   plotoptions.str32 = '(D-N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';   plotoptions.str33 = '(D-N)';
   plotoptions.str14 = '(D) ERA5';         plotoptions.str24 = '(N)';   plotoptions.str34 = '(D-N)';
-
+  plotoption.barstr = 'dRH/dt [%/yr]';
   newz11 = fUMBC_day.RHsurftrend;                 newz21 = fUMBC_night.RHsurftrend;            newz31 = newz11 - newz21;
   newz12 = fAIRSL3_day.RHsurftrend;               newz22 = fAIRSL3_night.RHsurftrend;          newz32 = newz12 - newz22;
   newz13 = fCLIMCAPSL3_day.RHsurftrend;           newz23 = fCLIMCAPSL3_night.RHsurftrend;      newz33 = newz13 - newz23;
@@ -78,8 +78,9 @@ iFig = 71;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dRHsurf/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'ERA5';        
+  plotoptions.str11 = 'AIRS\_RT';     plotoptions.str12 = 'ERA5';        
   plotoptions.str21 = 'AIRS L3';      plotoptions.str22 = 'CLIMCAPS L3'; 
+  plotoption.barstr = 'dRH/dt [%/yr]';
   newz11 = (fUMBC_day.RHsurftrend-fUMBC_night.RHsurftrend)*1.0;                           newz12 = (fERA5_day.RHsurftrend-fERA5_night.RHsurftrend)*1.0; 
   newz21 = (fAIRSL3_day.RHsurftrend-fAIRSL3_night.RHsurftrend)*1.0; newz22 = (fCLIMCAPSL3_day.RHsurftrend-fCLIMCAPSL3_night.RHsurftrend)*1.0;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);
@@ -91,8 +92,9 @@ iFig = 72;
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dRHsurf/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
+  plotoptions.str11 = 'AIRS\_RT';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
   plotoptions.str21 = 'N/A';          plotoptions.str22 = 'ERA5';        plotoptions.str23 = 'MERRA2';
+  plotoption.barstr = 'dRH/dt [%/yr]';
   newz11 = (fUMBC_day.RHsurftrend+fUMBC_night.RHsurftrend)*0.5;    newz12 = (fAIRSL3_day.RHsurftrend+fAIRSL3_night.RHsurftrend)*0.5;   newz13 = (fCLIMCAPSL3_day.RHsurftrend+fCLIMCAPSL3_night.RHsurftrend)*0.5;
   newz21 = fGISS.giss_trend4608*NaN;                         newz22 = (fERA5_day.RHsurftrend+fERA5_night.RHsurftrend)*0.5;       newz23 = fMERRA2.RHsurftrend;
     newz11 = reshape(newz11,72,64);   newz22 = reshape(newz22,72,64);   newz23 = reshape(newz23,72,64);  
@@ -105,11 +107,12 @@ clear newz*
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dRHsurf/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS L3';   plotoptions.str12 = 'CLIMCAPS L3';
-  plotoptions.strzz = 'CHIRP\_A';  
+  plotoptions.strzz = 'AIRS\_RT';  
   plotoptions.str21 = 'MERRA2';    plotoptions.str22 = 'ERA5';
   newzAA = (fUMBC_day.RHsurftrend+fUMBC_night.RHsurftrend)*0.5;    newz11 = (fAIRSL3_day.RHsurftrend+fAIRSL3_night.RHsurftrend)*0.5; newz12 = (fCLIMCAPSL3_day.RHsurftrend+fCLIMCAPSL3_night.RHsurftrend)*0.5;
   newz22 = (fERA5_day.RHsurftrend+fERA5_night.RHsurftrend)*0.5;    newz21 = fMERRA2.RHsurftrend;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newzAA = reshape(newzAA,72,64);    
+  plotoption.barstr = 'dRH/dt [%/yr]';
   aslmap_2x1x2tiledlayout(newz11,newz12,newzAA,newz21,newz22,iFig,plotoptions);
   junk = [newz11(:) newz12(:) newzAA(:) newz21(:) newz22(:)];
 
@@ -118,8 +121,9 @@ clear newz*
   clear plotoptions
   plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dRHsurf/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = 'CHIRP\_A';   plotoptions.str12 = 'AIRS L3';   plotoptions.str13 = 'CLIMCAPS L3';  
+  plotoptions.str11 = 'AIRS\_RT';   plotoptions.str12 = 'AIRS L3';   plotoptions.str13 = 'CLIMCAPS L3';  
   plotoptions.str21 = 'ERA5';      plotoptions.str22 = 'MERRA2';
+  plotoption.barstr = 'dRH/dt [%/yr]';
   newz11 = (fUMBC_day.RHsurftrend+fUMBC_night.RHsurftrend)*0.5;    newz12 = (fAIRSL3_day.RHsurftrend+fAIRSL3_night.RHsurftrend)*0.5; newz13 = (fCLIMCAPSL3_day.RHsurftrend+fCLIMCAPSL3_night.RHsurftrend)*0.5;
   newz21 = (fERA5_day.RHsurftrend+fERA5_night.RHsurftrend)*0.5;    newz22 = fMERRA2.RHsurftrend;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
@@ -167,7 +171,7 @@ ta.TileSpacing = 'compact';
 
 figure(80); clf
 plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',2);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dt');
 
 %%% OCEAN + LAND
@@ -178,7 +182,7 @@ newzST11 = reshape(newzST11,72,64);   newzST12 = reshape(newzST12,72,64);  newzS
 
 figure(81); clf
 plot(rlat,nanmean(newzST11,1),'k',rlat,nanmean(newzST12,1),'b',rlat,nanmean(newzST13,1),'gx-',rlat,nanmean(newzST21,1),'r',rlat,nanmean(newzST22,1),'m','linewidth',2);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dST/dt');
 
 figure(82); clf
@@ -190,7 +194,7 @@ junkA = newz22(:); junkB = newzST22(:); junk22 = junkA./junkB; junk22(abs(junkB)
 plot(rlat,nanmean(junk11,1),'k',rlat,nanmean(junk12,1),'b',rlat,nanmean(junk13,1),'gx-',rlat,nanmean(junk21,1),'r',rlat,nanmean(junk22,1),'m','linewidth',2);
 plot(rlat,smooth(nanmean(junk11,1),10),'k',rlat,smooth(nanmean(junk12,1),10),'b',rlat,smooth(nanmean(junk13,1),10),'gx-',rlat,smooth(nanmean(junk21,1),10),'r',rlat,smooth(nanmean(junk22,1),10),'m','linewidth',2);
 ylim([-1 +1]*10);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dST Land+Ocean'); ylim([-1 +1]*10);
 
 figure(82); clf
@@ -199,7 +203,7 @@ plot(rlat,nanmean(newz11,1)./nanmean(newzST11,1),'k',rlat,nanmean(newz12,1)./nan
 plot(rlat,smooth(nanmean(newz11,1)./nanmean(newzST11,1),10),'k',rlat,smooth(nanmean(newz12,1)./nanmean(newzST12,1),10),'b',rlat,smooth(nanmean(newz13,1)./nanmean(newzST13,1),10),'gx-',...
      rlat,smooth(nanmean(newz21,1)./nanmean(newzST21,1),10),'r',rlat,smooth(nanmean(newz22,1)./nanmean(newzST22,1),10),'m','linewidth',2);
 ylim([-1 +1]*20);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dST Ocean'); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -228,17 +232,17 @@ x2rlat = nanmean(moo_oceanfrac,1).*sin(rlat'*pi/180);
 %plot(xrlat,nanmean(newzST11,1),'k',xrlat,nanmean(newzST12,1),'b',xrlat,nanmean(newzST13,1),'gx-',xrlat,nanmean(newzST21,1),'r',xrlat,nanmean(newzST22,1),'m','linewidth',2);
 %plot(xrlat.*sign(rlat'),nanmean(newzST11,1),'k',xrlat.*sign(rlat'),nanmean(newzST12,1),'b',xrlat.*sign(rlat'),nanmean(newzST13,1),'gx-',xrlat.*sign(rlat'),nanmean(newzST21,1),'r',xrlat.*sign(rlat'),nanmean(newzST22,1),'m','linewidth',2);
 %plot(x2rlat,nanmean(newzST11,1),'k',x2rlat,nanmean(newzST12,1),'b',x2rlat,nanmean(newzST13,1),'gx-',x2rlat,nanmean(newzST21,1),'r',x2rlat,nanmean(newzST22,1),'m','linewidth',2);
-%plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+%plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 %xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dST/dt');
 
 figure(83); clf
 plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',2);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dt Ocean');
 
 figure(84); clf
 plot(rlat,nanmean(newzST11,1),'k',rlat,nanmean(newzST12,1),'b',rlat,nanmean(newzST13,1),'gx-',rlat,nanmean(newzST21,1),'r',rlat,nanmean(newzST22,1),'m','linewidth',2);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dST/dt Ocean');
 
 figure(85); clf
@@ -250,7 +254,7 @@ junkA = newz22(:); junkB = newzST22(:); junk22 = junkA./junkB; junk22(abs(junkB)
 plot(rlat,nanmean(junk11,1),'k',rlat,nanmean(junk12,1),'b',rlat,nanmean(junk13,1),'gx-',rlat,nanmean(junk21,1),'r',rlat,nanmean(junk22,1),'m','linewidth',2);
 plot(rlat,smooth(nanmean(junk11,1),10),'k',rlat,smooth(nanmean(junk12,1),10),'b',rlat,smooth(nanmean(junk13,1),10),'gx-',rlat,smooth(nanmean(junk21,1),10),'r',rlat,smooth(nanmean(junk22,1),10),'m','linewidth',2);
 ylim([-1 +1]*20);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dST Ocean'); 
 
 figure(85); clf
@@ -259,7 +263,7 @@ plot(rlat,nanmean(newz11,1)./nanmean(newzST11,1),'k',rlat,nanmean(newz12,1)./nan
 plot(rlat,smooth(nanmean(newz11,1)./nanmean(newzST11,1),10),'k',rlat,smooth(nanmean(newz12,1)./nanmean(newzST12,1),10),'b',rlat,smooth(nanmean(newz13,1)./nanmean(newzST13,1),10),'gx-',...
      rlat,smooth(nanmean(newz21,1)./nanmean(newzST21,1),10),'r',rlat,smooth(nanmean(newz22,1)./nanmean(newzST22,1),10),'m','linewidth',2);
 ylim([-1 +1]*10);
-plotaxis2; hl = legend('CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('dRHsurf/dST Ocean'); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

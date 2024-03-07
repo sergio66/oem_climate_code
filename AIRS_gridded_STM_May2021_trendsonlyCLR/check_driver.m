@@ -1,3 +1,4 @@
+miaow.removeEmisTrend   = -1;          %% -1(default) ignore chaning emiss; +1 means account for changing CAMEL land emissivity 
 miaow.iAllorSeasonal    = +1;          %% +1 = trends over 12 months, -1/-2/-3/-4 = DJF, MAM, JJA, SON
 miaow.debug             = 'false';     %% no debuging
 miaow.debug_dir         = '../Debug/'; %% no debuging
@@ -8,7 +9,7 @@ miaow.iDebugRatesUseNWP = -1;          %% [-1] use AIRS observed trends
                                        %%   51,52 use reconstructed spectral trends from night/day ERA5
                                        %%   61,62 use reconstructed spectral trends from night/day CMIP6 (technically they are the same)
 
-driver_allowedparams = [{'debug'},{'debug_dir'},{'iDebugRatesUseNWP'},{'NorD'},{'iQuantile'},{'iAllorSeasonal'}];
+driver_allowedparams = [{'debug'},{'debug_dir'},{'iDebugRatesUseNWP'},{'NorD'},{'iQuantile'},{'iAllorSeasonal'},{'removeEmisTrend'}];
 
 %disp('miaow before')
 %miaow

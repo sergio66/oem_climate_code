@@ -1,7 +1,7 @@
 addpath /asl/matlib/science/
 addpath /home/sergio/MATLABCODE/TIME
 
-if ~exist('btanom')
+if ~exist('btanomD')
   load /asl/s1/sergio/JUNK/anomaly_ALL_Q03.mat
   daysSince2002 = change2days(yy,mm,dd,2002);
   load h2645structure.mat
@@ -45,14 +45,14 @@ clear btavg* usethese
 iCnt = 1;
 usethese{iCnt} = 1 : 4608;
 for ii = 1 : 2645
-  moo = squeeze(btanom(:,ii,:));
+  moo = squeeze(btanomD(:,ii,:));
   btavg1(ii,:)  = nansum(moo.*coslat)./nansum(coslat);
   xbtavg1(ii,:) = nanmean(moo.*coslat);
 end
 pcolor(2002+daysSince2002/365,h.vchan,btavg1); colorbar; shading flat;
 pcolor(2002+daysSince2002/365,h.vchan,btavg1-xbtavg1); colorbar; shading flat;
-plot(2002+daysSince2002/365,xbtavg1(1520,:),'bx-',2002+daysSince2002/365,nanmean(alone.btanom.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2023])
-plot(2002+daysSince2002/365,btavg1(1520,:),'b',2002+daysSince2002/365,nanmean(alone.btanom.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2023])
+plot(2002+daysSince2002/365,xbtavg1(1520,:),'bx-',2002+daysSince2002/365,nanmean(alone.btanomD.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2023])
+plot(2002+daysSince2002/365,btavg1(1520,:),'b',2002+daysSince2002/365,nanmean(alone.btanomD.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2023])
 
 xow = xbtavg1(1520,:); PX = polyfit(daysSince2002,xow,1); YPX = polyval(PX,daysSince2002);
 wow = btavg1(1520,:);  PW = polyfit(daysSince2002,wow,1); YPW = polyval(PW,daysSince2002);
@@ -68,7 +68,7 @@ for iCnt = 1 : 1
   clear junk
   usethese{2} = [LonBin LatBin];
   iTile = (LatBin-1)*72 + LonBin;
-  junk = squeeze(btanom(iTile,:,:));
+  junk = squeeze(btanomD(iTile,:,:));
   str = ['btavg' num2str(iCnt+1) ' = junk;'];
   eval(str);
 end

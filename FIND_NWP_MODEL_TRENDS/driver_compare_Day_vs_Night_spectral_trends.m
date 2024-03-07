@@ -113,8 +113,8 @@ ii = 0;
 % ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(obs_d(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : AIRS L1C DAY');
 % ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(obs_n(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : AIRS L1C NIGHT');
 % 
-% ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_d(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : CHIRP\_A DAY');
-% ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_n(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : CHIRP\_A NIGHT');
+% ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_d(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : AIRS\_RT DAY');
+% ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_n(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : AIRS\_RT NIGHT');
 % 
 % ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_d.trend(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : ERA5 DAY');
 % ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_n.trend(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : ERA5 NIGHT');
@@ -126,7 +126,7 @@ ii = 0;
 % ii = ii + 1; figure(ii); clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fCLIMCAPSL3_n.trend(1520,:),72,64)',1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.15); colormap(llsmap5); title('dBT1231/dt : CLIMCAPSL3 NIGHT');
 
 plotoptions.cmap = llsmap5; plotoptions.cx = [-1 +1]*0.15; 
-plotoptions.str11 = 'AIRS L1C \newline(D)'; plotoptions.str12 = 'CHIRP\_A \newline(D)'; plotoptions.str13 = 'AIRS L3 \newline(D)'; plotoptions.str14 = 'CLIMCAPS L3 \newline(D)';plotoptions.str15 = 'ERA5 \newline(D)';  
+plotoptions.str11 = 'AIRS L1C \newline(D)'; plotoptions.str12 = 'AIRS\_RT \newline(D)'; plotoptions.str13 = 'AIRS L3 \newline(D)'; plotoptions.str14 = 'CLIMCAPS L3 \newline(D)';plotoptions.str15 = 'ERA5 \newline(D)';  
 plotoptions.str21 = '(N)';    plotoptions.str22 = '(N)';        plotoptions.str23 = '(N)';  plotoptions.str24 = '(N)';     plotoptions.str25 = '(N)'; 
 aslmap_2x5tiledlayout(obs_d(1520,:),fUMBC_d(1520,:),fAIRSL3_d.trend(1520,:),fCLIMCAPSL3_d.trend(1520,:),fERA5_d.trend(1520,:),...
                       obs_n(1520,:),fUMBC_n(1520,:),fAIRSL3_n.trend(1520,:),fCLIMCAPSL3_n.trend(1520,:),fERA5_d.trend(1520,:),...
@@ -143,31 +143,32 @@ aslmap_2x5tiledlayout(obs_d(1520,:),fUMBC_d(1520,:),fAIRSL3_d.trend(1520,:),fCLI
 % The corresponding minimum passing dbtc*ddbtx for these 2 channels
 %dayWminpass = 0.20;
 
+%% see /home/sergio/MATLABCODE/btdiff_1231_1227_to_mmw.m
 %% tile_fits_quantiles.m uses 1228 and 1231 for SKT hmmm
 plotoptions.cmap = llsmap5; plotoptions.cx = [-1 +1]*0.02; 
 i1231 = 1520;
 i1227 = find(fchanx >= 1227,1); i1227 = 1513;
-i1227 = find(fchanx >= 1226,1); i1227 = 1511;
+i1226 = find(fchanx >= 1226,1); i1226 = 1511;
 
 smX = 3;
 figure(2); clf
-  moo0 = -obs_d(i1227,:)+obs_d(i1231,:);                              moo0 = nanmean(reshape(moo0,72,64),1);
-  moo1 = -fUMBC_d(i1227,:)+fUMBC_d(i1231,:);                          moo1 = nanmean(reshape(moo1,72,64),1);
-  moo2 = -fAIRSL3_d.trend(i1227,:)+fAIRSL3_d.trend(i1231,:);          moo2 = nanmean(reshape(moo2,72,64),1);
-  moo3 = -fCLIMCAPSL3_d.trend(i1227,:)+fCLIMCAPSL3_d.trend(i1231,:);  moo3 = nanmean(reshape(moo3,72,64),1);
-  moo4 = -fERA5_d.trend(i1227,:)+fERA5_d.trend(i1231,:);              moo4 = nanmean(reshape(moo4,72,64),1);
-  moo5 = -fMERRA2.trend(i1227,:)+fMERRA2.trend(i1231,:);              moo5 = nanmean(reshape(moo5,72,64),1);
+  moo0 = -obs_d(i1226,:)+obs_d(i1231,:);                              moo0 = nanmean(reshape(moo0,72,64),1);
+  moo1 = -fUMBC_d(i1226,:)+fUMBC_d(i1231,:);                          moo1 = nanmean(reshape(moo1,72,64),1);
+  moo2 = -fAIRSL3_d.trend(i1226,:)+fAIRSL3_d.trend(i1231,:);          moo2 = nanmean(reshape(moo2,72,64),1);
+  moo3 = -fCLIMCAPSL3_d.trend(i1226,:)+fCLIMCAPSL3_d.trend(i1231,:);  moo3 = nanmean(reshape(moo3,72,64),1);
+  moo4 = -fERA5_d.trend(i1226,:)+fERA5_d.trend(i1231,:);              moo4 = nanmean(reshape(moo4,72,64),1);
+  moo5 = -fMERRA2.trend(i1226,:)+fMERRA2.trend(i1231,:);              moo5 = nanmean(reshape(moo5,72,64),1);
 plot(rlat,smooth(moo0,smX),'color',[1 1 1]*0.6,'linewidth',4); hold on
 plot(rlat,smooth(moo1,smX),'k',rlat,smooth(moo2,smX),'b',rlat,smooth(moo3,smX),'g',rlat,smooth(moo4,smX),'r',rlat,smooth(moo5,smX),'m','linewidth',4); 
 hold off; plotaxis2; 
 %title('BT1226-BT1231 = colWV'); 
-hl = legend('AIRS L1C','CHIRP\_A','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',10);
+hl = legend('AIRS L1C','AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',10);
 xlim([-1 +1]*90); xlabel('Latitude'); ylabel('\delta BT1226-BT1231 trend [K/yr]')
 
-aslmap_2x5tiledlayout(-obs_d(i1227,:)+obs_d(i1231,:),-fUMBC_d(i1227,:)+fUMBC_d(i1231,:),-fAIRSL3_d.trend(i1227,:)+fAIRSL3_d.trend(i1231,:),...
-                      -fCLIMCAPSL3_d.trend(i1227,:)+fCLIMCAPSL3_d.trend(i1231,:),-fERA5_d.trend(i1227,:)+fERA5_d.trend(i1231,:),...
-                      -obs_n(i1227,:)+obs_n(i1231,:),-fUMBC_n(i1227,:)+fUMBC_n(i1231,:),-fAIRSL3_n.trend(i1227,:)+fAIRSL3_n.trend(i1231,:),...
-                      -fCLIMCAPSL3_n.trend(i1227,:)+fCLIMCAPSL3_n.trend(i1231,:),-fERA5_n.trend(i1227,:)+fERA5_n.trend(i1231,:),...
+aslmap_2x5tiledlayout(-obs_d(i1226,:)+obs_d(i1231,:),-fUMBC_d(i1226,:)+fUMBC_d(i1231,:),-fAIRSL3_d.trend(i1226,:)+fAIRSL3_d.trend(i1231,:),...
+                      -fCLIMCAPSL3_d.trend(i1226,:)+fCLIMCAPSL3_d.trend(i1231,:),-fERA5_d.trend(i1226,:)+fERA5_d.trend(i1231,:),...
+                      -obs_n(i1226,:)+obs_n(i1231,:),-fUMBC_n(i1226,:)+fUMBC_n(i1231,:),-fAIRSL3_n.trend(i1226,:)+fAIRSL3_n.trend(i1231,:),...
+                      -fCLIMCAPSL3_n.trend(i1226,:)+fCLIMCAPSL3_n.trend(i1231,:),-fERA5_n.trend(i1226,:)+fERA5_n.trend(i1231,:),...
                       3,plotoptions);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

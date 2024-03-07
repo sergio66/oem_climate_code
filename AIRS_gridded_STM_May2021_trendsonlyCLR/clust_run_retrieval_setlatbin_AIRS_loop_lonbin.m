@@ -137,6 +137,14 @@ iDebug = -1;
 %iDebug = 1261    %% -37 S, have -ve col WV trends
 %iDebug = 36
 %iDebug = 1532    %% this one is strongly negative for ERA5 synthetic rates ... not as negative for CHIRP_A, though spectral rates are very similar. But ERA5 synthtic has much less noise, so retrieval is "truer"
+%iDebug = 36;     %% check to make sure emiss trend comes in (over land)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
+%% see ../FIN_NWP_TRENDS/ : driver_compare_trends_Day_vs_Night.m --> prep_colWV_T_WV_trends_Day_vs_Night --> get_umbc_day_night_name.m
+umbc_night_file  = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jac>> tartwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjac_removeemisstrends.mat';
+oldresults = load(umbc_night_file);
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
@@ -180,13 +188,13 @@ ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, d
 ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
 ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
 
-ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 10,iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 12,iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 11,iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
 
-%ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9, iQuantile = 16   20 year rates
+ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
 
 if ia_OorC_DataSet_Quantile(1) == 2
   get_anomaly_processors
@@ -378,27 +386,35 @@ for iInd = iXX1 : idX : iXX2
   topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint, but now use 210 !!!! gives slightly better results than 214, decent column water results at tropics!, not so good polar WV results
 
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
-  topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
-  topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 FULL 18 years
-  topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years
-  topts.dataset   = +3;   %% (+3) AIRS 19 year extreme  dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, EXTREME
-  topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
-  topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
-  topts.dataset   = +5;   %% (+5) AIRS 12 year quantile dataset, Sergio Aug 2022   2002/09-2014/08 FULL 12 years
-  topts.dataset   = +6;   %% (+6) AIRS = CRIS NSR 07 year quantile dataset,        2012/05-2019/04 FULL 07 years
-  topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
-  topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
-  % quants = [0.50 0.80 0.90 0.95 0.97 1.00];
-  topts.dataset   = +09;   %% (+ 9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
-  topts.dataset   = +10;   %% (+10) AIRS 05 year quantile dataset, Sergio May 2023   2002/09-2007/08 FULL 05 years, new way of douning quantile iQAX = 3  ************************
-  topts.dataset   = +11;   %% (+11) AIRS 10 year quantile dataset, Sergio May 2023   2002/09-2012/08 FULL 10 years, new way of douning quantile iQAX = 3  ************************
-  topts.dataset   = +12;   %% (+12) AIRS 15 year quantile dataset, Sergio May 2023   2002/09-2017/08 FULL 15 years, new way of douning quantile iQAX = 3  ************************
+  % topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
+  % topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 FULL 18 years
+  % topts.dataset   = +2;   %% (+2) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years
+  % topts.dataset   = +3;   %% (+3) AIRS 19 year extreme  dataset, Sergio Aug 2021   2002/09-2021/07 PARTIAL 19 years, EXTREME
+  % topts.dataset   = -3;   %% (-3) AIRS 19 year mean     dataset, Sergio Aug 2021   2002/09-2020/08 AUTOMATIC USES Q00, MEAN
+  % topts.dataset   = +4;   %% (+4) AIRS 19 year quantile dataset, Sergio Aug 2021   2002/09-2021/08 FULL 19 years ************************ JPL April 2021 Sounder Science Meeting
+  % topts.dataset   = +5;   %% (+5) AIRS 12 year quantile dataset, Sergio Aug 2022   2002/09-2014/08 FULL 12 years
+  % topts.dataset   = +6;   %% (+6) AIRS = CRIS NSR 07 year quantile dataset,        2012/05-2019/04 FULL 07 years
+  % topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
+  % topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
+  % % quants = [0.50 0.80 0.90 0.95 0.97 1.00];
+  % topts.dataset   = +09;   %% (+ 9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
+  % topts.dataset   = +10;   %% (+10) AIRS 05 year quantile dataset, Sergio May 2023   2002/09-2007/08 FULL 05 years, new way of douning quantile iQAX = 3  ************************
+  % topts.dataset   = +11;   %% (+11) AIRS 10 year quantile dataset, Sergio May 2023   2002/09-2012/08 FULL 10 years, new way of douning quantile iQAX = 3  ************************
+  % topts.dataset   = +12;   %% (+12) AIRS 15 year quantile dataset, Sergio May 2023   2002/09-2017/08 FULL 15 years, new way of douning quantile iQAX = 3  ************************
 
   topts.model   = ia_OorC_DataSet_Quantile(4);
   topts.dataset = ia_OorC_DataSet_Quantile(2);
   iQuantile     = ia_OorC_DataSet_Quantile(3);
 
   %%%%%%%%%%
+
+  driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss
+  if ia_OorC_DataSet_Quantile(1) == 0 & ia_OorC_DataSet_Quantile(2) ~= 14
+    %% ia_OorC_DataSet_Quantile(2) == 14 is 2018-2022 = 4 year dataset sp emiss can't have changed
+    %% ia_OorC_DataSet_Quantile(2) == [everything else] = 14+ ears so changing land emiss
+    driver.removeEmisTrend = +1; %% account for changing (LAND) emiss
+  end
+  driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss default
 
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc  DEFAULT
@@ -522,7 +538,8 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +4;  %% use T only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +1;  %% use WV only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T/ST/O3
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = +100 %% set lower WV a priori, and then also upper WV with MLS
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T/ST/O3, DEFAULT
 
   topts.set_era5_cmip6_airsL3 = 6;           %% use AMIP6    a priori
   topts.set_era5_cmip6_airsL3 = 3;           %% use AIRSL3   a priori
@@ -530,7 +547,7 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
   topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
   topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori
-  topts.set_era5_cmip6_airsL3 = 0;           %% use 0 a priori
+  topts.set_era5_cmip6_airsL3 = 0;           %% use 0        a priori, DEFAULT
 
   if (length(intersect(ia_OorC_DataSet_Quantile(2),[10 11 12])) == 1) & topts.set_era5_cmip6_airsL3 == 8
     error('MLS UT/LS WV a-priori only for 20 years!!!!')
@@ -552,7 +569,7 @@ for iInd = iXX1 : idX : iXX2
   if topts.iAdjLowerAtmWVfrac > 0 & topts.set_era5_cmip6_airsL3 ~= 0
     disp('You have topts.iAdjLowerAtmWVfrac > 0 so you want to set PBL ... but you also want to set ERA5 or MERRA2 or AIRS L3 a-priori NOPE NOPE NOPE')
     topts.iAdjLowerAtmWVfrac = 0;             %% forget about PBL
-    %topts.set_era5_cmip6_airsL3 = 0;         %% use 0 a priori for every layer ... but can still allow MLS input at UT?LS and above 300 mb
+    %topts.set_era5_cmip6_airsL3 = 0;         %% use 0 a priori for every layer ... but can still allow MLS input at UT/LS and above 300 mb
   end
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
@@ -590,7 +607,7 @@ for iInd = iXX1 : idX : iXX2
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  %% iNorD > 0 ==> night
+  %% NorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_OBS/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
@@ -604,7 +621,7 @@ for iInd = iXX1 : idX : iXX2
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
-  %% iNorD < 0 ==> day
+  %% NorD < 0 ==> day
   elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_OBS_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
@@ -882,6 +899,7 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
     plot_retrieval_latbins_fewlays
   end
   plot(f,driver.oem.fitXcomponents); plotaxis2; xlim([640 1640]); title('Components of fit'); hl = legend('trace gases','ST','WV(z)','T(z)','O3(z)','location','best','fontsize',10);
+  printarray([aux.pavg; driver.oem.xb(driver.jacobian.water_i)']','[p(water) xb(water)]')
   error('nnyuk iDebug')
 end
 

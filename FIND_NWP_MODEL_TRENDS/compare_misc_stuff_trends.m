@@ -96,16 +96,16 @@ if exist('fERA5_night')
     plot(rlat,nanmean(reshape(deltaILR_chirp,72,64),1),'k',...
          rlat,nanmean(reshape(wahoo,72,64),1),'gx-',rlat,nanmean(reshape(fERA5_night.ilr_clr,72,64),1),'c',rlat,nanmean(reshape(fERA5_night.ilr_adj,72,64),1),'b',...
          rlat,nanmean(reshape(fERA5_night.ilr_Rld,72,64),1),'r','linewidth',2);
-    plotaxis2;  hl = legend('CHIRP\_A','CERES','ERA5 net?','ERA5 adj','Brutsaert','location','best','fontsize',10); xlabel('Latitude'); ylabel('dILR/dt W/m2/yr'); xlim([-90 +90])
+    plotaxis2;  hl = legend('AIRS\_RT','CERES','ERA5 net?','ERA5 adj','Brutsaert','location','best','fontsize',10); xlabel('Latitude'); ylabel('dILR/dt W/m2/yr'); xlim([-90 +90])
     plot(rlat,nanmean(reshape(deltaILR_chirp,72,64),1),'k',...
          rlat,nanmean(reshape(wahoo,72,64),1),'gx-',rlat,nanmean(reshape(fERA5_night.ilr_clr,72,64),1),'c',rlat,nanmean(reshape(fERA5_night.ilr_adj,72,64),1),'b',...
          rlat,brutsaert_era5,'r','linewidth',2);
-    plotaxis2;  hl = legend('CHIRP\_A','CERES','ERA5 net?','ERA5 adj','Brutsaert','location','best','fontsize',10); xlabel('Latitude'); ylabel('dILR/dt W/m2/yr'); xlim([-90 +90])
+    plotaxis2;  hl = legend('AIRS\_RT','CERES','ERA5 net?','ERA5 adj','Brutsaert','location','best','fontsize',10); xlabel('Latitude'); ylabel('dILR/dt W/m2/yr'); xlim([-90 +90])
 
     plot(rlat,nanmean(reshape(deltaILR_chirp,72,64),1) .* (1 + co2_ilr_adjust') ,'k',...
          rlat,nanmean(reshape(wahoo,72,64),1),'gx-',rlat,nanmean(reshape(fERA5_night.ilr_adj,72,64),1),'b',...
          rlat,brutsaert_era5 .* (1 + co2_ilr_adjust'),'r','linewidth',2);
-    plotaxis2;  hl = legend('CHIRP\_A with CO2 adj','CERES','ERA5 ILR --> ERA5 ILR + stemp adj','ERA5 Brutsaert with CO2 adj','location','best','fontsize',10); xlabel('Latitude'); 
+    plotaxis2;  hl = legend('AIRS\_RT with CO2 adj','CERES','ERA5 ILR --> ERA5 ILR + stemp adj','ERA5 Brutsaert with CO2 adj','location','best','fontsize',10); xlabel('Latitude'); 
     ylabel('dILR/dt W/m2/yr'); xlim([-90 +90])
     title('ILR trends')
     ylim([0 0.4])
@@ -114,17 +114,17 @@ if exist('fERA5_night')
          rlat,nanmean(reshape(wahoo,72,64),1),'gx-',...
          rlat,nanmean(reshape(fERA5_night.ilr_adj,72,64),1),'r',rlat,brutsaert_era5 .* (1 + co2_ilr_adjust'),'r--','linewidth',2);
     plotaxis2;  
-    hl = legend('CHIRP\_A Brutsaert using dSKT/dt, CO2 adj','CHIRP\_A Brutsaert using dT2m/dt, CO2 adj',...
+    hl = legend('AIRS\_RT Brutsaert using dSKT/dt, CO2 adj','AIRS\_RT Brutsaert using dT2m/dt, CO2 adj',...
                  'CERES','ERA5 ILR --> ERA5 ILR + stemp adj','ERA5 Brutsaert with CO2 adj','location','best','fontsize',10); xlabel('Latitude'); 
     ylabel('dILR/dt W/m2/yr'); xlim([-90 +90])
     title('ILR trends')
     ylim([-0.2 0.4])
 
     figure(104); clf
-    aslmap(104,rlat65,rlon73,smoothn(reshape(deltaILR_ST,72,64)',1), [-90 +90],[-180 +180]); title('CHIRP\_A d(ILR)/dt (W/m2/yr)'); caxis([-1 +1]*0.5); colormap(llsmap5)
+    aslmap(104,rlat65,rlon73,smoothn(reshape(deltaILR_ST,72,64)',1), [-90 +90],[-180 +180]); title('AIRS\_RT d(ILR)/dt (W/m2/yr)'); caxis([-1 +1]*0.5); colormap(llsmap5)
     figure(104); clf
     co2_ilr_adjustx = 0.1 + 0.2*(sin(p.rlat*pi/180)).^2; %% this is ILR flux adjust due to CO2 changes .. 10% at humid tropics, 30% at dry poles
-    aslmap(104,rlat65,rlon73,smoothn(reshape(deltaILR_ST.*(1 + co2_ilr_adjustx),72,64)',1), [-90 +90],[-180 +180]); title('CHIRP\_A d(ILR)/dt (W/m2/yr)'); caxis([-1 +1]*0.5); colormap(llsmap5)
+    aslmap(104,rlat65,rlon73,smoothn(reshape(deltaILR_ST.*(1 + co2_ilr_adjustx),72,64)',1), [-90 +90],[-180 +180]); title('AIRS\_RT d(ILR)/dt (W/m2/yr)'); caxis([-1 +1]*0.5); colormap(llsmap5)
 
     figure(105); clf
     aslmap(105,rlat65,rlon73,smoothn(reshape(wahoo,72,64)',1), [-90 +90],[-180 +180]); title('CERES d(ILR)/dt (W/m2/yr)'); caxis([-1 +1]*0.5); colormap(llsmap5)
@@ -152,7 +152,7 @@ if exist('fERA5_night')
    ylim([-0.05 0.075])
    plotaxis2;
    hl = legend('ERA5 interped T2m rate','ERA5 actual monthly T2m rate','MERRA2 interped T2m rate','AIRSL3 interped T2m rate','CLIMCAPSL3 interped T2m rate',...
-               'CHIRP\_A interped T2m rate','CHIRP\_A stemp rate','location','best','fontsize',8);
+               'AIRS\_RT interped T2m rate','AIRS\_RT stemp rate','location','best','fontsize',8);
 
    junkind = find(abs(p.rlat) < 60);
    %junkind = 1:4608;
@@ -169,7 +169,7 @@ if exist('fERA5_night')
    hold off
    ylim([0 0.075])
    plotaxis2;
-   hl = legend('ERA5 interped fracWV 2m rate  x10','ERA5 actual monthly fracWV 2m rate x10','CHIRP\_A interped fracWV 2m rate x10','location','best','fontsize',8);
+   hl = legend('ERA5 interped fracWV 2m rate  x10','ERA5 actual monthly fracWV 2m rate x10','AIRS\_RT interped fracWV 2m rate x10','location','best','fontsize',8);
 
   end
 end

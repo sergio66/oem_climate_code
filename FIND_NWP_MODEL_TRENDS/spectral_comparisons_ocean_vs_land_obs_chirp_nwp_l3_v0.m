@@ -90,7 +90,7 @@ plot(f,allbias_13,'k.-',f,polarbias_13,'b',f,midlatbias_13,'r',f,tropicalbias_13
  end
  ax = gca; ax.XAxis.FontSize = 10; ax.YAxis.FontSize = 10;
  plotaxis2;
- hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('CHIRP\_A');
+ hl = legend('All Lats','Polar','MidLats','Tropics','location','best','fontsize',8); t = title('AIRS\_RT');
  t.FontSize = 10; t.FontWeight = 'normal'; 
  xlabel('Wavenumber cm-1','Fontsize',10); ylabel('dBT/dt K/yr','Fontsize',10)
 

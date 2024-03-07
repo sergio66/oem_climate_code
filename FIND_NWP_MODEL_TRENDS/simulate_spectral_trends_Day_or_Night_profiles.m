@@ -148,7 +148,7 @@ figure(101); clf;
   tafov(1) = nexttile; 
   plot(hh2.vchan,simbiasO(:,1),'g',hh2.vchan,simbiasO(:,2),'m--',hh2.vchan,simbiasO(:,3),'r',hh2.vchan,simbiasO(:,4),'c--',hh2.vchan,simbiasO(:,5),'b');
   plotaxis2; hl = legend('tropical','S Midlat','N Midlat','S Polar','N Polar','location','best','fontsize',6); axis([640 1620 -0.1 +0.1]); ylabel('OCEAN');
-  title('CHIRP\_A')
+  title('AIRS\_RT')
 
   tafov(2) = nexttile; 
   plot(hh2.vchan,simbiasL(:,1),'g',hh2.vchan,simbiasL(:,2),'m--',hh2.vchan,simbiasL(:,3),'r',hh2.vchan,simbiasL(:,4),'c--',hh2.vchan,simbiasL(:,5),'b');
@@ -175,7 +175,7 @@ figure(102);
   plot(hh2.vchan,signal_o(:,1)-simbiasO(:,1),'g',hh2.vchan,signal_o(:,2)-simbiasO(:,2),'m--',hh2.vchan,signal_o(:,3)-simbiasO(:,3),'r',...
        hh2.vchan,signal_o(:,4)-simbiasO(:,4),'c--',hh2.vchan,signal_o(:,5)-simbiasO(:,5),'b'); 
   plotaxis2; hl = legend('tropical','S Midlat','N Midlat','S Polar','N Polar','location','best','fontsize',6); ylabel('OCEAN'); axis([640 1620 -0.03 +0.03]); 
-  title('OBS-CHIRP\_A')
+  title('OBS-AIRS\_RT')
 
   tafov(2) = nexttile; 
   plot(hh2.vchan,signal_l(:,1)-simbiasL(:,1),'g',hh2.vchan,signal_l(:,2)-simbiasL(:,2),'m--',hh2.vchan,signal_l(:,3)-simbiasL(:,3),'r',...

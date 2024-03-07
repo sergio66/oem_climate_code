@@ -48,9 +48,9 @@ end
 
 varnames = {'OBS','UMBC','ERA5','MERRA2','AIRS L3','CLIMCAPS'};
 varnames = {'OBS','This work','ERA5','MERRA2','AIRS L3','CLIMCAPS'};
-varnames = {'OBS','CHIRP\_A','ERA5','MERRA2','AIRS L3','CLIMCAPS'};
+varnames = {'OBS','AIRS\_RT','ERA5','MERRA2','AIRS L3','CLIMCAPS'};
 
-plotoptions6.str11 = 'AIRS L1C';   plotoptions6.str12 = 'CHIRP\_A';
+plotoptions6.str11 = 'AIRS L1C';   plotoptions6.str12 = 'AIRS\_RT';
 plotoptions6.str21 = 'ERA52';      plotoptions6.str22 = 'MERRA2';
 plotoptions6.str31 = 'AIRS L3';   plotoptions6.str32 = 'CLIMCAPS';
 plotoptions6.ystr = 'Latitude';   plotoptions6.xstr = 'Wavenumber / [cm-1]';
@@ -72,7 +72,7 @@ dnotpolar    = setdiff(1:64,dpolar);
 disp('R = 6 x 4 matrix of R^2 with the  rows being :   64-1640cm-1    640-800 cm-1   800-960cm-1   1370-1620cm-1')
 disp('and the columns being')
 disp('OBS')
-disp('CHIRP\_A')
+disp('AIRS\_RT')
 disp('ERA5')
 disp('MERRA2')    
 disp('AIRS L3 v7')
@@ -512,7 +512,7 @@ disp('Rx = 6 x 4 matrix of R^2 with the  rows being :   GLOBAL  TROPICAL MIDLAT 
 
 disp('and the columns being')
 disp('OBS')
-disp('CHIRP\_A')
+disp('AIRS\_RT')
 disp('ERA5')
 disp('MERRA2')    
 disp('AIRS L3 v7')

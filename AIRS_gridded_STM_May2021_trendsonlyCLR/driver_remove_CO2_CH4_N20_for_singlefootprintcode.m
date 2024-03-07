@@ -13,10 +13,11 @@ rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iNumYears = 20;  %% 2002-2022
 iNumYears = 19;  %% 2002-2021
 iNumYears = 12;  %% 2002-2014
 iNumYears = 07;  %% 2015-2021
+iNumYears = -20;  %% 2002-2022, allsky
+iNumYears = +20;  %% 2002-2022, clrsky
 
 iNumYears = input('Enter iNumYears : (12 or 19 or 20 or 07) : ');
 
@@ -145,7 +146,7 @@ elseif iNumYears == 19
 
   load iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat
 
-elseif iNumYears == 20
+elseif iNumYears == -20
   co2x = 2.262445;
   n2ox = 0.925496;
   ch4x = 6.613673;
@@ -165,6 +166,26 @@ elseif iNumYears == 20
 
   load iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q05.mat
 
+elseif iNumYears == +20
+  co2x = 2.262445;
+  n2ox = 0.925496;
+  ch4x = 6.613673;
+
+  iVersESRL = 0
+  iVersESRL = 4
+  if iVersESRL == 0
+    co2x = co2x * ones(1,64);
+    n2ox = n2ox * ones(1,64);
+    ch4x = ch4x * ones(1,64);
+  elseif iVersESRL == 4
+    esrl_trend = load('/home/sergio/MATLABCODE/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_2014_2021.mat');
+    n2ox = n2ox * ones(1,64);
+    co2x = interp1(esrl_trend.rlat,esrl_trend.co2trend_19,rlat);
+    ch4x = interp1(esrl_trend.rlat,esrl_trend.ch4trend_19,rlat);
+  end
+
+  %load iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q05.mat
+  load iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat
 else
   error('unknown iNumYears')
 end
@@ -181,8 +202,10 @@ for jj = 1 : 64
     jacname = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(jj) '.mat'];
   elseif iNumYears == 19
     jacname = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(jj) '.mat'];
-  elseif iNumYears == 20
+  elseif iNumYears == -20
     jacname = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(jj,'%02d') '.mat'];
+  elseif iNumYears == +20
+    jacname = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin//kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(jj,'%02d') '.mat'];
   else
     error('unknown iNumYears')
   end
@@ -190,9 +213,14 @@ for jj = 1 : 64
     iibin = (jj-1)*72 + ii;
 
     fprintf(1,'\n\n    lat/lon = %2i/%2i \n',jj,ii)
-    if iNumYears == 12 | iNumYears == 19 | iNumYears == 20
+    if iNumYears == 12 | iNumYears == 19 | abs(iNumYears) == 20
       topts.iVersQRenorm = 1;
-      [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(jacname,iibin,ii,jj,2002+iNumYears,topts);
+      topts.iLatX = jj;
+      if iNumYears == 20
+        [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(jacname,iibin,ii,jj,2002+iNumYears,+5,topts);
+      else
+        [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(jacname,iibin,ii,jj,2002+iNumYears,+9,topts);
+      end
     elseif iNumYears == 07
       [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(jacname,iibin,ii,jj,2015);
     else
@@ -214,13 +242,15 @@ oldrad = reshape(permute(b_desc,[3 1 2]),2645,72*64);
 
 comment = 'see driver_remove_CO2_CH4_N20.m';
 if iNumYears == 07
-  saver = ['save no_tracegas_spectral_rate_07years' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
+  saver = ['save no_tracegas_spectral_rate_07years_ESRLv' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
 elseif iNumYears == 12
-  saver = ['save no_tracegas_spectral_rate_12years' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
+  saver = ['save no_tracegas_spectral_rate_12years_ESRLv' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
 elseif iNumYears == 19
-  saver = ['save no_tracegas_spectral_rate_19years' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
-elseif iNumYears == 20
-  saver = ['save no_tracegas_spectral_rate_cld20years' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
+  saver = ['save no_tracegas_spectral_rate_19years_ESRLv' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
+elseif iNumYears == -20
+  saver = ['save no_tracegas_spectral_rate_cld20years_ESRLv' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
+elseif iNumYears == +20
+  saver = ['save no_tracegas_spectral_rate_20years_ESRLv' num2str(iVersESRL) '.mat newrad nedt_b nedt_true oldrad comment freq2645 co2x n2ox ch4x'];
 else
   error('unknown iNumYears')
 end

@@ -1,7 +1,7 @@
 ii = 0; 
 
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_day.gas_1trend,100,72,64),2)),1)); title('dfracWV/dt : CHIRP\_A DAY');
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_night.gas_1trend,100,72,64),2)),1)); title('dfracWV/dt : CHIRP\_A NIGHT');
+ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_day.gas_1trend,100,72,64),2)),1)); title('dfracWV/dt : AIRS\_RT DAY');
+ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_night.gas_1trend,100,72,64),2)),1)); title('dfracWV/dt : AIRS\_RT NIGHT');
 
 ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fERA5_day.gas_1trend,100,72,64),2)),1)); title('dfracWV/dt : ERA5 DAY');
 ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fERA5_night.gas_1trend,100,72,64),2)),1)); title('dfracWV/dt : ERA5 NIGHT');
@@ -14,12 +14,12 @@ ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(resha
 
 ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fMERRA2.gas_1trend,100,72,64),2)),1)); title('dfracWV/dt : MERRA2 DAY');
 
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.gas_1trend + fUMBC_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dfracWV/dt : CHIRP\_A DAY/NIGHT');
+ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.gas_1trend + fUMBC_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dfracWV/dt : AIRS\_RT DAY/NIGHT');
 ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fERA5_day.gas_1trend + fERA5_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dfracWV/dt : ERA5 DAY/NIGHT');
 ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fAIRSL3_day.gas_1trend + fAIRSL3_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dfracWV/dt : AIRSL3 DAY/NIGHT');
 ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.gas_1trend + fCLIMCAPSL3_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dfracWV/dt : CLIMCAPSL3 DAY/NIGHT');
 
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.gas_1trend - fUMBC_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dfracWV/dt : CHIRP\_A DAY - NIGHT');
+ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.gas_1trend - fUMBC_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dfracWV/dt : AIRS\_RT DAY - NIGHT');
 ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fERA5_day.gas_1trend - fERA5_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dfracWV/dt : ERA5 DAY - NIGHT');
 ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fAIRSL3_day.gas_1trend - fAIRSL3_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dfracWV/dt : AIRSL3 DAY - NIGHT');
 ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.gas_1trend - fCLIMCAPSL3_night.gas_1trend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dfracWV/dt : CLIMCAPSL3 DAY - NIGHT');
@@ -33,13 +33,13 @@ clear newz*
 iFig = 50;
   figure(iFig); clf;
   clear plotoptions
-  plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
+  plotoptions.xstr = ' '; plotoptions.ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151/10; plotoptions.maintitle = 'dfracWV/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = '(D) CHIRP\_A';     plotoptions.str21 = '(N)';
+  plotoptions.str11 = '(D) AIRS\_RT';     plotoptions.str21 = '(N)';
   plotoptions.str12 = '(D) AIRS L3';      plotoptions.str22 = '(N)';
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';
   plotoptions.str14 = '(D) ERA5';         plotoptions.str24 = '(N)';
-
+  plotoptions.barstr = 'd(fracWV)/dt [1/yr]';
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [100 1000];
@@ -60,13 +60,14 @@ clear newz*
 iFig = 51; 
   figure(iFig); clf;
   clear plotoptions
-  plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
+  plotoptions.xstr = ' '; plotoptions.ystr = ' ';
   plotoptions.cx = [-1 +1]*0.151/10; plotoptions.maintitle = 'dfracWV/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'ERA5';        
+  plotoptions.str11 = 'AIRS\_RT';     plotoptions.str12 = 'ERA5';        
   plotoptions.str21 = 'AIRS L3';      plotoptions.str22 = 'CLIMCAPS L3'; 
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [100 1000];
+  plotoptions.barstr = 'd(fracWV)/dt [1/yr]';
   newz11 = (fUMBC_day.gas_1trend-fUMBC_night.gas_1trend)*1.0;        newz12 = (fERA5_day.gas_1trend-fERA5_night.gas_1trend)*1.0; 
   newz21 = (fAIRSL3_day.gas_1trend-fAIRSL3_night.gas_1trend)*1.0;    newz22 = (fCLIMCAPSL3_day.gas_1trend-fCLIMCAPSL3_night.gas_1trend)*1.0;
     newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2)); 
@@ -77,13 +78,14 @@ clear newz*
 iFig = 52;
   figure(iFig); clf;
   clear plotoptions
-  plotoptions.Xstr = ' '; plotoptions.Ystr = ' ';
+  plotoptions.xstr = ' '; plotoptions.ystr = 'P [mb] ';
   plotoptions.cx = [-1 +1]*0.151/10; plotoptions.maintitle = 'dfracWV/dt'; plotoptions.cmap = llsmap5;
-  plotoptions.str11 = 'CHIRP\_A';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
+  plotoptions.str11 = 'AIRS\_RT';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
   plotoptions.str21 = 'N/A';          plotoptions.str22 = 'ERA5';        plotoptions.str23 = 'MERRA2';
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [100 1000];
+  plotoptions.barstr = 'd(fracWV)/dt [1/yr]';
   newz11 = (fUMBC_day.gas_1trend+fUMBC_night.gas_1trend)*0.5;  newz12 = (fAIRSL3_day.gas_1trend+fAIRSL3_night.gas_1trend)*0.5; newz13 = (fCLIMCAPSL3_day.gas_1trend+fCLIMCAPSL3_night.gas_1trend)*0.5;
   newz21 = newz11*0;                                           newz22 = (fERA5_day.gas_1trend+fERA5_night.gas_1trend)*0.5;     newz23 = fMERRA2.gas_1trend;
     newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2));     newz13 = squeeze(nanmean(reshape(newz13,100,72,64),2)); 
@@ -97,12 +99,13 @@ clear newz*
     newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2));     newz13 = squeeze(nanmean(reshape(newz13,100,72,64),2)); 
               newz21 = squeeze(nanmean(reshape(newz21,100,72,64),2));     newz22 = squeeze(nanmean(reshape(newz22,100,72,64),2));     
     plotoptions2x1x2 = plotoptions;
-    plotoptions2x1x2.str11 = 'CHIRP\_A';
+    plotoptions2x1x2.str11 = 'AIRS\_RT';
     plotoptions2x1x2.str12 = 'AIRS L3';
     plotoptions2x1x2.str13 = 'CLIMCAPS';
     plotoptions2x1x2.str21 = 'MERRA2';
     plotoptions2x1x2.str22 = 'ERA5';
-    plotoptions2x1x2.cstr  = 'dWVfrac/dt';
+    %plotoptions2x1x2.cstr  = 'dWVfrac/dt';
+    plotoptions.barstr = 'd(fracWV)/dt [1/yr]';
       profile_plots_2x1x2tiledlayout_tall(rlat,plays100,newz11,newz12,newz13,newz21,newz22,iFig,plotoptions2x1x2);
 
 %junk = [newz11(:) newz12(:) newz13(:) newz21(:) newz22(:) newz23(:)];

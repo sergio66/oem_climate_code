@@ -64,6 +64,11 @@ driver.rateset.ncfile   = driver.rateset.datafile;
 %%         = +6 for CMIP6, -6 for AMIP6
 %%             1 for N, 2 for D
 driver = get_rates(driver,settings,settings.iNoiseType);  %% this gets spectral rates (driver.rateset.rates), and uncertainty (driver.rateset.unc_rates)
+if driver.removeEmisTrend > 0
+  emiseffect = get_emissivity_trends(driver);
+  plot(1:2645,driver.rateset.rates,1:2645,emiseffect); plotaxis2; hl = legend('rates','emiss trend','location','best','fontsize',10);
+  driver.rateset.rates = driver.rateset.rates - emiseffect;
+end
 
 %---------------------------------------------------------------------------
 % Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200

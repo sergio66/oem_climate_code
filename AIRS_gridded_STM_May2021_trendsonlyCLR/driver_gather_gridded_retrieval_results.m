@@ -6,9 +6,10 @@ addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-addpath /home/sergio/MATLABCODE/matlib/science/
 addpath /home/sergio/MATLABCODE/NANROUTINES/
 addpath /home/sergio/MATLABCODE/SHOWSTATS/
+addpath ../FIND_NWP_MODEL_TRENDS
+addpath /asl/matlib/science
 addpath /asl/matlib/aslutil
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/maps
@@ -407,6 +408,7 @@ while iDoAgain > 0
         i10sec = 1;
       end
     end
+
     %fprintf(1,'%5i    %s \n',existfname(ii),fname)
     if exist(fname) > 0 & iaFound(ii) == 0 & i10sec == 1
       fnamelastloaded = fname;
@@ -542,6 +544,7 @@ while iDoAgain > 0
           temprate_ak0_era5(ix,1:length(ak)) = (temprate_ak1(ix,:)')';
           temprate_akF_era5(ix,1:length(ak)) = (ak * temprate_ak1(ix,:)')';
       end   %% if iAK > 0
+
       %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%%
 
       junknoise  = nan(2645,1);
@@ -799,8 +802,22 @@ if isfield(oem,'spectral_deltan00')
   title('After doing data-sum(jac(i)*startxb(i)')
   ylabel('solid : mean; dashed : std [K/yr]');
   xlabel('Wavenumber cm-1');
-  disp('ret to continue'); pause
 end
+[pMean17years.salti,pMean17years.landfrac] = usgs_deg10_dem(pMean17years.rlat,pMean17years.rlon);
+figure(06); clf; aslmap(06,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt UMBC');     caxis([-1 +1]*0.15); colormap(llsmap5)
+figure(50); clf; aslmap(50,rlat65,rlon73,smoothn((reshape(era5.trend_stemp',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt ERA5'); caxis([-1 +1]*0.15); colormap(llsmap5)
+junk = find(pMean17years.landfrac == 0); fprintf(1,'SKT rates ocean : ERA5 = %8.4f    UMBC = %8.4f K/yr \n',nanmean(era5.trend_stemp(junk)),nanmean(results(junk,6)))
+junk = find(pMean17years.landfrac == 1); fprintf(1,'SKT rates land  : ERA5 = %8.4f    UMBC = %8.4f K/yr \n',nanmean(era5.trend_stemp(junk)),nanmean(results(junk,6)))
+junk = find(pMean17years.landfrac >= 0); fprintf(1,'SKT rates all   : ERA5 = %8.4f    UMBC = %8.4f K/yr \n',nanmean(era5.trend_stemp(junk)),nanmean(results(junk,6)))
+figure(51); clf; plot(rlat,nanmean(reshape(results(:,6),72,64),1),'b',rlat,nanmean(reshape(era5.trend_stemp(junk),72,64),1),'r','linewidth',2); plotaxis2; xlabel('latitude'); ylabel('dSKT/dt K/yr'); hl = legend('umbc','era5','location','best');
+  disp('ret to continue'); pause
+
+%{
+rlat4608 = p.rlat; rlon4608 = p.rlon; landfrac4608 = p.landfrac;
+era5spectral = era5.era5_spectral_rates;
+save strow_2028_2022_JPLreport.mat f rates spectral_deltan00 era5spectral iNumYearsX
+clear era5spectral *4608
+%}
 
 maskLF = ones(size(chisqrX));
 figure(52); clf; 

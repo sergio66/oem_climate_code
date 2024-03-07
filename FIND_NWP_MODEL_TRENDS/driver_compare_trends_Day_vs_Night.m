@@ -94,10 +94,12 @@ Q0 = 1000 * layers2gg(h,p,1:4608,1);
 Q0 = Lv * Q0 + cp * p.ptemp(1:mm,:) + g * p.palts(1:mm,:);
 
 clear f*
-prep_colWV_T_WV_trends_Day_vs_Night
+prep_colWV_T_WV_trends_Day_vs_Night  %% basically calls get_umbc_day_night_name
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+quick_plot_UMBC_vs_ERA5
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp(' ')
 disp('ret to continue to <<< simulated simulated simulated >>> SPECTRAL trends'); pause
 compare_spectral_trends_Day_or_Night

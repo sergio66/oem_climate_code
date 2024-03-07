@@ -1,5 +1,16 @@
 function [m_ts_jac,nlays,qrenorm,freq2645,colo3,profilejunk] = get_jac_fast(fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac,iOldORNew,topts);
 
+if nargin < 5
+  error('need at least 5 arguments')
+elseif nargin == 5
+  iOldORNew = +1;
+  topts = struct;
+elseif nargin == 6
+  topts = struct;
+end
+
+fprintf(1,'input : jacname %s \n       tile %4i lonbin,latbin %2i %2i : iVersJac %2i iOldORNew %2i \n',fname,iWhichLatLonBin,iLonBin,iLatBin,iVersJac,iOldORNew)
+
 iDoSlow = -1;
 if iDoSlow > 0
   tic;

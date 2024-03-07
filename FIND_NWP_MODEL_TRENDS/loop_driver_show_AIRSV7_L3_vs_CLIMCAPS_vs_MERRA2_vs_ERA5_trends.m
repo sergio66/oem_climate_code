@@ -74,6 +74,20 @@ ii = ii + 1; %% ii = 19;
   strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjac_day.mat';        comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization"
 xstrstr = [xstrstr 'SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT','SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT DAY, clr jac'};
 
+%%% ooops found bug in set_CO2_CH4_N2O_ESRL.m, calling arguments in jeevanjee_PBL_deltaRH_Ts
+ii = ii + 1; %% ii = 19;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjac.mat';             comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization, clr jac"
+ii = ii + 1; %% ii = 20;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjac_day.mat';        comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization"
+xstrstr = [xstrstr 'SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT','SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT DAY, clr jac'};
+
+%%% introducing emiss trend effects
+ii = ii + 1; %% ii = 21;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjac_removeemisstrends.mat';             comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization, clr jac"
+ii = ii + 1; %% ii = 22;
+  strUMBC{ii} = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjac_day_removeemisstrends.mat';        comment{ii} = 'SEQN: same as test2D but has Held/Jeevanjee addition to dRH xb initialization"
+xstrstr = [xstrstr 'SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT','SEQN test3,iAdj=1.0,slope=0,Held/Jevanjee vary dlnPdSKT DAY, clr jac'};
+
 if length(xstrstr) ~= length(strUMBC)  
   [ii length(strUMBC) length(comment) length(xstrstr)]
   error('need to have length(xstrstr) == length(strUMBC)')

@@ -73,7 +73,7 @@ ii = ii + 1; figure(ii); clf;
   tafov(1) = nexttile; 
   plot(f,allbias_o,'k',f,tropicalbias_o,'g',f,smidlatbias_o,'m--',f,nmidlatbias_o,'r',f,spolarbias_o,'c--',f,npolarbias_o,'b')
   xlim([640 1620]); plotaxis2; hl = legend('All','tropical','S Midlat','N Midlat','S Polar','N Polar','location','south','fontsize',6); ylabel('OCEAN')
-  title('CHIRP\_A');
+  title('AIRS\_RT');
 
   if abs(iFrac) <= 1
     axis([640 1620 -0.075 +0.075]);

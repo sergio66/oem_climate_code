@@ -98,11 +98,11 @@ elseif driver.i16daytimestep < 0
     iCovSetNumber = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
   elseif topts.dataset == 7
     iCovSetNumber = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=7,Q=16
-  elseif topts.dataset == 9
+  elseif topts.dataset >= 9
     if topts.ocb_set == 1
-      iCovSetNumber = 20.1;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=16, CAL
+      iCovSetNumber = 20.1;  %% did it for 20 year CAL rates 2002/09 to 2022/08 dataset=9,Q=16, CAL
     elseif topts.ocb_set == 0
-      iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=05, OBS
+      iCovSetNumber = 20.2;  %% did it for 20 year OBS rates 2002/09 to 2022/08 dataset=9,Q=05, OBS
     end
   end
 

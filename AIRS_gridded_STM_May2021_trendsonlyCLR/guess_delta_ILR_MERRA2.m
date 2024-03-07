@@ -12,7 +12,7 @@ if ~exist('nlays_straight_from_results')
   load ../AIRS_gridded_STM_May2021_trendsonlyCLR/nlays_straight_from_results_50lays.mat
 end
 
-if ~exist('merra2_file')
+if ~exist('merra2_file') | ~exist('merra2_night_file')
   merra2_night_file = '../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat';
   merra2_day_file   = '../FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat';
 end
