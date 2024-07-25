@@ -34,8 +34,9 @@ iNumYears = 20;
 YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
 YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
 YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
-YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
 YMStart = [2018 09];  YMEnd = [2022 08];  %% last 4 years
+YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+YMStart = [2008 09];  YMEnd = [2022 08];  %% Ryan said they fixed O3 after 2007 so start 2008not yet done
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -184,23 +185,23 @@ mm = mm(usethese);
 dd = dd(usethese);
 
 numtimesteps = length(yy);
-era5_64x72.all.yy = era5_64x72.all.yy(usethese);
-era5_64x72.all.mm = era5_64x72.all.mm(usethese);
-era5_64x72.all.dd = era5_64x72.all.dd(usethese);
+era5_64x72.all.yy        = era5_64x72.all.yy(usethese);
+era5_64x72.all.mm        = era5_64x72.all.mm(usethese);
+era5_64x72.all.dd        = era5_64x72.all.dd(usethese);
 era5_64x72.all.nwp_ptemp = era5_64x72.all.nwp_ptemp(usethese,:,:);
 era5_64x72.all.nwp_gas_1 = era5_64x72.all.nwp_gas_1(usethese,:,:);
 era5_64x72.all.nwp_gas_3 = era5_64x72.all.nwp_gas_3(usethese,:,:);
 era5_64x72.all.nwp_rh    = era5_64x72.all.nwp_rh(usethese,:,:);
 era5_64x72.all.nwp_plevs = era5_64x72.all.nwp_plevs(usethese,:,:);
-era5_64x72.all.ptemp = era5_64x72.all.ptemp(usethese,:,:);
-era5_64x72.all.gas_1 = era5_64x72.all.gas_1(usethese,:,:);
-era5_64x72.all.gas_3 = era5_64x72.all.gas_3(usethese,:,:);
-era5_64x72.all.mmw   = era5_64x72.all.mmw(usethese,:);
-era5_64x72.all.stemp = era5_64x72.all.stemp(usethese,:);
-era5_64x72.all.nlays = era5_64x72.all.nlays(usethese,:);
-era5_64x72.all.RH    = era5_64x72.all.RH(usethese,:,:);
-era5_64x72.all.TwSurf = era5_64x72.all.TwSurf(usethese,:);
-era5_64x72.all.RHSurf = era5_64x72.all.RHSurf(usethese,:);
+era5_64x72.all.ptemp     = era5_64x72.all.ptemp(usethese,:,:);
+era5_64x72.all.gas_1     = era5_64x72.all.gas_1(usethese,:,:);
+era5_64x72.all.gas_3     = era5_64x72.all.gas_3(usethese,:,:);
+era5_64x72.all.mmw       = era5_64x72.all.mmw(usethese,:);
+era5_64x72.all.stemp     = era5_64x72.all.stemp(usethese,:);
+era5_64x72.all.nlays     = era5_64x72.all.nlays(usethese,:);
+era5_64x72.all.RH        = era5_64x72.all.RH(usethese,:,:);
+era5_64x72.all.TwSurf    = era5_64x72.all.TwSurf(usethese,:);
+era5_64x72.all.RHSurf    = era5_64x72.all.RHSurf(usethese,:);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

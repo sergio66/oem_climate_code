@@ -207,8 +207,9 @@ i1227 = find(h.vchan >= 1227,1);
   iEorMFstr = 'simulate64binsERA5_';
   iEorMFstr = 'reconstruct_era5_spectra_geo_rlat';
   for ii = 1 : 64
-    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '.mat'];
-    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '_2002_09_2022_08.mat'];
+    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/'            iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '.mat'];
+    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/'            iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '_2002_09_2022_08.mat'];
+    fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/NIGHTorAVG/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '_2002_09_2022_08.mat'];
     junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
     junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
     ind = (ii-1)*72 + (1:72);

@@ -30,7 +30,9 @@ load('llsmap5.mat');
 disp('takes about 5 hours for trends')
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
-%JOB = 20
+if length(JOB) == 0
+  JOB = 20
+end
 
 if ~exist('iTrendsOrAnoms')
   iTrendsOrAnoms = -1;  %% surface and atmospheric anomalies
@@ -38,13 +40,17 @@ if ~exist('iTrendsOrAnoms')
 
   iTrendsOrAnoms = +10; %% surface                 trends
   iTrendsOrAnoms = +1;  %% surface and atmospheric trends
+
+  iTrendsOrAnoms = +10; %% surface                 trends
 end
 
 if ~exist('iDorA')
-  iDorA = -1;  %% asc,  tile centert
-  iDorA = +1;  %% desc, tile center
-  iDorA = -10; %% asc,  random pert about tile center
-  iDorA = +10; %% desc, random pert about tile center
+  iDorA = -10;  %% DAY   time (avg of 4 steps, random pt)
+  iDorA = +10;  %% NIGHT time (avg of 4 steps, random pt)
+  iDorA = 100;  %% 24 hour    (avg of 8 steps, random pt)
+  iDorA = -1;   %% DAY   time (avg of 4 steps, tile center)
+  iDorA = +1;   %% NIGHT time (avg of 4 steps, tile center)
+  iDorA = 0;    %% 24 hour    (avg of 8 steps, tile center)
 end
 fprintf(1,'iDorA = %2i \n',iDorA)
 
@@ -100,7 +106,8 @@ if ~exist('iCldORClr')
   iCldORClr = +1; %% include cloud fields
 end
 
-find_computeERA5_monthly_trends_foutname
+%% find_computeERA5_monthly_trends_foutname
+find_computeERA5_monthly_trends_foutname_D_N_B
 
 fout_trendjunk_surface = [fout_trendjunk(1:end-4) '_surf.mat'];
 if exist(fout_trendjunk) & exist(fout_trendjunk_surface)
@@ -115,6 +122,8 @@ fprintf(1,'seeing how many of the expected %3i files exist \n',iaMax);
 disp('  "+" are the 100, "x" are tens .. ')
 
 iOLR = +1;
+iOLR = -1;
+[iOLR iaMin iaMax]
 for ii = iaMin : iaMax
   if mod(ii,100) == 0
     fprintf(1,'+ \n')
@@ -125,24 +134,26 @@ for ii = iaMin : iaMax
   end
 
   if iOLR < 0
-    if iDorA == 1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == 10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    end
-  else
     if iDorA == +1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/era5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == +10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/randomptera5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
+    elseif iDorA == -1
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/era5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/randomptera5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
+    elseif iDorA == 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/era5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+    elseif iDorA == 100
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/randomptera5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+    end
+
+  else
+    error(';l;l;l')
+    if iDorA > 0
+      fin = ['XYZ//asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['XYZ//asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
     end
   end
 
@@ -182,24 +193,26 @@ disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clu
 fprintf(1,' "+" are the 100, "x" are tens .. need to read in %3i \n',iaMax)
 for ii = iaMin : iaMax
   if iOLR < 0
-    if iDorA == 1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == 10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    end
-  else
     if iDorA == +1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/era5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == +10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/randomptera5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
+    elseif iDorA == -1
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/era5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/randomptera5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
+    elseif iDorA == 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/era5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+    elseif iDorA == 100
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/randomptera5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+    end
+
+  else
+    error('lgjd;hjd;js')
+    if iDorA > 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
     end
   end
 
@@ -242,43 +255,27 @@ for ii = iaMin : iaMax
     all.RHSurf(iii,:)  = a.pnew_op.RHSurf;
     
     if iOLR > 0
-      if isfield(a.pnew_op,'d2m')
-        iYes2m = +1;
-        all.d2m(iii,:)     = a.pnew_op.d2m;
-        all.t2m(iii,:)     = a.pnew_op.t2m;
-
-        %% Improved Magnus Form Approximation of Saturation Vapor Pressure
-        %% Oleg A. Alduchov  and Robert E. Eskridge
-        %% JAMS 1996, v35 DOI: https://doi.org/10.1175/1520-0450(1996)035<0601:IMFAOS>2.0.CO;2  Page(s): 601–609
-        all.RH2m(iii,:) = 100 * exp((17.625*(a.pnew_op.d2m-273.13)./(243.04+(a.pnew_op.d2m-273.13))));
-        all.RH2m(iii,:) = all.RH2m(iii,:) ./ exp((17.625*(a.pnew_op.t2m-273.13)./(243.04+(a.pnew_op.t2m-273.13))));;
-
-        %% from "Understanding variations in downwelling longwave radiation using Brutsaert’s equation"
-        %% Earth Syst. Dynam., 14, 1363–1374, 2023 https://doi.org/10.5194/esd-14-1363-2023, eqn 6
-        all.e2a(iii,:) = 6.1079*exp(17.269 * (a.pnew_op.d2m-273.13)./(237.3 + (a.pnew_op.d2m-273.13)));            
-        all.ecs(iii,:) = 1.24*(all.e2a(iii,:)./a.pnew_op.t2m).^(1/7);
-        all.Rld(iii,:) = 5.67e-8 * all.ecs(iii,:) .* a.pnew_op.t2m.^(4); 
-
-      else
-        iYes2m = -1;
-        all.d2m(iii,:)     = zeros(size(a.pnew_op.stemp));
-        all.t2m(iii,:)     = zeros(size(a.pnew_op.stemp));
-
-        all.RH2m(iii,:)     = zeros(size(a.pnew_op.stemp));
-        all.e2a(iii,:)     = zeros(size(a.pnew_op.stemp));
-        all.ecs(iii,:)     = zeros(size(a.pnew_op.stemp));
-        all.Rld(iii,:)     = zeros(size(a.pnew_op.stemp));
-        
-      end
-      %% now do adjustments, since I think ILR is a net flux instead of actual downwelling flux
-      all.ilr_adj(iii,:) = -a.pnew_op.ilr_clr + 5.67e-8 * a.pnew_op.stemp.^(4);
-
-
+      all.d2m(iii,:)     = a.pnew_op.d2m;
+      all.t2m(iii,:)     = a.pnew_op.t2m;
       all.olr(iii,:)     = a.pnew_op.olr;
       all.olr_clr(iii,:) = a.pnew_op.olr_clr;
       all.ilr(iii,:)     = a.pnew_op.ilr;
       all.ilr_clr(iii,:) = a.pnew_op.ilr_clr;
 
+      %% Improved Magnus Form Approximation of Saturation Vapor Pressure
+      %% Oleg A. Alduchov  and Robert E. Eskridge
+      %% JAMS 1996, v35 DOI: https://doi.org/10.1175/1520-0450(1996)035<0601:IMFAOS>2.0.CO;2  Page(s): 601–609
+      all.RH2m(iii,:) = 100 * exp((17.625*(a.pnew_op.d2m-273.13)./(243.04+(a.pnew_op.d2m-273.13))));
+      all.RH2m(iii,:) = all.RH2m(iii,:) ./ exp((17.625*(a.pnew_op.t2m-273.13)./(243.04+(a.pnew_op.t2m-273.13))));;
+
+      %% now do adjustments, since I think ILR is a net flux instead of actual downwelling flux
+      all.ilr_adj(iii,:) = -a.pnew_op.ilr_clr + 5.67e-8 * a.pnew_op.stemp.^(4);
+
+      %% from "Understanding variations in downwelling longwave radiation using Brutsaert’s equation"
+      %% Earth Syst. Dynam., 14, 1363–1374, 2023 https://doi.org/10.5194/esd-14-1363-2023, eqn 6
+      all.e2a(iii,:) = 6.1079*exp(17.269 * (a.pnew_op.d2m-273.13)./(237.3 + (a.pnew_op.d2m-273.13)));            
+      all.ecs(iii,:) = 1.24*(all.e2a(iii,:)./a.pnew_op.t2m).^(1/7);
+      all.Rld(iii,:) = 5.67e-8 * all.ecs(iii,:) .* a.pnew_op.t2m.^(4); 
     end
 
     if iCldORClr == +1
@@ -312,9 +309,9 @@ all.rlat = a.pnew_op.rlat;
 monitor_memory_whos
 
 comment = 'see computeERA5_trends.m';
-comment = 'see driver_computeERA5_monthly_trends_desc_or_asc.m';
+comment = 'see driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m';
 
-find_computeERA5_monthly_foutname
+find_computeERA5_monthly_foutname_D_N_B
 
 iSave = -1;  %%% unless now you do a whole new set of files Steve brings down from ERA5
              %%% be careful though, first time you run this, you need it DUDE and iSave should be +1   eg when I did the daytime "asc" I forgot to save, so could not generate spectral trends boo hoo
@@ -332,7 +329,7 @@ else
   iSave = +1;
 end
 
-%%% iSave = +1;   %% this is doing it first time
+%%% iSave = +1;
 
 if iSave > 0
   %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];

@@ -102,6 +102,7 @@ quick_plot_UMBC_vs_ERA5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp(' ')
 disp('ret to continue to <<< simulated simulated simulated >>> SPECTRAL trends'); pause
+settings.iInstr = 1;
 compare_spectral_trends_Day_or_Night
 disp('run "driver_compare_Day_vs_Night_spectral_trends.m" for the real spectral comparison')
 disp(' ')

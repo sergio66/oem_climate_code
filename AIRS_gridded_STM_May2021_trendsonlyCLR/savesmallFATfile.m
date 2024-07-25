@@ -63,7 +63,7 @@ if junk == 1
     saver = ['save -v7.3 ' genericoutname];
     saver = [saver ' deltaRH deltaRHlat deltaRHunc results resultsunc resultsO3 resultsO3unc resultsT resultsTunc resultsWV resultsWVunc '];
     saver = [saver ' topts fracWV fracWVunc fracO3 fracO3unc deltaT deltaTunc save_cov_set chisqrR pert_unc'];
-    saver = [saver ' rates fits nedt']
+    saver = [saver ' rates fits nedt'];
     saver = [saver ' pavg iNumLay xb* pert pjunk20 maskLF rlat rlat65 rlon rlon73 nlays_straight_from_results '];
     if iAK > 0
       figure(29); figure(30); 
@@ -73,7 +73,7 @@ if junk == 1
       figure(55); clf; waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
       figure(56); clf; waha = save_cov_set.xb_wvz(2,:);                              aslmap(56,rlat65,rlon73,smoothn(reshape(waha,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.015); title('xb(WVfrac(gnd))')
       era5_stemprate = era5.trend_stemp;
-      saver = [saver ' *_ak*_era5* era5_stemprate pjunk20'];
+      saver = [saver ' *_ak*_era5* era5_stemprate pjunk20 h p'];
     end
     eval(saver);
   end 

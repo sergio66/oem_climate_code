@@ -1,15 +1,23 @@
 if iNumYears <= 069
   if iCldORClr == -1
-    if iDorA > 0
+    if iDorA == +1
       foutjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_desc.mat'];
-    else
+    elseif iDorA == -1
       foutjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_asc.mat'];
+    elseif iDorA == +10
+      foutjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_desc_randompt.mat'];
+    elseif iDorA == -10
+      foutjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_asc_randompt.mat'];
     end
   elseif iCldORClr == +1
-    if iDorA > 0
+    if iDorA == +1
       foutjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_desc.mat'];
-    else
+    elseif iDorA == -1
       foutjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_asc.mat'];
+    elseif iDorA == +10
+      foutjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_desc_randompt.mat'];
+    elseif iDorA == -10
+      foutjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_asc_randompt.mat'];
     end
   end
 else

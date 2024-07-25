@@ -2,7 +2,7 @@
 [Lera5mmw, EOFsera5mmw, ECera5mmw, errorera5mmw] = detrend_time_series_make_EOF_v1(era5mmw');
 
 anom_1231 = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/anomaly_chID_1520_Q03.mat');
-  [L1231, EOFs1231, EC1231, error1231] = detrend_time_series_make_EOF_v1(anom_1231.btanom');
+  [L1231, EOFs1231, EC1231, error1231] = detrend_time_series_make_EOF_v1(anom_1231.btanomD');
 anom_1227 = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/anomaly_chID_1511_Q03.mat');
   [L1227, EOFs1227, EC1227, error1227] = detrend_time_series_make_EOF_v1(anom_1227.btanom');
 anom_1419 = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/anomaly_chID_1861_Q03.mat');

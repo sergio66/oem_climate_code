@@ -538,7 +538,7 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +4;  %% use T only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +1;  %% use WV only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = +100 %% set lower WV a priori, and then also upper WV with MLS
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = +100 %% set lower WV a priori, and then also upper WV with MLS   >>>>>
   topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T/ST/O3, DEFAULT
 
   topts.set_era5_cmip6_airsL3 = 6;           %% use AMIP6    a priori
@@ -546,7 +546,7 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
   topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
   topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
-  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori
+  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori >>>>
   topts.set_era5_cmip6_airsL3 = 0;           %% use 0        a priori, DEFAULT
 
   if (length(intersect(ia_OorC_DataSet_Quantile(2),[10 11 12])) == 1) & topts.set_era5_cmip6_airsL3 == 8

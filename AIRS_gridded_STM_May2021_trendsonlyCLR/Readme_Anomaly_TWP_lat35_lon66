@@ -1,0 +1,32 @@
+ << see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years/Readme >>
+ << see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years/Readme >>
+ << see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years/Readme >>
+
+%% see ~/PAPERS/AIRS/AIRS_STM_Sept2021/sergio_May2021.tex
+%% see ~/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/sergio.pdf
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{\textcolor{red}{Anomalies}}
+\begin{block}{Regions}
+\begin{itemize}
+
+\item Can select a region eg Southern Oscillation, ENSO 3.4 and run off anomalies
+\item kCARTA jacobians .. about 1 day
+\item Unlike AMT 2020 paper, here I just used same jacobian at each time step .. but allowed CO2/N2O/CH4/CFC to ramp
+\item Takes a couple so hours to process eg +/- 10 lat and then about an hour to read in 500 tiles x 412 time steps!
+\item \textcolor{blue}{TESTS - can examine radiance anomaly spectral residuals}
+\item \textcolor{blue}{TESTS - anomaly retrievals can be compared to geophysical anomalies, as can trends}
+\item \textcolor{red}{CLOSURE TESTS - generate BT anomalies from retrieved geophysical anomalies, \emph{compare to observed BT anomalies}}
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{ENSO Region 3.4 (Tile (66,35))}
+\vspace{-0.1in}
+
+BT spectra and ST anomaly
+
+%% cp /home/sergio/PAPERS/REPORTS/ForStrow/Strow_ROSES2018/pro/Figs/Pdf/closure_example_lon67_lat35_hottest2pc.pdf Figs/.
+%% cp /home/sergio/PAPERS/REPORTS/ForStrow/Strow_ROSES2018/pro/Figs/Pdf/oe_era_lon67_lat35_tsurf_anom_with_era_gridded_and_airsl3.pdf Figs/.

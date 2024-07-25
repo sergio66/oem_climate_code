@@ -868,6 +868,7 @@ if iUMBC  > 0
   plotoptions.str31 = 'THIS WORK';   plotoptions.str32 = 'GISS';
   plotoptions.xstr = ' ';        plotoptions.ystr = ' ';
   plotoptions.yLinearOrLog = +1;
+  plotoptions.barstr = 'dST/dt [Kyr]';
   aslmap_3x2tiledlayout(newz11,newz12,newz21,newz22,newz31,newz32,iFig,plotoptions);
 
   figure(20); clf; aslmap(20,rlat65,rlon73,smoothn(reshape(newz31,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.151); %% UMBC
@@ -885,6 +886,7 @@ if iUMBC  > 0
   % z31 = z11x;    z31unc = z11xunc;  z32 = z32;
   plotoptions.str11 = 'ERA5';         plotoptions.str12 = 'MERRA2';      plotoptions.str13 = 'AIRS L3';    
   plotoptions.str21 = 'CLIMCAPS L3';  plotoptions.str22 = 'THIS WORK';   plotoptions.str23 = 'GISS';
+  plotoptions.barstr = 'dST/dt [Kyr]';
 
   aslmap_2x3tiledlayout(newz11,newz12,newz21,newz22,newz31,newz32,iFig,plotoptions);
 
@@ -900,6 +902,7 @@ if iUMBC  > 0
   % z32 = z32;
   plotoptions.str11 = 'ERA5';    plotoptions.str12 = 'THIS WORK';   plotoptions.str13 = 'AIRS L3';    
   plotoptions.str21 = 'MERRA2';  plotoptions.str22 = 'GISS';        plotoptions.str23 = 'CLIMCAPSL3';
+  plotoptions.barstr = 'dST/dt [Kyr]';
 
   aslmap_2x3tiledlayout(newz11,newz31,newz21,newz12,newz32,newz22,iFig,plotoptions);
 
@@ -934,15 +937,17 @@ if iUMBC  > 0
   [Lera5skt, EOFsera5skt, ECera5skt, errorera5skt] = detrend_time_series_make_EOF_v1(era5skt');
 
   anom_1231 = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/anomaly_chID_1520_Q03.mat');
-  [L1231, EOFs1231, EC1231, error1231] = detrend_time_series_make_EOF_v1(anom_1231.btanom');
-  for iEOF = 1 : 10
-    [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),era5.stemprate');           thecorrEOF.BT1231_ST(iEOF,1) = r;
-    [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),merra2.stemprate');         thecorrEOF.BT1231_ST(iEOF,2) = r;
-    [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),airsL3.stemprate');         thecorrEOF.BT1231_ST(iEOF,3) = r;
-    [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),climcapsL3.stemprate');     thecorrEOF.BT1231_ST(iEOF,4) = r;
-    bonk = agiss.giss_trend4608; bonk = bonk(:);
-    [r,chisqr,P] = nanlinearcorrelation(EOFs1231(iEOF,:),bonk');                     thecorrEOF.BT1231_ST(iEOF,5) = r;
-    [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),umbc.stemprate');           thecorrEOF.BT1231_ST(iEOF,6) = r;
+  if isfield(anom_1231,'btanomD')
+    [L1231, EOFs1231, EC1231, error1231] = detrend_time_series_make_EOF_v1(anom_1231.btanomD');
+    for iEOF = 1 : 10
+      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),era5.stemprate');           thecorrEOF.BT1231_ST(iEOF,1) = r;
+      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),merra2.stemprate');         thecorrEOF.BT1231_ST(iEOF,2) = r;
+      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),airsL3.stemprate');         thecorrEOF.BT1231_ST(iEOF,3) = r;
+      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),climcapsL3.stemprate');     thecorrEOF.BT1231_ST(iEOF,4) = r;
+      bonk = agiss.giss_trend4608; bonk = bonk(:);
+      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(iEOF,:),bonk');                     thecorrEOF.BT1231_ST(iEOF,5) = r;
+      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),umbc.stemprate');           thecorrEOF.BT1231_ST(iEOF,6) = r;
+    end
   end
 
   iFig = iFig + 1;

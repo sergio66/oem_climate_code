@@ -31,20 +31,23 @@ if iAllorSeasonal == +1
     data = all.mmw(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_mmw(ii) = B(2);    trend_mmw_err(ii) = stats.se(2);
 
     if iOLR > 0
-      data = all.d2m(:,ii);      [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_d2m(ii) = B(2);      trend_d2m_err(ii) = stats.se(2);
-      data = all.t2m(:,ii);      [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_t2m(ii) = B(2);      trend_t2m_err(ii) = stats.se(2);
-      data = all.RH2m(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_RH2m(ii) = B(2);     trend_RH2m_err(ii) = stats.se(2);
-      
+iYes2m = -1;
+iYes2m = +1;
+      if iYes2m > 0
+        data = all.d2m(:,ii);      [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_d2m(ii) = B(2);      trend_d2m_err(ii) = stats.se(2);
+        data = all.t2m(:,ii);      [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_t2m(ii) = B(2);      trend_t2m_err(ii) = stats.se(2);
+        data = all.RH2m(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_RH2m(ii) = B(2);     trend_RH2m_err(ii) = stats.se(2);
+        data = all.e2a(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_e2m(ii) = B(2);      trend_e2m_err(ii) = stats.se(2);
+        data = all.e2a(:,ii)/nanmean(all.e2a(:,ii));     
+                                  [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_frac_e2m(ii) = B(2); trend_frac_e2m_err(ii) = stats.se(2);
+        data = all.ecs(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_ecs(ii) = B(2);      trend_ecs_err(ii) = stats.se(2);
+        data = all.Rld(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_ilr_Rld(ii) = B(2);  trend_ilr_Rld_err(ii) = stats.se(2);
+      end        
       data = all.olr(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_olr(ii) = B(2);      trend_olr_err(ii) = stats.se(2);
       data = all.olr_clr(:,ii); [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_olr_clr(ii) = B(2);  trend_olr_clr_err(ii) = stats.se(2);
       data = all.ilr(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_ilr(ii) = B(2);      trend_ilr_err(ii) = stats.se(2);
       data = all.ilr_clr(:,ii); [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_ilr_clr(ii) = B(2);  trend_ilr_clr_err(ii) = stats.se(2);
       data = all.ilr_adj(:,ii); [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_ilr_adj(ii) = B(2);  trend_ilr_adj_err(ii) = stats.se(2);
-      data = all.e2a(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_e2m(ii) = B(2);      trend_e2m_err(ii) = stats.se(2);
-      data = all.e2a(:,ii)/nanmean(all.e2a(:,ii));     
-                                [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_frac_e2m(ii) = B(2); trend_frac_e2m_err(ii) = stats.se(2);
-      data = all.ecs(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_ecs(ii) = B(2);      trend_ecs_err(ii) = stats.se(2);
-      data = all.Rld(:,ii);     [B, stats] = Math_tsfit_lin_robust(dayOFtime,data,4); trend_ilr_Rld(ii) = B(2);  trend_ilr_Rld_err(ii) = stats.se(2);
     end
 
   end

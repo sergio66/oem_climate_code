@@ -90,6 +90,10 @@ figure(4); clf;
     profile_plots_1x3tiledlayout(rlat,plays100,newz11,newz22,newz12,iFig,plotoptions);
 clear plotoptions
 
+figure(5); clf; pcolor(rlat,plays100,newz11); caxis([-1 +1]*0.015); colormap(llsmap5); colorbar('location','eastoutside'); xlabel('Latitude'); ylabel('Pressure (mb)');  ylim([100 1000])
+  shading interp; set(gca,'ydir','reverse'); set(gca,'fontsize',12)
+%% dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs_DN_Temp';; sergioprintfig([dir0 '/wvfrac_trends_20years_MLS_UA']);
+
 %{
 dir0 = '/home/sergio/PAPERS/CONFERENCES/ClimateNCAR_Mar2024_Poster/QuickFigs';
 if iV3 < 6
@@ -102,5 +106,58 @@ end
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(5); sizefig; ; clf; aslmap(5,rlat65,rlon73,smoothn(reshape(fUMBC_night.results(:,6),72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT');
+figure(6); sizefig; ; clf; aslmap(6,rlat65,rlon73,smoothn(reshape(fUMBC_night.results(:,6),72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT');
   caxis([-1 +1]*0.151); colormap(llsmap5);
+
+figure(7); clf; 
+junkmmw0 = mmwater_rtp(h,p);
+junkmmwN = load(umbc_night_file,'pert');
+junkmmwN = mmwater_rtp(h,junkmmwN.pert);
+junkmmwD = load(umbc_day_file,'pert');
+junkmmwD = mmwater_rtp(h,junkmmwD.pert);
+plot(rlat,nanmean(reshape(junkmmwN-junkmmw0,72,64),1),'b',rlat,nanmean(reshape(junkmmwD-junkmmw0,72,64),1),'g',rlat,0.5*nanmean(reshape((junkmmwN-junkmmw0)+(junkmmwD-junkmmw0),72,64),1),'k','linewidth',2); 
+plotaxis2; title('UMBC night COL WV trends'); hl = legend('night','day','average','location','best','fontsize',10);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%{
+%% this was done with editing /asl/s1/sergio/JUNK/gitjunk5/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/set_CO2_CH4_N2O_ESRL.m so it had same <<<<<< till Dec 31, 2023 MAJOR DIFF >>>>>> as the one in this dir
+gitt2 = load('/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_gitjunk5_dec29_2023_v2.mat');  
+
+%% this is original commit in /asl/s1/sergio/JUNK/gitjunk5/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/set_CO2_CH4_N2O_ESRL.m     Dec 29, 2023
+gitt = load('/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_gitjunk5_dec29_2023.mat');
+
+%% this is currently in sergio/home/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/set_CO2_CH4_N2O_ESRL.m, March 11, 2024
+current = load('/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss.mat');
+
+mmw0       = mmwater_rtp(gitt2.h,gitt2.p);
+mmwgit2    = mmwater_rtp(gitt2.h,gitt2.pert);
+mmwgit     = mmwater_rtp(gitt2.h,gitt.pert);
+mmwcurrent = mmwater_rtp(gitt2.h,current.pert);
+
+imagesc(gitt.xbWV'-current.xbWV'); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*1e-3);
+imagesc(gitt.xbWV');               shading interp; colorbar; colormap(usa2); caxis([-1 +1]*1e-3);
+imagesc(current.xbWV');            shading interp; colorbar; colormap(usa2); caxis([-1 +1]*1e-3);
+imagesc(gitt.xbWV');               shading interp; colorbar; colormap(usa2); caxis([-1 +1]*1e-3);
+
+imagesc(current.xbWV');            shading interp; colorbar; colormap(usa2); caxis([-1 +1]*1e-3);
+plot(current.xbWV(30,:))
+plot(current.xbWV(:,30))
+plot(1:100,current.xbWV(1:100,30))
+plot(1:100,current.xbWV(1:100,30),1:100,gitt.xbWV(1:100,30))
+ind = 1:100;      plot(ind,current.xbWV(ind,30),ind,gitt.xbWV(ind,30))
+ind = 1:100:4608; plot(ind,current.xbWV(ind,30),ind,gitt.xbWV(ind,30))
+ind = 1:100:4608; plot(ind,current.xbWV(ind,30),ind,gitt.xbWV(ind,30)); plotaxis2;
+ind = 1:100:4608; plot(ind,current.xbWV(ind,30),'bx-',ind,gitt.xbWV(ind,30),'ro-'); plotaxis2;
+ind = 1:50:4608;  plot(ind,current.xbWV(ind,30),'bx-',ind,gitt.xbWV(ind,30),'ro-'); plotaxis2;
+plot(rlat,nanmean(reshape(mmwgit2-mmwcurrent,72,64),1))
+plot(rlat,nanmean(reshape(mmwgit2-mmw0,72,64),1))
+plot(rlat,nanmean(reshape(mmwgit2-mmw0,72,64),1),rlat,nanmean(reshape(mmwgit-mmw0,72,64),1))
+plot(rlat,nanmean(reshape(mmwgit2-mmw0,72,64),1),rlat,nanmean(reshape(mmwgit-mmw0,72,64),1)); plotaxis2;
+plot(rlat,nanmean(reshape(mmwgit2-mmw0,72,64),1),rlat,nanmean(reshape(mmwcurrent-mmw0,72,64),1)); plotaxis2;
+plot(rlat,nanmean(reshape(mmwgit2-mmw0,72,64),1),rlat,nanmean(reshape(mmwcurrent-mmw0,72,64),1),'linewidth',2); plotaxis2;
+%}
+
+

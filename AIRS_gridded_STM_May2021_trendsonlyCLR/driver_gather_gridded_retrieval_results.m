@@ -49,7 +49,7 @@ if length(iAK) == 0
 end
 if iAK > 0
   %% see Plotutils/plot_retrieval_latbins_fewlays
-  iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 20, caln also give =-N for data ending in 2022 (end of mission)] ');  
+  iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 20, can also give =-N for data ending in 2022 (end of mission)] ');  
   if length(iNumYears) == 0
     iNumYears = 20;
   end
@@ -788,7 +788,7 @@ else
   iNumYearsX = -4; %% only have spectra for -4   ie 2018-2022
 end
 if iNumYears ~= iNumYearsX
-  fprintf(1,' WARNING : get_ERA5_trends_thermodynamic_and_spectral.m using ERA5 trends from %2i years in stead of %2i years \n',iNumYearsX,iNumYears);
+  fprintf(1,' WARNING : get_ERA5_trends_thermodynamic_and_spectral.m using ERA5 trends from %2i years instead of %2i years \n',iNumYearsX,iNumYears);
 end
 if isfield(oem,'spectral_deltan00')
   plot(f,nanmean(rates'),'b',f,nanmean(spectral_deltan00'),'g',f,nanmean(era5.era5_spectral_rates'),'r',...

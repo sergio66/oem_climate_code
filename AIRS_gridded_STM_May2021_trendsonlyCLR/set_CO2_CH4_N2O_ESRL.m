@@ -81,7 +81,7 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
     end
 
     JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
-    %%% if ppp.landfrac(JOBJOBJOB) < eps    till Dec 31, 2023
+    %%% if ppp.landfrac(JOBJOBJOB) < eps    <<<<<< till Dec 31, 2023 MAJOR DIFF >>>>>>
     if ppp.landfrac(JOBJOBJOB) < 0.25
       %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
       %% also see Nadir Jeevanjee : Simple Climate Models, arXiv 2018
@@ -204,7 +204,13 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
         if iVers == 4 | iVers == 5
           dlnPdT = precipitation_vs_skt_changes(ppp.rlat(JOBJOBJOB),ppp.landfrac(JOBJOBJOB));
           dlnPdT = 0.02;
-          [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dBT1231,dlnPdT); %% OH OH I HAD IT THIS WAY dec 26, 2023 when showed to LLS
+
+          %% <<<<<< till Dec 31, 2023 MAJOR DIFF >>>>>> OH OH I HAD IT THIS WAY dec 26, 2023 when showed to LLS
+          %% <<<<<< till Dec 31, 2023 MAJOR DIFF >>>>>> OH OH I HAD IT THIS WAY dec 26, 2023 when showed to LLS
+          %% [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dBT1231,dlnPdT); 
+          %% <<<<<< till Dec 31, 2023 MAJOR DIFF >>>>>> OH OH I HAD IT THIS WAY dec 26, 2023 when showed to LLS
+          %% <<<<<< till Dec 31, 2023 MAJOR DIFF >>>>>> OH OH I HAD IT THIS WAY dec 26, 2023 when showed to LLS
+
           [dRH_Jevanjee,lowest_layer_fracwater_dRH_Held_Jeevanjee,lowest_layer_fracwater_dRHzero] = jeevanjee_PBL_deltaRH_Ts(ppp.stemp(JOBJOBJOB),RHSurf(JOBJOBJOB)/100,dlnPdT,dBT1231);
           dBT1231_WV = estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB));
           dBT1231_WV = dBT1231_WV + lowest_layer_fracwater_dRH_Held_Jeevanjee;          %% dBT1231_WV and lowest_layer_fracwater_dRHzero should be the same if the iAdjustStuff = 1.0
