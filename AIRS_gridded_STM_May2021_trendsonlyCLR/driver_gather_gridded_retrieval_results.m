@@ -98,9 +98,9 @@ if length(iOCBset) == 0
   iOCBset = 0;
 end
 
-disp('quants for dataset 1-8        = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00]');
-disp('quants for dataset 9,10,11,12 = [0.50 0.80 0.90 0.95 0.97 1.00]');
-
+disp('quants for dataset 1-8            = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00]');
+disp('quants for dataset 9,10,11,12     = [0.50 0.80 0.90 0.95 0.97 1.00]');
+disp('quants for dataset 30 [AMSU only] = [1]');
 dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n    :::  [9 = Default] : ');
 if length(dataset) == 0
   dataset = 9;
@@ -130,11 +130,15 @@ elseif dataset == 11
   iNumYears = 10;
 elseif dataset == 12
   iNumYears = 15;
+elseif dataset == 30  %% AMSU
+  iNumYears = 20;
 end
 
-if dataset == -3
+if dataset == 30
+  iQuantile = 01;
+elseif dataset == -3
   iQuantile = 00;
-elseif dataset >= 9
+elseif dataset >= 9 & dataset < 30
   iQuantile = 05; 
   if iOCBset == 0
     iQuantile = input('Dataset = 9,10,11,12, iOCBset = 0 (obs)  ==> Which quantile 1..5   [3 = Default] : ');
@@ -162,7 +166,10 @@ else
 end
 
 if iOCBset == 0
-  if dataset == 3
+  if dataset == 30
+    %% AMSU
+    data_trends = load(['iType_30_AMSU_iQAX_01.mat']);
+  elseif dataset == 3
     data_trends = load(['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat']);
   elseif dataset == -3
     data_trends = load(['iType_-3_mean_convert_sergio_clearskygrid_obsonly.mat']);
@@ -262,6 +269,11 @@ elseif iOCBset == 1
   data_trends.h.vchan = junk.h.vchan;
 end
 
+iNumChan = 2645;
+if dataset == 30
+  iNumChan = 13;
+end
+
 fnamelastloaded = 'none';
 if ~exist('iaFound')
   clear results*
@@ -285,19 +297,24 @@ if ~exist('iaFound')
   resultsTunc  = nan(4608,iNumLay);
   resultsO3unc = nan(4608,iNumLay);
 
-  spectral_deltan00 = nan(2645,4608);
-  rates             = nan(2645,4608);
-  fits              = nan(2645,4608);
-  componentfits     = nan(5,2645,4608);
-  nedt              = nan(2645,4608);
+  spectral_deltan00 = nan(iNumChan,4608);
+  rates             = nan(iNumChan,4608);
+  fits              = nan(iNumChan,4608);
+  componentfits     = nan(5,iNumChan,4608);
+  nedt              = nan(iNumChan,4608);
 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','b_err_desc');
+if dataset < 30
+  moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','b_err_desc');
+elseif dataset == 30
+  moonoise = load('iType_30_AMSU_iQAX_01.mat','b_err_desc');
+  moonoise.b_err_desc = moonoise.b_err_desc(:,:,1:13);
+end
 b_err_desc = moonoise.b_err_desc; clear moonoise;
 b_err_desc = permute(b_err_desc,[3 1 2]);
-b_err_desc = reshape(b_err_desc,2645,72*64);
+b_err_desc = reshape(b_err_desc,iNumChan,72*64);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -547,8 +564,8 @@ while iDoAgain > 0
 
       %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%%
 
-      junknoise  = nan(2645,1);
-      junknoise2 = nan(2645,1);
+      junknoise  = nan(iNumChan,1);
+      junknoise2 = nan(iNumChan,1);
       junknoise(jacobian.chanset)  = sqrt(diag(oem.se));
       junknoise2(jacobian.chanset) = rateset.unc_rates(jacobian.chanset);
       junknoise2                   = rateset.unc_rates;
@@ -690,38 +707,40 @@ Ylat = Y(:);
 Xlon = X(:);
 % save landfrac_mask4608.mat landfrac Ylat Xlon rlat65 rlon73 rlon rlat
 
-junk = load('h2645structure.mat');
-f    = junk.h.vchan;
-
-i1419 = find(f >= 1419,1);
-i1231 = find(f >= 1231,1);
-i0900 = find(f >= 0900,1);
-
-clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2.5]); caxis([2.0 2.5])
-aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2');  caxis([1.5 2.5])
-
-figure(29); waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha); shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt'); colormap(llsmap5); caxis([-1 +1]*0.15)
-figure(30); waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha); shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-
-if dataset == 8
+if dataset < 30
+  junk = load('h2645structure.mat');
+  f    = junk.h.vchan;
+  
+  i1419 = find(f >= 1419,1);
+  i1231 = find(f >= 1231,1);
+  i0900 = find(f >= 0900,1);
+  
+  clf;; scatter_coast(Xlon,Ylat,50,results(:,1)); title('d/dt CO2');  caxis([1.5 2.5]); caxis([2.0 2.5])
+  aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2');  caxis([1.5 2.5])
+  
+  figure(29); waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(waha); shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt'); colormap(llsmap5); caxis([-1 +1]*0.15)
+  figure(30); waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(waha); shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
+  
+  if dataset == 8
+    aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+    eracal = load('saved_co2_era_cal_retrieval_2002_2021.mat');
+    eracal = load('saved_co2_era_cal_retrieval_2015_2021.mat');
+    aslmap(2,rlat65,rlon73,smoothn((reshape(eracal.results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('ERA d/dt CO2');  caxis([-1 +1]*2); 
+    aslmap(3,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]);        colormap(jet);      title('UMBC d/dt CO2');  caxis([0 4]);
+    aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1)-eracal.results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('UMBC-ERA d/dt CO2');  caxis([0 4]);
+    oco2 = load('oco2_timeseries.mat');
+    aslmap(35,rlat65,rlon73,smoothn(oco2.co2_trend',1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2 from OCO2 2015-2021');  caxis([2.0 3.0])  
+      caxis([2.35 2.55])
+    disp('showed the CO2 trends ... ret to continue'); pause
+  end
+  
+  aslmap(5,rlat65,rlon73,smoothn((reshape(rates(i1231,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1231/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
   aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
-  eracal = load('saved_co2_era_cal_retrieval_2002_2021.mat');
-  eracal = load('saved_co2_era_cal_retrieval_2015_2021.mat');
-  aslmap(2,rlat65,rlon73,smoothn((reshape(eracal.results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('ERA d/dt CO2');  caxis([-1 +1]*2); 
-  aslmap(3,rlat65,rlon73,smoothn((reshape(results(:,1),72,64)'),1),[-90 +90],[-180 +180]);        colormap(jet);      title('UMBC d/dt CO2');  caxis([0 4]);
-  aslmap(4,rlat65,rlon73,smoothn((reshape(results(:,1)-eracal.results(:,1),72,64)'),1),[-90 +90],[-180 +180]); colormap(jet);  title('UMBC-ERA d/dt CO2');  caxis([0 4]);
-  oco2 = load('oco2_timeseries.mat');
-  aslmap(35,rlat65,rlon73,smoothn(oco2.co2_trend',1),[-90 +90],[-180 +180]); colormap(jet);  title('d/dt CO2 from OCO2 2015-2021');  caxis([2.0 3.0])  
-    caxis([2.35 2.55])
-  disp('showed the CO2 trends ... ret to continue'); pause
+  
+  aslmap(7,rlat65,rlon73,smoothn((reshape(rates(i1419,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1419/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
+  figure(8); junk = smoothn((reshape(rates(i1419,:),72,64)')); junk = reshape(rates(i1419,:),72,64)'; plot(rlat,nanmean(junk,2)); title('Zonal dBT1419/dt'); grid; xlim([-90 +90])
 end
-
-aslmap(5,rlat65,rlon73,smoothn((reshape(rates(i1231,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1231/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
-aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
-
-aslmap(7,rlat65,rlon73,smoothn((reshape(rates(i1419,:),72,64)'),1), [-90 +90],[-180 +180]); title('dBT1419/dt'); caxis([-1 +1]*0.15); colormap(llsmap5)
-figure(8); junk = smoothn((reshape(rates(i1419,:),72,64)')); junk = reshape(rates(i1419,:),72,64)'; plot(rlat,nanmean(junk,2)); title('Zonal dBT1419/dt'); grid; xlim([-90 +90])
-
+  
 figure(9); scatter_coast(Xlon,Ylat,50,thedofs); jett = jet(64); jett(1,:) = 1; colormap(jett); title('ALL DOFS'); caxis([0 max(thedofs)]); caxis([0 30])
 figure(10); boo = find(lencdofs == 66); sumc = mean(cdofs(boo,:),1); 
   plot(cumsum(sumc)); fl = ceil(sum(sumc)); line([6 6],[0 fl],'color','k'); line([26 26],[0 fl],'color','k'); line([46 46],[0 fl],'color','k');
@@ -752,8 +771,13 @@ figure(11); plot(wvsumcflip,pflip20,tsumcflip,pflip20,o3sumcflip,pflip20,'linewi
 figure(11); semilogy(wvsumcflip,pflip20,tsumcflip,pflip20,o3sumcflip,pflip20,'linewidth',2)
   set(gca,'ydir','reverse'); ylim([0.050 1000]); hl = legend('WV','T','O3','location','best'); grid; xlabel('DOF'); ylabel('P(mb)')
 
+if dataset == 30
+  load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/hAMSU.mat');
+  f = hAMSU.vchan;
+  f = f(1:13);
+end
 figure(12); clf; plot(f,nanmean(rates,2),'b',f,nanstd(rates,[],2),'c--',f,nanmean(rates-fits,2),'r',f,nanstd(rates-fits,[],2),'m--');
-  plotaxis2; hl = legend('mean obs','std obs','mean(obs-fits)','std(obs-fits)','linewidth',2);
+  plotaxis2; hl = legend('mean obs','std obs','mean(obs-fits)','std(obs-fits)','fontsize',10,'location','best');
 
 disp('ret to continue to spectral chisqr'); pause
 

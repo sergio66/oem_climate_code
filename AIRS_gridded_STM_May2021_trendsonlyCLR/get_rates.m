@@ -19,6 +19,15 @@ iy = driver.iLat;
 if driver.i16daytimestep < 0
   %% usual data
   load(driver.rateset.datafile)
+
+  if settings.dataset == 30
+    %% AMSU AMSU AMSU
+    b_asc  = b_asc(:,:,1:13);  %% for some reason SARTA only has 13 chans
+    b_desc = b_desc(:,:,1:13); %% for some reason SARTA only has 13 chans
+    b_err_asc  = b_err_asc(:,:,1:13);  %% for some reason SARTA only has 13 chans
+    b_err_desc = b_err_desc(:,:,1:13); %% for some reason SARTA only has 13 chans
+  end
+
   switch driver.rateset.ocb_set
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

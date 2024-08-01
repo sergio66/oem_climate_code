@@ -1,5 +1,10 @@
 %% note this is a SCRIPT
 
+i1231 = 1520;
+if topts.dataset >= 30
+  i1231 = 4;
+end
+
 if driver.iNumYears > 0
   if length(intersect(settings.dataset,[6 8])) == 1
     [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override0(driver,iVersJac); %% sets co2x,n2ox,ch4x using special CRIS or OCO years
@@ -25,6 +30,7 @@ elseif iAdjCo2 > -1 & iAdjCo2 < +0.99
   co2x = co2x * (1 + iAdjCo2);
   %disp('set_CO2_CH4_N2O_ESRL.m : co2 --> co2 x 1.05')  
 end
+
 driver.co2adj_ESRL = iAdjCo2;
 if driver.iNumYears > 0
   fprintf(1,'co2x rate in set_CO2_CH4_N2O_ESRL.m = %6.3f ppmv/yr for %2i iNumYears starting forward  from 2002 and ending at %4i \n',co2x,driver.iNumYears,driver.iNumYears+2002);
@@ -49,7 +55,7 @@ end
 %     xb(4) = 0.0; %% clouds, so dunno value
 %     xb(5) = 0.0; %% clouds, so dunno value
 % 
-if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <= 1
+if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <= 1 & topts.dataset ~= 30
   fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  N2O = %8.6f   CH4 = %8.6f \n',co2x,n2ox,ch4x)
 
   if settings.co2lays == 1 & settings.ocb_set == 0
@@ -85,25 +91,33 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
     if ppp.landfrac(JOBJOBJOB) < 0.25
       %% ocean, so use Isaac Held blog ideas  https://www.gfdl.noaa.gov/blog_held/47-relative-humidity-over-the-oceans/
       %% also see Nadir Jeevanjee : Simple Climate Models, arXiv 2018
-      dBT1231 = 0.0025/2;
-      dBT1231 = driver.rateset.rates(1520); 
-     
-      if driver.iNumYears > 0
-        dBT1231 = abs(driver.rateset.rates(1520));  %%% new 
-        dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
-      elseif driver.iNumYears < 0
-        if driver.rateset.rates(1520) > 0
-          dBT1231 = abs(driver.rateset.rates(1520));  %%% new 
+
+      if topts.dataset < 30
+        %% AIRS 
+
+        dBT1231 = 0.0025/2;
+        dBT1231 = driver.rateset.rates(i1231); 
+
+        if driver.iNumYears > 0
+          dBT1231 = abs(driver.rateset.rates(i1231));  %%% new 
           dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
-        else
-          dBT1231 = 0;
-          dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+        elseif driver.iNumYears < 0
+          if driver.rateset.rates(i1231) > 0
+            dBT1231 = abs(driver.rateset.rates(i1231));  %%% new 
+            dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+          else
+            dBT1231 = 0;
+            dBT1231_WV = dBT1231 * 0.07; %% remember saturation vapor pressure changes at 0.07/K and we want dRH = 0 BUT THIS 0.07 is for 285 K !!!!!!!!!!!!
+          end
         end
+
+        %%% see my notes, BK 45
+        dBT1231_WV = estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB));
+      else
+        %% AMSU, so whos knows
+        dBT1231_WV = 0.0;
+        dBT1231    = 0.0;
       end
-
-      %%% see my notes, BK 45
-      dBT1231_WV = estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB));
-
     else
       %% land, so whos knows
       dBT1231_WV = 0.0;
@@ -156,13 +170,11 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
     end
 
     fprintf(1,'JOBJOBJOB = %4i rlat = %2i p.rlat = %8.6f   mmwater = %8.6f RHSurf = %8.6f  STEMP = %8.6f \n',JOBJOBJOB,driver.iLat,ppp.rlat(JOBJOBJOB),mmw0(JOBJOBJOB),RHSurf(JOBJOBJOB),ppp.stemp(JOBJOBJOB))
-    junk = [iVers driver.rateset.rates(1520)  dBT1231_WV   dBT1231_WV/driver.rateset.rates(1520)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
+    junk = [iVers driver.rateset.rates(i1231)  dBT1231_WV   dBT1231_WV/driver.rateset.rates(i1231)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
     fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean %8.6f frac/yr \n',junk(1:3))
     fprintf(1,'           (ratio dBT1231_WV/dBT1231 = %8.6f compared to 0.07 percent increase in RH per K at 285 K) yah yah mebbe an additional fudge of 5 applied \n',junk(4))
     fprintf(1,'           with TfacAdjAtmosphericAmplification,iAdjLowerAtmWVfrac = %8.6f %8.6f ==> final WV adj factor fudge to multiply "dBT1231_WV" will be %8.6f  \n',junk(5:7));
-    %% fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> Tadj over ocean %8.6f K/yr    with TfacAdjAtmosphericAmplification = %8.6f \n',iVers,driver.rateset.rates(1520),dBT1231,TfacAdjAtmosphericAmplification)
-
-%keyboard_nowindow
+    %% fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> Tadj over ocean %8.6f K/yr    with TfacAdjAtmosphericAmplification = %8.6f \n',iVers,driver.rateset.rates(i1231),dBT1231,TfacAdjAtmosphericAmplification)
 
     %[hjh,pjp] = subset_rtp(hhh,ppp,[],[],JOBJOBJOB);
     %jacxjacx = quicksartajac(hjh,pjp,1);
@@ -235,11 +247,10 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
 
         miaow2 = dBT1231 * TfacAdjAtmosphericAmplification * iAdjLowerAtmWVfracX;
         disp(' ')
-        junk = [iVers driver.rateset.rates(1520)  estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB)) dBT1231_WV   dBT1231_WV/driver.rateset.rates(1520)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
+        junk = [iVers driver.rateset.rates(i1231)  estimate_fracWV_for_deltaRH_zero(dBT1231,ppp.stemp(JOBJOBJOB)) dBT1231_WV   dBT1231_WV/driver.rateset.rates(i1231)   TfacAdjAtmosphericAmplification  iAdjLowerAtmWVfrac iAdjLowerAtmWVfracX];
         fprintf(1,'iVers = %2i --> d/dt BT1231 from rates = %8.6f K/year --> dBT1231_WV = WVfractional change needed for constant RH over ocean, 0.01K/yr  %8.6f %8.6f frac/yr \n',junk(1:4))
         fprintf(1,'miaow2 = %8.6f from OLD pre Nov 2003 dBT1231 adj          ....       while miaow3 = %8.6f from NEW, CORRECT d(RH) based adjustment \n',miaow2,xb(6+length(driver.jacobian.water_i)-0));
       end
-%keyboard_nowindow
 
     else
       disp('iAdjLowerAtmWVfracX = 0 so NO WV adjustment!!!')
@@ -260,7 +271,7 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
 
   end
 
-elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_set ~= 1
+elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_set ~= 1 & topts.dataset ~= 30
   junk = 365/16; %% days per timestep 
   junk = (driver.i16daytimestep-1)/junk;
   str = ['setting time varying rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25 for ' num2str(junk) ' years']; 
@@ -288,7 +299,7 @@ elseif settings.set_tracegas == +1 & driver.i16daytimestep > 0 & settings.ocb_se
     xb(7) = -1.25 * (driver.i16daytimestep-1)/deltaT * 0;  % set CFC12, before Aug 23 the mult was 1
   end
 
-elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1 & settings.ocb_set ~= 1
+elseif settings.set_tracegas == +2 & driver.i16daytimestep > 1 & settings.ocb_set ~= 1 & topts.dataset ~= 30
   junk = 365/16; %% days per timestep 
   junk = (driver.i16daytimestep-1);
   str = ['setting bootstrap time varying rates for tracegas apriori : CO2 = 2.2  CH4 = 4.5 N2O = 0.8 CFC = -1.25 based on previous timestep'];

@@ -46,6 +46,9 @@ switch settings.dataset
     settings.iNumYears = 04;
   case +15
     settings.iNumYears = 15;
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  case +30
+    settings.iNumYears = 20;
 end
 
 %fprintf(1,' in set_driver_rateset_datafile.m : [settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i \n',[settings.descORasc driver.i16daytimestep settings.dataset])
@@ -267,5 +270,18 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 15
     disp('doing descending CAL ANOMALY')
     driver.rateset.datafile = [];
   end
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & (settings.dataset == 30)
+    disp('doing Sergio FULL 20 year AMSU AMSU AMSU gridded quantile rates 2002/09-2022/08 , just one case (all average) iQAX = 1')
+    fprintf(1,'dataset = %2i for 20 years of AMSU data .... \n',settings.dataset)
+    driver.rateset.datafile  = [];
+    if settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 30
+      driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_AMSU_iQAX_' num2str(driver.iQuantile,'%02d') '.mat'];           
+    end
+
 end
 

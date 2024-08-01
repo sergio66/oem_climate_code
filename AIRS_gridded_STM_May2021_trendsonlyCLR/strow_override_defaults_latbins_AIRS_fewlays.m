@@ -55,6 +55,9 @@ fprintf(1,' <<< driver.rateset.datafile >>> = %s \n',driver.rateset.datafile)
 % Lag-1 correlation file; if using rate least-squares errors
 driver.rateset.ncfile   = '../oem_pkg/Test/all_lagcor.mat';
 driver.rateset.ncfile   = driver.rateset.datafile;
+if topts.dataset == 30
+  driver.rateset.ncfile = [];
+end
 
 %driver
 % Get rate data, do Q/A elsewhere
@@ -74,7 +77,11 @@ end
 % Jacobian file: f = 2378x1 and M_TS_jac_all = 36x2378x200
 [driver,iVersJac,iOldORNew,iXJac,topts] = set_driver_jacfile(driver,settings,topts);
 
-set_the_jacobians  %% sets structure "jac" and m_ts_jac
+if topts.dataset == 30
+  set_the_AMSU_jcobians
+else
+  set_the_jacobians  %% sets structure "jac" and m_ts_jac
+end
 
 aux.m_ts_jac = m_ts_jac;
 aux.f        = jac.f;
@@ -106,7 +113,17 @@ iChSet = 5; %% new chans + laserlines
 iChSet = 3; %% new chans, but no CFC11
 iChSet = topts.iChSet;
 
-ch = find_the_oem_channels(f,lenrates,settings.numchan,settings.chan_LW_SW,iChSet);
+if topts.dataset == 30
+  [hAMSU,~,pAMSU,~] = rtpread('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/MWchannels15.rp.rtp');
+  f = hAMSU.vchan;
+
+  ch = 1 : 13; %% AMSU
+  ch = 4 : 13; %% Stephen Leroy only gave these
+  ch = 5 : 13; %% Stephen Leroy only gave these. and Ch 4 has lots of WV so remove it
+
+else
+  ch = find_the_oem_channels(f,lenrates,settings.numchan,settings.chan_LW_SW,iChSet);
+end
 
 driver.topts.iChSet = iChSet;
 driver.jacobian.chanset = ch;
@@ -353,10 +370,9 @@ if settings.resetnorm2one == +1
 
   disp(' ')
   disp('settings.resetnorm2one == +1')
-  disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
-  disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
-  disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
-  disp('resetting all jabian norms to 1 ONE UNO UN MOJA')
+  disp('resetting all jacobian norms to 1 ONE UNO UN MOJA')
+  disp('resetting all jacobian norms to 1 ONE UNO UN MOJA')
+  disp('resetting all jacobian norms to 1 ONE UNO UN MOJA')
   disp(' ')
 
   boo1 = driver.qrenorm;

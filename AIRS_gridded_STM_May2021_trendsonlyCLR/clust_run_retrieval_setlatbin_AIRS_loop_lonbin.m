@@ -52,6 +52,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/PLOTMISC/
 addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /asl/matlib/h4tools
@@ -81,6 +82,9 @@ if exist('JOBM')
   JOB = JOBM;
 else
   JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins, 1:120 for anomalies
+  if length(JOB) == 0
+    JOB = 32;
+  end
 end
 
 % JOB = 33
@@ -138,6 +142,8 @@ iDebug = -1;
 %iDebug = 36
 %iDebug = 1532    %% this one is strongly negative for ERA5 synthetic rates ... not as negative for CHIRP_A, though spectral rates are very similar. But ERA5 synthtic has much less noise, so retrieval is "truer"
 %iDebug = 36;     %% check to make sure emiss trend comes in (over land)
+%iDebug = 2000
+%iDebug = 1598
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
@@ -183,18 +189,21 @@ ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTi
 ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
   anomalydatafile = 'anomaly_tile_2515_timeseries_Q05.mat';  %% needs 454/20 = 23 processors
 
-ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9, iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9, iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
-ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9, iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9, iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9,  iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9,  iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
+ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9,  iQuantile = 16  20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9,  iQuantile = 16  20 year rates
 
 ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
 
-ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9, iQuantile = 16   20 year rates
+ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
 ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+
+ia_OorC_DataSet_Quantile = [+2 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year anomalies, 2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
+ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
 
 if ia_OorC_DataSet_Quantile(1) == 2
   get_anomaly_processors
@@ -402,10 +411,14 @@ for iInd = iXX1 : idX : iXX2
   % topts.dataset   = +11;   %% (+11) AIRS 10 year quantile dataset, Sergio May 2023   2002/09-2012/08 FULL 10 years, new way of douning quantile iQAX = 3  ************************
   % topts.dataset   = +12;   %% (+12) AIRS 15 year quantile dataset, Sergio May 2023   2002/09-2017/08 FULL 15 years, new way of douning quantile iQAX = 3  ************************
 
+  topts.numchan = 2645;                              %% 2645 AIRS channels
   topts.model   = ia_OorC_DataSet_Quantile(4);
   topts.dataset = ia_OorC_DataSet_Quantile(2);
   iQuantile     = ia_OorC_DataSet_Quantile(3);
-
+  if topts.dataset == 30
+    topts.iaSequential = -1;                         %% default one gulp, gives good results at poles but bad column water results at tropics!    
+    topts.numchan = 13;                              %% 13 AMSU channels
+  end
   %%%%%%%%%%
 
   driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss
@@ -420,6 +433,9 @@ for iInd = iXX1 : idX : iXX2
   driver.NorD = +1; %% night, desc  DEFAULT
   driver.iQuantile = iQuantile;
 
+  disp('see driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m')
+  disp('see driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m')
+  disp('see driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m')
   if abs(topts.dataset) == +1
     driver.iNumYears = 18;
   elseif abs(topts.dataset) >= 2 & abs(topts.dataset) <= 4
@@ -434,20 +450,33 @@ for iInd = iXX1 : idX : iXX2
     driver.iNumYears = 07; %% oops 2015-2021
   elseif topts.dataset == 9
     driver.iNumYears = 20;
+    disp('STANDARD 20 years, used for AIRS STM and trends paper')
   elseif topts.dataset == 10
     driver.iNumYears = 05;
+    disp('STANDARD 05 years')
   elseif topts.dataset == 11
     driver.iNumYears = 10;
+    disp('STANDARD 10 years')
   elseif topts.dataset == 12
     driver.iNumYears = 15;
+    disp('STANDARD 15 years')
   elseif topts.dataset == 13
     driver.iNumYears = 20;
+    disp('20 years, Q01-03 NEW DEFN ???')
+    driver.iNumYears = 08;
+    disp('08 years, Q01-03 NEW DEFN ???')
   elseif topts.dataset == 14
     driver.iNumYears = -04;  
-    disp(' <<< warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2018')
+    disp(' <<< 2018-2022 : warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2018 >>>')
   elseif topts.dataset == 15
     driver.iNumYears = 14;  
-    disp(' <<< warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2008')
+    disp(' <<< w2008-2022 IASI overlap arning ... the CO2 trends are from 2002 onwards, but this dataset is from 2008 >>>')
+  elseif topts.dataset == 30
+    driver.iNumYears = 20;  
+    disp(' <<< AMSU 20 years allsky from Stephen Leroy >>> ')
+  else
+    fprintf(1,'topts.dataset = %2i \n',topts.dataset)
+    error('unknown topts.dataset')
   end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -699,17 +728,21 @@ for iInd = iXX1 : idX : iXX2
       %% now adjust everything!!!!!
       call_adjustCO2
     end
+
     junk  = load('h2645structure.mat');
     f2645 = junk.h.vchan;
+    if topts.dataset == 30
+      f2645 = aux.f;
+    end
+    figure(3); plot(1:length(f2645),driver.rateset.rates,'b',1:length(f2645),driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
+    figure(3); plot(f2645,driver.rateset.rates,'b',f2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
 
-     figure(3); plot(1:2645,driver.rateset.rates,'b',1:2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
-     figure(3); plot(f2645,driver.rateset.rates,'b',f2645,driver.oem.fit,'r'); title('AIRS_gridded_Oct2020_trendsonly')
   else
     disp(' ')
     fprintf(1,'%s after all that, already exists \n',driver.outfilename)
     fprintf(1,'%s after all that, already exists \n',driver.outfilename)
     fprintf(1,'%s after all that, already exists \n',driver.outfilename)
-    driver.rateset.rates = zeros(2645,1);
+    driver.rateset.rates = zeros(topts.numchan,1);
     disp(' ')
   end
 driver
@@ -898,8 +931,29 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
     pause(1)
     plot_retrieval_latbins_fewlays
   end
-  plot(f,driver.oem.fitXcomponents); plotaxis2; xlim([640 1640]); title('Components of fit'); hl = legend('trace gases','ST','WV(z)','T(z)','O3(z)','location','best','fontsize',10);
+
+  figure(5); clf
+  plot(f,driver.oem.fitXcomponents); plotaxis2; 
+  if topts.dataset < 30 
+    xlim([640 1640]); 
+    xlabel('AIRS Wavenumber cm-1')
+  else
+    xlabel('AMSU Frequency GHz')
+  end
+  title('Components of fit'); hl = legend('trace gases','ST','WV(z)','T(z)','O3(z)','location','best','fontsize',10);
   printarray([aux.pavg; driver.oem.xb(driver.jacobian.water_i)']','[p(water) xb(water)]')
+
+  figure(6); clf
+  if topts.dataset < 30 
+    plot(f,driver.rateset.rates); 
+    xlim([640 1640]); 
+    xlabel('AIRS Wavenumber cm-1')
+  else
+    plot(f,driver.rateset.rates,'.-'); 
+    xlabel('AMSU Frequency GHz')
+  end
+  plotaxis2;     ylabel('dBT/dt [K/yr]')
+
   error('nnyuk iDebug')
 end
 

@@ -44,7 +44,10 @@ if driver.i16daytimestep < 0
     iVersJac = 2019;     %% ERA5 from 2002-2019
     iVersJac = 2021;     %% ERA5 from 2002-2021
 
-    if settings.dataset == 5
+
+    if settings.dataset == 30
+      iVersJac = 2022;   %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)  AMSU AMSU AMSU
+    elseif settings.dataset == 5
       iVersJac = 2014;   %% AMIP6/CMIp6 2002-2014, 12 years
     elseif settings.dataset == 6
       iVersJac = 2012;   %% CrIS NSR 2012-2019, 07 years
@@ -78,7 +81,13 @@ if driver.i16daytimestep < 0
     end
     fprintf(1,' set_driver_jacfile.m : settings.ocb_set = %2i     iVersJac = %4i    iOldORNew = %2i \n',settings.ocb_set,iVersJac,iOldORNew);
 
-    if iKCARTAorSARTA < 0
+    if settings.dataset == 30
+      %% SARTA jacs
+      AHA = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/JAC_20year_avg/'];
+      AHA = [AHA '/amsu_jacT_ST_WV_' num2str(driver.iibin,'%04i') '.mat'];
+      fprintf(1,'AMSU JAC %s \n',AHA)
+
+    elseif iKCARTAorSARTA < 0
       %% AHA = [AHA '/subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
       AHA = [AHA '/clr_subjacLatBin' num2str(driver.jac_latbin,'%02i') '.mat'];
     else
@@ -114,12 +123,14 @@ if driver.i16daytimestep < 0
     fprintf(1,'reading in jac version %4i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)
   end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 elseif driver.i16daytimestep > 0
   junk = num2str(driver.i16daytimestep,'%03d');
   if iXJac == 1
     %% sarta time vary jacs
     driver.jacobian.filename = [];
-    fprintf(1,'iXJac == 1 reading in timestep sarta jac file %s \n',driver.jacobian.filename)
+    fprintf(1,'iXJac == 1 reading in anomaly timestep sarta jac file %s \n',driver.jacobian.filename)
 
   elseif iXJac == 2  
     rlat = load('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat'); 

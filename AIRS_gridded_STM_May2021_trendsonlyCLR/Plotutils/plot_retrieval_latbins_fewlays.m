@@ -13,12 +13,16 @@ elseif iLoad == 0
   era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat'); ahwoo = driver.iibin;            %% and use era5.trend
 end
 
-hdffile = '/home/sergio/MATLABCODE/airs_l1c_srf_tables_lls_20181205.hdf';   % what he gave in Dec 2018
-vchan2834 = hdfread(hdffile,'freq');
-f = vchan2834;
+if topts.dataset < 30
+  hdffile = '/home/sergio/MATLABCODE/airs_l1c_srf_tables_lls_20181205.hdf';   % what he gave in Dec 2018
+  vchan2834 = hdfread(hdffile,'freq');
+  f = vchan2834;
 
-load sarta_chans_for_l1c.mat
-f = f(ichan);
+  load sarta_chans_for_l1c.mat
+  f = f(ichan);
+else
+  f = aux.f;
+end
 
 %---------------------------------------------------------------------------
 % Plot Rates and Fit
@@ -33,11 +37,15 @@ plot(f(g1),+driver.rateset.unc_rates(g1),'color',[1 1 1]*0.75);
 plot(f(g1),-driver.rateset.unc_rates(g1),'color',[1 1 1]*0.75);
 grid;
 axis([min(f(g1)) max(f(g1)) -0.1 +0.1]);
-title('AIRS'); 
 plotaxis2;
 hl=legend('Obs','Fit','Residual','location','best');
 set(hl,'fontsize',10)
 hold off
+if topts.dataset < 30
+  title('AIRS'); xlabel('Wavenumber cm-1')
+else
+  title('AMSU'); xlabel('Grequency GHz')
+end
 
 if isfield(driver.oem,'spectral_deltan00')
 
@@ -57,6 +65,12 @@ if isfield(driver.oem,'spectral_deltan00')
   plotaxis2;
   hl=legend('Obs','Fit','Residual','No TraceGas Obs','location','best');
   set(hl,'fontsize',10)
+end
+
+if topts.dataset < 30
+  title('AIRS'); xlabel('Wavenumber cm-1')
+else
+  title('AMSU'); xlabel('Grequency GHz')
 end
 
 %---------------------------------------------------------------------------

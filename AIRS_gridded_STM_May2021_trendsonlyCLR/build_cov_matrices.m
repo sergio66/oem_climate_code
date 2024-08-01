@@ -67,7 +67,7 @@ end
 %%               sigT_t    sigT_s                sigWV_t   sigWV_s             sigO3_t   sigO3_s
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
 
-if driver.i16daytimestep > 0
+if driver.i16daytimestep > 0 & topts.dataset < 30
   %% worked great for anomalies!!!
   %%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
   cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
@@ -76,7 +76,7 @@ if driver.i16daytimestep > 0
   iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)
   do_the_cov_set_numbers  
 
-elseif driver.i16daytimestep < 0
+elseif driver.i16daytimestep < 0 & topts.dataset < 30
   %% earlier_cov_sets
   iCovSetNumber = 4.16;  %% great JPLMay 2022 talk!!! so probably dataset=4,Q=16, 19 year rates
   iCovSetNumber = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
@@ -111,6 +111,30 @@ elseif driver.i16daytimestep < 0
 
   do_the_cov_set_numbers
 
+elseif topts.dataset == 30
+  %%            1  |      2        3       4     |       5         6           7  |     8         9        10     |    11       12        13   
+  %%               |   sigT_t    sigT_s          |    sigWV_t   sigWV_s           |   sigO3_t   sigO3_s           |
+  %%            lc |  ct.lev1  ct.lev2   ct_wide |    cw.lev1  cw.lev2    cw_wide |  coz.lev1  coz.lev2  coz_wide |   alpha_T  alpha_w  alpha_oz
+
+  iCovSetNumber = -1;    %% completely diagnol (tiny length scales)
+  iCovSetNumber = 20.2;  %% has length scales
+
+  cov_set = zeros(1,13);
+   
+  cov_set(1) = 1;
+  cov_set([4 7 10]) = 1/2;
+
+  %% WORKS, Aug 01 2024, 3 pm, but very large WV error bars
+  %% temperature and WV
+  cov_set([2 3]) = [0.05 0.09]*4000;    cov_set([11])  = 1.0e-10;
+  cov_set([5 6]) = 0.1*1000/10;         cov_set([12 ]) = 1.0e+4;
+
+  cov_set([2 3]) = [0.05 0.09]*4000;    cov_set([11])  = 1.0e-10;
+  cov_set([5 6]) = 0.1*1000/1000;       cov_set([12 ]) = 1.0e+4;
+
+  %% no ozone for AMSU
+  cov_set([8 9]) = eps;
+  cov_set([13 ]) = 1.0e12;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -241,16 +265,21 @@ w_sigma = (wunc./wnorm);  %% wnorm = qrenorm(iwater)
 wmat = (w_sigma'*w_sigma).*mat_odWV;
 driver.oem.wunc = wunc;
 
+if topts.dataset < 30
+  miaow = find(aux.f <= 800); miaow = miaow(end);
+else
+  miaow = 13;
+end
+
 figure(1)
-miaow = find(aux.f <= 800); miaow = miaow(end);
-pcolor(aux.f(1:miaow),1:driver.jacobian.numlays,aux.m_ts_jac(1:miaow,driver.jacobian.temp_i)'); shading flat; colorbar; set(gca,'ydir','reverse'); title('Tz jac')
-line([650 800],[trpi(iiBinUseHere) trpi(iiBinUseHere)],'color','r','linewidth',2); 
-pcolor(aux.f(1:miaow),aux.pavg,aux.m_ts_jac(1:miaow,driver.jacobian.temp_i)'); shading flat; colorbar; set(gca,'ydir','reverse'); title('Tz jac')
-line([650 800],[aux.pavg(trpi(iiBinUseHere)) aux.pavg(trpi(iiBinUseHere))],'color','r','linewidth',2); 
+  pcolor(aux.f(1:miaow),1:driver.jacobian.numlays,aux.m_ts_jac(1:miaow,driver.jacobian.temp_i)'); shading flat; colorbar; set(gca,'ydir','reverse'); title('Tz jac')
+  line([650 800],[trpi(iiBinUseHere) trpi(iiBinUseHere)],'color','r','linewidth',2); 
+  pcolor(aux.f(1:miaow),aux.pavg,aux.m_ts_jac(1:miaow,driver.jacobian.temp_i)'); shading flat; colorbar; set(gca,'ydir','reverse'); title('Tz jac')
+  line([650 800],[aux.pavg(trpi(iiBinUseHere)) aux.pavg(trpi(iiBinUseHere))],'color','r','linewidth',2); 
 
 figure(2);
-plot(sum(aux.m_ts_jac(1:miaow,driver.jacobian.temp_i),1),aux.pavg); set(gca,'ydir','reverse'); title('Tz jac');
-ax = axis; line([ax(1) ax(2)],[aux.pavg(trpi(iiBinUseHere)) aux.pavg(trpi(iiBinUseHere))],'color','r','linewidth',2); 
+  plot(sum(aux.m_ts_jac(1:miaow,driver.jacobian.temp_i),1),aux.pavg); set(gca,'ydir','reverse'); title('Tz jac');
+  ax = axis; line([ax(1) ax(2)],[aux.pavg(trpi(iiBinUseHere)) aux.pavg(trpi(iiBinUseHere))],'color','r','linewidth',2); 
 
 figure(3); semilogy(aux.ptemp(1:aux.nlays),aux.plays(1:aux.nlays),aux.tavg,aux.pavg); set(gca,'ydir','reverse')
 
@@ -375,6 +404,8 @@ elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimeste
   fmatd(1:5) = fmatd0(1:5)*1e-3;    %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates  ******
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% NEW Aug 16, 2020
 %if driver.i16daytimestep < 0
 %  fmatd = 1*[2   0  0.1       2      1     1            0.1];       %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
@@ -423,6 +454,19 @@ if iSergioCO2 > 0
   fmatd = [2     0.1       2      1     1            1]*0.0025;
   fmatd = [2     0.1       2      1     1            1];
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if topts.dataset == 30
+  fmatd(1:5)           = 0.0;                %% no CO2/N2O/CH4/cld1/cld2 for AMSU
+  ozmat                = zeros(size(ozmat)); %% no ozone for AMSU
+
+  fmatd(1:5)           = eps;                %% no CO2/N2O/CH4/cld1/cld2 for AMSU
+  ozmat                = diag(ozmat);        %% no ozone for AMSU
+    ozmat = diag(ones(size(ozmat))) * eps;   %% no ozone for AMSU
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 fmatd
 fmat  = diag(fmatd./fnorm); 
@@ -529,10 +573,11 @@ elseif exist('iFixO3_NoFit','var') & (strcmp(driver.rateset.ocb_set,'obs') | str
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 driver.oem.cov_set = cov_set;
 driver.oem.fmat    = fmat;
 
-fprintf(1,'cov_set : lenngth scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
+fprintf(1,'cov_set : length scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
   junk = cov_set([2 3 4  11]); fprintf(1,'      T  : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
   junk = cov_set([5 6 7  12]); fprintf(1,'      WV : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk);
   junk = exp10(junk(1:2))-1;   fprintf(1,'           percent sig_trop  sig_strat  = %8.6e %8.6e \n',junk*100);
@@ -541,5 +586,3 @@ fprintf(1,'cov_set : lenngth scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
 
 oem = driver.oem;
 show_unc
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

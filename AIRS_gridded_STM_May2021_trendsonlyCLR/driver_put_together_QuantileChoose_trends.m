@@ -60,6 +60,8 @@ iType = +12;   %% sergio iQAX_3 Q05 15 year trends  I     ran for me in June 202
 iType = +13;   %% sergio iQAX_4 Q03 08 year trends  I     ran for me in Oct 2023, 2002/09 to 2010/08 08 years, with alternate defn of quantiles, beginning 8 years of mission, SW drifting
 iType = +14;   %% sergio iQAX_3 Q03 04 years trends for AIRS RTA report 2018/09 - 2022/08
 iType = +15;   %% sergio iQAX_3 Q03 14 years trends for Sarah/Cathy     2008/01 - 2022/12
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+iType = +30;   %% sergio iQAX_1 Q01 20 years trends ASMU full average   2002/09 - 2022/08
 
 disp('Choices DataSet to use ')
 disp(' see  ../../oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_fits_quantiles.m, and set_iQAX');
@@ -90,7 +92,9 @@ disp(' <------------------------------------------------------------------------
 disp('                       (13) Sergio Quantile Sep 2023 2002/09 to 2010/08 First 08 years, three quantiles defn **** ');
 disp('                       (14) Sergio Quantile Jan 2024 2018/09 to 2022/08 last  04 years, new quantiles defn **** ');
 disp('                       (15) Sergio Quantile Jan 2024 2008/01 to 2022/12 Mid   14 years, new quantiles defn **** ');
-iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9,+10,+11,+12   or +3,-3   or +13,+14,+15) : ');
+disp(' <---------------------------------------------------------------------------------------> ')
+disp('                       (30) Sergio Quantile Aug 2024 2002/09 to 2022/08 20 years AMSU **** ');
+iType = input('Enter DataSet to use (+1,-1,+2,+4,+5,+6,+7,+8  or  +9,+10,+11,+12   or +3,-3   or +13,+14,+15      or +30 AMSU) : ');
 
 if iType <= 8
   quants =  [0.0100 0.0200 0.0300 0.0400 0.0500 0.1000 0.2500 0.5000 0.7500 0.9000 0.9500 0.9600 0.9700 0.9800 0.9900 1];
@@ -98,6 +102,13 @@ elseif iType >=9 & iType <= 12 | iType >= 14
   quants =  [0.5000 0.7000 0.9000 0.9500 0.9700 1];
 elseif iType == 13
   quants =  [0.0000 0.0300 0.5000 0.9700 1];
+elseif iType == 30
+  quants =  [0.0000 1];
+end
+
+if iType == 30
+  b_asc  = nan(72,64,14);
+  b_desc = nan(72,64,14);
 end
 
 if iType ~= 3 & iType < 9
@@ -105,12 +116,15 @@ if iType ~= 3 & iType < 9
   iQuantile = 08;
   iQuantile = 04;
   iQuantile = input('Enter iQuantile to make (1-16, 0 = avg, 50 = hottest 5) : ');
-elseif iType >= 9 & iType <= 12 | iType >= 14
+elseif iType >= 9 & iType <= 12 | iType >= 14 & iType <= 29
   iQuantile = 03;  %% Q0.95, used for AIRS STM May 22
   iQuantile = input('Enter iQuantile to make (1-5, 1 = mean (Q0.50) , 5 = clearest (Q0.99) : ');
 elseif iType == 13
   iQuantile = 03;  %% Q0.97, used for AIRS STM Oct 2023
   iQuantile = input('Enter iQuantile to make (1-3, 1 = average, 2 = Q0.03, 3 = Q0.97 : ');
+elseif iType == 30
+  %iQuantile = input('Enter iQuantile to make (1 only');
+  iQuantile = 01;  %% Q0.97, used for AIRS STM Oct 2023
 end
 
 iAllorSeasonal = 1;
@@ -168,6 +182,9 @@ elseif iType == 3
   fnamePROCESS = ['iType_3_extreme_convert_sergio_clearskygrid_obsonly.mat'];
 elseif iType == -3
   fnamePROCESS = ['iType_-3_mean_convert_sergio_clearskygrid_obsonly.mat'];
+%%%%%
+elseif iType == 30
+  fnamePROCESS = ['iType_30_AMSU_iQAX_' num2str(iQuantile,'%02d')];
 end
 
 if iAllorSeasonal == -1
@@ -189,6 +206,45 @@ end
 
 saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
 saver = ['save ' fnamePROCESS ' b_* X Y landfrac salti h lagcor* mean_BT airs_noiseTtrue'];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if iType == 30
+  disp('easy to do AMSU!!!')
+
+    % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
+    %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
+    thedir0    = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/'];
+    thedirERA5 = ['/NOTDONE//home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/'];
+
+  thefilein = [thedir0 '/trends_anomalies_AMSU_20year_72x64.mat'];
+
+  x = load(thefilein);
+  for iLon = 1 : 72
+    for iLat = 1 : 64
+      %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%%  
+      b_asc(iLon,iLat,:) = x.trend_T(:,iLon,iLat);
+      b_desc(iLon,iLat,:) = x.trend_T(:,iLon,iLat);
+      b_err_asc(iLon,iLat,:) = x.trend_T_err(:,iLon,iLat);
+      b_err_desc(iLon,iLat,:) = x.trend_T_err(:,iLon,iLat);
+      lagcor_obs_anom_asc(iLon,iLat,:)  = NaN;
+      lagcor_obs_anom_desc(iLon,iLat,:) = NaN;
+      mean_BT(iLon,iLat,:)  = NaN;
+    end
+  end
+
+  figure(1); scatter_coast(X',Y',50,squeeze(b_desc(:,:,5))'); colorbar; colormap(usa2); caxis([-1 +1]*0.15); shading interp; title('d Ch5/dt');
+
+  if ~exist(fnamePROCESS)
+    airs_noiseTtrue = [];
+    eval(saver);
+    saver
+  else 
+    fprintf(1,'%s already exists \n',fnamePROCESS);
+  end
+
+  return
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -229,6 +285,12 @@ for iLat = 1 : 64
     %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
     thedir0    = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon/LatBin' num2str(iLat,'%02d') '/'];
     thedirERA5 = ['/NOTDONE/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/SimulateTimeSeries/ERA5_ConstTracegas/'];
+  elseif iType == 30
+    error('already done')
+    % see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/compare_bt1231trends_Q16_vs_extreme.m
+    %fname = ['../DATAObsStats_StartSept2002_CORRECT_LatLon_v3/Extreme/LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/extreme_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d') '_V1_TimeSteps433.mat'];
+    thedir0    = ['/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/'];
+    thedirERA5 = ['/NOTDONE//home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/'];
   end
 
   for iLon = 1 : 72
@@ -306,6 +368,8 @@ for iLat = 1 : 64
       %% AIRS 14 year, overlap with IASI
       %% ../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin*/LonBin*/iQAX_3_fits_LonBin*_LatBin*_V1_TimeSteps457.mat
       thefilein = [thedir0 '/LonBin' num2str(iLon,'%02d') '/iQAX_3_fits_LonBin' num2str(iLon,'%02d') '_LatBin' num2str(iLat,'%02d') '_V1_200800010001_202200120031_TimeSteps_122_464_X342.mat'];
+    elseif iType == 30
+      thefilein = [thedir0 '/trends_anomalies_AMSU_20year_72x64.mat'];
     end
 
     iBoo = (iLat-1)*72 + iLon;
@@ -318,7 +382,22 @@ for iLat = 1 : 64
       xERA5 = load(thefileERA5);
     end
     
-    if abs(iType) ~= 3
+    if iType == 30  
+      error('already done')
+      %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%% AMSU %%%  
+      b_asc(iLon,iLat,:) = x.trend_T(:,iLon,iLat);
+      b_desc(iLon,iLat,:) = x.trend_T(:,iLon,iLat);
+      b_err_asc(iLon,iLat,:) = x.trend_T_err(:,iLon,iLat);
+      b_err_desc(iLon,iLat,:) = x.trend_T_err(:,iLon,iLat);
+      lagcor_obs_anom_asc(iLon,iLat,:)  = NaN;
+      lagcor_obs_anom_desc(iLon,iLat,:) = NaN;
+      mean_BT(iLon,iLat,:)  = NaN;
+
+    elseif abs(iType) ~= 3 & iType < 29 
+      %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%%
+      %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%%
+      %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%% AIRS %%%
+
       %% QUANTILES QUANTILES QUANTILES
       %% these are rads
       %b_asc(iLon,iLat,:) = x.b_asc(:,iQuantile,2);
