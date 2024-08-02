@@ -118,8 +118,8 @@ if topts.dataset == 30
   f = hAMSU.vchan;
 
   ch = 1 : 13; %% AMSU
-  ch = 4 : 13; %% Stephen Leroy only gave these
   ch = 5 : 13; %% Stephen Leroy only gave these. and Ch 4 has lots of WV so remove it
+  ch = 4 : 13; %% Stephen Leroy only gave these
 
 else
   ch = find_the_oem_channels(f,lenrates,settings.numchan,settings.chan_LW_SW,iChSet);

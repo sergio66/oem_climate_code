@@ -46,6 +46,16 @@ mask = find(maskLF == 1);
 
 figure(1); scatter_coast(X(:),Y(:),50,maskLF'.*landfrac); colorbar; title('landfrac');  caxis([-1 1]); colormap jet; hold on; plot(Xlon(maskLF == 1),Ylat(maskLF == 1),'.'); hold off
 
+if dataset ~= 30
+  i1231 = 1520;
+else
+  disp('WARNING : this is AMSU so every plot with 1231 cm-1 should be 53.6 GHz; ditto everything with cm=1 is probably in GHz')
+  disp('WARNING : this is AMSU so every plot with 1231 cm-1 should be 53.6 GHz; ditto everything with cm=1 is probably in GHz')
+  disp('WARNING : this is AMSU so every plot with 1231 cm-1 should be 53.6 GHz; ditto everything with cm=1 is probably in GHz')
+  disp('RET to continue'); pause
+  i1231 = 5;  %% this is AMSU Ch 5, pretend its window
+end
+
 %{
 figure(1); pcolor(X,Y,(reshape(results(:,1),72,64)).*maskLFmatr'); shading interp; colorbar; title('CO2');
 figure(2); pcolor(X,Y,(reshape(results(:,2),72,64)).*maskLFmatr'); shading interp; colorbar; title('N2O');
@@ -54,9 +64,9 @@ figure(4); pcolor(X,Y,(reshape(results(:,4),72,64)).*maskLFmatr'); shading inter
 figure(5); pcolor(X,Y,(reshape(results(:,5),72,64)).*maskLFmatr'); shading interp; colorbar; title('CFC12');
 figure(6); pcolor(X,Y,(reshape(results(:,6),72,64)).*maskLFmatr'); shading interp; colorbar; title('ST');
 if iNorD > 0
-  figure(7); pcolor(X,Y,data_trends.b_desc(:,:,1520).*maskLFmatr');  shading interp; colorbar; title('d/dt BT1231');
+  figure(7); pcolor(X,Y,data_trends.b_desc(:,:,i1231).*maskLFmatr');  shading interp; colorbar; title('d/dt BT1231');
 else
-  figure(7); pcolor(X,Y,data_trends.b_asc(:,:,1520).*maskLFmatr');  shading interp; colorbar; title('d/dt BT1231');
+  figure(7); pcolor(X,Y,data_trends.b_asc(:,:,i1231).*maskLFmatr');  shading interp; colorbar; title('d/dt BT1231');
 end
 
 figure(1); scatter_coast(X(:),Y(:),50,results(:,1).*maskLF'); shading interp; colorbar; title('CO2');  caxis([1.5 2.5])
@@ -66,9 +76,9 @@ figure(4); scatter_coast(X(:),Y(:),50,results(:,4).*maskLF'); shading interp; co
 figure(5); scatter_coast(X(:),Y(:),50,results(:,5).*maskLF'); shading interp; colorbar; title('CFC12'); caxis([-5 +5]*1e-10)
 figure(6); scatter_coast(X(:),Y(:),50,results(:,6).*maskLF'); shading interp; colorbar; title('ST');    caxis([-0.1 +0.1]/10)
 if iNorD > 0
-  figure(7); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,1520),72*64,1).*maskLF');  shading interp; colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+  figure(7); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_desc(:,:,i1231),72*64,1).*maskLF');  shading interp; colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
 else
-  figure(7); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_asc(:,:,1520),72*64,1).*maskLF');  shading interp; colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+  figure(7); scatter_coast(X(:),Y(:),50,reshape(data_trends.b_asc(:,:,i1231),72*64,1).*maskLF');  shading interp; colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
 end
 figure(1); simplemap(Y(:),X(:),results(:,1).*maskLF',5); colorbar; title('CO2');  caxis([1.5 2.5])
 figure(2); simplemap(Y(:),X(:),results(:,2).*maskLF',5); colorbar; title('N2O');  caxis([0 1])
@@ -77,9 +87,9 @@ figure(4); simplemap(Y(:),X(:),results(:,4).*maskLF',5); colorbar; title('CFC11'
 figure(5); simplemap(Y(:),X(:),results(:,5).*maskLF',5); colorbar; title('CFC12'); caxis([-5 +5]*1e-1)
 figure(6); simplemap(Y(:),X(:),results(:,6).*maskLF',5); colorbar; title('ST');    caxis([-0.1 +0.1])
 if iNorD > 0
-  figure(7); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,1520),72*64,1).*maskLF',5);  colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+  figure(7); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,i1231),72*64,1).*maskLF',5);  colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
 else
-  figure(7); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,1520),72*64,1).*maskLF',5);  colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
+  figure(7); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,i1231),72*64,1).*maskLF',5);  colorbar; title('d/dt BT1231'); caxis([-0.1 +0.1])
 end
 %}
 
@@ -91,15 +101,15 @@ figure(4); aslmap(4,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,4),72,6
 figure(5); aslmap(5,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,5),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt CFC12'); caxis([-5 +5]*1e-1)
 figure(6); aslmap(6,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,6),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt ST');    caxis([-0.15 +0.15])
 if iNorD > 0
-  figure(7); aslmap(7,rlat65,rlon73,maskLFmatr.*smoothn((data_trends.b_desc(:,:,1520)'),1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt BT1231'); caxis([-0.1 +0.1])
+  figure(7); aslmap(7,rlat65,rlon73,maskLFmatr.*smoothn((data_trends.b_desc(:,:,i1231)'),1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt BT1231'); caxis([-0.1 +0.1])
 else
-  figure(7); aslmap(7,rlat65,rlon73,maskLFmatr.*smoothn((data_trends.b_asc(:,:,1520)'),1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt BT1231'); caxis([-0.1 +0.1])
+  figure(7); aslmap(7,rlat65,rlon73,maskLFmatr.*smoothn((data_trends.b_asc(:,:,i1231)'),1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt BT1231'); caxis([-0.1 +0.1])
 end
 for ii = 1 : 7; figure(ii); plotaxis2; end
 
 %{
 umbc_st_trend4608 = reshape(results(:,6),72,64);
-airs_quantile16_bt1231_trend4608 = data_trends.b_desc(:,:,1520);
+airs_quantile16_bt1231_trend4608 = data_trends.b_desc(:,:,i1231);
 comment = 'see driver_gather_gridded_retrieval_results.m';
 save umbc_trends.mat airs_quantile16_bt1231_trend4608 umbc_st_trend4608 X Y comment rlat65 rlon73
 
@@ -120,9 +130,9 @@ figure(4); plot(rlat,nanmean(reshape(results(:,4),72,64),1)); title('zonal CFC11
 figure(5); plot(rlat,nanmean(reshape(results(:,5),72,64),1)); title('zonal CFC12')
 figure(6); plot(rlat,nanmean(reshape(results(:,6),72,64),1)); title('zonal Stemp')
 if iNorD > 0
-  figure(7); plot(rlat,nanmean(data_trends.b_desc(:,:,1520),1)); title('zonal BT1231')
+  figure(7); plot(rlat,nanmean(data_trends.b_desc(:,:,i1231),1)); title('zonal BT1231')
 else
-  figure(7); plot(rlat,nanmean(data_trends.b_asc(:,:,1520),1)); title('zonal BT1231')
+  figure(7); plot(rlat,nanmean(data_trends.b_asc(:,:,i1231),1)); title('zonal BT1231')
 end
 for ii = 1 : 7; figure(ii); colormap(llsmap5); plotaxis2; end
 
@@ -151,12 +161,19 @@ end
 plot(junk.fout,peak,'x-'); set(gca,'ydir','reverse'); xlim([min(junk.fout) max(junk.fout)]); grid on
 %}
 
-ix200 = find(data_trends.h.vchan >= 1419,1);
-ix500 = find(data_trends.h.vchan >= 1365,1);
-ix800 = find(data_trends.h.vchan >= 0900,1);
-ix200 = find(data_trends.h.vchan >= 1507,1); %% IASI
-ix500 = find(data_trends.h.vchan >= 1441,1); %% IASI 
-ix800 = find(data_trends.h.vchan >= 0900,1);
+if dataset ~= 30
+  ix200 = find(data_trends.h.vchan >= 1419,1);
+  ix500 = find(data_trends.h.vchan >= 1365,1);
+  ix800 = find(data_trends.h.vchan >= 0900,1);
+  ix200 = find(data_trends.h.vchan >= 1507,1); %% IASI
+  ix500 = find(data_trends.h.vchan >= 1441,1); %% IASI 
+  ix800 = find(data_trends.h.vchan >= 0900,1);
+else
+  ix200 = 4;
+  ix500 = 5;
+  ix800 = 6;
+end
+
 if iNorD > 0 
   figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix200),72*64,1),5); colorbar; title(['WV 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
   figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix500),72*64,1),5); colorbar; title(['WV 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
@@ -193,19 +210,22 @@ for ii = 1 : 2378;
 end
 plot(junk.fout,peak,'x-'); set(gca,'ydir','reverse'); xlim([min(junk.fout) max(junk.fout)]); grid on
 %}
-ix200 = find(data_trends.h.vchan >= 694,1);
-ix500 = find(data_trends.h.vchan >= 730.7,1);
-ix800 = find(data_trends.h.vchan >= 0814,1);
-if iNorD > 0
-  figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix200),72*64,1),5); colorbar; title(['T 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
-  figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix500),72*64,1),5); colorbar; title(['T 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
-  figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix800),72*64,1),5); colorbar; title(['T 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
-  for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(llsmap5); plotaxis2; end
-else
-  figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix200),72*64,1),5); colorbar; title(['T 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
-  figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix500),72*64,1),5); colorbar; title(['T 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
-  figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix800),72*64,1),5); colorbar; title(['T 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
-  for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(llsmap5); plotaxis2; end
+
+if dataset ~= 30
+  ix200 = find(data_trends.h.vchan >= 694,1);
+  ix500 = find(data_trends.h.vchan >= 730.7,1);
+  ix800 = find(data_trends.h.vchan >= 0814,1);
+  if iNorD > 0
+    figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix200),72*64,1),5); colorbar; title(['T 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+    figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix500),72*64,1),5); colorbar; title(['T 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+    figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_desc(:,:,ix800),72*64,1),5); colorbar; title(['T 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+    for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(llsmap5); plotaxis2; end
+  else
+    figure(25); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix200),72*64,1),5); colorbar; title(['T 200 mb = ' num2str(data_trends.h.vchan(ix200)) ' cm-1']); 
+    figure(26); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix500),72*64,1),5); colorbar; title(['T 500 mb = ' num2str(data_trends.h.vchan(ix500)) ' cm-1']); 
+    figure(27); simplemap(Y(:),X(:),reshape(data_trends.b_asc(:,:,ix800),72*64,1),5); colorbar; title(['T 800 mb = ' num2str(data_trends.h.vchan(ix800)) ' cm-1']); 
+    for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(llsmap5); plotaxis2; end
+  end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

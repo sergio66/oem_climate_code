@@ -797,10 +797,22 @@ read_fileMean17years
 plotopt.iUpperWavenumLimit = 1620;
 plotopt.rlon = pMean17years.rlon;
 plotopt.rlat = pMean17years.rlat;
-[raaBadFov,indBadFov,chisqrX,chisqrR] = plot_spectral_region_chisqr(rates(chanset,:),0*rates(chanset,:),0*rates(chanset,:),fits(chanset,:),f(chanset,:),nedt(chanset,:),-1,settings,plotopt);
-figure(11); ylim([-1 +1]*0.1/2)
-figure(12); ylim([-1 +1]*5)
-for ii = 15:20; figure(ii); colormap jet; caxis([0 1]*10); end
+if dataset ~= 30
+  [raaBadFoav,indBadFov,chisqrX,chisqrR] = plot_spectral_region_chisqr(rates(chanset,:),0*rates(chanset,:),0*rates(chanset,:),fits(chanset,:),f(chanset,:),nedt(chanset,:),-1,settings,plotopt);
+  figure(11); ylim([-1 +1]*0.1/2)
+  figure(12); ylim([-1 +1]*5)
+  for ii = 15:20; figure(ii); colormap jet; caxis([0 1]*10); end
+end
+if dataset == 30
+  junk = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/AMSU_12channels_20years/SARTA_CALCS/amsu_sarta_trends.mat');
+  era5.era5_spectral_rates2645 = era5.era5_spectral_rates;
+  era5.era5_spectral_rates     = junk.trend_sarta;
+  chisqrX = zeros(1,4608);
+  chisqrR.iAll    = chisqrX;
+  chisqrR.i15um   = chisqrX;
+  chisqrR.iWindow = chisqrX;
+  chisqrR.iWV     = chisqrX;
+end
 
 figure(21); clf
 if iNumYears >= 0

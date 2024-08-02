@@ -328,20 +328,22 @@ isaac_held_dRH_dST_pgorman_dcolwater_dST
 boo = xbWV(:,40);
 figure(31); clf; aslmap(31,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('xbWV(layer 40)');     caxis([0 +1]*0.01/2); colormap(jet)
 
-boo = mmwPert - mmw0; 
-mmw_rate_lat = nanmean(reshape(boo,72,64),1);
-wah1226_1231 = rates(1520,:)-rates(1511,:);
-figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),rlat,6*nanmean(reshape(wah1226_1231,72,64),1),'linewidth',2); plotaxis2;
-  hl = legend('mmw','stemp','1226-1231','location','best'); title('Trends of SKT and MMW and 1226-1231')
-figure(35); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
-pause(1)
-
-boo = boo ./ mmw0; boo = 1 * boo ./ results(:,6)'; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
-  bad = find(abs(results(:,6)) < 1e-2); boo(bad) = nan;
-aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
-aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
-%aslmap(34,rlat65,rlon73,smoothn((reshape(abs(boo),72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
-
+if dataset ~= 30
+  boo = mmwPert - mmw0; 
+  mmw_rate_lat = nanmean(reshape(boo,72,64),1);
+  wah1226_1231 = rates(1520,:)-rates(1511,:);
+  figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),rlat,6*nanmean(reshape(wah1226_1231,72,64),1),'linewidth',2); plotaxis2;
+    hl = legend('mmw','stemp','1226-1231','location','best'); title('Trends of SKT and MMW and 1226-1231')
+  figure(35); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+  pause(1)
+  
+  boo = boo ./ mmw0; boo = 1 * boo ./ results(:,6)'; boo = boo.*maskLF;  %%before I used 100 for percent, now just do fraction
+    bad = find(abs(results(:,6)) < 1e-2); boo(bad) = nan;
+  aslmap_polar(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
+  aslmap(34,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
+  %aslmap(34,rlat65,rlon73,smoothn((reshape(abs(boo),72,64)') ,1), [-90 +90],[-180 +180]); title('d frac(mmw)/dST');     caxis([-1 +1]*1); colormap(llsmap5)
+end
+  
 clf
 plot(results(:,6),100*(mmwPert - mmw0)./mmw0,'.'); ylabel('% change in mmw'); xlabel('d(ST) (K)')
 dsst = [-1:0.01:+1]/2; dmmwfrac = [-20:0.1:+20]/2; 
@@ -421,8 +423,10 @@ ylim([1 1000]); caxis([0 +1]*0.15); colorbar('horizontal'); %plotaxis2;
 title(['Zonal UNC d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 colormap(jet)
 
-figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),rlat,6*nanmean(reshape(wah1226_1231,72,64),1),'linewidth',2); plotaxis2;
-  hl = legend('mmw','stemp','1226-1231','location','best'); title('Trends of SKT and MMW and 1226-1231')
+if dataset ~= 30
+  figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),rlat,6*nanmean(reshape(wah1226_1231,72,64),1),'linewidth',2); plotaxis2;
+    hl = legend('mmw','stemp','1226-1231','location','best'); title('Trends of SKT and MMW and 1226-1231')
+end
 boo = mmwPert - mmw0;
 figure(35); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
 
@@ -435,9 +439,11 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 boo = mmwPert - mmw0;
-figure(34); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),rlat,6*nanmean(reshape(wah1226_1231,72,64),1),'linewidth',2); plotaxis2;
+figure(34); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+if dataset ~= 30
+  figure(35); clf; plot(rlat,mmw_rate_lat,rlat,nanmean(reshape(results(:,6),72,64),1),rlat,6*nanmean(reshape(wah1226_1231,72,64),1),'linewidth',2); plotaxis2;
   hl = legend('mmw','stemp','1226-1231','location','best'); title('Trends of SKT and MMW and 1226-1231')
-figure(35); clf; aslmap(35,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('dmmw/dt');     caxis([-1 +1]*0.15); colormap(llsmap5)
+end
 
 disp('if you hit Ctrl C and look at find_T_RH_trends.m, you can save these plots ....')
 disp('ret to continue'); pause

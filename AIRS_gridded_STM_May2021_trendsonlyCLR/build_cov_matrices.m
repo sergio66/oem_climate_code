@@ -130,7 +130,7 @@ elseif topts.dataset == 30
   cov_set([5 6]) = 0.1*1000/10;         cov_set([12 ]) = 1.0e+4;
 
   cov_set([2 3]) = [0.05 0.09]*4000;    cov_set([11])  = 1.0e-10;
-  cov_set([5 6]) = 0.1*1000/1000;       cov_set([12 ]) = 1.0e+4;
+  cov_set([5 6]) = [0.1  0.00001];      cov_set([12 ]) = 1.0e+4;
 
   %% no ozone for AMSU
   cov_set([8 9]) = eps;

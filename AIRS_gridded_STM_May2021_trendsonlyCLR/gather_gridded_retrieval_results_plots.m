@@ -1,19 +1,25 @@
-maskLFchan = ones(2645,1) * maskLF;
+% maskLFchan = ones(2645,1) * maskLF;
+maskLFchan = ones(length(f),1) * maskLF;
 mask = find(maskLF == 1);
 
 redo_fig8_spectralrates_with_mask
 
-i730 = find(f >= 730,1);   figure(9);  clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i730,:)-fits(i730,:))); title('BT730 bias')
-i900 = find(f >= 900,1);   figure(10); clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i900,:)-fits(i900,:))); title('BT900 bias')
-i1419 = find(f >= 1419,1); figure(11); clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i1419,:)-fits(i1419,:))); title('BT1419 bias')
-i667 = find(f >= 667,1);   figure(12); clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i667,:)-fits(i667,:))); title('BT667 bias')
-for ii = 9:12; figure(ii); caxis([-1 +1]*0.01); colormap(llsmap5); end
+if dataset ~= 30
+  i730 = find(f >= 730,1);   figure(9);  clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i730,:)-fits(i730,:))); title('BT730 bias')
+  i900 = find(f >= 900,1);   figure(10); clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i900,:)-fits(i900,:))); title('BT900 bias')
+  i1419 = find(f >= 1419,1); figure(11); clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i1419,:)-fits(i1419,:))); title('BT1419 bias')
+  i667 = find(f >= 667,1);   figure(12); clf; scatter_coast(X(:),Y(:),50,maskLF.*(rates(i667,:)-fits(i667,:))); title('BT667 bias')
+  for ii = 9:12; figure(ii); caxis([-1 +1]*0.01); colormap(llsmap5); end
+else
+  i900 = i1231;
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% have added 4 new figures, so these subsequent figures displaced by 4 eg fig 11 --> fig 15
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-chisqr = rates(jacobian.chanset,:)-fits(jacobian.chanset,:); chisqr = sum(chisqr.*chisqr,1)/length(jacobian.chanset); figure(13); clf; scatter_coast(X(:),Y(:),50,log10(chisqr.*maskLF)); title('log10(\chi^2) oem chans')
+chisqr = rates(jacobian.chanset,:)-fits(jacobian.chanset,:); chisqr = sum(chisqr.*chisqr,1)/length(jacobian.chanset); 
+figure(13); clf; scatter_coast(X(:),Y(:),50,log10(chisqr.*maskLF)); title('log10(\chi^2) oem chans')
 
 junkBT  = rates(i900,:).*maskLF;
 junkT20 = resultsT(:,iNumLay)'.*maskLF;
