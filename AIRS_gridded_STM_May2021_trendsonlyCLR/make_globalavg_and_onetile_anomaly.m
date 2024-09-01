@@ -110,7 +110,8 @@ iCnt = 1;
   figure(3); clf; plot(h.vchan,quicktrend); xlim([640 1640]); ylim([-1 +1]/10); ylabel('BT trend'); title(num2str(iCnt)); plotaxis2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iSave = input('save -1/+1  : ');
+iSave = -1;
+%iSave = input('save -1/+1  : ');
 if iSave > 0
   comment = 'see make_global_avg_and_onetile_averages.m';
   fout = ['anomaly_globalavg_and_tile_' num2str(iTile) '_timeseries_Q' num2str(iQuant,'%02d') '.mat'];

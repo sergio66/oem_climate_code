@@ -141,9 +141,14 @@ figure(25); simplemap(Y(:),X(:),resultsWV(:,12),5); colorbar; title('WV 200 mb')
 figure(26); simplemap(Y(:),X(:),resultsWV(:,16),5); colorbar; title('WV 500 mb');
 figure(27); simplemap(Y(:),X(:),resultsWV(:,18),5); colorbar; title('WV 800 mb');
 %}
-figure(25); aslmap(25,rlat65,rlon73,maskLFmatr.*smoothn(reshape(resultsWV(:,12),72,64)',1),[-90 +90],[-180 +180]); colorbar; title('WV 200 mb'); 
-figure(26); aslmap(26,rlat65,rlon73,maskLFmatr.*smoothn(reshape(resultsWV(:,16),72,64)',1),[-90 +90],[-180 +180]); colorbar; title('WV 500 mb');
-figure(27); aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn(reshape(resultsWV(:,18),72,64)',1),[-90 +90],[-180 +180]); colorbar; title('WV 800 mb');
+
+i200 = find(pavg < 200); i200 = i200(end);
+i500 = find(pavg < 500); i500 = i500(end);
+i800 = find(pavg < 800); i800 = i800(end);
+
+figure(25); aslmap(25,rlat65,rlon73,maskLFmatr.*smoothn(reshape(resultsWV(:,i200),72,64)',1),[-90 +90],[-180 +180]); colorbar; title('WV 200 mb'); 
+figure(26); aslmap(26,rlat65,rlon73,maskLFmatr.*smoothn(reshape(resultsWV(:,i500),72,64)',1),[-90 +90],[-180 +180]); colorbar; title('WV 500 mb');
+figure(27); aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn(reshape(resultsWV(:,i800),72,64)',1),[-90 +90],[-180 +180]); colorbar; title('WV 800 mb');
 for ii = 25 : 27; figure(ii); caxis([-1e-2 +1e-2]); colormap(llsmap5); plotaxis2; end
 %{
 playsX = flipud(plays);
@@ -194,9 +199,9 @@ else
   for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]/2); colormap(llsmap5); plotaxis2; end
 end
 
-figure(25); simplemap(Y(:),X(:),resultsT(:,12),5); colorbar; title('T 200 mb'); 
-figure(26); simplemap(Y(:),X(:),resultsT(:,16),5); colorbar; title('T 500 mb');
-figure(27); simplemap(Y(:),X(:),resultsT(:,18),5); colorbar; title('T 800 mb');
+figure(25); simplemap(Y(:),X(:),resultsT(:,i200),5); colorbar; title('T 200 mb'); 
+figure(26); simplemap(Y(:),X(:),resultsT(:,i500),5); colorbar; title('T 500 mb');
+figure(27); simplemap(Y(:),X(:),resultsT(:,i800),5); colorbar; title('T 800 mb');
 for ii = 25 : 27; figure(ii); caxis([-1e-1 +1e-1]); colormap(llsmap5); plotaxis2; end
 %{
 playsX = flipud(plays);

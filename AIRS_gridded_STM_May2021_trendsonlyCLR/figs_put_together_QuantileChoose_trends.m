@@ -47,7 +47,7 @@ text(-0.5,-1.625,'[K]','fontsize',20)
 figure(4); clf
 junk = squeeze(airs_noiseTtrue(:,:,1520));
 junk = reshape(airs_noiseTtrue,72*64,2645)'/sqrt(120);    %% need sqrt(N) from about 12000 obs/tile/16 days .. so 1% of this is 120 ... noise goes down by sqrt(N)
-plot(h.vchan,nanmean(reshape(b_err_desc,72*64,2645)',2),h.vchan(g2645),nanmean(junk(g2645,:),2));  
+plot(h.vchan,nanmean(reshape(b_err_desc,72*64,2645)',2),h.vchan(g2645),nanmean(junk(g2645,:),2));  plotaxis2;
   ylim([0 0.3]); 
   hl = legend('from b_{err}','from 1/sqrt(N)','location','best','fontsize',10);
 title(['Quantile ' num2str(iQuantile,'%02d')])
@@ -55,27 +55,40 @@ title(['Quantile ' num2str(iQuantile,'%02d')])
 figure(5); clf
 junkA = reshape(b_asc,4608,2645);
 junkD = reshape(b_desc,4608,2645);
-plot(h.vchan,nanmean(junkA,1),h.vchan,nanmean(junkD,1),h.vchan,nanstd(junkA,1),'--',h.vchan,nanstd(junkD,1),'--')
+plot(h.vchan,nanmean(junkA,1),h.vchan,nanmean(junkD,1),h.vchan,nanstd(junkA,1),'--',h.vchan,nanstd(junkD,1),'--'); plotaxis2;
   ylim([-0.1 +0.1]*0.75)
   xlim([640 1640])
   hl = legend('mean ratesA','mean ratesD','std ratesA','std ratesD','location','best','fontsize',10);
-title(['Quantile ' num2str(iQuantile,'%02d')])
+title(['Unity Weight Quantile ' num2str(iQuantile,'%02d')])
+
+figure(6); clf
+junkA = reshape(b_asc,4608,2645);
+junkD = reshape(b_desc,4608,2645);
+cosY = cos(Y*pi/180);
+cosY = reshape(cosY,4608,1) * ones(1,2645);
+plot(h.vchan,nansum(junkA.*cosY,1)./nansum(cosY,1),h.vchan,nansum(cosY.*junkD,1)./nansum(cosY,1)); plotaxis2;
+  ylim([-0.1 +0.1]*1.25)
+  xlim([640 1640])
+  hl = legend('mean ratesA','mean ratesD','location','best','fontsize',10);
+title(['Cosine Weight Quantile ' num2str(iQuantile,'%02d')])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if exist('b_cal_desc')
-  figure(6); clf;
+  figure(7); clf;
   moo = b_cal_desc(:,:,i1231);
   aslmap(6,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['dBT1231/dt ERA5 calc']); caxis([-1 +1]*0.15); colormap(llsmap5)
   text(-0.5,-1.625,'mmw/year','fontsize',20)
 
-  figure(7); clf;
+  figure(8); clf;
   moo = b_err_desc(:,:,i1231);
   aslmap(7,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['unc dBT1231/dt Quantile ' num2str(iQuantile,'%02d')]); caxis([0 +1]*0.25); colormap(llsmap5)
 
-  figure(8); clf;
+  figure(9); clf;
   moo = b_cal_err_desc(:,:,i1231);
   aslmap(8,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['unc dBT1231/dt ERA5 calc']); caxis([0 +1]*0.25); colormap(llsmap5)
 
-  figure(9); clf; 
+  figure(10); clf; 
   moo = b_desc(:,:,i1231) - b_desc(:,:,i1226);
   if ~isreal(moo)
     disp('warning : b_desc(:,:,i1231) is complex')
@@ -85,13 +98,13 @@ if exist('b_cal_desc')
 
 else
 
-  figure(6); clf; 
+  figure(7); clf; 
   moo = b_desc(:,:,i1231) - b_desc(:,:,i1227);
   if ~isreal(moo)
     disp('warning : b_desc(:,:,i1231) is complex')
     moo = real(moo);
   end
-  aslmap(6,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['d colWV/dt Quantile ' num2str(iQuantile,'%02d')]); caxis([-1 +1]*0.15); colormap(llsmap5)
+  aslmap(7,rlat65,rlon73,smoothn(moo',1), [-90 +90],[-180 +180]); title(['d colWV/dt Quantile ' num2str(iQuantile,'%02d')]); caxis([-1 +1]*0.15); colormap(llsmap5)
   text(-0.5,-1.625,'mmw/year','fontsize',20)
 
   figure(7); clf

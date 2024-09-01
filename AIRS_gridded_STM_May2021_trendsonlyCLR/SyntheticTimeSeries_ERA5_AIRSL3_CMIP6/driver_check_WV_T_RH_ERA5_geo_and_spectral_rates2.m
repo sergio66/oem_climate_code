@@ -36,7 +36,11 @@ YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
 YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
 YMStart = [2018 09];  YMEnd = [2022 08];  %% last 4 years
 YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+
 YMStart = [2008 09];  YMEnd = [2022 08];  %% Ryan said they fixed O3 after 2007 so start 2008not yet done
+
+YMStart = [2020 07];  YMEnd = [2024 06];  %% hot hot hot trends
+YMStart = [2002 09];  YMEnd = [2024 06];  %% 22 year trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -114,15 +118,17 @@ disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs
 %% NOTE THIS IS JUST HOW MUCH DATA YOU HAVE, AND IS DIFFERENT THAN YMStart,YMEnd where you set ACTUAL startYY/stopYY for trends
 iYS = 2002; iYE = 2021;
 iYS = 2002; iYE = 2022;
+iYS = 2002; iYE = 2024;
 
 if iNorD > 0
   %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m  and do_the_AIRSL3_trends.m
-  %era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
-  %era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
-  era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
-  era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2022_08_desc.mat');
+  %era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
+  %era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
+  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
+  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
 else
-  era5_64x72 = load('../../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2022_08_asc.mat');
+  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2022_08_asc.mat');
+  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_asc.mat');
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -150,7 +156,7 @@ for ii = iYS : iYE
 %    yyx(1:inum) = ii;
 %    mmx = 1 : 8;
 %    ddx = ones(size(mmx)) * 15;
-  elseif ii == iYE
+  elseif ii == iYE 
     inum = 8;
     yyx(1:inum) = ii;
     mmx = 1 : 8;
@@ -244,7 +250,7 @@ if iConstORVary == +1
   end
 else
   if iNorD > 0
-    dirout = '../../FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
+    dirout = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries';
     dirout = 'SimulateTimeSeries/ERA5/';
     dirout = 'SimulateTimeSeries/NIGHTorAVG/ERA5/';
     dirout = 'STS/NIGHTorAVG/ERA5/';

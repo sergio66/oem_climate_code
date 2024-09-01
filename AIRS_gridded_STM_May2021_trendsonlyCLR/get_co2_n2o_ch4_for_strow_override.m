@@ -119,12 +119,22 @@ else
   elseif iVersESRL == 4
     esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2021.mat');
     esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2022.mat');
-    iNX = settings.iNumYears + 2002;
+    if settings.iNumYears > 0
+      iNX = settings.iNumYears + 2002;
+    elseif settings.iNumYears == -4.0
+      %% 2018/07-2022/06
+      iNX = 2020;
+    elseif settings.iNumYears == -4.1
+      %% 2020/07-2024/06
+      iNX = 2024;
+    end
     if iNX <= esrl_trend.yyE(end)      
       [~,iNX] = intersect(esrl_trend.yyE,iNX);
     else
       iNX = length(esrl_trend.yyE);
     end
+    iNX = min(iNX,20);  %% dag, I don't have NOAA ESRL after 2022
+    fprintf(1,'get_co2_n2o_ch4_for_strow_override.m : [settings.iNumYears iNX] = %6.4f  %3i \n',[settings.iNumYears iNX])
     n2ox = interp1(esrl_trend.rlat0,esrl_trend.n2otrend(iNX,:),rlatx);
     co2x = interp1(esrl_trend.rlat0,esrl_trend.co2trend(iNX,:),rlatx);
     ch4x = interp1(esrl_trend.rlat0,esrl_trend.ch4trend(iNX,:),rlatx);

@@ -1,54 +1,52 @@
-%{
-if iNumYears <= 069
+if iForwardFrom2002_or_BackwardFrom2022  > 0
+  if iNumYears <= 069
+    if iCldORClr == -1
+      if iDorA == +1
+        fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      elseif iDorA == -1
+        fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      elseif iDorA == +10
+        fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc_randompt.mat'];
+      elseif iDorA == -10
+        fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc_randompt.mat'];
+      end
+    else
+      if iDorA == +1
+        fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      elseif iDorA == -1
+        fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      elseif iDorA == +10
+        fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc_randompt.mat'];
+      elseif iDorA == -10
+        fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc_randompt.mat'];
+      end
+    end
+  else
+    error('gugugug')
+  end
+elseif iForwardFrom2002_or_BackwardFrom2022  < 0
   if iCldORClr == -1
     if iDorA == +1
-      fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      fout_trendjunk = ['ERA5_atm_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_desc.mat'];
     elseif iDorA == -1
-      fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
-  elseif iDorA == +10
-      fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc_randompt.mat'];
+      fout_trendjunk = ['ERA5_atm_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_asc.mat'];
+    elseif iDorA == +10
+      fout_trendjunk = ['ERA5_atm_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_desc_randompt.mat'];
     elseif iDorA == -10
-      fout_trendjunk = ['ERA5_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc_randompt.mat'];
+      fout_trendjunk = ['ERA5_atm_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_asc_randompt.mat'];
     end
   else
     if iDorA == +1
-      fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_desc.mat'];
     elseif iDorA == -1
-      fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_asc.mat'];
     elseif iDorA == +10
-      fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc_randompt.mat'];
+      fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_desc_randompt.mat'];
     elseif iDorA == -10
-      fout_trendjunk = ['ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc_randompt.mat'];
+      fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)-iNumYears) '_09_to_' num2str(abs(iForwardFrom2002_or_BackwardFrom2022)) '_08_trends_asc_randompt.mat'];
     end
   end
-else
-  error('gugugug')
 end
-%}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if iCldORClr == -1
-  if iDorA == +1
-    fout_trendjunk = ['ERA5_atm_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_desc.mat'];
-  elseif iDorA == -1
-    fout_trendjunk = ['ERA5_atm_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_asc.mat'];
-  elseif iDorA == +10
-    fout_trendjunk = ['ERA5_atm_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_desc_randompt.mat'];
-  elseif iDorA == -10
-    fout_trendjunk = ['ERA5_atm_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_asc_randompt.mat'];
-  end
-else
-  if iDorA == +1
-    fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_desc.mat'];
-  elseif iDorA == -1
-    fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_asc.mat'];
-  elseif iDorA == +10
-    fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_desc_randompt.mat'];
-  elseif iDorA == -10
-    fout_trendjunk = ['ERA5_atm_N_cld_data_' num2str(yymmS(1)) '_' num2str(yymmS(2),'%02i') '_to_' num2str(yymmE(1)) '_' num2str(yymmE(2),'%02i') '_trends_asc_randompt.mat'];
-  end
-end  
 
 fprintf(1,'will be saving to %s \n',fout_trendjunk)
 

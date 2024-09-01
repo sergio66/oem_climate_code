@@ -100,6 +100,8 @@ end
 
 disp('quants for dataset 1-8            = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00]');
 disp('quants for dataset 9,10,11,12     = [0.50 0.80 0.90 0.95 0.97 1.00]');
+disp('quants for dataset 13             = [0.03 0.50 0.97]');
+disp('quants for dataset 14,15,16,17    = [0.50 0.80 0.90 0.95 0.97 1.00]');
 disp('quants for dataset 30 [AMSU only] = [1]');
 dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n    :::  [9 = Default] : ');
 if length(dataset) == 0
@@ -130,6 +132,10 @@ elseif dataset == 11
   iNumYears = 10;
 elseif dataset == 12
   iNumYears = 15;
+elseif dataset == 16
+  iNumYears = 04;
+elseif dataset == 17
+  iNumYears = 22;
 elseif dataset == 30  %% AMSU
   iNumYears = 20;
 end
@@ -248,6 +254,18 @@ if iOCBset == 0
   elseif dataset == 12
     if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
       data_trends = load(['iType_12_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
+    end
+  elseif dataset == 16
+    if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
+      data_trends = load(['iType_16_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
+    end
+  elseif dataset == 17
+    if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
+      data_trends = load(['iType_17_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     else
       fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
@@ -665,6 +683,7 @@ aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-
 figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
 figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
 figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(rlon,rlat,waha'); shading flat;   colorbar; set(gca,'ydir','normal');  title('read in so far');  xlabel('Longitude'); ylabel('Latitude'); colormap(jet); 
+disp('all 4608 read in .... RET to  continue'); pause
 
 disp('WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster')
 disp('WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster')

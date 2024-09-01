@@ -43,8 +43,8 @@ end
 if ~exist('iDorA')
   iDorA = -10; %% asc,  random pert about tile center
   iDorA = +10; %% desc, random pert about tile center
-  iDorA = +1;  %% desc, tile center
   iDorA = -1;  %% asc,  tile center
+  iDorA = +1;  %% desc, tile center
 end
 fprintf(1,'iDorA = %2i \n',iDorA)
 
@@ -59,26 +59,59 @@ iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iNumYears = 20; %% 2002/09-2022/08
 iNumYears = 22; %% 2002/09-2024/06
 
-iCnt = 0;
-for yy = 2002 : 2024
-  mmS = 1; mmE = 12;
-  if yy == 2002
-    mmS = 09;
-  elseif yy == 2024
-    mmE = 06;
-  end
-  for mm = mmS : mmE
-    iCnt = iCnt + 1;
-    yysave(iCnt) = yy;
-    mmsave(iCnt) = mm;
+iForwardFrom2002_or_BackwardFrom2022 = +1;    %% default 2002 ----> 20XY
+iForwardFrom2002_or_BackwardFrom2022 = -2022; %% new     2022 <---- 20XY
+iForwardFrom2002_or_BackwardFrom2022 = -2024; %% new     2022 <---- 20XY
+
+% iNumYears = input('Enter iNumYears : ');
+if length(JOB) == 0
+  if iForwardFrom2002_or_BackwardFrom2022 > 0
+    %% we already have 20 years of data from 2002
+    JOB = 22;
+  else
+    %% but Larrabee wants 4 years of data from 2018 to 2022
+    %% but Larrabee wants 4 years of data from 2020 to 2024
+    JOB = 4;
   end
 end
+iNumYears = JOB;
 
-yymmS = [2020 07]; yymmE = [2024 06];
-yymmS = [2002 09]; yymmE = [2024 06];
+fprintf(1,'iNumYears = %2i \n',iNumYears);
 
-iaMin = find(yymmS(1) == yysave & yymmS(2) == mmsave);
-iaMax = find(yymmE(1) == yysave & yymmE(2) == mmsave);
+if iForwardFrom2002_or_BackwardFrom2022 > 0
+  if iNumYears <= 69
+    iaMin = 1;
+    iaMax = iNumYears*12;
+  elseif iNumYears == 70
+    iaMin = 1;
+    iaMax = 7*12;
+  end
+
+  %%% 
+  if iNumYears == 22
+    disp('  iaMax = iaMax - 2; %% only have till June 24 .. not yet July/Aug 2024')
+    disp('  iaMax = iaMax - 2; %% only have till June 24 .. not yet July/Aug 2024')
+    disp('  iaMax = iaMax - 2; %% only have till June 24 .. not yet July/Aug 2024')
+    iaMax = iaMax - 2; %% only have till June 24 .. not yet July/Aug 2024
+  end
+  %%% 
+
+else
+  thelen = 12 * 20;         %% assume our ERA5 data ends on 2022/08 ... might need to revisit this!!!
+  iaMax = thelen - (2022 - abs(iForwardFrom2002_or_BackwardFrom2022))*12;
+  iaMin = iaMax - iNumYears*12 + 1;
+
+  %%% 
+  if iNumYears == 22
+    disp('  iaMax = iaMax - 2; %% only have till June 24 .. not yet July/Aug 2024')
+    disp('  iaMax = iaMax - 2; %% only have till June 24 .. not yet July/Aug 2024')
+    disp('  iaMax = iaMax - 2; %% only have till June 24 .. not yet July/Aug 2024')
+    thelen = 12 * 22 - 2;     %% assume our ERA5 data ends on 2024/08 - 2 = 2024/06 ... might need to revisit this!!!   
+  end
+  %%% 
+  iaMax = thelen - (2024 - abs(iForwardFrom2002_or_BackwardFrom2022))*12;
+  iaMin = iaMax - iNumYears*12 + 1;
+end
 
 iAllorSeasonal = -4;  %% SON
 iAllorSeasonal = -3;  %% JJA
@@ -107,14 +140,13 @@ disp('  "+" are the 100, "x" are tens .. ')
 
 iOLR = +1;
 for ii = iaMin : iaMax
-  % iForwardFrom2002_or_BackwardFrom2022 = +1;
-  %if mod(ii,100) == 0 & iForwardFrom2002_or_BackwardFrom2022 > 0
-  %  fprintf(1,'+ \n')
-  %elseif mod(ii,10) == 0 & iForwardFrom2002_or_BackwardFrom2022 > 0
-  %  fprintf(1,'x')
-  %elseif iForwardFrom2002_or_BackwardFrom2022 > 0
-  %  fprintf(1,'.')
-  %end
+  if mod(ii,100) == 0 & iForwardFrom2002_or_BackwardFrom2022 > 0
+    fprintf(1,'+ \n')
+  elseif mod(ii,10) == 0 & iForwardFrom2002_or_BackwardFrom2022 > 0
+    fprintf(1,'x')
+  elseif iForwardFrom2002_or_BackwardFrom2022 > 0
+    fprintf(1,'.')
+  end
 
   if iOLR < 0
     if iDorA == 1
@@ -139,7 +171,9 @@ for ii = iaMin : iaMax
   end
 
   if exist(fin)
-    fprintf(1,'%3i : %s exists \n',ii,fin)
+    if iForwardFrom2002_or_BackwardFrom2022 < 0
+      fprintf(1,'%3i : %s exists \n',ii,fin)
+    end
     iaFound(ii) = 1;
     moo = load(fin,'pnew_op');
     iaNumProf(ii) = length(moo.pnew_op.stemp);
@@ -149,10 +183,12 @@ for ii = iaMin : iaMax
   else
     iaFound(ii) = 0;
     iaNumProf(ii) = -1;
-    fprintf(1,'%3i : %s DNE \n',ii,fin)
+    if iForwardFrom2002_or_BackwardFrom2022 < 0
+      fprintf(1,'%3i : %s DNE \n',ii,fin)
+    end
+
   end
 end
-
 fprintf(1,'iNumYears = %3i : found %3i of expected %3i files \n',[iNumYears sum(iaFound) length(iaFound)])
 bad = find(iaFound > 0 & iaNumProf ~= 4608);
 if length(bad) > 0
@@ -161,9 +197,13 @@ if length(bad) > 0
   error('bad files ... redo')
 end
 
-%iForwardFrom2002_or_BackwardFrom2022 = +1;
 plot(1:iaMax,iaFound,'+-')
-if sum(iaFound) < length(iaFound(iaMin:iaMax)) 
+if sum(iaFound) < length(iaFound) & iForwardFrom2002_or_BackwardFrom2022 > 0
+  disp('these not found going forwards')
+  printarray(find(iaFound == 0))
+  error('not enough')
+elseif iForwardFrom2002_or_BackwardFrom2022 < 0 & sum(iaFound) ~= (iaMax-iaMin + 1)
+  disp('these not found going backwards')
   printarray(find(iaFound == 0))
   error('not enough')
 end
@@ -198,14 +238,13 @@ for ii = iaMin : iaMax
 
   iii = ii - iaMin + 1;
   if exist(fin)
-    fprintf(1,'%3i : reading %s \n',ii,fin)
-    % if mod(ii,100) == 0
-    %   fprintf(1,'+ \n')
-    % elseif mod(ii,10) == 0
-    %   fprintf(1,'x')
-    % else
-    %   fprintf(1,'.')
-    % end
+    if mod(ii,100) == 0
+      fprintf(1,'+ \n')
+    elseif mod(ii,10) == 0
+      fprintf(1,'x')
+    else
+      fprintf(1,'.')
+    end
     iaFound(ii) = 1;
 
     a = load(fin);
@@ -265,7 +304,7 @@ for ii = iaMin : iaMax
         
       end
 
-      if ~isfield(a.pnew_op,'olr') & iOLR > 0
+      if ~isfield(a.pnew_op,'olr') * iOLR > 0
         fprintf(1,'%s \n',fin)
         error('no olr field but iOLR > 0')
       end
@@ -277,7 +316,7 @@ for ii = iaMin : iaMax
         all.olr_clr(iii,:) = nan;
       end
       
-      if ~isfield(a.pnew_op,'ilr') & iOLR > 0
+      if ~isfield(a.pnew_op,'ilr') * iOLR > 0
         disp('WARNING : no ilr field but iOLR > 0')
       end
       if isfield(a.pnew_op,'ilr')
@@ -328,9 +367,7 @@ comment = 'see driver_computeERA5_monthly_trends_desc_or_asc.m';
 find_computeERA5_monthly_foutname
 
 iSave = -1;  %%% unless now you do a whole new set of files Steve brings down from ERA5
-             %%% be careful though, first time you run this, you need it DUDE and iSave should be +1   
-             %%%     eg when I did the daytime   "asc"  2002-2022 I forgot to save, so could not generate spectral trends boo hoo
-             %%%     eg when I did the nighttime "desc" 2002-2024 I forgot to save, so could not generate spectral trends boo hoo
+             %%% be careful though, first time you run this, you need it DUDE and iSave should be +1   eg when I did the daytime "asc" I forgot to save, so could not generate spectral trends boo hoo
 
 if iNumYears <= 100
   iSave = -1;
@@ -342,17 +379,10 @@ else
     fprintf(1,'foutjunk = %s a HUGE FILE WITH ALL THE 20 years of PROFILE data DNE DNE DNE ! \n',foutjunk)
   end
   iSave = input('Save huge file (-1/+1) : ');
-  %%iSave = +1;
+  iSave = +1;
 end
 
-if ~exist(foutjunk)
-  iSave = +1;   %% this is doing it first time
-  fprintf(1,'BIG FAT FILE with all data %s DNE and so will NOT be able to do spectral trends using driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m \n',foutjunk)
-  iSave = input('Save BIG FAT FILES???? (-1/+1) : ');
-end
-
-fprintf(1,'iSave    foutjunk  = %2i %s  \n',iSave,foutjunk);
-disp('RET to continue'); pause
+%%% iSave = +1;   %% this is doing it first time
 
 if iSave > 0
   %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];

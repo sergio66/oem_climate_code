@@ -72,7 +72,9 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
   %%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
   cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
   cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, 
-                                                                 %OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
+                                                %OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  
+                                                %%% <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
+
   iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)
   do_the_cov_set_numbers  
 
@@ -116,21 +118,31 @@ elseif topts.dataset == 30
   %%               |   sigT_t    sigT_s          |    sigWV_t   sigWV_s           |   sigO3_t   sigO3_s           |
   %%            lc |  ct.lev1  ct.lev2   ct_wide |    cw.lev1  cw.lev2    cw_wide |  coz.lev1  coz.lev2  coz_wide |   alpha_T  alpha_w  alpha_oz
 
-  iCovSetNumber = -1;    %% completely diagnol (tiny length scales)
+  %% see Lscale_* below %% see Lscale_* below %% see Lscale_* below %% see Lscale_* below %% see Lscale_* below
   iCovSetNumber = 20.2;  %% has length scales
+  iCovSetNumber = -1;    %% completely diagonal (tiny length scales)
+  %% see Lscale_* below %% see Lscale_* below %% see Lscale_* below %% see Lscale_* below %% see Lscale_* below
 
   cov_set = zeros(1,13);
    
   cov_set(1) = 1;
   cov_set([4 7 10]) = 1/2;
 
-  %% WORKS, Aug 01 2024, 3 pm, but very large WV error bars
+  %% WORKS, Aug 01 2024, 15:00, but very large WV error bars
   %% temperature and WV
-  cov_set([2 3]) = [0.05 0.09]*4000;    cov_set([11])  = 1.0e-10;
-  cov_set([5 6]) = 0.1*1000/10;         cov_set([12 ]) = 1.0e+4;
+  iCovSetNumber = 20.2;  %% has length scales
+  cov_set([2 3]) = [0.05 0.09]*4000;    cov_set([11]) = 1.0e-10;
+  cov_set([5 6]) = 0.1*1000/10;         cov_set([12]) = 1.0e+4;
 
-  cov_set([2 3]) = [0.05 0.09]*4000;    cov_set([11])  = 1.0e-10;
-  cov_set([5 6]) = [0.1  0.00001];      cov_set([12 ]) = 1.0e+4;
+  %% WORKS, Aug 01 2024, 22:00, but very large WV error bars  AND WIERD LARGE NEEDS for T cov
+  iCovSetNumber = 20.2;  %% has length scales
+  cov_set([2 3]) = [0.05 0.09]*4000;    cov_set([11]) = 1.0e-10;
+  cov_set([5 6]) = [0.1  0.00001];      cov_set([12]) = 1.0e+4;
+
+%  iCovSetNumber = -1;    %% completely diagonal (tiny length scales)
+%  iCovSetNumber = 20.2;  %% has length scales
+%  cov_set([2 3]) = [0.05 0.09]*10;      cov_set([11]) = 1.0e-13;
+%  cov_set([5 6]) = [0.1  0.00001];      cov_set([12]) = 1.0e-13;
 
   %% no ozone for AMSU
   cov_set([8 9]) = eps;
@@ -142,8 +154,8 @@ end
 zalt = p2h(plays)/1000;  %% change m to km
 
 % Make sure re-scale to Jacobians before squaring cov matrix
-for i=1:pmat_size
-  for j=1:pmat_size
+for i = 1:pmat_size
+  for j = 1:pmat_size
     mat_od(i,j)    = abs(i-j);
     mat_odHgt(i,j) = abs(zalt(i)-zalt(j));
   end
@@ -182,7 +194,8 @@ end
 %% should really be 
 %% mat_od(i,j) = abs(z(i)-z(j))/zScale;  %% and in lower atmosphere z(i)-z(j) ~ 0.5 km, zScale ~ 5 km so mat_od(i,j) ~ 0.1 and not 1 ----- so let l_c = 10
 % Relative off-diagonal
-l_c = cov_set(1)*1;    mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, this was in Apr 2022, claiming that (i-j)/<scale> = 1 ie basically (z(i)-z(j))/<scale hgt> = 1 or dz = 1 km, zscale = 1 km, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bc
+l_c = cov_set(1)*1;    mat_od   = exp(-mat_od0.^2./(1*l_c^2));            %% generic, Apr 2022, claiming that (i-j)/<scale> = 1 ie basically (z(i)-z(j))/<scale hgt> = 1 or dz = 1 km, zscale = 1 km
+                                                                          %% 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bc
 l_c = Lscale_Tz;       mat_odT  = exp(-mat_odHgt0.^2./(Lscale_Tz^2));     %% T
 l_c = Lscale_WV;       mat_odWV = exp(-mat_odHgt0.^2./(Lscale_WV^2));     %% WV
 l_c = Lscale_O3;       mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
@@ -368,7 +381,7 @@ if settings.co2lays == 1
   fmatd = [2     1.0       5      2     2            0.1];       %% try loosening  so all gases have unc ~ 1.0 year growth : files 8/30/19  *newchans_newkcartajacs_finitediffV3_5_allTraceGasUnc_1yearrate.mat
   fmatd = [2     1.0       5      2     2            0.1]/10;    %% try tightening so all gases have unc ~ 0.1 year growth : files 9/03/19  *newchans_newkcartajacs_finitediffV3_5_allTraceGasUnc_0p1yearrate.mat
   fmatd = [2     0.1       2      0.02    0.02       0.1];       %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
-  fmatd = [2     0.1       2      1     1            1];         %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
+  fmatd = [2     0.1       2      1     1            1.0];       %% 99.99999999999999999999% of the time, works pretty well but CFC11,CFC12 rates are too high by x2  -3.4 ppm/yr (July/Aug 2019) >>> ORIG, BEST
 elseif settings.co2lays == 3
   fmatd = [2 2 2 0.1       2      0.02     0.02            0.1];
 end
@@ -464,6 +477,9 @@ if topts.dataset == 30
   fmatd(1:5)           = eps;                %% no CO2/N2O/CH4/cld1/cld2 for AMSU
   ozmat                = diag(ozmat);        %% no ozone for AMSU
     ozmat = diag(ones(size(ozmat))) * eps;   %% no ozone for AMSU
+
+  fmatd(6)             = 5;                  %% STEMP
+  fmatd(6)             = 0.01;               %% STEMP
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -58,6 +58,7 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/rtptools
 addpath /asl/matlib/aslutil
+addpath /home/sergio/MATLABCODE/LOADMIE
 
 system_slurm_stats
 
@@ -98,12 +99,6 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%iDebug = 180
-%iDebug = 754
-%iDebug = 1;
-%iDebug = 1665;
-%iDebug = 2376;
-
 iDebug = 2259; %% T
 iDebug = 3439; %% NML
 iDebug = 2268; %% T
@@ -116,31 +111,9 @@ iDebug = 3233; %% NML
 iDebug = 2233; %% T
 iDebug = 2264; %% T
 iDebug = 4483; %% NP
-%iDebug = 4233; %% NP BAD
-%iDebug = 0249;  %% SP
-%iDebug = 0233;  %% SP
-iDebug = 1404; %% SML'
-iDebug = 1380; %% SML
-iDebug = 4212; %% NP
-iDebug = 4226; %% NP WOW dSST/dt = +0.15 K/yr
-
-iDebug = 4487;
-iDebug = 252;
-iDebug = 108;
-iDebug = 287;
 
 iDebug = -1;
 
-%iDebug = 4500;
-%iDebug = 2268; %% T
-%iDebug = 1082
-%iDebug = 1009   %% Southern Midlats
-%iDebug = 2843
-%iDebug = 3169    %% +34 N, have -ve col WV trends
-%iDebug = 1369    %% -37 S, have -ve col WV trends
-%iDebug = 1261    %% -37 S, have -ve col WV trends
-%iDebug = 36
-%iDebug = 1532    %% this one is strongly negative for ERA5 synthetic rates ... not as negative for CHIRP_A, though spectral rates are very similar. But ERA5 synthtic has much less noise, so retrieval is "truer"
 %iDebug = 36;     %% check to make sure emiss trend comes in (over land)
 %iDebug = 2000
 %iDebug = 1598
@@ -196,14 +169,24 @@ ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, d
 
 ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
 
+%%%%% for trends paper START
 ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
+
 ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
 ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+%%%%% for trends paper STOP 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ia_OorC_DataSet_Quantile = [+2 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year anomalies, 2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
 ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ia_OorC_DataSet_Quantile = [+0 16 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 16,  iQuantile = 03   04 year rates, 2020/07-2024/06
 
 if ia_OorC_DataSet_Quantile(1) == 2
   get_anomaly_processors
@@ -394,6 +377,10 @@ for iInd = iXX1 : idX : iXX2
   topts.iaSequential = -1;                         %% default one gulp, gives good results at poles but bad column water results at tropics!
   topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint, but now use 210 !!!! gives slightly better results than 214, decent column water results at tropics!, not so good polar WV results
 
+  %% see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m
+  %% see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m
+  %% see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m
+
   % quants = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00];
   % topts.dataset   = -1;   %% (-1) AIRS 18 year quantile dataset, Sergio Aug 2021   2002/09-2020/08 FULL 18 years
   % topts.dataset   = +1;   %% (+1) AIRS 18 year quantile dataset, Strow  March 2021 2002/09-2020/08 FULL 18 years
@@ -405,19 +392,31 @@ for iInd = iXX1 : idX : iXX2
   % topts.dataset   = +6;   %% (+6) AIRS = CRIS NSR 07 year quantile dataset,        2012/05-2019/04 FULL 07 years
   % topts.dataset   = +7;   %% (+7) AIRS 20 year quantile dataset, Sergio Sep 2022   2002/09-2022/08 FULL 20 years ************************
   % topts.dataset   = +8;   %% (+8) AIRS = OCO2  07 year quantile dataset            2015/01-2021/12 OCO2 FULL 07 years
+
   % % quants = [0.50 0.80 0.90 0.95 0.97 1.00];
-  % topts.dataset   = +09;   %% (+ 9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of douning quantile iQAX = 3  ************************
-  % topts.dataset   = +10;   %% (+10) AIRS 05 year quantile dataset, Sergio May 2023   2002/09-2007/08 FULL 05 years, new way of douning quantile iQAX = 3  ************************
-  % topts.dataset   = +11;   %% (+11) AIRS 10 year quantile dataset, Sergio May 2023   2002/09-2012/08 FULL 10 years, new way of douning quantile iQAX = 3  ************************
-  % topts.dataset   = +12;   %% (+12) AIRS 15 year quantile dataset, Sergio May 2023   2002/09-2017/08 FULL 15 years, new way of douning quantile iQAX = 3  ************************
+  % topts.dataset   = +09;   %% (+ 9) AIRS 20 year quantile dataset, Sergio Oct 2022   2002/09-2022/08 FULL 20 years, new way of doing quantile iQAX = 3  ************************
+  % topts.dataset   = +10;   %% (+10) AIRS 05 year quantile dataset, Sergio May 2023   2002/09-2007/08 FULL 05 years, new way of doing quantile iQAX = 3  ************************
+  % topts.dataset   = +11;   %% (+11) AIRS 10 year quantile dataset, Sergio May 2023   2002/09-2012/08 FULL 10 years, new way of doing quantile iQAX = 3  ************************
+  % topts.dataset   = +12;   %% (+12) AIRS 15 year quantile dataset, Sergio May 2023   2002/09-2017/08 FULL 15 years, new way of doing quantile iQAX = 3  ************************
+
+  % topts.dataset   = +13;   %% (+13) AIRS  8 year quantile dataset, Sergio May 2023    2002/09-2019/08 FULL 08 years, SW drifting, new way of doing quantile iQAX = 3  ************************
+  % topts.dataset   = +14;   %% (+14) AIRS  4 year quantile dataset, Sergio May 2023    2018/09-2022/08 FULL 04 years, new way of doing quantile iQAX = 3  ************************
+  % topts.dataset   = +15;   %% (+15) AIRS 14 year quantile dataset, Sergio May 2023    2008/01-2022/12 FULL 14 years, overlap with IASI for Sarah/Cathy, new way of doing quantile iQAX = 3  ************************
+
+  % topts.dataset   = +16;   %% (+16) AIRS  4 year quantile dataset, Sergio May 2023    2020/07-2024/06 FULL 04 years, HOT HOT HOT new way of doing quantile iQAX = 3  ************************
+  % topts.dataset   = +17;   %% (+17) AIRS 14 year quantile dataset, Sergio May 2023    2002/09-2024/06 FULL 22 years, new way of doing quantile iQAX = 3  ************************
+
+  % topts.dataset   = +30;   %% (+30) AMSU 20 year average dataset, Sergio May 2024    2002/09-2022/08 FULL 20 years, one one quantile (avg), given by Stephen Leroy  ************************
 
   topts.numchan = 2645;                              %% 2645 AIRS channels
   topts.model   = ia_OorC_DataSet_Quantile(4);
   topts.dataset = ia_OorC_DataSet_Quantile(2);
   iQuantile     = ia_OorC_DataSet_Quantile(3);
+
   if topts.dataset == 30
     topts.iaSequential = -1;                         %% default one gulp, gives good results at poles but bad column water results at tropics!    
     topts.numchan = 13;                              %% 13 AMSU channels
+    topts.iNlays_retrieve = 10;                      %% default, 10 AIRS lays thick since so few AMSU channels
   end
   %%%%%%%%%%
 
@@ -470,7 +469,13 @@ for iInd = iXX1 : idX : iXX2
     disp(' <<< 2018-2022 : warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2018 >>>')
   elseif topts.dataset == 15
     driver.iNumYears = 14;  
-    disp(' <<< w2008-2022 IASI overlap arning ... the CO2 trends are from 2002 onwards, but this dataset is from 2008 >>>')
+    disp(' <<< 2008-2022 IASI overlap arning ... the CO2 trends are from 2002 onwards, but this dataset is from 2008 >>>')
+  elseif topts.dataset == 16
+    driver.iNumYears = 4;  
+    disp(' <<< 2020-2024 AIRS hot 4 years, ... the CO2 trends are from 2002 onwards >>>')
+  elseif topts.dataset == 17
+    driver.iNumYears = 22;  
+    disp(' <<< 2002-2024 AIRS for 22 years, ... the CO2 trends are from 2002 onwards >>>')
   elseif topts.dataset == 30
     driver.iNumYears = 20;  
     disp(' <<< AMSU 20 years allsky from Stephen Leroy >>> ')
@@ -603,6 +608,9 @@ for iInd = iXX1 : idX : iXX2
 
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
+  if topts.dataset == 30
+    topts.iNlays_retrieve = 10;                      %% default, 10 AIRS lays thick since so few AMSU channels
+  end
 
   %% iLatX is used in : build_cov_matrices.m to make the cov_setA, cov_srtB ... cov_set = wgtA cov_setA + wgtB cov_setB
   %%                  : get_jac_fast.m to set the iVersQRenorm and then qrenorm
@@ -941,7 +949,7 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
     xlabel('AMSU Frequency GHz')
   end
   title('Components of fit'); hl = legend('trace gases','ST','WV(z)','T(z)','O3(z)','location','best','fontsize',10);
-  printarray([aux.pavg; driver.oem.xb(driver.jacobian.water_i)']','[p(water) xb(water)]')
+  % printarray([aux.pavg; driver.oem.xb(driver.jacobian.water_i)']','[p(water) xb(water)]')
 
   figure(6); clf
   if topts.dataset < 30 

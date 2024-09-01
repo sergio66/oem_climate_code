@@ -30,9 +30,10 @@ px.gas_1 = px.gas_1 * (1.01);
 [RHx,RH1kmx,colwaterx] = layeramt2RH(h,px);
 scatter_coast(px.rlon,px.rlat,50,colwaterx-colwater0); title('\delta colwater mm/yr');
 
-i200 = find(p.plevs(1:90,2300) >= 200,1);
-i500 = find(p.plevs(1:90,2300) >= 500,1);
-i800 = find(p.plevs(1:90,2300) >= 800,1);
+% i200 = find(p.plevs(1:90,2300) >= 200,1);
+% i500 = find(p.plevs(1:90,2300) >= 500,1);
+% i800 = find(p.plevs(1:90,2300) >= 800,1);
+
 scatter_coast(px.rlon,px.rlat,50,RHx(i800,:)-RH0(i800,:)); title('\delta RH 800 /yr');
 scatter_coast(px.rlon,px.rlat,50,RHx(i600,:)-RH0(i600,:)); title('d/dt UMBC RH(600 mb)');
 figure(25); aslmap(25,rlat65,rlon73,smoothn(reshape(RHx(i600,:)-RH0(i600,:),72,64)',1), [-90 +90],[-180 +180]);
@@ -83,6 +84,7 @@ end
   fprintf(1,'cosine weighted UMBC mmw percent  trends = %8.6f +/- %8.6f mmH2O/yr or kg/m2/yr \n',m,s);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 i005 = find(p.plevs(1:90,2300) >= 005,1);
 i010 = find(p.plevs(1:90,2300) >= 010,1);
@@ -325,8 +327,11 @@ isaac_held_dRH_dST_pgorman_dcolwater_dST
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-boo = xbWV(:,40);
-figure(31); clf; aslmap(31,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('xbWV(layer 40)');     caxis([0 +1]*0.01/2); colormap(jet)
+%i200x = find(pavg < 200); i200x = i200x(end);
+%i500x = find(pavg < 500); i500x = i500x(end);
+%i800x = find(pavg < 800); i800x = i800x(end);
+%boo = xbWV(:,i800x);
+%figure(31); clf; aslmap(31,rlat65,rlon73,smoothn((reshape(boo,72,64)') ,1), [-90 +90],[-180 +180]); title('xbWV(layer 800 mb)');     caxis([0 +1]*0.01/2); colormap(jet)
 
 if dataset ~= 30
   boo = mmwPert - mmw0; 
