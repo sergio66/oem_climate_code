@@ -13,6 +13,19 @@ addpath /asl/matlib/aslutil
 addpath /asl/matlib/h4tools
 addpath /asl/matlib/maps
 addpath /home/sergio/MATLABCODE/TIME
+addpath /home/sergio/MATLABCODE/COLORMAP/COLORBREWER/cbrewer/cbrewer/
+
+cmap = cbrewer('div', 'RdBu', 128);
+cmap = cbrewer('div', 'RdBu', 16);
+cmap(cmap < 0) = 0; cmap(cmap > 1) = 1;
+cmap = flipud(cmap);
+jett = jet(128); jett(1,:) = 1;
+
+f2645 = instr_chans2645;
+i0900 = find(f2645 >= 900,1);
+i0723 = find(f2645 >= 723,1);
+i1305 = find(f2645 >= 1305,1);
+i1419 = find(f2645 >= 1419,1);
 
 %% get this from clust_run_retrieval_setlatbin_AIRS_loop_lonbin,m
 
@@ -81,19 +94,15 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iJunk = input('clear 50 figs???? (-1 = no = default) ');
-if length(iJunk) == 0
-  iJunk = -1;
-end
+%iJunk = input('clear 50 figs???? (-1 = no = default) ');
+%if length(iJunk) == 0
+%  iJunk = -1;
+%end
+iJunk = +1;
 if iJunk > 0
-  for ii = 1 : 50
-    figure(ii); colormap jet
+  for ii = 1 : 30
+    figure(ii); clf; colormap jet
   end
-else
-  figure(6);  clf; %% this puts d/dt ST plot with correct title
-  figure(28); clf; %% this puts d/dt ST plot with correct title
-  figure(29); clf; %% this puts d/dt ST plot with correct title
-  figure(30); clf; %% this puts d/dt ST plot with correct title
 end
 
 iNumLay = 20;
@@ -416,9 +425,9 @@ while iDoAgain > 0
            mean_ak_o3 = nan(size(resultsWV));;
         end
   
-        %figure(47); plot(oem.ak_water',pjunk20,'c',max(oem.ak_water'),pjunk20,'rx-',mean(oem.ak_water'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
-        %figure(48); plot(oem.ak_ozone',pjunk20,'c',max(oem.ak_ozone'),pjunk20,'rx-',mean(oem.ak_ozone'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
-        %figure(49); plot(oem.ak_temp',pjunk20,'c',max(oem.ak_temp'),pjunk20,'rx-',mean(oem.ak_temp'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(2); plot(oem.ak_water',pjunk20,'c',max(oem.ak_water'),pjunk20,'rx-',mean(oem.ak_water'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(3); plot(oem.ak_ozone',pjunk20,'c',max(oem.ak_ozone'),pjunk20,'rx-',mean(oem.ak_ozone'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(4); plot(oem.ak_temp',pjunk20,'c',max(oem.ak_temp'),pjunk20,'rx-',mean(oem.ak_temp'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
 
         clear waterrate_ak0 waterrate_ak1 o3rate_ak0 o3rate_ak1 temprate_ak0 temprate_ak1
         ix = ii;
@@ -524,14 +533,31 @@ while iDoAgain > 0
   
   fprintf(1,'found %4i of %4i \n',sum(iaFound),iNumAnomData)
   iDoAgain = -1;
-  if sum(iaFound) < iNumAnomData
-    jett = jet(64); jett(1,:) = 1;
 
+
+  if sum(iaFound) < iNumAnomData
     if strfind(anomalydatafile,'_tile')
       plot_anomalies_1
     else
+      simple = +1;
       plot_anomalies_All
     end
+
+    junk_globalavg_rawdata = data_anom.btavgAnomFinal(:,1:iNumAnomTimeSteps);
+    junk_globalavg_spectral_deltan00 = spectral_deltan00(:,1:iNumAnomTimeSteps);
+    figure(2); clf; 
+    plot(yymm,smooth(junk_globalavg_spectral_deltan00(i0723,:),23),'r.-',...
+        yymm,smooth(junk_globalavg_rawdata(i0723,:),23),'r--',...
+       'linewidth',2); plotaxis2;
+    title('Fitted data in thick, raw data in dashes, CO2 only'); pause(0.1)
+
+    figure(3); clf
+    wah = save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps);
+    plot(yymm,wah(1,:),'b',yymm,wah(2,:),'m',yymm,wah(3,:),'g',yymm,wah(4,:),'y',yymm,wah(5,:),'k',yymm,wah(6,:),'r','linewidth',2); hold on; 
+    wah = save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps);
+    plot(yymm,wah(1,:),'b--',yymm,wah(2,:),'m--',yymm,wah(3,:),'g--',yymm,wah(4,:),'y--',yymm,wah(5,:),'k--',yymm,wah(6,:),'r--','linewidth',2); hold on; 
+    hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
+    set(gca,'fontsize',10); title('xb(trace gas + ST)');
 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
@@ -548,26 +574,20 @@ fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f
 junk_globalavg_rawdata = data_anom.btavgAnomFinal(:,1:iNumAnomTimeSteps);
 junk_globalavg_spectral_deltan00 = spectral_deltan00(:,1:iNumAnomTimeSteps);
 for ii = 1 : 2645
-  P = polyfit(1:iNumAnomTimeSteps,junk_globalavg_rawdata(ii,:),1);
+  P = nanpolyfit(1:iNumAnomTimeSteps,junk_globalavg_rawdata(ii,:),1);
   trend_globalavg_raw(ii) = P(1)*365/16;
-  P = polyfit(1:iNumAnomTimeSteps,junk_globalavg_spectral_deltan00(ii,:),1);
+  P = nanpolyfit(1:iNumAnomTimeSteps,junk_globalavg_spectral_deltan00(ii,:),1);
   trend_globalavg(ii) = P(1)*365/16;
 end
 
-f2645 = instr_chans2645;
-i0900 = find(f2645 >= 900,1);
-i0723 = find(f2645 >= 723,1);
-i1305 = find(f2645 >= 1305,1);
-i1419 = find(f2645 >= 1419,1);
-
-figure(16); clf; plot(f2645,trend_globalavg_raw,'b',f2645,trend_globalavg,'r'); title('Global Avg Quick dBT/dt'); plotaxis2; xlim([645 1620])
+figure(2); clf; plot(f2645,trend_globalavg_raw,'b',f2645,trend_globalavg,'r'); title('Global Avg Quick dBT/dt'); plotaxis2; xlim([645 1620])
   hl = legend('Raw from data','after CO2/CH4/N2O removed','location','best','fontsize',10);
 
-figure(16); clf; plot(f2645,trend_globalavg_raw*20,'b',f2645,trend_globalavg*20,'r',...
+figure(3); clf; plot(f2645,trend_globalavg_raw*20,'b',f2645,trend_globalavg*20,'r',...
                       f2645,data_anom.btavgAnomFinal(:,1),f2645,data_anom.btavgAnomFinal(:,iNumAnomTimeSteps)); title('Global Avg Quick dBT/dt'); plotaxis2; xlim([645 1620])
   hl = legend('20 x (Raw data)','20 x (after CO2/CH4/N2O removed)','TimeStep 1','TimeStep Nyears','location','best','fontsize',10);
 
-figure(17); clf; 
+figure(4); clf; 
   plot(yymm,smooth(junk_globalavg_spectral_deltan00(i0723,:),23),'r.-',...
        yymm,smooth(junk_globalavg_spectral_deltan00(i0900,:),23),'gx-',...
        yymm,smooth(junk_globalavg_spectral_deltan00(i1305,:),23),'k.-',...
@@ -580,13 +600,13 @@ figure(17); clf;
 plotaxis2; hl = legend('723 CO2 (700 mb)','900 Window','1305 CH4','1419 WV (300 mb)','location','best','fontsize',8); xlim([2002 2025]);
 title('Fitted data in thick, raw data in dashes')
 
-figure(18); clf
+figure(5); clf
   plot(yymm,save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps),'linewidth',2); hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
   set(gca,'fontsize',10); title('xb(trace gas + ST)');
-figure(19); clf
+figure(5); clf
   plot(yymm,save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps),'linewidth',2); hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
   set(gca,'fontsize',10); title('xfinal(trace gas + ST)');
-figure(20); clf
+figure(5); clf
   wah = save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps);
   plot(yymm,wah(1,:),'b',yymm,wah(2,:),'m',yymm,wah(3,:),'g',yymm,wah(4,:),'y',yymm,wah(5,:),'k',yymm,wah(6,:),'r','linewidth',2); hold on; 
   wah = save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps);
@@ -594,19 +614,20 @@ figure(20); clf
   hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
   set(gca,'fontsize',10); title('xb(trace gas + ST)');
 
-figure(19); clf
+figure(6); clf
   plot(yymm,save_cov_set.xb_wvz(:,1:iNumAnomTimeSteps),'linewidth',2); set(gca,'fontsize',10); title('xb(WV)');
-figure(19); clf
+figure(6); clf
   plot(yymm,save_cov_set.xb_tzz(:,1:iNumAnomTimeSteps),'linewidth',2); set(gca,'fontsize',10); title('xb(TZ)');
-figure(19); clf
+figure(6); clf
   plot(yymm,save_cov_set.xb_ozz(:,1:iNumAnomTimeSteps),'linewidth',2); set(gca,'fontsize',10); title('xb(OZ)');
 
-disp('ret to continue to plot_anomalies_ALL'); apuse
+disp('ret to continue to plot_anomalies_ALL'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 if strfind(anomalydatafile,'_tile')
   plot_anomalies_1
 else
+  simple = -1;
   plot_anomalies_All
 end

@@ -1,9 +1,18 @@
-## this deletes stuff from Output/QuantileXYZ where XYZ is 1-16; 
+## this deletes stuff from Output_Day/QuantileXYZ where XYZ is 1-16; 
 ## so run it as        rmer_rerun_all.sc $1 $2
 ## where first arg == 1-16 for Quantile .... second arg is 1[default]/2 for cpu2021/highmem
 
 clear
 date
+
+echo " "
+echo "see how many are done by typing this ... "
+echo "      watch \"ls -lt Output_Day/Quantile03/*.mat | wc -l\" "
+echo " "
+echo "if not all finished, run these two commands"
+echo "     sbatch  -p cpu2021  --exclude= --array=01-120 sergio_matlab_jobB.sbatch 0"
+echo "     sbatch  -p cpu2021  --exclude= --array=01-120 sergio_matlab_jobB.sbatch 1"
+echo " "
 
 if [[ "$1" -eq "" ]]; then
   echo "no arguments, set first arg to 16"

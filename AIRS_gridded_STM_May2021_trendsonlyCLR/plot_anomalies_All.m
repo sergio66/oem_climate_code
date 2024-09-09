@@ -1,5 +1,3 @@
-jett = jet(128); jett(1,:) = 1;
-
 junk = iNumAnomTimeSteps * iNumAnomTiles;
 fprintf(1,'found %5i of %5i \n',sum(iaFound),length(iaFound))
 figure(1); clf; waha = reshape(iaFound,iNumAnomTimeSteps,iNumAnomTiles);                                                   
@@ -25,7 +23,9 @@ iNumYearSmooth = 0.25;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(2); clf
+iFig = 5;
+
+iFig = iFig + 1; figure(iFig); clf
 junk = results(1:iNumAnomTimeSteps,6); 
 plot(yymm,smooth(junk,15)); title('Global ST(t)'); plotaxis2;
 
@@ -35,15 +35,15 @@ plot(onidd,oni/10,'k',yymm,smooth(junk,23*iNumYearSmooth),'b',...
   title('Global Avg Stemp anomaly'); ylim([-1 +1]*1)
 xlim([2002 2025]); ; plotaxis2; hl = legend('Ocean Nino Index','UMBC Global anomaly w/ trend','UMBC Global anomaly w/o trend','location','best','fontsize',10);
 
-figure(3); clf; wahaT = resultsT(1:iNumAnomTimeSteps,:)'; 
+iFig = iFig + 1; figure(iFig); clf; wahaT = resultsT(1:iNumAnomTimeSteps,:)'; 
   pcolor(yymm,pavg,wahaT);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global AVG T(z,t)');      
   colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','log'); ylim([10 1000])
 
-figure(4); clf; wahaWV = resultsWV(1:iNumAnomTimeSteps,:)';
+iFig = iFig + 1; figure(iFig); clf; wahaWV = resultsWV(1:iNumAnomTimeSteps,:)';
   pcolor(yymm,pavg,wahaWV);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global Avg WVfrac(z,t)'); 
   colormap(llsmap5); caxis([-1 +1]*0.1); ylim([100 1000])
 
-figure(5); clf
+iFig = iFig + 1; figure(iFig); clf
   for ii = 1 : 49
     P = polyfit(daysSince2002/365,wahaT(ii,:),1); trendTavg(ii) = P(1);
     P = polyfit(daysSince2002/365,wahaWV(ii,:),1); trendWVavg(ii) = P(1);
@@ -55,17 +55,23 @@ figure(5); clf
   subplot(121); semilogy(trendTavg, pavg,'r','linewidth',2); title('Global dT/dt'); set(gca,'ydir','reverse'); plotaxis2; ylim([10 1000])  
   subplot(122); semilogy(trendWVavg,pavg,'b','linewidth',2); title('Global dWVfrac/dt'); set(gca,'ydir','reverse'); plotaxis2; ylim([10 1000])
 
-disp('ret to continue'); pause
-%%%%%%%%%%%%%%%%%%%%%%%%%
+% disp('ret to continue'); pause
+pause(0.1)
 
-figure(6)
+iFig = iFig + 1; figure(iFig)
 pcolor(yymm,rlat(1:end),(reshape(results(iNumAnomTimeSteps+1:end,6),iNumAnomTimeSteps,iNumAnomTiles-1))'); colorbar; 
 caxis([-1 +1]*2); colormap(llsmap5); shading interp; title('Anomaly Stemp(t,lat)')
 
-figure(7); clf; waha = squeeze(nanmean(reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay),1)); waha = waha'; waha = waha(:,2:length(rlat)+1);
+iFig = iFig + 1; figure(iFig); clf; waha = squeeze(nanmean(reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay),1)); waha = waha'; waha = waha(:,2:length(rlat)+1);
   pcolor(rlat(1:end),pavg,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('<UMBC> T(z,lat)');      colormap(llsmap5); caxis([-1 +1]*5)
-figure(8); clf; waha = squeeze(nanmean(reshape(resultsWV,iNumAnomTimeSteps,iNumAnomTiles,iNumLay),1)); waha = waha';waha = waha(:,2:length(rlat)+1);       
+iFig = iFig + 1; figure(iFig); waha = squeeze(nanmean(reshape(resultsWV,iNumAnomTimeSteps,iNumAnomTiles,iNumLay),1)); waha = waha';waha = waha(:,2:length(rlat)+1);       
   pcolor(rlat(1:end),pavg,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('<UMBC> WVfrac(z,lat)'); colormap(llsmap5); caxis([-1 +1]*0.5)
+
+if simple > 0
+  return
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear trendT trendWV
 waha = reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay);
@@ -84,9 +90,9 @@ for jj = 1 : length(pavg)
 end
 trendT  = trendT';
 trendWV = trendWV';
-figure(09); pcolor(rlat(2:end),pavg,trendT); title('dT/dt'); colormap(llsmap5); caxis([-1 +1]*0.15); 
+iFig = iFig + 1; figure(iFig); pcolor(rlat(2:end),pavg,trendT); title('dT/dt'); colormap(llsmap5); caxis([-1 +1]*0.15); 
   shading interp; colorbar; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000])
-figure(10); pcolor(rlat(2:end),pavg,trendWV);title('dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
+iFig = iFig + 1; figure(iFig); pcolor(rlat(2:end),pavg,trendWV);title('dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
   shading interp; colorbar; set(gca,'ydir','reverse'); set(gca,'yscale','linear'); ylim([100 1000])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,13 +133,13 @@ yslice = [-75:25:+75];
 xslice = [100 200 500 800];
 zslice = [1:5:length(iaYears)]; zslice = iaYears(zslice);
 
-figure(11); clf
+iFig = iFig + 1; figure(iFig); clf
 slice(Y,X,Z,double(annualT), xslice, yslice, zslice);
 slice(Y,X,Z,double(annualT), [], [], zslice);
 shading interp; colormap jet; colorbar; caxis([-2 +2]); colormap(usa2);
 zlabel('Pav(mb)'); ylabel('Latitude'); zlabel('Time'); title('Tanomaly (K)')
 
-figure(12); clf
+iFig = iFig + 1; figure(iFig); clf
 slice(Y,X,Z,double(annualWV), xslice, yslice, zslice);
 slice(Y,X,Z,double(annualWV), [], [], zslice);
 shading interp; colormap jet; colorbar; caxis([-2 +2]/10); colormap(usa2);
@@ -148,7 +154,7 @@ yslice = [-75:25:+75];
 zslice = [100 200 500 800];
 xslice = [1:5:length(iaYears)]; xslice = iaYears(xslice);
 
-figure(11); clf
+iFig = iFig + 1; figure(iFig); clf
 h = slice(Y,X,Z,double(annualT), [], xslice, []);
 ylabel('Time'); xlabel('Latitude'); zlabel('Pav (mb)'); title('Tanomaly (K)')
 shading interp; colormap jet; colorbar; caxis([-1 +1]*1); colormap(usa2); set(gca,'zdir','reverse'); set(gca,'ydir','reverse');
@@ -162,7 +168,7 @@ alpha('color');
 %alpha('scaled');
 colormap(usa2);
 
-figure(12); clf;
+iFig = iFig + 1; figure(iFig); clf;
 h = slice(Y,X,Z,double(annualWV), [], xslice, []);
 ylabel('Time'); xlabel('Latitude'); zlabel('Pav (mb)'); title('WVanomaly (frac)')
 shading interp; colormap jet; colorbar; caxis([-1 +1]/5); colormap(usa2); set(gca,'zdir','reverse'); set(gca,'ydir','reverse');
@@ -176,7 +182,7 @@ alpha('color');
 colormap(usa2);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(14); clf
+iFig = iFig + 1; figure(iFig); clf
 isosurface(Y,X,Z,annualT,-0.5)
 isosurface(Y,X,Z,annualT,0)
 isosurface(Y,X,Z,annualT,0.5)
@@ -184,7 +190,7 @@ colormap(llsmap5); caxis([-2 +2])
 ylabel('Time'); xlabel('Latitude'); zlabel('Pav (mb)'); title('Tanomaly (K)')
 set(gca,'zdir','reverse'); set(gca,'ydir','reverse');
 
-figure(15); clf
+iFig = iFig + 1; figure(iFig); clf
 lvls = [-2:0.25:+2];
 h = contourslice(Y,X,Z,double(annualT), [], xslice, [], lvls);
 ylabel('Time'); xlabel('Latitude'); zlabel('Pav (mb)'); title('Tanomaly (K)')
@@ -195,7 +201,7 @@ view(3)
 grid on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-for ii = 11 : 15
+for ii = iFig-4 : iFig
   figure(ii); xlim([-90 +90]); ylim([2002 2025]); zlim([10 1000]);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -225,15 +231,17 @@ i32km = find(havg <= 32,1);
 
 wahaT = resultsT(1:iNumAnomTimeSteps,:)';
 wahaWV = resultsWV(1:iNumAnomTimeSteps,:)';
-figure(18);  clf; %% same as figure 3
+%{
+iFig = iFig + 1; figure(iFig);  clf; %% same as figure 3
   pcolor(yymm,pavg,wahaT);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global AVG T(z,t)');
   colormap(llsmap5); caxis([-1 +1]*1); set(gca,'yscale','log'); ylim([10 1000])
   xlim([2020 2025])
 
-figure(19); clf;   %% same as figure(4)
+iFig = iFig + 1; figure(iFig); clf;   %% same as figure(4)
   pcolor(yymm,pavg,wahaWV);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global Avg WVfrac(z,t)');
   colormap(llsmap5); caxis([-1 +1]*0.1); ylim([100 1000])
   xlim([2020 2025])
+%}
 
 iaYears = 2003 : 2022;
 iaYears = 2003-0.25 : 1/12 : 2025-0.25;
@@ -256,18 +264,42 @@ end
 
 annualT0  = annualT;
 annualWV0 = annualWV;
+tropicsHT = find(rlat(2:end) >= -30 & rlat(2:end) <= 10); rlat(tropicsHT);
+timeHT = 2022 + (1-1)/12 + (15-1)/30/12;
 
-figure(20); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i19km,:))); shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*2); 
-  title('T(z,t) at 19 km'); xlim([2021.75 2023.75]); ylim([-1 +1]*50)
-figure(21); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i27km,:))); shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*2); 
-  title('T(z,t) at 27 km'); xlim([2021.75 2023.75]); ylim([-1 +1]*50)
-figure(22); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i32km,:))); shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*2); 
-  title('T(z,t) at 32 km'); xlim([2021.75 2023.75]); ylim([-1 +1]*50)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i19km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
+  title('T(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i27km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
+  title('T(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i32km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
+  title('T(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualWV(:,i19km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
+  title('WV(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualWV(:,i27km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
+  title('WV(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualWV(:,i32km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
+  title('WV(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
+iFig = iFig + 1; junk = squeeze(nanmean(annualT(tropicsHT+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2);
+  title('T(t,z) -30S to +10 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); pause(0.1)
+iFig = iFig + 1; junk = squeeze(nanmean(annualWV(tropicsHT+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
+  title('WV(t,z) -30S to +10 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); pause(0.1)
+return
 
-figure(20); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i19km,:)),1)); shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*2); 
-  title('T(z,t) at 19 km'); xlim([2021.75 2023.75]); ylim([-1 +1]*50)
-figure(21); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i27km,:)),1)); shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*2); 
-  title('T(z,t) at 27 km'); xlim([2021.75 2023.75]); ylim([-1 +1]*50)
-figure(22); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i32km,:)),1)); shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*2); 
-  title('T(z,t) at 32 km'); xlim([2021.75 2023.75]); ylim([-1 +1]*50)
+smn = 1;
+smn = 0.1;
+iFig = iFig - 8;
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i19km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
+  title('T(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i27km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
+  title('T(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i32km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
+  title('T(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualWV(:,i19km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
+  title('WV(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualWV(:,i27km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
+  title('WV(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
+iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualWV(:,i32km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
+  title('WV(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 

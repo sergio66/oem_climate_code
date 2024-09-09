@@ -7,13 +7,12 @@ date
 
 echo " "
 echo "see how many are done by typing this ... "
-echo "      watch \" ls -lt Output/Quantile03/*.mat | wc -l \" "
+echo "      watch \"ls -lt Output/Quantile03/*.mat | wc -l\" "
 echo " "
 echo "if not all finished, run these two commands"
 echo "     sbatch  -p cpu2021  --exclude= --array=01-120 sergio_matlab_jobB.sbatch 0"
 echo "     sbatch  -p cpu2021  --exclude= --array=01-120 sergio_matlab_jobB.sbatch 1"
 echo " "
-
 
 if [[ "$1" -eq "" ]]; then
   #echo "no arguments, set first arg to 16"

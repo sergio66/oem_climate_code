@@ -75,8 +75,14 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
                                                 %OBS AND ERA CALCS good fits (great for ERA calcs T and O3 need to slightly improve WV make it slightly less wiggly)  
                                                 %%% <<<<< used as DEFAULT starting for all the SAVE_blah dirs, qrenorm ~= 1 >>>>
 
+  %% commit 9c6e18ab014aed371bacc19ecb68594cd2f7c568 (HEAD -> sergio, github/sergio)  9/8/24, very good but too few wiggles in T(z) and WV(z)
   iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=9,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)
   do_the_cov_set_numbers  
+
+  %% this is pretty good now
+  %cov_set(11:13) = cov_set(11:13) / 100;     %% try for some Temperature upper atm wiggles, not enough
+  %cov_set(11:13) = cov_set(11:13) / 1000;    %% try for some Temperature upper atm wiggles
+  cov_set(11:13) = cov_set(11:13) / 10000;    %% try for some Temperature upper atm wiggles, pretty good!!!! Sept 9, 2024 9 am
 
 elseif driver.i16daytimestep < 0 & topts.dataset < 30
   %% earlier_cov_sets  AIRS only, not AMSU
@@ -418,7 +424,11 @@ elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimeste
   fmatd(1:5) = fmatd0(1:5)*1e-3;    %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates  ******
 
 elseif settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep > 0
-  fmatd(1:5) = fmatd0(1:5)*1e-3;     %% new, Aug 2024
+  % fmatd(1:5) = fmatd0(1:5)*1e0;      %% Aug 2024, allowed too much freedom in xb(CO2,N2O,CH4,CFC11,CFC12) --> xf(CO2,N2O,CH4,CFC11,CFC12)
+
+  %% commit 9c6e18ab014aed371bacc19ecb68594cd2f7c568 (HEAD -> sergio, github/sergio)  9/8/24
+  % fmatd(1:5) = fmatd0(1:5)*1e-3;  %% new, Sept 2024  -- kept the xb(CO2,N2O,CH4,CFC11,CFC12) unchanged!!!!
+  fmatd(1:5) = fmatd0(1:5)*1e-1;    %% new, Sept 2024  -- the xb(CO2,N2O,CH4,CFC11,CFC12) wiggles a little, CH4 moves quite a bit!!!! Nice!!!
 
 end
 
