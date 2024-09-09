@@ -68,7 +68,7 @@ end
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
 
 if driver.i16daytimestep > 0 & topts.dataset < 30
-  %% worked great for anomalies!!!
+  %% worked great for anomalies!!!  AIRS only, not AMSU
   %%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
   cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
   cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, 
@@ -79,7 +79,7 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
   do_the_cov_set_numbers  
 
 elseif driver.i16daytimestep < 0 & topts.dataset < 30
-  %% earlier_cov_sets
+  %% earlier_cov_sets  AIRS only, not AMSU
   iCovSetNumber = 4.16;  %% great JPLMay 2022 talk!!! so probably dataset=4,Q=16, 19 year rates
   iCovSetNumber = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
   iCovSetNumber = 18;    %% did it for 18 year rates 2002/09 to 2020/08 
@@ -114,6 +114,7 @@ elseif driver.i16daytimestep < 0 & topts.dataset < 30
   do_the_cov_set_numbers
 
 elseif topts.dataset == 30
+  %% AMSU
   %%            1  |      2        3       4     |       5         6           7  |     8         9        10     |    11       12        13   
   %%               |   sigT_t    sigT_s          |    sigWV_t   sigWV_s           |   sigO3_t   sigO3_s           |
   %%            lc |  ct.lev1  ct.lev2   ct_wide |    cw.lev1  cw.lev2    cw_wide |  coz.lev1  coz.lev2  coz_wide |   alpha_T  alpha_w  alpha_oz
@@ -415,6 +416,10 @@ if settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep < 
 elseif settings.set_tracegas == 1 & settings.co2lays == 3 & driver.i16daytimestep < 0
   %fmatd(1:5) = fmatd0(1:5)*0.0000001;   %% have put in xb(1:3) so we should not change those values .. recall 1,2,3 = CO2/N2O/CH4 and 4/5 are cld1,cld2
   fmatd(1:5) = fmatd0(1:5)*1e-3;    %% xb(1:3) (Co2/N2o/Ch4) so we should not change those values .. gives small spectral bias, lousy SARTA trace gas rates eg CO2=1.0, semi ok KCARTA trace gas rates  ******
+
+elseif settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimestep > 0
+  fmatd(1:5) = fmatd0(1:5)*1e-3;     %% new, Aug 2024
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

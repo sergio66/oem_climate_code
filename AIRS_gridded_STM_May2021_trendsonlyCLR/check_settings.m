@@ -94,9 +94,10 @@ topts = settings;
 %xyz = fieldnames(topts); length(xyz)
 %keyboard_nowindow
 
-if length(topts.iaSequential) > 0
-  disp('topts.iaSequential = ')
-  topts.iaSequential
+if length(topts.iaSequential) == 1
+  fprintf(1,'topts.iaSequential = %2i \n',topts.iaSequential)
+else
+  printarray(topts.iaSequential,'topts.iaSequential')
 end
 
 %disp('settings after')

@@ -280,9 +280,9 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 17
   elseif settings.descORasc == -1 & driver.i16daytimestep < 0
     disp('doing ascending latbin rates')
     driver.rateset.datafile  = [];
-  elseif driver.i16daytimestep > 0 & settings.ocb_set == 0
-    disp('doing descending OBS ANOMALY')
-    driver.rateset.datafile = [];
+  elseif driver.i16daytimestep > 0 & settings.ocb_set == 2
+    disp('doing ascending? descending? OBS ANOMALY')
+    driver.rateset.datafile = driver.anomalydatafile;
   elseif driver.i16daytimestep > 0 & settings.ocb_set == 1
     disp('doing descending CAL ANOMALY')
     driver.rateset.datafile = [];

@@ -63,75 +63,49 @@ end
 fprintf(1,'found %4i of 4608 anomaly files that look like %s \n',sum(iaFound),fname);
 disp(' ')
 
-iHuge = -1;
-iHuge = +1;
-iHuge = input('Enter (-1/default) save one channel, all tiles, all timesteps or (+1) save all channels, all tiles, all timesteps (huge memory) or (+2) save f < 1650 cm-1, all timesteps (+3) 450 good channels : ');
-if length(iHuge) == 0
-  iHuge = -1;
-end
+%iHuge = -1;
+%iHuge = +1;
+%iHuge = input('Enter (-1/default) save one channel, all tiles, all timesteps or (+1) save all channels, all tiles, all timesteps (huge memory) or (+2) save f < 1650 cm-1, all timesteps (+3) 450 good channels : ');
+%if length(iHuge) == 0
+%  iHuge = -1;
+%end
+iHuge = +1; %% all channels
 
 do_XX_YY_from_X_Y
 coslat = cos(reshape(YY,4608,1)*pi/180)*ones(1,iNumAnomTimeSteps);
 
-if iHuge > 0
-  iDorA = input('+1 Desc/default or -1 Asc : ');
-  if length(iDorA) == 0
-    iDorA = +1;
-  end
-end 
+%if iHuge > 0
+%  iDorA = input('+1 Desc/default or -1 Asc : ');
+%  if length(iDorA) == 0
+%    iDorA = +1;
+%  end
+%end 
+iDorA = 0; %% both day and night
+
 iaFound = zeros(size(iaFound));
 
 if iHuge == +1
   disp('wow : lotsa lotsa memory! making the btanom and fluxanom ....')
   if iDorA > 0
-    btanomD = nan(4608,2645,iNumAnomTimeSteps); %% too much memory!
-    fluxanomD = nan(4608,iNumAnomTimeSteps);
+    btanomD = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
+    fluxanomD = zeros(64,iNumAnomTimeSteps);
+  elseif iDorA < 0
+    btanomA = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
+    fluxanomA = zeros(64,iNumAnomTimeSteps);
   else
-    btanomA = nan(4608,2645,iNumAnomTimeSteps); %% too much memory!
-    fluxanomA = nan(4608,iNumAnomTimeSteps);
+    btanomD = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
+    fluxanomD = zeros(64,iNumAnomTimeSteps);
+    btanomA = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
+    fluxanomA = zeros(64,iNumAnomTimeSteps);
   end
   monitor_memory_whos
   ind = 1 : 2645;
-elseif iHuge == +2
-  disp('wow : lotsa lotsa memory! making the btanom and fluxanom ....')
-  f2645 = instr_chans2645;
-  f2645 = h.vchan;
-  ind = find(f2645 < 1650); [mean(diff(ind)) std(diff(ind))];
-  if iDorA > 0
-    btanomD = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomD = nan(4608,iNumAnomTimeSteps);
-  else
-    btanomA = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomA = nan(4608,iNumAnomTimeSteps);
-  end
-  monitor_memory_whos
-elseif iHuge == +3
-  disp('wow : lotsa memory! making the btanomD .... ')
-  f2645 = instr_chans2645;
-  f2645 = h.vchan;
-  ind = get_climateQA_LW_noCFC(h.vchan);
-  ichan = h.ichan(ind);
-
-  [mean(diff(ind)) std(diff(ind))];
-  if iDorA > 0
-    btanomD = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomD = nan(4608,iNumAnomTimeSteps);
-  else
-    btanomA = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomA = nan(4608,iNumAnomTimeSteps);
-  end
-  monitor_memory_whos
-else
-  btanomD = nan(4608,iNumAnomTimeSteps);
-  btanomA = nan(4608,iNumAnomTimeSteps);
-  fluxanomD = nan(4608,iNumAnomTimeSteps);
-  fluxanomA = nan(4608,iNumAnomTimeSteps);
 end
 
-bt1231_D = nan(1,4608);
-bt1231_A = nan(1,4608);
-btChID_D = nan(1,4608);
-btChID_A = nan(1,4608);
+bt1231_D = zeros(1,64);
+bt1231_A = zeros(1,64);
+btChID_D = zeros(1,64);
+btChID_A = zeros(1,64);
 
 disp('reading in anomalies')
 
@@ -151,54 +125,6 @@ iChIX  = 1511;  %% 1226.82 cm-1  find(h.vchan >= 1226.65,1)
 iChIX  = 1861;  %% 1419 cm-1     find(h.vchan >= 1419,1)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%{
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/aslutil
-[h,ha,p,pa] = rtpread('/asl/rtp/airs/airs_l1c_v674/clear/2023/ecmwf_airicrad_day022_clear.rtp');
-
-% ~/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/tile_fits_quantiles.m
-% for qi = qi1 : qi2
-%    % r1231 = squeeze(d.rad_quantile_desc(:,1520,qi));
-%    % r1228 = squeeze(d.rad_quantile_desc(:,1513,qi));
-%    r1231 = squeeze(d.rad_quantile_desc(k_desc,1520,qi));
-%    r1228 = squeeze(d.rad_quantile_desc(k_desc,1513,qi));
-%    bt1231 = rad2bt(fairs(1520),r1231);
-%    bt1228 = rad2bt(fairs(1513),r1228);
-% end
-
-boo = [1511 1520];
-
-addpath /home/sergio/MATLABCODE
-load /home/sergio/KCARTA/L2SComparisons/l2s_kc122_H16_605_2830.mat
-[fc,qc] = convolve_airs(double(w),double(d),double(h.ichan));
-semilogy(w,d(:,1),fc,qc(:,1),fc(boo),qc(boo,1),'ro'); xlim([1220 1240])
-
-plot(p.rlon,p.rlat,'.')
-lala = find(p.rlat >= 0,1);
-
-robs = nanmean(p.robs1,2);
-robs = p.robs1(:,lala);
-
-plot(h.vchan,rad2bt(h.vchan,robs),h.vchan(boo),rad2bt(h.vchan(boo),robs(boo)),'ro'); xlim([1220 1235])
-
-%}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if iHuge < 0
-  junk = -1;
-  while junk < 0
-    junk = input('Enter wavenumber to look for : ');
-    iChIX = find(h.vchan >= junk,1);
-    fprintf(1,'iChIX = %4i corresponds to SARTA ID %4i %6.2f cm-1 \n',iChIX,h.ichan(iChIX),h.vchan(iChIX))
-    junk = input('Proceed (-1/+1[default]) : ');
-    if length(junk) == 0
-      junk = +1;
-    end
-    if junk < 0
-      return
-    end
-  end
-end
 
 iChID = iChIX;
 iChIA = iChIX;
@@ -206,6 +132,9 @@ iChIA = iChIX;
 %% fname = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin64/LonBin72/iQAX_3_fits_LonBin72_LatBin64_V1_200200090001_202200080031_Anomaly_TimeStepsX457.mat'
 %% Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m
 %%   which loads in   fn_summary = sprintf('../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin%1$02d/LonBin%2$02d/iQAX_3_summarystats_LatBin%1$02d_LonBin%2$02d_timesetps_001_%3$03d_V1.mat',lati,loni,i16daysSteps);
+
+  f2645 = instr_chans2645;
+  f2645 = h.vchan;
 
 fprintf(1,'iChIX = 1520 and %04i  --> %8.3f    %8.3f cm-1 \n',iChIX,f2645(1520),f2645(iChIX))
 
@@ -223,20 +152,21 @@ fprintf(1,'f2645(iChIX) --> h.vchan(ind(iXCh)) : %8.6f %8.6f \n',f2645(iChIX),h.
  
 for jj = 1 : 64
   fprintf(1,' \n latbin %2i of 64  will loop over 72 lonbins .... \n',jj);
-  figure(1); clf; pcolor(reshape(bt1231_D,72,64)'); title('BT 1231'); shading interp; colorbar; xlabel('LonBin 01-72'); ylabel('LatBin 01-64'); colormap jet; pause(0.1);
-  figure(2); clf; pcolor(reshape(btChID_D,72,64)'); title('BT ChID'); shading interp; colorbar; xlabel('LonBin 01-72'); ylabel('LatBin 01-64'); colormap jet; pause(0.1);
+  figure(1); clf; plot(bt1231_D'); title('BT 1231'); 
+  figure(2); clf; plot(btChID_D'); title('BT ChID'); 
   datime = 2002.75 + (1:iNumAnomTimeSteps)*16/365;
 
   if iDorA == +1
-    figure(3); clf; junkjunk = squeeze(btanomD(:,i1231,:));  junkjunk = reshape(junkjunk,72,64,iNumAnomTimeSteps); 
-               junkjunk = squeeze(nanmean(junkjunk,1)); pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT 1231 anom D');
-    figure(4); clf; junkjunk = squeeze(btanomD(:,iXCh,:)); junkjunk = reshape(junkjunk,72,64,iNumAnomTimeSteps); 
-               junkjunk = squeeze(nanmean(junkjunk,1)); pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT ChID anom D');
+    figure(3); clf; junkjunk = squeeze(btanomD(i1231,:,:))';  pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT 1231 anom D');
+    figure(4); clf; junkjunk = squeeze(btanomD(iXCh,:,:))';   pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT ChID anom D');
+  elseif iDorA == -1 
+    figure(3); clf; junkjunk = squeeze(btanomA(i1231,:,:))';  pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT 1231 anom A');
+    figure(4); clf; junkjunk = squeeze(btanomA(iXCh,:,:))';   pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT ChID anom A');
   else
-    figure(5); clf; junkjunk = squeeze(btanomA(:,i1231,:));  junkjunk = reshape(junkjunk,72,64,iNumAnomTimeSteps); 
-               junkjunk = squeeze(nanmean(junkjunk,1)); pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT 1231 anom A');
-    figure(6); clf; junkjunk = squeeze(btanomA(:,iXCh,:)); junkjunk = reshape(junkjunk,72,64,iNumAnomTimeSteps); 
-               junkjunk = squeeze(nanmean(junkjunk,1)); pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT ChID anom A');
+    figure(3); clf; junkjunk = squeeze(btanomD(i1231,:,:))';  pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT 1231 anom D');
+    figure(4); clf; junkjunk = squeeze(btanomD(iXCh,:,:))';   pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT ChID anom D');
+    figure(5); clf; junkjunk = squeeze(btanomA(i1231,:,:))';  pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT 1231 anom A');
+    figure(6); clf; junkjunk = squeeze(btanomA(iXCh,:,:))';   pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT ChID anom A');
   end
   pause(0.1) 
   for ii = 1 : 72
@@ -268,33 +198,53 @@ for jj = 1 : 64
       junkradD = squeeze(a.rad_anom_desc(iQuant,:,:));
       if iHuge == +1 | iHuge == +2 | iHuge == +3
         if iDorA > 0
-          btanomD(iCnt,:,:) = squeeze(junkD(iQuant,ind,:));
-          fluxanomD(iCnt,:) = trapz(h.vchan,junkradD)/1000;
-        else
-          btanomA(iCnt,:,:) = squeeze(junkA(iQuant,ind,:));
-          fluxanomA(iCnt,:) = trapz(h.vchan,junkradA)/1000;
+          btanomD(:,:,jj) = squeeze(junkD(iQuant,ind,:))/72 + btanomD(:,:,jj);
+          fluxanomD(jj,:) = trapz(h.vchan,junkradD)/1000 /72+ fluxanomD(jj,:);
+        elseif iDorA < 0
+          btanomA(:,:,jj) = squeeze(junkA(iQuant,ind,:))/72 + btanomA(:,:,jj);
+          fluxanomA(jj,:) = trapz(h.vchan,junkradA)/1000/72 + fluxanomA(jj,:);
+        elseif iDorA == 0
+          btanomA(:,:,jj) = squeeze(junkA(iQuant,ind,:))/72 + btanomA(:,:,jj);
+          fluxanomA(jj,:) = trapz(h.vchan,junkradA)/1000/72 + fluxanomA(jj,:);
+          btanomD(:,:,jj) = squeeze(junkD(iQuant,ind,:))/72 + btanomD(:,:,jj);
+          fluxanomD(jj,:) = trapz(h.vchan,junkradD)/1000/72 + fluxanomD(jj,:);
         end
-      else
-        btanomD(iCnt,:) = squeeze(junkD(iQuant,iXCh,:));
-        btanomA(iCnt,:) = squeeze(junkA(iQuant,iXCh,:));
-        fluxanomD(iCnt,:) = trapz(h.vchan,junkradD)/1000;
-        fluxanomA(iCnt,:) = trapz(h.vchan,junkradA)/1000;
       end
-      bt1231_D(iCnt) = a.bt_desc(i1231,iQuant);
-      btChID_D(iCnt) = a.bt_desc(iXCh,iQuant);
-      bt1231_A(iCnt) = a.bt_asc(i1231,iQuant);
-      btChID_A(iCnt) = a.bt_asc(iXCh,iQuant);
+      bt1231_D(jj) = a.bt_desc(i1231,iQuant)/72 + bt1231_D(jj);
+      btChID_D(jj) = a.bt_desc(iXCh,iQuant)/72  + btChID_D(jj);
+      bt1231_A(jj) = a.bt_asc(i1231,iQuant)/72 + bt1231_A(jj);
+      btChID_A(jj) = a.bt_asc(iXCh,iQuant)/72  + btChID_A(jj);
     end  %% iaFound
   end    %% loop ii
 end      %% loop jj
 fprintf(1,'\n');
 
+%bt1231_D = bt1231_D/72;
+%btChID_D = btChID_D/72;
+%bt1231_A = bt1231_A/72;
+%btChID_A = btChID_A/72;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iDorA > 0
-  put_together_QuantileChoose_anomalies_plots_AND_save_D
+  btanomD = permute(btanomD,[3 1 2]);
+  %btanomD = btanomD/72;
+  %fluxanomD = fluxanomD/72;
+  put_together_QuantileChoose_anomalies_plots_AND_save_D_zonalavg
+elseif iDorA > 0
+  btanomA = permute(btanomA,[3 1 2]);
+  %btanomA = btanomA/72;
+  %fluxanomA = fluxanomA/72;
+  put_together_QuantileChoose_anomalies_plots_AND_save_A_zonalavg
 else
-  put_together_QuantileChoose_anomalies_plots_AND_save_A
+  btanomD = permute(btanomD,[3 1 2]);
+  %btanomD = btanomD/72;
+  %fluxanomD = fluxanomD/72;
+  btanomA = permute(btanomA,[3 1 2]);
+  %btanomA = btanomA/72;
+  %fluxanomA = fluxanomA/72;
+  put_together_QuantileChoose_anomalies_plots_AND_save_D_zonalavg
+  put_together_QuantileChoose_anomalies_plots_AND_save_A_zonalavg
 end
 
 disp('just load in the huge mat file with anomalies, and rerun make_globalavg_and_N_average_anomalies.m');  
@@ -303,16 +253,9 @@ disp('just load in the huge mat file with anomalies, and rerun make_globalavg_an
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if iHuge > 0
-  %iX = input('Do you wish to do global and (+1/default) N zonal averages or (-1) one tile : ');
   iX = 1;
-  if length(iX) == 0
-    iX = 1;
-  end
   if iX > 0
-    stand_alone_make_globalavg_and_N_average_anomalies
-  else
-    make_globalavg_and_onetile_anomaly
-    %make_onetile_anomaly
+    stand_alone_make_globalavg_and_N_average_anomalies_zonalavg
   end
 end
 

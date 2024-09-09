@@ -85,6 +85,11 @@ else
   JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins, 1:120 for anomalies
   if length(JOB) == 0
     JOB = 32;
+    %JOB = 33;
+    %JOB = 34;
+    JOB = 29
+    JOB = 1
+    JOB = 2
   end
 end
 
@@ -140,53 +145,77 @@ plot(f,moo0.thesave.xtrend(:,20),'b',f,moo1.trend(:,1532),'r',f,fMERRA2.trend(:,
 %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
-ia_OorC_DataSet_Quantile = [+0 04 16 -9999]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
-ia_OorC_DataSet_Quantile = [+0 05 50 -9999]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
-%%
-ia_OorC_DataSet_Quantile = [+0 07 16 -9999]; %% ocb_set = 0 : obs fit, dataset = 7, iQuantile = 16    20 year rates, AIRS obs Q16
-ia_OorC_DataSet_Quantile = [+0 09 05 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
+driver.iTrendOrAnomaly = +1;   %% trends
+driver.iTrendOrAnomaly = -1;   %% anomalies
+
+if driver.iTrendOrAnomaly > 0
+  %% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
+  ia_OorC_DataSet_Quantile = [+0 04 16 -9999]; %% ocb_set = 0 : obs fit, dataset = 4, iQuantile = 16    19 year rates, AIRS obs Q(09.99), JPL Aprl 2022 meeting        04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
+  ia_OorC_DataSet_Quantile = [+0 05 50 -9999]; %% ocb_set = 0 : obs fit, dataset = 5, iQuantile = 50    12 year rates, AIRS obs Q(09.99), Princeton Aug 2022 meeting   09/04/2022 commit 0cb7d1fc6ca2485864b625b0590cbdbb7894e5ac
+  %%
+  ia_OorC_DataSet_Quantile = [+0 07 16 -9999]; %% ocb_set = 0 : obs fit, dataset = 7, iQuantile = 16    20 year rates, AIRS obs Q16
+  ia_OorC_DataSet_Quantile = [+0 09 05 -9999]; %% ocb_set = 0 : obs fit, dataset = 9, iQuantile = 05    20 year rates, AIRS obs Q(0.97-->1)
+
+  ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9,  iQuantile = 16  20 year rates
+  ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9,  iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
+  ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9,  iQuantile = 16  20 year rates
+  ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9,  iQuantile = 16  20 year rates
+  
+  ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
+  
+  %%%%% for trends paper START
+  ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
+  
+  ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+  %%%%% for trends paper STOP 
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  ia_OorC_DataSet_Quantile = [+2 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year anomalies, 2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
+  ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+  ia_OorC_DataSet_Quantile = [+0 16 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 16,  iQuantile = 03   04 year rates, 2020/07-2024/06
+
+elseif driver.iTrendOrAnomaly < 0
+
+  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; 
+    anomalydatafile = 'anomaly_globalavg_and_9_averages_timeseries_Q03.mat';   %% needs 454*10/72 = 64 processors       btavgAnomFinal: [2645x4540 double] ==> 454 timesteps x 10 anomaly time series
+  
+  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; 
+    anomalydatafile = 'anomaly_globalavg_and_18_averages_timeseries_Q03.mat';  %% needs 454*19/72 = 120 processors      btavgAnomFinal: [2645x8626 double] ==> 454 timesteps x 19 anomaly time series
+  
+  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 29; iNumAnomJobsPerProc =  110; 
+    anomalydatafile = 'anomaly_globalavg_and_28_averages_timeseries_Q03.mat';  %% needs 454*29/110 = 120 processors     btavgAnomFinal: [2645x13166 double] ==> 454 timesteps x 99 anomaly time series
+  
+  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
+    anomalydatafile = 'anomaly_tile_2515_timeseries_Q03.mat';  %% needs 454/20 = 23 processors                          btavgAnomFinal = [2645x454 double] ==> 454 x 1 
+  
+  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
+    anomalydatafile = 'anomaly_tile_2515_timeseries_Q04.mat';  %% needs 454/20 = 23 processors                          btavgAnomFinal = [2645x454 double] ==> 454 x 1 
+  
+  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
+    anomalydatafile = 'anomaly_tile_2515_timeseries_Q05.mat';  %% needs 454/20 = 23 processors                          btavgAnomFinal = [2645x454 double] ==> 454 x 1 
+  
+  %% ocb_set = 2 : anomaly fit, dataset = 16, iQuantile = 03   22 year anomalies== > 22yrs* 23steps/yr = 500; AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 64; iNumAnomJobsPerProc =  200; 
+    anomalydatafile = '/asl/s1/sergio/JUNK/anomaly_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat';          %% needs 500*64/200 =  160 processors     btavgAnomFinal = [64x2645x500] ==> 500 timesteps x 64 anomaly time series
+  ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 29; iNumAnomJobsPerProc =  250; 
+    anomalydatafile = 'anomaly_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*29/250 = 64 processors       btavgAnomFinal = [2645x14000] > 500*28 anomaly time series
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  anomalydatafile = 'anomaly_globalavg_and_9_averages_timeseries_Q03.mat';   %% needs 454*10/72 = 64 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  anomalydatafile = 'anomaly_globalavg_and_18_averages_timeseries_Q03.mat';  %% needs 454*19/72 = 120 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 29; iNumAnomJobsPerProc =  110; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  anomalydatafile = 'anomaly_globalavg_and_28_averages_timeseries_Q03.mat';  %% needs 454*29/110 = 120 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  anomalydatafile = 'anomaly_tile_2515_timeseries_Q03.mat';  %% needs 454/20 = 23 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  anomalydatafile = 'anomaly_tile_2515_timeseries_Q04.mat';  %% needs 454/20 = 23 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  anomalydatafile = 'anomaly_tile_2515_timeseries_Q05.mat';  %% needs 454/20 = 23 processors
-
-ia_OorC_DataSet_Quantile = [+1 09 16  2]; %% ocb_set = 1 : MERRA2     cal fit, dataset = 9,  iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+1 09 16  3]; %% ocb_set = 1 : AIRSL3     cal fit, dataset = 9,  iQuantile = 16  20 year rates, problems at eg latbin 1, lonbin 15-65
-ia_OorC_DataSet_Quantile = [+1 09 16 -3]; %% ocb_set = 1 : CLIMCAPSL3 cal fit, dataset = 9,  iQuantile = 16  20 year rates
-ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9,  iQuantile = 16  20 year rates
-
-ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
-
-%%%%% for trends paper START
-ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
-
-ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
-ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
-%%%%% for trends paper STOP 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-ia_OorC_DataSet_Quantile = [+2 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year anomalies, 2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
-ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-ia_OorC_DataSet_Quantile = [+0 16 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 16,  iQuantile = 03   04 year rates, 2020/07-2024/06
 
 if ia_OorC_DataSet_Quantile(1) == 2
   get_anomaly_processors
@@ -210,11 +239,15 @@ end
 JOBTYPE = -1000;  %%% uncomment this when trying to fit for linear rates!!! fix change_important_topts_settings, and set <<< driver.i16daytimestep = -1 >>>;  iDoAnomalyOrRates = -1; below
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
 
-iDoAnomalyOrRates = +1;  %% do the anomalies
-iDoAnomalyOrRates = -1;  %% do the trends/rates, default
-if ia_OorC_DataSet_Quantile(1) == 2
-  iDoAnomalyOrRates = +1;  %% do the anomalies
-end
+% <<< got rid of this here as it is reintroduced as  -(driver.iTrendOrAnomaly) !!!! >>>
+% <<<<<<<     but I re-use it in change_important_topts_settings.m      >>>>>>>>>>
+% iDoAnomalyOrRates = +2;  %% bootstrap anomaly?? see change_important_topts_settings.m
+% iDoAnomalyOrRates = +1;  %% do the anomalies
+% iDoAnomalyOrRates = -1;  %% do the trends/rates, default
+% iDoAnomalyOrRates = -(driver.iTrendOrAnomaly);
+% if ia_OorC_DataSet_Quantile(1) == 2
+%   iDoAnomalyOrRates = +1;  %% do the anomalies
+% end
 
 %---------------------------------------------------------------------------
 addpath /home/sergio/MATLABCODE/oem_pkg
@@ -232,7 +265,7 @@ addpath Plotutils
 % for this JOB timestep (1:388), loop over 64x72 grid points
 %---------------------------------------------------------------------------
 %JOB = 1000; iLon0 =  1; iLonE = 64*72;  %% trends
-if iDoAnomalyOrRates == -1
+if driver.iTrendOrAnomaly == +1
   JOBTYPE = -1000;
   iLon0A = 1; iLonEA = 72;
   iOffset = (JOB-1)*72;
@@ -287,12 +320,12 @@ for iInd = iXX1 : idX : iXX2
   driver.iAllorSeasonal = -3; %% JJA
   driver.iAllorSeasonal = -4; %% SON
   driver.iAllorSeasonal = +1; %% default
-  if iDoAnomalyOrRates == +1
+  if driver.iTrendOrAnomaly == +1
     driver.iAllorSeasonal = +1; %% default
   end
 
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
-  if iDoAnomalyOrRates == +1
+  if driver.iTrendOrAnomaly == -1
     driver.i16daytimestep = JOB;                               %% ORIG when doing only ONE anomaly time series
     driver.i16daytimestep = mapAnomData_to_processor(iInd,2);  %% NEW when doing about 10 anomaly time series
     driver.anomalylatbin  = mapAnomData_to_processor(iInd,1);  %% NEW when doing about 10 anomaly time series
@@ -301,21 +334,22 @@ for iInd = iXX1 : idX : iXX2
     driver.anomalytimesteps = iNumAnomTimeSteps;
     driver.anomalynumtiles  = iNumAnomTiles;
     driver.anomalylocation  = iInd;
+    driver.iibin = (driver.anomalylatbin - 1)*72 + driver.anomalylonbin; 
 
-  elseif iDoAnomalyOrRates == -1  
+  elseif driver.iTrendOrAnomaly == +1  
     driver.i16daytimestep = -1;   %% for the rates, not anomalies, RUN BY HAND BY UN-COMMENTING THIS LINE and 
                                   %% on top JOB = 1000, in change_important_topts_settings.m also set topts.set_tracegas = -1;
     driver.iibin     = iInd;
   end
 
-  if iDoAnomalyOrRates < 0
+  if driver.iTrendOrAnomaly > 0
     fprintf(1,'latbin = %3i lonbin = %3i   gridpoint = %4i i16daytimestep = %4i \n',JOB,(iInd-iInd0+1),iInd,driver.i16daytimestep);
-  elseif iDoAnomalyOrRates > 0
+  elseif driver.iTrendOrAnomaly < 0
     fprintf(1,'JOB = %5i gridpoint = %5i i16daytimestep = %5i i16dayLocalBin = %5i \n',JOB,iInd,driver.i16daytimestep,driver.anomalylatbin);
   end
 
   ix = iInd;
-  if iDoAnomalyOrRates < 0
+  if driver.iTrendOrAnomaly > 0
     driver.iLon = iInd-iOffset;
     driver.iLat = JOB;
   else
@@ -323,21 +357,29 @@ for iInd = iXX1 : idX : iXX2
     do_XX_YY_from_X_Y
 
     driver.anomalydatafile = anomalydatafile;
-    if ~strfind(driver.anomalydatafile,'_tile_')
-      junk = load(driver.anomalydatafile,'usethese');
-      junk = junk.usethese{driver.anomalylatbin};
-      YYmean = nanmean(YY(junk));
-      junk = find(rlat65 >= YYmean,1) - 1;
-    
-      driver.iLon = 36;
-      driver.iLat = junk;
 
-    elseif strfind(driver.anomalydatafile,'_tile_')
+    if strfind(driver.anomalydatafile,'_tile_')
       junk = load(driver.anomalydatafile,'LatBin','LonBin');
       driver.iLon = junk.LonBin;
       driver.iLat = junk.LatBin;
-    end
+    else  %% ~strfind(driver.anomalydatafile,'_tile_')
+      junk = load(driver.anomalydatafile,'usethese');
+      junk = junk.usethese{driver.anomalylatbin};
 
+      %YYmean = nanmean(YY(junk));
+      %junk = find(rlat65 >= YYmean,1) - 1;
+      junk = round(nanmean(junk));
+
+      %{
+      newLatGrid = [-90 -75 -60 [-55:5:+55] +60 +75 +90];;      from stand_alone_make_globalavg_and_N_average_anomalies.m
+      so if eg get_anomaly_processors.m  says we are using input_spectrum_number : locallatbin localtimestep ---> procnumber = 8245 :   17  245 ----->   33 clustjob = 033
+         locallatin = 17 ---> latitude = 10
+         junk == 36 ==> rlat = meanvaluebin(rlat65)    rlat(36) = 9.625   YAYAYAYAYAYAYAYA
+      %}
+
+      driver.iLon = 36;
+      driver.iLat = junk;
+    end
   end
 
   driver.oem.dofit = true;
@@ -418,6 +460,15 @@ for iInd = iXX1 : idX : iXX2
     topts.numchan = 13;                              %% 13 AMSU channels
     topts.iNlays_retrieve = 10;                      %% default, 10 AIRS lays thick since so few AMSU channels
   end
+
+  if ia_OorC_DataSet_Quantile(1) == 2
+    %% do the anomalies fast!
+    topts.iaSequential = -1;                                          %% default one gulp, gives good results at poles but bad column water results at tropics!
+    driver.actualanomalyimeStep = jobjunk.localtimestep(iInd-iXX1+1); %% this is used by oem_pkg/rodgers.m --> oem_pkg/common_rodgers_initializations1.m to remove CO2, N20, CH4 etc
+    junk = [iXX1 idX  iXX2 iInd  driver.actualanomalyimeStep];
+    fprintf(1,'     anomaly --- doing iInd = %5i : %2i : %5i; current iInd, iTimestep = %5i %5i \n',junk);
+  end
+
   %%%%%%%%%%
 
   driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss
@@ -518,32 +569,34 @@ for iInd = iXX1 : idX : iXX2
     topts.TfacAdjAtmosphericAmplification = 0.00;
   end
 
-  if driver.iLat <= 31
-    %% we seem to need double or triple this factor in the Southern Hemisphere compared to Northern (too much ocean?????)
-
-    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2.mat
-    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2A.mat
-    %% so let it be triple at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
-    %% so the slope = (3-1)/(32-1) = -2/31
-    intercept = 3;
-
-    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2B.mat
-    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2C.mat
-    %% so let it be double at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
-    %% so the slope = (2-1)/(32-1) = -1/31
-    intercept = 2;
-
-    %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat
-    %% so let it be double at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
-    %% so the slope = (1-1)/(32-1) = 0/31
-    intercept = 1;
-
-    slope = (1-intercept)/31;
-    yjunk = slope * (driver.iLat - 1) + intercept;
-    topts.TfacAdjAtmosphericAmplification = topts.TfacAdjAtmosphericAmplification * yjunk;
-    fprintf(1,'JOB = %4i latbin = %2i mult = %8.6f topts.TfacAdjAtmosphericAmplification = %8.6f \n',JOB,driver.iLat,yjunk,topts.TfacAdjAtmosphericAmplification);
+  if driver.iTrendOrAnomaly > 0
+    if driver.iLat <= 31
+      %% we seem to need double or triple this factor in the Southern Hemisphere compared to Northern (too much ocean?????)
+  
+      %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2.mat
+      %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2A.mat
+      %% so let it be triple at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
+      %% so the slope = (3-1)/(32-1) = -2/31
+      intercept = 3;
+  
+      %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2B.mat
+      %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2C.mat
+      %% so let it be double at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
+      %% so the slope = (2-1)/(32-1) = -1/31
+      intercept = 2;
+  
+      %% this is /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat
+      %% so let it be double at S. Polar (JOB = 1) and then ramp down smoothly to unity at equator (JOB = 32)
+      %% so the slope = (1-1)/(32-1) = 0/31
+      intercept = 1;
+  
+      slope = (1-intercept)/31;
+      yjunk = slope * (driver.iLat - 1) + intercept;
+      topts.TfacAdjAtmosphericAmplification = topts.TfacAdjAtmosphericAmplification * yjunk;
+      fprintf(1,'JOB = %4i latbin = %2i mult = %8.6f topts.TfacAdjAtmosphericAmplification = %8.6f \n',JOB,driver.iLat,yjunk,topts.TfacAdjAtmosphericAmplification);
+    end
   end
-
+  
   topts.tie_sst_lowestlayer = -1;  %% DEFAULT
   topts.tie_sst_lowestlayer = +1;  %% testing dataset=4,iQuantil=16,ocb_set=0 (the JPL SOunder meeting Apr 2022, 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
 
@@ -621,12 +674,14 @@ for iInd = iXX1 : idX : iXX2
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
   %% WARNING, when savesmallFATfile or savebigFATfile is called, topts.resetnorm2one will depend on which is the last file read in (could be anything, depending on the darn cluster)
-  if driver.iLat <= iLatX | driver.iLat >= 64 - iLatX
-    topts.resetnorm2one = -1;   %% DEFAULT, use eg 0.01 for T, 2.2/400 for CO2 etc
-  else
-    topts.resetnorm2one = +1;   %% use 1 for every param
+  if driver.iTrendOrAnomaly > 0
+    if driver.iLat <= iLatX | driver.iLat >= 64 - iLatX
+      topts.resetnorm2one = -1;   %% DEFAULT, use eg 0.01 for T, 2.2/400 for CO2 etc
+    else
+      topts.resetnorm2one = +1;   %% use 1 for every param
+    end
+    %topts.resetnorm2one = +1;   %% use 1 for every param, this is new March 2023 and duplicates the Feb 9, 2023 commit
   end
-  %topts.resetnorm2one = +1;   %% use 1 for every param, this is new March 2023 and duplicates the Feb 9, 2023 commit
 
   iChSet = topts.iChSet;
   iChSet = 2; %% new chans

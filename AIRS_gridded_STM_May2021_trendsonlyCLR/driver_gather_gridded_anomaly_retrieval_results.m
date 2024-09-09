@@ -14,16 +14,31 @@ addpath /asl/matlib/h4tools
 addpath /asl/matlib/maps
 addpath /home/sergio/MATLABCODE/TIME
 
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+%% get this from clust_run_retrieval_setlatbin_AIRS_loop_lonbin,m
+
+%% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; 
   anomalydatafile = 'anomaly_globalavg_and_9_averages_timeseries_Q03.mat';   %% needs 454*10/72 = 64 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+
+%% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; 
   anomalydatafile = 'anomaly_globalavg_and_18_averages_timeseries_Q03.mat';  %% needs 454*19/72 = 120 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 29; iNumAnomJobsPerProc =  110; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+
+%% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 29; iNumAnomJobsPerProc =  110; 
   anomalydatafile = 'anomaly_globalavg_and_28_averages_timeseries_Q03.mat';  %% needs 454*29/110 = 120 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+
+%% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
   anomalydatafile = 'anomaly_tile_2515_timeseries_Q03.mat';  %% needs 454/20 = 23 processors
-ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+
+%% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
+ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
   anomalydatafile = 'anomaly_tile_2515_timeseries_Q04.mat';  %% needs 454/20 = 23 processors
+
+%% needs 500*29/250 = 64 processors       btavgAnomFinal = [2645x14000] > 500*28 anomaly time series
+ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 29; iNumAnomJobsPerProc =  250; 
+  anomalydatafile = 'anomaly_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  
 
 disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
@@ -167,12 +182,15 @@ else
 end
 
 data_anom = load(anomalydatafile);
-if ~strfind(anomalydatafile,'_tile')
-  rlat = [0 meanvaluebin(data_anom.newLatGrid)];
-else
+if strfind(anomalydatafile,'_tile')
   rlat = [data_anom.LatBin];
+else
+  rlat = [0 meanvaluebin(data_anom.newLatGrid)];
+  rlat = [meanvaluebin(data_anom.newLatGrid)];
 end
+
 daysSince2002 = change2days(data_anom.yy,data_anom.mm,data_anom.dd,2002);
+yymm = data_anom.yy + (data_anom.mm-1)/12 + (data_anom.dd-1)/30/12;
 
 iNumAnomData = iNumAnomTimeSteps * iNumAnomTiles;
 
@@ -206,6 +224,34 @@ if ~exist('iaFound')
   nedt              = nan(2645,iNumAnomData);
 
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% can do something like      watch "ls -lt Output/Quantile03/*.mat | wc -l"   
+%% can do something like      watch "ls -lt Output/Quantile03/*.mat | wc -l"   
+%% can do something like      watch "ls -lt Output/Quantile03/*.mat | wc -l"   
+
+JOB = -1;
+get_anomaly_processors
+iaaFound = zeros(iNumAnomTimeSteps,iNumAnomTiles);
+iCnt = 0;
+for jj = 1 : (iNumAnomTiles)
+  for ii = 1 : iNumAnomTimeSteps
+    iCnt = iCnt + 1;
+    if iNorD > 0
+      fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(iCnt) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+    elseif iNorD < 0
+      fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(iCnt) '.mat']; %% stored here before before July 2021
+    end
+    if exist(fname) > 0
+      iaaFound(ii,jj) = +1;
+    end
+  end
+end
+fprintf(1,'found %6i of the expected %6i files \n',sum(iaaFound(:)),iNumAnomTimeSteps*(iNumAnomTiles))
+printarray([1:iNumAnomTiles; sum(iaaFound,1)]',['checking how many of the ' num2str(iNumAnomTimeSteps) ' have been made for the ' num2str(iNumAnomTiles) ' tiles']);
+figure(1); clf; imagesc(iaaFound'); colorbar; title('Jobs found'); xlabel('iNumAnomTimeSteps'); ylabel('iNumAnomTiles'); 
+disp('ret to continue to reading in the files'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -249,9 +295,13 @@ playsD = log(plevs(1:100)./plevs(2:101));
 plays = playsN./playsD;
 plays = flipud(plays);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear pavg
 
 iDoAgain = +1;
+fprintf(1,'will loop through %3i timeteps for %2i latbins .. the timesteps will mark off as "o" for 100 and "." for 10 \n',iNumAnomTimeSteps,iNumAnomTiles)
+
 while iDoAgain > 0
   for ii = 1 : iNumAnomTimeSteps * iNumAnomTiles
     if iNorD > 0
@@ -293,18 +343,18 @@ while iDoAgain > 0
       save_cov_set.cov_set(:,ii)   = oem.cov_set;
       save_cov_set.fmat(:,ii)      = sqrt(diag(oem.fmat));
       save_cov_set.reg_type        = oem.reg_type;
-      save_cov_set.xb_traceI(:,ii) = jacobian.scalar_i([1 length(jacobian.scalar_i)]); %% Co2/N2O/CH4/CFC11/CFC11/stemp etc
-      save_cov_set.xb_wvzI(:,ii)   = jacobian.water_i([1 length(jacobian.water_i)]);   %% top/bottom
-      save_cov_set.xb_tzzI(:,ii)   = jacobian.temp_i([1 length(jacobian.temp_i)]);     %% top/bottom
-      save_cov_set.xb_ozzI(:,ii)   = jacobian.ozone_i([1 length(jacobian.ozone_i)]);   %% top/bottom
-      save_cov_set.xb_trace(:,ii)  = oem.xb(1:6);
-      save_cov_set.xb_wvz(:,ii)    = oem.xb(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom
-      save_cov_set.xb_tzz(:,ii)    = oem.xb(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom
-      save_cov_set.xb_ozz(:,ii)    = oem.xb(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom
-      save_cov_set.xf_trace(:,ii)  = oem.finalrates(1:6);
-      save_cov_set.xf_wvz(:,ii)    = oem.finalrates(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom
-      save_cov_set.xf_tzz(:,ii)    = oem.finalrates(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom
-      save_cov_set.xf_ozz(:,ii)    = oem.finalrates(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom
+      save_cov_set.xb_traceI(:,ii) = jacobian.scalar_i([1 length(jacobian.scalar_i)]); %% Co2/N2O/CH4/CFC11/CFC11/stemp etc  indices (1,6)
+      save_cov_set.xb_wvzI(:,ii)   = jacobian.water_i([1 length(jacobian.water_i)]);   %% top/bottom indices
+      save_cov_set.xb_tzzI(:,ii)   = jacobian.temp_i([1 length(jacobian.temp_i)]);     %% top/bottom indices
+      save_cov_set.xb_ozzI(:,ii)   = jacobian.ozone_i([1 length(jacobian.ozone_i)]);   %% top/bottom indices
+      save_cov_set.xb_trace(:,ii)  = oem.xb(1:6);                                             %% Co2/N2O/CH4/CFC11/CFC11/stemp etc  init values (1,6)
+      save_cov_set.xb_wvz(:,ii)    = oem.xb(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom init values
+      save_cov_set.xb_tzz(:,ii)    = oem.xb(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom init values
+      save_cov_set.xb_ozz(:,ii)    = oem.xb(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom init values
+      save_cov_set.xf_trace(:,ii)  = oem.finalrates(1:6);                                             %% Co2/N2O/CH4/CFC11/CFC11/stemp etc  final values (1,6)
+      save_cov_set.xf_wvz(:,ii)    = oem.finalrates(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom final values
+      save_cov_set.xf_tzz(:,ii)    = oem.finalrates(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom final values
+      save_cov_set.xf_ozz(:,ii)    = oem.finalrates(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom final values
 
       nlays_straight_from_results(ii) = nn;
       nn0 = min(nn,iNumLay);
@@ -449,10 +499,15 @@ while iDoAgain > 0
       fits(:,ii) = NaN;
       nedt(:,ii) = NaN;
     end
+
     if mod(ii,iNumAnomTimeSteps) == 0
-      fprintf(1,'+ %2i\n',ii/iNumAnomTimeSteps);
+      fprintf(1,'+ fat latbin   %2i of %2i \n',ii/iNumAnomTimeSteps,iNumAnomTiles);
     elseif iExist == 1
-      fprintf(1,'o');
+      if mod(ii,100) == 0
+        fprintf(1,'o');
+      elseif mod(ii,10) == 0
+        fprintf(1,'.');
+      end
     elseif iExist == -1
       fprintf(1,' ');
     end
@@ -472,10 +527,10 @@ while iDoAgain > 0
   if sum(iaFound) < iNumAnomData
     jett = jet(64); jett(1,:) = 1;
 
-    if ~strfind(anomalydatafile,'_tile')
-      plot_anomalies_A
-    else
+    if strfind(anomalydatafile,'_tile')
       plot_anomalies_1
+    else
+      plot_anomalies_All
     end
 
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
@@ -490,8 +545,68 @@ fprintf(1,'last loaded file %s has xb(1:6) = %5.2f %5.2f %5.2f %5.2f %5.2f %5.2f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-if ~strfind(anomalydatafile,'_tile')
-  plot_anomalies_All
-else
+junk_globalavg_rawdata = data_anom.btavgAnomFinal(:,1:iNumAnomTimeSteps);
+junk_globalavg_spectral_deltan00 = spectral_deltan00(:,1:iNumAnomTimeSteps);
+for ii = 1 : 2645
+  P = polyfit(1:iNumAnomTimeSteps,junk_globalavg_rawdata(ii,:),1);
+  trend_globalavg_raw(ii) = P(1)*365/16;
+  P = polyfit(1:iNumAnomTimeSteps,junk_globalavg_spectral_deltan00(ii,:),1);
+  trend_globalavg(ii) = P(1)*365/16;
+end
+
+f2645 = instr_chans2645;
+i0900 = find(f2645 >= 900,1);
+i0723 = find(f2645 >= 723,1);
+i1305 = find(f2645 >= 1305,1);
+i1419 = find(f2645 >= 1419,1);
+
+figure(16); clf; plot(f2645,trend_globalavg_raw,'b',f2645,trend_globalavg,'r'); title('Global Avg Quick dBT/dt'); plotaxis2; xlim([645 1620])
+  hl = legend('Raw from data','after CO2/CH4/N2O removed','location','best','fontsize',10);
+
+figure(16); clf; plot(f2645,trend_globalavg_raw*20,'b',f2645,trend_globalavg*20,'r',...
+                      f2645,data_anom.btavgAnomFinal(:,1),f2645,data_anom.btavgAnomFinal(:,iNumAnomTimeSteps)); title('Global Avg Quick dBT/dt'); plotaxis2; xlim([645 1620])
+  hl = legend('20 x (Raw data)','20 x (after CO2/CH4/N2O removed)','TimeStep 1','TimeStep Nyears','location','best','fontsize',10);
+
+figure(17); clf; 
+  plot(yymm,smooth(junk_globalavg_spectral_deltan00(i0723,:),23),'r.-',...
+       yymm,smooth(junk_globalavg_spectral_deltan00(i0900,:),23),'gx-',...
+       yymm,smooth(junk_globalavg_spectral_deltan00(i1305,:),23),'k.-',...
+       yymm,smooth(junk_globalavg_spectral_deltan00(i1419,:),23),'bo-',...
+       yymm,smooth(junk_globalavg_rawdata(i0723,:),23),'r--',...
+       yymm,smooth(junk_globalavg_rawdata(i0900,:),23),'y--',...
+       yymm,smooth(junk_globalavg_rawdata(i1305,:),23),'k--',...
+       yymm,smooth(junk_globalavg_rawdata(i1419,:),23),'c--',...
+       'linewidth',2)
+plotaxis2; hl = legend('723 CO2 (700 mb)','900 Window','1305 CH4','1419 WV (300 mb)','location','best','fontsize',8); xlim([2002 2025]);
+title('Fitted data in thick, raw data in dashes')
+
+figure(18); clf
+  plot(yymm,save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps),'linewidth',2); hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
+  set(gca,'fontsize',10); title('xb(trace gas + ST)');
+figure(19); clf
+  plot(yymm,save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps),'linewidth',2); hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
+  set(gca,'fontsize',10); title('xfinal(trace gas + ST)');
+figure(20); clf
+  wah = save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps);
+  plot(yymm,wah(1,:),'b',yymm,wah(2,:),'m',yymm,wah(3,:),'g',yymm,wah(4,:),'y',yymm,wah(5,:),'k',yymm,wah(6,:),'r','linewidth',2); hold on; 
+  wah = save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps);
+  plot(yymm,wah(1,:),'b--',yymm,wah(2,:),'m--',yymm,wah(3,:),'g--',yymm,wah(4,:),'y--',yymm,wah(5,:),'k--',yymm,wah(6,:),'r--','linewidth',2); hold on; 
+  hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
+  set(gca,'fontsize',10); title('xb(trace gas + ST)');
+
+figure(19); clf
+  plot(yymm,save_cov_set.xb_wvz(:,1:iNumAnomTimeSteps),'linewidth',2); set(gca,'fontsize',10); title('xb(WV)');
+figure(19); clf
+  plot(yymm,save_cov_set.xb_tzz(:,1:iNumAnomTimeSteps),'linewidth',2); set(gca,'fontsize',10); title('xb(TZ)');
+figure(19); clf
+  plot(yymm,save_cov_set.xb_ozz(:,1:iNumAnomTimeSteps),'linewidth',2); set(gca,'fontsize',10); title('xb(OZ)');
+
+disp('ret to continue to plot_anomalies_ALL'); apuse
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if strfind(anomalydatafile,'_tile')
   plot_anomalies_1
+else
+  plot_anomalies_All
 end

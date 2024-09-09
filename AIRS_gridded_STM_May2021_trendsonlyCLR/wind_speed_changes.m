@@ -1,3 +1,5 @@
+function wind = wind_speed_changes();
+
 if ~exist('YY')
 
   %% run this as stand alone to check anonaly code
@@ -65,10 +67,27 @@ jett = jet(128); jett(1,:) = 1;
 scatter_coast(XX,YY,100,nanmean(wind.wspeedsave,1)); title([junkstr 'Wind Speed']);        caxis([0 1]*10); colormap(jett)
 scatter_coast(XX,YY,100,wind.trend.wspeed);          title([junkstr 'Wind Speed Trends']); caxis([-1 +1]*0.1); colormap(usa2)
 
+disp('computing anomalies for 4608 tiles ... +=1000  .=100')
 for ii = 1 : 4608
+  if mod(ii,1000) == 0
+    fprintf(1,'+');
+  elseif mod(ii,100) == 0
+    fprintf(1,'.');
+  end
+
+  [B, stats] = Math_tsfit_lin_robust(junkdoy-junkdoy(1),wind.stempsave(:,ii),4);
+  wind.stempanom(:,ii) = compute_anomaly(1:num_months_wind,junkdoy-junkdoy(1),B,[],wind.stempsave(:,ii),-1);
+
   [B, stats] = Math_tsfit_lin_robust(junkdoy-junkdoy(1),wind.wspeedsave(:,ii),4);
   wind.wspeedanom(:,ii) = compute_anomaly(1:num_months_wind,junkdoy-junkdoy(1),B,[],wind.wspeedsave(:,ii),-1);
+
+  [B, stats] = Math_tsfit_lin_robust(junkdoy-junkdoy(1),wind.tccsave(:,ii),4);
+  wind.tccanom(:,ii) = compute_anomaly(1:num_months_wind,junkdoy-junkdoy(1),B,[],wind.tccsave(:,ii),-1);
+
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 pcolor(reshape(XX,72,64),reshape(YY,72,64),reshape(nanmean(wind.wspeedanom,1),72,64)); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*1)
 scatter_coast(reshape(XX,72,64),reshape(YY,72,64),100,reshape(nanmean(wind.wspeedanom,1),72,64)); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*1)
 title([junkstr 'Mean WSpeed Anomaly \newline over 263 months m/s'])
@@ -92,10 +111,10 @@ jett = jet(128); jett(1,:) = 1;
 scatter_coast(XX,YY,100,nanmean(wind.stempsave,1)); title([junkstr 'Stemp']); caxis([200 320]); colormap(jett)
 scatter_coast(XX,YY,100,wind.trend.stemp);          title([junkstr 'STEMP Trends']); caxis([-1 +1]*0.1); colormap(usa2)
 
-for ii = 1 : 4608
-  [B, stats] = Math_tsfit_lin_robust(junkdoy-junkdoy(1),wind.stempsave(:,ii),4);
-  wind.stempanom(:,ii) = compute_anomaly(1:num_months_wind,junkdoy-junkdoy(1),B,[],wind.stempsave(:,ii),-1);
-end
+%for ii = 1 : 4608
+%  [B, stats] = Math_tsfit_lin_robust(junkdoy-junkdoy(1),wind.stempsave(:,ii),4);
+%  wind.stempanom(:,ii) = compute_anomaly(1:num_months_wind,junkdoy-junkdoy(1),B,[],wind.stempsave(:,ii),-1);
+%end
 pcolor(reshape(XX,72,64),reshape(YY,72,64),reshape(nanmean(wind.stempanom,1),72,64)); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*2)
 scatter_coast(reshape(XX,72,64),reshape(YY,72,64),100,reshape(nanmean(wind.stempanom,1),72,64)); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*2)
 title([junkstr 'Mean Stemp Anomaly \newline over 263 months K'])
@@ -119,10 +138,10 @@ jett = jet(128); jett(1,:) = 1;
 scatter_coast(XX,YY,100,nanmean(wind.tccsave,1)); title([junkstr 'Tcc']); caxis([200 320]); colormap(jett)
 scatter_coast(XX,YY,100,wind.trend.tcc);          title([junkstr 'TCC Trends']); caxis([-1 +1]*0.01); colormap(usa2)
 
-for ii = 1 : 4608
-  [B, stats] = Math_tsfit_lin_robust(junkdoy-junkdoy(1),wind.tccsave(:,ii),4);
-  wind.tccanom(:,ii) = compute_anomaly(1:num_months_wind,junkdoy-junkdoy(1),B,[],wind.tccsave(:,ii),-1);
-end
+%for ii = 1 : 4608
+%  [B, stats] = Math_tsfit_lin_robust(junkdoy-junkdoy(1),wind.tccsave(:,ii),4);
+%  wind.tccanom(:,ii) = compute_anomaly(1:num_months_wind,junkdoy-junkdoy(1),B,[],wind.tccsave(:,ii),-1);
+%end
 pcolor(reshape(XX,72,64),reshape(YY,72,64),reshape(nanmean(wind.tccanom,1),72,64)); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*2)
 scatter_coast(reshape(XX,72,64),reshape(YY,72,64),100,reshape(nanmean(wind.tccanom,1),72,64)); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*0.1)
 title([junkstr 'Mean Tcc Anomaly \newline over 263 months K'])

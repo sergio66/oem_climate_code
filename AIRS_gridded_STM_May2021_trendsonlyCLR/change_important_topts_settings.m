@@ -70,6 +70,7 @@ topts.offsetrates = -1; %% DEFAULT do NOT offset!!!!!
                             %% then we LINEARLY add in 0,01 K/year, depending on timestep DEFAULT OFF
 
 %%%%%%%%%% ANOM or RATES %%%%%%%%%%
+iDoAnomalyOrRates = -(driver.iTrendOrAnomaly);
 if iDoAnomalyOrRates == +2
   %% BOOTSTRAP ANOMALY
   topts.set_tracegas = +2;   %% set  a priori for trace gas as eg 2.2/1.0/4.5/0.0/0.0 for CO2/N2O/CH4/CFC11/CFC12; if anomaly, adjust according to PREVIOUS timestep!!!!!  BOOTSTRAP

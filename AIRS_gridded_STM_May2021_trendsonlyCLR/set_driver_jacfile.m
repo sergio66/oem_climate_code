@@ -126,6 +126,7 @@ if driver.i16daytimestep < 0
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 elseif driver.i16daytimestep > 0
+  fprintf(1,'set_driver_jacfile.m : anomalies!!! latbin = %2i timestep = %3i \n',driver.iLat,driver.i16daytimestep)
   junk = num2str(driver.i16daytimestep,'%03d');
   if iXJac == 1
     %% sarta time vary jacs
@@ -150,13 +151,16 @@ elseif driver.i16daytimestep > 0
 
     %% kcarta time vary jac
     junk = load(driver.rateset.datafile);
-    if ~strfind(driver.anomalydatafile,'_tile_')    
-      junk = junk.usethese{driver.anomalylatbin};
-      
-      YYmean = nanmean(YY(junk));
-      junk = find(rlat65 >= YYmean,1) - 1;
-    else
+    if strfind(driver.anomalydatafile,'_tile_')
+      junk = load(driver.anomalydatafile,'LatBin','LonBin');
+      %driver.iLon = junk.LonBin;
       junk = junk.LatBin;
+    else
+      junk = junk.usethese{driver.anomalylatbin};
+
+      %YYmean = nanmean(YY(junk));
+      %junk = find(rlat65 >= YYmean,1) - 1;
+      junk = round(nanmean(junk));
     end
     driver.jacobian.filename = [];
     AHA = '/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/';

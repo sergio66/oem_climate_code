@@ -40,6 +40,7 @@ elseif abs(settings.ocb_set) > 2
   settings.ocb_set
   error('incorrect settings.ocb_set')
 end
+
 %---------------------------------------------------------------------------
 % Raw rate data file        
 %% iUseNWP = -1 for use AIRS obs/cal rates
@@ -48,7 +49,6 @@ end
 %%         = +6 for CMIP6, -6 for AMIP6
 %%             1 for N, 2 for D
 [driver,settings] = set_driver_rateset_datafile(driver,settings);
-
 fprintf(1,'[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i %3i \n',[settings.ocb_set settings.descORasc driver.i16daytimestep settings.dataset])
 fprintf(1,' <<< driver.rateset.datafile >>> = %s \n',driver.rateset.datafile)
 
@@ -223,15 +223,12 @@ if driver.ia_OorC_DataSet_Quantile(1) == 0
 elseif driver.ia_OorC_DataSet_Quantile(1) == 1
   %% these are ERA5 simulations with CO2, so use CO2 trends!!
   set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
+elseif driver.ia_OorC_DataSet_Quantile(1) == 2
+  %% these are obs anomalies
+  set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0
 end
 
 %{
-disp('WV xb WV xb WV xb')
-disp('WV xb WV xb WV xb')
-disp('WV xb WV xb WV xb')
-disp('WV xb WV xb WV xb')
-disp('WV xb WV xb WV xb')
-disp('WV xb WV xb WV xb')
 disp('WV xb WV xb WV xb')
   xb(driver.jacobian.water_i) = +0.01/2;
 %}
@@ -250,6 +247,12 @@ elseif iSergioCO2 > 0 & settings.ocb_set == 0
   xb(2) = n2ox;
   xb(3) = ch4x;
   xb(1:6) = 0;  %%% sergio, float the CO2 rates !!!!! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+elseif iSergioCO2 < 0 & settings.ocb_set == 2
+  disp('iSergioCO2 = -1 and this is ANOMALY')
+  %% so if driver.actualanomalyimeStep = 1:23:N, then xb(1) = co2x*[0 1 2 3 Nyears]; etc
+  xb(1) = co2x * (driver.actualanomalyimeStep - 1)/(365.25/16);  
+  xb(2) = n2ox * (driver.actualanomalyimeStep - 1)/(365.25/16);
+  xb(3) = ch4x * (driver.actualanomalyimeStep - 1)/(365.25/16);
 end
 
 [mm,nn] = size(xb);
