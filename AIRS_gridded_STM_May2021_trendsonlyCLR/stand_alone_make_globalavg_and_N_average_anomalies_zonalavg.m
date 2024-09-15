@@ -6,10 +6,17 @@ addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/TIME
 
+disp('just load in the huge mat file with anomalies, and rerun stand_alone_make_globalavg_and_N_average_anomalies_zonalavg.m');  
+disp('just load in the huge mat file with anomalies, and rerun stand_alone_make_globalavg_and_N_average_anomalies_zonalavg.m');  
+disp('just load in the huge mat file with anomalies, and rerun stand_alone_make_globalavg_and_N_average_anomalies_zonalavg.m');  
+
 %{ 
 %%%%% can use this as standalone %%%%%
 load /asl/s1/sergio/JUNK/anomaly_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
-iDorA = +1;
+iDorA = +1; iQuant = 3;  %% Q0.90 for paper, iQAX = 3
+
+load /asl/s1/sergio/JUNK/anomaly_iQAX_4_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+iDorA = +1; iQuant = 1;  %% Q00  = allsky avg
 
 stand_alone_make_globalavg_and_N_average_anomalies_zonalavg
 %} 
@@ -296,9 +303,8 @@ look_for_anomalous_UTLS_WV_zonalavg
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-%iSave = input('save so that can process anomalies with clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m    -1/+1  : ');
 iSave = -1; 
-disp('just load in the huge mat file with anomalies, and rerun make_globalavg_and_N_average_anomalies.m');  
+iSave = input('save so that can process anomalies with clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m    -1/+1  : ');
 if iSave > 0
   if iDorA == +1
     yy = yyD; 
@@ -306,16 +312,28 @@ if iSave > 0
     dd = ddD; 
     hh = hhD; 
     rtime = rtimeD;
+    fout = ['anomalyD_zonalavg_globalavg_and_' num2str(length(newLatGrid)-1) '_averages_timeseries_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) ];
   else
     yy = yyA; 
     mm = mmA; 
     dd = ddA; 
     hh = hhA; 
     rtime = rtimeA;
+    fout = ['anomalyA_zonalavg_globalavg_and_' num2str(length(newLatGrid)-1) '_averages_timeseries_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) ];
+  end
+  if iQAX == 3
+    fout = [fout '.mat'];                       %% orig, iQAX = 3
+  else
+    fout = [fout '_iQAX_' num2str(iQAX) '.mat']; %% new
   end
   comment = 'see stand_alone_make_global_avg_and_N_averages_anomalies_zonalavg.m';
-  fout = ['anomaly_zonalavg_globalavg_and_' num2str(length(newLatGrid)-1) '_averages_timeseries_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '.mat'];
   saver = ['save -v7.3 ' fout ' btavgAnomFinal yy mm dd hh rtime comment usethese newLatGrid anomavg'];
   eval(saver);
+  fprintf(1,'saving to %s \n',fout)
 end
 %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

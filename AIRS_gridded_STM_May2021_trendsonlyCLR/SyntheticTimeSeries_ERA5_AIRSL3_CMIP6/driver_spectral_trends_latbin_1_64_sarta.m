@@ -12,6 +12,7 @@ if length(JOB) == 0
 end
 
 iStartYY = 2018; iNumYears = 04;
+iStartYY = 2002; iNumYears = 22;
 
 % ls -lt /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_15*.rp.rtp
 % -rw-rw-r-- 1 sergio pi_strow 316109325 Oct 29 15:35 /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_15_2002_09_2022_08.rp.rtp
@@ -24,6 +25,7 @@ end;
 if ~exist('iNumYears')
   iNumYears = 19;
   iNumYears = 20;
+  iNumYears = 22;
 end
 
 if ~exist('iModel')
@@ -31,15 +33,15 @@ if ~exist('iModel')
   iModel = 1;   %% UMBC
   iModel = -3;  %% CLIMCAPS
   iModel = +3;  %% AIRS v7
-  iModel = 5;   %% ERA5
   iModel = 51;  %% ERA5 Const TraceGas
+  iModel = 5;   %% ERA5
 end
 
 iNorD = -1; %% day
 iNorD = +1; %% DEFAULT, night
 
-iConstORVary = -1;   %% vary the CO2 N2O CH4 as function of time  %% DEFAULT
 iConstORVary = +1;   %% constant CO2 N2O CH4 as function of time  %% to replace driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
+iConstORVary = -1;   %% vary the CO2 N2O CH4 as function of time  %% DEFAULT
 
 if iNorD == +1
   dndir = 'NIGHTorAVG';
@@ -200,14 +202,17 @@ for xx = 1 : 72
     data = double(raaData(iii,:));
     zoo = find(isfinite(data));
     if length(zoo) > 20
-      [junk err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      %[junk err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk err junkanom] = compute_anomaly_wrapper(zoo,dayOFtime(zoo),data(zoo),4,-1,-1);
       thesave.xtrend(iii,xx)    = junk(2);
       thesave.xtrendErr(iii,xx) = err.se(2);
       thesave.const(iii,xx)     = junk(1);
+      thesave.anom(iii,xx,:)    = junkanom;
     else
       thesave.xtrend(iii,xx)    = NaN;
       thesave.xtrendErr(iii,xx) = NaN;
       thesave.const(iii,xx)     = NaN;
+      thesave.anom(iii,xx,:)    = NaN;
     end
   end
   fprintf(1,' 1231 cm-1 trend (AIRS L1C Ch 1520) = %8.6f \n',thesave.xtrend(1520,xx));
@@ -222,7 +227,6 @@ comment = 'see MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/Syn
 % elseif iNumYears == 20
 %   saver = ['save ' dirout '/sarta_spectral_trends_latbin' num2str(JOB,'%02d') '_2002_09_2022_08.mat thesave comment'];
 % end
-
 
 %% STS/NIGHTorAVG/ERA5_ConstG/reconstruct_era5_spectra_geo_rlat31_2018_09_2022_08.mat
 if ~exist(fnameOUT)

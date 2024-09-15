@@ -10,11 +10,13 @@ end
 
 if exist(fop)
   fop
+  warning('fop exists')
   error('fop exists')
 end
 
 if exist(frp)
   frp
+  warning('frp exists')
   error('frp exists')
 end
 
@@ -62,6 +64,7 @@ ppmvLAY_4 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),4);
 ppmvLAY_5 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),5);
 ppmvLAY_6 = layers2ppmv(h72x,p72x,1:length(p72x.ptemp),6);
 
+rcalc = reshape(p72x.rcalc,2645,72,numtimesteps);;
 tcalc = reshape(rad2bt(h72x.vchan,p72x.rcalc),2645,72,numtimesteps);;
 tcalcavg = squeeze(nanmean(tcalc,2));
 

@@ -1,3 +1,8 @@
+%>> whos btanomX fluxanomaly
+%  Name              Size                      Bytes  Class     Attributes%%
+%  btanomX          4608x444x500               677120000  double
+%  fluxanomaly      4608x500x14                3584000  double   (:,:,1) === total flux
+
 coslat = cos(YY*pi/180)*ones(1,iNumAnomTimeSteps);
 
 yymmSlope = 2020.50;
@@ -89,7 +94,7 @@ xlim([2002 2025])
 xticks([2002 2005:2:2022 2025])
 
 tropics = find(abs(YY') <= 30 & p.landfrac <= 0.01);
-tropics = find(abs(YY') <= 30 &);
+tropics = find(abs(YY') <= 30);
 for ii = 1 : iNumAnomTimeSteps
   junk = squeeze(btanomX(:,i900,:)) * pi;
   junk900(ii) = nanmean(junk(tropics,ii));

@@ -21,6 +21,7 @@ system_slurm_stats
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
 if length(JOB) == 0
   JOB = 20;
+  JOB = 22;
 end
 
 iNumYears = JOB;
@@ -77,7 +78,7 @@ iAllorSeasonal = +1;  %% all
 %%% TEMPERATURE AND WATER VAPOR LEVELS
 
 Airs_PT = [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100, ...
-70, 50, 30, 20, 15, 10, 7, 5, 3, 2, 1.5,1];
+           70, 50, 30, 20, 15, 10, 7, 5, 3, 2, 1.5,1];
 Airs_PQ = [1000, 925, 850, 700, 600, 500, 400, 300, 250, 200, 150, 100];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

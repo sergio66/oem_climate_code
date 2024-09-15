@@ -366,6 +366,8 @@ elseif iL3orCLIMCAPS == -1
     saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_' savestr_version '_asc.mat save64x72_* days Tlevs Qlevs save_l*64*72'];
   end
 end
+
+fprintf(1,'saver = %s \n',saver);
 eval(saver)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

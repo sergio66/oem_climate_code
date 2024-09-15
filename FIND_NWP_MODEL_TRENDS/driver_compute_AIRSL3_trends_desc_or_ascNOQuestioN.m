@@ -21,6 +21,7 @@ system_slurm_stats
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
 if length(JOB) == 0
   JOB = 20;
+  JOB = 22;
 end
 
 iNumYears = JOB;

@@ -40,7 +40,7 @@ a.topts.dataset = 09; strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GU
 iMakePertProf = -1;
 if iMakePertProf > 0
   pert_kcarta_fluxes_for_paper
-  rtpwrite(['/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_' nu2str(2002 + iNumYears) '_monthlyERA5_pert.rp.rtp'],h,ha,pert,pa);
+  rtpwrite(['/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_' num2str(2002 + iNumYears) '_monthlyERA5_pert.rp.rtp'],h,ha,pert,pa);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

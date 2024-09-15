@@ -82,7 +82,7 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
   %% this is pretty good now
   %cov_set(11:13) = cov_set(11:13) / 100;     %% try for some Temperature upper atm wiggles, not enough
   %cov_set(11:13) = cov_set(11:13) / 1000;    %% try for some Temperature upper atm wiggles
-  cov_set(11:13) = cov_set(11:13) / 10000;    %% try for some Temperature upper atm wiggles, pretty good!!!! Sept 9, 2024 9 am
+  cov_set(11:13) = cov_set(11:13) / 10000;    %% try for some Temperature upper atm wiggles, pretty good!!!! Sept 9, 2024 9 am, commit 6067ec1cec3cf8e4610786581c334eadbf367f5e (HEAD -> sergio, github/sergio)
 
 elseif driver.i16daytimestep < 0 & topts.dataset < 30
   %% earlier_cov_sets  AIRS only, not AMSU

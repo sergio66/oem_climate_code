@@ -208,10 +208,12 @@ if iSave > 0
   comment = 'look at driver_put_together_QuantileChoose_anomalies.m';
   f_ind = h.vchan(ind);
   if iHuge < 0
-    fout = ['anomaly_chID_' num2str(iChID,'%04d') '_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '.mat'];
+    fout = ['anomaly_chID_' num2str(iChID,'%04d') '_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '.mat'];  % orig
+    fout = ['anomaly_' num2str(iQAX) '_chID_' num2str(iChID,'%04d') '_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '.mat'];
     saver = ['save ' fout ' bt1231_D btChID_D btanomD yyD mmD ddD hhD rtimeD fluxanomD    btanomA yyA mmA ddA hhA rtimeA bt1231_A btChID_A fluxanomA   comment ind f_ind'];
   else
-    fout = ['/asl/s1/sergio/JUNK/anomaly_ALL_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '_D.mat'];
+    fout = ['/asl/s1/sergio/JUNK/anomaly_ALL_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '_D.mat'];  %% orig
+    fout = ['/asl/s1/sergio/JUNK/anomaly_' num2str(iQAX) '_ALL_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '_D.mat'];
     saver = ['save -v7.3 ' fout ' btanomD yyD mmD ddD hhD rtimeD comment bt1231_D fluxanomD ind f_ind'];
   end
   eval(saver)

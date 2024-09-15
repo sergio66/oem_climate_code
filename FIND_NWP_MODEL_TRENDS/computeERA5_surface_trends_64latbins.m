@@ -82,6 +82,56 @@ for ii = 1 : 64
     trend64_mmw_lag(ii) = NaN;
    end
 
+  data = reshape(all.olr,i228,72,64); data = nanmean(maskLF.*data,2); data = data(:,ii);  
+  [B, stats] = Math_tsfit_lin_robust(dayOFtime(usetime),data(usetime),4); trend64_olr(ii) = B(2);    trend64_olr_err(ii) = stats.se(2);
+  k = remove_nan(data);
+  if length(k) > 50
+    l = xcorr(data(k),1,'coeff');
+    trend64_olr_lag(ii) = l(1);
+   else
+    trend64_olr_lag(ii) = NaN;
+   end
+
+  data = reshape(all.olr_clr,i228,72,64); data = nanmean(maskLF.*data,2); data = data(:,ii);  
+  [B, stats] = Math_tsfit_lin_robust(dayOFtime(usetime),data(usetime),4); trend64_olr_clr(ii) = B(2);    trend64_olr_clr_err(ii) = stats.se(2);
+  k = remove_nan(data);
+  if length(k) > 50
+    l = xcorr(data(k),1,'coeff');
+    trend64_olr_clr_lag(ii) = l(1);
+   else
+    trend64_olr_clr_lag(ii) = NaN;
+   end
+
+  data = reshape(all.ilr,i228,72,64); data = nanmean(maskLF.*data,2); data = data(:,ii);  
+  [B, stats] = Math_tsfit_lin_robust(dayOFtime(usetime),data(usetime),4); trend64_ilr(ii) = B(2);    trend64_ilr_err(ii) = stats.se(2);
+  k = remove_nan(data);
+  if length(k) > 50
+    l = xcorr(data(k),1,'coeff');
+    trend64_ilr_lag(ii) = l(1);
+   else
+    trend64_ilr_lag(ii) = NaN;
+   end
+
+  data = reshape(all.ilr_clr,i228,72,64); data = nanmean(maskLF.*data,2); data = data(:,ii);  
+  [B, stats] = Math_tsfit_lin_robust(dayOFtime(usetime),data(usetime),4); trend64_ilr_clr(ii) = B(2);    trend64_ilr_clr_err(ii) = stats.se(2);
+  k = remove_nan(data);
+  if length(k) > 50
+    l = xcorr(data(k),1,'coeff');
+    trend64_ilr_clr_lag(ii) = l(1);
+   else
+    trend64_ilr_clr_lag(ii) = NaN;
+   end
+
+  data = reshape(all.ilr_adj,i228,72,64); data = nanmean(maskLF.*data,2); data = data(:,ii);  
+  [B, stats] = Math_tsfit_lin_robust(dayOFtime(usetime),data(usetime),4); trend64_ilr_adj(ii) = B(2);    trend64_ilr_adj_err(ii) = stats.se(2);
+  k = remove_nan(data);
+  if length(k) > 50
+    l = xcorr(data(k),1,'coeff');
+    trend64_ilr_adj_lag(ii) = l(1);
+   else
+    trend64_ilr_adj_lag(ii) = NaN;
+   end
+
 end
 fprintf(1,'\n')
 warning on

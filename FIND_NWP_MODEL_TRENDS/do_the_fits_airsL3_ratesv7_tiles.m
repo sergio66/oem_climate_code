@@ -1,7 +1,14 @@
 warning off
 
 zonkA = find(yy == StartY & mm == StartYM);
+if length(zonkA) == 0
+  zonkA = 1;
+end
 zonkB = find(yy == StopY  & mm == StopYM);
+if length(zonkB) == 0
+  zonkB = length(mm);
+end
+
 %zonk = 1:zonk;
 zonk = zonkA : zonkB;
 fprintf(1,'going from %4i/%2i to %4i/%2i .. found %3i time points out of %3i\n',StartY,StartYM,StopY,StopYM,length(zonk),length(yy))
@@ -66,49 +73,57 @@ for ii = 1 : 72
 
   thestats64x72.lats = xthestats.lats;
 
-  thestats64x72.waterrate(ii,:,:) = xthestats.waterrate;
-  thestats64x72.waterratestd(ii,:,:) = xthestats.waterratestd;
-  thestats64x72.waterlag(ii,:,:) = xthestats.waterlag;
+  thestats64x72.waterrate(ii,:,:)        = xthestats.waterrate;
+  thestats64x72.waterratestd(ii,:,:)     = xthestats.waterratestd;
+  thestats64x72.wateranom(ii,:,:,:)      = xthestats.wateranom;
+  thestats64x72.waterlag(ii,:,:)         = xthestats.waterlag;
   thestats64x72.waterratestd_lag(ii,:,:) = xthestats.waterratestd_lag;
 
   if iL3orCLIMCAPS == +1
-    thestats64x72.ozonerate(ii,:,:) = xthestats.ozonerate;
-    thestats64x72.ozoneratestd(ii,:,:) = xthestats.ozoneratestd;
-    thestats64x72.ozonelag(ii,:,:) = xthestats.ozonelag;
+    thestats64x72.ozonerate(ii,:,:)        = xthestats.ozonerate;
+    thestats64x72.ozoneratestd(ii,:,:)     = xthestats.ozoneratestd;
+    thestats64x72.ozoneanom(ii,:,:,:)      = xthestats.ozoneanom;
+    thestats64x72.ozonelag(ii,:,:)         = xthestats.ozonelag;
     thestats64x72.ozoneratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag;
 
     thestats64x72.cld_frac_rate(ii,:,:) = xthestats_cld1.waterrate;  thestats64x72.cld_frac_ratestd(ii,:,:) = xthestats_cld1.waterrate;
     thestats64x72.cld_pres_rate(ii,:,:) = xthestats_cld1.ptemprate;  thestats64x72.cld_pres_ratestd(ii,:,:) = xthestats_cld1.ptemprate;  %% fixed Sept 31, 2018 (or Oct -1, 2018)
 
   else
-    thestats64x72.ozonerate(ii,:,:) = xthestats.ozonerate * 0;
-    thestats64x72.ozoneratestd(ii,:,:) = xthestats.ozoneratestd * 0;
-    thestats64x72.ozonelag(ii,:,:) = xthestats.ozonelag * 0;
+    thestats64x72.ozonerate(ii,:,:)        = xthestats.ozonerate * 0;
+    thestats64x72.ozoneratestd(ii,:,:)     = xthestats.ozoneratestd * 0;
+    thestats64x72.ozoneanom(ii,:,:,:)      = xthestats.ozoneanom * 0;
+    thestats64x72.ozonelag(ii,:,:)         = xthestats.ozonelag * 0;
     thestats64x72.ozoneratestd_lag(ii,:,:) = xthestats.ozoneratestd_lag * 0;
   end
 
-  thestats64x72.RHrate(ii,:,:) = xthestats.RHrate;
-  thestats64x72.RHratestd(ii,:,:) = xthestats.RHratestd;
-  thestats64x72.RHlag(ii,:,:) = xthestats.RHlag;
+  thestats64x72.RHrate(ii,:,:)        = xthestats.RHrate;
+  thestats64x72.RHratestd(ii,:,:)     = xthestats.RHratestd;
+  thestats64x72.RHanom(ii,:,:,:)      = xthestats.RHanom;
+  thestats64x72.RHlag(ii,:,:)         = xthestats.RHlag;
   thestats64x72.RHratestd_lag(ii,:,:) = xthestats.RHratestd_lag;
 
   thestats64x72.ptemprate(ii,:,:) = xthestats.ptemprate;
   thestats64x72.ptempratestd(ii,:,:) = xthestats.ptempratestd;
+  thestats64x72.ptempanom(ii,:,:,:)  = xthestats.ptempanom;
   thestats64x72.ptemplag(ii,:,:) = xthestats.ptemplag;
   thestats64x72.ptempratestd_lag(ii,:,:) = xthestats.ptempratestd_lag;
 
   thestats64x72.stemprate(ii,:) = xthestats.stemprate;
   thestats64x72.stempratestd(ii,:) = xthestats.stempratestd;
+  thestats64x72.stempanom(ii,:,:)  = xthestats.stempanom;
   thestats64x72.stemplag(ii,:) = xthestats.stemplag;
   thestats64x72.stempratestd_lag(ii,:) = xthestats.stempratestd_lag;
 
   thestats64x72.TWetSurfrate(ii,:) = xthestats.TWetSurfrate;
   thestats64x72.TWetSurfratestd(ii,:) = xthestats.TWetSurfratestd;
+  thestats64x72.TWetSurfanom(ii,:,:)  = xthestats.TWetSurfanom;
   thestats64x72.TWetSurflag(ii,:) = xthestats.TWetSurflag;
   thestats64x72.TWetSurfratestd_lag(ii,:) = xthestats.TWetSurfratestd_lag;
 
   thestats64x72.RHSurfrate(ii,:) = xthestats.RHSurfrate;
   thestats64x72.RHSurfratestd(ii,:) = xthestats.RHSurfratestd;
+  thestats64x72.RHSurfanom(ii,:,:)  = xthestats.RHSurfanom;
   thestats64x72.RHSurflag(ii,:) = xthestats.RHSurflag;
   thestats64x72.RHSurfratestd_lag(ii,:) = xthestats.RHSurfratestd_lag;
 
@@ -147,6 +162,8 @@ if iL3orCLIMCAPS > 0
     thestats64x72_other.olrratestd(ii,:) = xthestats64x72_other.olrratestd;
     thestats64x72_other.clrolrrate(ii,:) = xthestats64x72_other.clrolrrate;
     thestats64x72_other.clrolrratestd(ii,:) = xthestats64x72_other.clrolrratestd;
+    thestats64x72_other.olranom(ii,:,:)  = xthestats64x72_other.olranom;
+    thestats64x72_other.clr olranom(ii,:,:)  = xthestats64x72_other.clrolranom;
    
     thestats64x72_other.iceT_rate(ii,:) = thestats_cld2.olrrate;       thestats64x72_other.iceT_ratestd(ii,:) = thestats_cld2.olrratestd;
     thestats64x72_other.ice_od_rate(ii,:) = thestats_cld2.clrolrrate;  thestats64x72_other.ice_od_ratestd(ii,:) = thestats_cld2.clrolrratestd;

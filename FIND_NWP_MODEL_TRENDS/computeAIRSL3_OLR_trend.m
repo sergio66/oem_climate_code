@@ -1,6 +1,10 @@
 yy0 = 2002; mm0 = 8;
 yy = yy0; mm = mm0;
-for JOBB = 1 : 240
+
+iNumYears = 20; %% 2002/09 - 2022/08
+iNumYears = 22; %% 2002/09 - 2024/08
+
+for JOBB = 1 : iNumYears*12
   yy = yy; mm = mm + 1;
   if mod(JOBB-5,12) == 0
     yy = yy + 1;

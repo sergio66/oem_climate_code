@@ -1,5 +1,19 @@
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE
+addpath /asl/matlib/h4tools
+addpath /asl/matlib/rtptools
+
+%% see also /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
+%% https://www.arm.gov/publications/proceedings/conf05/extended_abs/mlawer_ej.pdf
+RRTM_bands0 = [10 250 500 630 700 820 980 1080 1180 1390 1480 1800 2080 2250 2380 2600 3000];
+wx = 10:1:3000; rx = ttorad(wx,300); 
+fluxx = trapz(wx,rx)/1000;
+for ii = 2 : length(RRTM_bands0)
+  junk = find(wx > RRTM_bands0(ii-1) & wx <= RRTM_bands0(ii));
+  fluxx(ii) = trapz(wx(junk),rx(junk))/1000;
+end
+
+RRTM_bands = RRTM_bands0(4:end);
 
 dirCode = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/';
 dirData = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/';
@@ -37,19 +51,24 @@ iNumYears = 20;    iNumAnomTimeSteps = 454; % 365/16 = 22.8125; floor(iNumYears*
 iNumYears = 21.75; iNumAnomTimeSteps = 496; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 498!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 iNumYears = 22;    iNumAnomTimeSteps = 500; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 500!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 
+iQAX = input('Enyter iQAX [1,3,4] 3=default : ');
+if length(iQAX) == 0
+  iQAX = 3;
+end
+
 iCnt = 0;
 for jj = 1 : 64
   fprintf(1,'latbin %2i of 64 \n',jj);
   for ii = 1 : 72
     iCnt = iCnt + 1;
     if iNumYears == 20
-      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_3_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_200200090001_202200080031_Anomaly_TimeStepsX457.mat'];
     elseif iNumYears == 21.75
-      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_3_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_Anomaly_TimeSteps498.mat'];
     elseif iNumYears == 22
-      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_3_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_Anomaly_TimeSteps502.mat'];
     else
       error('unknown iNumYears')
@@ -85,10 +104,10 @@ if iHuge == +1
   disp('wow : lotsa lotsa memory! making the btanom and fluxanom ....')
   if iDorA > 0
     btanomD = nan(4608,2645,iNumAnomTimeSteps); %% too much memory!
-    fluxanomD = nan(4608,iNumAnomTimeSteps);
+    fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
   else
     btanomA = nan(4608,2645,iNumAnomTimeSteps); %% too much memory!
-    fluxanomA = nan(4608,iNumAnomTimeSteps);
+    fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
   end
   monitor_memory_whos
   ind = 1 : 2645;
@@ -99,10 +118,10 @@ elseif iHuge == +2
   ind = find(f2645 < 1650); [mean(diff(ind)) std(diff(ind))];
   if iDorA > 0
     btanomD = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomD = nan(4608,iNumAnomTimeSteps);
+    fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
   else
     btanomA = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomA = nan(4608,iNumAnomTimeSteps);
+    fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
   end
   monitor_memory_whos
 elseif iHuge == +3
@@ -115,17 +134,17 @@ elseif iHuge == +3
   [mean(diff(ind)) std(diff(ind))];
   if iDorA > 0
     btanomD = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomD = nan(4608,iNumAnomTimeSteps);
+    fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
   else
     btanomA = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
-    fluxanomA = nan(4608,iNumAnomTimeSteps);
+    fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
   end
   monitor_memory_whos
 else
   btanomD = nan(4608,iNumAnomTimeSteps);
   btanomA = nan(4608,iNumAnomTimeSteps);
-  fluxanomD = nan(4608,iNumAnomTimeSteps);
-  fluxanomA = nan(4608,iNumAnomTimeSteps);
+  fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+  fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
 end
 
 bt1231_D = nan(1,4608);
@@ -247,13 +266,13 @@ for jj = 1 : 64
     end
     iCnt = iCnt + 1;
     if iNumYears == 20
-      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_3_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_200200090001_202200080031_Anomaly_TimeStepsX457.mat'];
     elseif iNumYears == 21.75
-      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_3_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_Anomaly_TimeSteps498.mat'];
     elseif iNumYears == 22
-      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_3_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_Anomaly_TimeSteps502.mat'];
     else
       error('unknown iNumYears')
@@ -269,16 +288,29 @@ for jj = 1 : 64
       if iHuge == +1 | iHuge == +2 | iHuge == +3
         if iDorA > 0
           btanomD(iCnt,:,:) = squeeze(junkD(iQuant,ind,:));
-          fluxanomD(iCnt,:) = trapz(h.vchan,junkradD)/1000;
+          fluxanomD(iCnt,:,1) = trapz(h.vchan,junkradD)/1000;
+          for flfl = 1 : length(RRTM_bands)-1
+            junk = find(h.vchan >= RRTM_bands(flfl) & h.vchan < RRTM_bands(flfl+1));
+            fluxanomD(iCnt,:,flfl+1) = trapz(h.vchan(junk),junkradD(junk,:))/1000;
+          end
         else
           btanomA(iCnt,:,:) = squeeze(junkA(iQuant,ind,:));
-          fluxanomA(iCnt,:) = trapz(h.vchan,junkradA)/1000;
+          fluxanomA(iCnt,:,1) = trapz(h.vchan,junkradA)/1000;
+          for flfl = 1 : length(RRTM_bands)-1
+            junk = find(h.vchan >= RRTM_bands(flfl) & h.vchan < RRTM_bands(flfl+1));
+            fluxanomA(iCnt,:,flfl+1) = trapz(h.vchan(junk),junkradA(junk,:))/1000;
+          end
         end
       else
         btanomD(iCnt,:) = squeeze(junkD(iQuant,iXCh,:));
         btanomA(iCnt,:) = squeeze(junkA(iQuant,iXCh,:));
-        fluxanomD(iCnt,:) = trapz(h.vchan,junkradD)/1000;
-        fluxanomA(iCnt,:) = trapz(h.vchan,junkradA)/1000;
+        fluxanomD(iCnt,:,1) = trapz(h.vchan,junkradD)/1000;
+        fluxanomA(iCnt,:,1) = trapz(h.vchan,junkradA)/1000;
+        for flfl = 1 : length(RRTM_bands)-1
+          junk = find(h.vchan >= RRTM_bands(flfl) & h.vchan < RRTM_bands(flfl+1));
+          fluxanomD(iCnt,:,flfl+1) = trapz(h.vchan(junk),junkradD(junk,:))/1000;
+          fluxanomA(iCnt,:,flfl+1) = trapz(h.vchan(junk),junkradA(junk,:))/1000;
+        end
       end
       bt1231_D(iCnt) = a.bt_desc(i1231,iQuant);
       btChID_D(iCnt) = a.bt_desc(iXCh,iQuant);

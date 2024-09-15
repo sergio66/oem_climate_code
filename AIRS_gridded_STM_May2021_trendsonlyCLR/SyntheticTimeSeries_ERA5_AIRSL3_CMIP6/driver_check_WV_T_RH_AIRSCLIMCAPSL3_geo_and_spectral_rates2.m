@@ -40,6 +40,7 @@ YMStart = [2002 09];  YMEnd = [2007 08];  %% 05 years
 YMStart = [2002 09];  YMEnd = [2012 08];  %% 10 years
 YMStart = [2002 09];  YMEnd = [2017 08];  %% 15 years
 YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+YMStart = [2002 09];  YMEnd = [2024 08];  %% 22 years
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -124,6 +125,7 @@ disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs
 %% NOTE THIS IS JUST HOW MUCH DATA YOU HAVE, AND IS DIFFERENT THAN YMStart,YMEnd where you set ACTUAL startYY/stopYY for trends
 iYS = 2002; iYE = 2021;
 iYS = 2002; iYE = 2022;
+iYS = 2002; iYE = 2024;
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeAIRSCLIMCAPSL3_monthly_trends.m  and do_the_AIRSCLIMCAPSL3_trends.m
 %% see  FIND_NWP_MODEL_TRENDS/driver_compute_AIRS_CLIMCAPS_trends_desc_or_asc.m or FIND_NWP_MODEL_TRENDS/driver_compute_AIRS_CLIMCAPS_trends_desc_or_ascNOQuestioN.m  

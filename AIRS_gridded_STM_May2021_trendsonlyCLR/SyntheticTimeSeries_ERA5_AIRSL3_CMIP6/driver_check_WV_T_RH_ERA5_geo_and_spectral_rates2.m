@@ -10,6 +10,8 @@ addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 
+%% check_all_jobs_done('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_rlat',64,'_2002_09_2024_08.mat');
+
 disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
 disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
 disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
@@ -41,6 +43,7 @@ YMStart = [2008 09];  YMEnd = [2022 08];  %% Ryan said they fixed O3 after 2007 
 
 YMStart = [2020 07];  YMEnd = [2024 06];  %% hot hot hot trends
 YMStart = [2002 09];  YMEnd = [2024 06];  %% 22 year trends
+YMStart = [2002 09];  YMEnd = [2024 08];  %% 22 year trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

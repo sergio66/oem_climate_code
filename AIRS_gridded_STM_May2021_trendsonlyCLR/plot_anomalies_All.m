@@ -267,39 +267,9 @@ annualWV0 = annualWV;
 tropicsHT = find(rlat(2:end) >= -30 & rlat(2:end) <= 10); rlat(tropicsHT);
 timeHT = 2022 + (1-1)/12 + (15-1)/30/12;
 
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i19km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
-  title('T(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i27km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
-  title('T(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualT(:,i32km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
-  title('T(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualWV(:,i19km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
-  title('WV(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualWV(:,i27km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
-  title('WV(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualWV(:,i32km,:))); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
-  title('WV(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); pause(0.1)
-iFig = iFig + 1; junk = squeeze(nanmean(annualT(tropicsHT+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2);
-  title('T(t,z) -30S to +10 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); pause(0.1)
-iFig = iFig + 1; junk = squeeze(nanmean(annualWV(tropicsHT+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
-  title('WV(t,z) -30S to +10 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); pause(0.1)
-return
-
-smn = 1;
-smn = 0.1;
-iFig = iFig - 8;
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i19km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
-  title('T(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i27km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
-  title('T(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualT(:,i32km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*2); 
-  title('T(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualWV(:,i19km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
-  title('WV(t,lat) at 19 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualWV(:,i27km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
-  title('WV(t,lat) at 27 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
-iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),smoothn(squeeze(annualWV(:,i32km,:)),smn)); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25); 
-  title('WV(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50)
+iFig = 28; iFig = iFig - 8;
+iFig = 20; 
+plot_Nature2024
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 

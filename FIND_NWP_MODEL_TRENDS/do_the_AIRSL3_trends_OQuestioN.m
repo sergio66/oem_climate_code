@@ -177,9 +177,14 @@ if iDo > 0
   disp(' ')
   disp('interpolating AIRS L3 data from gridded Lat/Lon bins to Tiles bins FAST');
   plot_L3_data_tiles_fast_grib
+  %% see eg /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc.mat
   
   disp(' ')
   disp('doing the geophysical rates (do_profilerate_fit includes lag1) and anoms')
   iSlowORFast = -1;
   do_the_fits_airsL3_ratesv7_tiles
+
+  disp('now converting to radiances and fluxes, run this using cluster, this only does latbin 32 (default)')
+  cluster_do_the_fits_airsL3_ratesv7_tiles_radiances
+  
 end

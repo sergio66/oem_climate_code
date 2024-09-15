@@ -194,7 +194,7 @@ utlswv0 = btanomX(:,[i0658 i0663 i0669 i0674],:);       utlswv0 = squeeze(nanmea
 utlswv0 = btanomX(:,[i0654 i0677 i0678 i0680 i0681],:); utlswv0 = squeeze(nanmean(utlswv0,2));   strX = 'UTLS Tz';  %% shows something
 
 for ii = 1 : 64
-  P(ii,:) = polyfit(1:iNumAnomTimeSteps,utlswv0(ii,:),1);
+  P(ii,:) = nanpolyfit(1:iNumAnomTimeSteps,utlswv0(ii,:),1);
   Q = polyval(P(ii,:),1:iNumAnomTimeSteps);
   utlswv(ii,:) = utlswv0(ii,:) - Q;
 end
@@ -274,7 +274,7 @@ hgts = [tzpeak([iaTz2(1) iaTz1(1) iaTz3(1) iaTz4(1)]); 18];
 
 %% Figure 2a
 for ii = 1 : 4
-  Pjunk = polyfit(1:iNumAnomTimeSteps,bt_show4(ii,:),1);
+  Pjunk = nanpolyfit(1:iNumAnomTimeSteps,bt_show4(ii,:),1);
   Q = polyval(Pjunk,1:iNumAnomTimeSteps);
   bt_show4_detrended(ii,:) = bt_show4(ii,:) - Q;
 end
@@ -357,7 +357,7 @@ disp('ret to continue'); pause
 % also remember of jacg1 = q dBT/dq ==> dBT/dq = jacg1/q
 bt_Q = (bt_WV2 - nanmean(nanmean(tzjac(iaWV2,i050mb),1),1) * bt_Tz2)/nanmean(nanmean(g1jac(iaWV2,i050mb),1),1)/100;
 bt_Q = (bt_WV2 - nanmean(nansum(nansum(tzjac(iaWV2,1:i050mb),1)),1) * bt_Tz2)/nanmean(nansum(nansum(g1jac(iaWV2,1:i050mb),1)),1);
-bt_Q = bt_Q - mean(bt_Q,2)*ones(1,iNumAnomTimeSteps);
+bt_Q = bt_Q - nanmean(bt_Q,2)*ones(1,iNumAnomTimeSteps);
 pcolor(yymm,rlat,bt_Q); 
 pcolor(yymm,rlat,smoothn(bt_Q,1)); colorbar; colormap(usa2); caxis([-1 +1]*1);  shading interp
 %set(gca,'ydir','reverse');

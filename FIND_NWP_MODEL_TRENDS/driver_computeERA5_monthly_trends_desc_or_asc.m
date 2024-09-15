@@ -23,14 +23,31 @@ load('llsmap5.mat');
 %% note this code only handles 2002_09 to YYYY_08 sp
 %%      this code does not currently handle eg OCO2 ERA5_atm_N_cld_data_2012_05_to_2019_04_trends_desc.mat
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+can start afresh from here%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('takes about 5 hours for trends')
 
+iEnsureSave = -1;   %% only save if file DNE (big fat file, or trends)
+iEnsureSave = +1;   %% this makes sure big fat file is saved, as are trend files, whether or not files have already been made
+
+if iEnsureSave < 0
+  disp('iEnsureSave = -1 so files only saved (big fat file, trends etc) if they DNE')
+elseif iEnsureSave > 0
+  disp('iEnsureSave = +1 so files always saved (big fat file, trends etc) even if they already exist')
+end
+disp('if you have ALREADY saved BIG FAT FILE also look for lines that say     can start afresh from here       ')
+disp('if you have ALREADY saved BIG FAT FILE also look for lines that say     can start afresh from here       ')
+disp('<RET> to continue'); pause
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
-%JOB = 20
+if length(JOB) == 0
+  JOB = 20;
+  JOB = 22;
+end
 
 if ~exist('iTrendsOrAnoms')
   iTrendsOrAnoms = -1;  %% surface and atmospheric anomalies
@@ -43,8 +60,8 @@ end
 if ~exist('iDorA')
   iDorA = -10; %% asc,  random pert about tile center
   iDorA = +10; %% desc, random pert about tile center
-  iDorA = +1;  %% desc, tile center
   iDorA = -1;  %% asc,  tile center
+  iDorA = +1;  %% desc, tile center
 end
 fprintf(1,'iDorA = %2i \n',iDorA)
 
@@ -66,6 +83,7 @@ for yy = 2002 : 2024
     mmS = 09;
   elseif yy == 2024
     mmE = 06;
+    mmE = 08;
   end
   for mm = mmS : mmE
     iCnt = iCnt + 1;
@@ -76,6 +94,7 @@ end
 
 yymmS = [2020 07]; yymmE = [2024 06];
 yymmS = [2002 09]; yymmE = [2024 06];
+yymmS = [2002 09]; yymmE = [2024 08];
 
 iaMin = find(yymmS(1) == yysave & yymmS(2) == mmsave);
 iaMax = find(yymmE(1) == yysave & yymmE(2) == mmsave);
@@ -351,19 +370,15 @@ if ~exist(foutjunk)
   iSave = input('Save BIG FAT FILES???? (-1/+1) : ');
 end
 
-fprintf(1,'iSave    foutjunk  = %2i %s  \n',iSave,foutjunk);
+fprintf(1,'iSave   iEnsureSave    foutjunk  = %2i %s  \n',iSave,iEnsureSave,foutjunk);
 disp('RET to continue'); pause
 
-if iSave > 0
+if iSave > 0 | iEnsureSave > 0
   %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
   fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
   saver = ['save -v7.3 ' foutjunk ' comment all'];
   eval(saver);
 end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.stemp,1)); colormap(jet); title('ERA5 mean stemp')
 figure(2); clf; scatter_coast(all.rlon,all.rlat,40,nanmean(all.RHSurf,1)); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
@@ -374,6 +389,15 @@ figure(5); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.stemp);
 figure(6); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf); colormap(jet); title('ERA5 mean RHsurf DO NOT BELIEVE')
 figure(7); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('ERA5 mean TWSurf DO BELIEVE')
 figure(8); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('ERA5 mean mmw')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp('can start afresh from here eg    clear all; load ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
+disp('can start afresh from here eg    clear all; load ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
+disp('can start afresh from here eg    clear all; load ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
+%% check these :::: iOLR = +1; iCldORClr = +1; iDorA = +1; yymmS = [2002 09]; yymmE = [2024 08];  iTrendsOrAnoms = +1; find_computeERA5_monthly_trends_foutname
 
 plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
 pN = plevs(1:end-1)-plevs(2:end);
@@ -415,7 +439,7 @@ if iTrendsOrAnoms > 0
   figure(4); clf; aslmap(4,rlat65,rlon73,smoothn((reshape(trend_mmw,72,64)') ,1), [-90 +90],[-180 +180]);    title('ERA5 trend  colwater mm/yr');    caxis([-1 +1]*0.2);  colormap(llsmap5);
   pause(0.1)
 
-  if ~exist(fout_trendjunk_surface)
+  if ~exist(fout_trendjunk_surface) | iEnsureSave > 0
     fprintf(1,'saving surface/scalar trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk_surface)
     saver = ['save ' fout_trendjunk_surface ' comment trend*'];
     eval(saver);
@@ -423,6 +447,15 @@ if iTrendsOrAnoms > 0
 
 elseif iTrendsOrAnoms < 0
   computeERA5_surface_anoms
+
+%  fout_trendjunk_surface_anom = ['anom_' fout_trendjunk_surface_anom];
+
+  if ~exist(fout_trendjunk_surface_anom | iEnsureSave > 0
+    fprintf(1,'saving surface/scalar anomaly file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk_surface_anom)
+    saver = ['save ' fout_trendjunk_surface_anom ' comment anom_*'];
+    eval(saver);
+  end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -442,7 +475,7 @@ if iTrendsOrAnoms == 1
   %trend_plevs37 = permute(all.nwp_plevs,[2 1 3]); trend_plevs37 = reshape(trend_plevs37,37,227*4608); trend_plevs37 = mean(trend_plevs37,2);
   
   %find_computeERA5_monthly_trends_foutname
-  if ~exist(fout_trendjunk)
+  if ~exist(fout_trendjunk) | iEnsureSave > 0
     fprintf(1,'saving trend file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk)
     saver = ['save ' fout_trendjunk ' comment trend*'];
     eval(saver);
@@ -454,6 +487,7 @@ if iTrendsOrAnoms == 1
     set(gca,'yscale','linear'); ylim([100 1000]); colorbar('horizontal')
 
 elseif iTrendsOrAnoms == -1 
+  error('too long and painful, forget this')
   computeERA5_atmos_anoms
 
   if isfield(all,'nwp_plevs')
@@ -468,7 +502,8 @@ elseif iTrendsOrAnoms == -1
   %anom_plevs37 = permute(all.nwp_plevs,[2 1 3]); anom_plevs37 = reshape(anom_plevs37,37,227*4608); anom_plevs37 = mean(anom_plevs37,2);
   
   %find_computeERA5_monthly_anoms_foutname
-  if ~exist(fout_anomjunk)
+  fout_anomjunk = ['anom_' fout_trendjunk];
+  if ~exist(fout_anomjunk) | iEnsureSave > 0
     fprintf(1,'saving anom file : can type in a separate window         watch "ls -lt %s " \n',fout_anomjunk)
     saver = ['save ' fout_anomjunk ' comment anom*'];
     eval(saver);

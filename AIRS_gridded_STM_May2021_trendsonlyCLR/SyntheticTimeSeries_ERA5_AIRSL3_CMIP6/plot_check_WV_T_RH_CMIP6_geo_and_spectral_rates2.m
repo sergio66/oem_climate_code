@@ -3,6 +3,21 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 
 disp('plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2 : did preliminaries, starting the spectral and geophysical trends ...')
 
+%% see also /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/driver_put_together_QuantileChoose_anomalies.m
+%% https://www.arm.gov/publications/proceedings/conf05/extended_abs/mlawer_ej.pdf
+RRTM_bands0 = [10 250 500 630 700 820 980 1080 1180 1390 1480 1800 2080 2250 2380 2600 3000];
+wx = 10:1:3000; rx = ttorad(wx,300); 
+fluxx = trapz(wx,rx)/1000;
+for ijunk = 2 : length(RRTM_bands0)
+  junk = find(wx > RRTM_bands0(ijunk-1) & wx <= RRTM_bands0(ijunk));
+  fluxx(ijunk) = trapz(wx(junk),rx(junk))/1000;
+end
+
+RRTM_bands = RRTM_bands0(4:end);
+thesave.RRTM_bands = RRTM_bands;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 thesave.bad_lonbins = [];
 if isfield(p72x,'verybad')
   bad_lonbins = find(p72x.verybad > 0);
@@ -36,10 +51,13 @@ for iii = 1 : 72
 
   zoo = find(isfinite(data));
   if length(find(isfinite(data))) > 16
-    junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
-    thesave.xst_trend(iii) = junk(2);
+    %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+    thesave.sxt_anom(iii,:) = junkanom;
+    thesave.xst_trend(iii)  = junk(2);
     xst_constr(iii) = junk(1);
   else
+    thesave.xst_anom(iii,:) = NaN;
     thesave.xst_trend(iii) = NaN;
     xst_constr(iii) = NaN;
   end
@@ -51,11 +69,15 @@ for iii = 1 : 72
 %  thesave.bt1231_trend(iii) = junk(1);
 %  bt1231_constr(iii) = junk(2);
 
+  zoo = find(isfinite(data));
   if length(find(isfinite(data))) > 16
-    junk = Math_tsfit_lin_robust(dayOFtime,data,4);
+    %junk = Math_tsfit_lin_robust(dayOFtime,data,4);
+    [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+    thesave.xbt1231_anom(iii,:) = junkanom;
     thesave.xbt1231_trend(iii) = junk(2);
     xbt1231_constr(iii) = junk(1);
   else
+    thesave.xbt1231_anom(iii,:) = NaN;
     thesave.xbt1231_trend(iii) = NaN;
     xbt1231_constr(iii) = NaN;
   end
@@ -66,8 +88,56 @@ warning on
 figure(6); plot(rlon,thesave.xst_trend,rlon,thesave.xbt1231_trend); title('dST/dt and dBT1231/dt');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp(' .... fluxes for each of the 72 lon bins ... ')
+warning off
+for ilon = 1 : 72
+  % old
+  % FAFA = squeeze(rcalc(:,ilon,:));  
+  % data = squeeze(trapz(h.vchan,FAFA))/1000;  
 
-disp(' .... 2645 channel trends for each of the 72 lon bins ... + = 1000 . = 100')
+  %% see cluster_do_the_fits_airsL3_ratesv7_tiles_radiances.m
+  [Y,I] = sort(h.vchan);
+  fchan = Y;
+  FAFA = squeeze(pcalc.rcalc(I,ilon,:));
+  data = squeeze(trapz(fchan,FAFA))/1000;  
+
+  zoo = find(isfinite(data));
+  if length(zoo) > 20
+    %[junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+    thesave.xanomflux(ilon,1,:)    = junkanom;
+    thesave.xtrendflux(ilon,1)     = junk(2);
+    thesave.xtrendflux_unc(ilon,1) = err.se(2);
+  else
+    thesave.xanomflux(ilon,1,:)    = NaN;
+    thesave.xtrendflux(ilon,1)     = NaN;
+    thesave.xtrendflux_unc(ilon,1) = NaN;
+  end
+
+  for flfl = 1 : length(RRTM_bands)-1
+    junk = find(h.vchan >= RRTM_bands(flfl) & h.vchan < RRTM_bands(flfl+1));
+    %data = squeeze(trapz(h.vchan(junk),FAFA(junk,:)))/1000;      %% OLD
+    data = squeeze(trapz(fchan(junk),FAFA(junk,:)))/1000;      
+    zoo = find(isfinite(data));
+    if length(zoo) > 20
+      %[junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+      thesave.xanomflux(ilon,flfl+1,:)    = junkanom;
+      thesave.xtrendflux(ilon,flfl+1)     = junk(2);
+      thesave.xtrendflux_unc(ilon,flfl+1) = err.se(2);
+    else
+      thesave.xanomflux(ilon,flfl+1,:)    = NaN;
+      thesave.xtrendflux(ilon,flfl+1)     = NaN;
+      thesave.xtrendflux_unc(ilon,flfl+1) = NaN;
+    end
+  end
+
+end  
+warning on
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp(' .... 2645 channel trends and anomalies for each of the 72 lon bins ... + = 1000 . = 100')
 warning off
 for iii = 1 : 2645
   if mod(iii,1000) == 0
@@ -84,12 +154,15 @@ for iii = 1 : 2645
 
     zoo = find(isfinite(data));
     if length(zoo) > 20
-      [junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      %[junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+      thesave.xanomSpectral(iii,ilon,:)    = junkanom;
       thesave.xtrendSpectral(iii,ilon)     = junk(2);
       thesave.xtrendSpectral_unc(iii,ilon) = err.se(2);
 %      xconstr72(iii,ilon) = junk(1);
     else
-      thesave.xtrendSpectral(iii,ilon) = NaN;
+      thesave.xanomSpectral(iii,ilon,:)    = NaN;
+      thesave.xtrendSpectral(iii,ilon)     = NaN;
       thesave.xtrendSpectral_unc(iii,ilon) = NaN;
 %      xconstr72(iii,ilon) = NaN;
     end
@@ -101,7 +174,9 @@ fprintf(1,'\n');
 figure(1); pcolor(h72x.vchan,1:72,thesave.xtrendSpectral'); shading interp; title('Spectral Rate K/yr')
   ylabel('72 LonBins'); xlabel('Wavenumber cm-1'); caxis([-1 +1]); colorbar; colormap(llsmap5);
 
-disp(' .... 2645 channel trends for the average katbin (over the 72 lon bins) ... should be fast')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp(' .... 2645 channel trends for the average latbin (over the 72 lon bins) ... should be fast')
 for iii = 1 : 2645
   data = tcalcavg(iii,:);
 %  junk = polyfit(dayOFtime/365,data,1);
@@ -110,12 +185,15 @@ for iii = 1 : 2645
 
   zoo = find(isfinite(data));
   if length(zoo) > 20
-    [junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
-    thesave.xtrend(iii) = junk(2);
+    %[junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+    thesave.xanom(iii,:)    = junkanom;
+    thesave.xtrend(iii)     = junk(2);
     thesave.xtrend_unc(iii) = err.se(2);
     xconstr(iii) = junk(1);
   else
-    thesave.xtrend(iii) = NaN;
+    thesave.xanom(iii,:)    = NaN;
+    thesave.xtrend(iii)     = NaN;
     thesave.xtrend_unc(iii) = NaN;
     xconstr(iii) = NaN;
   end
@@ -143,11 +221,14 @@ for jj = 1 : iNlev
 
     zoo = find(isfinite(data));
     if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
-      thesave.t2d_xtrendnwp(jj,ll) = junk(2);
+      %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+      thesave.t2d_xanomnwp(jj,ll,:) = junkanom;
+      thesave.t2d_xtrendnwp(jj,ll)  = junk(2);
       t2d_xconstrnwp(jj,ll) = junk(1);
     else
-      thesave.t2d_xtrendnwp(jj,ll) = NaN;
+      thesave.t2d_xanomnwp(jj,ll,:) = NaN;
+      thesave.t2d_xtrendnwp(jj,ll)  = NaN;
       t2d_xconstrnwp(jj,ll) = NaN;
     end
   end
@@ -167,10 +248,13 @@ for jj = 1 : 101
 
     zoo = find(isfinite(data));
     if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+      thesave.t2d_xanom(jj,ll,:) = junkanom;
       thesave.t2d_xtrend(jj,ll) = junk(2);
       t2d_xconstr(jj,ll) = junk(1);
     else
+      thesave.t2d_xanom(jj,ll,:) = NaN;
       thesave.t2d_xtrend(jj,ll) = NaN;
       t2d_xconstr(jj,ll) = NaN;
     end
@@ -195,10 +279,13 @@ for jj = 1 : iNlev
     data = squeeze(t(jj,ll,:));
     zoo = find(isfinite(data));
     if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+      thesave.wv2d_xanomnwp(jj,ll,:) = junkanom;
       thesave.wv2d_xtrendnwp(jj,ll) = junk(2);
       wv2d_xconstrnwp(jj,ll) = junk(1);
     else
+      thesave.wv2d_xanomnwp(jj,ll,:) = NaN;
       thesave.wv2d_xtrendnwp(jj,ll) = NaN;
       wv2d_xconstrnwp(jj,ll) = NaN;
     end
@@ -219,10 +306,13 @@ for jj = 1 : 101
     data = squeeze(t(jj,ll,:));
     zoo = find(isfinite(data));
     if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);  
+      thesave.wv2d_xanom(jj,ll,:) = junkanom;
       thesave.wv2d_xtrend(jj,ll) = junk(2);
       wv2d_xconstr(jj,ll) = junk(1);
     else
+      thesave.wv2d_xanom(jj,ll,:) = NaN;
       thesave.wv2d_xtrend(jj,ll) = NaN;
       wv2d_xconstr(jj,ll) = NaN;
     end
@@ -248,10 +338,13 @@ if iType ~= 4
       data = squeeze(t(jj,ll,:));
       zoo = find(isfinite(data));
       if length(zoo) > 20    
-        junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+        %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+        [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+        thesave.oz2d_xanomnwp(jj,ll,:) = junkanom;
         thesave.oz2d_xtrendnwp(jj,ll) = junk(2);
         oz2d_xconstrnwp(jj,ll) = junk(1);
       else
+        thesave.oz2d_xanomnwp(jj,ll,:) = NaN;
         thesave.oz2d_xtrendnwp(jj,ll) = NaN;
         oz2d_xconstrnwp(jj,ll) = NaN;
       end
@@ -273,10 +366,13 @@ if iType ~= 4
       data = squeeze(t(jj,ll,:));
       zoo = find(isfinite(data));
       if length(zoo) > 20    
-        junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+        %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+        [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+        thesave.oz2d_xanom(jj,ll,:) = junkanom;
         thesave.oz2d_xtrend(jj,ll) = junk(2);
         oz2d_xconstr(jj,ll) = junk(1);
       else
+        thesave.oz2d_xanom(jj,ll,:) = NaN;
         thesave.oz2d_xtrend(jj,ll) = NaN;
         oz2d_xconstr(jj,ll) = NaN;
       end
@@ -300,10 +396,13 @@ for jj = 1 : iNlev
 
     zoo = find(isfinite(data));
     if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+      thesave.rh2d_xanomnwp(jj,ll,:) = junkanom;      
       thesave.rh2d_xtrendnwp(jj,ll) = junk(2);      
       rh2d_xconstrnwp(jj,ll) = junk(1);
     else
+      thesave.rh2d_xanomnwp(jj,ll,:) = NaN;      
       thesave.rh2d_xtrendnwp(jj,ll) = NaN;      
       rh2d_xconstrnwp(jj,ll) = NaN;
     end
@@ -325,10 +424,13 @@ for jj = 1 : 100
 
     zoo = find(isfinite(data));
     if length(zoo) > 20    
-      junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+      [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+      thesave.rh2d_xanom(jj,ll,:) = real(junkanom);
       thesave.rh2d_xtrend(jj,ll) = real(junk(2));
       rh2d_xconstr(jj,ll) = junk(1);
     else
+      thesave.rh2d_xanom(jj,ll,:) = NaN;
       thesave.rh2d_xtrend(jj,ll) = NaN;
       rh2d_xconstr(jj,ll) = NaN;
     end
@@ -352,10 +454,13 @@ for iii = 1 : 97
 
   zoo = find(isfinite(data));
   if length(zoo) > 20    
-    junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+    thesave.rh_xanom(iii,:) = junkanom;
     thesave.rh_xtrend(iii) = junk(2);
     rh_xconstr(iii) = junk(1);
   else
+    thesave.rh_xanom(iii,:) = NaN;
     thesave.rh_xtrend(iii) = NaN;
     rh_xconstr(iii) = NaN;
   end
@@ -377,10 +482,13 @@ for iii = 1 : 97
 
   zoo = find(isfinite(data));
   if length(zoo) > 20    
-    junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
+    [junk,err,junkanom] = compute_anomaly_wrapper(zoo,dayOFtime,data,4,-1,-1);
+    thesave.t_xanom(iii,:) = junkanom;
     thesave.t_xtrend(iii) = junk(2);
     t_xconstr(iii) = junk(1);
   else
+    thesave.t_xanom(iii,:) = NaN;
     thesave.t_xtrend(iii) = NaN;
     t_xconstr(iii) = NaN;
   end
@@ -398,6 +506,8 @@ disp(' ... finally done!! saving ....')
 
 diroutX = dirout;
 %diroutX = ' ';
+
+ii = JOB;
 
 disp('here I am doing this save')
 if iType == 1
@@ -444,6 +554,12 @@ else
   fprintf(1,'%s already exists, not saving \n',foutname)
   eval(saver)
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp('now use driver_read64x72flux72_save64zonalflux_ERA5_AIRSL3.m to put the individual latbins together')
+disp('now use driver_read64x72flux72_save64zonalflux_ERA5_AIRSL3.m to put the individual latbins together')
+disp('now use driver_read64x72flux72_save64zonalflux_ERA5_AIRSL3.m to put the individual latbins together')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 make_all_replots_check_WV_T_RH_CMIP6_geo_and_spectral_rates2
