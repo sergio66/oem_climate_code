@@ -15,9 +15,13 @@ hahaSum = squeeze(sum(aha(:,2:14,:),2));  %% sum over bands
 haha0   = squeeze(aha(:,1,:));            %% this should be all
 
 figure(1); pcolor(hahaSum); shading interp; colorbar; colormap(jet);  title('AIRS L3 : all')
+  xlael('Time'); ylabel('Lonbin')
 figure(2); pcolor(hahaSum-haha0); shading interp; colorbar; colormap(usa2);  title('AIRS L3 : all-sum(bands)')
+  xlael('Time'); ylabel('Lonbin')
 figure(3); plot(1:262,nansum(haha0,1),'r.-',1:262,nansum(hahaSum,1),'b'); 
-  title('Sum over lonbins for AIRS L3'); legend('All chans','Sum Over Bands','location','best','fontsize',10);
+  title('sum over 72 lonbins for AIRS L3'); legend('All chans','Sum Over 14 Bands','location','best','fontsize',10);
+
+gah3 = mean(squeeze(mean(aha,1)),2);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('checking ERA2 latbin 32')
@@ -29,12 +33,21 @@ hahaSum = squeeze(sum(aha(:,2:14,:),2));  %% sum over bands
 haha0   = squeeze(aha(:,1,:));            %% this should be all
 
 figure(4); pcolor(hahaSum); shading interp; colorbar; colormap(jet); title('ERA5 : all')
+  xlael('Time'); ylabel('Lonbin')
 figure(5); pcolor(hahaSum-haha0); shading interp; colorbar; colormap(usa2); title('ERA5 : all-sum(bands)')
+  xlael('Time'); ylabel('Lonbin')
 figure(6); plot(1:264,nansum(haha0,1),'r.-',1:264,nansum(hahaSum,1),'b')
-  title('Sum over lonbins for ERA5'); legend('All chans','Sum Over Bands','location','best','fontsize',10);
+  title('sum over 72 lonbins for ERA5'); legend('All chans','Sum Over 14 Bands','location','best','fontsize',10);
 
 figure(1); caxis([-1 +1]*2.5)
 figure(4); caxis([-1 +1]*2.5)
 figure(3); ylim([-1 +1]*60)
 figure(6); ylim([-1 +1]*60)
 
+gah5 = mean(squeeze(mean(aha,1)),2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+rrtmX = [100 meanvaluebin(wah.thesave.RRTM_bands)];
+figure(7); plot(rrtmX,gah3,rrtmX,gah5); plotaxis2; title('sum(anom) : (b) AIRS L3 (r) ERA5');
+  xlabel('RRTM band'); ylabel('Mean Anom Flux');

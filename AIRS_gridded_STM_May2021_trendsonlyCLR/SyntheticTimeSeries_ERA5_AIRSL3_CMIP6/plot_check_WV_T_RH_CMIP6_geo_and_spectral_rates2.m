@@ -44,7 +44,7 @@ disp(' .... stemp trends ...')
 warning off
 t = p72x.stemp; t = reshape(t,72,numtimesteps);
 for iii = 1 : 72
-  data = t(iii,:);
+  data = real(t(iii,:));
 %  junk = polyfit(dayOFtime/365,data,1);
 %  thesave.st_trend(iii) = junk(1);
 %  st_constr(iii) = junk(2);
@@ -64,7 +64,7 @@ for iii = 1 : 72
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  data = squeeze(tcalc(1520,iii,:));
+  data = real(squeeze(tcalc(1520,iii,:)));
 %  junk = polyfit(dayOFtime/365,data,1);
 %  thesave.bt1231_trend(iii) = junk(1);
 %  bt1231_constr(iii) = junk(2);
@@ -93,13 +93,13 @@ warning off
 for ilon = 1 : 72
   % old
   % FAFA = squeeze(rcalc(:,ilon,:));  
-  % data = squeeze(trapz(h.vchan,FAFA))/1000;  
+  % data = real(squeeze(trapz(h.vchan,FAFA))/1000);  
 
   %% see cluster_do_the_fits_airsL3_ratesv7_tiles_radiances.m
   [Y,I] = sort(h.vchan);
   fchan = Y;
-  FAFA = squeeze(pcalc.rcalc(I,ilon,:));
-  data = squeeze(trapz(fchan,FAFA))/1000;  
+  FAFA = squeeze(rcalc(I,ilon,:));
+  data = real(squeeze(trapz(fchan,FAFA))/1000);  
 
   zoo = find(isfinite(data));
   if length(zoo) > 20
@@ -117,7 +117,7 @@ for ilon = 1 : 72
   for flfl = 1 : length(RRTM_bands)-1
     junk = find(h.vchan >= RRTM_bands(flfl) & h.vchan < RRTM_bands(flfl+1));
     %data = squeeze(trapz(h.vchan(junk),FAFA(junk,:)))/1000;      %% OLD
-    data = squeeze(trapz(fchan(junk),FAFA(junk,:)))/1000;      
+    data = real(squeeze(trapz(fchan(junk),FAFA(junk,:)))/1000);      
     zoo = find(isfinite(data));
     if length(zoo) > 20
       %[junk,err] = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
@@ -146,7 +146,7 @@ for iii = 1 : 2645
     fprintf(1,'.');
   end
   for ilon = 1 : 72
-    data = squeeze(tcalc(iii,ilon,:));
+    data = real(squeeze(tcalc(iii,ilon,:)));
 
 %    junk = polyfit(dayOFtime/365,data,1);
 %    thesave.trendSpectral(iii,ilon) = junk(1);
@@ -178,7 +178,7 @@ figure(1); pcolor(h72x.vchan,1:72,thesave.xtrendSpectral'); shading interp; titl
 
 disp(' .... 2645 channel trends for the average latbin (over the 72 lon bins) ... should be fast')
 for iii = 1 : 2645
-  data = tcalcavg(iii,:);
+  data = real(tcalcavg(iii,:));
 %  junk = polyfit(dayOFtime/365,data,1);
 %  thesave.trend(iii) = junk(1);
 %  constr(iii) = junk(2);
@@ -214,7 +214,7 @@ disp(' .... Tz trends ...')
 t = p72.ptemp; t = reshape(t,iNlev,72,numtimesteps); 
 for jj = 1 : iNlev
   for ll = 1 : 72
-    data = squeeze(t(jj,ll,:));
+    data = real(squeeze(t(jj,ll,:)));
 %    junk = polyfit(dayOFtime/365,data,1);
 %    thesave.t2d_trendnwp(jj,ll) = junk(1);
 %    t2d_constnwp(jj,ll) = junk(2);
@@ -241,7 +241,7 @@ figure(7); pcolor(rlon,plevsnwp,thesave.t2d_xtrendnwp); shading interp; colorbar
 t = p72x.ptemp; t = reshape(t,101,72,numtimesteps); 
 for jj = 1 : 101
   for ll = 1 : 72
-    data = squeeze(t(jj,ll,:));
+    data = real(squeeze(t(jj,ll,:)));
 %    junk = polyfit(dayOFtime/365,data,1);
 %    thesave.t2d_trend(jj,ll) = junk(1);
 %    t2d_constr(jj,ll) = junk(2);
@@ -276,7 +276,7 @@ t = t./tXX;
 
 for jj = 1 : iNlev
   for ll = 1 : 72
-    data = squeeze(t(jj,ll,:));
+    data = real(squeeze(t(jj,ll,:)));
     zoo = find(isfinite(data));
     if length(zoo) > 20    
       %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
@@ -303,7 +303,7 @@ end
 t = t./tXX;
 for jj = 1 : 101
   for ll = 1 : 72
-    data = squeeze(t(jj,ll,:));
+    data = real(squeeze(t(jj,ll,:)));
     zoo = find(isfinite(data));
     if length(zoo) > 20    
       %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
@@ -335,7 +335,7 @@ if iType ~= 4
   
   for jj = 1 : iNlev
     for ll = 1 : 72
-      data = squeeze(t(jj,ll,:));
+      data = real(squeeze(t(jj,ll,:)));
       zoo = find(isfinite(data));
       if length(zoo) > 20    
         %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
@@ -363,7 +363,7 @@ if iType ~= 4
   t = t./tXX;
   for jj = 1 : 101
     for ll = 1 : 72
-      data = squeeze(t(jj,ll,:));
+      data = real(squeeze(t(jj,ll,:)));
       zoo = find(isfinite(data));
       if length(zoo) > 20    
         %junk = Math_tsfit_lin_robust(dayOFtime(zoo),data(zoo),4);
@@ -389,7 +389,7 @@ disp(' .... RH trends ...')
 rh = p72.rh; rh = reshape(rh,iNlev,72,numtimesteps); 
 for jj = 1 : iNlev
   for ll = 1 : 72
-    data = squeeze(rh(jj,ll,:));
+    data = real(squeeze(rh(jj,ll,:)));
 %    junk = polyfit(dayOFtime/365,data,1);
 %    thesave.rh2d_trendnwp(jj,ll) = junk(1);
 %    rh2d_constnwp(jj,ll) = junk(2);
@@ -417,7 +417,7 @@ figure(11); pcolor(rlon,plevsnwp,thesave.rh2d_xtrendnwp); shading interp; colorb
 rh = p72x.rh; rh = reshape(rh,100,72,numtimesteps); 
 for jj = 1 : 100
   for ll = 1 : 72
-    data = squeeze(rh(jj,ll,:));
+    data = real(squeeze(rh(jj,ll,:)));
 %    junk = polyfit(dayOFtime/365,data,1);
 %    thesave.rh2d_trend(jj,ll) = junk(1);
 %    rh2d_constr(jj,ll) = junk(2);
@@ -447,7 +447,7 @@ disp(' .... NOW 101 trends ...')
 disp(' .... RH 101 trends ...')
 rh = p72x.rh; rh = reshape(rh,100,72,numtimesteps); rh = squeeze(nanmean(rh,2)); 
 for iii = 1 : 97
-  data = rh(iii,:);
+  data = real(rh(iii,:));
 %  junk = polyfit(dayOFtime/365,data,1);
 %  thesave.rh_trend(iii) = junk(1);
 %  rh_constr(iii) = junk(2);
@@ -475,7 +475,7 @@ disp(' .... TZ 101 trends ...')
 
 t = p72x.ptemp; t = reshape(t,101,72,numtimesteps); t = squeeze(nanmean(t,2)); 
 for iii = 1 : 97
-  data = t(iii,:);
+  data = real(t(iii,:));
 %  junk = polyfit(dayOFtime/365,data,1);
 %  thesave.t_trend(iii) = junk(1);
 %  t_constr(iii) = junk(2);
@@ -518,8 +518,13 @@ elseif iType == 2
   saver = ['save ' diroutX 'reconstruct_merra2_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHMERRA2rate zonalTMERRA2rate *xconstr*'];
 elseif iType == 5
-  saver = ['save ' diroutX 'reconstruct_era5_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
-  saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate *xconstr*'];
+  if ~exist('idRH')
+    saver = ['save ' diroutX 'reconstruct_era5_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+    saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate *xconstr*'];
+  else
+    saver = ['save ' diroutX 'reconstruct_era5_spectra_geo_idRH_' num2str(idRH) '_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
+    saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate *xconstr*'];
+  end
 elseif iType == 51
   saver = ['save ' diroutX 'reconstruct_era5_const_tracegas_spectra_geo_rlat' num2str(ii,'%02i') fstr '.mat fchanx thesave rlon rlatx '];
   saver = [saver ' zonalrlat zonalplays zonalRHERA5rate zonalTERA5rate *xconstr*'];

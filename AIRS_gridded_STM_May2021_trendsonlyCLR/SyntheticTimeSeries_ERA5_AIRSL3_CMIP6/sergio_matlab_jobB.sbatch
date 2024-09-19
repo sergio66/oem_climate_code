@@ -15,6 +15,7 @@
 # run this with   kleenslurm; sbatch  --exclude= --array=1-40 sergio_matlab_jobB.sbatch 4     for clust_convert_strowrates2oemrates_anomaly_nonucal_2012
 #
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 5     for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+# run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 51    for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH.m (can have WV const, CO2 const, T const, TH const
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 6     for driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 7     for driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 8     for driver_check_WV_T_RH_MERRA_geo_and_spectral_rates2.m
@@ -102,6 +103,11 @@ elif [[ "$1" -eq "5" ]]; then
   # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
   echo "cmd line arg = 5, driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2; exit"
+elif [[ "$1" -eq "51" ]]; then
+  # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH.m
+  echo "cmd line arg = 51, driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "idRH = 6; driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH; exit"
+
 elif [[ "$1" -eq "6" ]]; then
   # makes driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
   echo "cmd line arg = 6, driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2"

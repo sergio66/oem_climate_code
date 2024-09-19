@@ -11,13 +11,13 @@ end
 if exist(fop)
   fop
   warning('fop exists')
-  error('fop exists')
+  %error('fop exists')
 end
 
 if exist(frp)
   frp
   warning('frp exists')
-  error('frp exists')
+  %error('frp exists')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

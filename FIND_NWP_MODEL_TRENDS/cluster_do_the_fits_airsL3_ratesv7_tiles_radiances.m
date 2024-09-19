@@ -210,8 +210,14 @@ for jj = JOB
     h.pfields = 5; % (1=prof + 4=IRobs);
     h.pfields = 1; %% 1 = profile
     h.nchan = 2645;
+
     h.ichan = (1:2645)';
     h.vchan = instr_chans2645;
+
+    junk = load('/home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/h2645structure.mat');
+    h.ichan = junk.h.ichan;
+    h.vchan = junk.h.vchan;
+
     %% see driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
     h.ngas = 4;    
     h.glist = [1  3  5  6]';
@@ -261,7 +267,12 @@ for jj = JOB
       chuse = [chuse; junk];
       data = trapz(fchan(junk),FAFA(junk,:))/1000; moo(flfl+1,:) = data;
     end
-    woo = sum(moo(2:14,:),1); plot(1:262,woo,1:262,moo(1,:)); printarray([sum(woo-moo(1,:)) mean(woo-moo(1,:)) std(woo-moo(1,:))],'difference between trapz(all) - sum(trapz(RRTM bands)) : total, mean, stdev')
+    woo = sum(moo(2:14,:),1); 
+    figure(1); clf; plot(1:262,woo,1:262,moo(1,:)); title('Compare flux(all) vs sum(bandFlux)')
+    figure(2); clf; plot(nanmean(moo,2)); title('Mean flux per RRTM band')
+    figure(3); clf; plot(fchan,nanmean(FAFA,2),'b.-',h.vchan,nanmean(pcalc.rcalc,2))
+    figure(4); clf; plot(fchan,rad2bt(fchan,nanmean(FAFA,2)),'b.-',h.vchan,rad2bt(hcalc.vchan,nanmean(pcalc.rcalc,2)))
+    printarray([sum(woo-moo(1,:)) mean(woo-moo(1,:)) std(woo-moo(1,:))],'difference between trapz(all) - sum(trapz(RRTM bands)) : total, mean, stdev')
 
     fprintf(1,'doing fluxes for latbin jj = %2i lonbin ii = %2i \n',jj,ii);
     data = trapz(fchan,FAFA)/1000;         

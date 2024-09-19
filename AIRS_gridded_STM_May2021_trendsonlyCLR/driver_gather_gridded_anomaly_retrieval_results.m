@@ -51,7 +51,7 @@ ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTi
 
 %% needs 500*29/250 = 64 processors       btavgAnomFinal = [2645x14000] > 500*28 anomaly time series
 ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 29; iNumAnomJobsPerProc =  250; 
-  anomalydatafile = 'anomaly_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  
+  anomalydatafile = 'anomalyD_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  
 
 disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');

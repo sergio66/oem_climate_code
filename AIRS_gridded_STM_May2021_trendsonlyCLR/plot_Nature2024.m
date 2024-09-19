@@ -28,9 +28,25 @@ iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualT(tropicsHT+1,:
 iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualWV(tropicsHT+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
   title('WV(t,z) -30S to +10 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); 
   xlabel('Time'); ylabel('Height [km]')
+  axis([2020 2025 0 25])
+
+iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualT(tropicsHT2+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*4);
+  title('T(t,z) -30S to +30 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); 
+  xlabel('Time'); ylabel('Height [km]')
+iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualWV(tropicsHT2+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
+  title('WV(t,z) -30S to +30 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); 
+  xlabel('Time'); ylabel('Height [km]')
+  axis([2020 2025 0 25])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+make_T_WV_O3_ST_trends_from_anoms
 
 return
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 smn = 1;

@@ -7,11 +7,21 @@ addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/TIME
 
 %{ 
+
+%% these are made by driver_put_together_QuantileChoose_anomalies.m
+
+-rw-rw-r-- 1 sergio pi_strow   654295802 Sep 10 18:49 /asl/s1/sergio/JUNK/anomaly_iQAX_4_zonalavg_ALL_Q01_numyears_22.00_iNumAnomTimeSteps_500_A.mat
+-rw-rw-r-- 1 sergio pi_strow   654000927 Sep 10 18:48 /asl/s1/sergio/JUNK/anomaly_iQAX_4_zonalavg_ALL_Q01_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+-rw-rw-r-- 1 sergio pi_strow   654737499 Sep  9 20:31 /asl/s1/sergio/JUNK/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat
+-rw-rw-r-- 1 sergio pi_strow   654599069 Sep  9 20:31 /asl/s1/sergio/JUNK/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+-rw-rw-r-- 1 sergio pi_strow  8592493709 Sep  1 18:06 /asl/s1/sergio/JUNK/anomaly_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+-rw-rw-r-- 1 sergio pi_strow  8593706139 Sep  1 15:33 /asl/s1/sergio/JUNK/anomaly_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat
+
 %%%%% can use this as standalone %%%%%
 load /asl/s1/sergio/JUNK/anomaly_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
-iDorA = +1; iQuant = 3;  %% Q0.90 for paper, iQAX = 3
+iDorA = +1; iQuant = 3;  %% Q0.90 for paper, iQAX = 3 = clear sky
 
-load /asl/s1/sergio/JUNK/anomaly_iQAX_3_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+load /asl/s1/sergio/JUNK/anomaly_ALL_Q01_numyears_22.00_iNumAnomTimeSteps_500_D.mat
 iDorA = +1; iQuant = 1;  %% Q00  = allsky avg
 
 stand_alone_make_globalavg_and_N_average_anomalies
@@ -45,7 +55,7 @@ if iDorA > 0
   fluxanomaly = fluxanomD * 3.5788;
   yyX = yyD; mmX = mmD; ddX = ddD;
   yymm = yyX + (mmX-1)/12 + (ddX-1)/30/12;
-  disp('make_globalavg_and_N_average_anomalies.m using btanomD')
+  disp('stand_alone_make_globalavg_and_N_average_anomalies.m using btanomD')
 else
   if ~exist('daysSince2002A')
     daysSince2002A = change2days(yyA,mmA,ddA,2002);
@@ -54,7 +64,7 @@ else
   fluxanomaly = fluxanomA * 3.5788;
   yyX = yyA; mmX = mmA; ddX = ddA;
   yymm = yyX + (mmX-1)/12 + (ddX-1)/30/12;
-  disp('make_globalavg_and_N_average_anomalies.m using btanomA')
+  disp('stand_alone_make_globalavg_and_N_average_anomalies.m using btanomA')
 end
 
 if ~exist('iNumAnomTimeSteps')

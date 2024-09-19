@@ -212,7 +212,7 @@ elseif driver.iTrendOrAnomaly < 0
   ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 64; iNumAnomJobsPerProc =  200; 
     anomalydatafile = '/asl/s1/sergio/JUNK/anomaly_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat';          %% needs 500*64/200 =  160 processors     btavgAnomFinal = [64x2645x500] ==> 500 timesteps x 64 anomaly time series
   ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 29; iNumAnomJobsPerProc =  250; 
-    anomalydatafile = 'anomaly_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*29/250 = 64 processors       btavgAnomFinal = [2645x14000] > 500*28 anomaly time series
+    anomalydatafile = 'anomalyD_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*29/250 = 64 processors       btavgAnomFinal = [2645x14000] > 500*28 anomaly time series
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

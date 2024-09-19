@@ -55,6 +55,9 @@ if length(iQAX) == 0
   iQAX = 3;
 end
 
+iClrorCld = +1;
+iClrorCld = -1;
+
 iCnt = 0;
 for jj = 1 : 64
   fprintf(1,'latbin %2i of 64 \n',jj);

@@ -105,6 +105,13 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp('can start afresh from here eg    clear all; load ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
+disp('can start afresh from here eg    clear all; load ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
+disp('can start afresh from here eg    clear all; load ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
+%% check these :::: iOLR = +1; iCldORClr = +1; iDorA = +1; yymmS = [2002 09]; yymmE = [2024 08];  iTrendsOrAnoms = +1; find_computeERA5_monthly_trends_foutname
 
 plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
 pN = plevs(1:end-1)-plevs(2:end);
@@ -229,6 +236,8 @@ elseif iNumYears == 22
 end
 saver = ['save ' fnamesave_anom_trend ' comment trend* anom* dayOFtime StartY StopY StartYM StopYM'];
 eval(saver);
+
+disp('now run look_at_anomalies_computeERA5_monthly_trends_desc_or_asc_64latbins.m')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ../AIRS_gridded_STM_May2021_trendsonlyCLR/statistical_significance_ludescherPNAS_lag1_functions.m

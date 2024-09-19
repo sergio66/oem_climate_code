@@ -68,6 +68,7 @@ end
 %%         lc   ct.lev1  ct.lev2   ct_wide     cw.lev1  cw.lev2    cw_wide  coz.lev1  coz.lev2  coz_wide    alpha_T  alpha_w  alpha_oz
 
 if driver.i16daytimestep > 0 & topts.dataset < 30
+  disp('build_cov_matrices.m : anomalies')
   %% worked great for anomalies!!!  AIRS only, not AMSU
   %%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
   cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
@@ -80,9 +81,17 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
   do_the_cov_set_numbers  
 
   %% this is pretty good now
-  %cov_set(11:13) = cov_set(11:13) / 100;     %% try for some Temperature upper atm wiggles, not enough
-  %cov_set(11:13) = cov_set(11:13) / 1000;    %% try for some Temperature upper atm wiggles
-  cov_set(11:13) = cov_set(11:13) / 10000;    %% try for some Temperature upper atm wiggles, pretty good!!!! Sept 9, 2024 9 am, commit 6067ec1cec3cf8e4610786581c334eadbf367f5e (HEAD -> sergio, github/sergio)
+  %cov_set(11:13) = cov_set(11:13) / 100;      %% try for some Temperature upper atm wiggles, not enough
+  %cov_set(11:13) = cov_set(11:13) / 10000;    %% try for some Temperature upper atm wiggles, pretty good!!!! Sept 9, 2024 9 am, commit 6067ec1cec3cf8e4610786581c334eadbf367f5e (HEAD -> sergio, github/sergio), 
+                                               %% too loose eg too much WV and makes WV, T trends larger than ERA5 trends, esp in Northern Hemisphere
+
+  %cov_set([11 13]) = cov_set([11 13]) / 10;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much, T too constrained
+  %cov_set([12])    = cov_set([12])   / 10;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much, WV tooooo constrained 
+
+  %%% this is on the right track but still a little too tight for both WV and T
+  cov_set([11 13]) = cov_set([11 13]) / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
+  cov_set([12])    = cov_set([12])    / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much 
+  %%% this is on the right track but still a little too tight for both WV and T
 
 elseif driver.i16daytimestep < 0 & topts.dataset < 30
   %% earlier_cov_sets  AIRS only, not AMSU

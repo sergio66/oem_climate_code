@@ -1,5 +1,10 @@
+%% this is copied and modified from driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+%% this is copied and modified from driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+%% this is copied and modified from driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+
 %% this tries to loop over the 64 zonal bins using the cluster
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /asl/matlib/h4tools
@@ -9,8 +14,11 @@ addpath /home/sergio/MATLABCODE
 %addpath ../../../FIND_TRENDS/
 addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
+addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
+addpath /home/sergio/MATLABCODE_Git/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MATLAB/
 
 %% check_all_jobs_done('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_rlat',64,'_2002_09_2024_08.mat');
+%% check_all_jobs_done('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_idRH_6_rlat',64,'_2002_09_2024_08.mat');
 
 disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
 disp('Note cluster job needs to be run from AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6')
@@ -27,6 +35,15 @@ system_slurm_stats
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 if length(JOB) == 0
   JOB = 31;
+end
+
+if ~exist('idRH')
+  idRH = +1;   %% keep WV   constant
+  idRH = +2;   %% keep CO2  constant
+  idRH = +3;   %% keep T,ST constant
+  idRH = +4;   %% keep RH   constant
+  idRH = +5;   %% put in everything, including clouds
+  idRH = +6;   %% increase RH by 0.01
 end
 
 iNorD = -1; %% day
@@ -105,6 +122,7 @@ else
   else
     %% new code
     junk = load('/home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/h2645structure.mat');
+    h.nchan = junk.h.nchan;
     h.ichan = junk.h.ichan;
     h.vchan = junk.h.vchan;
     do_XX_YY_from_X_Y
@@ -245,6 +263,10 @@ ch4ppm = 1.75 + (1.875-1.750)/(2020-2000)*time_so_far;
 iConstORVary = +1;   %% constant CO2 N2O CH4 as function of time  %% to replace driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
 iConstORVary = -1;   %% vary the CO2 N2O CH4 as function of time  %% DEFAULT
 
+if idRH == 2
+  iConstORVary = +1;   %% constant CO2 N2O CH4 as function of time  %% to replace driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_constracegas.m
+end
+
 if iConstORVary < 0
   %% see ~/MATLABCODE/CRODGERS_FAST_CLOUD/driver_stage2_ESRL_set_CO2_CH4_N2O.m
   co2ppm = 368 + 2.1*time_so_far;
@@ -337,6 +359,24 @@ for ii = JOB
   junk = era5_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
   junk = era5_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
 
+  if idRH == 5
+    junk = era5_64x72.all.ctype;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.ctype = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cfrac;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cfrac = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cpsize;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cpsize = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cngwat;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cngwat = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cprtop;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprtop = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cprbot;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprbot = reshape(junk,1,72*numtimesteps);
+
+    junk = era5_64x72.all.ctype2;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.ctype2 = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cfrac2;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cfrac2 = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cpsize2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cpsize2 = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cngwat2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cngwat2 = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cprtop2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprtop2 = reshape(junk,1,72*numtimesteps);
+    junk = era5_64x72.all.cprbot2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprbot2 = reshape(junk,1,72*numtimesteps);
+
+    junk = era5_64x72.all.cfrac12;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cfrac12 = reshape(junk,1,72*numtimesteps);
+  end
+
 %  p72.scanang = zeros(size(p72.stemp));
 %  p72.satzen = zeros(size(p72.stemp));
   p72.zobs = 705000 * ones(size(p72.stemp));
@@ -353,12 +393,16 @@ for ii = JOB
   pcolor(rlon,1:numtimesteps,reshape(p72.spres,72,numtimesteps)'); colormap jet; colorbar
   pcolor(rlon,1:numtimesteps,reshape(p72.salti,72,numtimesteps)'); colormap jet; colorbar
   
-  p72.cngwat = zeros(size(p72.stemp));
-  p72.cngwat2 = zeros(size(p72.stemp));
-  p72.cfrac = zeros(size(p72.stemp));
-  p72.cfrac2 = zeros(size(p72.stemp));
-  p72.cfrac12 = zeros(size(p72.stemp));
-  
+  if idRH ~= 5
+    p72.cngwat = zeros(size(p72.stemp));
+    p72.cngwat2 = zeros(size(p72.stemp));
+    p72.cfrac = zeros(size(p72.stemp));
+    p72.cfrac2 = zeros(size(p72.stemp));
+    p72.cfrac12 = zeros(size(p72.stemp));
+  elseif idRH == 5
+    %% keep all clouds
+  end
+
   p72.nemis = ones(size(p72.stemp)) * 2;
   p72.efreq(1,:) = ones(size(p72.stemp)) * 200;
   p72.efreq(2,:) = ones(size(p72.stemp)) * 3200;
@@ -370,12 +414,163 @@ for ii = JOB
   p72.efreq = efreq_t;
   p72.emis  = emis_t;
   p72.rho   = rho_t;
-    
+
+  %% p72.plays = plevs2plays(p72.plevs);
+
+  if idRH == 1
+    ind = (1:72);
+    pconst  = p72.plevs(:,ind);
+    stconst = p72.stemp(ind);
+    tconst = p72.ptemp(:,ind);
+    wvconst = p72.gas_1(:,ind);
+    rhconst = convert_humidity (pconst,tconst,wvconst,'specific humidity','relative humidity');
+
+    wvconst = p72.gas_1(:,ind);
+    for iTime = 1 : length(p72.stemp)/72
+      indTime = (iTime-1)*72 + (1:72);
+      p72.gas_1(:,indTime) = wvconst;
+      rhnew = convert_humidity (p72.plevs(:,indTime),p72.ptemp(:,indTime),p72.gas_1(:,indTime),'specific humidity','relative humidity');
+      drhsave(iTime) = rhnew(20,36)-rhconst(20,36);
+    end
+    junk = p72.gas_1(:,ind+72);
+    figure(1); clf; pcolor(wvconst-junk); shading interp; colormap(usa2); colorbar; title('idRH = 1 ... wv const'); set(gca,'ydir','reverse')
+    figure(6); clf; plot(drhsave); title(['idRH = ' num2str(idRH) ' \delta RH at center of 37 x 72 set']); set(gca,'fontsize',10)
+      pause(0.1)
+
+  elseif idRH == 2
+    ind = (1:72);
+    pconst  = p72.plevs(:,ind);
+    stconst = p72.stemp(ind);
+    tconst = p72.ptemp(:,ind);
+    wvconst = p72.gas_1(:,ind);
+    rhconst = convert_humidity (pconst,tconst,wvconst,'specific humidity','relative humidity');
+
+    co2const = p72.co2ppm(ind);
+    for iTime = 1 : length(p72.stemp)/72
+      indTime = (iTime-1)*72 + (1:72);
+      p72.co2ppm(indTime) = co2const;
+      rhnew = convert_humidity (p72.plevs(:,indTime),p72.ptemp(:,indTime),p72.gas_1(:,indTime),'specific humidity','relative humidity');
+      drhsave(iTime) = rhnew(20,36)-rhconst(20,36);
+    end
+    figure(1); clf; plot(p72.co2ppm); title('idRH = 2 ... co2 const')
+    figure(6); clf; plot(drhsave); title(['idRH = ' num2str(idRH) ' \delta RH at center of 37 x 72 set']); set(gca,'fontsize',10)
+      pause(0.1)
+
+  elseif idRH == 3
+    ind = (1:72);
+    pconst  = p72.plevs(:,ind);
+    stconst = p72.stemp(ind);
+    tconst = p72.ptemp(:,ind);
+    wvconst = p72.gas_1(:,ind);
+    rhconst = convert_humidity (pconst,tconst,wvconst,'specific humidity','relative humidity');
+
+    stconst = p72.stemp(ind);
+    tconst = p72.ptemp(:,ind);
+    for iTime = 1 : length(p72.stemp)/72
+      indTime = (iTime-1)*72 + (1:72);
+      p72.stemp(indTime) = stconst;
+      p72.ptemp(:,indTime) = tconst;
+      rhnew = convert_humidity (p72.plevs(:,indTime),p72.ptemp(:,indTime),p72.gas_1(:,indTime),'specific humidity','relative humidity');
+      drhsave(iTime) = rhnew(20,36)-rhconst(20,36);
+    end
+    junk = p72.ptemp(:,ind+72);
+    figure(1); clf; pcolor(tconst-junk); shading interp; colormap(usa2); colorbar; title('idRH = 2 ... T const'); set(gca,'ydir','reverse')
+    figure(6); clf; plot(drhsave); title(['idRH = ' num2str(idRH) ' \delta RH at center of 37 x 72 set']); set(gca,'fontsize',10)
+      pause(0.1)
+
+  elseif idRH == 4 | idRH == 6
+    %% klayers
+    %         20   mass mixing ratio in (g/kg), dry air
+    %              Grams of gas X per kilogram of "dry air"
+    %
+    %         21   mass mixing ratio in (g/g) or (kg/kg), dry air
+    %              Grams of gas X per gram of "dry air"
+    %
+    % while "convert_humidity" requires mixing ratio in kg/kg (not g/kg)
+    initialWV = p72.gas_1;
+    ind = (1:72);
+    pconst  = p72.plevs(:,ind);
+    stconst = p72.stemp(ind);
+    tconst = p72.ptemp(:,ind);
+    wvconst = p72.gas_1(:,ind);
+    rhconst = convert_humidity (pconst,tconst,wvconst,'specific humidity','relative humidity');
+
+    %% look at trend paper : for const RH : Eqn 4 : de = e (Lv/Rv dT/T^2)    where Lv = 
+    %% see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/guess_wv_surface.. for Lo,Rv
+    Lo = 2.5e6;  %%% J/kg
+    Rv = 461.52; %%% J/kg/K
+    for iTime = 1 : length(p72.stemp)/72
+      indTime = (iTime-1)*72 + (1:72);
+      p72.stemp(indTime) = p72.stemp(indTime);
+      p72.ptemp(:,indTime) = p72.ptemp(:,indTime);
+      dT = p72.ptemp(:,indTime) - tconst;
+      q  = p72.gas_1(:,indTime);
+      dq = wvconst .* (Lo/Rv * dT ./p72.ptemp(:,indTime) ./p72.ptemp(:,indTime));
+      if idRH == 4 & iTime > 1
+        %% keep RH constant from time t = 0
+        p72.gas_1(:,indTime) = wvconst + dq;
+      elseif idRH == 6 & iTime > 1
+        %% increase RH time t = 0
+        RHincrease = 0.01; %% 1 perecent increase per year, divide by 12 per month
+
+        %% see https://vortex.plymouth.edu/~stmiller/stmiller_content/Publications/AtmosRH_Equations_Rev.pdf4
+        rh = convert_humidity (p72.plevs(:,indTime),p72.ptemp(:,indTime),p72.gas_1(:,indTime),'specific humidity','relative humidity');
+
+        %% esat(373) = 1001 mb, yay
+        satvp = esat(tconst);
+        satvp = esat(p72.ptemp(:,indTime));
+
+        %% see HumidityMeasures.pdf     e = q p/(0.622 + 0.378 q)    
+        vp = p72.gas_1(:,indTime) .* p72.plevs(:,indTime) ./(0.622 + 0.378* p72.gas_1(:,indTime));         
+
+        figure(1); pcolor(rh);             colorbar; colormap(jet);                      shading interp; title('RH direct from p,T,q');
+        figure(2); pcolor(vp./satvp);      colorbar; colormap(jet);                      shading interp; title('RH from vp and satvp');
+        figure(3); pcolor(rh - vp./satvp); colorbar; colormap(usa2); caxis([-1 +1]*0.5); shading interp; title('RH from (vp and satvp) compared to direct');
+
+        % so satvp = qsat p/(0.622 + 0.378 qsat)
+        % so qsat = 0.622 satvp / (p - 0.378 satvp)
+        qsat = 0.622 * satvp ./ (p72.plevs(:,indTime) - 0.378 * satvp);
+
+        p72.gas_1(:,indTime) = wvconst + dq + ((iTime-1)*RHincrease/12)*qsat;
+      end   
+
+      iPlot = -1;
+      if iPlot > 0
+        figure(1); pcolor(tconst);                       shading interp; colorbar; title('has T changed?');   colormap(jet); set(gca,'ydir','reverse')
+        figure(1); pcolor(tconst-p72.ptemp(:,indTime));  shading interp; colorbar; title('has T changed?');   colormap(usa2); caxis([-1 +1]*10); set(gca,'ydir','reverse')
+        figure(2); pcolor(wvconst);                      shading interp; colorbar; title('has WV changed?');   colormap(jet); set(gca,'ydir','reverse')
+        figure(2); pcolor(wvconst-p72.gas_1(:,indTime)); shading interp; colorbar; title('has WV changed?');   colormap(usa2); caxis([-1 +1]*1e-3); set(gca,'ydir','reverse')
+        figure(3); pcolor(wvconst-initialWV(:,indTime)); shading interp; colorbar; title('has WV changed?');   colormap(usa2); caxis([-1 +1]*1e-3); set(gca,'ydir','reverse')
+        figure(4); pcolor(rhconst-rhnew); colorbar; title('has RH changed?');  colormap(usa2); caxis([-1 +1]/10); shading interp; set(gca,'ydir','reverse')
+        pause(0.1)
+      end
+      rhnew = convert_humidity (p72.plevs(:,indTime),p72.ptemp(:,indTime),p72.gas_1(:,indTime),'specific humidity','relative humidity');
+      drhsave(iTime) = rhnew(20,36)-rhconst(20,36);
+      figure(6); clf; plot(drhsave); title(['idRH = ' num2str(idRH) ' \delta RH at center of 37 x 72 set']); set(gca,'fontsize',10)
+      figure(5); clf; pcolor(rhnew-rhconst); caxis([0 0.25]); shading interp; set(gca,'ydir','reverse'); colormap(usa2); colorbar; 
+        title(['idRH = ' num2str(idRH) ' ... RHnew-RH0 at time ' num2str(iTime)])
+        %disp('ret to continue'); pause
+
+        pause(0.1)
+    end
+    p72.gas_1 = max(0,p72.gas_1);
+  elseif idRH == 5
+    disp('idRH == 5, use clouds and everything')
+    p72 = fix_clouds_as_needed(p72);
+  end
+
   fstr = ['_' num2str(YMStart(1),'%04d') '_' num2str(YMStart(2),'%02d') '_' num2str(YMEnd(1),'%04d') '_' num2str(YMEnd(2),'%02d')];
-  fip = [dirout 'simulate64binsERA5_' num2str(ii) fstr '.ip.rtp'];
-  fop = [dirout 'simulate64binsERA5_' num2str(ii) fstr '.op.rtp'];
-  frp = [dirout 'simulate64binsERA5_' num2str(ii) fstr '.rp.rtp'];
-                      
+  
+  if idRH == 2
+    fip = [dirout 'sm64ERA5_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.ip.rtp'];
+    fop = [dirout 'sm64ERA5_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.op.rtp'];
+    frp = [dirout 'sm64ERA5_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.rp.rtp'];
+  else  
+    fip = [dirout 'sim64binsERA5_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.ip.rtp'];
+    fop = [dirout 'sim64binsERA5_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.op.rtp'];
+    frp = [dirout 'sim64binsERA5_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.rp.rtp'];
+  end
+                     
   klayers_sarta_check_WV_T_RH_geo_and_spectral_rates2
 
   iType = 5;
@@ -389,3 +584,4 @@ for ii = JOB
   disp(' ')
 
 end
+
