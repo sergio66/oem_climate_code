@@ -1,3 +1,5 @@
+function [jobjunk,mapAnomData_to_processor] = get_anomaly_processors(ia_OorC_DataSet_Quantile,iNumAnomTimeSteps,iNumAnomTiles,iNumAnomJobsPerProc,JOB)
+
 if ia_OorC_DataSet_Quantile(1) == 2 
   junkprevious = -1;
   jobjunk = struct;

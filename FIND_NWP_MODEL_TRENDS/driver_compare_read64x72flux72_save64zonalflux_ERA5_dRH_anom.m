@@ -90,10 +90,14 @@ if ~exist('ceres_trend')
   %% see modis_ceres_era5_anoms.m
   ceres_trend = quick_ceres_flux_cloud_anomaly_look();
   modis_cloud = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/MODIS_L3_AEROSOL_TRENDS/modis_L3_cloud_trends_2002_0009_2024_0006.mat');
-    aod_anom = reshape(modis_cloud.anom_cldfrac,4608,262);
-    aod_anom_cosavg = sum(aod_anom.*(cos(reshape(YY,4608,1)*pi/180)*ones(1,262)))./sum(cos(reshape(YY,4608,1)*pi/180)*ones(1,262));
-    deepblue_anom = reshape(modis_cloud.anom_cldtop,4608,262);
-    deepblue_anom_cosavg = sum(deepblue_anom.*(cos(reshape(YY,4608,1)*pi/180)*ones(1,262)))./sum(cos(reshape(YY,4608,1)*pi/180)*ones(1,262));
+    cldfrac_anom = reshape(modis_cloud.anom_cldfrac,4608,262);
+    cldfrac_anom_cosavg = sum(cldfrac_anom.*(cos(reshape(YY,4608,1)*pi/180)*ones(1,262)))./sum(cos(reshape(YY,4608,1)*pi/180)*ones(1,262));
+
+    cldtop_anom = reshape(modis_cloud.anom_cldtop,4608,262);
+    cldtop_anom_cosavg = sum(cldtop_anom.*(cos(reshape(YY,4608,1)*pi/180)*ones(1,262)))./sum(cos(reshape(YY,4608,1)*pi/180)*ones(1,262));
+
+    cldod_anom = reshape((modis_cloud.anom_od_ice + modis_cloud.anom_od_liq)/2,4608,262);
+    cldod_anom_cosavg = sum(aod_anom.*(cos(reshape(YY,4608,1)*pi/180)*ones(1,262)))./sum(cos(reshape(YY,4608,1)*pi/180)*ones(1,262));
 
   ohc = ocean_heat_content();
   solar = annual_solar_irradiance_data();

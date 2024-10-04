@@ -87,9 +87,10 @@ else
     JOB = 32;
     %JOB = 33;
     %JOB = 34;
-    JOB = 29
-    JOB = 1
-    JOB = 2
+    JOB = 29;
+    JOB = 2;
+    JOB = 1;
+    JOB = 45;
   end
 end
 
@@ -99,8 +100,12 @@ end
 % JOB = 7
 % JOB = 39
 % JOB = 12
+% JOB = 16
+% JOB  = 15
 
 % JOB = 70 %% for anomalies, > 64)
+
+JOB0 = JOB;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -122,6 +127,7 @@ iDebug = -1;
 %iDebug = 36;     %% check to make sure emiss trend comes in (over land)
 %iDebug = 2000
 %iDebug = 1598
+%iDebug = 10
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
@@ -183,42 +189,14 @@ if driver.iTrendOrAnomaly > 0
   ia_OorC_DataSet_Quantile = [+0 16 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 16,  iQuantile = 03   04 year rates, 2020/07-2024/06
 
 elseif driver.iTrendOrAnomaly < 0
-
-  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 10; iNumAnomJobsPerProc =  72; 
-    anomalydatafile = 'anomaly_globalavg_and_9_averages_timeseries_Q03.mat';   %% needs 454*10/72 = 64 processors       btavgAnomFinal: [2645x4540 double] ==> 454 timesteps x 10 anomaly time series
-  
-  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 19; iNumAnomJobsPerProc =  72; 
-    anomalydatafile = 'anomaly_globalavg_and_18_averages_timeseries_Q03.mat';  %% needs 454*19/72 = 120 processors      btavgAnomFinal: [2645x8626 double] ==> 454 timesteps x 19 anomaly time series
-  
-  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 29; iNumAnomJobsPerProc =  110; 
-    anomalydatafile = 'anomaly_globalavg_and_28_averages_timeseries_Q03.mat';  %% needs 454*29/110 = 120 processors     btavgAnomFinal: [2645x13166 double] ==> 454 timesteps x 99 anomaly time series
-  
-  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
-    anomalydatafile = 'anomaly_tile_2515_timeseries_Q03.mat';  %% needs 454/20 = 23 processors                          btavgAnomFinal = [2645x454 double] ==> 454 x 1 
-  
-  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
-    anomalydatafile = 'anomaly_tile_2515_timeseries_Q04.mat';  %% needs 454/20 = 23 processors                          btavgAnomFinal = [2645x454 double] ==> 454 x 1 
-  
-  %% ocb_set = 2 : anomaly fit, dataset = 9, iQuantile = 03    20 year anomalies== > 20yrs* 23steps/yr = 460; AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+2 09 03 -9999]; iNumAnomTimeSteps = 454; iNumAnomTiles = 1; iNumAnomJobsPerProc =  20; 
-    anomalydatafile = 'anomaly_tile_2515_timeseries_Q05.mat';  %% needs 454/20 = 23 processors                          btavgAnomFinal = [2645x454 double] ==> 454 x 1 
-  
-  %% ocb_set = 2 : anomaly fit, dataset = 16, iQuantile = 03   22 year anomalies== > 22yrs* 23steps/yr = 500; AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 64; iNumAnomJobsPerProc =  200; 
-    anomalydatafile = '/asl/s1/sergio/JUNK/anomaly_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat';          %% needs 500*64/200 =  160 processors     btavgAnomFinal = [64x2645x500] ==> 500 timesteps x 64 anomaly time series
-  ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 29; iNumAnomJobsPerProc =  250; 
-    anomalydatafile = 'anomalyD_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*29/250 = 64 processors       btavgAnomFinal = [2645x14000] > 500*28 anomaly time series
+  set_anomaly_info
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ia_OorC_DataSet_Quantile(1) == 2
-  get_anomaly_processors
+  %get_anomaly_processors  %% this sets mapAnomData_to_processor
+  [jobjunk,mapAnomData_to_processor] = get_anomaly_processors(ia_OorC_DataSet_Quantile,iNumAnomTimeSteps,iNumAnomTiles,iNumAnomJobsPerProc,JOB0);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -282,8 +260,8 @@ if driver.iTrendOrAnomaly == +1
 
 else
   JOBTYPE = +1000;
-  mapperAnom2Processor = find(mapAnomData_to_processor(:,3) == JOB);
-  iInd0 = mapperAnom2Processor(1);  iIndE = mapperAnom2Processor(end);
+  mapperAnom2Processor = find(mapAnomData_to_processor(:,3) == JOB);    %% from get_anomaly_processors
+  iInd0 = mapperAnom2Processor(1);  iIndE = mapperAnom2Processor(end);  %% from get_anomaly_processors
   fprintf(1,'JOB = %3i iInd0,iIndE = %4i %4i \n',JOB,iInd0,iIndE)
 end
 
@@ -326,15 +304,23 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
   if driver.iTrendOrAnomaly == -1
-    driver.i16daytimestep = JOB;                               %% ORIG when doing only ONE anomaly time series
-    driver.i16daytimestep = mapAnomData_to_processor(iInd,2);  %% NEW when doing about 10 anomaly time series
-    driver.anomalylatbin  = mapAnomData_to_processor(iInd,1);  %% NEW when doing about 10 anomaly time series
-    driver.anomalylonbin  = 36;
-    driver.anomaly4608eqv = (driver.anomalylatbin-1)*72 + driver.anomalylonbin; 
-    driver.anomalytimesteps = iNumAnomTimeSteps;
-    driver.anomalynumtiles  = iNumAnomTiles;
-    driver.anomalylocation  = iInd;
-    driver.iibin = (driver.anomalylatbin - 1)*72 + driver.anomalylonbin; 
+    %driver.i16daytimestep = JOB;                              %% ORIG when doing only ONE anomaly time series
+    driver.i16daytimestep = mapAnomData_to_processor(iInd,2);  %% NEW when doing about 10 anomaly time series, from get_anomaly_processors
+    if (JOB <= iNumAnomTimeSteps)
+      driver.anomalyinfo.global = +1;  %% this is global, over 64 latbins
+    elseif (JOB > iNumAnomTimeSteps & JOB <= 2*iNumAnomTimeSteps)
+      driver.anomalyinfo.global = +2;  %% this is tropical, over 64 latbins
+    else
+      driver.anomalyinfo.global = -1;  %% this is averaged over few latbins
+    end 
+    driver.anomalyinfo.timestep16day = driver.i16daytimestep;
+    driver.anomalyinfo.latbin  = mapAnomData_to_processor(iInd,1);  %% NEW when doing about 10 anomaly time series, from get_anomaly_processors
+    driver.anomalyinfo.lonbin  = 36;
+    driver.anomalyinfo.i4608eqv = (driver.anomalyinfo.latbin-1)*72 + driver.anomalyinfo.lonbin; 
+    driver.anomalyinfo.timesteps = iNumAnomTimeSteps;
+    driver.anomalyinfo.numtiles  = iNumAnomTiles;
+    driver.anomalyinfo.location  = iInd;
+    driver.iibin = (driver.anomalyinfo.latbin - 1)*72 + driver.anomalyinfo.lonbin; 
 
   elseif driver.iTrendOrAnomaly == +1  
     driver.i16daytimestep = -1;   %% for the rates, not anomalies, RUN BY HAND BY UN-COMMENTING THIS LINE and 
@@ -345,7 +331,7 @@ for iInd = iXX1 : idX : iXX2
   if driver.iTrendOrAnomaly > 0
     fprintf(1,'latbin = %3i lonbin = %3i   gridpoint = %4i i16daytimestep = %4i \n',JOB,(iInd-iInd0+1),iInd,driver.i16daytimestep);
   elseif driver.iTrendOrAnomaly < 0
-    fprintf(1,'JOB = %5i gridpoint = %5i i16daytimestep = %5i i16dayLocalBin = %5i \n',JOB,iInd,driver.i16daytimestep,driver.anomalylatbin);
+    fprintf(1,'JOB = %5i gridpoint = %5i i16daytimestep = %5i i16dayLocalBin = %5i \n',JOB,iInd,driver.i16daytimestep,driver.anomalyinfo.latbin);
   end
 
   ix = iInd;
@@ -356,15 +342,15 @@ for iInd = iXX1 : idX : iXX2
     %% see set_driver_jacfile.m, elseif driver.i16daytimestep > 0
     do_XX_YY_from_X_Y
 
-    driver.anomalydatafile = anomalydatafile;
+    driver.anomalyinfo.datafile = anomalydatafile;
 
-    if strfind(driver.anomalydatafile,'_tile_')
-      junk = load(driver.anomalydatafile,'LatBin','LonBin');
+    if strfind(driver.anomalyinfo.datafile,'_tile_')
+      junk = load(driver.anomalyinfo.datafile,'LatBin','LonBin');
       driver.iLon = junk.LonBin;
       driver.iLat = junk.LatBin;
-    else  %% ~strfind(driver.anomalydatafile,'_tile_')
-      junk = load(driver.anomalydatafile,'usethese');
-      junk = junk.usethese{driver.anomalylatbin};
+    else  %% ~strfind(driver.anomalyinfo.datafile,'_tile_')
+      junk = load(driver.anomalyinfo.datafile,'usethese');
+      junk = junk.usethese{driver.anomalyinfo.latbin};
 
       %YYmean = nanmean(YY(junk));
       %junk = find(rlat65 >= YYmean,1) - 1;
@@ -758,20 +744,24 @@ for iInd = iXX1 : idX : iXX2
     end
   end
 
-  if oldstyle_removeCO2 > 0 
-    if topts.iNlays_retrieve >= 97 & ~exist(driver.outfilename)
-      [driver,aux,topts] = strow_override_defaults_latbins_AIRS(driver,topts);
-    elseif topts.iNlays_retrieve < 97 & ~exist(driver.outfilename)
-      [driver,aux,topts] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
+  if ~exist(driver.outfilename)
+    if oldstyle_removeCO2 > 0 
+      if topts.iNlays_retrieve >= 97 & ~exist(driver.outfilename)
+        [driver,aux,topts] = strow_override_defaults_latbins_AIRS(driver,topts);
+      elseif topts.iNlays_retrieve < 97 & ~exist(driver.outfilename)
+        [driver,aux,topts] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
+      end
+      %%[driver,aux,topts] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
+    else
+      if topts.iNlays_retrieve >= 97 & ~exist(driver.outfilename)
+        [driver,aux,co2rate] = strow_override_defaults_latbins_AIRS_removeCO2(driver,topts);
+      elseif topts.iNlays_retrieve < 97 & ~exist(driver.outfilename)
+        [driver,aux,co2rate] = strow_override_defaults_latbins_AIRS_fewlays_removeCO2(driver,topts.iNlays_retrieve,topts);
+      end
     end
-    %%[driver,aux,topts] = strow_override_defaults_latbins_AIRS_fewlays(driver,topts.iNlays_retrieve,topts);
   else
-    if topts.iNlays_retrieve >= 97 & ~exist(driver.outfilename)
-      [driver,aux,co2rate] = strow_override_defaults_latbins_AIRS_removeCO2(driver,topts);
-    elseif topts.iNlays_retrieve < 97 & ~exist(driver.outfilename)
-      [driver,aux,co2rate] = strow_override_defaults_latbins_AIRS_fewlays_removeCO2(driver,topts.iNlays_retrieve,topts);
-    end
- end
+    fprintf(1,'A outdir,outname = %s already exists \n',driver.outfilename)    
+  end
 
 %---------------------------------------------------------------------------
   fprintf(1,'A outdir,outname = %s \n',driver.outfilename)
@@ -802,22 +792,24 @@ for iInd = iXX1 : idX : iXX2
 
   else
     disp(' ')
-    fprintf(1,'%s after all that, already exists \n',driver.outfilename)
+    fprintf(1,'%s after all that strow_override_defaults, already exists \n',driver.outfilename)
     fprintf(1,'%s after all that, already exists \n',driver.outfilename)
     fprintf(1,'%s after all that, already exists \n',driver.outfilename)
     driver.rateset.rates = zeros(topts.numchan,1);
     disp(' ')
   end
-driver
 
-if ~exist('oem')
-  oem = driver.oem;
-end
-if exist('oem')
-  if isfield(oem,'cov_set')
-    show_unc  
+% driver
+
+  if ~exist('oem')
+    oem = driver.oem;
   end
-end
+  if exist('oem')
+    if isfield(oem,'cov_set')
+      show_unc  
+    end
+  end
+
 %---------------------------------------------------------------------------
   % Save retrieval output from this loop
 

@@ -151,12 +151,12 @@ elseif driver.i16daytimestep > 0
 
     %% kcarta time vary jac
     junk = load(driver.rateset.datafile);
-    if strfind(driver.anomalydatafile,'_tile_')
-      junk = load(driver.anomalydatafile,'LatBin','LonBin');
+    if strfind(driver.anomalyinfo.datafile,'_tile_')
+      junk = load(driver.anomalyinfo.datafile,'LatBin','LonBin');
       %driver.iLon = junk.LonBin;
       junk = junk.LatBin;
     else
-      junk = junk.usethese{driver.anomalylatbin};
+      junk = junk.usethese{driver.anomalyinfo.latbin};
 
       %YYmean = nanmean(YY(junk));
       %junk = find(rlat65 >= YYmean,1) - 1;

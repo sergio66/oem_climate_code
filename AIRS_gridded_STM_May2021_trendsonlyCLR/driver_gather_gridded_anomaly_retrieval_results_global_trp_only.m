@@ -24,10 +24,15 @@ jett = jet(128); jett(1,:) = 1;
 f2645 = instr_chans2645;
 i0900 = find(f2645 >= 900,1);
 i0723 = find(f2645 >= 723,1);
+i0667 = find(f2645 >= 667.2,1);
 i1305 = find(f2645 >= 1305,1);
 i1419 = find(f2645 >= 1419,1);
+i1400 = find(f2645 >= 1400,1);
+i1598 = find(f2645 >= 1598,1);
 
 set_anomaly_info
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
@@ -177,6 +182,8 @@ end
 daysSince2002 = change2days(data_anom.yy,data_anom.mm,data_anom.dd,2002);
 yymm = data_anom.yy + (data_anom.mm-1)/12 + (data_anom.dd-1)/30/12;
 
+iNumAnomTiles = 1;  %% global only
+iNumAnomTiles = 2;  %% global + tropics only
 iNumAnomData = iNumAnomTimeSteps * iNumAnomTiles;
 
 fnamelastloaded = 'none';
@@ -519,7 +526,7 @@ while iDoAgain > 0
       plot_anomalies_1
     else
       simple = +1;
-      plot_anomalies_All
+      plot_anomalies_global_trp
     end
 
     junk_globalavg_rawdata = data_anom.btavgAnomFinal(:,1:iNumAnomTimeSteps);
@@ -598,6 +605,23 @@ figure(5); clf
   hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
   set(gca,'fontsize',10); title('xb(trace gas + ST)');
 
+figure(5); clf
+  subplot(211); 
+  wah = save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps);
+  plot(yymm,wah(1,:),'b',yymm,wah(2,:),'m',yymm,wah(3,:),'g',yymm,wah(6,:),'r','linewidth',2); hold on; 
+  wah = save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps);
+  plot(yymm,wah(1,:),'b--',yymm,wah(2,:),'m--',yymm,wah(3,:),'g--',yymm,wah(6,:),'r--','linewidth',2); hold on; 
+  hl = legend('CO2','N2O','CH4','ST','location','best');
+  set(gca,'fontsize',10); title('xb(trace gas + ST)');
+figure(5);
+  subplot(212); 
+  wah = save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps);
+  plot(yymm,wah(4,:),'y',yymm,wah(5,:),'k','linewidth',2); hold on; 
+  wah = save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps);
+  plot(yymm,wah(4,:),'y--',yymm,wah(5,:),'k--','linewidth',2); hold on; 
+  hl = legend('CFC11','CFC12','location','best');
+  set(gca,'fontsize',10); title('xb(trace gas + ST)');
+
 figure(6); clf
   plot(yymm,save_cov_set.xb_wvz(:,1:iNumAnomTimeSteps),'linewidth',2); set(gca,'fontsize',10); title('xb(WV)');
 figure(6); clf
@@ -611,42 +635,26 @@ figure(7); clf;
   plot(f2645,nanmean(rates_global'-fits_global'),f2645,nanmean(rates_global')); plotaxis2; xlim([645 1620])
     hl = legend('rates-fits','rates','location','best','fontsize',10); title('Global set')
 
-if strfind(anomalydatafile,'globalavg_and_tropics')
-  iStartOffset = 3;  % first two are global and tropic
-else
-  iStartOffset = 2;
-end
+figure(8); clf; 
+  rates_tropics = rates(:,(1:iNumAnomTimeSteps)+iNumAnomTimeSteps);
+  fits_tropics  = fits(:,(1:iNumAnomTimeSteps)+iNumAnomTimeSteps);
+  plot(f2645,nanmean(rates_tropics'-fits_tropics'),f2645,nanmean(rates_tropics')); plotaxis2; xlim([645 1620])
+    hl = legend('rates-fits','rates','location','best','fontsize',10); title('Tropical set')
 
-rates_global_sum = zeros(size(rates_global));
-fits_global_sum  = zeros(size(rates_global));
-for ii = iStartOffset : iNumAnomTiles
-  ind = (1:iNumAnomTimeSteps) + (ii-1)*iNumAnomTimeSteps;
-  coslat = cos(rlat(ii-1)*pi/180);
-  rates_global_sum = coslat * rates(:,ind) + rates_global_sum;
-  fits_global_sum  = coslat * fits(:,ind) + fits_global_sum;
-end
-rates_global_sum = rates_global_sum/sum(cos(rlat*pi/180));
-fits_global_sum = fits_global_sum/sum(cos(rlat*pi/180));
-figure(8); clf
-  plot(f2645,nanmean(rates_global_sum'-fits_global_sum'),f2645,nanmean(rates_global_sum')); plotaxis2; xlim([645 1620])
-    hl = legend('rates-fits','rates','location','best','fontsize',10); title('Sum over latbins')
-  
-figure(9); clf
-  plot(f2645,nanmean(rates_global'-rates_global_sum'),f2645,nanmean(rates_global')); plotaxis2; xlim([645 1620])
-    hl = legend('rates- rates sum','rates','location','best','fontsize',10); title('Sum over latbins')
+figure(9); clf;
+plot(yymm,smooth(rates_global(i0667,:),23),yymm,smooth(rates_global(i0723,:),23),yymm,smooth(rates_global(i1598,:),23),yymm,smooth(rates_global(i1419,:),23),'linewidth',2); plotaxis2;
+  legend('0667 S','0723 T','1598 T','1419 S','location','best','fontsize',10); title('Global average')
 
-disp('ret to continue to plot_anomalies_ALL'); pause
+figure(10); clf;
+plot(yymm,smooth(rates_tropics(i0667,:),23),yymm,smooth(rates_tropics(i0723,:),23),yymm,smooth(rates_tropics(i1598,:),23),yymm,smooth(rates_tropics(i1419,:),23),'linewidth',2); plotaxis2;
+  legend('0667','0723','1598 T','1419 S','location','best','fontsize',10); title('Tropics average')
+
+%[c,lags]=xcorr(rates_tropics(i0667,:),rates_tropics(i0723,:));  % compute cross correlation; keep lags vector
+%[~,iLag]=max(c(find(lags==0):end));                             % find the max in one-sided
+%s3=circshift(rates_tropics(i0723,:),[0 iLag]);                  % correct for the shift
+
+disp('ret to continue to plot_anomalies_global_trp'); pause
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
+plot_anomalies_global_trp
 
-if strfind(anomalydatafile,'_tile')
-  plot_anomalies_1
-else
-  simple = -1;
-  plot_anomalies_All
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-addpath ../FIND_NWP_MODEL_TRENDS/
-look_at_anomalies_computeERA5_monthly_trends_desc_or_asc_64fast(40,1);

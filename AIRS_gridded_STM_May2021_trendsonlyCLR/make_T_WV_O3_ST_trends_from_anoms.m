@@ -12,7 +12,7 @@ dtime = dtime(setdiff(1:length(dtime),boo_summary.timestep_notfound));
 
 iNumLay6 = 6;
 waha = reshape(results,iNumAnomTimeSteps,iNumAnomTiles,6);
-for jjunk = 1 : iNumAnomTiles  %% 1 = global avg, 2 : 29 = latins
+for jjunk = 1 : iNumAnomTiles  %% 1 = global avg, 2 : 29 = latins     or 1 = global avg, 2 = tropics, 3 : 30 = latins
   for ijunk = 1 : iNumLay6
     P = nanpolyfit(dtime,squeeze(waha(:,jjunk,ijunk)),1);
     trendScalar(jjunk,ijunk) = P(1)*365.25;
@@ -43,14 +43,14 @@ for jjunk = 1 : iNumAnomTiles  %% 1 = global avg, 2 : 29 = latins
   end
 end
 
-iFig = iFig + 1; figure(iFig); clf; junk = trendScalar(2:iNumAnomTiles,6); plot(rlat,junk); title('ST trends'); 
+iFig = iFig + 1; figure(iFig); clf; junk = trendScalar(iStartOffset:iNumAnomTiles,6); plot(rlat,junk); title('ST trends'); 
   plotaxis2; ylabel('dSKT/dt [Kyr]'); xlabel('Latitude')
-iFig = iFig + 1; figure(iFig); clf; junk = trendTz(2:iNumAnomTiles,:); pcolor(rlat,pavg,junk'); 
+iFig = iFig + 1; figure(iFig); clf; junk = trendTz(iStartOffset:iNumAnomTiles,:); pcolor(rlat,pavg,junk'); 
   xlabel('Latitude'); ylabel('Pressure [mb]');
   shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*0.15); title('UMBC T trends'); set(gca,'ydir','reverse'); ylim([10 1000]); set(gca,'yscale','log')
-iFig = iFig + 1; figure(iFig); clf; junk = trendWV(2:iNumAnomTiles,:); pcolor(rlat,pavg,junk'); 
+iFig = iFig + 1; figure(iFig); clf; junk = trendWV(iStartOffset:iNumAnomTiles,:); pcolor(rlat,pavg,junk'); 
   shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); title('UMBC WV trends'); set(gca,'ydir','reverse'); ylim([10 1000])
   xlabel('Latitude'); ylabel('Pressure [mb]');
-iFig = iFig + 1; figure(iFig); clf; junk = trendO3(2:iNumAnomTiles,:); pcolor(rlat,pavg,junk'); 
+iFig = iFig + 1; figure(iFig); clf; junk = trendO3(iStartOffset:iNumAnomTiles,:); pcolor(rlat,pavg,junk'); 
   shading interp;  colorbar; colormap(llsmap5); caxis([-1 +1]*0.015); title('UMBC O3 trends'); set(gca,'ydir','reverse'); ylim([10 1000]); set(gca,'yscale','log')
   xlabel('Latitude'); ylabel('Pressure [mb]');

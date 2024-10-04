@@ -18,7 +18,7 @@ driver.topts  = topts;
 if driver.ia_OorC_DataSet_Quantile(1) <= 1
   ix = driver.iibin;
 else
-  ix = driver.anomalylocation;
+  ix = driver.anomalyinfo.location;
 end
 
 %---------------------------------------------------------------------------
@@ -80,7 +80,8 @@ end
 if topts.dataset == 30
   set_the_AMSU_jcobians
 else
-  set_the_jacobians  %% sets structure "jac" and m_ts_jac
+ %set_the_jacobians  %% sets structure "jac" and m_ts_jac
+ [m_ts_jac,m_ts_jac_coljac,nlays,iNlays_retrieve,freq2645,jac,qWV,layWV,qT,layT,qO3,layO3,plays,driver,settings] = set_the_jacobians(driver,settings,topts,iVersJac,iOldORNew,iNlays_retrieve,iXJac);
 end
 
 aux.m_ts_jac = m_ts_jac;
@@ -266,6 +267,8 @@ set_Tz_O3z_noFit
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % A Priori stored in aux.xb
+%size(xb)
+%size(driver.qrenorm)
 aux.xb = xb./driver.qrenorm';
 
 %---------------------------------------------------------------------------

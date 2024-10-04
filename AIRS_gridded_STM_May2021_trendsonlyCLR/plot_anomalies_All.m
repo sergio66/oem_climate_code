@@ -23,7 +23,7 @@ iNumYearSmooth = 0.25;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iFig = 5;
+iFig = 9;
 
 iFig = iFig + 1; figure(iFig); clf
 junk = results(1:iNumAnomTimeSteps,6); 
@@ -47,6 +47,11 @@ iFig = iFig + 1; figure(iFig); clf; wahaWV = resultsWV(1:iNumAnomTimeSteps,:)';
 
 tropicsHT  = find(rlat(2:end) >= -30 & rlat(2:end) <= +10); rlat(tropicsHT);
 tropicsHT2 = find(rlat(2:end) >= -30 & rlat(2:end) <= +30); rlat(tropicsHT2);
+tropicsHT  = find(rlat(1:end) >= -30 & rlat(1:end) <= +10); rlat(tropicsHT);
+tropicsHT2 = find(rlat(1:end) >= -30 & rlat(1:end) <= +30); rlat(tropicsHT2);
+
+tropicsHT  = tropicsHT + (iStartOffset-1);
+tropicsHT2 = tropicsHT2 + (iStartOffset-1);
 iFig = iFig + 1; figure(iFig); clf; waha = reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay); waha = nanmean(waha(:,tropicsHT2,:),2); waha = squeeze(waha)'; 
   pcolor(yymm,pavg,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('Tropics <UMBC> T(z,lat)');      colormap(llsmap5); caxis([-1 +1]*2)
   pcolor(yymm,pavg,smoothn(waha,1));  shading interp; colorbar; set(gca,'ydir','reverse'); title('Tropics <UMBC> T(z,lat)');      colormap(llsmap5); caxis([-1 +1]*2)
@@ -94,14 +99,14 @@ clear trendT trendWV
 waha = reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay);
 for jj = 1 : length(pavg)
   for ii = 1 : length(rlat)-1
-    junk = squeeze(waha(:,ii+1,jj)); 
+    junk = squeeze(waha(:,ii+(iStartOffset-1),jj)); 
     P = nanpolyfit(daysSince2002/365,junk,1); trendT(ii,jj) = P(1);
   end
 end
 waha = reshape(resultsWV,iNumAnomTimeSteps,iNumAnomTiles,iNumLay);
 for jj = 1 : length(pavg)
   for ii = 1 : length(rlat)-1
-    junk = squeeze(waha(:,ii+1,jj)); 
+    junk = squeeze(waha(:,ii+(iStartOffset-1),jj)); 
     P = nanpolyfit(daysSince2002/365,junk,1); trendWV(ii,jj) = P(1);
   end
 end
@@ -120,7 +125,7 @@ clear annualT annualWV
 waha = reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay);
 for jj = 1 : length(pavg)
   for ii = 1 : length(rlat)-1
-    junk = squeeze(waha(:,ii+1,jj)); 
+    junk = squeeze(waha(:,ii+(iStartOffset-1),jj)); 
     annualT(ii,jj,:) = interp1(yymm,junk,iaYears,[],'extrap');
   end
 end
@@ -128,7 +133,7 @@ end
 waha = reshape(resultsWV,iNumAnomTimeSteps,iNumAnomTiles,iNumLay);
 for jj = 1 : length(pavg)
   for ii = 1 : length(rlat)-1
-    junk = squeeze(waha(:,ii+1,jj)); 
+    junk = squeeze(waha(:,ii+(iStartOffset-1),jj)); 
     annualWV(ii,jj,:) = interp1(yymm,junk,iaYears,[],'extrap');
   end
 end
@@ -266,7 +271,7 @@ clear annualT annualWV
 waha = reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay);
 for jj = 1 : length(pavg)
   for ii = 1 : length(rlat)-1
-    junk = squeeze(waha(:,ii+1,jj)); 
+    junk = squeeze(waha(:,ii+(iStartOffset-1),jj)); 
     annualT(ii,jj,:) = interp1(yymm,junk,iaYears,[],'extrap');
   end
 end
@@ -274,7 +279,7 @@ end
 waha = reshape(resultsWV,iNumAnomTimeSteps,iNumAnomTiles,iNumLay);
 for jj = 1 : length(pavg)
   for ii = 1 : length(rlat)-1
-    junk = squeeze(waha(:,ii+1,jj)); 
+    junk = squeeze(waha(:,ii+(iStartOffset-1),jj)); 
     annualWV(ii,jj,:) = interp1(yymm,junk,iaYears,[],'extrap');
   end
 end
@@ -283,6 +288,8 @@ annualT0  = annualT;
 annualWV0 = annualWV;
 tropicsHT  = find(rlat(2:end) >= -30 & rlat(2:end) <= +10); rlat(tropicsHT);
 tropicsHT2 = find(rlat(2:end) >= -30 & rlat(2:end) <= +30); rlat(tropicsHT2);
+tropicsHT  = find(rlat(1:end) >= -30 & rlat(1:end) <= +10); rlat(tropicsHT);
+tropicsHT2 = find(rlat(1:end) >= -30 & rlat(1:end) <= +30); rlat(tropicsHT2);
 timeHT = 2022 + (1-1)/12 + (15-1)/30/12;
 
 iFig = 28; iFig = iFig - 8;

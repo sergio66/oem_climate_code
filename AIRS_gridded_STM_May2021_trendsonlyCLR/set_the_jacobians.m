@@ -1,3 +1,9 @@
+function [m_ts_jac,m_ts_jac_coljac,nlays,iNlays_retrieve,freq2645,jac,qWV,layWV,qT,layT,qO3,layO3,plays,driver,settings] = set_the_jacobians(driver0,settings0,topts,iVersJac,iOldORNew,iNlays_retrieve0,iXJac);
+
+driver          = driver0;
+settings        = settings0;
+iNlays_retrieve = iNlays_retrieve0;
+
 % Get jacobians, and combine the 97 layer T(z)/WV(z)/O3(z) into N layers
 
 %[m_ts_jac0,nlays,qrenorm]  = get_jac(driver.jacobian.filename,driver.jac_indexINSIDEbin,iVersJac);
@@ -8,10 +14,28 @@
 %   [m_ts_jac0,nlays,qrenorm,freq2645]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,topts);
 % end
 
+iConstantJac_or_DoSARTA_Analytic_per_timestep = -1;  %% new style, varying sarta jac for all time steps
+iConstantJac_or_DoSARTA_Analytic_per_timestep = +1;  %% old style, constant      jac for all time steps
+
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
+  %% trends
   [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+
 elseif driver.ia_OorC_DataSet_Quantile(1) == 2
-  [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.anomaly4608eqv,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+  %% anomalies
+  if iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
+    info_about_time_lat = load(driver.anomalyinfo.datafile,'yy','mm','mm','newLatGrid','rtime','usethese');
+    [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk] = sarta_analytic_jac(driver,info_about_time_lat);
+    driver.rateset.tropopause_index = xprofilejunk.lps.trp_ind;
+    [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.anomalyinfo.i4608eqv,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+    new_m_ts_jac0 = combine_sarta_anaytic_precomputed_jacs(xm_ts_jac0,xnlays,xqrenorm,m_ts_jac0,nlays,qrenorm);
+    m_ts_jac0 = new_m_ts_jac0;  
+  else
+    info_about_time_lat = load(driver.anomalyinfo.datafile,'yy','mm','mm','newLatGrid','rtime','usethese');
+    [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk] = sarta_analytic_jac(driver,info_about_time_lat,-1);
+    driver.rateset.tropopause_index = xprofilejunk.lps.trp_ind;
+    [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.anomalyinfo.i4608eqv,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+  end
 else
   error('invalid driver.ia_OorC_DataSet_Quantile(1))')
 end
@@ -72,8 +96,8 @@ end
 %disp('here 2'); pause
 
 %% replace CO2,N2O,CH4 jacs
-if driver.i16daytimestep > 0  
-  %% this is for 388 anomaly time steps
+if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
+  %% this is for 23*iNumYears anomaly time steps
   %% put in time varying Jacobian, err no more need to do this??? well sarta has older CO2/CH4 but let's comment this for now
   iDoStrowFiniteJac = +2; %% testing Strows finite difference jacs CO2(t)-CO2(370) ...    6/24-27/2019 interp in time, used to be +1
   iDoStrowFiniteJac = +3; %% testing Strows finite difference jacs CO2(t)-CO2(370) ...    6/24-27/2019 at all anom timesteps
@@ -233,3 +257,15 @@ jac.qavg        = profilejunk.qavg;
 jac.oavg        = profilejunk.oavg;
 jac.trop_P      = profilejunk.lps_tropoapauseP;
 jac.trop_ind    = profilejunk.lps_tropoapauseind;
+
+bad = find(isinf(m_ts_jac0));
+if length(bad) > 0
+  disp('oh oh found bad numbers in main jacs')
+  keyboard_nowindow
+end
+bad = find(isinf(m_ts_jac_coljac));
+if length(bad) > 0
+  disp('oh oh found bad numbers in col jacs')
+  keyboard_nowindow
+end
+

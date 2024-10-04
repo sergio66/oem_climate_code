@@ -289,7 +289,8 @@ if iHuge > 0
   iX = 1;
   if iX > 0
     %% iQuant = 3;
-    stand_alone_make_globalavg_and_N_average_anomalies_zonalavg
+    stand_alone_make_globalavg_and_N_average_anomalies_zonalavg             %% global and 28 latbins, so you basically have to do all 14500 datapoints ugh!!! to see global, and then tropical
+    stand_alone_make_globalavg_and_tropics_and_N_average_anomalies_zonalavg %% global and tropics and 28 latbins, so you can zip through 1000 datapoints and see how things look for global and tropical
   end
 end
 

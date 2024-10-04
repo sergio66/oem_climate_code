@@ -44,7 +44,6 @@ if ~exist('colo3')
 end
 
 if iDoSlow > 0
-  'done2'
   timervalx2 = toc;
 
   timervalx1

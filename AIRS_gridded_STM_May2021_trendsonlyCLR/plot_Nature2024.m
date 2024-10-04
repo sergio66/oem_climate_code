@@ -22,18 +22,18 @@ iFig = iFig + 1; figure(iFig); clf; pcolor(iaYears,rlat(2:end),squeeze(annualWV(
   title('WV(t,lat) at 32 km'); xlim([2021.75 2024]); ylim([-1 +1]*50); line([timeHT timeHT],[-1 +1]*50,'color','k','linewidth',2); 
   xlabel('Time'); ylabel('Latitude [deg]');
 
-iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualT(tropicsHT+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*4);
+iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualT(tropicsHT,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*4);
   title('T(t,z) -30S to +10 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); 
   xlabel('Time'); ylabel('Height [km]')
-iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualWV(tropicsHT+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
+iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualWV(tropicsHT,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
   title('WV(t,z) -30S to +10 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); 
   xlabel('Time'); ylabel('Height [km]')
   axis([2020 2025 0 25])
 
-iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualT(tropicsHT2+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*4);
+iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualT(tropicsHT2,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*4);
   title('T(t,z) -30S to +30 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); 
   xlabel('Time'); ylabel('Height [km]')
-iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualWV(tropicsHT2+1,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
+iFig = iFig + 1; figure(iFig); clf; junk = squeeze(nanmean(annualWV(tropicsHT2,:,:),1)); pcolor(iaYears,havg,junk); shading interp;  colorbar; colormap(cmap); caxis([-1 +1]*0.25);
   title('WV(t,z) -30S to +30 N'); xlim([2021.75 2024]); ylim([16 32]); line([timeHT timeHT],[16 32],'color','k','linewidth',2); 
   xlabel('Time'); ylabel('Height [km]')
   axis([2020 2025 0 25])

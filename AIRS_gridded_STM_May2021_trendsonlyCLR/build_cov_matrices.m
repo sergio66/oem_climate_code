@@ -42,7 +42,6 @@ if topts.iNlays_retrieve < 90
   end
 end
 
-
 %%%%%%%%%%%%%%%%%%%%
 %% see ../Strow/strow_override_defaults_latbins_AIRS.m
 
@@ -70,6 +69,10 @@ end
 if driver.i16daytimestep > 0 & topts.dataset < 30
   disp('build_cov_matrices.m : anomalies')
   %% worked great for anomalies!!!  AIRS only, not AMSU
+
+  %trpi = floor(trpi/(100/topts.iNlays_retrieve));
+  trpi = ones(1,4608) * floor(driver.rateset.tropopause_index/(100/topts.iNlays_retrieve));
+
   %%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
   cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
   cov_set = [1.0  0.05/2    0.05/2    1/2       0.15/25      0.15/25    1/2      0.05/2    0.05/0.75      1/2        1E-1     1E-1  1E-1]; %works pretty well for topts.obs_corr_matrix = -1  and 10 lays, 
@@ -88,11 +91,19 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
   %cov_set([11 13]) = cov_set([11 13]) / 10;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much, T too constrained
   %cov_set([12])    = cov_set([12])   / 10;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much, WV tooooo constrained 
 
-  %%% this is on the right track but still a little too tight for both WV and T
+  %%% this is on the right track but still a little too tight for both WV and T 
   cov_set([11 13]) = cov_set([11 13]) / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
   cov_set([12])    = cov_set([12])    / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much 
   %%% this is on the right track but still a little too tight for both WV and T
 
+%  cov_set([11 13]) = cov_set([11 13]) / 750;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
+%  cov_set([12])    = cov_set([12])    / 750;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much 
+%  cov_set([3 6])   = cov_set([3 6])*1000;       %% loosen upper atm
+
+%  cov_set([11 12 13]) = cov_set([11 12 13]) / 1000;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
+%  cov_set([3 6])   = cov_set([3 6])*10000;       %% loosen upper atm
+%  cov_set([2 5])   = cov_set([2 5])*10000;       %% loosen lower atm
+  
 elseif driver.i16daytimestep < 0 & topts.dataset < 30
   %% earlier_cov_sets  AIRS only, not AMSU
   iCovSetNumber = 4.16;  %% great JPLMay 2022 talk!!! so probably dataset=4,Q=16, 19 year rates
@@ -226,53 +237,62 @@ if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
   ixUseHere = ix;
   iiBinUseHere = driver.iibin;
 elseif abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
-  ixUseHere = driver.anomaly4608eqv;
+  ixUseHere = driver.anomalyinfo.i4608eqv;
   iiBinUseHere = ixUseHere;
 end
 
-   iOffX = 10;
-   ct(ix).trans1 = trpi(ixUseHere);
-   ct(ix).trans2 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));; %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
+%%%%%
+if abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
+  %% anomaly
+  iOffX = 10;
+  ct(ix).trans1 = trpi(ixUseHere);
+  ct(ix).trans2 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));; %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
 
-   ct(ix).trans1 = ct(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
-   ct(ix).trans2 = ct(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
-
-   ct(ix).trans1 = trpi(ixUseHere);
-   ct(ix).trans2 = trpi(ixUseHere);
-
-   ct(ix).lev1 = cov_set(2);
-   ct(ix).lev2 = cov_set(3);
-   ct(ix).lev3 = ct(ix).lev2;
-   ct(ix).width1 = cov_set(4);
-   ct(ix).width2 = ct(ix).width1;
+  ct(ix).trans1 = ct(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+  ct(ix).trans2 = ct(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+else
+  %% trend
+  ct(ix).trans1 = trpi(ixUseHere);
+  ct(ix).trans2 = trpi(ixUseHere);
+end
+ct(ix).lev1 = cov_set(2);
+ct(ix).lev2 = cov_set(3);
+ct(ix).lev3 = ct(ix).lev2;
+ct(ix).width1 = cov_set(4);
+ct(ix).width2 = ct(ix).width1;
 
 %%%%%
-   iOffX = 10;
+if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 20
+  %% anomaly or trend
+  iOffX = 10;
 %   cw(ix).trans1 = trpi(ixUseHere);
 %   cw(ix).trans2 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));       %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
-   cw(ix).trans1 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));  %% new move (+) towards ground (-) away from gnd/to TOA
-   cw(ix).trans2 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));  %% new move (+) towards ground (-) away from gnd/to TOA
+  cw(ix).trans1 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));  %% new move (+) towards ground (-) away from gnd/to TOA
+  cw(ix).trans2 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));  %% new move (+) towards ground (-) away from gnd/to TOA
 
-   cw(ix).trans1 = cw(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
-   cw(ix).trans2 = cw(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
-
-   cw(ix).lev1 = cov_set(5);
-   cw(ix).lev2 = cov_set(6);
-   cw(ix).lev3 = cw(ix).lev2;
-   cw(ix).width1 = cov_set(7);
-   cw(ix).width2 = cw(ix).width1;
+  cw(ix).trans1 = cw(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+  cw(ix).trans2 = cw(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+end
+cw(ix).lev1 = cov_set(5);
+cw(ix).lev2 = cov_set(6);
+cw(ix).lev3 = cw(ix).lev2;
+cw(ix).width1 = cov_set(7);
+cw(ix).width2 = cw(ix).width1;
 
 %%%%%
-   iOffX = 10;
-   coz(ix).trans1 = trpi(ixUseHere);
-   coz(ix).trans2 = trpi(ixUseHere) + floor(iOffX/(100/iNlays_retrieve));       %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
-   coz(ix).trans1 = coz(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
-   coz(ix).trans2 = coz(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
-   coz(ix).lev1 = cov_set(8);
-   coz(ix).lev2 = cov_set(9);
-   coz(ix).lev3 = coz(ix).lev2;
-   coz(ix).width1 = cov_set(10);
-   coz(ix).width2 = coz(ix).width1;
+if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 20
+  %% anomaly or trend
+  iOffX = 10;
+  coz(ix).trans1 = trpi(ixUseHere);
+  coz(ix).trans2 = trpi(ixUseHere) + floor(iOffX/(100/iNlays_retrieve));       %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
+  coz(ix).trans1 = coz(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+  coz(ix).trans2 = coz(ix).trans2-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
+end
+coz(ix).lev1 = cov_set(8);
+coz(ix).lev2 = cov_set(9);
+coz(ix).lev3 = coz(ix).lev2;
+coz(ix).width1 = cov_set(10);
+coz(ix).width2 = coz(ix).width1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -436,8 +456,10 @@ elseif settings.set_tracegas == 1 & settings.co2lays == 1 & driver.i16daytimeste
   % fmatd(1:5) = fmatd0(1:5)*1e0;      %% Aug 2024, allowed too much freedom in xb(CO2,N2O,CH4,CFC11,CFC12) --> xf(CO2,N2O,CH4,CFC11,CFC12)
 
   %% commit 9c6e18ab014aed371bacc19ecb68594cd2f7c568 (HEAD -> sergio, github/sergio)  9/8/24
-  % fmatd(1:5) = fmatd0(1:5)*1e-3;  %% new, Sept 2024  -- kept the xb(CO2,N2O,CH4,CFC11,CFC12) unchanged!!!!
-  fmatd(1:5) = fmatd0(1:5)*1e-1;    %% new, Sept 2024  -- the xb(CO2,N2O,CH4,CFC11,CFC12) wiggles a little, CH4 moves quite a bit!!!! Nice!!!
+  % fmatd(1:5) = fmatd0(1:5)*1e-3;  %% new, Sept 2024  -- kept the xb(CO2,N2O,CH4,CFC11,CFC12) unchanged!!!! but jacs are the kcarta midtime trend (ie same for every time step)
+  % fmatd(1:5) = fmatd0(1:5)*1e-1;  %% new, Sept 2024  -- the xb(CO2,N2O,CH4,CFC11,CFC12) wiggles a little, CH4 moves quite a bit!!!! Nice!!! but jacs are the kcarta midtime trend (ie same for every time step)
+  fmatd(1:3) = fmatd0(1:3)*1e-2;    %% new, Oct  2024  -- the xb(CO2,N2O,CH4,CFC11,CFC12) wiggles a little, CH4 moves quite a bit!!!! Nice!!! but jacs are the sarta analytic at every time step
+  fmatd(4:5) = fmatd0(4:5)*1e-2;    %% new, Oct  2024  -- the xb(CO2,N2O,CH4,CFC11,CFC12) wiggles a little, CH4 moves quite a bit!!!! Nice!!! but jacs are the sarta analytic at every time step
 
 end
 
