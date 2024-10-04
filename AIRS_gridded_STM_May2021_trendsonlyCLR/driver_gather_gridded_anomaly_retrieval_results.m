@@ -218,7 +218,7 @@ end
 
 JOB = -1;
 %get_anomaly_processors  %% this sets mapAnomData_to_processor
-[jobjunk,mapAnomData_to_processor] = get_anomaly_processors(ia_OorC_DataSet_Quantile,iNumAnomTimeSteps,iNumAnomTiles,iNumAnomJobsPerProc,-1);
+[jobjunk,mapAnomData_to_processor] = get_anomaly_processors(ia_OorC_DataSet_Quantile,iNumAnomTimeSteps,iNumAnomTiles,iNumAnomJobsPerProc,anomalydatafile,-1);
 
 iaaFound = zeros(iNumAnomTimeSteps,iNumAnomTiles);
 iCnt = 0;

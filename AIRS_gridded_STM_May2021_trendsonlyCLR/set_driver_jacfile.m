@@ -156,7 +156,8 @@ elseif driver.i16daytimestep > 0
       %driver.iLon = junk.LonBin;
       junk = junk.LatBin;
     else
-      junk = junk.usethese{driver.anomalyinfo.latbin};
+      %junk = junk.usethese{driver.anomalyinfo.latbin};
+      junk = junk.usethese{driver.anomalyinfo.fatprofilebin};
 
       %YYmean = nanmean(YY(junk));
       %junk = find(rlat65 >= YYmean,1) - 1;

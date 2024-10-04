@@ -89,8 +89,8 @@ else
     %JOB = 34;
     JOB = 29;
     JOB = 2;
-    JOB = 45;
     JOB = 1;
+    JOB = 35;
   end
 end
 
@@ -317,6 +317,7 @@ for iInd = iXX1 : idX : iXX2
 
     driver.anomalyinfo.fatprofilebin  = mapAnomData_to_processor(iInd,1);  %% NEW when doing about 10 anomaly time series, from get_anomaly_processors (1) GLOBAL (2) TROICAL (3-30) FAT LATBINS
 
+    driver.anomalyinfo.latbin  = mapAnomData_to_processor(iInd,1);  %% NEW when doing about 10 anomaly time series, from get_anomaly_processors
     junkx = load(anomalydatafile,'usethese');
     driver.anomalyinfo.latbin = ceil(nanmean(junkx.usethese{mapAnomData_to_processor(iInd,1)}));
     driver.anomalyinfo.lonbin  = 36;
@@ -377,6 +378,9 @@ for iInd = iXX1 : idX : iXX2
     end
   end
 
+end
+
+%{
   driver.oem.dofit = true;
   driver.lls.dofit = false;
   driver.oem.nloop = 2;
@@ -1044,3 +1048,5 @@ fprintf(1,'time taken (in seconds) for a %3i layer retrievals = %8.4f \n',topts.
 if driver.i16daytimestep < 0
   plot_one_latlonbin_fewlays
 end
+
+%}

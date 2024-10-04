@@ -45,6 +45,16 @@ end
 %%%%%%%%%%%%%%%%%%%%
 %% see ../Strow/strow_override_defaults_latbins_AIRS.m
 
+if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
+  ixUseHere = ix;
+  iiBinUseHere = driver.iibin;
+elseif abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
+  ixUseHere = driver.anomalyinfo.i4608eqv;
+  iiBinUseHere = ixUseHere;
+end
+
+%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %% MATLABCODE/oem_pkg_run/AIRS_AllSky_97_O3jacs_Apr2017/strow_build_cov_matrix.m
 %% recall Sa-1 = Sconv-1 + alpha T'T where T are the tikonov matrices = no units
@@ -70,8 +80,11 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
   disp('build_cov_matrices.m : anomalies')
   %% worked great for anomalies!!!  AIRS only, not AMSU
 
+  fprintf(1,'  iLat,iLon,iiBin = %2i %2i %4i \n',driver.iLat,driver.iLon,driver.iibin)
+  fprintf(1,'  iiBinUseHere %4i saved trpi %3i \n',iiBinUseHere,trpi(ixUseHere))
   %trpi = floor(trpi/(100/topts.iNlays_retrieve));
   trpi = ones(1,4608) * floor(driver.rateset.tropopause_index/(100/topts.iNlays_retrieve));
+  fprintf(1,'  iiBinUseHere %4i new trpi %3i \n',iiBinUseHere,trpi(ixUseHere))
 
   %%% topts.obs_corr_matrix = -1, 10,20 lays, topts.invtype = 1,3
   cov_set = [1.0  0.005/2   0.005/2   1/2       0.005/25     0.005/25   1/2      0.001/2   0.001/0.75     1/2        1E-5     1E-5  1E-5]; %pretty good for obs  YEAH YEAH YEAH
@@ -230,15 +243,6 @@ l_c = Lscale_O3;       mat_odO3 = exp(-mat_odHgt0.^2./(Lscale_O3^2));     %% O3
 if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quantile(1:3) == [0 5 50] | driver.ia_OorC_DataSet_Quantile(1:3) == [1 9 16]
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< hmm the big reset to what was done in April 2022 JPL Sounder Meeting >>>>>>>>>>
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< also this works fine for Feb 4, 2023 testing of driver.ia_OorC_DataSet_Quantile == [1 9 16] >>>>>>>>>>>>
-end
-
-%%%%%
-if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
-  ixUseHere = ix;
-  iiBinUseHere = driver.iibin;
-elseif abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
-  ixUseHere = driver.anomalyinfo.i4608eqv;
-  iiBinUseHere = ixUseHere;
 end
 
 %%%%%

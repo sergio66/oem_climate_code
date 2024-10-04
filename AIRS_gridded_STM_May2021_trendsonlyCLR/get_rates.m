@@ -119,6 +119,7 @@ elseif driver.i16daytimestep > 0
     iVersAnom = +1;
     if iVersAnom == 1
       iiAnomBins = (driver.anomalyinfo.latbin-1)*driver.anomalyinfo.timesteps + (1:driver.anomalyinfo.timesteps);
+      iiAnomBins = (driver.anomalyinfo.fatprofilebin-1)*driver.anomalyinfo.timesteps + (1:driver.anomalyinfo.timesteps);
       fprintf(1,' get_rates.m : subsetting iiAnomBins between %6i and %6i \n',iiAnomBins(1),iiAnomBins(end));
       anom.avg16_btanom = (anom.btavgAnomFinal(:,iiAnomBins))';
     end
