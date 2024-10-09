@@ -93,6 +93,9 @@ elseif iCovSetNumber == 20.2
   fprintf(1,'  in build_cov_matrices.m, iLatX = %2i \n',iLatX)
 
   %% COPY THE SETTINGS FOR ia_OorC_DataSet_Quantile = [01 09 16] synthetic calc
+  %% this is basically mentioned in Subsection 6.3 of the trends paper
+  %% this is basically mentioned in Subsection 6.3 of the trends paper
+  %% this is basically mentioned in Subsection 6.3 of the trends paper
   cov_set = [1.0  0.05*5        0.09*5          1/2       0.04              0.02              1/2      0.02            0.02                1/2        02*1E-0     05*1E+2  05*1E+1];  %% 2002/09-2022/08, * reproduces ERA5 20 year gophysical rates dataset9,Quant16 *
   cov_set0 = cov_set;
 

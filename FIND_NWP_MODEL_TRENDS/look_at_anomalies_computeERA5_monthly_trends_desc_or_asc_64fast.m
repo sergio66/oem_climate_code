@@ -1,4 +1,4 @@
-function [] = look_at_anomalies_computeERA5_monthly_trends_desc_or_asc_64latbins_fast(iFig,iAnomOrTrend)
+function [] = look_at_anomalies_computeERA5_monthly_trends_desc_or_asc_64fast(iFig,iAnomOrTrend)
 
 if nargin == 0
   iFig = 30;
@@ -65,39 +65,39 @@ if iAnomOrTrend > 0 | iAnomOrTrend == 0
   iFig = iFig + 1; figure(iFig); 
   boo = find(rlat >= -45 & rlat <= 20);
   wah = squeeze(nanmean(anom64_ptemp(:,boo,:),2));
-  pcolor(yymm,hgt,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies between -45 S and 20 N'); colorbar; colormap(cmap); caxis([-1 +1]*2)
-  xlim([2022-1/12 2022+2/12]); ylim([18 34]);
+  pcolor(yymm,hgt,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies \newline between -45 S and 20 N'); colorbar; colormap(cmap); caxis([-1 +1]*2)
+  xlim([2022-1/12 2022+2/12]); ylim([18 34]); ylabel('H [km]')
   
   iFig = iFig + 1; figure(iFig);
   boo = find(rlat >= -30 & rlat <= 10);
   wah = squeeze(nanmean(anom64_ptemp(:,boo,:),2));
-  pcolor(yymm,hgt,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies between -30S S and 10 N'); colorbar; colormap(cmap); caxis([-1 +1]*4)
-  xlim([2022-1/12 2024-1/12]); ylim([16 38]);
+  pcolor(yymm,hgt,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies \newline between -30S S and 10 N'); colorbar; colormap(cmap); caxis([-1 +1]*4)
+  xlim([2022-1/12 2024-1/12]); ylim([16 38]); ylabel('H [km]')
   
   iFig = iFig + 1; figure(iFig);
   boo = find(hgt <= 19,1);
   wah = squeeze(nanmean(anom64_ptemp(boo,:,:),1));
-  pcolor(yymm,rlat,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies at 19 km'); colorbar; colormap(cmap); caxis([-1 +1]*4)
-  xlim([2022-1/12 2024-1/12]); ylim([-1 +1]*45)
+  pcolor(yymm,rlat,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies \newline at 19 km'); colorbar; colormap(cmap); caxis([-1 +1]*4)
+  xlim([2022-1/12 2024-1/12]); ylim([-1 +1]*45); ylabel('Latitude')
   
   iFig = iFig + 1; figure(iFig);
   boo = find(hgt <= 27,1);
   wah = squeeze(nanmean(anom64_ptemp(boo,:,:),1));
-  pcolor(yymm,rlat,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies at 27 km'); colorbar; colormap(cmap); caxis([-1 +1]*4)
-  xlim([2022-1/12 2024-1/12]); ylim([-1 +1]*45)
+  pcolor(yymm,rlat,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies \newline at 27 km'); colorbar; colormap(cmap); caxis([-1 +1]*4)
+  xlim([2022-1/12 2024-1/12]); ylim([-1 +1]*45); ylabel('Latitude')
   
   iFig = iFig + 1; figure(iFig);
   boo = find(hgt <= 32,1);
   wah = squeeze(nanmean(anom64_ptemp(boo,:,:),1));
-  pcolor(yymm,rlat,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies at 32 km'); colorbar; colormap(cmap); caxis([-1 +1]*4)
-  xlim([2022-1/12 2024-1/12]); ylim([-1 +1]*45)
+  pcolor(yymm,rlat,wah); shading interp; title('ERA5 2002/09-2024/08 T anomalies \newline at 32 km'); colorbar; colormap(cmap); caxis([-1 +1]*4)
+  xlim([2022-1/12 2024-1/12]); ylim([-1 +1]*45); ylabel('Latitude')
   
   iFig = iFig + 1; figure(iFig);
   boo = find(rlat >= -30 & rlat <= 13);
   wah = squeeze(nanmean(anom64_gas_1(:,boo,:),2));
-  pcolor(yymm,hgt,wah); shading interp; title('ERA5 2002/09-2024/08 WV anomalies between -30S S and +30 N'); colorbar; colormap(cmap); caxis([-1 +1]*0.25)
-  xlim([2022-1/12 2024-1/12]); ylim([16 38]);
-  xlim([2022-1/12 2025-1/12]); ylim([10 25]);
+  pcolor(yymm,hgt,wah); shading interp; title('ERA5 2002/09-2024/08 WV anomalies \newline between -30S S and +30 N'); colorbar; colormap(cmap); caxis([-1 +1]*0.25)
+  xlim([2022-1/12 2024-1/12]); ylim([16 38]); ylabel('H [hgt]')
+  xlim([2022-1/12 2025-1/12]); ylim([10 25]); ylabel('H [hgt]')
 end
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -110,27 +110,27 @@ if iAnomOrTrend < 0 | iAnomOrTrend == 0
   wah = squeeze(nanmean(anom64_ptemp,3));
   wah = trend64_ptemp;
   pcolor(rlat,plays,wah); shading interp; title('ERA5 2002/09-2024/08 T trends');colormap(llsmap5); caxis([-1 +1]*0.15); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   set(gca,'yscale','log')
   
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_gas_1,3));
   wah = trend64_gas_1;
   pcolor(rlat,plays,wah); shading interp; title('ERA5 2002/09-2024/08 WV trends');colormap(llsmap5); caxis([-1 +1]*0.015); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_gas_3,3));
   wah = trend64_gas_3;
   pcolor(rlat,plays,wah); shading interp; title('ERA5 2002/09-2024/08 O3 trends');colormap(llsmap5); caxis([-1 +1]*0.015); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   set(gca,'yscale','log')
   
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_RH,3));
   wah = trend64_RH;
   pcolor(rlat,plays,wah); shading interp; title('ERA5 2002/09-2024/08 RH trends');colormap(llsmap5); caxis([-1 +1]*0.5); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
 end
   
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,36 +139,36 @@ if iAnomOrTrend == 2 | iAnomOrTrend == 0
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_ptemp,2));
   pcolor(yymm,plays,wah); shading interp; title('ERA5 2002/09-2024/08 T anoms');colormap(llsmap5); caxis([-1 +1]*2); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   set(gca,'yscale','log')
   
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_gas_1,2));
   pcolor(yymm,plays,wah); shading interp; title('ERA5 2002/09-2024/08 WV anoms');colormap(llsmap5); caxis([-1 +1]*0.15); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_ptemp,2));
   pcolor(yymm,plays,smoothn(wah,1)); shading interp; title('ERA5 2002/09-2024/08 T anoms');colormap(llsmap5); caxis([-1 +1]*2); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   set(gca,'yscale','log')
   
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_gas_1,2));
   pcolor(yymm,plays,smoothn(wah,1)); shading interp; title('ERA5 2002/09-2024/08 WV anoms');colormap(llsmap5); caxis([-1 +1]*0.15); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   
   tropics = find(abs(rlat) < 30);
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_ptemp(:,tropics,:),2));
   pcolor(yymm,plays,smoothn(wah,1)); shading interp; title('ERA5 TROPICS 2002/09-2024/08 T anoms');colormap(llsmap5); caxis([-1 +1]*2); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
   set(gca,'yscale','log')
   
   iFig = iFig + 1; figure(iFig);
   wah = squeeze(nanmean(anom64_gas_1(:,tropics,:),2));
   pcolor(yymm,plays,smoothn(wah,1)); shading interp; title('ERA5 TROPICS 2002/09-2024/08 WV anoms');colormap(llsmap5); caxis([-1 +1]*0.15); colorbar
-  ylim([10 1000]); set(gca,'ydir','reverse')
+  ylim([10 1000]); set(gca,'ydir','reverse'); ylabel('P [mb]')
 end
   
 % for ii = 1 : 14

@@ -60,8 +60,9 @@ end
 %% recall Sa-1 = Sconv-1 + alpha T'T where T are the tikonov matrices = no units
 %% so units of alpha = Sconv-1 == eg 1/K2 etc
 %% 
-%%         lc   ct.lev1  ct.lev2   ct_wide   cw.lev1  cw.lev2    cw_wide alpha_T  alpha_w  alpha_oz
-%%               TROP    STRAT               TROP     STRAT
+%%          1 |    2        3         4     |    5        6          7     |    8        9         10     |     11     12         13
+%%         lc |  ct.lev1  ct.lev2   ct_wide |  cw.lev1  cw.lev2    cw_wide |  oz.lev1  oz.lev2    oz_wide |  alpha_T  alpha_w  alpha_oz
+%%            |   TROP    STRAT             |  TROP     STRAT              |  TROP     STRAT              |
 %% if lc is tiny, mat_od ~ diagnol; if lc is large, mat_od is very broad
 %%
 %% if cX_wide is tiny, transition is very smooth and gradual ... if cX_wide is large, almost step function transition from trop to strat
@@ -104,18 +105,26 @@ if driver.i16daytimestep > 0 & topts.dataset < 30
   %cov_set([11 13]) = cov_set([11 13]) / 10;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much, T too constrained
   %cov_set([12])    = cov_set([12])   / 10;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much, WV tooooo constrained 
 
-  %%% this is on the right track but still a little too tight for both WV and T 
-  cov_set([11 13]) = cov_set([11 13]) / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
-  cov_set([12])    = cov_set([12])    / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much 
-  %%% this is on the right track but still a little too tight for both WV and T
+  %%% this is on the right track but still a little too tight for both WV and T  Sept 20, 2024
+%  cov_set([11 13]) = cov_set([11 13]) / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
+%  cov_set([12])    = cov_set([12])    / 500;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much 
+  %%% this is on the right track but still a little too tight for both WV and T  Sept 20, 2024
 
+  %%% this is on the right track but still a little too tight for both WV and T   Oct 06, 2024, 12 noon
 %  cov_set([11 13]) = cov_set([11 13]) / 750;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
 %  cov_set([12])    = cov_set([12])    / 750;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much 
-%  cov_set([3 6])   = cov_set([3 6])*1000;       %% loosen upper atm
+%  cov_set([3 6])   = cov_set([3 6])*10;       %% loosen upper atm
+  %%% this is on the right track but still a little too tight for both WV and T    Oct 06, 2024
 
-%  cov_set([11 12 13]) = cov_set([11 12 13]) / 1000;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
-%  cov_set([3 6])   = cov_set([3 6])*10000;       %% loosen upper atm
-%  cov_set([2 5])   = cov_set([2 5])*10000;       %% loosen lower atm
+  %%% this is on the right track but still a little too tight for both WV and T   Oct 06, 2024, 6 pm  for driver.oem.reg_type = 'reg_and_cov';
+%  cov_set([11 12 13]) = cov_set([11 12 13]) / 5000;    %% try for some Temperature upper atm wiggles, %% try for some water stability otherwise too much
+%  cov_set([3 6])   = cov_set([3 6])*500;       %% loosen upper atm
+  %%% this is on the right track but still a little too tight for both WV and T   Oct 06, 2024, 6 pm  for driver.oem.reg_type = 'reg_and_cov';
+
+  %%% this is on the right track but still a little too tight for both WV and T   Oct 06, 2024, 6 pm  for driver.oem.reg_type = 'cov';
+  cov_set([2 3 8 9]) = cov_set([2 3 8 9]) / 10 /0.95;  %% cov only
+  cov_set([5 6])     = cov_set([5 6]) / 05 /0.95;      %% cov only
+  %%% this is on the right track but still a little too tight for both WV and T   Oct 06, 2024, 6 pm  for driver.oem.reg_type = 'cov';
   
 elseif driver.i16daytimestep < 0 & topts.dataset < 30
   %% earlier_cov_sets  AIRS only, not AMSU
@@ -249,6 +258,7 @@ end
 if abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
   %% anomaly
   iOffX = 10;
+  iOffX = 20;
   ct(ix).trans1 = trpi(ixUseHere);
   ct(ix).trans2 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));; %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
 
@@ -269,6 +279,9 @@ ct(ix).width2 = ct(ix).width1;
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 20
   %% anomaly or trend
   iOffX = 10;
+  if abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
+    iOffX = 20;
+  end
 %   cw(ix).trans1 = trpi(ixUseHere);
 %   cw(ix).trans2 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));       %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
   cw(ix).trans1 = trpi(ixUseHere) + -floor(iOffX/(100/iNlays_retrieve));  %% new move (+) towards ground (-) away from gnd/to TOA
@@ -287,6 +300,9 @@ cw(ix).width2 = cw(ix).width1;
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 20
   %% anomaly or trend
   iOffX = 10;
+  if abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
+    iOffX = 20;
+  end
   coz(ix).trans1 = trpi(ixUseHere);
   coz(ix).trans2 = trpi(ixUseHere) + floor(iOffX/(100/iNlays_retrieve));       %% offset by 10 (when using 100 AIRS layers) or 2 (when using 20 FAT layers)
   coz(ix).trans1 = coz(ix).trans1-floor(4*iOffX/(100/iNlays_retrieve)); %% new move (+) towards ground (-) away from gnd/to TOA
@@ -616,8 +632,8 @@ end
 %% cov = covariance ~ exp(-((i-j/lc).^2)
 %% reg = regulatization = Tikonov
 driver.oem.reg_type = 'reg';         % 'reg_and_cov','cov','reg' are other choices
-driver.oem.reg_type = 'cov';         % 'reg_and_cov','cov','reg' are other choices
 driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices DEFAULT
+driver.oem.reg_type = 'cov';         % 'reg_and_cov','cov','reg' are other choices
 
 % Separate reg weights for water, temperature, ozone profiles
 driver.oem.alpha_water = cov_set(12);

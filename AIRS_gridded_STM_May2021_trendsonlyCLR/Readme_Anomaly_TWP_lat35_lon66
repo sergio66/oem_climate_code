@@ -3,8 +3,7 @@
  << see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years/Readme >>
 
 %% see ~/PAPERS/AIRS/AIRS_STM_Sept2021/sergio_May2021.tex
-%% see ~/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/sergio.pdf
-
+%% see ~/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/sergio.pdf   *******************************
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{\textcolor{red}{Anomalies}}
 \begin{block}{Regions}
@@ -26,7 +25,25 @@
 \begin{frame}{ENSO Region 3.4 (Tile (66,35))}
 \vspace{-0.1in}
 
-BT spectra and ST anomaly
+Sensitivity in UT/LW T(z,t) anomaly, not sure about WV
 
+\vspace{-0.1in}
+\begin{columns}
+
+\begin{column}{0.95\columnwidth}
+%\begin{block}{\footnotesize T(z) anomaly}
+\begin{block}{}
+\vspace{-0.1in}
+\begin{center}
+\includegraphics[width=0.75\linewidth]{./Figs/anom_tseries_2x1.pdf}
+\end{center}
+\end{block}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+
+%% BT spectra and ST anomaly
 %% cp /home/sergio/PAPERS/REPORTS/ForStrow/Strow_ROSES2018/pro/Figs/Pdf/closure_example_lon67_lat35_hottest2pc.pdf Figs/.
 %% cp /home/sergio/PAPERS/REPORTS/ForStrow/Strow_ROSES2018/pro/Figs/Pdf/oe_era_lon67_lat35_tsurf_anom_with_era_gridded_and_airsl3.pdf Figs/.

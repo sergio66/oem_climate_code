@@ -38,13 +38,25 @@ xlim([2002 2025]); ; plotaxis2; hl = legend('Ocean Nino Index','UMBC Global anom
 iFig = iFig + 1; figure(iFig); clf; wahaT = resultsT(1:iNumAnomTimeSteps,:)'; 
   pcolor(yymm,pavg,wahaT);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global AVG T(z,t)');      
   pcolor(yymm,pavg,smoothn(wahaT,1));  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global AVG T(z,t)');      
-  colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','log'); ylim([10 1000])
+    colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','log'); ylim([10 1000]); ylabel('P [mb]')
+  pcolor(yymm,p2h(pavg)/1000,smoothn(wahaT,1));  shading interp; colorbar; title('UMBC Global AVG T(z,t)');      
+    colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','linear'); ylim([0 30]); ylabel('H [km]')
 
 iFig = iFig + 1; figure(iFig); clf; wahaWV = resultsWV(1:iNumAnomTimeSteps,:)';
   pcolor(yymm,pavg,wahaWV);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global Avg WVfrac(z,t)'); 
   pcolor(yymm,pavg,smoothn(wahaWV,1));  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Global Avg WVfrac(z,t)'); 
-  colormap(llsmap5); caxis([-1 +1]*0.15); ylim([100 1000])
-  ylim([50 1000]); set(gca,'yscale','log');
+    colormap(llsmap5); caxis([-1 +1]*0.15); ylim([50 1000]); set(gca,'yscale','log'); ylabel('P [mb]')
+  pcolor(yymm,p2h(pavg)/1000,smoothn(wahaWV,1));  shading interp; colorbar; set(gca,'yscale','linear'); title('UMBC Global Avg WVfrac(z,t)'); 
+    colormap(llsmap5); caxis([-1 +1]*0.15); ylim([0 30]); ylabel('H [km]')
+
+for ii = 1 : length(pavg)
+  PX = nanpolyfit(yymm,wahaT(ii,:),1);  trendTglobal(ii) = PX(1);
+  PX = nanpolyfit(yymm,wahaWV(ii,:),1); trendWVglobal(ii) = PX(1);
+end
+iFig = iFig + 1; figure(iFig); clf;  
+  subplot(121); plot(trendTglobal,pavg);  set(gca,'ydir','reverse'); title('Global dT/dt');      ylim([10 1000]); plotaxis2; set(gca,'yscale','log');
+  subplot(122); plot(trendWVglobal,pavg); set(gca,'ydir','reverse'); title('Global dWVfrac/dt'); ylim([10 1000]); plotaxis2; set(gca,'yscale','log');
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iFig = iFig + 1; figure(iFig); clf
@@ -60,11 +72,23 @@ xlim([2002 2025]); ; plotaxis2; hl = legend('Ocean Nino Index','UMBC Tropical an
 iFig = iFig + 1; figure(iFig); clf; wahaT = resultsT((1:iNumAnomTimeSteps)+iNumAnomTimeSteps,:)'; 
   pcolor(yymm,pavg,wahaT);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Tropical AVG T(z,t)');      
   pcolor(yymm,pavg,smoothn(wahaT,1));  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Tropical AVG T(z,t)');      
-  colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','log'); ylim([10 1000])
+    colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','log'); ylim([10 1000]);  ylabel('P [mb]')
+  pcolor(yymm,p2h(pavg)/1000,smoothn(wahaT,1));  shading interp; colorbar; title('UMBC Tropical AVG T(z,t)');      
+    colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','linear'); ylim([0 30]); ylabel('H [km]')
 
 iFig = iFig + 1; figure(iFig); clf; wahaWV = resultsWV((1:iNumAnomTimeSteps)+iNumAnomTimeSteps,:)';
   pcolor(yymm,pavg,wahaWV);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Tropical Avg WVfrac(z,t)'); 
   pcolor(yymm,pavg,smoothn(wahaWV,1));  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC Tropical Avg WVfrac(z,t)'); 
-  colormap(llsmap5); caxis([-1 +1]*0.15); ylim([100 1000])
-  ylim([50 1000]); set(gca,'yscale','log');
+    colormap(llsmap5); caxis([-1 +1]*0.15); ylim([100 1000])
+    ylim([50 1000]); set(gca,'yscale','log'); ylabel('P [mb]')
+  pcolor(yymm,p2h(pavg)/1000,smoothn(wahaWV,1));  shading interp; colorbar; set(gca,'yscale','linear'); title('UMBC Tropical Avg WVfrac(z,t)'); 
+    colormap(llsmap5); caxis([-1 +1]*0.15); ylim([0 30]); ylabel('H [km]')
+
+for ii = 1 : length(pavg)
+  PX = nanpolyfit(yymm,wahaT(ii,:),1);  trendTtropic(ii) = PX(1);
+  PX = nanpolyfit(yymm,wahaWV(ii,:),1); trendWVtropic(ii) = PX(1);
+end
+iFig = iFig + 1; figure(iFig); clf;  
+  subplot(121); plot(trendTtropic,pavg);  set(gca,'ydir','reverse'); title('Tropic dT/dt');      ylim([10 1000]); plotaxis2; set(gca,'yscale','log');
+  subplot(122); plot(trendWVtropic,pavg); set(gca,'ydir','reverse'); title('Tropic dWVfrac/dt'); ylim([10 1000]); plotaxis2; set(gca,'yscale','log');
 

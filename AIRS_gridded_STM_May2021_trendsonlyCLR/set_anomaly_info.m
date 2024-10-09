@@ -29,9 +29,19 @@ ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTi
 ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 29; iNumAnomJobsPerProc =  250; 
   anomalydatafile = 'anomalyD_zonalavg_globalavg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*29/250 = 58 processors       btavgAnomFinal = [2645x14500] = 500*28 anomaly time series + 1 global
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% (global + tropics + 28 lats) x 500 timesteps = 15000 points to fit; if each processor needs to do 250 of these, we need 15000/250 = 60 procesors
 ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 30; iNumAnomJobsPerProc =  250; 
   anomalydatafile = 'anomalyD_zonalavg_globalavg_and_tropics_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*30/250 = 60 processors   btavgAnomFinal = [2645x15000] = 500*28 anomaly time series + 1 global + 1 tropical
+
 %% (ONLY global + tropics ONLY) x 500 timesteps = 01000 points to fit; if each processor needs to do 020 of these, we need 01000/020 = 50 procesors; or 750 processors to do everything
 ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 30; iNumAnomJobsPerProc =  050; 
   anomalydatafile = 'anomalyD_zonalavg_globalavg_and_tropics_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*30/250 = 60 processors   btavgAnomFinal = [2645x15000] = 500*28 anomaly time series + 1 global + 1 tropical
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% (ONLY global + tropics ONLY) x 500 timesteps = 01000 points to fit; if each processor needs to do 020 of these, we need 01000/020 = 50 procesors; or 750 processors to do everything
+ia_OorC_DataSet_Quantile = [+2 17 03 -9999]; iNumAnomTimeSteps = 500; iNumAnomTiles = 30; iNumAnomJobsPerProc =  050; 
+  anomalydatafile = 'anomalyD_zonalavg_globalavg_and_TWPlat35lon66_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';  %% needs 500*30/250 = 60 processors   btavgAnomFinal = [2645x15000] = 500*28 anomaly time series + 1 global + 1 tropical
+  anomalydatafile = 'anomalyD_zonalavg_globalavg_and_TWPlat35avg_and_28_averages_timeseries_Q03_numyears_22_iNumAnomTimeSteps_500.mat';    %% needs 500*30/250 = 60 processors   btavgAnomFinal = [2645x15000] = 500*28 anomaly time series + 1 global + 1 tropical

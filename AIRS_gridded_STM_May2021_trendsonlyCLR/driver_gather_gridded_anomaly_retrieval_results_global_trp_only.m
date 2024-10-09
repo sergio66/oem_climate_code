@@ -658,3 +658,16 @@ disp('ret to continue to plot_anomalies_global_trp'); pause
 %%%%%%%%%%%%%%%%%%%%%%%%%
 plot_anomalies_global_trp
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+addpath ../FIND_NWP_MODEL_TRENDS/
+look_at_anomalies_computeERA5_monthly_trends_desc_or_asc_64fast(20,1);
+
+figure(26); ax = axis; cx = caxis; figure(17); axis(ax); caxis(cx); colormap(cmap); %% WV 10-25 km, 2022 - 2025
+figure(22); ax = axis; cx = caxis; figure(16); axis(ax); caxis(cx); colormap(cmap); %% Tz 10-25 km, 2022 - 2025
+
+disp('hit RET to continue to axis = [2015 2025 0 45]'); pause
+figure(26); axis([2015 2025 0 25])
+figure(17); axis([2015 2025 0 25])
+figure(22); axis([2015 2025 0 40])
+figure(16); axis([2015 2025 0 40])
+

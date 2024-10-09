@@ -82,6 +82,9 @@ end
 fprintf(1,'found %4i of 4608 anomaly files that look like %s \n',sum(iaFound),fname);
 disp(' ')
 
+%% Readme_Anomaly_TWP_lat35_lon66
+iTWP = (35-1)*72 + 66;
+
 iHuge = -1;
 iHuge = +1;
 iHuge = input('Enter (-1/default) save one channel, all tiles, all timesteps or (+1) save all channels, all tiles, all timesteps (huge memory) or (+2) save f < 1650 cm-1, all timesteps (+3) 450 good channels : ');
@@ -105,9 +108,11 @@ if iHuge == +1
   if iDorA > 0
     btanomD = nan(4608,2645,iNumAnomTimeSteps); %% too much memory!
     fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomTWP_35_66D = nan(2645,iNumAnomTimeSteps);
   else
     btanomA = nan(4608,2645,iNumAnomTimeSteps); %% too much memory!
     fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomTWP_35_66A = nan(2645,iNumAnomTimeSteps);
   end
   monitor_memory_whos
   ind = 1 : 2645;
@@ -119,9 +124,11 @@ elseif iHuge == +2
   if iDorA > 0
     btanomD = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
     fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomTWP_35_66D = nan(2645,iNumAnomTimeSteps);
   else
     btanomA = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
     fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomTWP_35_66A = nan(2645,iNumAnomTimeSteps);
   end
   monitor_memory_whos
 elseif iHuge == +3
@@ -135,9 +142,11 @@ elseif iHuge == +3
   if iDorA > 0
     btanomD = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
     fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomTWP_35_66D = nan(2645,iNumAnomTimeSteps);
   else
     btanomA = nan(4608,length(ind),iNumAnomTimeSteps);  %% lot of memory!
     fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomTWP_35_66A = nan(2645,iNumAnomTimeSteps);
   end
   monitor_memory_whos
 else
@@ -145,6 +154,8 @@ else
   btanomA = nan(4608,iNumAnomTimeSteps);
   fluxanomD = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
   fluxanomA = nan(4608,iNumAnomTimeSteps,length(RRTM_bands));
+  btanomTWP_35_66D = nan(2645,iNumAnomTimeSteps);
+  btanomTWP_35_66A = nan(2645,iNumAnomTimeSteps);
 end
 
 bt1231_D = nan(1,4608);
@@ -289,6 +300,9 @@ for jj = 1 : 64
         if iDorA > 0
           btanomD(iCnt,:,:) = squeeze(junkD(iQuant,ind,:));
           fluxanomD(iCnt,:,1) = trapz(h.vchan,junkradD)/1000;
+          if iCnt == iTWP
+            btanomTWP_35_66D = squeeze(junkD(iQuant,:,:));
+          end
           for flfl = 1 : length(RRTM_bands)-1
             junk = find(h.vchan >= RRTM_bands(flfl) & h.vchan < RRTM_bands(flfl+1));
             fluxanomD(iCnt,:,flfl+1) = trapz(h.vchan(junk),junkradD(junk,:))/1000;
@@ -296,6 +310,9 @@ for jj = 1 : 64
         else
           btanomA(iCnt,:,:) = squeeze(junkA(iQuant,ind,:));
           fluxanomA(iCnt,:,1) = trapz(h.vchan,junkradA)/1000;
+          if iCnt == iTWP
+            btanomTWP_35_66A = squeeze(junkA(iQuant,:,:));
+          end
           for flfl = 1 : length(RRTM_bands)-1
             junk = find(h.vchan >= RRTM_bands(flfl) & h.vchan < RRTM_bands(flfl+1));
             fluxanomA(iCnt,:,flfl+1) = trapz(h.vchan(junk),junkradA(junk,:))/1000;
@@ -304,6 +321,10 @@ for jj = 1 : 64
       else
         btanomD(iCnt,:) = squeeze(junkD(iQuant,iXCh,:));
         btanomA(iCnt,:) = squeeze(junkA(iQuant,iXCh,:));
+        if iCnt == iTWP
+          btanomTWP_35_66A = squeeze(junkA(iQuant,:,:));
+          btanomTWP_35_66D = squeeze(junkD(iQuant,:,:));
+        end
         fluxanomD(iCnt,:,1) = trapz(h.vchan,junkradD)/1000;
         fluxanomA(iCnt,:,1) = trapz(h.vchan,junkradA)/1000;
         for flfl = 1 : length(RRTM_bands)-1
@@ -319,6 +340,58 @@ for jj = 1 : 64
     end  %% iaFound
   end    %% loop ii
 end      %% loop jj
+
+%{
+a = load(fname,'yy_desc','mm_desc','dd_desc','hh_desc','rtime_desc');
+yyD = a.yy_desc;
+mmD = a.mm_desc;
+ddD = a.dd_desc;
+hhD = a.hh_desc;
+rtimeD = a.rtime_desc;
+
+a = load(fname,'yy_asc','mm_asc','dd_asc','hh_asc','rtime_asc');
+yyA = a.yy_asc;
+mmA = a.mm_asc;
+ddA = a.dd_asc;
+hhA = a.hh_asc;
+rtimeA = a.rtime_asc;
+
+comment = 'see driver_put_together_QuantileChoose_anomalies.m';
+if iDorA > 0
+  saver = ['save btanomTWP_35_66_Q' num2str(iQuant,'%02d') '_numyears_' num2str(ceil(iNumYears)) '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '.mat btanomTWP_35_66D yyD mmD ddD hhD rtimeD comment'];
+elseif iDorA < 0
+  saver = ['save btanomTWP_35_66_Q' num2str(iQuant,'%02d') '_numyears_' num2str(ceil(iNumYears)) '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '.mat btanomTWP_35_66A yyA mmA ddA hhA rtimeA comment'];
+else
+  saver = ['save btanomTWP_35_66_Q' num2str(iQuant,'%02d') '_numyears_' num2str(ceil(iNumYears)) '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '.mat btanomTWP_35_66A btanomTWP_35_66D yyD mmD ddD hhD rtimeD comment'];
+end
+ix1519 = find(f2645 >= 1519,1)
+ix1558 = find(f2645 >= 1558,1)
+ix1419 = find(f2645 >= 1419,1)
+ix1231 = find(f2645 >= 1231,1)
+yymmjunk = yyD + (mmD-1)/12 + (ddD-1)/12/30;
+plot(yymmjunk,btanomTWP_35_66D([1520 1861],:)); legend('1231','1419');
+plot(yymmjunk,smooth(btanomTWP_35_66D(1520,:),23),yymmjunk,smooth(btanomTWP_35_66D(1861,:),23),yymmjunk,smooth(btanomTWP_35_66D(2025,:),23)); plotaxis2; legend('1231','1419','1519');
+plot(yymmjunk,smooth(btanomTWP_35_66D(1520,:),5),yymmjunk,smooth(btanomTWP_35_66D(1861,:),5),yymmjunk,smooth(btanomTWP_35_66D(2084,:),5),'linewidth',2); plotaxis2; legend('1231','1419','1558');
+
+mamoo = load('anomaly_tile_2515_timeseries_Q03.mat')
+mamoo.yymm = mamoo.yy + (mamoo.mm-1)/12 + (mamoo.dd-1)/12/30;
+plot(mamoo.yymm,smooth(mamoo.btavgAnomFinal(1520,:),5),mamoo.yymm,smooth(mamoo.btavgAnomFinal(1861,:),5),mamoo.yymm,smooth(mamoo.btavgAnomFinal(2084,:),5),'linewidth',2); plotaxis2; legend('1231','1419','1558');
+
+%% this is HUGE
+%  mazoo = load('/asl/s1/sergio/JUNK/anomaly_ALL_Q03.mat');
+% sum(sum(squeeze(mazoo.btanom(iTWP-1,:,:))-mamoo.btavgAnomFinal))   %% iTWP = 2515, play with 2514 or 2516
+% sum(sum(squeeze(mazoo.btanom(iTWP,:,:))-mamoo.btavgAnomFinal))
+% sum(sum(squeeze(mazoo.btanom(iTWP-1,:,:))-mamoo.btavgAnomFinal))
+% sum(sum(squeeze(mazoo.btanom(iTWP+1,:,:))-mamoo.btavgAnomFinal)) YAY
+
+wazoo = load('/asl/s1/sergio/AIRSPRODUCTS_JACOBIANS/TRP/wgtfcn_jac.mat');
+pcolor(wazoo.fout,1:97,wazoo.jout'); shading interp; xlim([640 1640])
+for pp = 1 : 2378
+  moo = find(
+eval(saver)
+%}
+error('save btanomTWP_35_66A')
+
 fprintf(1,'\n');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

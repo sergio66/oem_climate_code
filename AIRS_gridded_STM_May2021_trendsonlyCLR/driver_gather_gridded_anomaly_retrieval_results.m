@@ -29,6 +29,12 @@ i1419 = find(f2645 >= 1419,1);
 
 set_anomaly_info
 
+if strfind(anomalydatafile,'globalavg_and_tropics') | strfind(anomalydatafile,'globalavg_and_TWPlat35') 
+  iStartOffset = 3;  % first two are global and tropic
+else
+  iStartOffset = 2;
+end
+
 disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
@@ -611,17 +617,11 @@ figure(7); clf;
   plot(f2645,nanmean(rates_global'-fits_global'),f2645,nanmean(rates_global')); plotaxis2; xlim([645 1620])
     hl = legend('rates-fits','rates','location','best','fontsize',10); title('Global set')
 
-if strfind(anomalydatafile,'globalavg_and_tropics')
-  iStartOffset = 3;  % first two are global and tropic
-else
-  iStartOffset = 2;
-end
-
 rates_global_sum = zeros(size(rates_global));
 fits_global_sum  = zeros(size(rates_global));
 for ii = iStartOffset : iNumAnomTiles
   ind = (1:iNumAnomTimeSteps) + (ii-1)*iNumAnomTimeSteps;
-  coslat = cos(rlat(ii-1)*pi/180);
+  coslat = cos(rlat(ii-iStartOffset+1)*pi/180);
   rates_global_sum = coslat * rates(:,ind) + rates_global_sum;
   fits_global_sum  = coslat * fits(:,ind) + fits_global_sum;
 end
@@ -647,6 +647,9 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 addpath ../FIND_NWP_MODEL_TRENDS/
 look_at_anomalies_computeERA5_monthly_trends_desc_or_asc_64fast(40,1);
+
+figure(46); ax = axis; figure(36); axis(ax)  %% WV 10-25 km, 2022 - 2025
+figure(42); ax = axis; figure(35); axis(ax)  %% TZ 10-25 km, 2022 - 2025
+

@@ -75,7 +75,9 @@ iFig = iFig + 1; figure(iFig); clf
   subplot(122); semilogy(trendWVavg,pavg,'b','linewidth',2); title('Global dWVfrac/dt'); set(gca,'ydir','reverse'); plotaxis2; ylim([10 1000])
 
 iFig = iFig + 1; figure(iFig)
-pcolor(yymm,rlat(1:end),(reshape(results(iNumAnomTimeSteps+1:end,6),iNumAnomTimeSteps,iNumAnomTiles-1))'); colorbar; 
+wah = reshape(results(:,6),iNumAnomTimeSteps,iNumAnomTiles);
+%pcolor(yymm,rlat(1:end),(reshape(results(iNumAnomTimeSteps+1:end,6),iNumAnomTimeSteps,iNumAnomTiles-1))'); colorbar; 
+pcolor(yymm,rlat(1:end),wah(:,iStartOffset:iNumAnomTiles)'); colorbar; 
 caxis([-1 +1]*2); colormap(llsmap5); shading interp; title('Anomaly Stemp(t,lat)')
 
 iFig = iFig + 1; figure(iFig); clf; waha = squeeze(nanmean(reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay),1)); waha = waha'; waha = waha(:,2:length(rlat)+1);
