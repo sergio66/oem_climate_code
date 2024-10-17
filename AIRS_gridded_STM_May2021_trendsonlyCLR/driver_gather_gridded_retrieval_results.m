@@ -816,6 +816,9 @@ read_fileMean17years
 plotopt.iUpperWavenumLimit = 1620;
 plotopt.rlon = pMean17years.rlon;
 plotopt.rlat = pMean17years.rlat;
+if ~isfield(settings,'iInstr')
+  settings.iInstr = 1;
+end
 if dataset ~= 30
   [raaBadFoav,indBadFov,chisqrX,chisqrR] = plot_spectral_region_chisqr(rates(chanset,:),0*rates(chanset,:),0*rates(chanset,:),fits(chanset,:),f(chanset,:),nedt(chanset,:),-1,settings,plotopt);
   figure(11); ylim([-1 +1]*0.1/2)

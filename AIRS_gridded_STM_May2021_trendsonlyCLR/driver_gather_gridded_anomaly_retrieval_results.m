@@ -218,9 +218,9 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% can do something like      watch "ls -lt Output/Quantile03/*.mat | wc -l"   
-%% can do something like      watch "ls -lt Output/Quantile03/*.mat | wc -l"   
-%% can do something like      watch "ls -lt Output/Quantile03/*.mat | wc -l"   
+%% can do something like      watch "ls -lt OutputAnomaly/Quantile03/*.mat | wc -l"   
+%% can do something like      watch "ls -lt OutputAnomaly/Quantile03/*.mat | wc -l"   
+%% can do something like      watch "ls -lt OutputAnomaly/Quantile03/*.mat | wc -l"   
 
 JOB = -1;
 %get_anomaly_processors  %% this sets mapAnomData_to_processor
@@ -232,9 +232,9 @@ for jj = 1 : (iNumAnomTiles)
   for ii = 1 : iNumAnomTimeSteps
     iCnt = iCnt + 1;
     if iNorD > 0
-      fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(iCnt) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      fname = ['OutputAnomaly/Quantile' num2str(iQuantile,'%02d') '/test' num2str(iCnt) '.mat']; %% stored here before before July 2021, and fornew test comparisons
     elseif iNorD < 0
-      fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(iCnt) '.mat']; %% stored here before before July 2021
+      fname = ['OutputAnomaly_DAY/Quantile' num2str(iQuantile,'%02d') '/test' num2str(iCnt) '.mat']; %% stored here before before July 2021
     end
     if exist(fname) > 0
       iaaFound(ii,jj) = +1;
@@ -254,9 +254,9 @@ clear fname
 iCnt = 0;
 for ii = 1 : iNumAnomTimeSteps : iNumAnomTimeSteps * iNumAnomTiles
   if iNorD > 0
-    fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+    fname = ['OutputAnomaly/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
   elseif iNorD < 0
-    fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+    fname = ['OutputAnomaly_DAY/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
   end
 
   if exist(fname) > 0
@@ -298,9 +298,9 @@ fprintf(1,'will loop through %3i timeteps for %2i latbins .. the timesteps will 
 while iDoAgain > 0
   for ii = 1 : iNumAnomTimeSteps * iNumAnomTiles
     if iNorD > 0
-      fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
+      fname = ['OutputAnomaly/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
     elseif iNorD < 0
-      fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
+      fname = ['OutputAnomaly_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
     end
   
     existfname(ii) = exist(fname);

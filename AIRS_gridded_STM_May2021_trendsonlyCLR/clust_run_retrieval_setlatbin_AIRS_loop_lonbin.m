@@ -696,9 +696,13 @@ for iInd = iXX1 : idX : iXX2
 
   %% NorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
-    driver.outfilename = ['OutputAnomaly_OBS/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+    driver.outfilename = ['OutputAnomaly/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+  elseif topts.ocb_set == 2 & driver.i16daytimestep > 0 & driver.NorD > 0 %% NIGHT TIME ANOMALIES, NEW
+    outdir = ['OutputAnomaly/Quantile' num2str(driver.iQuantile,'%02d')];
+    driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset ~= 3
     outdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
@@ -708,11 +712,13 @@ for iInd = iXX1 : idX : iXX2
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+
   %% NorD < 0 ==> day
   elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_OBS_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_CAL_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset ~= 3
     outdir = ['Output_Day/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
@@ -722,9 +728,7 @@ for iInd = iXX1 : idX : iXX2
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output_Day/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
-  elseif topts.ocb_set == 2 & driver.i16daytimestep >= 0 & driver.NorD > 0 %% NIGHT TIME ANOMALIES
-    outdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d')];
-    driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+
   end
   if ~exist(outdir)
     mker = ['!mkdir -p ' outdir];

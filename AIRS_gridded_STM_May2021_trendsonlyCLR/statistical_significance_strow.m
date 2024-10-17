@@ -1,25 +1,30 @@
 addpath /home/sergio/MATLABCODE/COLORMAP
 load('/home/sergio/MATLABCODE/COLORMAP/LLS/llsmap5.mat')
 
-if ~exist('era5')
+if ~exist('deltaT') | ~exist('era5')
   %load /asl/s1/sergio/JUNK//gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX100_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat
   load /asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX3_50fatlayers_AIRSL3_ERA5_CMIP6_feedback.mat
 end
 
 iX = 4;
-tvalue = 0.025;
 tvalue = 0.050;
+tvalue = 0.025;
+
+fprintf(1,'tvalue = %8.6f \n',tvalue')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 iX = iX + 1;
-xTtrend = reshape(era5.trend_ptemp,100,72,64); whos xTtrend; xTtrend = squeeze(nanmean(xTtrend,2)); whos xTtrend
-deltaTlat = xTtrend';
+xTtrend = reshape(era5.trend_ptemp,100,72,64); xTtrend = squeeze(nanmean(xTtrend,2)); % whos xTtrend
+clear deltaTlat
+if ~exist('deltaTlat')
+   deltaTlat = xTtrend';
+end
 figure(1); pcolor(deltaTlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
 figure(2); pcolor(xTtrend); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
 figure(3); pcolor(xTtrend-deltaTlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); sum(sum(xTtrend-deltaTlat'))
 
-deltaTunc = reshape(era5.trend_ptemp_err,100,72,64); deltaTunc = squeeze(nanmean(deltaTunc,2)); whos deltaTunc
+deltaTunc = reshape(era5.trend_ptemp_err,100,72,64); deltaTunc = squeeze(nanmean(deltaTunc,2)); % whos deltaTunc
 xTunc = deltaTunc; 
 figure(2); pcolor(xTunc); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02)
 xTunc = xTunc';
@@ -50,13 +55,16 @@ figure(iX); hold off
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iX = iX + 1;
-xRHtrend = reshape(era5.trend_RH,100,72,64); whos xRHtrend; xRHtrend = squeeze(nanmean(xRHtrend,2)); whos xRHtrend
-deltaRHlat = xRHtrend';
+xRHtrend = reshape(era5.trend_RH,100,72,64); xRHtrend = squeeze(nanmean(xRHtrend,2)); % whos xRHtrend
+clear deltaRHlat
+if ~exist('deltaRHlat')
+   deltaRHlat = xRHtrend';
+end
 figure(1); pcolor(deltaRHlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
 figure(2); pcolor(xRHtrend); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
 figure(3); pcolor(xRHtrend-deltaRHlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); nansum(nansum(xRHtrend-deltaRHlat'))
 
-xRHunc = reshape(era5.trend_RH_err,100,72,64); whos xRHunc; xRHunc = squeeze(nanmean(xRHunc,2))/sqrt(72); whos xRHunc
+xRHunc = reshape(era5.trend_RH_err,100,72,64); xRHunc = squeeze(nanmean(xRHunc,2))/sqrt(72); % whos xRHunc
 deltaRHunc = xRHunc';
 figure(2); pcolor(xRHunc); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02)
 xRHunc = xRHunc';
@@ -87,13 +95,16 @@ figure(iX); hold off
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iX = iX + 1;
-xWVtrend = reshape(era5.trend_gas_1,100,72,64); whos xWVtrend; xWVtrend = squeeze(nanmean(xWVtrend,2)); whos xWVtrend
-fracWVlat = xWVtrend';
+xWVtrend = reshape(era5.trend_gas_1,100,72,64); xWVtrend = squeeze(nanmean(xWVtrend,2)); % whos xWVtrend
+clear fracWVlat
+if ~exist('fracWVlat')
+   fracWVlat = xWVtrend';
+end
 figure(1); pcolor(fracWVlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01)
 figure(2); pcolor(xWVtrend); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01)
 figure(3); pcolor(xWVtrend-fracWVlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01); nansum(nansum(xWVtrend-fracWVlat'))
 
-xWVunc = reshape(era5.trend_gas_1_err,100,72,64); whos xWVunc; xWVunc = squeeze(nanmean(xWVunc,2))/sqrt(72); whos xWVunc
+xWVunc = reshape(era5.trend_gas_1_err,100,72,64); xWVunc = squeeze(nanmean(xWVunc,2))/sqrt(72); % whos xWVunc
 figure(2); pcolor(xWVunc); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02)
 xWVunc = xWVunc';
 

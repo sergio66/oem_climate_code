@@ -37,7 +37,7 @@ elseif iV == 3
   iV3 = 2;  %% YAY, old default
   iV3 = 3;  %% YAY, new default???, NOT FOR dcolWV/dt ... pretty bad!!!!!!!!!!!
   iV3 = 4;
-  iV3 = 5;  %% testing is this same as iV3 = 2, except I have slightly switched  diong things in p.landfrac < 0.25 insteaad of eps, and also made sure args to jevanjee_PLB_deltaRH_Ts(a,b,c,d) are correct order
+  iV3 = 5;  %% testing is this same as iV3 = 2, except I have slightly switched  doing things in p.landfrac < 0.25 insteaad of eps, and also made sure args to jevanjee_PLB_deltaRH_Ts(a,b,c,d) are correct order
   iV3 = 6;  %% testing is this same as iV3 = 2 BUT has MLS in UT/LS, but is THE NEW DEFAUKT  not so great for dColWV/dt
 
   iV3 = 5;  %% YAY

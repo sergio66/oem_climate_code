@@ -22,6 +22,12 @@ else
   start_apriori_str = '0';
 end
 
+if topts.ocb_set == 1
+  start_apriori_str = ['_cal_' start_apriori_str];
+elseif topts.ocb_set == 2
+  start_apriori_str = ['_bias_' start_apriori_str];
+end
+
 numretlayers_str = [num2str(topts.iNlays_retrieve) 'fatlayers'];
 
 if length(iaSequential) == 1 & iaSequential(1) == -1
@@ -73,8 +79,16 @@ if junk == 1
       figure(55); clf; waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
       figure(56); clf; waha = save_cov_set.xb_wvz(2,:);                              aslmap(56,rlat65,rlon73,smoothn(reshape(waha,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.015); title('xb(WVfrac(gnd))')
       era5_stemprate = era5.trend_stemp;
-      saver = [saver ' *_ak*_era5* era5_stemprate pjunk20 h p'];
+      era5_wvrate    = era5.trend_gas_1;
+      era5_rhrate    = era5.trend_RH;
+      era5_ozrate    = era5.trend_gas_3;
+      era5_tzrate    = era5.trend_ptemp;
+      era5_plays     = era5.trend_plays;
+      saver = [saver ' *_ak*_era5* era5_plays era5_*rate pjunk20 h p'];
     end
     eval(saver);
+    
+    quick_compare_era5_retrieval
+
   end 
 end
