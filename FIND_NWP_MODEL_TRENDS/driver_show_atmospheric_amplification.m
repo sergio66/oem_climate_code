@@ -20,6 +20,12 @@ end
 clear maskLF
 maskLF = zeros(1,4608);
 maskLF = nan(1,4608);    %% MODIFICATION 1
+
+if ~exist('Xlon')
+  Xlon = X(:); 
+  Ylat = Y(:);
+end
+
 if size(landfrac) ~= size(Xlon)
   Xlon = Xlon';
   Ylat = Ylat';

@@ -944,8 +944,8 @@ if iUMBC  > 0
       [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),merra2.stemprate');         thecorrEOF.BT1231_ST(iEOF,2) = r;
       [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),airsL3.stemprate');         thecorrEOF.BT1231_ST(iEOF,3) = r;
       [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),climcapsL3.stemprate');     thecorrEOF.BT1231_ST(iEOF,4) = r;
-      bonk = agiss.giss_trend4608; bonk = bonk(:);
-      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(iEOF,:),bonk');                     thecorrEOF.BT1231_ST(iEOF,5) = r;
+      bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
+      [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),bonk');                     thecorrEOF.BT1231_ST(iEOF,5) = r;
       [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),umbc.stemprate');           thecorrEOF.BT1231_ST(iEOF,6) = r;
     end
   end
@@ -1776,7 +1776,7 @@ if iUMBC  > 0
   %% iWhich = 0;    %% to speed through all 11 choices with matlab nowindow
   if ~exist('iWhich')
     disp('can (+1) continue to 3 panel T(z,lat), WV(z,lat), RH(z,lat) 3x1 plots  ... and amplification or (0/default) quit or (-1) keyboard_nowindow : '); 
-    iWhich = input('Enter (+1) to continue (0/default) to return (-1) to examine via keyboard_nowindow : ');
+    iWhich = input('Enter (+1) to continue (eventually onto spectral rates)    (0/default) to return           (-1) to examine via keyboard_nowindow : ');
     if length(iWhich) == 0
       iWhich = 0;
     end
@@ -1867,7 +1867,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iFigiAmp = iFig;
 
-iAmp = input('Do amplification??? (-9999 to stop [default]/ 0 to go on) : ');
+iAmp = input('Do amplification??? (-9999 to stop [default]/ 0 to go on and eventually end up at spectral trends) : ');
 if length(iAmp) == 0
   iAmp = -9999;
 end
@@ -1907,6 +1907,7 @@ else
 end
 fprintf(1,'currently at iFig = %2i \n',iFig);
 
+disp('ret to continue '); pause
 if iUMBC > 0
   iSpectra = input('Show spectral trends : (-1 /+1 yes [default]) : ');
   if length(iSpectra) == 0
@@ -1929,6 +1930,9 @@ if iKB > 0
   keyboard_nowindow
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+error('skjgklsjglkjsglksjg')
 iPrint = -1;
 if iPrint > 0
   dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/PAPER17_TRENDS/Figs/';

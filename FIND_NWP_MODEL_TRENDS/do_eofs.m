@@ -22,8 +22,8 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(:,iEOF),merra2.stemprate');         thecorrEOF.era5skt_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(:,iEOF),airsL3.stemprate');         thecorrEOF.era5skt_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(:,iEOF),climcapsL3.stemprate');     thecorrEOF.era5skt_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:);
-  [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(iEOF,:),bonk');                     thecorrEOF.era5skt_ST(iEOF,5) = r;
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
+  [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(:,iEOF),bonk');                     thecorrEOF.era5skt_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(:,iEOF),umbc.stemprate');           thecorrEOF.era5skt_ST(iEOF,6) = r;
 end
 
@@ -32,8 +32,8 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),merra2.stemprate');         thecorrEOF.BT1231_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),airsL3.stemprate');         thecorrEOF.BT1231_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),climcapsL3.stemprate');     thecorrEOF.BT1231_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:);
-  [r,chisqr,P] = nanlinearcorrelation(EOFs1231(iEOF,:),bonk');                     thecorrEOF.BT1231_ST(iEOF,5) = r;
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
+  [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),bonk');                     thecorrEOF.BT1231_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(:,iEOF),umbc.stemprate');           thecorrEOF.BT1231_ST(iEOF,6) = r;
 end
 
@@ -42,8 +42,8 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(:,iEOF),merra2_mmwtrend');          thecorrEOF.era5mmw_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(:,iEOF),airsL3.stemprate');        thecorrEOF.era5mmw_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(:,iEOF),climcapsL3.stemprate');    thecorrEOF.era5mmw_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:);
-  %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(iEOF,:),bonk');                    thecorrEOF.era5mmw_MMW(iEOF,5) = r;
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
+  %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(:,iEOF),bonk');                    thecorrEOF.era5mmw_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(:,iEOF),umbc_mmwrate');             thecorrEOF.era5mmw_MMW(iEOF,6) = r;
 end
 
@@ -52,8 +52,8 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(:,iEOF),merra2_mmwtrend');          thecorrEOF.BT1519_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(:,iEOF),airsL3.stemprate');        thecorrEOF.BT1519_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(:,iEOF),climcapsL3.stemprate');    thecorrEOF.BT1519_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:);
-  %[r,chisqr,P] = nanlinearcorrelation(EOFs1(iEOF,:),bonk');                    thecorrEOF.BT1519_MMW(iEOF,5) = r;
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
+  %[r,chisqr,P] = nanlinearcorrelation(EOFs1(:,iEOF),bonk');                    thecorrEOF.BT1519_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(:,iEOF),umbc_mmwrate');             thecorrEOF.BT1519_MMW(iEOF,6) = r;
 end
 
@@ -70,7 +70,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(tropics),iEOF),merra2.stemprate(isfinite(tropics))');         thecorrEOF.tropical_era5skt_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(tropics),iEOF),airsL3.stemprate(isfinite(tropics))');         thecorrEOF.tropical_era5skt_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(tropics),iEOF),climcapsL3.stemprate(isfinite(tropics))');     thecorrEOF.tropical_era5skt_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(tropics),iEOF),bonk(isfinite(tropics))');                     thecorrEOF.tropical_era5skt_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(tropics),iEOF),umbc.stemprate(isfinite(tropics))');           thecorrEOF.tropical_era5skt_ST(iEOF,6) = r;
 end
@@ -80,7 +80,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(tropics),iEOF),merra2.stemprate(isfinite(tropics))');         thecorrEOF.tropical_BT1231_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(tropics),iEOF),airsL3.stemprate(isfinite(tropics))');         thecorrEOF.tropical_BT1231_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(tropics),iEOF),climcapsL3.stemprate(isfinite(tropics))');     thecorrEOF.tropical_BT1231_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(tropics),iEOF),bonk(isfinite(tropics))');                     thecorrEOF.tropical_BT1231_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(tropics),iEOF),umbc.stemprate(isfinite(tropics))');           thecorrEOF.tropical_BT1231_ST(iEOF,6) = r;
 end
@@ -90,7 +90,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(tropics),iEOF),merra2_mmwtrend(isfinite(tropics))');          thecorrEOF.tropical_era5mmw_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(tropics),iEOF),airsL3.stemprate(isfinite(tropics))');        thecorrEOF.tropical_era5mmw_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(tropics),iEOF),climcapsL3.stemprate(isfinite(tropics))');    thecorrEOF.tropical_era5mmw_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(tropics),iEOF),bonk(isfinite(tropics))');                    thecorrEOF.tropical_era5mmw_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(tropics),iEOF),umbc_mmwrate(isfinite(tropics))');             thecorrEOF.tropical_era5mmw_MMW(iEOF,6) = r;
 end
@@ -100,7 +100,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(tropics),iEOF),merra2_mmwtrend(isfinite(tropics))');          thecorrEOF.tropical_BT1519_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(tropics),iEOF),airsL3.stemprate(isfinite(tropics))');        thecorrEOF.tropical_BT1519_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(tropics),iEOF),climcapsL3.stemprate(isfinite(tropics))');    thecorrEOF.tropical_BT1519_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(tropics),iEOF),bonk(isfinite(tropics))');                    thecorrEOF.tropical_BT1519_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(tropics),iEOF),umbc_mmwrate(isfinite(tropics))');             thecorrEOF.tropical_BT1519_MMW(iEOF,6) = r;
 end
@@ -118,7 +118,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(oceantropics),iEOF),merra2.stemprate(isfinite(oceantropics))');         thecorrEOF.oceantropical_era5skt_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(oceantropics),iEOF),airsL3.stemprate(isfinite(oceantropics))');         thecorrEOF.oceantropical_era5skt_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(oceantropics),iEOF),climcapsL3.stemprate(isfinite(oceantropics))');     thecorrEOF.oceantropical_era5skt_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(oceantropics),iEOF),bonk(isfinite(oceantropics))');                     thecorrEOF.oceantropical_era5skt_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(isfinite(oceantropics),iEOF),umbc.stemprate(isfinite(oceantropics))');           thecorrEOF.oceantropical_era5skt_ST(iEOF,6) = r;
 end
@@ -128,7 +128,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(oceantropics),iEOF),merra2.stemprate(isfinite(oceantropics))');         thecorrEOF.oceantropical_BT1231_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(oceantropics),iEOF),airsL3.stemprate(isfinite(oceantropics))');         thecorrEOF.oceantropical_BT1231_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(oceantropics),iEOF),climcapsL3.stemprate(isfinite(oceantropics))');     thecorrEOF.oceantropical_BT1231_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(oceantropics),iEOF),bonk(isfinite(oceantropics))');                     thecorrEOF.oceantropical_BT1231_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(isfinite(oceantropics),iEOF),umbc.stemprate(isfinite(oceantropics))');           thecorrEOF.oceantropical_BT1231_ST(iEOF,6) = r;
 end
@@ -138,7 +138,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(oceantropics),iEOF),merra2_mmwtrend(isfinite(oceantropics))');          thecorrEOF.oceantropical_era5mmw_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(oceantropics),iEOF),airsL3.stemprate(isfinite(oceantropics))');        thecorrEOF.oceantropical_era5mmw_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(oceantropics),iEOF),climcapsL3.stemprate(isfinite(oceantropics))');    thecorrEOF.oceantropical_era5mmw_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(oceantropics),iEOF),bonk(isfinite(oceantropics))');                    thecorrEOF.oceantropical_era5mmw_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(isfinite(oceantropics),iEOF),umbc_mmwrate(isfinite(oceantropics))');             thecorrEOF.oceantropical_era5mmw_MMW(iEOF,6) = r;
 end
@@ -148,7 +148,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(oceantropics),iEOF),merra2_mmwtrend(isfinite(oceantropics))');          thecorrEOF.oceantropical_BT1519_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(oceantropics),iEOF),airsL3.stemprate(isfinite(oceantropics))');        thecorrEOF.oceantropical_BT1519_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(oceantropics),iEOF),climcapsL3.stemprate(isfinite(oceantropics))');    thecorrEOF.oceantropical_BT1519_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(oceantropics),iEOF),bonk(isfinite(oceantropics))');                    thecorrEOF.oceantropical_BT1519_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(isfinite(oceantropics),iEOF),umbc_mmwrate(isfinite(oceantropics))');             thecorrEOF.oceantropical_BT1519_MMW(iEOF,6) = r;
 end
@@ -168,7 +168,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(oocean,iEOF),merra2.stemprate(oocean)');         thecorrEOF.ocean_era5skt_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(oocean,iEOF),airsL3.stemprate(oocean)');         thecorrEOF.ocean_era5skt_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(oocean,iEOF),climcapsL3.stemprate(oocean)');     thecorrEOF.ocean_era5skt_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(oocean,iEOF),bonk(oocean)');                     thecorrEOF.ocean_era5skt_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5skt(oocean,iEOF),umbc.stemprate(oocean)');           thecorrEOF.ocean_era5skt_ST(iEOF,6) = r;
 end
@@ -178,7 +178,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(oocean,iEOF),merra2.stemprate(oocean)');         thecorrEOF.ocean_BT1231_ST(iEOF,2) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(oocean,iEOF),airsL3.stemprate(oocean)');         thecorrEOF.ocean_BT1231_ST(iEOF,3) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(oocean,iEOF),climcapsL3.stemprate(oocean)');     thecorrEOF.ocean_BT1231_ST(iEOF,4) = r;
-  bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(oocean,iEOF),bonk(oocean)');                     thecorrEOF.ocean_BT1231_ST(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1231(oocean,iEOF),umbc.stemprate(oocean)');           thecorrEOF.ocean_BT1231_ST(iEOF,6) = r;
 end
@@ -188,7 +188,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(oocean,iEOF),merra2_mmwtrend(oocean)');          thecorrEOF.ocean_era5mmw_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(oocean,iEOF),airsL3.stemprate(oocean)');        thecorrEOF.ocean_era5mmw_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(oocean,iEOF),climcapsL3.stemprate(oocean)');    thecorrEOF.ocean_era5mmw_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';;
   %[r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(oocean,iEOF),bonk(oocean)');                    thecorrEOF.ocean_era5mmw_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFsera5mmw(oocean,iEOF),umbc_mmwrate(oocean)');             thecorrEOF.ocean_era5mmw_MMW(iEOF,6) = r;
 end
@@ -198,7 +198,7 @@ for iEOF = 1 : 10
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(oocean,iEOF),merra2_mmwtrend(oocean)');          thecorrEOF.ocean_BT1519_MMW(iEOF,2) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(oocean,iEOF),airsL3.stemprate(oocean)');        thecorrEOF.ocean_BT1519_MMW(iEOF,3) = r;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(oocean,iEOF),climcapsL3.stemprate(oocean)');    thecorrEOF.ocean_BT1519_MMW(iEOF,4) = r;
-  %bonk = agiss.giss_trend4608; bonk = bonk(:)';
+  %bonk = agiss.giss_trend4608; bonk = bonk(:); bonk = bonk';;
   %[r,chisqr,P] = nanlinearcorrelation(EOFs1(oocean,iEOF),bonk(oocean)');                    thecorrEOF.ocean_BT1519_MMW(iEOF,5) = r;
   [r,chisqr,P] = nanlinearcorrelation(EOFs1(oocean,iEOF),umbc_mmwrate(oocean)');             thecorrEOF.ocean_BT1519_MMW(iEOF,6) = r;
 end

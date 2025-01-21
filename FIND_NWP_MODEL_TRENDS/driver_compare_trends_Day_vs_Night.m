@@ -17,8 +17,11 @@ addpath /asl/matlib/aslutil
 
 load llsmap5
 
-ceres_olr = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_T.mat');
-ceres_ilr = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_T_ilr.mat');
+%% produced by /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS/load_ceres_data.m
+%ceres_olr = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_T.mat');
+%ceres_ilr = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_T_ilr.mat');
+ceres_olr = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS/ceres_trends_20year_T.mat');
+ceres_olr = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS/ceres_trends_20year_T_ilr.mat');
 
 [h,ha,p,pa] = rtpread('summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp');
 [salti,landfrac] =  usgs_deg10_dem(p.rlat,p.rlon);

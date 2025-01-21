@@ -119,6 +119,31 @@ hold off
 plotaxis2; hl = legend('ERA5','MERRA2','UMBC','AIRS L3','CLIMCAPS L3','location','best','fontsize',10); 
 xlabel('Latitude [deg]'); ylabel('d(mmw)/dt [mm/yr]'); xlim([-1 +1]*90) 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+daland = find(land > 0);
+olr.trend_mmw_ocean = olr.trend_mmw;           olr.trend_mmw_ocean(daland) = NaN;
+merra2_mmwtrend_ocean = merra2_mmwtrend;       merra2_mmwtrend_ocean(daland) = NaN;
+umbc_mmwrate_ocean = umbc_mmwrate;             umbc_mmwrate_ocean(daland) = NaN;
+airsL3_mmwtrend_ocean = airsL3_mmwtrend;       airsL3_mmwtrend_ocean(daland) = NaN;
+climcaps_mmwtrend_ocean = climcaps_mmwtrend;   climcaps_mmwtrend_ocean(daland) = NaN;
+
+figure(iFig); clf
+plot(trend_rlat64,nanmean(reshape(olr.trend_mmw,72,64),1),'b',trend_rlat64,nanmean(reshape(merra2_mmwtrend,72,64),1),'g',trend_rlat64,nanmean(reshape(umbc_mmwrate,72,64),1),'r',...
+     trend_rlat64,nanmean(reshape(airsL3_mmwtrend,72,64),1),'c',trend_rlat64,nanmean(reshape(climcaps_mmwtrend,72,64),1),'m','linewidth',2);
+xlabel('Latitude [deg]'); ylabel('Land+Ocean d(mmw)/dt [mm/yr]'); xlim([-1 +1]*90) 
+plotaxis2; hl = legend('ERA5','MERRA2','UMBC','AIRS L3','CLIMCAPS L3','location','best','fontsize',10); 
+
+figure(iFig+1); clf
+plot(trend_rlat64,nanmean(reshape(olr.trend_mmw_ocean,72,64),1),'b',trend_rlat64,nanmean(reshape(merra2_mmwtrend_ocean,72,64),1),'g',trend_rlat64,nanmean(reshape(umbc_mmwrate_ocean,72,64),1),'r',...
+     trend_rlat64,nanmean(reshape(airsL3_mmwtrend_ocean,72,64),1),'c',trend_rlat64,nanmean(reshape(climcaps_mmwtrend_ocean,72,64),1),'m','linewidth',2);
+xlabel('Latitude [deg]'); ylabel('Ocean d(mmw)/dt [mm/yr]'); xlim([-1 +1]*90) 
+plotaxis2; hl = legend('ERA5','MERRA2','UMBC','AIRS L3','CLIMCAPS L3','location','best','fontsize',10); 
+
+disp('ret to continue'); pause;
+%% keyboard_nowindow
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 iFig = iFig + 1; figure(iFig); clf; plot(trend_rlat64,nanmean(reshape(olr.trend_stemp,72,64),1),'b',trend_rlat64,nanmean(reshape(merra2_stemptrend,72,64),1),'g',trend_rlat64,nanmean(reshape(umbc.stemprate,72,64),1),'r','linewidth',2);
   plotaxis2; hl = legend('ERA5','MERRA2','UMBC','location','best'); title('stemp trends')
 iFig = iFig + 1; figure(iFig); clf; plot(nanmean(reshape(olr.trend_stemp,72,64),1),nanmean(reshape(olr.trend_mmw,72,64),1),'bs',nanmean(reshape(merra2_stemptrend,72,64),1),nanmean(reshape(merra2_mmwtrend,72,64),1),'gd',...

@@ -116,7 +116,14 @@ junkmmwN = mmwater_rtp(h,junkmmwN.pert);
 junkmmwD = load(umbc_day_file,'pert');
 junkmmwD = mmwater_rtp(h,junkmmwD.pert);
 plot(rlat,nanmean(reshape(junkmmwN-junkmmw0,72,64),1),'b',rlat,nanmean(reshape(junkmmwD-junkmmw0,72,64),1),'g',rlat,0.5*nanmean(reshape((junkmmwN-junkmmw0)+(junkmmwD-junkmmw0),72,64),1),'k','linewidth',2); 
-plotaxis2; title('UMBC night COL WV trends'); hl = legend('night','day','average','location','best','fontsize',10);
+plotaxis2; title('UMBC COL WV trends'); hl = legend('night','day','average','location','best','fontsize',10);
+
+mmw_oceanN = junkmmwN-junkmmw0; mmw_oceanN(land) = NaN;
+mmw_oceanD = junkmmwD-junkmmw0; mmw_oceanD(land) = NaN;
+mmw_oceanA = 0.5*(mmw_oceanN+mmw_oceanD);
+figure(8); clf
+plot(rlat,nanmean(reshape(mmw_oceanN,72,64),1),'b',rlat,nanmean(reshape(mmw_oceanD,72,64),1),'g',rlat,nanmean(reshape(mmw_oceanA,72,64),1),'k','linewidth',2); 
+plotaxis2; title('UMBC ocean COL WV trends'); hl = legend('night','day','average','location','best','fontsize',10);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

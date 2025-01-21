@@ -188,6 +188,29 @@ figure(iOffSet+25); clf;
   pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(climcapsL3.climcapsL3_spectral_rates',72,64,2645),1))); 
   shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('CLIMCAPS L3 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 
+savetherates = struct;
+savetherates.rlatYY   = reshape(YY,72,64);
+savetherates.rlonXX   = XX;
+savetherates.obs_rates  = obsrates.rates;
+savetherates.umbc_rates = umbcL3.umbcL3_spectral_rates;
+savetherates.era5_rates = era5.era5_spectral_rates;
+savetherates.fchanx     = fchanx;
+savetherates.latavg     = nanmean(reshape(YY,72,64),1);
+savetherates.lfavg      = nanmean(reshape(landfrac,72,64),1);
+savetherates.obs        = squeeze(nanmean(reshape(obsrates.rates',72,64,2645),1));
+savetherates.umbc       = squeeze(nanmean(reshape(umbcL3.umbcL3_spectral_rates',72,64,2645),1));
+savetherates.era5       = squeeze(nanmean(reshape(era5.era5_spectral_rates',72,64,2645),1));
+savetherates.merra2     = squeeze(nanmean(reshape(merra2.merra2_spectral_rates',72,64,2645),1));
+savetherates.alrsL3     = squeeze(nanmean(reshape(airsL3.airsL3_spectral_rates',72,64,2645),1));
+savetherates.climcapsL3 = squeeze(nanmean(reshape(climcapsL3.climcapsL3_spectral_rates',72,64,2645),1));
+savetherates.comment1   = 'strUMBC = ''/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat'';   iNumYears = 20;';
+savetherates.comment2   = 'driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears);';
+%% save spectral_rate_avgs_umbc_obs_era5_merra2_airsL3_climcapsL3.mat savetherates
+
+keyboard_nowindow
+
+quick_tropical_perts
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 junk = input('do the correlations of spectra : takes a while to make the plots but some plots are in eg trends paper ... not needed for OLR calcs .... (-1 [default]/+1) : ');

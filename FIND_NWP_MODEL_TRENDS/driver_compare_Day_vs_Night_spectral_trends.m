@@ -187,6 +187,10 @@ aslmap_2x5tiledlayout(obs_d(i1519,:),fUMBC_d(i1519,:),fAIRSL3_d.trend(i1519,:),f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp('from now on, just gonna repeat showing spectral rates eg D or N or D_-N or (D+N)/2')
+disp('from now on, just gonna repeat showing spectral rates eg D or N or D_-N or (D+N)/2')
+disp('from now on, just gonna repeat showing spectral rates eg D or N or D_-N or (D+N)/2')
+
 iFrac = input('Show Day (-1) or Night (+1/default) or average (0) or difference (-10) or stop (-9999): ');
 if length(iFrac) == 0
   iFrac = 1;
