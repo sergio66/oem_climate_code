@@ -11,7 +11,7 @@ if iDo > 0
     else
       fprintf(1,'.')
     end
-    filein = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_latbin_' num2str(ibah,'%02i') '.mat'];
+    filein = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_latbin_' num2str(ibah,'%02i') '.mat'];
     a = load(filein);
     if iZonalorAll == -1
       %% huge file, eg 72x64x2645x264
@@ -42,31 +42,31 @@ if iDo > 0
     trendflux = flux64x72ta.trendflux; 
     RRTM_bands = a.thestatsradtrend64x72.RRTM_bands;
       if iZonalorAll == +1
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat comment anomflux trendflux
+        save /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat comment anomflux trendflux
       else
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all72x64_anomflux_14RRTMbands.mat comment anomflux trendflux
+        save /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all72x64_anomflux_14RRTMbands.mat comment anomflux trendflux
       end
     
     BTtrend = flux64x72ta.BTtrend;
     BTtrenderr = flux64x72ta.BTtrenderr;
       if iZonalorAll == +1
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
+        save /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
       else
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all72x64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
+        save /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all72x64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
       end
     
     radanom = flux64x72ta.radanom; 
       if iZonalorAll == +1
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all64.mat comment radanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all64.mat comment radanom
       else
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all72x64.mat comment radanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all72x64.mat comment radanom
       end
     
     BTanom = flux64x72ta.BTanom; 
       if iZonalorAll == +1
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat comment BTanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat comment BTanom
       else
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all72x64.mat comment BTanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/climcaps_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all72x64.mat comment BTanom
       end
   end
 end

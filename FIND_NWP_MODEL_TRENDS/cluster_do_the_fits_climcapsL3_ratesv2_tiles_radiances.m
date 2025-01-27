@@ -13,7 +13,7 @@ addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAnd
 %% do_the_fits_airsL3_ratesv7_tiles.m:270:      saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_' savestr_version '_desc' strmat ' thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
 %% do_the_fits_airsL3_ratesv7_tiles.m:272:      saver = ['save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_' savestr_version '_asc' strmat ' thestats64x72 thestats64x72_other Tlevs Qlevs rlat rlon save_lon64x72 save_lat64x72 zonk comment'];
 
-%% iaFound = check_all_jobs_done('/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_latbin_',64,'.mat');
+%% iaFound = check_all_jobs_done('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_latbin_',64,'.mat');
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 
 if length(JOB) == 0
@@ -21,11 +21,20 @@ if length(JOB) == 0
   JOB = 39;
   JOB = 29;
   JOB = 41;
+  JOB = 01;
 end
 
 filename = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc.mat';
+filename = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc.mat';
 loader = ['load ' filename];
 eval(loader)
+
+%% flipping so code same as ~/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/cluster_do_the_fits_airsL3_ratesv7_tiles_radiances.m
+Tlevs = flipud(Tlevs);
+Qlevs = flipud(Qlevs);
+save64x72_T  = flip(save64x72_T,3);
+save64x72_Q  = flip(save64x72_Q,3);
+save64x72_RH = flip(save64x72_RH,3);
 
 fnameout = [filename(1:end-4) '_btanom_latbin_' num2str(JOB,'%02i') '.mat'];
 %if exist(fnameout)
@@ -48,6 +57,9 @@ end
 
 RRTM_bands = RRTM_bands0(4:end);
 thestatsradtrend64x72.RRTM_bands = RRTM_bands;
+thestatsradtrend64x72.anomflux = nan(72,length(RRTM_bands)+1,240);
+thestatsradtrend64x72.trendflux = nan(72,length(RRTM_bands)+1);
+thestatsradtrend64x72.trendflux_unc = nan(72,length(RRTM_bands)+1);
 
 do_XX_YY_from_X_Y
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
@@ -77,16 +89,24 @@ for jj = JOB
   %for ii = iioo
     p = struct;
     p.spres = praw.spres((jj-1)*72 + ii) * ones(1,lenT);;
-    p.gas_6 = squeeze(save64x72_CH4(jj,ii,:,:));
-    p.gas_5 = squeeze(save64x72_CO(jj,ii,:,:));
-    p.gas_3 = squeeze(save64x72_O3(jj,ii,:,:));
+
+    %p.gas_6 = squeeze(save64x72_CH4(jj,ii,:))'; % * ones(1,240);
+    %p.gas_5 = squeeze(save64x72_CO(jj,ii,:))';  % * ones(1,240);
+    %p.gas_3 = squeeze(save64x72_O3(jj,ii,:))';  % * ones(1,240);
+    p.gas_6 = zeros(100,240);
+    p.gas_5 = zeros(100,240);
+    p.gas_3 = zeros(100,240);
+
+    p.gas_6 = praw.gas_6(1:100,(jj-1)*72 + ii) * ones(1,240);
+    p.gas_5 = praw.gas_5(1:100,(jj-1)*72 + ii) * ones(1,240);
+    p.gas_3 = praw.gas_3(1:100,(jj-1)*72 + ii) * ones(1,240);;
 
     p.gas_1 = 0 * p.gas_5;
-    p.gas_1(01:12,:) = squeeze(save64x72_Q(jj,ii,:,:)); 
-    iNlev = 24;
-    for ll = 13 : 24
+    p.gas_1(01:66,:) = squeeze(save64x72_Q(jj,ii,:,:)); 
+    iNlev = 100;
+    for ll = 67 : 100
       frac = (iNlev-ll+1)/(iNlev/2+1);
-      p.gas_1(ll,:) = p.gas_1(12,:)*frac;
+      p.gas_1(ll,:) = p.gas_1(66,:)*frac;
     end
     p.ptemp = squeeze(save64x72_T(jj,ii,:,:));
     p.stemp = squeeze(save64x72_stemp(jj,ii,:,:))';
@@ -108,8 +128,8 @@ for jj = JOB
     p.plon = p.rlon;
     p.plon = p.rlon;
 
-    p.nlevs = 24 * ones(size(p.stemp));
-    p.plevs = Tlevs' * ones(1,lenT);
+    p.nlevs = 100 * ones(size(p.stemp));
+    p.plevs = Tlevs * ones(1,lenT);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -149,7 +169,7 @@ for jj = JOB
 
       bad = find(isnan(wv)); wv(bad) = 0; 
         badbad = setdiff(bad,moo); 
-        good = max(bad)+1 : 24;
+        good = max(bad)+1 : 100;
         if length(badbad) > 0  & length(good) > 15
           wv(badbad) = interp1(log(plevs(good)),wv(good),log(plevs(badbad)),[],'extrap');
         elseif length(badbad) > 0 & length(good) <= 15
@@ -157,7 +177,7 @@ for jj = JOB
         end
       bad = find(isnan(oz)); oz(bad) = 0;
         badbad = setdiff(bad,moo); 
-        good = max(bad)+1 : 24;
+        good = max(bad)+1 : 100;
         if length(badbad) > 0 & length(good) > 15
           oz(badbad) = interp1(log(plevs(good)),oz(good),log(plevs(badbad)),[],'extrap');
         elseif length(badbad) > 0 & length(good) <= 15          
@@ -165,7 +185,7 @@ for jj = JOB
         end
       bad = find(isnan(tz)); tz(bad) = 0; 
         badbad = setdiff(bad,moo); 
-        good = max(bad)+1 : 24;
+        good = max(bad)+1 : 100;
         if length(badbad) > 0 & length(good) > 15
           tz(badbad) = interp1(log(plevs(good)),tz(good),log(plevs(badbad)),[],'extrap');
         elseif length(badbad) > 0 & length(good) <= 15           
@@ -182,9 +202,9 @@ for jj = JOB
 
 %{
     p.verybad = zeros(size(p.salti));
-    iCheck = 12; %% AIRS L3 has 24 levels for T, 12 for WV
+    iCheck = 40; %% AIRSCLIMCAPS L3 has 100 levels for T, 66 for WV
     verybad1 = find(isnan(p.ptemp(iCheck,:)) | isnan(p.gas_1(iCheck,:)) | isnan(p.gas_3(iCheck,:)))
-    iCheck = 18; %% AIRS L3 has 24 levels for T, 12 for WV, but we have ""augmented" the latter
+    iCheck = 80; %% AIRSCLIMCAPS L3 has 100 levels for T, 66 for WV, but we have ""augmented" the latter
     verybad2 = find(isnan(p.ptemp(iCheck,:)) | isnan(p.gas_1(iCheck,:)) | isnan(p.gas_3(iCheck,:)))
     verybad = union(verybad1,verybad2);
     p.verybad(verybad) = 1;
@@ -214,27 +234,39 @@ for jj = JOB
     h.ptype = 0;
     h.pfields = 5; % (1=prof + 4=IRobs);
     h.pfields = 1; %% 1 = profile
-    h.nchan = 2645;
 
+    h.nchan = 2645;
     h.ichan = (1:2645)';
     h.vchan = instr_chans2645;
 
     junk = load('/home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/h2645structure.mat');
+    %% junk = load('/home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/hCRIS_FSR_2233structure.mat');
     h.ichan = junk.h.ichan;
     h.vchan = junk.h.vchan;
+    h.nchan = junk.h.nchan;
 
-    %% see driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
-    h.ngas = 4;    
-    h.glist = [1  3  5  6]';
-    h.gunit = [21 12 12 12]'; %% kg/kg and VMR
     %% see driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
     h.ngas = 2;
     h.gunit = [20 12]';  %% g/kg and VMR
     h.glist = [ 1 3 ]';
+    %% see driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
+    h.ngas = 4;    
+    h.glist = [1  3  5  6]';
+    h.gunit = [21 12 12 12]'; %% kg/kg and VMR
+    %% L3 only has T and Q and SKT
+    h.ngas = 1;    
+    h.glist = [1  ]';
+    h.gunit = [21 ]'; %% kg/kg and VMR
 
     pa = {{'profiles','rtime','seconds since 1993'}};
     ha = {{'header','hdf file',filename}};
     [p,pa] = rtp_add_emis(p,pa);
+
+    p.cngwat  = 0 * ones(size(p.stemp));
+    p.cngwat2 = 0 * ones(size(p.stemp));
+    p.cfrac   = 0 * ones(size(p.stemp));
+    p.cfrac2  = 0 * ones(size(p.stemp));
+    p.cfrac12 = 0 * ones(size(p.stemp));
 
     fip = ['junk_' num2str(ii,'%02i') '_' num2str(jj,'%02i')  '.ip.rtp'];
     fop = ['junk_' num2str(ii,'%02i') '_' num2str(jj,'%02i')  '.op.rtp'];
@@ -264,8 +296,26 @@ for jj = JOB
     [Y,I] = sort(h.vchan);
     fchan = Y;
     FAFA = pcalc.rcalc(I,:);
-    bonk = find(diff(fchan(I)) > 10); bonk = [bonk bonk+1];
-    data = trapz(fchan,FAFA)/1000 - trapz(fchan(bonk),FAFA(bonk,:))/1000;  moo(1,:) = data;  %% SUM OVER ALL CHANNELS
+
+    [Xbad,Ybad] = find(isnan(FAFA));
+    uXbad = unique(Xbad);
+    Xgood = setdiff(1:length(Y),uXbad);
+    if length(Xgood) == 0
+      %% this means at least one profile sucks
+      boohoo = nansum(FAFA,1);
+      moohoo = setdiff(1:240,find(boohoo == 0));
+      if length(moohoo) == 0
+        error('profiles for ALL timesteps are bad????!!!!??');
+      end
+      FAFAX = FAFA(:,moohoo);
+      [Xbad,Ybad] = find(isnan(FAFAX));
+      uXbad = unique(Xbad);
+      Xgood = setdiff(1:length(Y),uXbad);
+    end
+
+    bonk = find(diff(fchan(I)) > 10); bonk = [bonk bonk+1];      
+    data = trapz(fchan(Xgood),FAFA(Xgood,:))/1000 - trapz(fchan(Xgood(bonk)),FAFA(Xgood(bonk),:))/1000;  moo(1,:) = data;  %% SUM OVER ALL CHANNELS
+
     chuse =[];
     for flfl = 1 : length(RRTM_bands)-1
       junk = find(fchan >= RRTM_bands(flfl) & fchan < RRTM_bands(flfl+1));
@@ -273,7 +323,7 @@ for jj = JOB
       data = trapz(fchan(junk),FAFA(junk,:))/1000; moo(flfl+1,:) = data;
     end
     woo = sum(moo(2:14,:),1); 
-    figure(1); clf; plot(1:262,woo,1:262,moo(1,:)); title('Compare flux(all) vs sum(bandFlux)')
+    figure(1); clf; plot(1:12*20,woo,1:12*20,moo(1,:)); title('Compare flux(all) vs sum(bandFlux)')
     figure(2); clf; plot(nanmean(moo,2)); title('Mean flux per RRTM band')
     figure(3); clf; plot(fchan,nanmean(FAFA,2),'b.-',h.vchan,nanmean(pcalc.rcalc,2))
     figure(4); clf; plot(fchan,rad2bt(fchan,nanmean(FAFA,2)),'b.-',h.vchan,rad2bt(hcalc.vchan,nanmean(pcalc.rcalc,2)))
@@ -334,15 +384,23 @@ for jj = JOB
       elseif mod(ch,100) == 0 
         fprintf(1,'.')
       end
-      [junkB junkstats junkbtanom junkradanom] = compute_anomaly_wrapper(k,dtime,pcalc.rcalc(ch,:),iNumSineCosCycles,fairs(ch),+1,-1);
-      % thestatsradtrend64x72.BTtrend(ii,jj,ch)    = junkB(2);
-      % thestatsradtrend64x72.BTtrenderr(ii,jj,ch) = junkstats.se(2);
-      % thestatsradtrend64x72.radanom(ii,jj,ch,:)  = junkradanom;
-      % thestatsradtrend64x72.BTanom(ii,jj,ch,:)   = junkbtanom;
-      thestatsradtrend64x72.BTtrend(ii,ch)    = junkB(2);
-      thestatsradtrend64x72.BTtrenderr(ii,ch) = junkstats.se(2);
-      thestatsradtrend64x72.radanom(ii,ch,:)  = junkradanom;
-      thestatsradtrend64x72.BTanom(ii,ch,:)   = junkbtanom;
+      boo = find(isfinite(pcalc.rcalc(ch,:)));
+      if length(boo) > 20
+        [junkB junkstats junkbtanom junkradanom] = compute_anomaly_wrapper(k(boo),dtime,pcalc.rcalc(ch,:),iNumSineCosCycles,fairs(ch),+1,-1);
+        % thestatsradtrend64x72.BTtrend(ii,jj,ch)    = junkB(2);
+        % thestatsradtrend64x72.BTtrenderr(ii,jj,ch) = junkstats.se(2);
+        % thestatsradtrend64x72.radanom(ii,jj,ch,:)  = junkradanom;
+        % thestatsradtrend64x72.BTanom(ii,jj,ch,:)   = junkbtanom;
+        thestatsradtrend64x72.BTtrend(ii,ch)    = junkB(2);
+        thestatsradtrend64x72.BTtrenderr(ii,ch) = junkstats.se(2);
+        thestatsradtrend64x72.radanom(ii,ch,:)  = junkradanom;
+        thestatsradtrend64x72.BTanom(ii,ch,:)   = junkbtanom;
+      else
+        thestatsradtrend64x72.BTtrend(ii,ch)    = NaN;
+        thestatsradtrend64x72.BTtrenderr(ii,ch) = NaN;
+        thestatsradtrend64x72.radanom(ii,ch,:)  = NaN*ones(1,240);
+        thestatsradtrend64x72.BTanom(ii,ch,:)   = NaN*ones(1,240);
+      end
     end
 
     fprintf(1,'\n');
@@ -359,7 +417,7 @@ for ibah = 1 : 64;
   else
     fprintf(1,'.')
   end
-  filein = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_latbin_' num2str(ibah,'%02i') '.mat'];
+  filein = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_latbin_' num2str(ibah,'%02i') '.mat'];
   a = load(filein);
   flux64x72ta.anomflux(:,ibah,:,:) = a.thestatsradtrend64x72.anomflux;  
   flux64x72ta.trendflux(:,ibah,:)  = a.thestatsradtrend64x72.trendflux;  
@@ -370,7 +428,7 @@ end
 fprintf(1,'\n');
 %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-comment = 'see cluster_do_the_fits_airsL3_ratesv7_tiles_radiances.m <-----> do_the_AIRSL3_trends_OQuestioN.m (which is called by eg driver_compute_AIRSL3_trends_desc_or_ascNOQuestioN.m)';
+comment = 'see cluster_do_the_fits_climcapsL3_ratesv2_tiles_radiances.m <-----> do_the_AIRSL3_trends_OQuestioN.m (which is called by eg driver_compute_AIRSL3_trends_desc_or_ascNOQuestioN.m)';
 saver = ['save ' fnameout ' thestatsradtrend64x72 filename'];
 if ~exist(fnameout)
   eval(saver);
@@ -381,7 +439,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('now use driver_read64x72flux72_save64zonalflux_ERA5_AIRSL3.m to put the individual latbins together')
-disp('now use driver_read64x72flux72_save64zonalflux_ERA5_AIRSL3.m to put the individual latbins together')
-disp('now use driver_read64x72flux72_save64zonalflux_ERA5_AIRSL3.m to put the individual latbins together')
+disp('now use driver_read64x72flux72_save64zonalflux_ERA5_CLIMCAPSL3.m to put the individual latbins together')
+disp('now use driver_read64x72flux72_save64zonalflux_ERA5_CLIMCAPSL3.m to put the individual latbins together')
+disp('now use driver_read64x72flux72_save64zonalflux_ERA5_CLIMCAPSL3.m to put the individual latbins together')
 

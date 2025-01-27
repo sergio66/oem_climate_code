@@ -23,6 +23,7 @@
 # run this with   sbatch -p high_mem --array=1-240 sergio_matlab_jobB.sbatch 14    for driver_computeAIRSL3_monthly_OLR.m 1 .. 240
 #
 # # run this with   sbatch -p high_mem --array=1-64 sergio_matlab_jobB.sbatch 15    for cluster_do_the_fits_airsL3_ratesv7_tiles_radiances.m, 1 : 64
+# # run this with   sbatch -p high_mem --array=1-64 sergio_matlab_jobB.sbatch 16    for cluster_do_the_fits_climcapsL3_ratesv2_tiles_radiances.m, 1 : 64
 
 #  Name of the job:
 #SBATCH --job-name=RUN_ERA_TRENDS
@@ -123,5 +124,8 @@ elif [[ "$1" -eq "14" ]]; then
 elif [[ "$1" -eq "15" ]]; then
   echo "cmd line arg = 1, cluster_do_the_fits_airsL3_ratesv7_tiles_radiances.m"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -r "cluster_do_the_fits_airsL3_ratesv7_tiles_radiances; exit"
+elif [[ "$1" -eq "16" ]]; then
+  echo "cmd line arg = 1, cluster_do_the_fits_climcapsL3_ratesv2_tiles_radiances.m"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -r "cluster_do_the_fits_climcapsL3_ratesv2_tiles_radiances; exit"
 
 fi

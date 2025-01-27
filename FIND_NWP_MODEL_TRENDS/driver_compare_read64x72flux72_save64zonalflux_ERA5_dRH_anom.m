@@ -201,7 +201,7 @@ a4 = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AI
 a5 = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_idRH_5_anomflux_14RRTMbands.mat');
 a6 = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_idRH_6_anomflux_14RRTMbands.mat');
 
-era5_direct_flux = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_trends_desc_surf_anomalyat');
+era5_direct_flux = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_trends_desc_surf_anomaly.mat');
 era5.olr     = reshape(era5_direct_flux.anom_olr,72,64,12*22);     era5.olr64 = squeeze(nanmean(era5.olr,1));         era5.olr = squeeze(nanmean(era5.olr,1));          era5.olr = sum(coslat.*era5.olr)./sum(coslat);
 era5.olr_clr = reshape(era5_direct_flux.anom_olr_clr,72,64,12*22); era5.olr_clr64 = squeeze(nanmean(era5.olr_clr,1)); era5.olr_clr = squeeze(nanmean(era5.olr_clr,1));  era5.olr_clr = sum(coslat.*era5.olr_clr)./sum(coslat);
 

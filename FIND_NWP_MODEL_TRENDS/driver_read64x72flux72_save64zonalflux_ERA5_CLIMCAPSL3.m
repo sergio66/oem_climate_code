@@ -2,19 +2,20 @@ iZonalorAll = +1;
 iSave = +1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% cluster_do_the_fits_airsL3_ratesv7_tiles_radiances.m
+%% cluster_do_the_fits_climcapsL3_ratesv2_tiles_radiances.m
 
 iDo = -1;
 iDo = +1;
 if iDo > 0  
-  disp('reading in AIRS L3 fluxes   + for 10, . for 1')
+  disp('reading in AIRSCLIMCAPS L3 fluxes   + for 10, . for 1')
   for ibah = 1 : 64;
     if mod(ibah,10) == 0
       fprintf(1,'+')
     else
       fprintf(1,'.')
     end
-    filein = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_latbin_' num2str(ibah,'%02i') '.mat'];
+    filein = ['/asl/s1/sergio/AIRS_L3/airsL3_v2_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_latbin_' num2str(ibah,'%02i') '.mat'];
+    filein = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_latbin_' num2str(ibah,'%02i') '.mat'];
     a = load(filein);
     if iZonalorAll == -1
       %% huge file, eg 72x64x2645x264
@@ -35,45 +36,46 @@ if iDo > 0
       flux64x72ta.radanom(ibah,:,:)  = nanmean(a.thestatsradtrend64x72.radanom,1);    %% 72 x 2645 x 262 --> 64 x 2645 x 262
       flux64x72ta.BTanom(ibah,:,:)   = nanmean(a.thestatsradtrend64x72.BTanom,1);     %% 72 x 2645 x 262 --> 64 x 2645 x 262 
     end
-  end
 
+  end
   fprintf(1,'\n');
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
   
   if iSave > 0
     
-    comment = 'see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compare_flux.m';
+    comment = 'see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compare_flux.m, driver_read64x72flux72_save64zonalflux_ERA5_CLIMCAPSL3.m';
     anomflux = flux64x72ta.anomflux; 
     trendflux = flux64x72ta.trendflux; 
     trendflux_unc = flux64x72ta.trendflux_unc; 
     RRTM_bands = a.thestatsradtrend64x72.RRTM_bands;
       if iZonalorAll == +1
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat comment anomflux trendflux RRTMbands
+        save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all64_anomflux_14RRTMbands.mat comment anomflux trendflux RRTM_bands
+        pcolor(1:15,1:64,squeeze(nanmean(anomflux,3))); colorbar; shading interp;    title('64 latbins, anomflux'); pause(0.1);
       else
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all72x64_anomflux_14RRTMbands.mat comment anomflux trendflux RRTMbands
+        save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all72x64_anomflux_14RRTMbands.mat comment anomflux trendflux RRTM_bands
       end
-    
+
     BTtrend = flux64x72ta.BTtrend;
     BTtrenderr = flux64x72ta.BTtrenderr;
       if iZonalorAll == +1
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
-      else
-        save /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all72x64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
+        save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
+      else 
+        save /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all72x64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
       end
     
     radanom = flux64x72ta.radanom; 
       if iZonalorAll == +1
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all64.mat comment radanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all64.mat comment radanom 
       else
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all72x64.mat comment radanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all72x64.mat comment radanom
       end
     
     BTanom = flux64x72ta.BTanom; 
       if iZonalorAll == +1
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat comment BTanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all64.mat comment BTanom
       else
-        save -v7.3 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all72x64.mat comment BTanom
+        save -v7.3 /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all72x64.mat comment BTanom
       end
   end
 
@@ -154,33 +156,33 @@ if iDo > 0
     trendflux_unc = fluxERA5.trendflux_unc; 
     RRTM_bands = era5x.thesave.RRTM_bands;
       if iZonalorAll == +1
-        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat comment anomflux trendflux*
+        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_anomflux_14RRTMbands.mat comment anomflux trendflux*
       else
-        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all72x64_anomflux_14RRTMbands.mat comment anomflux trendflux*
+        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all72x64_anomflux_14RRTMbands.mat comment anomflux trendflux*
       end
     
     BTtrend = fluxERA5.BTtrend;
     BTtrenderr = fluxERA5.BTtrend_unc;
       if iZonalorAll == +1
-        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
+        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
       else
-        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all72x64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
+        save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all72x64_BTtrend_2645chans.mat comment BTtrend BTtrenderr
       end
     
     %radanom = fluxERA5.radanom; 
     %  if iZonalorAll == +1
-    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all64.mat comment radanom
+    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all64.mat comment radanom
     %  else
-    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all72x64.mat comment radanom
+    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all72x64.mat comment radanom
     %  end
     
     BTanom = fluxERA5.BTanom; 
     BTtrend_zonal = fluxERA5.BTtrend_zonal;
     BTtrend_zonalerr = fluxERA5.BTtrend_zonal_unc;
       if iZonalorAll == +1
-        save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat comment BTanom BTtrend_zonal BTtrend_zonalerr
+        save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all64.mat comment BTanom BTtrend_zonal BTtrend_zonalerr
       else
-        save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all72x64.mat comment BTanom BTtrend_zonal BTtrend_zonalerr
+        save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all72x64.mat comment BTanom BTtrend_zonal BTtrend_zonalerr
       end
   end
 
@@ -196,11 +198,11 @@ era5 = load('ERA5_atm_data_2002_09_to_2024_08_trends_desc_64latbins.mat');
 %% AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
 
 %% ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH.m
-  idRH = +1;   %% keep WV   constant
-  idRH = +2;   %% keep CO2  constant
-  idRH = +3;   %% keep T,ST constant
-  idRH = +4;   %% keep RH   constant
-  idRH = +5;   %% put in everything, including clouds
+  disp('idRH = +1;   %% keep WV   constant ')
+  disp('idRH = +2;   %% keep CO2  constant ')
+  disp('idRH = +3;   %% keep T,ST constant ')
+  disp('idRH = +4;   %% keep RH   constant ')
+  disp('idRH = +5;   %% put in everything, including clouds ')
 idRH = input('Enter idRH (1:5) : ');
 
 iDo = +1;
@@ -275,38 +277,38 @@ if iDo > 0
     trendflux_unc = fluxERA5.trendflux_unc; 
     RRTM_bands = era5x.thesave.RRTM_bands;
       if iZonalorAll == +1
-        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_idRH_' num2str(idRH) '_anomflux_14RRTMbands.mat comment anomflux trendflux* '];
+        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_idRH_' num2str(idRH) '_anomflux_14RRTMbands.mat comment anomflux trendflux* '];
         eval(saver)
       else
-        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all72x64_idRH_' num2str(idRH) '_anomflux_14RRTMbands.mat comment anomflux trendflux* '];
+        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all72x64_idRH_' num2str(idRH) '_anomflux_14RRTMbands.mat comment anomflux trendflux* '];
         eval(saver)
       end
     
     BTtrend = fluxERA5.BTtrend;
     BTtrenderr = fluxERA5.BTtrend_unc;
       if iZonalorAll == +1
-        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_idRH_' num2str(idRH) '_BTtrend_2645chans.mat comment BTtrend BTtrenderr '];
+        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_idRH_' num2str(idRH) '_BTtrend_2645chans.mat comment BTtrend BTtrenderr '];
         eval(saver)
       else
-        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all72x64_idRH_' num2str(idRH) '_BTtrend_2645chans.mat comment BTtrend BTtrenderr '];
+        saver = ['save ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all72x64_idRH_' num2str(idRH) '_BTtrend_2645chans.mat comment BTtrend BTtrenderr '];
         eval(saver)
       end
     
     %radanom = fluxERA5.radanom; 
     %  if iZonalorAll == +1
-    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all64.mat comment radanom
+    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all64.mat comment radanom
     %  else
-    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all72x64.mat comment radanom
+    %    save -v7.3../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all72x64.mat comment radanom
     %  end
     
     BTanom = fluxERA5.BTanom; 
     BTtrend_zonal = fluxERA5.BTtrend_zonal;
     BTtrend_zonalerr = fluxERA5.BTtrend_zonal_unc;
       if iZonalorAll == +1
-        saver = ['save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64_idRH_' num2str(idRH) '.mat comment BTanom BTtrend_zonal BTtrend_zonalerr '];
+        saver = ['save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all64_idRH_' num2str(idRH) '.mat comment BTanom BTtrend_zonal BTtrend_zonalerr '];
         eval(saver)
       else
-        saver = ['save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all72x64_idRH_' num2str(idRH) '.mat comment BTanom BTtrend_zonal BTtrend_zonalerr '];
+        saver = ['save -v7.3  ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all72x64_idRH_' num2str(idRH) '.mat comment BTanom BTtrend_zonal BTtrend_zonalerr '];
         eval(saver)
       end
   end
@@ -316,19 +318,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
->> !ls -lth /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat
--rw-rw-r-- 1 sergio pi_strow 1.3M Sep 14 14:22 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat
->> !ls -lth //asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat
--rw-rw-r-- 1 sergio pi_strow 1.1M Sep 14 14:22 //asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat
->> !ls -lth /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all64.mat
--rw-rw-r-- 1 sergio pi_strow 264M Sep 14 14:23 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_radanom_2645chans_all64.mat
->> !ls -lth /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat
--rw-rw-r-- 1 sergio pi_strow 280M Sep 14 14:23 /asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat
+>> !ls -lth /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all64_anomflux_14RRTMbands.mat
+-rw-rw-r-- 1 sergio pi_strow 1.3M Sep 14 14:22 /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all64_anomflux_14RRTMbands.mat
+>> !ls -lth //asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all64_BTtrend_2645chans.mat
+-rw-rw-r-- 1 sergio pi_strow 1.1M Sep 14 14:22 //asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_btanom_all64_BTtrend_2645chans.mat
+>> !ls -lth /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all64.mat
+-rw-rw-r-- 1 sergio pi_strow 264M Sep 14 14:23 /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_radanom_2645chans_all64.mat
+>> !ls -lth /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all64.mat
+-rw-rw-r-- 1 sergio pi_strow 280M Sep 14 14:23 /asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72_rates_fastgrib_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all64.mat
 
->> !ls -lth ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat
--rw-rw-r-- 1 sergio pi_strow 1.3M Sep 14 14:15 ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_anomflux_14RRTMbands.mat
->> !ls -lth ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat
--rw-rw-r-- 1 sergio pi_strow 1.2M Sep 14 14:16 ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_btanom_all64_BTtrend_2645chans.mat
->> !ls -lth ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat
--rw-rw-r-- 1 sergio pi_strow 253M Sep 14 14:16 ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_64x72_Sept2002_Aug2024_22yr_desc_BTanom_2645chans_all64.mat
+>> !ls -lth ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_anomflux_14RRTMbands.mat
+-rw-rw-r-- 1 sergio pi_strow 1.3M Sep 14 14:15 ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_anomflux_14RRTMbands.mat
+>> !ls -lth ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_BTtrend_2645chans.mat
+-rw-rw-r-- 1 sergio pi_strow 1.2M Sep 14 14:16 ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_BTtrend_2645chans.mat
+>> !ls -lth ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all64.mat
+-rw-rw-r-- 1 sergio pi_strow 253M Sep 14 14:16 ../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/era5_climcaps_64x72_Sept2002_Aug2022_20yr_desc_BTanom_2645chans_all64.mat
 %}
