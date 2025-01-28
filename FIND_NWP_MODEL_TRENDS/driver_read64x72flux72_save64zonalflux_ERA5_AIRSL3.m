@@ -101,6 +101,7 @@ if iDo > 0
     %%% look at era5x.thesave
     era5x = load('~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_rlat17_2002_09_2024_08.mat');
 
+    %% made by driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH.m
     fileERA5 = ['/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_rlat' num2str(ibah,'%02i') '_2002_09_2024_06.mat'];
     fileERA5 = ['../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_rlat' num2str(ibah,'%02i') '_2002_09_2024_08.mat'];
   

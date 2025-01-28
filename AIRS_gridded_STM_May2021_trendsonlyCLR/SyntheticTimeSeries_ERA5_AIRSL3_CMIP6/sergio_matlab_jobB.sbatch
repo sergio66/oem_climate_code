@@ -18,7 +18,8 @@
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 51    for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH.m (can have WV const, CO2 const, T const, TH const
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 6     for driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 7     for driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
-# run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 8     for driver_check_WV_T_RH_MERRA_geo_and_spectral_rates2.m
+# run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 8     for driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2.m
+# run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 81    for driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2_deltaRH.m (can have WV const, CO2 const, T const, TH const
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 9     for driver_check_WV_T_RH_AMIP6_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 10    for driver_check_WV_T_RH_AIRSCLIMCAPSL3_geo_and_spectral_rates2.m
 # run this with   kleenslurm; sbatch  --exclude= --array=1-64 sergio_matlab_jobB.sbatch 11    for driver_check_WV_T_RH_UMBC_geo_and_spectral_rates2.m
@@ -106,7 +107,7 @@ elif [[ "$1" -eq "5" ]]; then
 elif [[ "$1" -eq "51" ]]; then
   # makes driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH.m
   echo "cmd line arg = 51, driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH"
-  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "idRH = 6; driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH; exit"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "idRH = 5; driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH; exit"
 
 elif [[ "$1" -eq "6" ]]; then
   # makes driver_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
@@ -116,10 +117,16 @@ elif [[ "$1" -eq "7" ]]; then
   # makes driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2.m
   echo "cmd line arg = 7, driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_AIRSL3_geo_and_spectral_rates2; exit"
+
 elif [[ "$1" -eq "8" ]]; then
   # makes driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2.m
   echo "cmd line arg = 8, driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2"
   srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2; exit"
+elif [[ "$1" -eq "81" ]]; then
+  # makes driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2_deltaRH.m
+  echo "cmd line arg = 81, driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2_deltaRH"
+  srun /usr/ebuild/software/MATLAB/2021a/bin/matlab -nodisplay -nosplash -r "idRH = 5; driver_check_WV_T_RH_MERRA2_geo_and_spectral_rates2_deltaRH; exit"
+
 elif [[ "$1" -eq "9" ]]; then
   # makes driver_check_WV_T_RH_AMIP6_geo_and_spectral_rates2.m
   echo "cmd line arg = 9, driver_check_WV_T_RH_AMIP6_geo_and_spectral_rates2"

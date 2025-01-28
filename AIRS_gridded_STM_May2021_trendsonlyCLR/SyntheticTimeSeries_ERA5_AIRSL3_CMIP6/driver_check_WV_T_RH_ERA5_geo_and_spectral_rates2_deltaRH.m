@@ -30,7 +30,7 @@ end
 
 system_slurm_stats
 
-%% kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 5     for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+%% kleenslurm; sbatch  --exclude=cnode[204,225,260,267] --array=1-64 sergio_matlab_jobB.sbatch 51     for driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2_deltaRH.m
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 64 for the 64 latbins
 if length(JOB) == 0

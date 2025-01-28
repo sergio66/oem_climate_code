@@ -107,6 +107,38 @@ climcapsL3_sarta_flux = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_v2_64x72
   plot(1:240,smooth(wahmean_climcapsL3,7)*3.5788); plotaxis2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(4); clf
+
+%% see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_computeMERRA2_monthly_trends_desc_or_asc.m
+%{
+merra2_direct_flux = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_N_cld_data_2002_09_to_2024_08_trends_desc_surf_anomaly.mat');
+  wah = merra2_direct_flux.anom_olr_clr;
+  wah = reshape(wah,72,64,264);
+  wah = squeeze(nanmean(wah,1));
+  coswah = cos(rlat*pi/180)*ones(1,264);
+  wahmean_merra2_direct = nansum(wah.*coswah,1)./nansum(coswah,1);
+
+  wah = merra2_direct_flux.anom_stemp;
+  wah = reshape(wah,72,64,264);
+  wah = squeeze(nanmean(wah,1));
+  coswah = cos(rlat*pi/180)*ones(1,264);
+  wahmean_merra2_direct_stemp = nansum(wah.*coswah,1)./nansum(coswah,1);
+
+  plot(1:264,smooth(wahmean_merra2_direct,7),1:264,smooth(wahmean_merra2_direct_stemp,7)); plotaxis2;
+%}
+
+merra2_sarta_flux = load('SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/MERRA2/merra2_64x72_Sept2002_Aug2022_20yr_desc_btanom_all64_anomflux_14RRTMbands.mat');
+  wah = squeeze(merra2_sarta_flux.anomflux(:,1,:));
+  coswah = cos(rlat*pi/180)*ones(1,240);
+  wahmean_merra2 = nansum(wah.*coswah,1)./nansum(coswah,1);
+  plot(smooth(squeeze(nanmean(merra2_sarta_flux.anomflux(:,1,:),1)),7)*3.5788); plotaxis2;
+  plot(1:240,smooth(wahmean_merra2,7)*3.5788); plotaxis2;
+
+figure(21); clf
+plot(yymm_monthly(1:264),smooth(wahmean_era5,7)*3.5788,'ko-',yymm_monthly(1:240),smooth(wahmean_merra2,7)*3.5788,'gx-')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -123,6 +155,22 @@ plot(yymm_monthly(1:240),smooth(wahmean_climcapsL3,7)*3.5788,'k',...
        'linewidth',2); 
 plotaxis2;
 hl = legend('CLIMCAPSL3 --> SARTA','AIRS L3 --> SARTA','ERA5 --> SARTA','AIRS L3 direct','ERA5 direct','location','best');
+title('CosAvg MONTHLY fields --> SARTA or direct Flux Anomaly W/m2')
+set(gca,'fontsize',10)
+xlabel('Time'); ylabel('Anomaly Flux [W/m2]'); axis([2002.75 2024.5 -1.5 +1.5]);
+
+plot(yymm_monthly(1:262),smooth(squeeze(nanmean(airsL3_sarta_flux.anomflux(:,1,:),1)),7)*3.5788,...
+       yymm_monthly(1:264),smooth(squeeze(nanmean(era5_sarta_flux.anomflux(:,1,:),1)),7)*3.5788,...
+       yymm_monthly(1:240),smooth(squeeze(nanmean(climcapsL3_sarta_flux.anomflux(:,1,:),1)),7)*3.5788,'linewidth',2); 
+plot(yymm_monthly(1:240),smooth(wahmean_climcapsL3,7)*3.5788,'k',...
+     yymm_monthly(1:240),smooth(wahmean_merra2,7)*3.5788,'gx-',...
+     yymm_monthly(1:262),smooth(wahmean_airsL3,7)*3.5788,'c',...
+     yymm_monthly(1:264),smooth(wahmean_era5,7)*3.5788,'m',...
+     yymm_monthly(1:262),smooth(wahmean_airsL3_direct,7),'b',...
+     yymm_monthly(1:264),smooth(wahmean_era5_direct,7),'r',...
+       'linewidth',2); 
+plotaxis2;
+hl = legend('CLIMCAPSL3 --> SARTA','MERRA2 --> SARTA','AIRS L3 --> SARTA','ERA5 --> SARTA','AIRS L3 direct','ERA5 direct','location','best','fontsize',8);
 title('CosAvg MONTHLY fields --> SARTA or direct Flux Anomaly W/m2')
 set(gca,'fontsize',10)
 xlabel('Time'); ylabel('Anomaly Flux [W/m2]'); axis([2002.75 2024.5 -1.5 +1.5]);
