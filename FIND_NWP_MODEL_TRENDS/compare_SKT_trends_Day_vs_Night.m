@@ -1,28 +1,83 @@
 ii = 0; 
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_day.results(:,6),72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_night.results(:,6),72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT');
+if iSmooth >= 1
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_day.results(:,6),72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fUMBC_night.results(:,6),72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_day.trend_stemp,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_night.trend_stemp,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fAIRSL3_day.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fAIRSL3_night.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fCLIMCAPSL3_day.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fCLIMCAPSL3_night.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fMERRA2.trend_stemp,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : MERRA2 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fGISS.giss_trend4608',1),[-90 +90],[-180 +180]); title('dSKT/dt : GISS2 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fAIRSL3_day.thestats64x72.stemprate'+fAIRSL3_night.thestats64x72.stemprate')*0.5,1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fCLIMCAPSL3_day.thestats64x72.stemprate'+fCLIMCAPSL3_night.thestats64x72.stemprate')*0.5,1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.results(:,6)-fUMBC_night.results(:,6))*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fAIRSL3_day.thestats64x72.stemprate'-fAIRSL3_night.thestats64x72.stemprate')*1.0,1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fCLIMCAPSL3_day.thestats64x72.stemprate'-fCLIMCAPSL3_night.thestats64x72.stemprate')*1.0,1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fERA5_day.trend_stemp-fERA5_night.trend_stemp)*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY - NIGHT');
 
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_day.trend_stemp,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fERA5_night.trend_stemp,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 NIGHT');
+elseif iSmooth == 0.5
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape(fUMBC_day.results(:,6),72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape(fUMBC_night.results(:,6),72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape(fERA5_day.trend_stemp,72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape(fERA5_night.trend_stemp,72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(fAIRSL3_day.thestats64x72.stemprate',5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(fAIRSL3_night.thestats64x72.stemprate',5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(fCLIMCAPSL3_day.thestats64x72.stemprate',5),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(fCLIMCAPSL3_night.thestats64x72.stemprate',5),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape(fMERRA2.trend_stemp,72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : MERRA2 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(fGISS.giss_trend4608',5),[-90 +90],[-180 +180]); title('dSKT/dt : GISS2 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape((fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5,72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata((fAIRSL3_day.thestats64x72.stemprate'+fAIRSL3_night.thestats64x72.stemprate')*0.5,5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata((fCLIMCAPSL3_day.thestats64x72.stemprate'+fCLIMCAPSL3_night.thestats64x72.stemprate')*0.5,5),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape((fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5,72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape((fUMBC_day.results(:,6)-fUMBC_night.results(:,6))*1.0,72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata((fAIRSL3_day.thestats64x72.stemprate'-fAIRSL3_night.thestats64x72.stemprate')*1.0,5),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata((fCLIMCAPSL3_day.thestats64x72.stemprate'-fCLIMCAPSL3_night.thestats64x72.stemprate')*1.0,5),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothdata(reshape((fERA5_day.trend_stemp-fERA5_night.trend_stemp)*1.0,72,64)',5),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY - NIGHT');
 
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fAIRSL3_day.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fAIRSL3_night.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 NIGHT');
+elseif iSmooth <= 0
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape(fUMBC_day.results(:,6),72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape(fUMBC_night.results(:,6),72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape(fERA5_day.trend_stemp,72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape(fERA5_night.trend_stemp,72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,fAIRSL3_day.thestats64x72.stemprate',[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,fAIRSL3_night.thestats64x72.stemprate',[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,fCLIMCAPSL3_day.thestats64x72.stemprate',[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,fCLIMCAPSL3_night.thestats64x72.stemprate',[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape(fMERRA2.trend_stemp,72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : MERRA2 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,fGISS.giss_trend4608',[-90 +90],[-180 +180]); title('dSKT/dt : GISS2 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape((fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5,72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,(fAIRSL3_day.thestats64x72.stemprate'+fAIRSL3_night.thestats64x72.stemprate')*0.5,[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,(fCLIMCAPSL3_day.thestats64x72.stemprate'+fCLIMCAPSL3_night.thestats64x72.stemprate')*0.5,[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape((fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5,72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape((fUMBC_day.results(:,6)-fUMBC_night.results(:,6))*1.0,72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,(fAIRSL3_day.thestats64x72.stemprate'-fAIRSL3_night.thestats64x72.stemprate')*1.0,[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,(fCLIMCAPSL3_day.thestats64x72.stemprate'-fCLIMCAPSL3_night.thestats64x72.stemprate')*1,[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,reshape((fERA5_day.trend_stemp-fERA5_night.trend_stemp)*1.0,72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY - NIGHT');
 
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fCLIMCAPSL3_day.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fCLIMCAPSL3_night.thestats64x72.stemprate',1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 NIGHT');
-
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape(fMERRA2.trend_stemp,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : MERRA2 DAY/NIGHT');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(fGISS.giss_trend4608',1),[-90 +90],[-180 +180]); title('dSKT/dt : GISS2 DAY/NIGHT');
-
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY/NIGHT');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fAIRSL3_day.thestats64x72.stemprate'+fAIRSL3_night.thestats64x72.stemprate')*0.5,1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY/NIGHT');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fCLIMCAPSL3_day.thestats64x72.stemprate'+fCLIMCAPSL3_night.thestats64x72.stemprate')*0.5,1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY/NIGHT');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY/NIGHT');
-
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fUMBC_day.results(:,6)-fUMBC_night.results(:,6))*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT DAY - NIGHT');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fAIRSL3_day.thestats64x72.stemprate'-fAIRSL3_night.thestats64x72.stemprate')*1.0,1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS L3 DAY - NIGHT');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn((fCLIMCAPSL3_day.thestats64x72.stemprate'-fCLIMCAPSL3_night.thestats64x72.stemprate')*1.0,1),[-90 +90],[-180 +180]); title('dSKT/dt : CLIMCAPS L3 DAY - NIGHT');
-ii = ii + 1; figure(ii); sizefig; ; clf; aslmap(ii,rlat65,rlon73,smoothn(reshape((fERA5_day.trend_stemp-fERA5_night.trend_stemp)*1.0,72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : ERA5 DAY - NIGHT');
+end
 
 iiMax = ii;
 for ii = 1 : iiMax; figure(ii); caxis([-1 +1]*0.15); colormap(llsmap5); end
@@ -40,6 +95,7 @@ iFig = 20;
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';
   plotoptions.str14 = '(D) ERA5';         plotoptions.str24 = '(N)';
   plotoptions.barstr = 'dSKT/dt [K/yr]';
+  plotoptions.smooth = iSmooth;
   newz11 = fUMBC_day.results(:,6);                  newz21 = fUMBC_night.results(:,6);                           
   newz12 = fAIRSL3_day.thestats64x72.stemprate;     newz22 = fAIRSL3_night.thestats64x72.stemprate; 
   newz13 = fCLIMCAPSL3_day.thestats64x72.stemprate; newz23 = fCLIMCAPSL3_night.thestats64x72.stemprate;
@@ -59,6 +115,7 @@ iFig = 20;
   plotoptions.str13 = '(D) CLIMCAPS L3';  plotoptions.str23 = '(N)';   plotoptions.str33 = '(D-N)';
   plotoptions.str14 = '(D) ERA5';         plotoptions.str24 = '(N)';   plotoptions.str34 = '(D-N)';
   plotoptions.barstr = 'dSKT/dt [K/yr]';
+  plotoptions.smooth = iSmooth;
   newz11 = fUMBC_day.results(:,6);                  newz21 = fUMBC_night.results(:,6);                       newz31 = newz11 - newz21;
   newz12 = fAIRSL3_day.thestats64x72.stemprate;     newz22 = fAIRSL3_night.thestats64x72.stemprate;          newz32 = newz12 - newz22;
   newz13 = fCLIMCAPSL3_day.thestats64x72.stemprate; newz23 = fCLIMCAPSL3_night.thestats64x72.stemprate;      newz33 = newz13 - newz23;
@@ -77,11 +134,15 @@ iFig = 21;
   plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dST/dt'; plotoptions.cmap = llsmap5;
   plotoptions.str11 = 'AIRS\_RT';     plotoptions.str12 = 'ERA5';        
   plotoptions.str21 = 'AIRS L3';      plotoptions.str22 = 'CLIMCAPS L3'; 
+  plotoptions.smooth = iSmooth;
   newz11 = (fUMBC_day.results(:,6)-fUMBC_night.results(:,6))*1.0;                           newz12 = (fERA5_day.trend_stemp-fERA5_night.trend_stemp)*1.0; 
   newz21 = (fAIRSL3_day.thestats64x72.stemprate-fAIRSL3_night.thestats64x72.stemprate)*1.0; newz22 = (fCLIMCAPSL3_day.thestats64x72.stemprate-fCLIMCAPSL3_night.thestats64x72.stemprate)*1.0;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);
   figure(iFig); sizefig; ; clf; aslmap_2x2tiledlayout(newz11,newz12,newz21,newz22,iFig,plotoptions);
 
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
 clear newz*
 iFig = 22;
   figure(iFig); sizefig; ; clf;
@@ -91,11 +152,16 @@ iFig = 22;
   plotoptions.str11 = 'AIRS\_RT';     plotoptions.str12 = 'AIRS L3';     plotoptions.str13 = 'CLIMCAPS L3';
   plotoptions.str21 = 'GISS';         plotoptions.str22 = 'ERA5';        plotoptions.str23 = 'MERRA2';
   plotoptions.barstr = 'dSKT/dt [K/yr]';
+  plotoptions.smooth = iSmooth;
   newz11 = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  newz12 = (fAIRSL3_day.thestats64x72.stemprate+fAIRSL3_night.thestats64x72.stemprate)*0.5; 
     newz13 = (fCLIMCAPSL3_day.thestats64x72.stemprate+fCLIMCAPSL3_night.thestats64x72.stemprate)*0.5;
   newz21 = fGISS.giss_trend4608;                                   newz22 = (fERA5_day.trend_stemp+fERA5_night.trend_stemp)*0.5;                             newz23 = fMERRA2.trend_stemp;
     newz11 = reshape(newz11,72,64);   newz22 = reshape(newz22,72,64);   newz23 = reshape(newz23,72,64);  
+  plotoptions.smooth = 0; 
   figure(iFig); sizefig; ; clf; aslmap_2x3tiledlayout(newz11,newz12,newz13,newz21,newz22,newz23,iFig,plotoptions);
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
 
 junk = [newz11(:) newz12(:) newz13(:) newz21(:) newz22(:) newz23(:)];
 moo0 = nanmean(junk,2);
@@ -104,26 +170,69 @@ moo2 = nanstd(junk,[],2);
 moo3 = zeros(size(moo1)); moo3(moo1 > moo2) = 1;
 moo4 = moo1./moo2; moo4(moo4 < 1) = 1; moo4 = log10(moo4);
 
-iFig = 23; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(nanmean(junk,2),72,64)',1),[-90 +90],[-180 +180]);   cx = [-1 +1]*0.151; caxis(cx); colormap(llsmap5);
-iFig = 24; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(nanstd(junk,[],2),72,64)',1),[-90 +90],[-180 +180]); cx = [0 +1]*0.031;  caxis(cx); colormap(jet);
-
-iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(moo3,72,64)',1),[-90 +90],[-180 +180]); cx = [0 +1];  caxis(cx); colormap(jet);
-iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo3,72,64)',[-90 +90],[-180 +180]);            cx = [0 +1]; caxis(cx); colormap(usa2x);
-
-iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo4,72,64)',[-90 +90],[-180 +180]);        cx = [0 +2]; caxis(cx); colormap(usa2x);
-iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(moo4),72,64)',[-90 +90],[-180 +180]);  cx = (10.^[0 +1]); caxis(cx); colormap(jett);
-
 mooUMBC_num   = 0.5*(fUMBC_day.results(:,6) + fUMBC_night.results(:,6));
 mooUMBC_denom = sqrt(fUMBC_day.resultsunc(:,6).^2 + fUMBC_night.resultsunc(:,6).^2);
 mooUMBC = abs(mooUMBC_num)./mooUMBC_denom;
-iFig = 27; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(mooUMBC_num,72,64)',1),[-90 +90],[-180 +180]);   cx = ([-1 +1]*0.15); caxis(cx); colormap(llsmap5);
-iFig = 28; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(mooUMBC_denom,72,64)',1),[-90 +90],[-180 +180]); cx = ([0 +1]*0.15/3); caxis(cx); colormap(jet);
-iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(mooUMBC),72,64)',[-90 +90],[-180 +180]);            cx = (10.^[0 +1]); caxis(cx); colormap(jett);
-iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(mooUMBC,72,64)',[-90 +90],[-180 +180]);                  cx = ([0 +5]); caxis(cx); colormap(jett);
 
+if iSmooth >= 1
+  iFig = 23; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(nanmean(junk,2),72,64)',1),[-90 +90],[-180 +180]);   cx = [-1 +1]*0.151; caxis(cx); colormap(llsmap5);
+  iFig = 24; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(nanstd(junk,[],2),72,64)',1),[-90 +90],[-180 +180]); cx = [0 +1]*0.031;  caxis(cx); colormap(jet);
+  
+  iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(moo3,72,64)',1),[-90 +90],[-180 +180]); cx = [0 +1];  caxis(cx); colormap(jet);
+  iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo3,72,64)',[-90 +90],[-180 +180]);            cx = [0 +1]; caxis(cx); colormap(usa2x);
+  
+  iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo4,72,64)',[-90 +90],[-180 +180]);        cx = [0 +2]; caxis(cx); colormap(usa2x);
+  iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(moo4),72,64)',[-90 +90],[-180 +180]);  cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  
+  iFig = 27; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(mooUMBC_num,72,64)',1),[-90 +90],[-180 +180]);   cx = ([-1 +1]*0.15); caxis(cx); colormap(llsmap5);
+  iFig = 28; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothn(reshape(mooUMBC_denom,72,64)',1),[-90 +90],[-180 +180]); cx = ([0 +1]*0.15/3); caxis(cx); colormap(jet);
+  iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(mooUMBC),72,64)',[-90 +90],[-180 +180]);            cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(mooUMBC,72,64)',[-90 +90],[-180 +180]);                  cx = ([0 +5]); caxis(cx); colormap(jett);
+  
+elseif iSmooth == 0.5
+  iFig = 23; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothdata(reshape(nanmean(junk,2),72,64),"movmean",5),[-90 +90],[-180 +180]);   cx = [-1 +1]*0.151; caxis(cx); colormap(llsmap5);
+  iFig = 24; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothdata(reshape(nanstd(junk,[],2),72,64),"movmean",5),[-90 +90],[-180 +180]); cx = [0 +1]*0.031;  caxis(cx); colormap(jet);
+  
+  iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothdata(reshape(moo3,72,64),"movmean",5),[-90 +90],[-180 +180]); cx = [0 +1];  caxis(cx); colormap(jet);
+  iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo3,72,64)',[-90 +90],[-180 +180]);                        cx = [0 +1]; caxis(cx); colormap(usa2x);
+  
+  iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo4,72,64)',[-90 +90],[-180 +180]);        cx = [0 +2]; caxis(cx); colormap(usa2x);
+  iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(moo4),72,64)',[-90 +90],[-180 +180]);  cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  
+  iFig = 27; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothdata(reshape(mooUMBC_num,72,64),"movmean",5),[-90 +90],[-180 +180]);   cx = ([-1 +1]*0.15); caxis(cx); colormap(llsmap5);
+  iFig = 28; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,smoothdata(reshape(mooUMBC_denom,72,64),"movmean",5),[-90 +90],[-180 +180]); cx = ([0 +1]*0.15/3); caxis(cx); colormap(jet);
+  iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(mooUMBC),72,64)',[-90 +90],[-180 +180]);                        cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(mooUMBC,72,64)',[-90 +90],[-180 +180]);                              cx = ([0 +5]); caxis(cx); colormap(jett);
+  
+elseif iSmooth <= 0
+  iFig = 23; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(nanmean(junk,2),72,64)',[-90 +90],[-180 +180]);   cx = [-1 +1]*0.151; caxis(cx); colormap(llsmap5);
+  iFig = 24; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(nanstd(junk,[],2),72,64)',[-90 +90],[-180 +180]); cx = [0 +1]*0.031;  caxis(cx); colormap(jet);
+  
+  iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo3,72,64)',[-90 +90],[-180 +180]); cx = [0 +1]; caxis(cx); colormap(jet);
+  iFig = 25; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo3,72,64)',[-90 +90],[-180 +180]); cx = [0 +1]; caxis(cx); colormap(usa2x);
+  
+  iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(moo4,72,64)',[-90 +90],[-180 +180]);        cx = [0 +2]; caxis(cx); colormap(usa2x);
+  iFig = 26; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(moo4),72,64)',[-90 +90],[-180 +180]);  cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  
+  iFig = 27; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(mooUMBC_num,72,64)',[-90 +90],[-180 +180]);   cx = ([-1 +1]*0.15); caxis(cx); colormap(llsmap5);
+  iFig = 28; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(mooUMBC_denom,72,64)',[-90 +90],[-180 +180]); cx = ([0 +1]*0.15/3); caxis(cx); colormap(jet);
+  iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(10.^(mooUMBC),72,64)',[-90 +90],[-180 +180]); cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  iFig = 29; figure(iFig); sizefig; ; clf; aslmap(iFig,rlat65,rlon73,reshape(mooUMBC,72,64)',[-90 +90],[-180 +180]);       cx = ([0 +5]); caxis(cx); colormap(jett);
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(90); clf
+  if iSmooth >= 1
+    zaza0 = smoothn(reshape(moo0,72,64)',1);
+    zaza2 = smoothn(reshape(moo2,72,64)',1);
+  elseif iSmooth == 0.5
+    zaza0 = smoothdata(reshape(moo0,72,64)',"movmean",5);
+    zaza2 = smoothdata(reshape(moo2,72,64)',"movmean",5);
+  elseif iSmooth == 0.5
+    zaza0 = reshape(moo0,72,64)';
+    zaza2 = reshape(moo2,72,64)';
+  end
+
   ta = tiledlayout(2,1,'TileSpacing','None', 'Padding','None');
   ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
   tfov(1) = nexttile;

@@ -1,3 +1,4 @@
+function generic_subtiles_fig_into_surface_matr(figfile)
 %addpath Tiledplots   % LLS path to Sergio's codes
 addpath /asl/matlib/maps  % LLS path to this
 addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
@@ -8,16 +9,20 @@ if ~exist('plotoptions','var')
 
   figure(1); close
 
-  hgload /home/sergio/PAPERS/SUBMITPAPERS/trends/Figs_DN/skt_Day_Night_avg_6panel.fig       %% what was used for Ryan Feb 2024 version
+  %% hgload /home/sergio/PAPERS/SUBMITPAPERS/trends/Figs_DN/nosmooth_skt_Day_Night_avg_6panel.fig       %% what was used for Ryan Feb 2024 version
+  %% hgload /home/sergio/PAPERS/SUBMITPAPERS/trends/Figs_DN/nosmooth_skt_Day_Night_avg_6panel.fig       %% what was used for Ryan Feb 2024 version
+  hgloader  = ['hgload ' figfile ';'];
+  eval(hgloader);
+
   % Get Sergio's plotoptions
   load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/skt_trends_strow.mat','plotoptions');
 end
 
 % Set aspect ratio (by hand first time)
-set(gcf,'Position',[1103 512 1007 382])
+set(gcf,'Position',[1103 512 1007 382]);
 
 hf = get(gcf,'Children');
-htc = get(hf(2),'Children')   % I think TiledChartLayout will always be hf(2)??
+htc = get(hf(2),'Children');   % I think TiledChartLayout will always be hf(2)??
 
 % Tile Titles and ind holds members of htc that are maps (axes), not colorbars
 atype = 'axes';
@@ -32,7 +37,7 @@ end
 % Get the data
 k = 1;
 for i = ind
-   md = findobj(htc(i),'type','Surface')
+   md = findobj(htc(i),'type','Surface');
    x(i,:,:) = md.XData;
    y(i,:,:) = md.YData;
    c(i,:,:) = md.CData;
@@ -45,7 +50,7 @@ do_XX_YY_from_X_Y
 % tricks to find axes title and change one of them!
 for i=ind
    if contains('CHIRP\_A',ttitle(i).text)
-      i
+      i;
       ttitle(i).text = 'AIRS\_RT';
    end
 end
@@ -63,17 +68,17 @@ for i=flip(ind)
 end
 
 cb = colorbar;
-cb.Layout.Tile = 'south'
-xl = xlabel(tafov(ind(2)),'T_{surface} (K/year)')
+cb.Layout.Tile = 'south';
+xl = xlabel(tafov(ind(2)),'T_{surface} (K/year)');
 
 ta.Padding = 'compact';
 ta.TileSpacing = 'compact';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
-BAD IDEA aslprint_asis('fixed_6panel_SKTtrend.pdf');
+BAD IDEA aslprint_asis('nosmooth_fixed_6panel_SKTtrend.pdf');
 BAD IDEA hf = gcf;
-BAD IDEA exportgraphics(hf,'fixed_6panel_SKTtrend.png')
+BAD IDEA exportgraphics(hf,'nosmooth_fixed_6panel_SKTtrend.png')
 %}
 
 %{
@@ -94,13 +99,13 @@ So, #2 for papers, #3 for presentations.  A presentation using all
 three is attached in next message.
 
 hf = gcf;
-exportgraphics(hf,'LLS_Figs/fig8x_defaultpdf.pdf', 'Backgroundcolor','none');
-exportgraphics(hf,'LLS_Figs/fig8x_defaultpdf2.pdf','Backgroundcolor','none','ContentType','vector');
-exportgraphics(hf,'LLS_Figs/fig8x_defaultpng.png'); 
+exportgraphics(hf,'LLS_Figs/nosmooth_fig8x_defaultpdf.pdf', 'Backgroundcolor','none');
+exportgraphics(hf,'LLS_Figs/nosmooth_fig8x_defaultpdf2.pdf','Backgroundcolor','none','ContentType','vector');
+exportgraphics(hf,'LLS_Figs/nosmooth_fig8x_defaultpng.png'); 
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 June 2025
-sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/MatlabFigFiles/fig8_redone_june2025.pdf')
+sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/MatlabFigFiles/nosmooth_fig8_redone_june2025.pdf')
 %}

@@ -1,29 +1,82 @@
 ii = 0; 
 
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRS\_RT DAY');
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRS\_RT NIGHT');
+if iSmooth >= 1
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRS\_RT DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fUMBC_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRS\_RT NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fERA5_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : ERA5 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fERA5_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : ERA5 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRSL3 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fAIRSL3_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRSL3 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : CLIMCAPSL3 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : CLIMCAPSL3 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fMERRA2.RHtrend,100,72,64),2)),1)); title('dRH/dt : MERRA2 DAY');
+  
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.RHtrend + fUMBC_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRS\_RT DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fERA5_day.RHtrend + fERA5_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : ERA5 DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend + fAIRSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRSL3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend + fCLIMCAPSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : CLIMCAPSL3 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.RHtrend - fUMBC_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRS\_RT DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fERA5_day.RHtrend - fERA5_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : ERA5 DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend - fAIRSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRSL3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend - fCLIMCAPSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : CLIMCAPSL3 DAY - NIGHT');
+ 
+elseif iSmooth == 0.5
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fUMBC_day.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : AIRS\_RT DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fUMBC_night.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : AIRS\_RT NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fERA5_day.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : ERA5 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fERA5_night.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : ERA5 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : AIRSL3 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fAIRSL3_night.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : AIRSL3 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : CLIMCAPSL3 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fCLIMCAPSL3_night.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : CLIMCAPSL3 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothdata(squeeze(nanmean(reshape(fMERRA2.RHtrend,100,72,64),2)),"movmean",5)); title('dRH/dt : MERRA2 DAY');
+  
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fUMBC_day.RHtrend + fUMBC_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRS\_RT DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fERA5_day.RHtrend + fERA5_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/2); title('dRH/dt : ERA5 DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend + fAIRSL3_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRSL3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend + fCLIMCAPSL3_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/2); title('dRH/dt : CLIMCAPSL3 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fUMBC_day.RHtrend - fUMBC_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRS\_RT DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fERA5_day.RHtrend - fERA5_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/1); title('dRH/dt : ERA5 DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend - fAIRSL3_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRSL3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = smoothdata(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend - fCLIMCAPSL3_night.RHtrend,100,72,64),2)),"movmean",5); pcolor(rlat,plays100,junk/1); title('dRH/dt : CLIMCAPSL3 DAY - NIGHT');
+ 
+elseif iSmooth <= 0
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fUMBC_day.RHtrend,100,72,64),2))); title('dRH/dt : AIRS\_RT DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fUMBC_night.RHtrend,100,72,64),2))); title('dRH/dt : AIRS\_RT NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fERA5_day.RHtrend,100,72,64),2))); title('dRH/dt : ERA5 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fERA5_night.RHtrend,100,72,64),2))); title('dRH/dt : ERA5 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fAIRSL3_day.RHtrend,100,72,64),2))); title('dRH/dt : AIRSL3 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fAIRSL3_night.RHtrend,100,72,64),2))); title('dRH/dt : AIRSL3 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend,100,72,64),2))); title('dRH/dt : CLIMCAPSL3 DAY');
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fCLIMCAPSL3_night.RHtrend,100,72,64),2))); title('dRH/dt : CLIMCAPSL3 NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,squeeze(nanmean(reshape(fMERRA2.RHtrend,100,72,64),2))); title('dRH/dt : MERRA2 DAY');
+  
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fUMBC_day.RHtrend + fUMBC_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRS\_RT DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fERA5_day.RHtrend + fERA5_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/2); title('dRH/dt : ERA5 DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fAIRSL3_day.RHtrend + fAIRSL3_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRSL3 DAY/NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend + fCLIMCAPSL3_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/2); title('dRH/dt : CLIMCAPSL3 DAY/NIGHT');
+  
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fUMBC_day.RHtrend - fUMBC_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRS\_RT DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fERA5_day.RHtrend - fERA5_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/1); title('dRH/dt : ERA5 DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fAIRSL3_day.RHtrend - fAIRSL3_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRSL3 DAY - NIGHT');
+  ii = ii + 1; figure(ii); clf; junk = squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend - fCLIMCAPSL3_night.RHtrend,100,72,64),2)); pcolor(rlat,plays100,junk/1); title('dRH/dt : CLIMCAPSL3 DAY - NIGHT');
 
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fERA5_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : ERA5 DAY');
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fERA5_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : ERA5 NIGHT');
-
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRSL3 DAY');
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fAIRSL3_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : AIRSL3 NIGHT');
-
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend,100,72,64),2)),1)); title('dRH/dt : CLIMCAPSL3 DAY');
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_night.RHtrend,100,72,64),2)),1)); title('dRH/dt : CLIMCAPSL3 NIGHT');
-
-ii = ii + 1; figure(ii); clf; pcolor(rlat,plays100,smoothn(squeeze(nanmean(reshape(fMERRA2.RHtrend,100,72,64),2)),1)); title('dRH/dt : MERRA2 DAY');
-
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.RHtrend + fUMBC_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRS\_RT DAY/NIGHT');
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fERA5_day.RHtrend + fERA5_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : ERA5 DAY/NIGHT');
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend + fAIRSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : AIRSL3 DAY/NIGHT');
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend + fCLIMCAPSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/2); title('dRH/dt : CLIMCAPSL3 DAY/NIGHT');
-
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fUMBC_day.RHtrend - fUMBC_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRS\_RT DAY - NIGHT');
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fERA5_day.RHtrend - fERA5_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : ERA5 DAY - NIGHT');
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fAIRSL3_day.RHtrend - fAIRSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : AIRSL3 DAY - NIGHT');
-ii = ii + 1; figure(ii); clf; junk = smoothn(squeeze(nanmean(reshape(fCLIMCAPSL3_day.RHtrend - fCLIMCAPSL3_night.RHtrend,100,72,64),2)),1); pcolor(rlat,plays100,junk/1); title('dRH/dt : CLIMCAPSL3 DAY - NIGHT');
-
+end
+ 
 iiMax = ii;
 for ii = 1 : iiMax; figure(ii); caxis([-1 +1]*0.50); colormap(llsmap5); shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','linear'); ylim([100 1000]); colorbar; end
 
@@ -42,6 +95,7 @@ iFig = 60;
   plotoptions.barstr       = 'dRH/dt [%/yr]';
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
+  plotoptions.smooth       = iSmooth;
   plotoptions.yLimits      = [100 1000];
 
   newz11 = fUMBC_day.RHtrend;        newz21 = fUMBC_night.RHtrend;                           
@@ -68,6 +122,7 @@ iFig = 61;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [100 1000];
   plotoptions.barstr       = 'dRH/dt [%/yr]';
+  plotoptions.smooth       = iSmooth;
   newz11 = (fUMBC_day.RHtrend-fUMBC_night.RHtrend)*1.0;        newz12 = (fERA5_day.RHtrend-fERA5_night.RHtrend)*1.0; 
   newz21 = (fAIRSL3_day.RHtrend-fAIRSL3_night.RHtrend)*1.0;    newz22 = (fCLIMCAPSL3_day.RHtrend-fCLIMCAPSL3_night.RHtrend)*1.0;
     newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2)); 
@@ -86,6 +141,7 @@ iFig = 62;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [100 1000];
   plotoptions.barstr       = 'dRH/dt [%/yr]';
+  plotoptions.smooth       = iSmooth;
   newz11 = (fUMBC_day.RHtrend+fUMBC_night.RHtrend)*0.5;  newz12 = (fAIRSL3_day.RHtrend+fAIRSL3_night.RHtrend)*0.5; newz13 = (fCLIMCAPSL3_day.RHtrend+fCLIMCAPSL3_night.RHtrend)*0.5;
   newz21 = newz11*0;                                           newz22 = (fERA5_day.RHtrend+fERA5_night.RHtrend)*0.5;     newz23 = fMERRA2.RHtrend;
     newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2));     newz13 = squeeze(nanmean(reshape(newz13,100,72,64),2)); 
@@ -105,8 +161,11 @@ clear newz*
     plotoptions2x1x2.str21 = 'MERRA2';
     plotoptions2x1x2.str22 = 'ERA5';
     plotoptions2x1x2.cstr  = 'dWVfrac/dt';
-  plotoptions.barstr       = 'dRH/dt [%/yr]';
+    plotoptions2x1x2.smooth = iSmooth;
+    plotoptions2x1x2.barstr = 'dRH/dt [%/yr]';
       profile_plots_2x1x2tiledlayout_tall(rlat,plays100,newz11,newz12,newz13,newz21,newz22,iFig,plotoptions2x1x2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %junk = [newz11(:) newz12(:) newz13(:) newz21(:) newz22(:) newz23(:)];
 %junk = reshape(junk,100,64,6);
@@ -117,38 +176,81 @@ moo1 = abs(nanmean(junk,3));
 moo2 = nanstd(junk,[],3);
 moo3 = zeros(size(moo1)); moo3(moo1 > moo2) = 1;
 moo4 = moo1./moo2; moo4(moo4 < 1) = 1; moo4 = log10(moo4);
- 
-iFig = 63; figure(iFig); clf; pcolor(rlat,plays100,smoothn(nanmean(junk,3),1));   cx = [-1 +1]*0.501; caxis(cx); colormap(llsmap5);
-iFig = 64; figure(iFig); clf; pcolor(rlat,plays100,smoothn(nanstd(junk,[],3),1)); cx = [0 +1]*0.301;  caxis(cx); colormap(jet);
-
-iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,smoothn(moo3,1));         cx = [0 +1];  caxis(cx); colormap(jet);
-iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,moo3);                    cx = [0 +1]; caxis(cx); colormap(usa2x);
-
-iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,smoothn(moo4,1));         cx = [0 +2];       caxis(cx); colormap(usa2x);
-iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,10.^moo4);                cx = (10.^[0 +1]); caxis(cx); colormap(jett);
 
 mooUMBC_num   = 0.5*(fUMBC_day.RHtrend + fUMBC_night.RHtrend);                 mooUMBC_num   = squeeze(nanmean(reshape(mooUMBC_num,100,72,64),2)); 
 mooUMBC_denom = sqrt(fUMBC_day.RHtrendunc.^2 + fUMBC_night.RHtrendunc.^2);     mooUMBC_denom = squeeze(nanmean(reshape(mooUMBC_denom,100,72,64),2)); 
 %mooUMBC_denom = mooUMBC_num/10;
 mooUMBC = abs(mooUMBC_num)./mooUMBC_denom;
-iFig = 67; figure(iFig); clf; pcolor(rlat,plays100,smoothn(mooUMBC_num,1));   cx = ([-1 +1]*0.501);  caxis(cx); colormap(llsmap5);
-iFig = 68; figure(iFig); clf; pcolor(rlat,plays100,smoothn(mooUMBC_denom,1)); cx = ([0 +1]*0.501/2/10); caxis(cx); colormap(jet);
-iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,10.^(mooUMBC));            cx = (10.^[0 +1]);        caxis(cx); colormap(jett);
-iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,mooUMBC);                  cx = ([0 +1]);            caxis(cx); colormap(jett);
+
+if iSmooth >= 1 
+  iFig = 63; figure(iFig); clf; pcolor(rlat,plays100,smoothn(nanmean(junk,3),1));   cx = [-1 +1]*0.501; caxis(cx); colormap(llsmap5);
+  iFig = 64; figure(iFig); clf; pcolor(rlat,plays100,smoothn(nanstd(junk,[],3),1)); cx = [0 +1]*0.301;  caxis(cx); colormap(jet);
+  
+  iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,smoothn(moo3,1));         cx = [0 +1];  caxis(cx); colormap(jet);
+  iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,moo3);                    cx = [0 +1]; caxis(cx); colormap(usa2x);
+  
+  iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,smoothn(moo4,1));         cx = [0 +2];       caxis(cx); colormap(usa2x);
+  iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,10.^moo4);                cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  
+  iFig = 67; figure(iFig); clf; pcolor(rlat,plays100,smoothn(mooUMBC_num,1));   cx = ([-1 +1]*0.501);  caxis(cx); colormap(llsmap5);
+  iFig = 68; figure(iFig); clf; pcolor(rlat,plays100,smoothn(mooUMBC_denom,1)); cx = ([0 +1]*0.501/2/10); caxis(cx); colormap(jet);
+  iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,10.^(mooUMBC));            cx = (10.^[0 +1]);        caxis(cx); colormap(jett);
+  iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,mooUMBC);                  cx = ([0 +1]);            caxis(cx); colormap(jett);
+
+elseif iSmooth == 0.5
+  iFig = 63; figure(iFig); clf; pcolor(rlat,plays100,smoothdata(nanmean(junk,3),"movmean",5));   cx = [-1 +1]*0.501; caxis(cx); colormap(llsmap5);
+  iFig = 64; figure(iFig); clf; pcolor(rlat,plays100,smoothdata(nanstd(junk,[],3),"movmean",5)); cx = [0 +1]*0.301;  caxis(cx); colormap(jet);
+  
+  iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,smoothdata(moo3,"movmean",5));         cx = [0 +1];  caxis(cx); colormap(jet);
+  iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,moo3);                                 cx = [0 +1]; caxis(cx); colormap(usa2x);
+  
+  iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,smoothdata(moo4,"movmean",5));         cx = [0 +2];       caxis(cx); colormap(usa2x);
+  iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,10.^moo4);                cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  
+  iFig = 67; figure(iFig); clf; pcolor(rlat,plays100,smoothdata(mooUMBC_num,"movmean",5));   cx = ([-1 +1]*0.501);  caxis(cx); colormap(llsmap5);
+  iFig = 68; figure(iFig); clf; pcolor(rlat,plays100,smoothdata(mooUMBC_denom,"movmean",5)); cx = ([0 +1]*0.501/2/10); caxis(cx); colormap(jet);
+  iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,10.^(mooUMBC));                         cx = (10.^[0 +1]);        caxis(cx); colormap(jett);
+  iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,mooUMBC);                               cx = ([0 +1]);            caxis(cx); colormap(jett);
+
+elseif iSmooth <= 0
+  iFig = 63; figure(iFig); clf; pcolor(rlat,plays100,nanmean(junk,3));   cx = [-1 +1]*0.501; caxis(cx); colormap(llsmap5);
+  iFig = 64; figure(iFig); clf; pcolor(rlat,plays100,nanstd(junk,[],3)); cx = [0 +1]*0.301;  caxis(cx); colormap(jet);
+  
+  iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,moo3);         cx = [0 +1];  caxis(cx); colormap(jet);
+  iFig = 65; figure(iFig); clf; pcolor(rlat,plays100,moo3);                    cx = [0 +1]; caxis(cx); colormap(usa2x);
+  
+  iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,moo4);         cx = [0 +2];       caxis(cx); colormap(usa2x);
+  iFig = 66; figure(iFig); clf; pcolor(rlat,plays100,10.^moo4);                cx = (10.^[0 +1]); caxis(cx); colormap(jett);
+  
+  iFig = 67; figure(iFig); clf; pcolor(rlat,plays100,mooUMBC_num);   cx = ([-1 +1]*0.501);  caxis(cx); colormap(llsmap5);
+  iFig = 68; figure(iFig); clf; pcolor(rlat,plays100,mooUMBC_denom); cx = ([0 +1]*0.501/2/10); caxis(cx); colormap(jet);
+  iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,10.^(mooUMBC));            cx = (10.^[0 +1]);        caxis(cx); colormap(jett);
+  iFig = 69; figure(iFig); clf; pcolor(rlat,plays100,mooUMBC);                  cx = ([0 +1]);            caxis(cx); colormap(jett);
+end
 
 for ii = 63 : 69; figure(ii); set(gca,'ydir','reverse'); set(gca,'yscale','linear'); ylim([100 1000]); colorbar; shading interp; end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+if iSmooth >= 1
+  wah0 = smoothn(moo0,1);
+  wah2 = smoothn(moo2,1);
+elseif iSmooth >= 0.5
+  wah0 = smoothdata(moo0,"movmean",5);
+  wah2 = smoothdata(moo2,"movmean",5);
+elseif iSmooth <= 0
+  wah0 = moo0;
+  wah2 = moo2;
+end
 figure(95); clf
   ta = tiledlayout(2,1,'TileSpacing','None', 'Padding','None');
   ta.OuterPosition = [0.0375 0.0375 0.925 0.925];
   tfov(1) = nexttile;
-    pcolor(rlat,plays100,smoothn(moo0,1));
+    pcolor(rlat,plays100,wah0)
     colorbar; shading interp; set(gca,'ydir','reverse','yscale','linear'); ylim([100 1000]); caxis([-1 +1]*0.501); colormap(llsmap5);
     text(-80,+200,'(a)');  ylabel('Pressure [mb]');
   tfov(2) = nexttile;
-    pcolor(rlat,plays100,smoothn(moo2,1));
+    pcolor(rlat,plays100,wah2);
     colorbar; shading interp; set(gca,'ydir','reverse','yscale','linear'); ylim([100 1000]); caxis([0 +1]*0.31); colormap(jet);
     text(-80,+200,'(b)'); ylabel('Pressure [mb]'); xlabel('Latitude [deg]');
 colormap(tfov(1),llsmap5);

@@ -23,6 +23,9 @@ load llsmap5
 ceres_olr = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS/ceres_trends_20year_T.mat');
 ceres_olr = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS/ceres_trends_20year_T_ilr.mat');
 
+iSmooth = +1;  %% default, paper submitted Jan 2025
+iSmooth = -1;  %% new, paper revised June 2025
+
 [h,ha,p,pa] = rtpread('summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp');
 [salti,landfrac] =  usgs_deg10_dem(p.rlat,p.rlon);
 p.landfrac = landfrac;
@@ -137,5 +140,10 @@ compare_misc_stuff_trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
-print_Day_vs_Night_trendspaper
+if iSMooth >= 1
+  print_Day_vs_Night_trendspaper
+else
+  print_nosmooth_Day_vs_Night_trendspaper
+end
+
 %}

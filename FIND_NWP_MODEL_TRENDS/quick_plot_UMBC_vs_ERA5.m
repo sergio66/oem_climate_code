@@ -10,6 +10,7 @@ figure(1); clf;
   plotoptions.barstr = 'dT/dt [K/yr]';
   plotoptions.yLinearOrLog = -1;
   plotoptions.yReverseDir  = +1;
+  plotoptions.smooth       = iSmooth;
   plotoptions.yLimits      = [10 1000];
     plotoptions.str1 = 'AIRS\_RT';
     plotoptions.str2 = 'ERA5';
@@ -31,6 +32,7 @@ figure(2); clf;
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [100 1000];
+  plotoptions.smooth       = iSmooth;
     plotoptions.str1 = 'AIRS\_RT';
     plotoptions.str2 = 'ERA5';
     plotoptions.barstr = 'dfracWV/dt [K/yr]';
@@ -62,6 +64,7 @@ figure(3); clf;
   plotoptions.yLinearOrLog = -1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [10 1000];
+  plotoptions.smooth       = iSmooth;
     plotoptions.str1 = 'AIRS\_RT';
     plotoptions.str2 = 'ERA5';
     plotoptions.str3 = 'AIRS v7 L3';
@@ -83,6 +86,7 @@ figure(4); clf;
   plotoptions.yLinearOrLog = +1;
   plotoptions.yReverseDir  = +1;
   plotoptions.yLimits      = [100 1000];
+  plotoptions.smooth       = iSmooth;
     plotoptions.str1 = 'AIRS\_RT';
     plotoptions.str2 = 'ERA5';
     plotoptions.str3 = 'AIRS v7 L3';
@@ -168,3 +172,78 @@ plot(rlat,nanmean(reshape(mmwgit2-mmw0,72,64),1),rlat,nanmean(reshape(mmwcurrent
 %}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% new to test pushing smoothn
+
+figure(09); clf;
+  iFig = 09;
+  newz11 = (fUMBC_day.ptemptrend+fUMBC_night.ptemptrend)*0.5;  newz12 = (fAIRSL3_day.ptemptrend+fAIRSL3_night.ptemptrend)*0.5; newz13 = (fCLIMCAPSL3_day.ptemptrend+fCLIMCAPSL3_night.ptemptrend)*0.5;
+                                       newz21 = fMERRA2.ptemptrend;  newz22 = (fERA5_day.ptemptrend+fERA5_night.ptemptrend)*0.5; 
+    newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2));     newz13 = squeeze(nanmean(reshape(newz13,100,72,64),2)); 
+              newz21 = squeeze(nanmean(reshape(newz21,100,72,64),2));     newz22 = squeeze(nanmean(reshape(newz22,100,72,64),2));     
+
+  plotoptions.xstr = ' '; plotoptions.ystr = ' ';
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt smoothn'; plotoptions.cmap = llsmap5;
+  plotoptions.barstr = 'dT/dt [K/yr]';
+  plotoptions.yLinearOrLog = -1;
+  plotoptions.yReverseDir  = +1;
+  plotoptions.yLimits      = [10 1000];
+  plotoptions.smooth       = +1;
+    plotoptions.str1 = 'AIRS\_RT';
+    plotoptions.str2 = 'ERA5';
+    plotoptions.barstr = 'dT/dt [K/yr]';
+    profile_plots_1x2tiledlayout(rlat,plays100,newz11,newz22,iFig,plotoptions);
+clear plotoptions
+
+figure(10); clf;
+  iFig = 10;
+  newz11 = (fUMBC_day.ptemptrend+fUMBC_night.ptemptrend)*0.5;  newz12 = (fAIRSL3_day.ptemptrend+fAIRSL3_night.ptemptrend)*0.5; newz13 = (fCLIMCAPSL3_day.ptemptrend+fCLIMCAPSL3_night.ptemptrend)*0.5;
+                                       newz21 = fMERRA2.ptemptrend;  newz22 = (fERA5_day.ptemptrend+fERA5_night.ptemptrend)*0.5; 
+    newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2));     newz13 = squeeze(nanmean(reshape(newz13,100,72,64),2)); 
+              newz21 = squeeze(nanmean(reshape(newz21,100,72,64),2));     newz22 = squeeze(nanmean(reshape(newz22,100,72,64),2));     
+
+  plotoptions.xstr = ' '; plotoptions.ystr = ' ';
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt matlab smooth'; plotoptions.cmap = llsmap5;
+  plotoptions.barstr = 'dT/dt [K/yr]';
+  plotoptions.yLinearOrLog = -1;
+  plotoptions.yReverseDir  = +1;
+  plotoptions.yLimits      = [10 1000];
+  plotoptions.smooth       = 0.5;
+    plotoptions.str1 = 'AIRS\_RT';
+    plotoptions.str2 = 'ERA5';
+    plotoptions.barstr = 'dT/dt [K/yr]';
+    profile_plots_1x2tiledlayout(rlat,plays100,newz11,newz22,iFig,plotoptions);
+clear plotoptions
+
+figure(11); clf;
+  iFig = 11;
+  newz11 = (fUMBC_day.ptemptrend+fUMBC_night.ptemptrend)*0.5;  newz12 = (fAIRSL3_day.ptemptrend+fAIRSL3_night.ptemptrend)*0.5; newz13 = (fCLIMCAPSL3_day.ptemptrend+fCLIMCAPSL3_night.ptemptrend)*0.5;
+                                       newz21 = fMERRA2.ptemptrend;  newz22 = (fERA5_day.ptemptrend+fERA5_night.ptemptrend)*0.5; 
+    newz11 = squeeze(nanmean(reshape(newz11,100,72,64),2));     newz12 = squeeze(nanmean(reshape(newz12,100,72,64),2));     newz13 = squeeze(nanmean(reshape(newz13,100,72,64),2)); 
+              newz21 = squeeze(nanmean(reshape(newz21,100,72,64),2));     newz22 = squeeze(nanmean(reshape(newz22,100,72,64),2));     
+
+  plotoptions.xstr = ' '; plotoptions.ystr = ' ';
+  plotoptions.cx = [-1 +1]*0.151; plotoptions.maintitle = 'dT/dt no smooth'; plotoptions.cmap = llsmap5;
+  plotoptions.barstr = 'dT/dt [K/yr]';
+  plotoptions.yLinearOrLog = -1;
+  plotoptions.yReverseDir  = +1;
+  plotoptions.yLimits      = [10 1000];
+  plotoptions.smooth       = -1;
+    plotoptions.str1 = 'AIRS\_RT';
+    plotoptions.str2 = 'ERA5';
+    plotoptions.barstr = 'dT/dt [K/yr]';
+    profile_plots_1x2tiledlayout(rlat,plays100,newz11,newz22,iFig,plotoptions);
+clear plotoptions
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(12); sizefig; ; clf; aslmap(12,rlat65,rlon73,smoothn(reshape(fUMBC_night.results(:,6),72,64)',1),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT SMOOTHN');
+  caxis([-1 +1]*0.151); colormap(llsmap5);
+window = 7;
+window = 4;
+window = 5;
+figure(13); sizefig; ; clf; aslmap(13,rlat65,rlon73,smoothdata(reshape(fUMBC_night.results(:,6),72,64)',"movmean",window),[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT SMOOTH MEAN');
+  caxis([-1 +1]*0.151); colormap(llsmap5);
+figure(14); sizefig; ; clf; aslmap(14,rlat65,rlon73,reshape(fUMBC_night.results(:,6),72,64)',[-90 +90],[-180 +180]); title('dSKT/dt : AIRS\_RT NIGHT NO SMOOTH');
+  caxis([-1 +1]*0.151); colormap(llsmap5);

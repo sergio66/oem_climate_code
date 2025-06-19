@@ -1,12 +1,28 @@
 clear all
 
+iSmooth = +1;    %% smoothn
+iSmooth = +0.5;  %% smoothdata
+iSmooth = 00;    %% no smooth
+
+if iSmooth >= 1
+  disp('using smoothn');
+elseif iSmooth == 0.5
+  disp('using smoothdata');
+elseif iSmooth <= 0
+  disp('no smooth');
+end
+
 %% see FIND_NWP_MODEL_TRENDS/driver_compare_trends_Day_vs_Night.m --> FIND_NWP_MODEL_TRENDS/get_umbc_day_night_name.m
-iV3 = 6;
-  if iV3 == 6
-    %% test, should be same as iV3 == 2, uses MLS
-    umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS_day.mat';
-    umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS.mat';
-  end
+iV3 = 6;   %% this is for the uncertainty z-scores, Fig 14
+iV3 = 9;   %% this is for the ERA5 trend and then the ERA5 trend retrieval, Fig 6
+if iV3 == 9
+  umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_CAL_startwith0_50fatlayers_NoMODELS_MLS_fortrendspaper.mat';
+  umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_CAL_startwith0_50fatlayers_NoMODELS_MLS_fortrendspaper.mat';
+elseif iV3 == 6
+  %% test, should be same as iV3 == 2, uses MLS
+  umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS_day.mat';
+  umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS.mat';
+end
 
 aD = load(umbc_day_file);
 aN = load(umbc_night_file);

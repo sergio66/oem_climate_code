@@ -8,7 +8,7 @@ if ~exist('plotoptions','var')
 
   figure(1); close
 
-  hgload /home/sergio/PAPERS/SUBMITPAPERS/trends/Figs_DN/skt_Day_Night_avg_6panel.fig       %% what was used for Ryan Feb 2024 version
+  hgload /home/sergio/PAPERS/SUBMITPAPERS/trends/Figs_DN/nosmooth_skt_Day_Night_avg_6panel.fig       %% what was used for Ryan Feb 2024 version
   % Get Sergio's plotoptions
   load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/skt_trends_strow.mat','plotoptions');
 end
@@ -71,9 +71,9 @@ ta.TileSpacing = 'compact';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
-BAD IDEA aslprint_asis('fixed_6panel_SKTtrend.pdf');
+BAD IDEA aslprint_asis('nosmooth_fixed_6panel_SKTtrend.pdf');
 BAD IDEA hf = gcf;
-BAD IDEA exportgraphics(hf,'fixed_6panel_SKTtrend.png')
+BAD IDEA exportgraphics(hf,'nosmooth_fixed_6panel_SKTtrend.png')
 %}
 
 %{
@@ -94,13 +94,13 @@ So, #2 for papers, #3 for presentations.  A presentation using all
 three is attached in next message.
 
 hf = gcf;
-exportgraphics(hf,'LLS_Figs/fig8x_defaultpdf.pdf', 'Backgroundcolor','none');
-exportgraphics(hf,'LLS_Figs/fig8x_defaultpdf2.pdf','Backgroundcolor','none','ContentType','vector');
-exportgraphics(hf,'LLS_Figs/fig8x_defaultpng.png'); 
+exportgraphics(hf,'LLS_Figs/nosmooth_fig8x_defaultpdf.pdf', 'Backgroundcolor','none');
+exportgraphics(hf,'LLS_Figs/nosmooth_fig8x_defaultpdf2.pdf','Backgroundcolor','none','ContentType','vector');
+exportgraphics(hf,'LLS_Figs/nosmooth_fig8x_defaultpng.png'); 
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 June 2025
-sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/MatlabFigFiles/fig8_redone_june2025.pdf')
+sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/MatlabFigFiles/nosmooth_fig8_redone_june2025.pdf')
 %}

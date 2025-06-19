@@ -23,7 +23,7 @@ if length(JOB) == 0
   JOB = 41;
 end
 
-filename = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc.mat';
+filename = '/asl/s1/sergio/alldata/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_Sept2002_Aug2024_22yr_desc.mat';
 loader = ['load ' filename];
 eval(loader)
 

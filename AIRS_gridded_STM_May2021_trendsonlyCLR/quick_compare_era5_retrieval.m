@@ -6,6 +6,22 @@ addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 addpath /home/sergio/MATLABCODE_Git/SHOWSTATS
 addpath /umbc/xfs2/strow/asl/matlib/maps/
 
+disp('did you run driver_trendspaper_figure15_uncertainty_ztest')
+disp('did you run driver_trendspaper_figure15_uncertainty_ztest')
+disp('did you run driver_trendspaper_figure15_uncertainty_ztest')
+
+iSmooth = +1;    %% smoothn
+iSmooth = +0.5;  %% smoothdata
+iSmooth = 00;    %% no smooth
+
+if iSmooth >= 1
+  disp('using smoothn');
+elseif iSmooth == 0.5
+  disp('using smoothdata');
+elseif iSmooth <= 0
+  disp('no smooth');
+end
+
 if ~exist('YY')
   do_XX_YY_from_X_Y
 end
@@ -41,8 +57,17 @@ disp('SKT')
 figure(60); clf;
 figure(61); clf;
 figure(62); clf;
-aslmap(60,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1),   [-90 +90],[-180 +180]); title('dST/dt AIRS\_RT');     colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
-aslmap(61,rlat65,rlon73,smoothn((reshape(era5_stemprate',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt ERA5');         colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
+if iSmooth >= 1
+  aslmap(60,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1),   [-90 +90],[-180 +180]); title('dST/dt AIRS\_RT');     colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
+  aslmap(61,rlat65,rlon73,smoothn((reshape(era5_stemprate',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt ERA5');         colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
+elseif iSmooth == 0.5
+  aslmap(60,rlat65,rlon73,smoothdata((reshape(results(:,6)',72,64)'),"movmean",5),  [-90 +90],[-180 +180]); title('dST/dt AIRS\_RT');     colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
+  aslmap(61,rlat65,rlon73,smoothdata((reshape(era5_stemprate',72,64)'),"movmean",5),[-90 +90],[-180 +180]); title('dST/dt ERA5');         colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
+elseif iSmooth <= 0
+  aslmap(60,rlat65,rlon73,reshape(results(:,6)',72,64)',  [-90 +90],[-180 +180]); title('dST/dt AIRS\_RT');     colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
+  aslmap(61,rlat65,rlon73,reshape(era5_stemprate',72,64)',[-90 +90],[-180 +180]); title('dST/dt ERA5');         colorbar; caxis([-1 +1]*0.101); colormap(llsmap5)
+end
+
 figure(62); [Y,I] = sort(era5_stemprate); plot(era5_stemprate(I),results(I,6),'b.',era5_stemprate,era5_stemprate,'k'); 
 xlabel('ERA5 dSK/dt'); ylabel('UMBC dSK/dt'); axis([-1 +1 -1 +1]*0.2)
 
@@ -125,6 +150,7 @@ clear plotoptions
   plotoptions.yLinearOrLog = +1;
   plotoptions.ystr = 'Pressure [mb]';
   plotoptions.xstr = 'Latitude [deg]';
+  plotoptions.smooth = iSmooth;
 profile_plots_2x1tiledlayout(rlat,era5_plays,wahaE,wahaU,65,plotoptions);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -180,43 +206,10 @@ clear plotoptions
   plotoptions.yLinearOrLog = -1;
   plotoptions.ystr = 'Pressure [mb]';
   plotoptions.xstr = 'Latitude [deg]';
+  plotoptions.smooth = iSmooth;
 profile_plots_2x1tiledlayout(rlat,era5_plays,wahaE,wahaU,68,plotoptions);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% S/N
-show_S_N
-
-figure(69); clf
-  sn = squeeze(nanmean(reshape(resultsT'./resultsTunc',49,72,64),2)); pcolor(rlat,pavg,abs(sn)); colormap jet; colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('retrieval S/N T')
-figure(70); clf
-  sn = squeeze(nanmean(reshape(resultsWV'./resultsWVunc',49,72,64),2)); pcolor(rlat,pavg,abs(sn)); colormap jet; colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','linear'); ylim([100 1000]); title('retrieval S/N WV')
-
-figure(69); clf;
-  wah = abs(resultsT'./resultsTunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
-  pcolor(rlat,pavg,wah); title('S/N : T/\sigma T'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp; 
-  set(gca,'yscale','log'); ylim([1 1000])
-figure(70); clf;
-  wah = abs(resultsWV'./resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
-  pcolor(rlat,pavg,wah); title('S/N : WV/\sigma WV'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
-
-figure(69); clf;
-  wah = abs(resultsTunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
-  pcolor(rlat,pavg,wah); set(gca,'ydir','reverse'); ylim([1 1000]); colormap jet; shading interp; % title('\sigma T'); ; plotaxis2;
-  set(gca,'yscale','log'); ylim([10 1000])
-  ylim([10 1000]); caxis([0 0.02]);  xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
-  % colorbar('vertical'); text(90,08,'K/yr'); set(gca,'fontsize',12)
-  colorbar('horizontal'); text(-90,2000,'K/yr'); set(gca,'fontsize',12)
-
-figure(70); clf;
-  wah = abs(resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
-  pcolor(rlat,pavg,wah); set(gca,'ydir','reverse'); ylim([100 1000]); colormap jet; shading interp; % title('\sigma WV'); plotaxis2; 
-  set(gca,'yscale','linear'); ylim([100 1000])
-  ylim([100 1000]); caxis([0 0.003]); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
-  % colorbar('vertical'); text(90,50,'1/yr'); set(gca,'fontsize',12)
-  colorbar('horizontal'); text(-100,1250,'1/yr'); set(gca,'fontsize',12)
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(71); clf;
 wahaU = squeeze(nanmean(reshape(deltaT,101,72,64),2)); wahaU = wahaU(1:100,:); 
@@ -251,20 +244,81 @@ pcolor(rlat,era5_plays,abs(wahaE-wahaU)./wahx);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 i400 = find(era5_plays >= 400,1);
-figure(75); clf; 
-aslmap(75,rlat65,rlon73,smoothn((reshape(fracWV(i400,:)',72,64)') ,1),     [-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt AIRS\_RT 400 mb'); 
+figure(75); clf;
 figure(76); clf; 
-aslmap(76,rlat65,rlon73,smoothn((reshape(era5_wvrate(i400,:)',72,64)') ,1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt ERA5 400 mb');    
+if iSmooth >= 1
+  aslmap(75,rlat65,rlon73,smoothn((reshape(fracWV(i400,:)',72,64)') ,1),     [-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt AIRS\_RT 400 mb'); 
+  aslmap(76,rlat65,rlon73,smoothn((reshape(era5_wvrate(i400,:)',72,64)') ,1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt ERA5 400 mb');    
+elseif iSmooth == 0.5
+  aslmap(75,rlat65,rlon73,smoothdata((reshape(fracWV(i400,:)',72,64)'),"movmean",5),     [-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt AIRS\_RT 400 mb'); 
+  aslmap(76,rlat65,rlon73,smoothdata((reshape(era5_wvrate(i400,:)',72,64)'),"movmean",5),[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt ERA5 400 mb');    
+elseif iSmooth <= 0
+  aslmap(75,rlat65,rlon73,reshape(fracWV(i400,:)',72,64)',     [-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt AIRS\_RT 400 mb'); 
+  aslmap(76,rlat65,rlon73,reshape(era5_wvrate(i400,:)',72,64)',[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt ERA5 400 mb');    
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iOffset = 80;
+figure(69); clf
+figure(70); clf
+figure(86); clf
+figure(90); clf
+
+%% S/N
+show_S_N
+
+figure(69); clf
+  sn = squeeze(nanmean(reshape(resultsT'./resultsTunc',49,72,64),2)); pcolor(rlat,pavg,abs(sn)); colormap jet; colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); title('retrieval S/N T')
+figure(70); clf
+  sn = squeeze(nanmean(reshape(resultsWV'./resultsWVunc',49,72,64),2)); pcolor(rlat,pavg,abs(sn)); colormap jet; colorbar; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','linear'); ylim([100 1000]); title('retrieval S/N WV')
+
+figure(69); clf;
+  wah = abs(resultsT'./resultsTunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
+  pcolor(rlat,pavg,wah); title('S/N : T/\sigma T'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp; 
+  set(gca,'yscale','log'); ylim([1 1000])
+
+figure(70); clf;
+  wah = abs(resultsWV'./resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
+  pcolor(rlat,pavg,wah); title('S/N : WV/\sigma WV'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
+
+figure(69); clf;
+  wah = abs(resultsTunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
+  pcolor(rlat,pavg,wah); set(gca,'ydir','reverse'); ylim([1 1000]); colormap jet; shading interp; % title('\sigma T'); ; plotaxis2;
+  set(gca,'yscale','log'); ylim([10 1000])
+  ylim([10 1000]); caxis([0 0.02]);  xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
+  % colorbar('vertical'); text(90,08,'K/yr'); set(gca,'fontsize',12)
+  colorbar('horizontal'); text(-90,2000,'K/yr'); set(gca,'fontsize',12)
+
+figure(70); clf;
+  wah = abs(resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
+  pcolor(rlat,pavg,wah); set(gca,'ydir','reverse'); ylim([100 1000]); colormap jet; shading interp; % title('\sigma WV'); plotaxis2; 
+  set(gca,'yscale','linear'); ylim([100 1000])
+  ylim([100 1000]); caxis([0 0.003]); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
+  % colorbar('vertical'); text(90,50,'1/yr'); set(gca,'fontsize',12)
+  colorbar('horizontal'); text(-100,1250,'1/yr'); set(gca,'fontsize',12)
+
 statistical_significance_sergio
+figure(69); text(-80,20, '(A)','fontsize',12); set(gca,'fontsize',12); caxis([0 0.015]);
+figure(70); text(-80,200,'(C)','fontsize',12); set(gca,'fontsize',12); caxis([0 2e-3]);
+figure(86); text(-80,20, '(B)','fontsize',12); set(gca,'fontsize',12); 
+figure(90); text(-80,200,'(D)','fontsize',12); set(gca,'fontsize',12); 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
-figure(62); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dsst_dt');
-figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dwvfrac_dt');
-figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dtz_dt');
+<< driver_trendspaper_figure15_uncertainty_ztest.m >> << iV3 = 9;   %% this is for the ERA5 trend and ERA5 trend retr, Fig 6
+if iSmooth >= 1 & iV3 == 9
+  figure(62); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dsst_dt');
+  figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dwvfrac_dt');
+  figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dtz_dt');
+elseif iSmooth <= 0 & iV3 == 9
+  figure(62); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dsst_dt');
+  figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dwvfrac_dt');
+  figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dtz_dt');
+end
+%}
 
+%% for Figure 2 of paper (ERA5 trends and retrieval) 
+%%                                     load /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_CAL_startwith0_50fatlayers_NoMODELS_MLS_fortrendspaper.mat
 %% Xyou need to make sure you have eg  load /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS.mat   %% this is for Fig 14 of trends paper (observation)
 %% Xor from ../FIND_NWP_MODEL_TRENDS/driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
 %% X  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat';    iNumYears = 20;     %% use CarbonTracker CO2 trends, MLS a priori
@@ -274,15 +328,27 @@ figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare
 %% X 
 %% Xsee FIND_NWP_MODEL_TRENDS/driver_compare_trends_Day_vs_Night.m --> FIND_NWP_MODEL_TRENDS/get_umbc_day_night_name.m
 
-%% << driver_trendspaper_figure15_uncertainty_ztest.m >> 
-%% 
-%% figure(69); set(gca,'fontsize',12); text(-85,20,'(A)','fontsize',12);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/unc_dtz_dt');
-%% figure(70); set(gca,'fontsize',12); text(-85,150,'(C)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/unc_dwvfrac_dt');
-%% figure(75); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/umbc_dwvfrac_dt_400mb');
-%% figure(76); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_dwvfrac_dt_400mb');
-%%
-%% figure(86); set(gca,'fontsize',12); text(-85,20,'(B)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_dtz_dt');
-%% figure(88); set(gca,'fontsize',12); % sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_drh_dt');
-%% figure(90); set(gca,'fontsize',12); text(-85,150,'(D)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_dwvfrac_dt');
+%{
+%% << driver_trendspaper_figure15_uncertainty_ztest.m >> << iV3 = 6;   %% this is for the uncertainty z-scores, Fig 14 >>
+if iSmooth >= 1 & iV3 == 6
+  figure(69); set(gca,'fontsize',12); text(-85,20,'(A)','fontsize',12);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/unc_dtz_dt');
+  figure(70); set(gca,'fontsize',12); text(-85,150,'(C)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/unc_dwvfrac_dt');
+  figure(75); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/umbc_dwvfrac_dt_400mb');
+  figure(76); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_dwvfrac_dt_400mb');
+  
+  figure(86); set(gca,'fontsize',12); text(-85,20,'(B)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_dtz_dt');
+  figure(88); set(gca,'fontsize',12); % sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_drh_dt');
+  figure(90); set(gca,'fontsize',12); text(-85,150,'(D)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_dwvfrac_dt');
+
+elseif iSmooth <= 0 & iV3 == 6
+  figure(69); set(gca,'fontsize',12); text(-85,20,'(A)','fontsize',12);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/unc_dtz_dt');
+  figure(70); set(gca,'fontsize',12); text(-85,150,'(C)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/unc_dwvfrac_dt');
+  figure(75); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/umbc_dwvfrac_dt_400mb');
+  figure(76); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/era5_dwvfrac_dt_400mb');
+  
+  figure(86); set(gca,'fontsize',12); text(-85,20,'(B)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/zvalue_dtz_dt');
+  figure(88); set(gca,'fontsize',12); % sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/zvalue_drh_dt');
+  figure(90); set(gca,'fontsize',12); text(-85,150,'(D)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/zvalue_dwvfrac_dt');
+end
 
 %} 

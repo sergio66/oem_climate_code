@@ -1,0 +1,32 @@
+~/PAPERS/SUBMITPAPERS/trends/JGR_Jan2025/paper_jgr_figurepaths.tex
+
+look for fig8x
+% driver_compare_trends_Day_vs_Night.m ---> prep_colWV_T_WV_trends_Day_vs_Night.m --> get_umbc_day_night_name.m --> compare_SKT_trends_Day_vs_Night,
+%  <<< June 2025 : now have nosmooth version of aslmap_2x3tiledlayout    figure 22 in compare_SKT_trends_Day_vs_Night --->>>>>>>>> print_Day_vs_Night_trendspaper.m >>>
+
+go all the way to "compare_SKT_trends_Day_vs_Night" "compare_SKT_trends_Day_vs_Night_stats" from "compare_SKT_trends_Day_vs_Night" and save off Fig 22 stuff namely
+newz11,newz12,newz13,newz21,newz22,newz23
+comment = 'see driver_compare_trends_Day_vs_Night.m --> compare_SKT_trends_Day_vs_Night';
+save L3_SKT_TIMESERIES_2002_09_to_2022_08/compare_SKT_trends_Day_vs_Night_fig22.mat newz11 newz12 newz13 newz21 newz22 newz23 comment
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+grep -in 'NO SMOOTH' *.m
+see /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/quick_plot_UMBC_vs_ERA5.m
+see /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/driver_load_in_summary_10percent_from_ERA5clearcalc.m --> /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/find_trends_summary_10percent_from_ERA5clearcalc.m
+
+GISS        : driver_giss_surfaceT.m
+AIRS L3     : clustbatch_make_L3_airsV7_climcaps_surfaceT.m
+CLIMCAPS L3 : clustbatch_make_L3_airsV7_climcaps_surfaceT.m
+MERRA2      : /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_MERRA/clustbatch_make_merra2_monthly_surfaceT.m
+ERA5        : /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clustbatch_make_era5_monthly_surfaceT.m  then
+              /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/driver_make_era5_monthly_surfaceT_interp_in_time.m
+
+all put together using
+  driver_SKTtrends_tilecenter_tilemean.m
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For profile T, WV Also look at
+ERA5        : /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clustbatch_make_era5_monthly_profileT_WV.m  then
+              /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/driver_make_era5_monthly_profileT_WV_interp_in_time.m

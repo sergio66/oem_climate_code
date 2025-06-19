@@ -22,6 +22,7 @@ fprintf(1,'tvalue     = %8.6f \n',tvalue')
 fprintf(1,'alphavalue = %8.6f \n',alphavalue')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
+disp(' ')
 
 iX = iX + 1;
 xTtrend = reshape(deltaT,101,72,64); xTtrend = squeeze(nanmean(xTtrend,2)); % whos xTtrend
@@ -30,7 +31,8 @@ if ~exist('deltaTlat')
 end
 figure(iOffset+1); pcolor(deltaTlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
 figure(iOffset+2); pcolor(xTtrend); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
-figure(iOffset+3); pcolor(xTtrend-deltaTlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); sum(sum(xTtrend-deltaTlat'))
+figure(iOffset+3); pcolor(xTtrend-deltaTlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); 
+  fprintf(1,'sum(sum(xTtrend-deltaTlat'')) = %8.6f \n',nansum(nansum(xTtrend-deltaTlat')))
 
 N72 = 72;
 N72 = 1;
@@ -38,7 +40,8 @@ xTunc = reshape(deltaTunc,101,72,64); xTunc = squeeze(nanmean(xTunc,2))/sqrt(N72
 figure(iOffset+2); pcolor(xTunc); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02)
 xTunc = xTunc';
 
-normcdf([-1.96 0 +1.96])
+junk = normcdf([-1.96 0 +1.96]);
+fprintf(1,'normcdf([-1.96 0 +1.96]) = %8.6f %8.6f %8.6f \n',junk)
 zscore = (abs(deltaTlat) - 0)./xTunc;
 pvalueT = 1-normcdf(zscore);
 figure(iOffset+3); pcolor(pvalueT'); shading interp; colorbar; set(gca,'ydir','reverse'); 
@@ -64,20 +67,20 @@ figure(iOffset+iX); hold off
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% https://www.mathworks.com/help/stats/hypothesis-testing.html
-bonk    = deltaTlat(:);
-bonkunc = abs(xTunc(:));
+bonk    = double(deltaTlat(:));
+bonkunc = double(abs(xTunc(:)));
 for ii = 1 : length(bonk)
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii));
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.01);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.05);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.10);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii));
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.01);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.05);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.10);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
 end
 
 figure(iOffset+iX+1); pcolor(rlat,airslays,deltaTlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.101); xlabel('Latitude'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dT/dt K/yr');
 figure(iOffset+iX+1); hold on
-ht = reshape(h,64,101);
+ht = reshape(hztest,64,101);
 for jj = 1 : 100
   for ii = 1 : 64
     if ht(ii,jj) == 1
@@ -89,6 +92,7 @@ figure(iOffset+iX+1); hold off
 set(gca,'yscale','log'); ylim([10 1000])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp(' ')
 
 iX = iX + 2;
 xRHtrend = reshape(deltaRH,100,72,64); xRHtrend = squeeze(nanmean(xRHtrend,2)); % whos xRHtrend
@@ -97,13 +101,15 @@ if ~exist('deltaRHlat')
 end
 figure(iOffset+1); pcolor(deltaRHlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
 figure(iOffset+2); pcolor(xRHtrend); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125)
-figure(iOffset+3); pcolor(xRHtrend-deltaRHlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); nansum(nansum(xRHtrend-deltaRHlat'))
+figure(iOffset+3); pcolor(xRHtrend-deltaRHlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125);
+  fprintf(1,'sum(sum(xRHtrend-deltaRHlat'')) = %8.6f \n',nansum(nansum(xRHtrend-deltaRHlat')))
 
 xRHunc = reshape(deltaRHunc,100,72,64); xRHunc = squeeze(nanmean(xRHunc,2))/sqrt(N72); % whos xRHunc
 figure(iOffset+2); pcolor(xRHunc); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02)
 xRHunc = xRHunc';
 
-normcdf([-1.96 0 +1.96])
+junk = normcdf([-1.96 0 +1.96]);
+fprintf(1,'normcdf([-1.96 0 +1.96]) = %8.6f %8.6f %8.6f \n',junk)
 zscore = (abs(deltaRHlat) - 0)./xRHunc;
 pvalueRH = 1-normcdf(zscore);
 figure(iOffset+3); pcolor(pvalueRH'); shading interp; colorbar; set(gca,'ydir','reverse'); 
@@ -129,20 +135,20 @@ figure(iOffset+iX); hold off
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% https://www.mathworks.com/help/stats/hypothesis-testing.html
-bonk    = deltaRHlat(:);
-bonkunc = abs(xRHunc(:));
+bonk    = double(deltaRHlat(:));
+bonkunc = double(abs(xRHunc(:)));
 for ii = 1 : length(bonk)
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii));
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.01);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.05);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.10);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii));
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.01);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.05);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.10);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
 end
 
 figure(iOffset+iX+1); pcolor(rlat,airslays,deltaRHlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.126); xlabel('Latitude'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dRH/dt percentyr');
 figure(iOffset+iX+1); hold on
-ht = reshape(h,64,101);
+ht = reshape(hztest,64,101);
 for jj = 1 : 100
   for ii = 1 : 64
     if ht(ii,jj) == 1
@@ -154,6 +160,7 @@ figure(iOffset+iX+1); hold off
 ylim([100 1000])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+disp(' ')
 
 iX = iX + 2;
 xWVtrend = reshape(fracWV,101,72,64); xWVtrend = squeeze(nanmean(xWVtrend,2)); % whos xWVtrend
@@ -162,13 +169,15 @@ if ~exist('fracWVlat')
 end
 figure(iOffset+1); pcolor(fracWVlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01)
 figure(iOffset+2); pcolor(xWVtrend); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01)
-figure(iOffset+3); pcolor(xWVtrend-fracWVlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01); nansum(nansum(xWVtrend-fracWVlat'))
+figure(iOffset+3); pcolor(xWVtrend-fracWVlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01);
+  fprintf(1,'sum(sum(xWVtrend-fracWVlat'')) = %8.6f \n',nansum(nansum(xWVtrend-fracWVlat')))
 
 xWVunc = reshape(fracWVunc,101,72,64); xWVunc = squeeze(nanmean(xWVunc,2))/sqrt(N72); % whos xWVunc
 figure(iOffset+2); pcolor(xWVunc); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02)
 xWVunc = xWVunc';
 
-normcdf([-1.96 0 +1.96])
+junk = normcdf([-1.96 0 +1.96]);
+fprintf(1,'normcdf([-1.96 0 +1.96]) = %8.6f %8.6f %8.6f \n',junk)
 zscore = (abs(fracWVlat) - 0)./xWVunc;
 pvalueWV = 1-normcdf(zscore);
 figure(iOffset+3); pcolor(pvalueWV'); shading interp; colorbar; set(gca,'ydir','reverse'); 
@@ -197,17 +206,17 @@ figure(iOffset+iX); hold off
 bonk    = fracWVlat(:);
 bonkunc = abs(xWVunc(:));
 for ii = 1 : length(bonk)
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii));
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.01);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.05);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.10);
-  [h(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii));
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.01);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.05);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',0.10);
+  [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
 end
 
 figure(iOffset+iX+1); pcolor(rlat,airslays,fracWVlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.0101); xlabel('Latitude'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dWV/dt frac/yr');
 figure(iOffset+iX+1); hold on
-ht = reshape(h,64,101);
+ht = reshape(hztest,64,101);
 for jj = 1 : 100
   for ii = 1 : 64
     if ht(ii,jj) == 1

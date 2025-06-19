@@ -60,7 +60,7 @@ Airs_PQ = a.air_pres_h2o;
 %%%%%%%%%%%%%%%%%%%%%%%%%
 maindir = '/asl/airs/AIRS3STM/v7/';
 maindir = '/asl/models/CLIMCAPS_SNDR_AIRS_L3/'; %% https://acdisc.gesdisc.eosdis.nasa.gov/data/Aqua_AIRS_Level3/AIRS3STM.006/2018/
-maindir = '/asl/airs/CLIMCAPS_SNDR_AIRS_L3/'; %% https://acdisc.gesdisc.eosdis.nasa.gov/data/Aqua_AIRS_Level3/AIRS3STM.006/2018/
+maindir = '/asl/airs/CLIMCAPS_SNDR_AIRS_L3/';   %% https://acdisc.gesdisc.eosdis.nasa.gov/data/Aqua_AIRS_Level3/AIRS3STM.006/2018/
 Airs_files = findfiles([maindir '/*/*.nc']);
 
 Airs_Date_Start = datenum(StartY,09+(1:length(Airs_files))-1,01);
@@ -217,7 +217,7 @@ if iDo < 0
 
     Airs_Temp_A(ix,:,:,:) = permute(squeeze(a.air_temp(:,:,:,1)),[3 2 1]);
     Airs_Temp_D(ix,:,:,:) = permute(squeeze(a.air_temp(:,:,:,2)),[3 2 1]);
-    if ~ exist('Airs_Lat','var')
+    if ~exist('Airs_Lat','var')
       Airs_Lat = a.lat;
       Airs_Lon = a.lon;
     end

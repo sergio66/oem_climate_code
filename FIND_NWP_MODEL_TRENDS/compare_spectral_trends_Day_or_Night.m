@@ -58,7 +58,15 @@ xlim([640 1620]); plotaxis2; hl = legend('All','tropical','S Midlat','N Midlat',
 jett = jet; jett(1,:) = 1;
 maskLF = ones(size(chisqrX));
 figure(98); clf;
-aslmap(98,rlat65,rlon73,smoothn((reshape(maskLF.*chisqrX,72,64)') ,1), [-90 +90],[-180 +180]); title('Chisqr');     caxis([0 +1]*10); colormap(jett)
+if iSmooth == 1
+  disp('using smoothn')
+  aslmap(98,rlat65,rlon73,smoothn((reshape(maskLF.*chisqrX,72,64)') ,1), [-90 +90],[-180 +180]); title('Chisqr');     caxis([0 +1]*10); colormap(jett)
+elseif iSmooth == -1
+  disp('using NO smooth')
+  aslmap(98,rlat65,rlon73,reshape(maskLF.*chisqrX,72,64)', [-90 +90],[-180 +180]); title('Chisqr');     caxis([0 +1]*10); colormap(jett)
+else
+  error('unknown option for iSmooth')
+end
 clear plotoptions;
 plotoptions.maintitle = '\chi^2'; plotoptions.cmap = jet(64); plotoptions.cmap = jett;
 plotoptions.str11 = 'ALL';
@@ -73,7 +81,7 @@ z11 = maskLF.*chisqrR.iAll;
 z12 = maskLF.*chisqrR.i15um;
 z21 = maskLF.*chisqrR.iWindow;
 z22 = maskLF.*chisqrR.iWV;
-
+plotoptions.smooth = iSmooth;
 plotoptions.cx = log10(plotoptions.cx);
 %plotoptions.cx = [-2 +1];
 z11 = log10(z11);  z12 = log10(z12);  z21 = log10(z21);  z22 = log10(z22); 

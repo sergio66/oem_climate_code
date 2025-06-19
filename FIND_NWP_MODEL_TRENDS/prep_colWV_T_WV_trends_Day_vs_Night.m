@@ -6,11 +6,11 @@ get_umbc_day_night_name
 era5_day_file    = 'ERA5_atm_N_cld_data_2002_09_to_2022_08_trends_asc.mat';
 era5_night_file  = 'ERA5_atm_N_cld_data_2002_09_to_2022_08_trends_desc.mat';
 
-airsL3_day_file   = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_asc.mat';
-airsL3_night_file = '/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat';
+airsL3_day_file   = '/asl/s1/sergio/alldata//AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_asc.mat';
+airsL3_night_file = '/asl/s1/sergio/alldata//AIRS_L3/airsL3_v7_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat';
 
-climcapsL3_day_file   = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_asc.mat';
-climcapsL3_night_file = '/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat';
+climcapsL3_day_file   = '/asl/s1/sergio/alldata//AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_asc.mat';
+climcapsL3_night_file = '/asl/s1/sergio/alldata//AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat';
 
 merra2_file = 'MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat';
 giss_file   = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ChrisHTrends/giss_trends_2002_2022.mat';

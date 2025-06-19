@@ -42,12 +42,14 @@ if length(JOB) == 0
 end
 
 if ~exist('idRH')
-  idRH = +1;   %% keep WV   constant
-  idRH = +2;   %% keep CO2  constant
-  idRH = +3;   %% keep T,ST constant
-  idRH = +4;   %% keep RH   constant
-  idRH = +5;   %% put in everything, including clouds
-  idRH = +6;   %% increase RH by 0.01
+  disp('if idRH ~= 0, automatically no clouds cngwat = cfrac = 0    only have clouds if idRH == 5')
+  idRH = +1;   %% keep WV   constant, no clouds
+  idRH = +2;   %% keep CO2  constant, no clouds
+  idRH = +3;   %% keep T,ST constant, no clouds
+  idRH = +4;   %% keep RH   constant, no clouds
+  idRH = +5;   %% put in everything, including clouds   --- but no MERRA2 clouds?????
+  idRH = +6;   %% increase RH by 0.01, no clouds
+  idRH = +7;   %% do nothing, no clouds
 end
 
 iNumYears = 20;
@@ -302,6 +304,27 @@ for ii = JOB
   junk = merra2_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
   junk = merra2_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
 
+  if idRH == 5
+    disp('no MERRA2 clouds in merra2_64x72.all so comment this out')
+    %{
+    junk = merra2_64x72.all.ctype;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.ctype = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cfrac;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cfrac = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cpsize;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cpsize = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cngwat;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cngwat = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cprtop;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprtop = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cprbot;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprbot = reshape(junk,1,72*numtimesteps);
+
+    junk = merra2_64x72.all.ctype2;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.ctype2 = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cfrac2;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cfrac2 = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cpsize2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cpsize2 = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cngwat2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cngwat2 = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cprtop2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprtop2 = reshape(junk,1,72*numtimesteps);
+    junk = merra2_64x72.all.cprbot2;    junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cprbot2 = reshape(junk,1,72*numtimesteps);
+
+    junk = merra2_64x72.all.cfrac12;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk';  p72.cfrac12 = reshape(junk,1,72*numtimesteps);
+    %}
+  end
+
 %  p72.scanang = zeros(size(p72.stemp));
 %  p72.satzen = zeros(size(p72.stemp));
   p72.zobs = 705000 * ones(size(p72.stemp));
@@ -318,11 +341,21 @@ for ii = JOB
   pcolor(rlon,1:numtimesteps,reshape(p72.spres,72,numtimesteps)'); colormap jet; colorbar
   pcolor(rlon,1:numtimesteps,reshape(p72.salti,72,numtimesteps)'); colormap jet; colorbar
   
-  p72.cngwat = zeros(size(p72.stemp));
-  p72.cngwat2 = zeros(size(p72.stemp));
-  p72.cfrac = zeros(size(p72.stemp));
-  p72.cfrac2 = zeros(size(p72.stemp));
-  p72.cfrac12 = zeros(size(p72.stemp));
+  if idRH ~= 5
+    p72.cngwat = zeros(size(p72.stemp));
+    p72.cngwat2 = zeros(size(p72.stemp));
+    p72.cfrac = zeros(size(p72.stemp));
+    p72.cfrac2 = zeros(size(p72.stemp));
+    p72.cfrac12 = zeros(size(p72.stemp));
+  elseif idRH == 5
+    %% keep all clouds
+    %% ACTUALLY, no MERRA2 clouds in merra2_64x72.all for some reason
+    p72.cngwat = zeros(size(p72.stemp));
+    p72.cngwat2 = zeros(size(p72.stemp));
+    p72.cfrac = zeros(size(p72.stemp));
+    p72.cfrac2 = zeros(size(p72.stemp));
+    p72.cfrac12 = zeros(size(p72.stemp));
+  end
   
   p72.nemis = ones(size(p72.stemp)) * 2;
   p72.efreq(1,:) = ones(size(p72.stemp)) * 200;
@@ -336,10 +369,23 @@ for ii = JOB
   p72.emis  = emis_t;
   p72.rho   = rho_t;
 
+  %% p72.plays = plevs2plays(p72.plevs);
+
+  do_idRH  %% 1,2,3,4,5,6,7
+
   fstr = ['_' num2str(YMStart(1),'%04d') '_' num2str(YMStart(2),'%02d') '_' num2str(YMEnd(1),'%04d') '_' num2str(YMEnd(2),'%02d')];
-  fip = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.ip.rtp'];
-  fop = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.op.rtp'];
-  frp = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.rp.rtp'];
+
+  if idRH == 5
+    %% since we already did this
+    fip = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.ip.rtp'];
+    fop = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.op.rtp'];
+    frp = [dirout 'simulate64binsMERRA2_' num2str(ii) fstr '.rp.rtp'];
+
+  else  
+    fip = [dirout 'sim64binsMRA2_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.ip.rtp'];
+    fop = [dirout 'sim64binsMRA2_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.op.rtp'];
+    frp = [dirout 'sim64binsMRA2_idRH_' num2str(idRH) '_latbin_' num2str(ii) fstr '.rp.rtp'];
+  end
 
   p72_0 = p72;
   p72 = fix_merraL3(p72);

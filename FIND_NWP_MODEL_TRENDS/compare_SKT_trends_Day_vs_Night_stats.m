@@ -16,7 +16,7 @@
 
 iShowSKTvsColWVunits = +1;
 
-disp(' >->->->->->-')
+disp(' >->->->->->- THIS IS IN TREND PAPER >->->->->->-')
 clear newz*
 disp(' DO NOT BELIEVE UNC    DO NOT BELIEVE UNC    D/N')
 newz11x = (fUMBC_day.results(:,6)+fUMBC_night.results(:,6))*0.5;  
@@ -32,7 +32,7 @@ clear newz*x; newz11x = newz31; newz11xunc = newz11x*0.1;
 newz11unc = newz11*0.1; newz12unc = newz11*0.1; newz21unc = newz21*0.1; newz22unc = newz11*0.1; newz31unc = newz11*0.1; newz32unc = newz11*0.1;
 iShowSKTUnc = -1;
 show_skt_trends_6models_new
-disp(' >->->->->->-')
+disp(' >->->->->->- THIS IS IN TREND PAPER >->->->->->-')
 
   %% correlations against UMBC, except sixth (last) is against ERA5
   [r,chisqr,P] = nanlinearcorrelation(newz31,newz11);    thecorr.ST(1) = r;

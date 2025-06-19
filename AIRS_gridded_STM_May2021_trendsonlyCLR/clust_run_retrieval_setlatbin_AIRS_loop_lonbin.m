@@ -151,8 +151,8 @@ plot(f,moo0.thesave.xtrend(:,20),'b',f,moo1.trend(:,1532),'r',f,fMERRA2.trend(:,
 %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-driver.iTrendOrAnomaly = +1;   %% trends
 driver.iTrendOrAnomaly = -1;   %% anomalies
+driver.iTrendOrAnomaly = +1;   %% trends
 
 if driver.iTrendOrAnomaly > 0
   %% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
@@ -168,17 +168,7 @@ if driver.iTrendOrAnomaly > 0
   ia_OorC_DataSet_Quantile = [+1 09 16  5]; %% ocb_set = 1 : ERA5       cal fit, dataset = 9,  iQuantile = 16  20 year rates
   
   ia_OorC_DataSet_Quantile = [+0 14 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 14, iQuantile = 03    4 year rates, 2018/09-2022/08 AIRS obs Q(0.90-->1)
-  
-  %%%%% for trends paper START
-  ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
-  
-  ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
-  %%%%% for trends paper STOP 
-  
+
   %%%%%%%%%%%%%%%%%%%%%%%%%
   
   ia_OorC_DataSet_Quantile = [+2 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year anomalies, 2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
@@ -188,6 +178,19 @@ if driver.iTrendOrAnomaly > 0
 
   ia_OorC_DataSet_Quantile = [+0 16 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 16,  iQuantile = 03   04 year rates, 2020/07-2024/06
 
+  
+  %%%%% for trends paper START
+  ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
+  
+  ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
+
+  %% /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/iType_16_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat
+  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+  %%%%% for trends paper STOP 
+  
 elseif driver.iTrendOrAnomaly < 0
   set_anomaly_info
 end
