@@ -4,7 +4,7 @@ junk = load('MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat','trend_mmw');  
 junk = load('MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat','trend_mmw_err'); merra2_mmwtrend_err = junk.trend_mmw_err;
 junk = load('MERRA2_atm_data_2002_09_to_2022_08_trends_desc.mat','trend_stemp');   merra2_stemptrend = junk.trend_stemp;
 
-junk = load('/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat');
+junk = load('/asl/s1/sergio/alldata/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug2022_20yr_desc.mat');
 junk.thestats64x72.stemprate(isnan(junk.thestats64x72.stemprate)) = 0;
 junk.thestats64x72.stempratestd(isnan(junk.thestats64x72.stempratestd)) = 0;
 junk.thestats64x72.ptemprate(isnan(junk.thestats64x72.ptemprate)) = 0;

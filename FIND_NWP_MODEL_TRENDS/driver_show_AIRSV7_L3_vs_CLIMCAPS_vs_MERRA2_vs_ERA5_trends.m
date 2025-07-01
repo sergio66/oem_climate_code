@@ -185,7 +185,7 @@ else
     moo = abs(iaJunk-iNumYears);
     moo = find(moo == min(moo),1);    
     iNumYearsPowWow = 2002+iaJunk(moo);
-    fin = ['/asl/s1/sergio/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
+    fin = ['/asl/s1/sergio/alldata/AIRS_L3/airsL3_v7_64x72_rates_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
   end
   loader = ['ajunk = load(''' fin ''');'];
   eval(loader)
@@ -232,7 +232,7 @@ if ~exist(fin)
   iaJunk = [5 10 15 20];
   moo = abs(iaJunk-iNumYears);
   moo = find(moo == min(moo),1);    
-  fin = ['/asl/s1/sergio/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
+  fin = ['/asl/s1/sergio/alldata/AIRS_CLIMCAPS/airsclimcaps_64x72_rates_fastgrib_stats_Sept2002_Aug' num2str(2002+iaJunk(moo)) '_' num2str(iaJunk(moo)) 'yr_desc.mat'];    
   iNumYearsPowWow = 2002+iaJunk(moo);
 end
 loader = ['ajunk = load(''' fin ''');'];
@@ -1937,6 +1937,7 @@ iPrint = -1;
 if iPrint > 0
   dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/PAPER17_TRENDS/Figs/';
   dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/';
+  dir0 = '/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/';
   figure(60); aslprint([dir0 'obs_spectralavg_'        num2str(iNumYears) '_years.pdf']);
   figure(61); aslprint([dir0 'umbc_spectralavg_'       num2str(iNumYears) '_years.pdf']);
   figure(62); aslprint([dir0 'era5_spectralavg_'       num2str(iNumYears) '_years.pdf']);

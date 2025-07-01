@@ -45,8 +45,46 @@ uoo04 = permute(unc04,[3 1 2]); uoo04 = reshape(uoo04,2645,72*64);
 uoo05 = permute(unc05,[3 1 2]); uoo05 = reshape(uoo05,2645,72*64);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+whos moo* unc* zoo* uoo*
+do_XX_YY_from_X_Y
+cosYY = ones(2645,1)*cos(YY*pi/180);
+czoo01 = nansum(cosYY.*zoo01,2)./nansum(cosYY,2);  cuoo01 = nansum(cosYY.*uoo01,2)./nansum(cosYY,2); 
+czoo02 = nansum(cosYY.*zoo02,2)./nansum(cosYY,2);  cuoo02 = nansum(cosYY.*uoo02,2)./nansum(cosYY,2); 
+czoo03 = nansum(cosYY.*zoo03,2)./nansum(cosYY,2);  cuoo03 = nansum(cosYY.*uoo03,2)./nansum(cosYY,2); 
+czoo04 = nansum(cosYY.*zoo04,2)./nansum(cosYY,2);  cuoo04 = nansum(cosYY.*uoo04,2)./nansum(cosYY,2); 
+czoo05 = nansum(cosYY.*zoo05,2)./nansum(cosYY,2);  cuoo05 = nansum(cosYY.*uoo05,2)./nansum(cosYY,2); 
 
-figure(1)
+figure(10); clf
+subplot(211); plot(h.vchan,nanmean(zoo01,2),h.vchan,nanmean(zoo02,2),h.vchan,nanmean(zoo03,2),h.vchan,nanmean(zoo04,2),h.vchan,nanmean(zoo05,2))
+subplot(212); plot(h.vchan,nanmean(uoo01,2),h.vchan,nanmean(uoo02,2),h.vchan,nanmean(uoo03,2),h.vchan,nanmean(uoo04,2),h.vchan,nanmean(uoo05,2))
+
+figure(10); clf
+ta = tiledlayout(2,1);
+tafov(1) = nexttile; plot(h.vchan,czoo01,h.vchan,czoo02,h.vchan,czoo03,h.vchan,czoo04,h.vchan,czoo05); plotaxis2;
+  xlim([640 1620]); ylabel('d(BT)/dt [K yr^{-1}]');  
+  %legend('Q50','Q80','Q90','Q95','Q97','fontsize',10,'location','south'); 
+  %legend('Q50','Q80','Q90','Q95','Q97','fontsize',10,'Position',[0.45 0.45 0.25 0.25])
+  set(gca,'fontsize',14)
+tafov(2) = nexttile; plot(h.vchan,cuoo01,h.vchan,cuoo02,h.vchan,cuoo03,h.vchan,cuoo04,h.vchan,cuoo05); plotaxis2;
+  xlim([640 1620]); 
+  %legend('Q50','Q80','Q90','Q95','Q97','fontsize',8,'location','southeast'); 
+  legend('Q50','Q80','Q90','Q95','Q97','fontsize',10,'Position',[0.45 0.4625 0.2 0.2])
+  xlabel('Wavenumber [cm^{-1}]'); ylabel('d(BT)/dt [K yr^{-1}]');
+  ylim([0 0.031])
+  set(gca,'fontsize',14)
+
+ta.Padding = 'none';
+ta.TileSpacing = 'compact';
+ta.Padding = 'compact';
+ta.TileSpacing = 'tight';
+tafov(1).XTickLabel = '';
+%{
+sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont')
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(1); clf
 plot(1:2645,nanmean(zoo01,2))
 plot(h.vchan,nanmean(zoo01,2),h.vchan,nanmean(zoo02,2))
 plot(h.vchan,nanmean(zoo01,2),h.vchan,nanmean(zoo02,2),h.vchan,nanmean(zoo03,2),h.vchan,nanmean(zoo04,2),h.vchan,nanmean(zoo05,2))
@@ -63,7 +101,7 @@ hl = legend('Q1','Q2','Q3','Q4','Q5','location','best','fontsize',8);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(2)
+figure(2); clf
 plot(1:2645,nanmean(uoo01,2))
 plot(h.vchan,nanmean(uoo01,2),h.vchan,nanmean(uoo02,2))
 plot(h.vchan,nanmean(uoo01,2),h.vchan,nanmean(uoo02,2),h.vchan,nanmean(uoo03,2),h.vchan,nanmean(uoo04,2),h.vchan,nanmean(uoo05,2))
@@ -81,8 +119,8 @@ hl = legend('Q1','Q2','Q3','Q4','Q5','location','best','fontsize',8);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 i1385 = find(h.vchan >= 1385,1);
 i1419 = find(h.vchan >= 1419,1);
-figure(3); pcolor((reshape(zoo01(i1419,:),72,64))');      shading interp; colormap(usa2);  caxis([-1 +1]*0.1); colorbar
-figure(4); pcolor((reshape(cleartrend(i1419,:),72,64))'); shading interp; colormap(usa2);  caxis([-1 +1]*0.1); colorbar
+figure(3); clf; pcolor((reshape(zoo01(i1419,:),72,64))');      shading interp; colormap(usa2);  caxis([-1 +1]*0.1); colorbar
+figure(4); clf; pcolor((reshape(cleartrend(i1419,:),72,64))'); shading interp; colormap(usa2);  caxis([-1 +1]*0.1); colorbar
 
  load latB64.mat
   rlat65 = latB2; rlon73 = -180 : 5 : +180;

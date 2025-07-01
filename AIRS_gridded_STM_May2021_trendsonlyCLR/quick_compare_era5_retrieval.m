@@ -10,6 +10,8 @@ disp('did you run driver_trendspaper_figure15_uncertainty_ztest')
 disp('did you run driver_trendspaper_figure15_uncertainty_ztest')
 disp('did you run driver_trendspaper_figure15_uncertainty_ztest')
 
+sizefont = 16;
+
 iSmooth = +1;    %% smoothn
 iSmooth = +0.5;  %% smoothdata
 iSmooth = 00;    %% no smooth
@@ -69,7 +71,7 @@ elseif iSmooth <= 0
 end
 
 figure(62); [Y,I] = sort(era5_stemprate); plot(era5_stemprate(I),results(I,6),'b.',era5_stemprate,era5_stemprate,'k'); 
-xlabel('ERA5 dSK/dt'); ylabel('UMBC dSK/dt'); axis([-1 +1 -1 +1]*0.2)
+xlabel('ERA5 dSK/dt'); ylabel('UMBC dSKT/dt'); axis([-1 +1 -1 +1]*0.2)
 
 nanlinearcorrelation(era5_stemprate,results(:,6)');
 wahaE = era5_stemprate; wahaU = results(:,6);
@@ -281,13 +283,17 @@ figure(70); clf;
   wah = abs(resultsWV'./resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
   pcolor(rlat,pavg,wah); title('S/N : WV/\sigma WV'); set(gca,'ydir','reverse'); plotaxis2; ylim([1 1000]); colorbar; colormap jet; shading interp
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% this can be called as "statistical_significance_sergio_put_together.m"
 figure(69); clf;
   wah = abs(resultsTunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
   pcolor(rlat,pavg,wah); set(gca,'ydir','reverse'); ylim([1 1000]); colormap jet; shading interp; % title('\sigma T'); ; plotaxis2;
   set(gca,'yscale','log'); ylim([10 1000])
   ylim([10 1000]); caxis([0 0.02]);  xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
   % colorbar('vertical'); text(90,08,'K/yr'); set(gca,'fontsize',12)
-  colorbar('horizontal'); text(-90,2000,'K/yr'); set(gca,'fontsize',12)
+  c = colorbar('horizontal'); text(-105,6000,'K/yr','fontsize',12); set(gca,'fontsize',sizefont)
+  c.Ruler.Exponent = 0; 
+  c.Ruler.TickLabelFormat = '%0.3f';
 
 figure(70); clf;
   wah = abs(resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
@@ -295,13 +301,16 @@ figure(70); clf;
   set(gca,'yscale','linear'); ylim([100 1000])
   ylim([100 1000]); caxis([0 0.003]); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
   % colorbar('vertical'); text(90,50,'1/yr'); set(gca,'fontsize',12)
-  colorbar('horizontal'); text(-100,1250,'1/yr'); set(gca,'fontsize',12)
+  c = colorbar('horizontal'); text(-105,1350,'1/yr'); set(gca,'fontsize',sizefont)
+  c.Ruler.Exponent = 0; 
+  c.Ruler.TickLabelFormat = '%0.3f';
 
+iOffset = 80;
 statistical_significance_sergio
-figure(69); text(-80,20, '(A)','fontsize',12); set(gca,'fontsize',12); caxis([0 0.015]);
-figure(70); text(-80,200,'(C)','fontsize',12); set(gca,'fontsize',12); caxis([0 2e-3]);
-figure(86); text(-80,20, '(B)','fontsize',12); set(gca,'fontsize',12); 
-figure(90); text(-80,200,'(D)','fontsize',12); set(gca,'fontsize',12); 
+figure(69); set(gca,'fontsize',sizefont); text(-80,20, '(A)','fontsize',12); caxis([0 0.015]);
+figure(70); set(gca,'fontsize',sizefont); text(-80,200,'(C)','fontsize',12); caxis([0 2e-3]);
+figure(86); text(-105,6000,'K/yr','fontsize',12);; set(gca,'fontsize',sizefont); text(-80,20, '(B)','fontsize',12);  
+figure(90); text(-105,1350,'1/yr');set(gca,'fontsize',sizefont); text(-80,200,'(D)','fontsize',12);  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
@@ -311,9 +320,12 @@ if iSmooth >= 1 & iV3 == 9
   figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dwvfrac_dt');
   figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/compare_era5_vs_calc_retrieval_dtz_dt');
 elseif iSmooth <= 0 & iV3 == 9
-  figure(62); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dsst_dt');
-  figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dwvfrac_dt');
-  figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dtz_dt');
+  %figure(62); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dsst_dt');
+  %figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dwvfrac_dt');
+  %figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dtz_dt');
+  figure(62); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dsst_dt_bigfont');
+  figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dwvfrac_dt_bigfont');
+  figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dtz_dt_bigfont');
 end
 %}
 
@@ -341,14 +353,14 @@ if iSmooth >= 1 & iV3 == 6
   figure(90); set(gca,'fontsize',12); text(-85,150,'(D)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_dwvfrac_dt');
 
 elseif iSmooth <= 0 & iV3 == 6
-  figure(69); set(gca,'fontsize',12); text(-85,20,'(A)','fontsize',12);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/unc_dtz_dt');
-  figure(70); set(gca,'fontsize',12); text(-85,150,'(C)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/unc_dwvfrac_dt');
-  figure(75); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/umbc_dwvfrac_dt_400mb');
-  figure(76); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/era5_dwvfrac_dt_400mb');
+  figure(69); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_unc_dtz_dt');
+  figure(70); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_unc_dwvfrac_dt');
+  figure(75); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_umbc_dwvfrac_dt_400mb');
+  figure(76); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_era5_dwvfrac_dt_400mb');
   
-  figure(86); set(gca,'fontsize',12); text(-85,20,'(B)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/zvalue_dtz_dt');
-  figure(88); set(gca,'fontsize',12); % sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/zvalue_drh_dt');
-  figure(90); set(gca,'fontsize',12); text(-85,150,'(D)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/zvalue_dwvfrac_dt');
+  figure(86); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_zvalue_dtz_dt');
+  %figure(88); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_zvalue_drh_dt'); ?????
+  figure(90); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_zvalue_dwvfrac_dt');
 end
 
 %} 

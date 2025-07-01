@@ -1,5 +1,8 @@
 addpath /home/sergio/MATLABCODE/COLORMAP
 
+ccc = [1 1 1]*0.0; %%% black
+ccc = [1 1 1]*0.5; %%% gray
+
 if ~exist('deltaT')
   load('/home/sergio/MATLABCODE/COLORMAP/LLS/llsmap5.mat')
   %load /asl/s1/sergio/JUNK//gather_tileCLRnight_Q16_newERA5_2021jacs_startwith0_uncX100_50fatlayers_CLIMCAPS_MERRA2_AMIP6_feedback.mat
@@ -46,19 +49,19 @@ zscore = (abs(deltaTlat) - 0)./xTunc;
 pvalueT = 1-normcdf(zscore);
 figure(iOffset+3); pcolor(pvalueT'); shading interp; colorbar; set(gca,'ydir','reverse'); 
 
-figure(iOffset+iX); pcolor(deltaTlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('dT/dt K/yr');
-figure(iOffset+2); pcolor(xTunc'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('dT_{\sigma}/dt K/yr');
-figure(iOffset+3); pcolor(pvalueT'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('PvalueT');
+figure(iOffset+iX); pcolor(deltaTlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('dT/dt K/yr');
+figure(iOffset+2); pcolor(xTunc'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('dT_{\sigma}/dt K/yr');
+figure(iOffset+3); pcolor(pvalueT'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('PvalueT');
 
 ppvalueT = pvalueT; ppvalueT(ppvalueT > tvalue) = NaN;
 ppvalueT = zeros(size(pvalueT)); ppvalueT(pvalueT < tvalue) = 1;
-figure(iOffset+4); pcolor(ppvalueT'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('PvalueT');
+figure(iOffset+4); pcolor(ppvalueT'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('PvalueT');
 
 figure(iOffset+iX); hold on
 for jj = 1 : 101
   for ii = 1 : 64
     if ppvalueT(ii,jj) == 1
-      hold on; plot(ii,jj,'k.','Markersize',4,'linewidth',4);
+      hold on; plot(ii,jj,'.','color',ccc,'Markersize',4,'linewidth',4);
     end
   end
 end
@@ -77,14 +80,14 @@ for ii = 1 : length(bonk)
   [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
 end
 
-figure(iOffset+iX+1); pcolor(rlat,airslays,deltaTlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.101); xlabel('Latitude'); ylabel('Pressure [mb]'); 
+figure(iOffset+iX+1); pcolor(rlat,airslays,deltaTlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.101); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dT/dt K/yr');
 figure(iOffset+iX+1); hold on
 ht = reshape(hztest,64,101);
 for jj = 1 : 100
   for ii = 1 : 64
     if ht(ii,jj) == 1
-      hold on; plot(rlat(ii),airslays(jj),'k.','Markersize',4,'linewidth',4);
+      hold on; plot(rlat(ii),airslays(jj),'.','color',ccc,'Markersize',4,'linewidth',4);
     end
   end
 end
@@ -114,19 +117,19 @@ zscore = (abs(deltaRHlat) - 0)./xRHunc;
 pvalueRH = 1-normcdf(zscore);
 figure(iOffset+3); pcolor(pvalueRH'); shading interp; colorbar; set(gca,'ydir','reverse'); 
 
-figure(iOffset+iX); pcolor(deltaRHlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('dRH/dt pc/yr');
-figure(iOffset+2); pcolor(xRHunc'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('dRH_{\sigma}/dt pc/yr');
-figure(iOffset+3); pcolor(pvalueRH'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('PvalueRH');
+figure(iOffset+iX); pcolor(deltaRHlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.125); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('dRH/dt pc/yr');
+figure(iOffset+2); pcolor(xRHunc'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('dRH_{\sigma}/dt pc/yr');
+figure(iOffset+3); pcolor(pvalueRH'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('PvalueRH');
 
 ppvalueRH = pvalueRH; ppvalueRH(ppvalueRH > tvalue) = NaN;
 ppvalueRH = zeros(size(pvalueRH)); ppvalueRH(pvalueRH < tvalue) = 1;
-figure(iOffset+4); pcolor(ppvalueRH'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('PvalueRH');
+figure(iOffset+4); pcolor(ppvalueRH'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('PvalueRH');
 
 figure(iOffset+iX); hold on
 for jj = 1 : 100
   for ii = 1 : 64
     if ppvalueRH(ii,jj) == 1
-      hold on; plot(ii,jj,'k.','Markersize',4,'linewidth',4);
+      hold on; plot(ii,jj,'.','color',ccc,'Markersize',4,'linewidth',4);
     end
   end
 end
@@ -145,14 +148,14 @@ for ii = 1 : length(bonk)
   [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
 end
 
-figure(iOffset+iX+1); pcolor(rlat,airslays,deltaRHlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.126); xlabel('Latitude'); ylabel('Pressure [mb]'); 
+figure(iOffset+iX+1); pcolor(rlat,airslays,deltaRHlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.126); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dRH/dt percentyr');
 figure(iOffset+iX+1); hold on
 ht = reshape(hztest,64,101);
 for jj = 1 : 100
   for ii = 1 : 64
     if ht(ii,jj) == 1
-      hold on; plot(rlat(ii),airslays(jj),'k.','Markersize',4,'linewidth',4);
+      hold on; plot(rlat(ii),airslays(jj),'.','color',ccc,'Markersize',4,'linewidth',4);
     end
   end
 end
@@ -182,19 +185,19 @@ zscore = (abs(fracWVlat) - 0)./xWVunc;
 pvalueWV = 1-normcdf(zscore);
 figure(iOffset+3); pcolor(pvalueWV'); shading interp; colorbar; set(gca,'ydir','reverse'); 
 
-figure(iOffset+iX); pcolor(fracWVlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('dWV/dt frac/yr');
-figure(iOffset+2); pcolor(xWVunc'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('dWV_{\sigma}/dt frac/yr');
-figure(iOffset+3); pcolor(pvalueWV'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('PvalueWV');
+figure(iOffset+iX); pcolor(fracWVlat'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([-1 +1]*0.01); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('dWV/dt frac/yr');
+figure(iOffset+2); pcolor(xWVunc'); shading interp; colormap(llsmap5); colorbar; set(gca,'ydir','reverse'); caxis([0 +1]*0.02); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('dWV_{\sigma}/dt frac/yr');
+figure(iOffset+3); pcolor(pvalueWV'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('PvalueWV');
 
 ppvalueWV = pvalueWV; ppvalueWV(ppvalueWV > tvalue) = NaN;
 ppvalueWV = zeros(size(pvalueWV)); ppvalueWV(pvalueWV < tvalue) = 1;
-figure(iOffset+4); pcolor(ppvalueWV'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude'); ylabel('AIRS PressLayer'); title('PvalueWV');
+figure(iOffset+4); pcolor(ppvalueWV'); shading interp; colorbar; set(gca,'ydir','reverse'); xlabel('Latitude [deg]'); ylabel('AIRS PressLayer'); title('PvalueWV');
 
 figure(iOffset+iX); hold on
 for jj = 1 : 101
   for ii = 1 : 64
     if ppvalueWV(ii,jj) == 1
-      hold on; plot(ii,jj,'k.','Markersize',4,'linewidth',4);
+      hold on; plot(ii,jj,'.','color',ccc,'Markersize',4,'linewidth',4);
     end
   end
 end
@@ -213,14 +216,14 @@ for ii = 1 : length(bonk)
   [hztest(ii),pvalue(ii),ci(ii,:)] = ztest(bonk(ii),0,bonkunc(ii),'Alpha',alphavalue);
 end
 
-figure(iOffset+iX+1); pcolor(rlat,airslays,fracWVlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.0101); xlabel('Latitude'); ylabel('Pressure [mb]'); 
+figure(iOffset+iX+1); pcolor(rlat,airslays,fracWVlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.0101); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dWV/dt frac/yr');
 figure(iOffset+iX+1); hold on
 ht = reshape(hztest,64,101);
 for jj = 1 : 100
   for ii = 1 : 64
     if ht(ii,jj) == 1
-      hold on; plot(rlat(ii),airslays(jj),'k.','Markersize',4,'linewidth',4);
+      hold on; plot(rlat(ii),airslays(jj),'.','color',ccc,'Markersize',4,'linewidth',4);
     end
   end
 end
@@ -228,3 +231,7 @@ figure(iOffset+iX+1); hold off
 ylim([100 1000])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for junk = 1 : 4
+  figure(iOffset+junk); set(gca,'fontsize',sizefont)
+end

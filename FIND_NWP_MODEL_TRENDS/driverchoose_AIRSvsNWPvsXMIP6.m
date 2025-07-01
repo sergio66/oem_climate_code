@@ -58,8 +58,8 @@ xmip6Choice = getdata_XMIP6(iXMIP6,iNorD,iAorOrL);
 %{
 see eg /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
 
-xyz = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','nwp_spectral_trends_cmip6_era5_airsL3_umbc');
-xyz = load('/asl/s1/sergio/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5_uncX3.mat','nwp_spectral_trends_cmip6_era5_airsL3_umbc');
+xyz = load('/asl/s1/sergio/alldata/JUNK/gather_tileCLRnight_Q16_v2_unc.mat','nwp_spectral_trends_cmip6_era5_airsL3_umbc');
+xyz = load('/asl/s1/sergio/alldata/JUNK/gather_tileCLRnight_Q16_newERA5_2021jacs_startwithERA5_uncX3.mat','nwp_spectral_trends_cmip6_era5_airsL3_umbc');
 
 xyz.nwp_spectral_trends_cmip6_era5_airsL3_umbc.era5_100_layertrends
 nwpChoice
