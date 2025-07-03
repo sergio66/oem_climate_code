@@ -3,6 +3,8 @@ clear f*
 
 get_umbc_day_night_name
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 era5_day_file    = 'ERA5_atm_N_cld_data_2002_09_to_2022_08_trends_asc.mat';
 era5_night_file  = 'ERA5_atm_N_cld_data_2002_09_to_2022_08_trends_desc.mat';
 

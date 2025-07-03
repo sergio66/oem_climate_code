@@ -2,7 +2,17 @@
 %%%% see loop_driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
 %%%% see loop_driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
 
-iV = input('Enter version of UMBC file (-1) GULP, old stuff, (0) oringinally was in test.pdf (dRHdt = 0 ... trends paper) (1) for (Held/Jeevanjee) with d lnP/dSKT = 0.02 (constant) (2) for (Held/Jeevanjee) with zonally varying d lnP/dSKT from IPCC 2007 (3/default) YAYAYAYA clrjac in test.pdf (dRH/dt ~ 0.01) : ');
+disp('Enter version of UMBC file (-1)         GULP, old stuff, (0) oringinally was in test.pdf (dRHdt = 0 ... trends paper)')
+disp('                            (1)         for (Held/Jeevanjee) with d lnP/dSKT = 0.02 (constant)')
+disp('                            (2)         for (Held/Jeevanjee) with zonally varying d lnP/dSKT from IPCC 2007')
+disp('                            (3/default) YAYAYAYA clrjac in test.pdf (dRH/dt ~ 0.01)')
+iV = input('Enter iV (-1,+1,2, 3/default : ');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% July 1, 2025 : iV = 3  iV3 = 66 : for plots in JGR trends resubmission, fig 9
+%% July 1, 2025 : iV = 3  iV3 = 6  : for plots in JGR trends resubmission, fig 10,11,12 and B1  << DEFAULT>>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if length(iV) == 0
   iV = 0;
   iV = 3;
@@ -43,7 +53,9 @@ elseif iV == 3
   iV3 = 5;  %% YAY
   iV3 = 2;  %% YAY
   iV3 = 3;  %% YAY
-  iV3 = 6;  %% testing is this same as iV3 = 2 BUT has MLS in UT/LS
+
+  iV3 = 66;  %%                                                            used for fig  9        in JGR trends paper   not working too well????
+  iV3 = 6;   %% testing is this same as iV3 = 2 BUT has MLS in UT/LS, also used for figs 10,11,12 in JGR trends paper
 
   if iV3 == 0
     %% when I first found my jacobian mistake .. but then I made a mistake in args of jeevanjee_PLB_deltaRH_Ts(a,b,d,c) switched args
@@ -58,7 +70,7 @@ elseif iV == 3
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
   elseif iV3 == 2
-    %% ooops found bug in set_CO2_CH4_N2O_ESRL.m, calling arguments in jeevanjee_PBL_deltaRH_Ts  -- YAY YAY YAY, done Jan 1, 2024
+    %% ooops found bug in set_CO2_CH4_N2O_ESRL.m, calling arguments in jeevanjee_PBL_deltaRH_Ts  -- YAY YAY YAY, redone Jan 1, 2024
     umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjac_dayV2.mat';
     umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2F_const_dlnPdST_clrjacV2.mat';
 
@@ -85,8 +97,26 @@ elseif iV == 3
 
   elseif iV3 == 6
     %% test, should be same as iV3 == 2, uses MLS
+
+    % strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat'; iNumYears = 20;
+    % driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears); % print_for_trendspaper.m  --->  HAS BEEN SUPERSEDED BY driver_compare_trends_Day_vs_Night.m
+
+    disp('loading in UMBC retrieval file with MLS a-priori')
     umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS_day.mat';
     umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS.mat';
+
+  elseif iV3 == 66
+    % strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat'; iNumYears = 20;
+    % driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears); % print_for_trendspaper.m  --->  HAS BEEN SUPERSEDED BY driver_compare_trends_Day_vs_Night.m
+
+    disp('loading in UMBC retrieval file with MLS a-priori that driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends says to use')
+    disp('see driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m for these names')
+    umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat';
+    umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat';
+
+    umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';
+    umbc_night_file = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';
+
   end
 
 end  

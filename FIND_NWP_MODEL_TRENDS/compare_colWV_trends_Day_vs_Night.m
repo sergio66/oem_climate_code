@@ -285,13 +285,29 @@ ta.TileSpacing = 'compact';
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(92); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',2);
+ylim([-1 +2]*0.05);
+xlim([-1 +1]*90); 
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
-xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('d mmw/dt [mm/yr]');
+xlabel('Latitude [deg]'); ylabel('d mmw/dt [mm/yr]');
+
+figure(92); clf
+fig10_colwvtrend.rlat     = rlat;
+fig10_colwvtrend.umbc     = nanmean(newz11,1);
+fig10_colwvtrend.airsL3   = nanmean(newz12,1);
+fig10_colwvtrend.climcaps = nanmean(newz13,1);
+fig10_colwvtrend.era5     = nanmean(newz21,1);
+fig10_colwvtrend.merra2   = nanmean(newz22,1);
+plot(fig10_colwvtrend.rlat,fig10_colwvtrend.umbc,'k',fig10_colwvtrend.rlat,fig10_colwvtrend.airsL3,'b',fig10_colwvtrend.rlat,fig10_colwvtrend.climcaps,'g',...
+     fig10_colwvtrend.rlat,fig10_colwvtrend.era5,'r',fig10_colwvtrend.rlat,fig10_colwvtrend.merra2,'m','linewidth',2);
+ylim([-1 +2]*0.05);
+xlim([-1 +1]*90); 
+plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
+xlabel('Latitude [deg]'); ylabel('d mmw/dt [mm/yr]');
 
 figure(99); clf
-plot(rlat,nanmean(newz11-newz21,1),'k',rlat,nanmean(newz12-newz21,1),'b',rlat,nanmean(newz13-newz21,1),'gx-',rlat,nanmean(newz21-newz21,1),'r',rlat,nanmean(newz22-newz21,1),'m','linewidth',2);
-%plot(rlat,nanmean(newz11./(newz21+0.0001)-1,1),'k',rlat,nanmean(newz12./(newz21+0.0001)-1,1),'b',rlat,nanmean(newz13./(newz21+0.0001)-1,1),'gx-',rlat,nanmean(newz21./(newz21+0.0001)-1,1),'r',rlat,nanmean(newz22./(newz21+0.0001)-1,1),'m','linewidth',2);
+plot(rlat,nanmean(newz11-newz21,1),'k',rlat,nanmean(newz12-newz21,1),'b',rlat,nanmean(newz13-newz21,1),'g',rlat,nanmean(newz21-newz21,1),'r',rlat,nanmean(newz22-newz21,1),'m','linewidth',2);
+%plot(rlat,nanmean(newz11./(newz21+0.0001)-1,1),'k',rlat,nanmean(newz12./(newz21+0.0001)-1,1),'b',rlat,nanmean(newz13./(newz21+0.0001)-1,1),'g',rlat,nanmean(newz21./(newz21+0.0001)-1,1),'r',rlat,nanmean(newz22./(newz21+0.0001)-1,1),'m','linewidth',2);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('X-ERA5 d mmw/dt [mm/yr]');
 
@@ -300,7 +316,7 @@ newz11 = (fD*fUMBC_day.mmwtrend+fN*fUMBC_night.mmwtrend)*0.5;    newz12 = (fD*fA
 newz21 = (fD*fERA5_day.mmwtrend+fN*fERA5_night.mmwtrend)*0.5;    newz22 = fMERRA2.mmwtrend;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(97); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('DAY d mmw/dt [mm/yr]');
 
@@ -309,7 +325,7 @@ newz11 = (fD*fUMBC_day.mmwtrend+fN*fUMBC_night.mmwtrend)*0.5;    newz12 = (fD*fA
 newz21 = (fD*fERA5_day.mmwtrend+fN*fERA5_night.mmwtrend)*0.5;    newz22 = fMERRA2.mmwtrend;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(98); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('NIGHT d mmw/dt [mm/yr]');
 
@@ -368,13 +384,13 @@ newz21 = (fERA5_day.mmwtrend+fERA5_night.mmwtrend)*0.5;    newz22 = fMERRA2.mmwt
 newz11(land) = NaN; newz12(land) = NaN; newz12(land) = NaN; newz21(land) = NaN; newz22(land) = NaN;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(192); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Ocean d mmw/dt [mm/yr]');
 
 figure(199); clf
-plot(rlat,nanmean(newz11-newz21,1),'k',rlat,nanmean(newz12-newz21,1),'b',rlat,nanmean(newz13-newz21,1),'gx-',rlat,nanmean(newz21-newz21,1),'r',rlat,nanmean(newz22-newz21,1),'m','linewidth',2);
-%plot(rlat,nanmean(newz11./(newz21+0.0001)-1,1),'k',rlat,nanmean(newz12./(newz21+0.0001)-1,1),'b',rlat,nanmean(newz13./(newz21+0.0001)-1,1),'gx-',rlat,nanmean(newz21./(newz21+0.0001)-1,1),'r',rlat,nanmean(newz22./(newz21+0.0001)-1,1),'m','linewidth',2);
+plot(rlat,nanmean(newz11-newz21,1),'k',rlat,nanmean(newz12-newz21,1),'b',rlat,nanmean(newz13-newz21,1),'g',rlat,nanmean(newz21-newz21,1),'r',rlat,nanmean(newz22-newz21,1),'m','linewidth',2);
+%plot(rlat,nanmean(newz11./(newz21+0.0001)-1,1),'k',rlat,nanmean(newz12./(newz21+0.0001)-1,1),'b',rlat,nanmean(newz13./(newz21+0.0001)-1,1),'g',rlat,nanmean(newz21./(newz21+0.0001)-1,1),'r',rlat,nanmean(newz22./(newz21+0.0001)-1,1),'m','linewidth',2);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Ocean X-ERA5 d mmw/dt [mm/yr]');
 
@@ -384,7 +400,7 @@ newz21 = (fD*fERA5_day.mmwtrend+fN*fERA5_night.mmwtrend)*0.5;    newz22 = fMERRA
 newz11(land) = NaN; newz12(land) = NaN; newz12(land) = NaN; newz21(land) = NaN; newz22(land) = NaN;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(197); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Ocean DAY d mmw/dt [mm/yr]');
 
@@ -394,7 +410,7 @@ newz21 = (fD*fERA5_day.mmwtrend+fN*fERA5_night.mmwtrend)*0.5;    newz22 = fMERRA
 newz11(land) = NaN; newz12(land) = NaN; newz12(land) = NaN; newz21(land) = NaN; newz22(land) = NaN;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(198); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Ocean NIGHT d mmw/dt [mm/yr]');
 
@@ -442,13 +458,13 @@ figure(92); ax = axis; figure(291); axis(ax); plotaxis2;
 newz11(ocean) = NaN; newz12(ocean) = NaN; newz12(ocean) = NaN; newz21(ocean) = NaN; newz22(ocean) = NaN;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(292); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Land d mmw/dt [mm/yr]');
 
 figure(299); clf
-plot(rlat,nanmean(newz11-newz21,1),'k',rlat,nanmean(newz12-newz21,1),'b',rlat,nanmean(newz13-newz21,1),'gx-',rlat,nanmean(newz21-newz21,1),'r',rlat,nanmean(newz22-newz21,1),'m','linewidth',2);
-%plot(rlat,nanmean(newz11./(newz21+0.0001)-1,1),'k',rlat,nanmean(newz12./(newz21+0.0001)-1,1),'b',rlat,nanmean(newz13./(newz21+0.0001)-1,1),'gx-',rlat,nanmean(newz21./(newz21+0.0001)-1,1),'r',rlat,nanmean(newz22./(newz21+0.0001)-1,1),'m','linewidth',2);
+plot(rlat,nanmean(newz11-newz21,1),'k',rlat,nanmean(newz12-newz21,1),'b',rlat,nanmean(newz13-newz21,1),'g',rlat,nanmean(newz21-newz21,1),'r',rlat,nanmean(newz22-newz21,1),'m','linewidth',2);
+%plot(rlat,nanmean(newz11./(newz21+0.0001)-1,1),'k',rlat,nanmean(newz12./(newz21+0.0001)-1,1),'b',rlat,nanmean(newz13./(newz21+0.0001)-1,1),'g',rlat,nanmean(newz21./(newz21+0.0001)-1,1),'r',rlat,nanmean(newz22./(newz21+0.0001)-1,1),'m','linewidth',2);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Land X-ERA5 d mmw/dt [mm/yr]');
 
@@ -458,7 +474,7 @@ newz21 = (fD*fERA5_day.mmwtrend+fN*fERA5_night.mmwtrend)*0.5;    newz22 = fMERRA
 newz11(ocean) = NaN; newz12(ocean) = NaN; newz12(ocean) = NaN; newz21(ocean) = NaN; newz22(ocean) = NaN;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(297); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Land DAY d mmw/dt [mm/yr]');
 
@@ -468,7 +484,7 @@ newz21 = (fD*fERA5_day.mmwtrend+fN*fERA5_night.mmwtrend)*0.5;    newz22 = fMERRA
 newz11(ocean) = NaN; newz12(ocean) = NaN; newz12(ocean) = NaN; newz21(ocean) = NaN; newz22(ocean) = NaN;
     newz11 = reshape(newz11,72,64);   newz12 = reshape(newz12,72,64);  newz21 = reshape(newz21,72,64);   newz22 = reshape(newz22,72,64);  newz13 = reshape(newz13,72,64);    
 figure(298); clf
-plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'gx-',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
+plot(rlat,nanmean(newz11,1),'k',rlat,nanmean(newz12,1),'b',rlat,nanmean(newz13,1),'g',rlat,nanmean(newz21,1),'r',rlat,nanmean(newz22,1),'m','linewidth',4);
 plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 xlim([-1 +1]*90); xlabel('Latitude [deg]'); ylabel('Land NIGHT d mmw/dt [mm/yr]');
 

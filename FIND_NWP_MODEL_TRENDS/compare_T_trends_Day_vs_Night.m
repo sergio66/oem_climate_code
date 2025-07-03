@@ -165,6 +165,16 @@ plotoptions2x1x2.cx = [-1 +1]*0.151;
 plotoptions2x1x2.cx = [-1 +1]*0.101;
       profile_plots_2x1x2tiledlayout_tall(rlat,plays100,newz11,newz12,newz13,newz21,newz22,iFig,plotoptions2x1x2);
 
+fig11_Ttrends.umbc     = newz11;
+fig11_Ttrends.airsL3   = newz12;
+fig11_Ttrends.climcaps = newz13;
+fig11_Ttrends.merra2   = newz21;
+fig11_Ttrends.era5     = newz22;
+fig11_Ttrends.rlat     = rlat;
+fig11_Ttrends.plays100 = plays100;
+fig11_Ttrends.plotoptions2x1x2 = plotoptions2x1x2;
+fig11_Trends.comment   = 'see ~/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_compare_trends_Day_vs_Night.m --> compare_T_trends_Day_vs_Night.m';
+
 moo = find(plays100 > 10,1);
 cjunkUMBC = newz11(moo:97,:); cjunkL3 = newz12(moo:97,:); cjunkC3 = newz13(moo:97,:); cjunkMERRA2 = newz21(moo:97,:); cjunkERA5 = newz22(moo:97,:);
 da5x5correl = ...

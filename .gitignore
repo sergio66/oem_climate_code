@@ -45,6 +45,7 @@ WORKS*
 Works*
 OLD_DIRS
 RHFeedBack
+MATFILES_for_JGR_trends_paper/*.mat
 
 # specific files
 Strow/.#*

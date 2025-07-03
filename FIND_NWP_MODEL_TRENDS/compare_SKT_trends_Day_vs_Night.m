@@ -124,6 +124,15 @@ iFig = 20;
     newz14 = reshape(newz14,72,64);   newz24 = reshape(newz24,72,64);   newz34 = reshape(newz34,72,64);   
   figure(iFig); sizefig; ; clf; aslmap_3x4tiledlayout(newz11,newz12,newz13,newz14,newz21,newz22,newz23,newz24,newz31,newz32,newz33,newz34,iFig,plotoptions);
 
+figB1_sktDNtrends.plotoptions = plotoptions;
+figB1_sktDNtrends.umbc_D = newz11; figB1_sktDNtrends.airsL3_D = newz12; figB1_sktDNtrends.climcaps_D = newz13; figB1_sktDNtrends.era5_D = newz14;
+figB1_sktDNtrends.umbc_N = newz21; figB1_sktDNtrends.airsL3_N = newz22; figB1_sktDNtrends.climcaps_N = newz23; figB1_sktDNtrends.era5_N = newz24;
+figB1_sktDNtrends.umbc_X = newz31; figB1_sktDNtrends.airsL3_X = newz32; figB1_sktDNtrends.climcaps_X = newz33; figB1_sktDNtrends.era5_X = newz34;
+  figure(iFig+100); sizefig; ; clf; 
+    aslmap_3x4tiledlayout(figB1_sktDNtrends.umbc_D,figB1_sktDNtrends.airsL3_D,figB1_sktDNtrends.climcaps_D,figB1_sktDNtrends.era5_D,...
+                          figB1_sktDNtrends.umbc_N,figB1_sktDNtrends.airsL3_N,figB1_sktDNtrends.climcaps_N,figB1_sktDNtrends.era5_N,...
+                          figB1_sktDNtrends.umbc_X,figB1_sktDNtrends.airsL3_X,figB1_sktDNtrends.climcaps_X,figB1_sktDNtrends.era5_X,...
+                          iFig+100,figB1_sktDNtrends.plotoptions);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear newz*

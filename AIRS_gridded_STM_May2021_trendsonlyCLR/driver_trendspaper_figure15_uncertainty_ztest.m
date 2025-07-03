@@ -15,7 +15,7 @@ end
 
 %% see FIND_NWP_MODEL_TRENDS/driver_compare_trends_Day_vs_Night.m --> FIND_NWP_MODEL_TRENDS/get_umbc_day_night_name.m
 iV3 = 9;   %% this is for the ERA5 trend and then the ERA5 trend retrieval, Fig 6
-iV3 = 6;   %% this is for the uncertainty z-scores, Fig 14
+iV3 = 6;   %% this is for the 400 mb AIRS_UMBC vs ERA5 Fig 13, and uncertainty z-scores Fig 14
 if iV3 == 9
   disp('this is ERA5 trend simulations and retrievals')
   umbc_day_file   = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_CAL_startwith0_50fatlayers_NoMODELS_MLS_fortrendspaper.mat';

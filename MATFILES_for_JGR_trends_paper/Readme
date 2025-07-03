@@ -1,0 +1,10 @@
+This is a data/source code directory to make figures for JGR 2025JD043501R
+
+We have cut and paste from the analysis source code(s) so as to make
+the matlab source codes here, arranged in the order of the 14 figures
+in main text and 3 figures in the appendices.
+
+Typically after making the individual panels, we use "imagemagick" on
+a Mac to combine the panels for submission to JGR
+
+eg gm montage -trim -geometry 1200x950 -tile 2x1  fig3a.pdf  fig3b.pdf   fig3_merged.pdf

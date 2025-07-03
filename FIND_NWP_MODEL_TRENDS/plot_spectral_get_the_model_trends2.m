@@ -207,6 +207,14 @@ savetherates.comment1   = 'strUMBC = ''/asl/s1/sergio/JUNK/smallgather_tileCLRni
 savetherates.comment2   = 'driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(strUMBC,iNumYears);';
 %% save spectral_rate_avgs_umbc_obs_era5_merra2_airsL3_climcapsL3.mat savetherates
 
+data_fig5c.comment  = 'see ~/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/plot_spectral_get_the_model_trends2.m called by ~/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends(str,iNum)';
+data_fig5c.comment2 = 'strUMBC = ''/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat''; iNumYears = 20;';
+data_fig5c.obs   = savetherates.obs;
+data_fig5c.era5  = savetherates.era5;
+data_fig5c.rlat  = savetherates.latavg;
+data_fig5c.vchan = savetherates.fchanx;
+%% save /umbc/xfs2/strow/asl/s1/sergio/home/git/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig5c.mat data_fig5c
+
 keyboard_nowindow
 
 quick_tropical_perts

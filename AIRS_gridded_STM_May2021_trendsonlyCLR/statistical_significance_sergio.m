@@ -82,6 +82,9 @@ end
 
 figure(iOffset+iX+1); pcolor(rlat,airslays,deltaTlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.101); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dT/dt K/yr');
+fig14_ztest_unc.Ttrend   = deltaTlat(:,1:100)';
+fig14_ztest_unc.Ttrend_p = airslays;
+fig14_ztest_unc.Ttrend_ztest = hztest;
 figure(iOffset+iX+1); hold on
 ht = reshape(hztest,64,101);
 for jj = 1 : 100
@@ -219,6 +222,9 @@ end
 figure(iOffset+iX+1); pcolor(rlat,airslays,fracWVlat(:,1:100)'); shading interp; colormap(llsmap5); set(gca,'ydir','reverse'); caxis([-1 +1]*0.0101); xlabel('Latitude [deg]'); ylabel('Pressure [mb]'); 
 colorbar('horizontal'); % title('dWV/dt frac/yr');
 figure(iOffset+iX+1); hold on
+fig14_ztest_unc.WVtrend   = fracWVlat(:,1:100)';
+fig14_ztest_unc.WVtrend_p = airslays;
+fig14_ztest_unc.WVtrend_ztest = hztest;
 ht = reshape(hztest,64,101);
 for jj = 1 : 100
   for ii = 1 : 64

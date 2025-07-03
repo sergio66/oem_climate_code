@@ -2,18 +2,19 @@ addpath /asl/matlib/plotutils
 addpath /asl/matlib/rtptools
 addpath /asl/matlib/maps
 addpath /asl/matlib/h4tools
+addpath /asl/matlib/science/
+addpath /asl/matlib/aslutil
+
 addpath /home/sergio/MATLABCODE
 addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
-addpath /asl/matlib/science/
 addpath /home/sergio/MATLABCODE/SHOWSTATS
 addpath /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/
 addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
 addpath /home/sergio/MATLABCODE/NANROUTINES
-addpath /asl/matlib/aslutil
 
 load llsmap5
 
@@ -99,6 +100,8 @@ Q0 = 1000 * layers2gg(h,p,1:4608,1);
 [mm,nn] = size(Q0);
 Q0 = Lv * Q0 + cp * p.ptemp(1:mm,:) + g * p.palts(1:mm,:);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear f*
 prep_colWV_T_WV_trends_Day_vs_Night  %% basically calls get_umbc_day_night_name
 
@@ -140,7 +143,7 @@ compare_misc_stuff_trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
-if iSMooth >= 1
+if iSmooth >= 1
   print_Day_vs_Night_trendspaper
 else
   print_nosmooth_Day_vs_Night_trendspaper
