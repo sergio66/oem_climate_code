@@ -304,7 +304,18 @@ if ~any(isnan(state_color))
    end
 end
 if ~any(isnan(coast_color))
-  load coast
+  if exist('coast.mat')
+    disp('coast is from coast.mat, earlier Matlab')
+    %% before R2021
+    load coast
+  else
+    disp('coast is from coastlines.mat, later Matlab')
+    %% after R2021
+    junk = load('coastlines.mat');
+    long = junk.coastlon;
+    lat = junk.coastlat;
+  end
+
   plot(pa,long,lat,'Color',coast_color)
   if any(lon_range > 180)
     plot(pa,long+360,lat,'Color',coast_color)

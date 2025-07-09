@@ -33,6 +33,24 @@ clc;
   for jj = 1 : 4; 
     figure(jj); clf; 
   end
+  str = ['figA1_plot'];
+  fprintf(1,'%s \n',str);
+  eval(str);
+  disp('ret to continue'); pause;
+
+clc; 
+  for jj = 1 : 4; 
+    figure(jj); clf; 
+  end
+  str = ['figA2_plot'];
+  fprintf(1,'%s \n',str);
+  eval(str);
+  disp('ret to continue'); pause;
+
+clc; 
+  for jj = 1 : 4; 
+    figure(jj); clf; 
+  end
   str = ['make_jgr_figB1'];
   fprintf(1,'%s \n',str);
   eval(str);

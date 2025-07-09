@@ -1,0 +1,58 @@
+Stephen Leroy has sent you the following file(s). To download the
+file(s) please click on the respective link(s) below.
+
+Hi Sergio & Larrabee, Here is the Jacobian file for AMSU-A channels 4
+through 14. The NetCDF file is pretty well documented
+internally. Stephen
+
+Name: oss_bt_jac_avg.cloudy.2010.nc
+Size: 191.6 MB
+Expires: September 22, 2025
+Download: https://mft.aer.com/download?domain=staff&id=f59f7165eb914ad0bd14beb8bdd2bf4f-0699b024d0634b79a6132e79c12dae06
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+s = read_netcdf_lls('oss_bt_jac_avg.cloudy.2010.nc');
+
+% s = 
+%                       lons: [72x1 single]
+%                       lats: [64x1 single]
+%                   lon_bnds: [73x1 single]
+%                   lat_bnds: [65x1 single]
+%                   channels: [11x1 int32]          
+%           surface_pressure: [64x72x12 single]     4608 tiles, 12 months
+%                     levels: [38x64x72x12 single]  38 levels, 4608 tiles, 12 months
+%     brightness_temperature: [11x64x72x12 single]  11 chans, 4608 tiles, 12 months
+%             tskin_jacobian: [11x64x72x12 single]  11 chans, 4608 tiles, 12 months
+%        emissivity_jacobian: [11x64x72x12 single]  11 chans, 4608 tiles, 12 months
+%       temperature_jacobian: [5-D single]          11 chans, 38 levels, 4608 tiles, 12 months
+%          humidity_jacobian: [5-D single]          11 chans, 38 levels, 4608 tiles, 12 months
+%                       year: 2010
+%                      month: [12x1 int32]
+% 
+
+figure(1); clf
+boo = squeeze(s.temperature_jacobian(:,:,32,36,6));
+pcolor(s.channels,squeeze(s.levels(:,32,36,6)),boo'); colorbar; 
+  colormap jet; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]);
+xlabel('AMSU channel'); ylabel('P [mb]'); 
+title('T jac tile latbin/lonbin 32,36')
+
+figure(2); clf
+woo = squeeze(s.humidity_jacobian(:,:,32,36,6));
+pcolor(s.channels,squeeze(s.levels(:,32,36,6)),woo'); colorbar; 
+  colormap jet; shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','linear'); ylim([10 1000]);
+xlabel('AMSU channel'); ylabel('P [mb]'); 
+title('SH g/g jac tile latbin/lonbin 32,36')
+
+figure(3); clf
+soo = squeeze(s.tskin_jacobian(:,32,36,6));
+plot(s.channels,soo'); colorbar; 
+xlabel('AMSU channel'); ylabel('P [mb]'); 
+title('SKT jac tile latbin/lonbin 32,36')
+
+figure(4); clf
+eoo = squeeze(s.emissivity_jacobian(:,32,36,6));
+plot(s.channels,eoo'); colorbar; 
+xlabel('AMSU channel'); ylabel('P [mb]'); 
+title('emiss jac tile latbin/lonbin 32,36')

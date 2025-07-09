@@ -24,13 +24,13 @@ figure(3); clf; pcolor(data_fig5c.vchan,data_fig5c.rlat,data_fig5c.era5); shadin
   text(1700,95,'K/yr');
   set(gca,'fontsize',14);
 
-%% D (night) unc
-figure(4); clf; pcolor(data_fig5b.vchan,data_fig5b.rlat,data_fig5b.l1c_trendD - data_fig5c.obs);   shading flat; colorbar; colormap(jet); xlabel('Wavenumber cm^{-1}'); ylabel('Latitude');
-  xlim([640 1640]);
-  xlim([640 1640]); caxis([-1 +1]*0.1/100)
-  text(1700,95,'K/yr');
-  set(gca,'fontsize',14);
-  title('Night L1C : fig5b - fig5c')
+%% D (night) check the trends, not needed
+%figure(4); clf; pcolor(data_fig5b.vchan,data_fig5b.rlat,data_fig5b.l1c_trendD - data_fig5c.obs);   shading flat; colorbar; colormap(%jet); xlabel('Wavenumber cm^{-1}'); ylabel('Latitude');
+%  xlim([640 1640]);
+%  xlim([640 1640]); caxis([-1 +1]*0.1/100)
+%  text(1700,95,'K/yr');
+%  set(gca,'fontsize',14);
+%  title('Night L1C : fig5b - fig5c')
 
 %{
 figure(1); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/new_fig5a_L1Cspectraltrends_bigfont');
