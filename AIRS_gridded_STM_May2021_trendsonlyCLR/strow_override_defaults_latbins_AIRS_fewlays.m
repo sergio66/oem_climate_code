@@ -79,9 +79,10 @@ end
 
 if topts.dataset == 30
   set_the_AMSU_jcobians
+  % keyboard_nowindow
 else
- %set_the_jacobians  %% sets structure "jac" and m_ts_jac
- [m_ts_jac,m_ts_jac_coljac,nlays,iNlays_retrieve,freq2645,jac,qWV,layWV,qT,layT,qO3,layO3,plays,driver,settings] = set_the_jacobians(driver,settings,topts,iVersJac,iOldORNew,iNlays_retrieve,iXJac);
+  %set_the_jacobians  %% sets structure "jac" and m_ts_jac
+  [m_ts_jac,m_ts_jac_coljac,nlays,iNlays_retrieve,freq2645,jac,qWV,layWV,qT,layT,qO3,layO3,plays,driver,settings] = set_the_jacobians(driver,settings,topts,iVersJac,iOldORNew,iNlays_retrieve,iXJac);
 end
 
 aux.m_ts_jac = m_ts_jac;
@@ -118,9 +119,14 @@ if topts.dataset == 30
   [hAMSU,~,pAMSU,~] = rtpread('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/MWchannels15.rp.rtp');
   f = hAMSU.vchan;
 
+%% if AMSU, ../OSS_AMSU_jacs/example_readjac.m
+%% see https://en.wikipedia.org/wiki/Advanced_microwave_sounding_unit
+%% chid =   [4 : 14];
+%% chcntr = [52.8 53.596 54.4 54.94 55.5 57.290 57.290+0.217 57.290+0.322 57.290+0.333 57.290+0.444 57.290+0.555];
+
   ch = 1 : 13; %% AMSU
   ch = 5 : 13; %% Stephen Leroy only gave these. and Ch 4 has lots of WV so remove it
-  ch = 4 : 13; %% Stephen Leroy only gave these
+  ch = 4 : 13; %% Stephen Leroy only gave these, though in 2025 when he gave me jacobians they were for Channels 4 : 14 (11 channels)
 
 else
   ch = find_the_oem_channels(f,lenrates,settings.numchan,settings.chan_LW_SW,iChSet);

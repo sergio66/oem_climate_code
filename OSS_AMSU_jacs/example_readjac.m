@@ -11,6 +11,10 @@
 % Download: https://mft.aer.com/download?domain=staff&id=f59f7165eb914ad0bd14beb8bdd2bf4f-0699b024d0634b79a6132e79c12dae06
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% see https://en.wikipedia.org/wiki/Advanced_microwave_sounding_unit
+
+chid =   [4 : 14];
+chcntr = [52.8 53.596 54.4 54.94 55.5 57.290 57.290+0.217 57.290+0.322 57.290+0.333 57.290+0.444 57.290+0.555]; 
 
 s = read_netcdf_lls('oss_bt_jac_avg.cloudy.2010.nc');
 

@@ -7,6 +7,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/clust_driver_AMSU_jacs.m
+%% /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/AMSU_12channels_20years_Trends_Anomalies/driver_amsu_jacs.m
 junk = load(driver.jacobian.filename);
 nlays = junk.jac.nlevs - 1;
 
@@ -50,6 +52,9 @@ figure(9); imagesc(m_ts_jac0(:,driver.jacobian.ozone_i)'); colorbar
 %disp('here 1'); pause
 
 m_ts_jac_coljac = m_ts_jac0(:,driver.jacobian.scalar_i);
+
+check_stephenleroy_amsu_jacs
+keyboard_nowindow
 
 if iNlays_retrieve <= 60
   [m_ts_jac_wv,qWV,layWV]  = combinejaclays(m_ts_jac0,driver.jacobian.water_i,qrenorm,iNlays_retrieve);
@@ -256,6 +261,7 @@ for iii = 1 : length(driver.jacobian.wvjaclays_used)
   profilejunk.qavg(iii) = mean(profilejunk.gas_1(junk));
   profilejunk.oavg(iii) = mean(profilejunk.gas_3(junk));
 end
+
 jac.nlays       = profilejunk.nlays;
 jac.plays       = profilejunk.plays;
 jac.ptemp       = profilejunk.ptemp;

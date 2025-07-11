@@ -66,6 +66,11 @@ t1x = tic;
 
 %{
 [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
+see zonally_averaged_profiles to produce T(z),WV(z),O3(z) averaged over 72 lons bins (101x72x64 --> 101x64) saved into zonally_averaged_profiles.mat
+%}
+
+%{
+[h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002_CLEAR.rtp');
 scatter_coast(p.rlon,p.rlat,50,p.nemis)
 mooO = find(p.nemis == 19);  i900_O = find(p.efreq(1:19,mooO(1)) >= 900,1);
 mooL = find(p.nemis == 100); i900_L = find(p.efreq(1:100,mooL(1)) >= 900,1);
@@ -90,7 +95,7 @@ else
     JOB = 29;
     JOB = 2;
     JOB = 45;
-    JOB = 1;
+    JOB = 32;
   end
 end
 
@@ -179,7 +184,7 @@ if driver.iTrendOrAnomaly > 0
   ia_OorC_DataSet_Quantile = [+0 16 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 16,  iQuantile = 03   04 year rates, 2020/07-2024/06
 
   
-  %%%%% for trends paper START
+  %%%%% for trends paper START %%%%%%%%%%%%%%%%%%%%%%%%%
   ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
   
   ia_OorC_DataSet_Quantile = [+0 10 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 10, iQuantile = 03    05 year rates, 2002/09-2007/08 AIRS obs Q(0.90-->1)
@@ -189,7 +194,9 @@ if driver.iTrendOrAnomaly > 0
   %% /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/iType_16_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat
   ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
   ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
-  %%%%% for trends paper STOP 
+  %%%%% for trends paper STOP  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+  ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
   
 elseif driver.iTrendOrAnomaly < 0
   set_anomaly_info
@@ -660,6 +667,7 @@ for iInd = iXX1 : idX : iXX2
   topts.iNlays_retrieve = 20; %% default, 5 AIRS lays thick
   topts.iNlays_retrieve = 50; %%          2 AIRS lays thick
   if topts.dataset == 30
+    topts.iNlays_retrieve = 50;                      %% testing S. Leroy jacs
     topts.iNlays_retrieve = 10;                      %% default, 10 AIRS lays thick since so few AMSU channels
   end
 
@@ -785,11 +793,38 @@ for iInd = iXX1 : idX : iXX2
 
   if ~exist(driver.outfilename)     
 
+%% if AMSU, ../OSS_AMSU_jacs/example_readjac.m
+%% see https://en.wikipedia.org/wiki/Advanced_microwave_sounding_unit
+%% chid =   [4 : 14];
+%% chcntr = [52.8 53.596 54.4 54.94 55.5 57.290 57.290+0.217 57.290+0.322 57.290+0.333 57.290+0.444 57.290+0.555];
+
     wvmoo = driver.jacobian.water_i;
+    tmoo = driver.jacobian.temp_i;
+
+    figure(1); clf; pcolor(aux.f(driver.jacobian.chanset),aux.pavg,aux.m_ts_jac(driver.jacobian.chanset,wvmoo)'); shading interp; colorbar; title('WV jac');  colormap jet
+      set(gca,'ydir','reverse'); ylim([100 1000])
+    figure(2); clf; pcolor(aux.f(driver.jacobian.chanset),aux.pavg, aux.m_ts_jac(driver.jacobian.chanset,tmoo)');  shading interp; colorbar; title('T jac');  colormap jet
+      set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000])
+
+ error('kjsglkjsljs')
+
     plot(aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,wvmoo(end-2:end)),2),'b',...
        aux.f(driver.jacobian.chanset),aux.m_ts_jac(driver.jacobian.chanset,6)*10,'k',...
        aux.f(driver.jacobian.chanset),driver.rateset.rates(driver.jacobian.chanset)*50,'r')
     plotaxis2; hl = legend('lowest WVjac','ST jac','rateset','location','best');
+    pause(0.1);
+
+    plot(aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,tmoo(end-2:end)),2),'b',...
+       aux.f(driver.jacobian.chanset),aux.m_ts_jac(driver.jacobian.chanset,6)*10,'k',...
+       aux.f(driver.jacobian.chanset),driver.rateset.rates(driver.jacobian.chanset)*50,'r')
+    plotaxis2; hl = legend('lowest Tjac','ST jac','rateset','location','best');
+    pause(0.1);
+
+    plot(aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,wvmoo(end-2:end)),2),'b+-',...
+         aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,tmoo(end-2:end)),2),'r',...
+       aux.f(driver.jacobian.chanset),aux.m_ts_jac(driver.jacobian.chanset,6)*10,'k',...
+       aux.f(driver.jacobian.chanset),driver.rateset.rates(driver.jacobian.chanset)*50,'g')
+    plotaxis2; hl = legend('lowest WVjac','lowest Tjac','ST jac','rateset','location','best');
     pause(0.1);
 
     driver = retrieval(driver,aux);
