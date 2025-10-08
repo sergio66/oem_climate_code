@@ -180,12 +180,13 @@ data8 = data7;
   figure(181); clf
   plot(data8.rlat,nanmean(data8.umbc,1),'k',data8.rlat,nanmean(data8.airsv7,1),'b',data8.rlat,nanmean(data8.climcaps,1),'g',data8.rlat,nanmean(data8.era5,1),'r',data8.rlat,nanmean(data8.merra2),'m',data8.rlat,nanmean(data8.giss),'c','linewidth',2);
   xlim([-1 +1]*90); ylim([-0.06 +0.11]); 
-  plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','best','fontsize',8);
+  %plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','best','fontsize',8);
+  plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','north','fontsize',12);  
 
   %plot(data8.rlat,nanmean(data8.umbc,1),'k',data8.rlat,nanmean(data8.airsv7,1),'b',data8.rlat,nanmean(data8.climcaps,1),'g',data8.rlat,nanmean(data8.era5,1),'r',data8.rlat,nanmean(data8.merra2),'m','linewidth',2);
   %plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 
-  xlabel('Latitude [deg]'); ylabel('dST/dt [K yr^{-1}]');
+  xlabel('Latitude [deg]'); ylabel('dST/dt [K yr^{-1}]'); set(gca,'fontsize',14);
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -193,12 +194,50 @@ data8 = data7;
   plot(data8.rlat,nanmean(data8.ocean_umbc,1),'k',data8.rlat,nanmean(data8.ocean_airsv7,1),'b',data8.rlat,nanmean(data8.ocean_climcaps,1),'g',...
       data8.rlat,nanmean(data8.ocean_era5,1),'r',data8.rlat,nanmean(data8.ocean_merra2),'m',data8.rlat,nanmean(data8.ocean_giss),'c','linewidth',2);
   xlim([-1 +1]*90); ylim([-0.06 +0.11]); 
-  plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','best','fontsize',8);
+  %plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','best','fontsize',8);
+  plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','north','fontsize',12);  
 
   %plot(data8.rlat,nanmean(data8.ocean_umbc,1),'k',data8.rlat,nanmean(data8.ocean_airsv7,1),'b',data8.rlat,nanmean(data8.ocean_climcaps,1),'g',data8.rlat,nanmean(data8.ocean_era5,1),'r',data8.rlat,nanmean(data8.ocean_merra2),'m','linewidth',2);
   %plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','best','fontsize',8);
 
-  xlabel('Latitude [deg]'); ylabel('dST_{ocean}/dt [K yr^{-1}]')
+  xlabel('Latitude [deg]'); ylabel('dST_{ocean}/dt [K yr^{-1}]'); set(gca,'fontsize',14);
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  disp('Make this as wide as Fig 181/182')
+  disp('Make this as wide as Fig 181/182')
+  disp('Make this as wide as Fig 181/182')
+
+  figure(183); clf;
+  ta = tiledlayout(1,2);
+  tafov(1) = nexttile;
+  plot(data8.rlat,nanmean(data8.umbc,1),'k',data8.rlat,nanmean(data8.airsv7,1),'b',data8.rlat,nanmean(data8.climcaps,1),'g',data8.rlat,nanmean(data8.era5,1),'r',data8.rlat,nanmean(data8.merra2),'m',data8.rlat,nanmean(data8.giss),'c','linewidth',2);
+  xlim([-1 +1]*90); ylim([-0.06 +0.12]); 
+  plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','north','fontsize',12);
+  %plot(data8.rlat,nanmean(data8.umbc,1),'k',data8.rlat,nanmean(data8.airsv7,1),'b',data8.rlat,nanmean(data8.climcaps,1),'g',data8.rlat,nanmean(data8.era5,1),'r',data8.rlat,nanmean(data8.merra2),'m','linewidth',2);
+  %plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','north','fontsize',8);
+
+  xlabel('Latitude [deg]'); ylabel('dST/dt [K yr^{-1}]'); set(gca,'fontsize',14);
+
+  tafov(2) = nexttile;
+  plot(data8.rlat,nanmean(data8.ocean_umbc,1),'k',data8.rlat,nanmean(data8.ocean_airsv7,1),'b',data8.rlat,nanmean(data8.ocean_climcaps,1),'g',...
+      data8.rlat,nanmean(data8.ocean_era5,1),'r',data8.rlat,nanmean(data8.ocean_merra2),'m',data8.rlat,nanmean(data8.ocean_giss),'c','linewidth',2);
+  xlim([-1 +1]*90); ylim([-0.06 +0.12]); 
+  plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','north','fontsize',12);
+  %plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','GISS','location','best','fontsize',8);  
+  %plot(data8.rlat,nanmean(data8.ocean_umbc,1),'k',data8.rlat,nanmean(data8.ocean_airsv7,1),'b',data8.rlat,nanmean(data8.ocean_climcaps,1),'g',data8.rlat,nanmean(data8.ocean_era5,1),'r',data8.rlat,nanmean(data8.ocean_merra2),'m','linewidth',2);
+  %plotaxis2; hl = legend('AIRS\_RT','AIRS L3','CLIMCAPS L3','ERA5','MERRA2','location','north','fontsize',8);
+
+  xlabel('Latitude [deg]');
+  %ylabel('dST_{ocean}/dt [K yr^{-1}]');
+  set(gca,'fontsize',14);
+
+  tafov(2).YTickLabel = ' ';
+  ta.Padding = 'none';
+  ta.TileSpacing = 'compact';
+  ta.Padding = 'compact';
+  ta.TileSpacing = 'tight';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -217,8 +256,19 @@ figure(23); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/fig8new_mean_no
 figure(24); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/fig8new_cntr_smoothnn');
 figure(25); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/fig8new_cntr_nosmooth');
 
+%%% july 2025
 figure(181); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/nosmooth_dST_dt_land_ocean_zonal_allmodels_and_GISS');
 figure(182); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/nosmooth_dST_dt_ocean_zonal_allmodels_and_GISS');
+%% gm montage -trim -geometry 1200x950 -tile 2x1  nosmooth_dST_dt_land_ocean_zonal_allmodels_and_GISS.pdf nosmooth_dST_dt_ocean_zonal_allmodels_and_GISS.pdf  fig8_merged.pdf
+%% gm montage -trim -geometry 1200x950 -tile 2x1  nosmooth_dST_dt_land_ocean_zonal_allmodels_and_GISS.png nosmooth_dST_dt_ocean_zonal_allmodels_and_GISS.png  fig8_merged.png
+figure(183); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/nosmooth_dST_dt_land_ocean_AND_ocean_zonal_allmodels_and_GISS');
+
+% aug 2025
+figure(181); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/nosmooth_dST_dt_land_ocean_zonal_allmodels_and_GISS_aug2025');
+figure(182); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/nosmooth_dST_dt_ocean_zonal_allmodels_and_GISS_aug2025');
+%% gm montage -trim -geometry 1200x950 -tile 2x1  nosmooth_dST_dt_land_ocean_zonal_allmodels_and_GISS_aug2025.pdf nosmooth_dST_dt_ocean_zonal_allmodels_and_GISS_aug2025.pdf  newfig8_merged.pdf
+%% gm montage -trim -geometry 1200x950 -tile 2x1  nosmooth_dST_dt_land_ocean_zonal_allmodels_and_GISS_aug2025.png nosmooth_dST_dt_ocean_zonal_allmodels_and_GISS_aug2025.png  newfig8_merged.png
+figure(183); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/nosmooth_dST_dt_land_ocean_AND_ocean_zonal_allmodels_and_GISS_aug2025');
 
 figure(1); clf; generic_subtiles_fig_into_surface_matr('L3_SKT_TIMESERIES_2002_09_to_2022_08/fig8new_mean_smoothnn.fig'); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/fig8xnew_mean_smoothnn');
 figure(1); clf; generic_subtiles_fig_into_surface_matr('L3_SKT_TIMESERIES_2002_09_to_2022_08/fig8new_mean_nosmooth.fig'); sergioprintfig('L3_SKT_TIMESERIES_2002_09_to_2022_08/fig8xnew_mean_nosmooth');

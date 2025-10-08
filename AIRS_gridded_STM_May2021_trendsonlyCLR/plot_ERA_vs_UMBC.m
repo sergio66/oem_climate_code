@@ -9,6 +9,7 @@ figure(50); clf; aslmap(50,rlat65,rlon73,smoothn((reshape(era5.trend_stemp,72,64
 figure(43); clf; pcolor(rlat,pjunk20,squeeze(nanmean(reshape(waterrate_ak0_era5,72,64,length(pavg)),1))'); shading interp;
 caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 raw dWVfrac/dt 1/yr')
 caxis([-1 +1]*0.015); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 dWVfrac/dt 1/yr')
+caxis([-1 +1]*0.01); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','linear'); ylim([100 1000]); title('ERA5 dWVfrac/dt 1/yr')
 colormap(llsmap5)
 
 figure(44); clf; pcolor(rlat,pjunk20,squeeze(nanmean(reshape(waterrate_akF_era5,72,64,length(pavg)),1))'); shading interp;
@@ -22,11 +23,11 @@ colormap(jet); caxis([0 +1]*0.04); caxis([0 +1]*0.5);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 figure(46); clf; pcolor(rlat,pjunk20,squeeze(nanmean(reshape(temprate_ak0_era5,72,64,length(pavg)),1))'); shading interp; 
-caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('ERA5 raw dT/dt K/yr')
+caxis([-1 +1]*0.10); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([10 1000]); title('ERA5 raw dT/dt K/yr')
 colormap(llsmap5)
 
 figure(47); clf; pcolor(rlat,pjunk20,squeeze(nanmean(reshape(temprate_akF_era5,72,64,length(pavg)),1))'); shading interp; 
-caxis([-1 +1]*0.15); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([1 1000]); title('ERA5 * AK dT/dt K/yr')
+caxis([-1 +1]*0.10); set(gca,'ydir','reverse'); colorbar; set(gca,'yscale','log'); ylim([10 1000]); title('ERA5 * AK dT/dt K/yr')
 colormap(llsmap5)
 
 figure(48); clf; pcolor(rlat,pjunk20,squeeze(nanmean(reshape(mean_ak_T,72,64,length(pavg)),1))'); shading interp;

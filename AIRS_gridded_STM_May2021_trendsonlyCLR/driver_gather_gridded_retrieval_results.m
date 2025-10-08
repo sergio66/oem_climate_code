@@ -36,6 +36,19 @@ disp('saved a version as   save -v7.3 /asl/s1/sergio/JUNK/gather_tileCLRday.mat 
 disp(' ')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+iNorD = input('night (+1) or day (-1)  [+1 = night = default] ');
+if length(iNorD) == 0
+  iNorD = +1;
+end
+iDorA = iNorD;
+
+iOCBset = input('obs cal or bias (0,+1,-1) [default 0] : ');
+if length(iOCBset) == 0
+  iOCBset = 0;
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %{
 %save -v7.3 nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat nwp_spectral_trends_cmip6_era5_airsL3_umbc
 save('nwp_spectral_trends_cmip6_era5_airsL3_umbc.mat','-struct','nwp_spectral_trends_cmip6_era5_airsL3_umbc','-v7.3');
@@ -49,14 +62,19 @@ if length(iAK) == 0
 end
 if iAK > 0
   %% see Plotutils/plot_retrieval_latbins_fewlays
-  iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 20, can also give =-N for data ending in 2022 (end of mission)] ');  
+  iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 23, can also give =-N for data ending in 2022 (end of mission)] ');  
   if length(iNumYears) == 0
     iNumYears = 20;
+    iNumYears = 23;    
   end
   %junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
   %junk = ['../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002 + iNumYears) '_08_trends_desc.mat'];
   %era5 = load(junk);
-  era5 = get_ERA5_trends_thermodynamic_and_spectral(iNumYears);
+  
+  if iNumYears > 23
+    disp('ooer have not done ERA5 trends for > 23 years, just set to 23')
+  end
+  era5 = get_ERA5_trends_thermodynamic_and_spectral(min(iNumYears,23),iNorD);  
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -87,23 +105,12 @@ iWVind = 07:26; iWVind = (1:iNumLay)+6+0*iNumLay;
 iTind  = 27:46; iTind  = (1:iNumLay)+6+1*iNumLay;
 iO3ind = 47:66; iO3ind = (1:iNumLay)+6+2*iNumLay;
 
-iNorD = input('night (+1) or day (-1)  [+1 = night = default] ');
-if length(iNorD) == 0
-  iNorD = +1;
-end
-iDorA = iNorD;
-
-iOCBset = input('obs cal or bias (0,+1,-1) [default 0] : ');
-if length(iOCBset) == 0
-  iOCBset = 0;
-end
-
 disp('quants for dataset 1-8            = [0 0.01 0.02 0.03 0.04 0.05 0.10 0.25 0.50 0.75 0.9 0.95 0.96 0.97 0.98 0.99 1.00]');
 disp('quants for dataset 9,10,11,12     = [0.50 0.80 0.90 0.95 0.97 1.00]');
 disp('quants for dataset 13             = [0.03 0.50 0.97]');
 disp('quants for dataset 14,15,16,17    = [0.50 0.80 0.90 0.95 0.97 1.00]');
 disp('quants for dataset 30 [AMSU only] = [1]');
-dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n    :::  [9 = Default] : ');
+dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n (18) Sergio 2002/09-2025/08 23 YEARS new quants iQAX=3 \n  :::  [9 = Default] : ');
 if length(dataset) == 0
   dataset = 9;
 end
@@ -136,6 +143,8 @@ elseif dataset == 16
   iNumYears = 04;
 elseif dataset == 17
   iNumYears = 22;
+elseif dataset == 18
+  iNumYears = 23;
 elseif dataset == 30  %% AMSU
   iNumYears = 20;
 end
@@ -147,12 +156,12 @@ elseif dataset == -3
 elseif dataset >= 9 & dataset < 30
   iQuantile = 05; 
   if iOCBset == 0
-    iQuantile = input('Dataset = 9,10,11,12, iOCBset = 0 (obs)  ==> Which quantile 1..5   [3 = Default] : ');
+    iQuantile = input('Dataset = 9,10,11,12,18  iOCBset = 0 (obs)  ==> Which quantile 1..5   [3 = Default] : ');
     if length(iQuantile) == 0
       iQuantile = 3;
     end
   elseif iOCBset == 1
-    iQuantile = input('Dataset = 9,10,11,12, iOCBset = 1 (cal)  ==> Which quantile 1..16   [16 = Default] : ');
+    iQuantile = input('Dataset = 9,10,11,12,18   iOCBset = 1 (cal)  ==> Which quantile 1..16   [16 = Default] : ');
     if length(iQuantile) == 0
       iQuantile = 16;
     end
@@ -266,6 +275,12 @@ if iOCBset == 0
   elseif dataset == 17
     if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
       data_trends = load(['iType_17_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+    else
+      fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
+    end
+  elseif dataset == 18
+    if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
+      data_trends = load(['iType_18_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     else
       fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
@@ -896,6 +911,7 @@ z22 = maskLF.*chisqrR.iWV;
 
 iFig = 52; figure(iFig); clf; 
 aslmap_2x2tiledlayout(z11,z12,z21,z22*5,iFig,plotoptions);
+disp('Fig 52 : chisqr')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

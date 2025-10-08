@@ -12,6 +12,7 @@ if ~exist('a05')
   a10 = load([dir0 'iType_11_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat']);
   a15 = load([dir0 'iType_12_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat']);
   a20 = load([dir0  'iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat']);
+  a23 = load([dir0 'iType_18_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat']);  
   
   loader = ['load ' dir0 'h2645structure.mat'];
   eval(loader)
@@ -25,7 +26,8 @@ cosrlat = cos(rlat*pi/180);
 a05.b_asc_zonal = squeeze(nanmean(a05.b_asc,1));  a05.b_desc_zonal = squeeze(nanmean(a05.b_desc,1)); 
 a10.b_asc_zonal = squeeze(nanmean(a10.b_asc,1));  a10.b_desc_zonal = squeeze(nanmean(a10.b_desc,1)); 
 a15.b_asc_zonal = squeeze(nanmean(a15.b_asc,1));  a15.b_desc_zonal = squeeze(nanmean(a15.b_desc,1)); 
-a20.b_asc_zonal = squeeze(nanmean(a20.b_asc,1));  a20.b_desc_zonal = squeeze(nanmean(a20.b_desc,1)); 
+a20.b_asc_zonal = squeeze(nanmean(a20.b_asc,1));  a20.b_desc_zonal = squeeze(nanmean(a20.b_desc,1));
+a23.b_asc_zonal = squeeze(nanmean(a23.b_asc,1));  a23.b_desc_zonal = squeeze(nanmean(a23.b_desc,1)); 
 
 bah = a05.mean_BT; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_BT(:,1) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
@@ -35,6 +37,8 @@ bah = a15.mean_BT; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608);
   mean_BT(:,3) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 bah = a20.mean_BT; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_BT(:,4) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
+bah = a23.mean_BT; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
+  mean_BT(:,5) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 
 bah = a05.b_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_desc_trend(:,1) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
@@ -44,6 +48,8 @@ bah = a15.b_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608);
   mean_desc_trend(:,3) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 bah = a20.b_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_desc_trend(:,4) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
+bah = a23.b_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
+  mean_desc_trend(:,5) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 
 bah = a05.b_err_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_err_desc_trend(:,1) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
@@ -53,6 +59,8 @@ bah = a15.b_err_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608);
   mean_err_desc_trend(:,3) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 bah = a20.b_err_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_err_desc_trend(:,4) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
+bah = a23.b_err_desc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
+  mean_err_desc_trend(:,5) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 
 bah = a05.b_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_asc_trend(:,1) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
@@ -62,6 +70,8 @@ bah = a15.b_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608);
   mean_asc_trend(:,3) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 bah = a20.b_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_asc_trend(:,4) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
+bah = a23.b_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
+  mean_asc_trend(:,5) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 
 bah = a05.b_err_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_err_asc_trend(:,1) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
@@ -71,30 +81,44 @@ bah = a15.b_err_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608);
   mean_err_asc_trend(:,3) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 bah = a20.b_err_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_err_asc_trend(:,4) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
+bah = a23.b_err_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
+  mean_err_asc_trend(:,5) = nanmean(cosrlat.*bah,2)./nanmean(cosrlat,2);
 
 figure(1); clf;
 plot(h.vchan,mean_BT); xlabel('Wavenumber cm-1'); ylabel('BT(K)'); 
-xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',8);
 
 figure(2); clf
 plot(h.vchan,mean_desc_trend); xlabel('Wavenumber cm-1'); ylabel('desc d(BT)/dt (K/yr)'); 
-  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',8);
   ylim([-1 +1]*0.05)
 
 figure(2); clf
 subplot(211); plot(h.vchan,mean_desc_trend); xlabel('Wavenumber cm-1'); ylabel('desc d(BT)/dt (K/yr)'); 
-  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',8);
 subplot(212); plot(h.vchan,mean_err_desc_trend); xlabel('Wavenumber cm-1'); ylabel('unc (K/yr)'); 
-  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',8);
 
 figure(3); clf
 subplot(211); plot(h.vchan,mean_asc_trend); xlabel('Wavenumber cm-1'); ylabel('asc d(BT)/dt (K/yr)'); 
-  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',8);
 subplot(212); plot(h.vchan,mean_err_asc_trend); xlabel('Wavenumber cm-1'); ylabel('unc (K/yr)'); 
-  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',8);
+
+figure(4); clf
+plot(h.vchan,mean_asc_trend); xlabel('Wavenumber cm-1'); ylabel('asc d(BT)/dt (K/yr)'); 
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',12);
+figure(5); clf  
+plot(h.vchan,mean_err_asc_trend); xlabel('Wavenumber cm-1'); ylabel('unc (K/yr)'); 
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','23','location','best','fontsize',12);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+error('kh;dkh')
+
+disp('this is iType_9, need iType_18')
+disp('this is iType_9, need iType_18')
+disp('this is iType_9, need iType_18')
 if ~exist('q01')
   q01 = load([dir0 'iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q01.mat']);
   q02 = load([dir0 'iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q02.mat']);

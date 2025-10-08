@@ -1,7 +1,9 @@
 disp('see Readme_SKTtrends_tilecenter_tilemean.m')
 
 addpath /home/sergio/MATLABCODE/
+addpath /home/sergio/MATLABCODE/PLOTTER
 addpath /home/sergio/MATLABCODE/TIME
+addpath /home/sergio/MATLABCODE/NANROUTINES
 addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
 addpath /home/sergio/MATLABCODE/COLORMAP/LLS
 
@@ -327,5 +329,6 @@ save skt_trends_tilecenter_tilemean.mat trend comment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% this makes figs 181,182,183 which are fig8 of the accepted paper
 process_SKTtrends_tilecenter_tilemean
 

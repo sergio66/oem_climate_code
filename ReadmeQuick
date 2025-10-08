@@ -1,0 +1,80 @@
+If Howard has added in eg 2024-09 to 2025/08 and you did all necessary thinngs in
+  /oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
+  (see ReadmeQuick there)
+  
+[sergio@c24-52 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ls -lt ../../oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
+total 2031648
+drwxrwxr-x  6 sergio pi_strow       73728 Sep 27 03:03 Code_For_HowardObs_TimeSeries
+drwxrwxr-x  4 sergio pi_strow      188416 Sep 27 03:03 Code_for_TileTrends
+
+this is what you need to do in oem_pkg_run
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(A) AIRS_gridded_STM_May2021_trendsonlyCLR
+------------------------------------------
+
+1) these two need to put together the latest trends and anomlaies made in
+  /oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
+-rw-rw-r-- 1 sergio pi_strow  35144 Sep 27 03:19 driver_put_together_QuantileChoose_trends.m
+-rw-rw-r-- 1 sergio pi_sergio 20710 Sep 27 04:14 driver_contrast_obsrates_05_10_15_20_23.m
+
+2) then this allows you to compare to earlier trends
+-rw-rw-r-- 1 sergio pi_strow  19983 Sep 26 14:40 driver_put_together_QuantileChoose_anomalies.m
+
+3) need to tell the main trend retrieval code about eg option (1*0 is for 2002/09 - 2025/08
+-rw-rw-r-- 1 sergio pi_strow  57198 Sep 27 03:49 clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+
+4) this points to the file names that need to be used
+-rw-rw-r-- 1 sergio pi_strow   1519 Sep 27 09:03 get_the_mean_profiles.m
+-rw-rw-r-- 1 sergio pi_strow   1607 Sep 27 08:57 read_fileMean17years.m
+-rw-rw-r-- 1 sergio pi_strow  19655 Sep 27 03:46 set_driver_rateset_datafile.m
+
+5) finally you needs to look at the results after the trend or anomaly retreival
+-rw-rw-r-- 1 sergio pi_strow  45168 Sep 27 09:00 driver_gather_gridded_retrieval_results.m
+
+(B) ERA5 monthly
+----------------
+more /home/sergio/git/Readme_RTP_PIPELINE/Readme_ERA5_monthly_pipeline
+
+cd /home/sergio/git/era5_pipeline/
+see README
+
+Edit era5.driver               to set YYYY/MM of monthly data you want
+Edit ERA5_get_monthly_avg.py   if needed, to get the location of /asl/isilonX/models/ERA5_MONTHLY correct
+
+pip install necessary cds5 python packages
+
+#module load Python/3.10.2-GCCcore-11.2.0
+module load python
+pip install "cdsapi>=0.7.4"
+
+test using     python test_download.py
+  
+./ERA5_get_monthly_avg.sh era5.driver
+
+(C) make RTP files
+------------------
+
+/home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/driver_check_ERA5file_inventory.m
+
+/home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m
+sbatch  --array=241-276  sergio_matlab_chip.sbatch 4  iDorA = +1
+sbatch  --array=241-276  sergio_matlab_chip.sbatch 4  iDorA = -1
+  produces eg /asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3//TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_276.mat
+
+/home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_D_N_A_sst.m
+sbatch  --array=241-276  sergio_matlab_chip.sbatch 10  iDorA = +1  D
+sbatch  --array=241-276  sergio_matlab_chip.sbatch 10  iDorA = -1  N
+sbatch  --array=241-276  sergio_matlab_chip.sbatch 10  iDorA = 0   N+D
+
+(D) FIND_NWP_MODEL_TRENDS
+-------------------------
+
+driver_computeERA5_monthly_trends_desc_or_asc.m           ??  TRY THIS ONE, EASIER!
+driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m  ??
+
+(E) Go to ../AIRS_gridded_STM_May2021_trendsonlyCLR
+---------------------------------------------------
+
+And update/compare to driver_gather_gridded_retrieval_results.m

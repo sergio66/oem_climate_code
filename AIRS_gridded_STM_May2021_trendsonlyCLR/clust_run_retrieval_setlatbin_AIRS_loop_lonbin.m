@@ -128,6 +128,7 @@ iDebug = 2264; %% T
 iDebug = 4483; %% NP
 
 iDebug = -1;
+%iDebug = 2304;
 
 %iDebug = 36;     %% check to make sure emiss trend comes in (over land)
 %iDebug = 2000
@@ -191,13 +192,14 @@ if driver.iTrendOrAnomaly > 0
   ia_OorC_DataSet_Quantile = [+0 12 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 12, iQuantile = 03    15 year rates, 2002/09-2012/08 AIRS obs Q(0.90-->1)
   ia_OorC_DataSet_Quantile = [+0 11 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 11, iQuantile = 03    10 year rates, 2002/09-2017/08 AIRS obs Q(0.90-->1)
 
+  ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
+  
   %% /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/iType_16_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat
   ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
   ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 18 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 18, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
   %%%%% for trends paper STOP  %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
-  
 elseif driver.iTrendOrAnomaly < 0
   set_anomaly_info
 end
@@ -452,6 +454,7 @@ for iInd = iXX1 : idX : iXX2
 
   % topts.dataset   = +16;   %% (+16) AIRS  4 year quantile dataset, Sergio May 2023    2020/07-2024/06 FULL 04 years, HOT HOT HOT new way of doing quantile iQAX = 3  ************************
   % topts.dataset   = +17;   %% (+17) AIRS 14 year quantile dataset, Sergio May 2023    2002/09-2024/06 FULL 22 years, new way of doing quantile iQAX = 3  ************************
+  % topts.dataset   = +18;   %% (+18) AIRS 23 year quantile dataset, Sergio May 2023    2002/09-2025/08 FULL 23 years, new way of doing quantile iQAX = 3  ************************  
 
   % topts.dataset   = +30;   %% (+30) AMSU 20 year average dataset, Sergio May 2024    2002/09-2022/08 FULL 20 years, one one quantile (avg), given by Stephen Leroy  ************************
 
@@ -484,8 +487,12 @@ for iInd = iXX1 : idX : iXX2
   end
   driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss default
 
-  driver.NorD = -1; %% day, asc
-  driver.NorD = +1; %% night, desc  DEFAULT
+  if ~exist('NorD')
+    NorD = -1; %% day, asc
+    NorD = +1; %% night, desc  DEFAULT
+  end
+  driver.NorD = NorD;
+  
   driver.iQuantile = iQuantile;
 
   disp('see driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m')
@@ -532,6 +539,9 @@ for iInd = iXX1 : idX : iXX2
   elseif topts.dataset == 17
     driver.iNumYears = 22;  
     disp(' <<< 2002-2024 AIRS for 22 years, ... the CO2 trends are from 2002 onwards >>>')
+  elseif topts.dataset == 18
+    driver.iNumYears = 23;  
+    disp(' <<< 2002-2025 AIRS for 23 years, ... the CO2 trends are from 2002 onwards >>>')
   elseif topts.dataset == 30
     driver.iNumYears = 20;  
     disp(' <<< AMSU 20 years allsky from Stephen Leroy >>> ')
@@ -806,8 +816,6 @@ for iInd = iXX1 : idX : iXX2
     figure(2); clf; pcolor(aux.f(driver.jacobian.chanset),aux.pavg, aux.m_ts_jac(driver.jacobian.chanset,tmoo)');  shading interp; colorbar; title('T jac');  colormap jet
       set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000])
 
- error('kjsglkjsljs')
-
     plot(aux.f(driver.jacobian.chanset),sum(aux.m_ts_jac(driver.jacobian.chanset,wvmoo(end-2:end)),2),'b',...
        aux.f(driver.jacobian.chanset),aux.m_ts_jac(driver.jacobian.chanset,6)*10,'k',...
        aux.f(driver.jacobian.chanset),driver.rateset.rates(driver.jacobian.chanset)*50,'r')
@@ -1064,7 +1072,12 @@ if (driver.iLat-1)*72 + driver.iLon == iDebug
 end
 
 
-end % end of latbin loop  
+end % end of latbin loop
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %---------------------------------------------------------------------------
 % Close debug file
 if driver.debug
@@ -1084,5 +1097,6 @@ t2x = toc(t1x);
 fprintf(1,'time taken (in seconds) for a %3i layer retrievals = %8.4f \n',topts.iNlays_retrieve,t2x)
 
 if driver.i16daytimestep < 0
+  disp('plotting trend retrieval')
   plot_one_latlonbin_fewlays
 end

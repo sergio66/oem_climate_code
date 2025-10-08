@@ -1,5 +1,6 @@
 addpath /asl/matlib/h4tools
 addpath /home/sergio/MATLABCODE
+addpath /home/sergio/MATLABCODE/COLORMAP
 addpath /asl/matlib/plotutils
 
 %% this code is originally in /home/sergio/PAPERS/SUBMITPAPERS/trends/Matlab/contrast_05_10_15_20.m
@@ -261,6 +262,16 @@ czoo03 = nansum(cosYY.*zoo03,2)./nansum(cosYY,2);  cuoo03 = nansum(cosYY.*uoo03,
 czoo04 = nansum(cosYY.*zoo04,2)./nansum(cosYY,2);  cuoo04 = nansum(cosYY.*uoo04,2)./nansum(cosYY,2); 
 czoo05 = nansum(cosYY.*zoo05,2)./nansum(cosYY,2);  cuoo05 = nansum(cosYY.*uoo05,2)./nansum(cosYY,2); 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(4); clf;
+plot(h.vchan,q_mean_BT); xlabel('Wavenumber cm-1'); ylabel('BT [K]'); 
+xlim([640 1620]); plotaxis2; hl = legend('Q50','Q80','Q90','Q95','Q97','location','best','fontsize',12);
+ylim([200 300]);
+set(gca,'fontsize',14)
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 figure(20); clf
 subplot(211); plot(h.vchan,nanmean(zoo01,2),h.vchan,nanmean(zoo02,2),h.vchan,nanmean(zoo03,2),h.vchan,nanmean(zoo04,2),h.vchan,nanmean(zoo05,2))
 subplot(212); plot(h.vchan,nanmean(uoo01,2),h.vchan,nanmean(uoo02,2),h.vchan,nanmean(uoo03,2),h.vchan,nanmean(uoo04,2),h.vchan,nanmean(uoo05,2))
@@ -275,7 +286,8 @@ tafov(1) = nexttile; plot(h.vchan,czoo01,h.vchan,czoo02,h.vchan,czoo03,h.vchan,c
 tafov(2) = nexttile; plot(h.vchan,cuoo01,h.vchan,cuoo02,h.vchan,cuoo03,h.vchan,cuoo04,h.vchan,cuoo05); plotaxis2;
   xlim([640 1620]); 
   %legend('Q50','Q80','Q90','Q95','Q97','fontsize',8,'location','southeast'); 
-  legend('Q50','Q80','Q90','Q95','Q97','fontsize',10,'Position',[0.45 0.4625 0.2 0.2])
+  legend('Q50','Q80','Q90','Q95','Q97','fontsize',10,'Position',[0.45 0.4625 0.2 0.2]) %% july 2025
+  legend('Q50','Q80','Q90','Q95','Q97','fontsize',12,'Position',[0.45 0.4625 0.2 0.2]) %% july 2025  
   xlabel('Wavenumber [cm^{-1}]'); ylabel('d(BT)/dt [K yr^{-1}]');
   ylim([0 0.031])
   set(gca,'fontsize',14)
@@ -286,12 +298,15 @@ ta.Padding = 'compact';
 ta.TileSpacing = 'tight';
 tafov(1).XTickLabel = '';
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %{
 data_fig5b.vchan      = h.vchan;
 data_fig5b.rlat       = rlat;
 data_fig5b.l1c_trendD = bsigD;
 data_fig5b.l1c_uncD   = berrD;
 save /home/sergio/MATLABCODE/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig5b.mat data_fig5b
+
 
 data_fig3a.vchan = h.vchan;
 data_fig3a.q_mean_BT = q_mean_BT;
@@ -304,8 +319,19 @@ data_fig3b.q04.trend = czoo04; data_fig3b.q04.unc = cuoo04;
 data_fig3b.q05.trend = czoo05; data_fig3b.q05.unc = cuoo05; 
 save /home/sergio/MATLABCODE/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig3.mat data_fig3b data_fig3a
 
-%% sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont')
+%% figure(4);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont_aug2025_fig3a')
+%% figure(20); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont_aug2025_fig3b')
 %}
+
+%{
+on home computer
+gm montage -trim -geometry 1200x950 -tile 3x1  trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont_aug2025_fig3a.pdf trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont_aug2025_fig3b.pdf  newfig3_merged.pdf
+gm montage -trim -geometry 1200x950 -tile 3x1  trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont_aug2025_fig3a.png trend_dBTdt_desc_20_years_Q50_Q80_Q90_Q95_Q97_bigfont_aug2025_fig3b.png  newfig3_merged.png
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+contrast_05_10_15_20_fig3finalpaper
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -323,6 +349,6 @@ if iPrint > 0
 
   figure(8); xlim([640 1640]); axis([640 1640 -0.005 +0.005]); aslprint('../Figs/trend_dBTdt_dsc_20_years_Q50_versus_Q80_Q90_Q95_Q97.pdf');
 
-
   %% figure(10); xlim([640 1640]);  aslprint('../Figs/obs_trend_unc_20_years.pdf');  %% notice this is night
+  %% figure(11); xlim([640 1640]);  aslprint('../Figs/obs_spectralavg_20_years.pdf');  %% notice this is night  
 end

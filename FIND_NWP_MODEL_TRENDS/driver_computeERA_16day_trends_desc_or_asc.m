@@ -18,13 +18,29 @@ end
 
 clear iaFound
 iaMax = 365/16*17; iaMax = 387;   %% so we only do 17 years that we do have ERA for .....
-iaMax = 365/16*18; iaMax = 412; 
+iaMax = 365/16*18; iaMax = 412;   %% so this is 18 years
+iaMax = 365/16*20; iaMax = 460;   %% so this is 20 years
+iaMax = 365/16*23; iaMax = 526;   %% so this is 23 years
+
+error('hmm should you be using driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m')
+
+
+iERAoriERA5 = -1; %% orig
+iERAoriERA5 = +1; %% new
 
 for ii = 1 : iaMax
   if iDorA > 0
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/DESC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    if iERAoriERA5 < 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/DESC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    end
   else
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/ASC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    if iERAoriERA5 < 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/ASC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    end
   end
   if exist(fin)
     iaFound(ii) = 1;
@@ -35,17 +51,32 @@ end
 [sum(iaFound) length(iaFound)]
 plot(1:iaMax,iaFound,'+-')
 
-disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
-disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
-disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
+if iERAoriERA5 < 0
+  disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
+  disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
+  disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make16day_tile_center.m')
+else
+  disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make_monthly_tile_center_asc_or_desc.m');
+  disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make_monthly_tile_center_asc_or_desc.m');
+  disp('mat files made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA/clust_loop_make_monthly_tile_center_asc_or_desc.m');  
+end
 
 for ii = 1 : iaMax
   clear a
-  if iDorA > 0
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/DESC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+  if iERAoriERA5 < 0  
+    if iDorA > 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/DESC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/ASC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    end
   else
-    fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA/Tile_Center/ASC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    if iDorA > 0
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    else
+      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era_tile_center_timestep_' num2str(ii,'%03d') '.mat'];
+    end
   end
+  
   if exist(fin)
     if mod(ii,100) == 0
       fprintf(1,'+ \n')

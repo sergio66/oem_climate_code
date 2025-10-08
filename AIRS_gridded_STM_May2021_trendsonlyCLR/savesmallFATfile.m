@@ -22,6 +22,26 @@ else
   start_apriori_str = '0';
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+if topts.descORasc == 1 & findstr(fname,'Output_Day')
+  disp('hmmm, topts.descORasc == 1 & findstr(fname,''Output_Day'') == 1 --- so I used "nightime jacs"');
+  disp('hmm, this is inconsistent, I will go with saying this is iNorD = -1');
+  if iNorD ~= -1
+    error('this is inconsistent')
+  end
+end
+if topts.descORasc == -1 & ~findstr(fname,'Output_Day')
+  disp('hmmm, topts.descORasc == -1 & ~findstr(fname,''Output_Day'') == 1 --- so I used "daytime jacs"');
+  disp('hmm, this is inconsistent, I will go with saying this is iNorD = +1');
+  if iNorD ~= +1
+    error('this is inconsistent')
+  end
+end
+if iNorD == -1
+  start_apriori_str = ['_ascorbit_' start_apriori_str];
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if topts.ocb_set == 1
   start_apriori_str = ['_cal_' start_apriori_str];
 elseif topts.ocb_set == 2
@@ -71,6 +91,7 @@ if junk == 1
     saver = [saver ' topts fracWV fracWVunc fracO3 fracO3unc deltaT deltaTunc save_cov_set chisqrR pert_unc'];
     saver = [saver ' rates fits nedt'];
     saver = [saver ' pavg iNumLay xb* pert pjunk20 maskLF rlat rlat65 rlon rlon73 nlays_straight_from_results '];
+    
     if iAK > 0
       figure(29); figure(30); 
       figure(45); figure(46); 
@@ -86,7 +107,9 @@ if junk == 1
       era5_plays     = era5.trend_plays;
       saver = [saver ' *_ak*_era5* era5_plays era5_*rate pjunk20 h p'];
     end
+
     eval(saver);
+    fprintf(1,'done saving, saver = %s \n',saver)
     
     quick_compare_era5_retrieval
 

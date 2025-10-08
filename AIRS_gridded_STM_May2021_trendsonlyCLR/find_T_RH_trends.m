@@ -181,20 +181,20 @@ pcolor(rlat,pavgLAY(1:97,1000),smoothn(fracWVlat(:,1:97)',1)); shading interp; s
 junk = zeros(size(fracWVlat)); junk = cos(rlat) * ones(1,101);
 area_wgt_fracWV = nansum(fracWVlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgt_fracWV(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
-ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('horizontal'); %plotaxis2;
+ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('vertical'); %plotaxis2;
 title(['Zonal d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 colormap(cmap)
-caxis([-1 +1]*0.015); ylim([100 1000])
+caxis([-1 +1]*0.010); ylim([100 1000])
 
 figure(30); 
-pcolor_sin(rlat,pavgLAY(1:97,1000),smoothn(fracWVlat(:,1:97)',1),30); 
+pcolor(rlat,pavgLAY(1:97,1000),smoothn(fracWVlat(:,1:97)',1)); 
 junk = zeros(size(fracWVlat)); junk = cos(rlat) * ones(1,101);
 area_wgt_fracWV = nansum(fracWVlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgt_fracWV(1:97)*10000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
-ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('horizontal'); %plotaxis2;
+ylim([10 1000]); caxis([-2 +2]*1e-3); colorbar('vertical'); %plotaxis2;
 title(['Zonal d/dt WVfrac UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
-colormap(cmap)
-caxis([-1 +1]*0.015); ylim([100 1000])
+colormap(cmap); shading interp; set(gca,'ydir','reverse');
+caxis([-1 +1]*0.01); ylim([100 1000])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -310,6 +310,17 @@ junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
 %area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);
 %hold on; plot(area_wgtT(1:97)*1000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
 ylim([10 1000]); caxis([-1 +1]*0.15); colorbar('horizontal'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
+%% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
+
+figure(29); clf
+pcolor_sin(rlat,pavgLAY(1:97,3000),deltaTlat(:,1:97)'); 
+pcolor_sin(rlat,pavgLAY(1:97,3000),smoothn(deltaTlat(:,1:97)',1));
+pcolor(rlat,pavgLAY(1:97,3000),smoothn(deltaTlat(:,1:97)',1));
+shading interp; set(gca,'ydir','reverse'); set(gca,'yscale','log')
+junk = zeros(size(deltaTlat)); junk = cos(rlat) * ones(1,101);
+%area_wgtT = nansum(deltaTlat.*junk,1)./nansum(junk,1);
+%hold on; plot(area_wgtT(1:97)*1000,pavgLAY(1:97,1000),'color','r','linewidth',2); hold off
+ylim([10 1000]); caxis([-1 +1]*0.10); colorbar('vertical'); colormap(cmap); title(['Zonal d/dt T UMBC Quantile' num2str(iQuantile,'%02d')]) %plotaxis2;
 %% aslprint('/home/sergio/PAPERS/AIRS/AIRS-STM-May-2021/tiletrends/Figs/umbc_T_zonal_trends.pdf');
 
 %{
@@ -450,10 +461,22 @@ if dataset ~= 30
   hl = legend('mmw','stemp','1226-1231','location','best'); title('Trends of SKT and MMW and 1226-1231')
 end
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(06); figure(01);  %% SKT   era5 = get_ERA5_trends_thermodynamic_and_spectral(min(iNumYears,23),iNorD);
+figure(29); figure(46);  %% T
+figure(30); figure(43);  %% WV
+
 disp('if you hit Ctrl C and look at find_T_RH_trends.m, you can save these plots ....')
 disp('ret to continue'); pause
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %{
 iPrintFigs = -1;
 if iPrintFigs > 0
@@ -463,3 +486,4 @@ if iPrintFigs > 0
   quickprint_find_T_RH_trends
 end
 %}
+

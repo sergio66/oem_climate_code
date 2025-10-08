@@ -1,5 +1,7 @@
 %% cp /home/sergio/PAPERS/SUBMITPAPERS/trends/Matlab/contrast_05_10_15_20.m compare_05_10_15_20_spectral_rates.m
 
+error('use driver_contrast_obsrates_05_10_15_20.m since it has far more things')
+
 addpath /asl/matlib/h4tools
 addpath /home/sergio/MATLABCODE
 addpath /asl/matlib/plotutils
@@ -19,6 +21,11 @@ end
   
 rlat = ones(2645,1)*p.rlat;
 rlat = cos(rlat*pi/180);
+
+a05.b_asc_zonal = squeeze(nanmean(a05.b_asc,1));  a05.b_desc_zonal = squeeze(nanmean(a05.b_desc,1)); 
+a10.b_asc_zonal = squeeze(nanmean(a10.b_asc,1));  a10.b_desc_zonal = squeeze(nanmean(a10.b_desc,1)); 
+a15.b_asc_zonal = squeeze(nanmean(a15.b_asc,1));  a15.b_desc_zonal = squeeze(nanmean(a15.b_desc,1)); 
+a20.b_asc_zonal = squeeze(nanmean(a20.b_asc,1));  a20.b_desc_zonal = squeeze(nanmean(a20.b_desc,1)); 
 
 bah = a05.mean_BT; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608); 
   mean_BT(:,1) = nanmean(rlat.*bah,2)./nanmean(rlat,2);
@@ -68,6 +75,11 @@ bah = a20.b_err_asc; bah = permute(bah,[3 1 2]); bah = reshape(bah,2645,4608);
 figure(1); clf;
 plot(h.vchan,mean_BT); xlabel('Wavenumber cm-1'); ylabel('BT(K)'); 
 xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+
+figure(2); clf
+plot(h.vchan,mean_desc_trend); xlabel('Wavenumber cm-1'); ylabel('desc d(BT)/dt (K/yr)'); 
+  xlim([640 1640]); plotaxis2; hl = legend('05','10','15','20','location','best','fontsize',8);
+  ylim([-1 +1]*0.05)
 
 figure(2); clf
 subplot(211); plot(h.vchan,mean_desc_trend); xlabel('Wavenumber cm-1'); ylabel('desc d(BT)/dt (K/yr)'); 

@@ -32,6 +32,11 @@ if ~exist('llsmap5')
   load llsmap5
 end
 
+if ~exist('iSaveJGR')
+  iSaveJGR = +1;
+  iSaveJGR = -1;
+end
+
 if ~exist('era5_tzrate')
   load('/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_CAL_startwith0_50fatlayers_NoMODELS_MLS_fortrendspaper.mat','era5_stemprate');
   load('/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_CAL_startwith0_50fatlayers_NoMODELS_MLS_fortrendspaper.mat','era5_ozrate');
@@ -220,6 +225,7 @@ pcolor(rlat,era5_plays,abs(wahaE-wahaU));
   title('dT/dt ERA5-UMBC'); colorbar; caxis([0 +1]*0.02); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); ylim([10 1000]); shading interp;
 
 figure(72); clf;
+clear wahx
 wah = abs(resultsTunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
 for ii = 1 : 64
   wahx(:,ii) = interp1(log(pavg),wah(:,ii),log(era5_plays),[],'extrap');
@@ -236,35 +242,22 @@ pcolor(rlat,era5_plays,abs(wahaE-wahaU));
   title('dfracWV/dt ERA5-UMBC'); colorbar; caxis([0 +1]*0.003); colormap(jet); set(gca,'ydir','reverse'); ylim([100 1000]); shading interp;
 
 figure(74); clf;
-wah = abs(resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2)); 
+wah = abs(resultsWVunc'); wah = squeeze(nanmean(reshape(wah,length(pavg),72,64),2));
+clear wahx
 for ii = 1 : 64
   wahx(:,ii) = interp1(log(pavg),wah(:,ii),log(era5_plays),[],'extrap');
 end
 pcolor(rlat,era5_plays,abs(wahaE-wahaU)./wahx); 
   title('dfracWV/dt (ERA5-UMBC)/uncWV'); colorbar; caxis([0 +1]*5); colormap(jet); set(gca,'ydir','reverse'); ylim([100 1000]); shading interp;
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 i400 = find(era5_plays >= 400,1);
 figure(75); clf;
 figure(76); clf; 
+figure(176); clf
 
-fig13_400mb.iSmooth = iSmooth;
-fig13_400mb.rlat65  = rlat65;
-fig13_400mb.rlon73  = rlon73;
-fig13_400mb.umbc_wv_400 = smoothn((reshape(fracWV(i400,:)',72,64)') ,1);
-fig13_400mb.era5_wv_400 = smoothn((reshape(era5_wvrate(i400,:)',72,64)') ,1);
-
-if iSmooth >= 1
-  aslmap(75,rlat65,rlon73,smoothn((reshape(fracWV(i400,:)',72,64)') ,1),     [-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt AIRS\_RT 400 mb'); 
-  aslmap(76,rlat65,rlon73,smoothn((reshape(era5_wvrate(i400,:)',72,64)') ,1),[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt ERA5 400 mb');    
-elseif iSmooth == 0.5
-  aslmap(75,rlat65,rlon73,smoothdata((reshape(fracWV(i400,:)',72,64)'),"movmean",5),     [-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt AIRS\_RT 400 mb'); 
-  aslmap(76,rlat65,rlon73,smoothdata((reshape(era5_wvrate(i400,:)',72,64)'),"movmean",5),[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt ERA5 400 mb');    
-elseif iSmooth <= 0
-  aslmap(75,rlat65,rlon73,reshape(fracWV(i400,:)',72,64)',     [-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt AIRS\_RT 400 mb'); 
-  aslmap(76,rlat65,rlon73,reshape(era5_wvrate(i400,:)',72,64)',[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5); % title('dfracWV/dt ERA5 400 mb');    
-end
+profile_figure13_wiley_1x2tiledlayout
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iOffset = 80;
@@ -300,7 +293,8 @@ figure(69); clf;
   c = colorbar('horizontal'); text(-105,6000,'K/yr','fontsize',12); set(gca,'fontsize',sizefont)
   c.Ruler.Exponent = 0; 
   c.Ruler.TickLabelFormat = '%0.3f';
-  fig14_ztest_unc.comment = '../AIRS_gridded_STM_May2021_trendsonlyCLR/driver_trendspaper_figure15_uncertainty_ztest.m --> ../AIRS_gridded_STM_May2021_trendsonlyCLR/quick_compare_era5_retrieval.m   with iV3 = 6';
+  fig14_ztest_unc.comment = '../AIRS_gridded_STM_May2021_trendsonlyCLR/driver_trendspaper_figure15_uncertainty_ztest.m --> ../AIRS_gridded_STM_May2021_trendsonlyCLR/quick_compare_era5_retrieval.m   with iV3 = 6';   %% original, before Spet 2025
+  fig14_ztest_unc.comment = '../AIRS_gridded_STM_May2021_trendsonlyCLR/driver_trendspaper_figure15_uncertainty_ztest.m --> ../AIRS_gridded_STM_May2021_trendsonlyCLR/quick_compare_era5_retrieval.m   with iV3 = 14';  %% new, after Sept 2025
   fig14_ztest_unc.rlat = rlat;
   fig14_ztest_unc.pavg = pavg;
   fig14_ztest_unc.Tunc = wah;  
@@ -324,48 +318,15 @@ figure(86); text(-105,6000,'K/yr','fontsize',12);; set(gca,'fontsize',sizefont);
 figure(90); text(-105,1350,'1/yr');set(gca,'fontsize',sizefont); text(-80,200,'(D)','fontsize',12);  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+iSaveJGRscript = +1;
 iSaveJGRscript = -1;
+if ~exist('iV3')
+  iV3 = -1;
+  disp('ooh, I think you are calling this eg in savesmallFATfile, so NOT SAVING JGR plots')
+end
 if iSaveJGRscript > 0 & iSmooth <= 0 & iV3 == 9
-
-  figure(65); figure(68); 
-
-  figure(165); clf
-  data_fig6.era5_plays = era5_plays;
-  data_fig6.rlat       = rlat;
-  data_fig6.retr_WV = squeeze(nanmean(reshape(fracWV,101,72,64),2)); data_fig6.retr_WV = data_fig6.retr_WV(1:100,:);
-  data_fig6.era5_WV = squeeze(nanmean(reshape(era5_wvrate,100,72,64),2)); data_fig6.era5_WV = data_fig6.era5_WV(1:100,:);
-  clear plotoptions
-    plotoptions.cx = [-1 +1]*0.0101;
-    plotoptions.cmap = llsmap5;
-    %plotoptions.maintitle = ' ';
-    %plotoptions.maintitle = 'dfracWV(z,lat)/dt'; 
-    plotoptions.yLimits = [100 1000]; plotoptions.xLimits = [-85 +85];
-    plotoptions.yReverseDir = +1;
-    plotoptions.yLinearOrLog = +1;
-    plotoptions.ystr = 'Pressure [mb]';
-    plotoptions.xstr = 'Latitude [deg]';
-    plotoptions.smooth = iSmooth;
-  profile_plots_2x1tiledlayout(data_fig6.rlat,data_fig6.era5_plays,data_fig6.era5_WV,data_fig6.retr_WV,165,plotoptions);
-  
-  figure(168); clf
-  data_fig6.retr_T = squeeze(nanmean(reshape(deltaT,101,72,64),2)); data_fig6.retr_T = data_fig6.retr_T(1:100,:);
-  data_fig6.era5_T = squeeze(nanmean(reshape(era5_tzrate,100,72,64),2)); data_fig6.era5_T = data_fig6.era5_T(1:100,:);
-  clear plotoptions
-    plotoptions.cx = [-1 +1]*0.101;
-    plotoptions.cmap = llsmap5;
-    %plotoptions.maintitle = ' ';
-    %plotoptions.maintitle = 'dT(z,lat)/dt'; 
-    plotoptions.yLimits = [10 1000]; plotoptions.xLimits = [-85 +85];
-    plotoptions.yReverseDir = +1;
-    plotoptions.yLinearOrLog = -1;
-    plotoptions.ystr = 'Pressure [mb]';
-    plotoptions.xstr = 'Latitude [deg]';
-    plotoptions.smooth = iSmooth;
-  profile_plots_2x1tiledlayout(data_fig6.rlat,data_fig6.era5_plays,data_fig6.era5_T,data_fig6.retr_T,168,plotoptions);
- 
-  data_fig6.comment = 'see ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/driver_trendspaper_figure15_uncertainty_ztest.m iVers = 9 --> quick_compare_era5_retrieval.m';
-
-  %% save /home/sergio/MATLABCODE/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig6.mat data_fig6
+  do_fig6_wileypaper_stuff
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -385,6 +346,7 @@ elseif iSmooth <= 0 & iV3 == 9
   figure(62); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dsst_dt_bigfont');
   figure(65); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dwvfrac_dt_bigfont');
   figure(68); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dtz_dt_bigfont');
+  figure(169); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_compare_era5_vs_calc_retrieval_dtz_dwvfrac_dt_bigfont',600,-1,-1);  
 end
 %}
 
@@ -394,8 +356,8 @@ end
 
 %% for Figure 2 of paper (ERA5 trends and retrieval) 
 %%                                     load /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q16_newERA5_2021jacs_CAL_startwith0_50fatlayers_NoMODELS_MLS_fortrendspaper.mat
-%% Xyou need to make sure you have eg  load /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS.mat   %% this is for Fig 14 of trends paper (observation)
-%% Xor from ../FIND_NWP_MODEL_TRENDS/driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
+%% X you need to make sure you have eg  load /asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_NoMODELS_testjunk_constmiss_MLS.mat   %% this is for Fig 14 of trends paper (observation)
+%% X or from ../FIND_NWP_MODEL_TRENDS/driver_show_AIRSV7_L3_vs_CLIMCAPS_vs_MERRA2_vs_ERA5_trends.m
 %% X  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_MLS.mat';    iNumYears = 20;     %% use CarbonTracker CO2 trends, MLS a priori
 %% X  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_GULP_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2.mat';        iNumYears = 20;     %% use CarbonTracker CO2 trends
 %% X  strUMBC = '/asl/s1/sergio/JUNK/smallgather_tileCLRnight_SEQN_dataset09_Q03_newERA5_2021jacs_startwith0_50fatlayers_CarbonTrackerCO2_test2D.mat'; iNumYears = 20;     %% use CarbonTracker CO2 trends
@@ -404,23 +366,35 @@ end
 %% Xsee FIND_NWP_MODEL_TRENDS/driver_compare_trends_Day_vs_Night.m --> FIND_NWP_MODEL_TRENDS/get_umbc_day_night_name.m
 
 %{
-%% << driver_trendspaper_figure15_uncertainty_ztest.m >> << iV3 = 6;   %% this is for the uncertainty z-scores, Fig 14 >>
-if iSmooth >= 1 & iV3 == 6
+%% << driver_trendspaper_figure15_uncertainty_ztest.m >> << iV3 = 6;    %% this is for the uncertainty z-scores, Fig 14 >> before Spet 2025
+%% << driver_trendspaper_figure15_uncertainty_ztest.m >> << iV3 = 14;   %% this is for the uncertainty z-scores, Fig 14 >> after Sept 2025
+
+six = 6;
+six = 14;
+iPrint = -1;
+if iPrint > 0 & iSmooth >= 1 & iV3 == six | iV3 == six-1
   figure(69); set(gca,'fontsize',12); text(-85,20,'(A)','fontsize',12);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/unc_dtz_dt');
   figure(70); set(gca,'fontsize',12); text(-85,150,'(C)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/unc_dwvfrac_dt');
-  figure(75); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/umbc_dwvfrac_dt_400mb');
-  figure(76); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_dwvfrac_dt_400mb');
+
+  if iV3 == 13
+    figure(75);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/umbc_dwvfrac_dt_400mb');
+    figure(76);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/era5_dwvfrac_dt_400mb');
+    figure(174); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/umbc_era5_dwvfrac_dt_400mb',400,-1,-1);    
+  end
   
   figure(86); set(gca,'fontsize',12); text(-85,20,'(B)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_dtz_dt');
   figure(88); set(gca,'fontsize',12); % sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_drh_dt');
   figure(90); set(gca,'fontsize',12); text(-85,150,'(D)','fontsize',12); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends/Figs/zvalue_dwvfrac_dt');
 
-elseif iSmooth <= 0 & iV3 == 6
+elseif iPrint > 0 & iSmooth <= 0 & iV3 == six | iV == six-1
   figure(69); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_unc_dtz_dt');
   figure(70); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_unc_dwvfrac_dt');
 
-  figure(75); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_umbc_dwvfrac_dt_400mb');
-  figure(76); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_era5_dwvfrac_dt_400mb');
+  if iV3 == 13
+    figure(75);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_umbc_dwvfrac_dt_400mb');
+    figure(76);  sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_era5_dwvfrac_dt_400mb');
+    figure(174); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_umbc_era5_dwvfrac_dt_400mb',600,-1,-1);
+  end
   
   figure(86); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_zvalue_dtz_dt');
   %figure(88); sergioprintfig('/home/sergio/PAPERS/SUBMITPAPERS/trends_May2025/Figs_NoSmooth/nosmooth_zvalue_drh_dt'); ?????
@@ -431,8 +405,8 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-iSaveJGR = -1;
 iSaveJGR = +1;
+iSaveJGR = -1;
 if iSaveJGR > 0 & iV3 == 6
   aslmap(175,fig13_400mb.rlat65,fig13_400mb.rlon73,fig13_400mb.umbc_wv_400,[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5);
     set(gca,'fontsize',18)
@@ -440,7 +414,7 @@ if iSaveJGR > 0 & iV3 == 6
   aslmap(176,fig13_400mb.rlat65,fig13_400mb.rlon73,fig13_400mb.era5_wv_400,[-90 +90],[-180 +180]); caxis([-1 +1]*0.015); colormap(llsmap5);
     set(gca,'fontsize',18)
     text(-0.25,-1.625,'yr^{-1}','fontsize',14)
-  %% save /home/sergio/MATLABCODE/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig13.mat fig13_400mb
+  %% save /home/sergio/MATLABCODE/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig13.mat fig13_400mb  %% july 3, 2025 do not over write
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   remake_z_test_figs_for_JGR

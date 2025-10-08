@@ -14,15 +14,23 @@ if nargin == 0
   iNorD = 1;
   iAorOrL = 0;
   iNumYears  = 19;
+  iNumYears  = 20;
+  iNumYears  = 23;    
 elseif nargin == 1
   iNorD = 1;
   iAorOrL = 0;
   iNumYears  = 19;
+  iNumYears  = 20;
+  iNumYears  = 23;    
 elseif nargin == 2
   iAorOrL = 0;
   iNumYears  = 19;
+  iNumYears  = 20;
+  iNumYears  = 23;    
 elseif nargin == 3
   iNumYears  = 19;
+  iNumYears  = 20;
+  iNumYears  = 23;    
 end
 
 if length(intersect(iNWP,[1 2 5])) == 0
@@ -79,12 +87,14 @@ end
 % end
 % iNumYears = 19;
 
+fprintf(1,'getdata_NWP.m : iNumYears = %2i \n',iNumYears)
+
 %% airsL3 : 'native' = 180 bins from L3, 'zonal' = 40 equal area latbins, [] = 64x72
 if iNorD > 0
   strNorD = 'NIGHT';
   if iNWP == 5
     %fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat';
-    if  iNumYears <= 20 & iNumYears >= 0
+    if  iNumYears <= 23 & iNumYears >= 0
       fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
     % if iNumYears == 20
     %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
@@ -97,7 +107,7 @@ if iNorD > 0
     elseif  iNumYears < 0
       fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];
     else
-      error('ERA5 : needs 01 .. 20 years')
+      error('ERA5 : needs 01 .. 23 years')
     end
     strChoice  = 'ERA5';
   elseif iNWP == 1
@@ -139,6 +149,24 @@ else
     %elseif iNumYears == 07
     %  fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_asc.mat';
     %end
+
+    if  iNumYears <= 23 & iNumYears >= 0
+      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+    % if iNumYears == 20
+    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
+    % elseif iNumYears == 19
+    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat';
+    % elseif iNumYears == 12
+    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat';
+    % elseif iNumYears == 07
+    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat';
+    elseif  iNumYears < 0
+      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];
+    else
+      error('ERA5 : needs 01 .. 23 years')
+    end
+
+    
     strChoice  = 'ERA5';
   elseif iNWP == 1
     fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_asc.mat';

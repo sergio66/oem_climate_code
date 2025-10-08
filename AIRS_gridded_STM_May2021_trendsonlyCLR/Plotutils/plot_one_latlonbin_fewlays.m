@@ -35,13 +35,48 @@ for ii = 1 : length(driver.jacobian.wvjaclays_used)
   playsRET(ii) = mean(plays(junk));
 end
 
-if driver.NorD == +1
-  %era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat');
-  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat');
-elseif driver.NorD == -1
-  %era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat');
-  era5 = load('../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if driver.iNumYears <= 19
+  if driver.NorD == +1
+    %era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_desc.mat';
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat';
+  elseif driver.NorD == -1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat';
+    %era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat';
+  end
+elseif driver.iNumYears <= 20
+  if driver.NorD == +1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
+  elseif driver.NorD == -1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_asc.mat';
+  end
+elseif driver.iNumYears <= 20
+  if driver.NorD == +1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
+  elseif driver.NorD == -1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_asc.mat';
+  end
+elseif driver.iNumYears <= 22
+  if driver.NorD == +1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_trends_desc.mat';
+  elseif driver.NorD == -1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_trends_asc.mat';    
+  end
+elseif driver.iNumYears <= 23
+  if driver.NorD == +1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_desc.mat';
+  elseif driver.NorD == -1
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_asc.mat';    
+  end
+else
+  error('hmm which era5trendfile to use???')
 end
+fprintf(1,'comparing retrived trends for iNumyears = %2i against %s \n',driver.iNumYears,era5trendfile);
+era5 = load(era5trendfile);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for ii = 1
   filex = [outputdir '/test' num2str(driver.iibin) '.mat'];
@@ -70,8 +105,9 @@ for ii = 1
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(1); clf; semilogy(wv_ret,playsRET,era5.trend_gas_1(1:97,driver.iibin),plays(1:97),'linewidth',2); 
+figure(1); clf; plot(wv_ret,playsRET,era5.trend_gas_1(1:97,driver.iibin),plays(1:97),'linewidth',2); plotaxis2;
   set(gca,'ydir','reverse'); ylim([10 1000]); title('WV frac rate'); hl=legend('UMBC','ERA5','location','best');
-figure(2); clf; semilogy(temp_ret,playsRET,era5.trend_ptemp(1:97,driver.iibin),plays(1:97),'linewidth',2); 
+figure(2); clf; semilogy(smooth(temp_ret,20),playsRET,era5.trend_ptemp(1:97,driver.iibin),plays(1:97),'linewidth',2);plotaxis2;
+figure(2); clf; semilogy(temp_ret,playsRET,era5.trend_ptemp(1:97,driver.iibin),plays(1:97),'linewidth',2);plotaxis2;
   set(gca,'ydir','reverse'); ylim([10 1000]); title('T(z) rate'); hl=legend('UMBC','ERA5','location','best');
 fprintf(1,'iibin = %4i UMBC CO2rate/stemprate  = %8.6f ppm/yr %8.6f K/yr   ERA stemprate = %8.6f K/yr \n',driver.iibin,traceNstemp([1 6],1),era5.trend_stemp(driver.iibin))

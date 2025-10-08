@@ -23,7 +23,7 @@ load('llsmap5.mat');
 %% note this code only handles 2002_09 to YYYY_08 sp
 %%      this code does not currently handle eg OCO2 ERA5_atm_N_cld_data_2012_05_to_2019_04_trends_desc.mat
 
-can start afresh from here%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -47,7 +47,32 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears
 if length(JOB) == 0
   JOB = 20;
   JOB = 22;
+  JOB = 23;  
 end
+
+iNumYears = 18; %% 2002/09-2020/08
+iNumYears = 19; %% 2002/09-2021/08
+iNumYears = 12; %% 2002/09-2014/08
+iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+iNumYears = 20; %% 2002/09-2022/08
+iNumYears = 22; %% 2002/09-2024/06
+iNumYears = 23; %% 2002/09-2024/06
+
+iNumYears = JOB;
+
+yymmS = [2020 07]; yymmE = [2024 06];
+yymmS = [2002 09]; yymmE = [2024 06];
+yymmS = [2002 09]; yymmE = [2024 08];
+yymmS = [2002 09]; yymmE = [yymmS(1)+iNumYears 08];
+
+%iaFound = zeros(1,iNumYears*12);
+
+clear iaFound
+%iaMax = 18*12; %% 18 year
+%iaMax = 19*12; %% 19 year
+iaMax = iNumYears*12;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~exist('iTrendsOrAnoms')
   iTrendsOrAnoms = -1;  %% surface and atmospheric anomalies
@@ -60,28 +85,17 @@ end
 if ~exist('iDorA')
   iDorA = -10; %% asc,  random pert about tile center
   iDorA = +10; %% desc, random pert about tile center
-  iDorA = -1;  %% asc,  tile center
   iDorA = +1;  %% desc, tile center
+  iDorA = -1;  %% asc,  tile center
 end
 fprintf(1,'iDorA = %2i \n',iDorA)
 
-clear iaFound
-%iaMax = 18*12; %% 18 year
-%iaMax = 19*12; %% 19 year
-
-iNumYears = 18; %% 2002/09-2020/08
-iNumYears = 19; %% 2002/09-2021/08
-iNumYears = 12; %% 2002/09-2014/08
-iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iNumYears = 20; %% 2002/09-2022/08
-iNumYears = 22; %% 2002/09-2024/06
-
 iCnt = 0;
-for yy = 2002 : 2024
+for yy = 2002 : yymmE(1)
   mmS = 1; mmE = 12;
   if yy == 2002
     mmS = 09;
-  elseif yy == 2024
+  elseif yy == yymmE(1)
     mmE = 06;
     mmE = 08;
   end
@@ -91,10 +105,6 @@ for yy = 2002 : 2024
     mmsave(iCnt) = mm;
   end
 end
-
-yymmS = [2020 07]; yymmE = [2024 06];
-yymmS = [2002 09]; yymmE = [2024 06];
-yymmS = [2002 09]; yymmE = [2024 08];
 
 iaMin = find(yymmS(1) == yysave & yymmS(2) == mmsave);
 iaMax = find(yymmE(1) == yysave & yymmE(2) == mmsave);
@@ -124,53 +134,28 @@ end
 fprintf(1,'seeing how many of the expected %3i files exist \n',iaMax);
 disp('  "+" are the 100, "x" are tens .. ')
 
+iOLR = -1;
 iOLR = +1;
-for ii = iaMin : iaMax
-  % iForwardFrom2002_or_BackwardFrom2022 = +1;
-  %if mod(ii,100) == 0 & iForwardFrom2002_or_BackwardFrom2022 > 0
-  %  fprintf(1,'+ \n')
-  %elseif mod(ii,10) == 0 & iForwardFrom2002_or_BackwardFrom2022 > 0
-  %  fprintf(1,'x')
-  %elseif iForwardFrom2002_or_BackwardFrom2022 > 0
-  %  fprintf(1,'.')
-  %end
 
-  if iOLR < 0
-    if iDorA == 1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == 10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    end
-  else
-    if iDorA == +1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == +10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
-    end
-  end
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  if exist(fin)
-    fprintf(1,'%3i : %s exists \n',ii,fin)
-    iaFound(ii) = 1;
-    moo = load(fin,'pnew_op');
-    iaNumProf(ii) = length(moo.pnew_op.stemp);
-    if length(moo.pnew_op.stemp) ~= 4608
-      fprintf(1,'OH NO %s %4i has %4i profiles instead of 4608 \n',fin,ii,iaNumProf(ii))
-    end
-  else
-    iaFound(ii) = 0;
-    iaNumProf(ii) = -1;
-    fprintf(1,'%3i : %s DNE \n',ii,fin)
-  end
+%% this is quick check
+iExistOnly_or_NumProfsAlso = +1;
+quick_exist_ERA5_files_for_trends
+
+fprintf(1,'iNumYears = %3i : found %3i of expected %3i files \n',[iNumYears sum(iaFound) length(iaFound)])
+if sum(iaFound) < length(iaFound)
+  bad = find(iaFound == 0);
+  fprintf(1,'found the following %3i bad files ... please redo \n',length(bad))
+  bad
+  error('bad files ... redo')
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% this is check to see if there are 4608 files
+iExistOnly_or_NumProfsAlso = -1;
+quick_exist_ERA5_files_for_trends
 
 fprintf(1,'iNumYears = %3i : found %3i of expected %3i files \n',[iNumYears sum(iaFound) length(iaFound)])
 bad = find(iaFound > 0 & iaNumProf ~= 4608);
@@ -179,6 +164,8 @@ if length(bad) > 0
   bad
   error('bad files ... redo')
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %iForwardFrom2002_or_BackwardFrom2022 = +1;
 plot(1:iaMax,iaFound,'+-')
@@ -189,29 +176,29 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
+disp('reading in monthly ERA5 data in /asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
 disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
 fprintf(1,' "+" are the 100, "x" are tens .. need to read in %3i \n',iaMax)
 for ii = iaMin : iaMax
   if iOLR < 0
     if iDorA == 1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == 10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     end
   else
     if iDorA == +1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == +10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/randomptera5_tile_center_monthly_' num2str(ii,'%03d') '.mat'];
     end
   end
 
@@ -370,12 +357,12 @@ if ~exist(foutjunk)
   iSave = input('Save BIG FAT FILES???? (-1/+1) : ');
 end
 
-fprintf(1,'iSave   iEnsureSave    foutjunk  = %2i %s  \n',iSave,iEnsureSave,foutjunk);
+fprintf(1,'iSave   iEnsureSave    foutjunk  = %2i %2i %s  \n',iSave,iEnsureSave,foutjunk);
 disp('RET to continue'); pause
 
 if iSave > 0 | iEnsureSave > 0
   %%% foutjunk = ['ERA5_atm_data_2002_09_to_*.mat'];
-  fprintf(1,'saving huge file : can type in a separate window         watch "ls -lt %s " \n',foutjunk)
+  fprintf(1,'saving huge file : can type in a separate window         watch "ls -lth %s " \n',foutjunk)
   saver = ['save -v7.3 ' foutjunk ' comment all'];
   eval(saver);
 end
@@ -390,6 +377,13 @@ figure(6); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.RHSurf)
 figure(7); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.TwSurf); colormap(jet); title('ERA5 mean TWSurf DO BELIEVE')
 figure(8); clf; scatter_coast(a.pnew_op.rlon,a.pnew_op.rlat,40,a.pnew_op.mmw); colormap(jet); title('ERA5 mean mmw')
 
+cosrlat = ones(length(all.yy),1)*cos(all.rlat*pi/180);
+cos_stemp = nanmean(cosrlat.*all.stemp,2)./nanmean(cosrlat,2);
+doy2002 = 2002 + change2days(all.yy,all.mm,all.dd,2002)/365.25;
+figure(9); clf; plot(doy2002,nanmean(all.stemp,2),doy2002,cos_stemp,'r'); title('Simple and coswgt <stemp>'); xlim([min(doy2002) max(doy2002)])
+grid on
+
+pause(0.1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -450,7 +444,7 @@ elseif iTrendsOrAnoms < 0
 
 %  fout_trendjunk_surface_anom = ['anom_' fout_trendjunk_surface_anom];
 
-  if ~exist(fout_trendjunk_surface_anom | iEnsureSave > 0
+  if ~exist(fout_trendjunk_surface_anom) | iEnsureSave > 0
     fprintf(1,'saving surface/scalar anomaly file : can type in a separate window         watch "ls -lt %s " \n',fout_trendjunk_surface_anom)
     saver = ['save ' fout_trendjunk_surface_anom ' comment anom_*'];
     eval(saver);
@@ -523,56 +517,56 @@ addpath /asl/matlib/maps/
 aslmap(1,rlat65,rlon73,smoothn((reshape(trend_stemp,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 dST/dt');      caxis([-1 +1]*0.15); colormap(llsmap5)
 aslmap(2,rlat65,rlon73,smoothn((reshape(trend_RHSurf,72,64)') ,1), [-90 +90],[-180 +180]); title('ERA5 UGH dRHSurf/dt'); caxis([-1 +1]*0.25); colormap(llsmap5)
 
-figure(3); junk = reshape(trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend ptemp K/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
-figure(4); junk = reshape(trend_RH,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend RH percent/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
-figure(5); junk = reshape(trend_gas_1,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend WVfrac /yr');  caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(3); clf; junk = reshape(trend_ptemp,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend ptemp K/yr');     caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log');    shading interp; ylim([10 1000]); colorbar
+figure(4); clf; junk = reshape(trend_RH,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend RH percent/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','linear'); shading interp; ylim([100 1000]); colorbar
+figure(5); clf; junk = reshape(trend_gas_1,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer trend WVfrac /yr');     caxis([-1 +1]*0.01); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','linear'); shading interp; ylim([100 1000]); colorbar
 
-figure(6); junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer mean ptemp K');  caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
-figure(7); junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer mean RH percent');  caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+figure(6); clf; junk = squeeze(nanmean(all.ptemp,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer mean ptemp K');    caxis([200 300]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(7);clf; junk = squeeze(nanmean(all.RH,1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer mean RH percent'); caxis([0 100]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 
 %{
-figure(8); junk = squeeze(nanstd(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
-figure(9); junk = squeeze(nanstd(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+figure(8); clf; junk = squeeze(nanstd(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev ptemp K');    caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(9); clf; junk = squeeze(nanstd(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanstd(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev RH percent'); caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 
-figure(10); junk = squeeze(max(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev ptemp K');  caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
-figure(11); junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev RH percent');  caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
+figure(10); clf; junk = squeeze(max(all.ptemp,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev ptemp K');    caxis([00 20]; colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([10 1000]); colorbar
+figure(11); clf; junk = squeeze(max(all.RH,[],1)); junk = junk(1:100,:); junk = reshape(junk,100,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_plays,junk); title('ERA5 100 layer stddev RH percent'); caxis([0 20]); colormap(jet); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading flat; ylim([100 1000]); colorbar
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure(8); junk = reshape(trend_nwp_ptemp,37,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(8); clf; junk = reshape(trend_nwp_ptemp,37,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend ptemp K/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([10 1000]); colorbar
-figure(9); junk = reshape(trend_nwp_rh,37,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(9); clf; junk = reshape(trend_nwp_rh,37,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend RH percent/yr');  caxis([-1 +1]*0.15); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
-figure(10); junk = reshape(trend_nwp_gg,37,72,64); junk = squeeze(nanmean(junk,2)); 
+figure(10); clf; junk = reshape(trend_nwp_gg,37,72,64); junk = squeeze(nanmean(junk,2)); 
   pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend SH g/g/yr');  caxis([0 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
-figure(11); junk = reshape(trend_nwp_ppmv,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend PPMV /yr');  caxis([0 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
-figure(12); junk = reshape(trend_nwp_frac,37,72,64); junk = squeeze(nanmean(junk,2)); 
-  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  frac /yr');  caxis([-10 +10]*1e-3); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(11); clf; junk = reshape(trend_nwp_ppmv,37,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  trend PPMV /yr');  caxis([0 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','linear'); shading interp; ylim([100 1000]); colorbar
+figure(12); clf; junk = reshape(trend_nwp_frac,37,72,64); junk = squeeze(nanmean(junk,2)); 
+  pcolor(trend_rlat64,trend_nwp_plevs_mean,junk); title('ERA5 37 lvl  frac /yr');  caxis([-10 +10]*1e-3); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','linear'); shading interp; ylim([100 1000]); colorbar
 
 pause(0.1);
 
 junk1 = squeeze(nanmean(all.nwp_gas_1,1)); junk1 = reshape(junk1,37,72,64); junk1 = squeeze(nanmean(junk1,2)); 
 junk2 = reshape(trend_nwp_frac,37,72,64); junk2 = squeeze(nanmean(junk2,2)); 
-figure(13); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 37 lvl  SH g/g/yr VERS2');  caxis([0 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(13); clf; pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 37 lvl  SH g/g/yr VERS2');  caxis([0 +2.5]*1e-5); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 junk1 = toppmv(all.nwp_plevs,all.nwp_ptemp,all.nwp_gas_1,18,21); junk1 = squeeze(nanmean(junk1,1));
 junk1 = reshape(junk1,37,72,64); junk1 = squeeze(nanmean(junk1,2));
 junk2 = reshape(trend_nwp_frac,37,72,64); junk2 = squeeze(nanmean(junk2,2)); 
-figure(14); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1);
-figure(14); loglog(nanmean(junk1,2),trend_nwp_plevs_mean);  set(gca,'ydir','reverse'); xlim([1 1e4]); grid
-figure(14); pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 37 lvl  PPMV/yr VERS2');  caxis([0 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
+figure(14); clf; pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1);
+figure(14); clf; loglog(nanmean(junk1,2),trend_nwp_plevs_mean);  set(gca,'ydir','reverse'); xlim([1 1e4]); grid
+figure(14); clf; pcolor(trend_rlat64,trend_nwp_plevs_mean,junk1.*junk2); title('ERA5 37 lvl  PPMV/yr VERS2');  caxis([0 40]); colormap(llsmap5); set(gca,'ydir','reverse'); set(gca,'yscale','log'); shading interp; ylim([100 1000]); colorbar
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -22,6 +22,32 @@ else
   start_apriori_str = '0';
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+if topts.descORasc == 1 & findstr(fname,'Output_Day')
+  disp('hmmm, topts.descORasc == 1 & findstr(fname,''Output_Day'') == 1 --- so I used "nightime jacs"');
+  disp('hmm, this is inconsistent, I will go with saying this is iNorD = -1');
+  if iNorD ~= -1
+    error('this is inconsistent')
+  end
+end
+if topts.descORasc == -1 & ~findstr(fname,'Output_Day')
+  disp('hmmm, topts.descORasc == -1 & ~findstr(fname,''Output_Day'') == 1 --- so I used "daytime jacs"');
+  disp('hmm, this is inconsistent, I will go with saying this is iNorD = +1');
+  if iNorD ~= +1
+    error('this is inconsistent')
+  end
+end
+if iNorD == -1
+  start_apriori_str = ['_ascorbit_' start_apriori_str];
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if topts.ocb_set == 1
+  start_apriori_str = ['_cal_' start_apriori_str];
+elseif topts.ocb_set == 2
+  start_apriori_str = ['_bias_' start_apriori_str];
+end
+
 numretlayers_str = [num2str(topts.iNlays_retrieve) 'fatlayers'];
 
 if length(iaSequential) == 1 & iaSequential(1) == -1
@@ -41,6 +67,22 @@ junk = input('save savebigFATfile???? (-1 default/+1) : ');
 if length(junk) == 0
   junk = -1;
 end
+
+if iAK > 0
+  figure(29); figure(30); 
+  figure(45); figure(46); 
+  deltaRH = real(deltaRH);
+  figure(54); clf; waha = squeeze(nanmean(reshape(deltaRH,100,72,64),2));        pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('UMBC dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
+  figure(55); clf; waha = squeeze(nanmean(reshape(era5.trend_RH,100,72,64),2));  pcolor(waha); shading interp; colorbar; set(gca,'ydi','reverse'); title('ERA5 dRH/dt'); colormap(llsmap5); caxis([-1 +1]*0.5)
+  figure(56); clf; waha = save_cov_set.xb_wvz(2,:);                              aslmap(56,rlat65,rlon73,smoothn(reshape(waha,72,64)',1), [-90 +90],[-180 +180]); colormap(llsmap5); caxis([-1 +1]*0.015); title('xb(WVfrac(gnd))')
+  era5_stemprate = era5.trend_stemp;
+  era5_wvrate    = era5.trend_gas_1;
+  era5_rhrate    = era5.trend_RH;
+  era5_ozrate    = era5.trend_gas_3;
+  era5_tzrate    = era5.trend_ptemp;
+  era5_plays     = era5.trend_plays;
+end
+
 if junk == 1
   junk2 = +1;
   genericoutname = input('Enter name of savebigFATfile : ');
@@ -57,3 +99,4 @@ if junk == 1
     eval(saver);
   end 
 end
+fprintf(1,'done saving, saver = %s \n',saver)

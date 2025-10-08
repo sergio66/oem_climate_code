@@ -129,20 +129,41 @@ plot(fchanx,nansum(cosYYNPolar.*obsrates.rates,2)./ncYY,'k',fchanx,nansum(cosYYN
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('showing *** ALL *** 4608 lats/lons Figs 50-56 so you may see a lot a lot of crazy structure!!!!')
+fprintf(1,'iOffSet = %3i \n',iOffSet)
+fprintf(1,'iOffSet+10 = %3i \n',iOffSet+10)
 figure(iOffSet+10); clf;
-  pcolor(fchanx,YY,obsrates.rates');                       shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+  pcolor(fchanx,YY,obsrates.rates');                       shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates \newline all72 lonbins/latbin'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 figure(iOffSet+11); clf;
-  pcolor(fchanx,YY,umbcL3.umbcL3_spectral_rates');         shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('UMBC Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+  pcolor(fchanx,YY,umbcL3.umbcL3_spectral_rates');         shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('UMBC Rates \newline all72 lonbins/latbin'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 figure(iOffSet+12); clf;
-  pcolor(fchanx,YY,era5.era5_spectral_rates');             shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('ERA5 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+  pcolor(fchanx,YY,era5.era5_spectral_rates');             shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('ERA5 Rates \newline all72 lonbins/latbin'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 figure(iOffSet+13); clf;
-  pcolor(fchanx,YY,merra2.merra2_spectral_rates');         shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('MERRA2 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+  pcolor(fchanx,YY,merra2.merra2_spectral_rates');         shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('MERRA2 Rates \newline all72 lonbins/latbin'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 figure(iOffSet+14); clf;
-  pcolor(fchanx,YY,airsL3.airsL3_spectral_rates');         shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('AIRS L3 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+  pcolor(fchanx,YY,airsL3.airsL3_spectral_rates');         shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('AIRS L3 Rates \newline all72 lonbins/latbin'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 figure(iOffSet+15); clf;
-  pcolor(fchanx,YY,climcapsL3.climcapsL3_spectral_rates'); shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('CLIMCAPS L3 Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
+  pcolor(fchanx,YY,climcapsL3.climcapsL3_spectral_rates'); shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('CLIMCAPS L3 Rates \newline all72 lonbins/latbin'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
 
-iX = find(fchanx >= 1608,1);
+keyboard_nowindow
+iX = 1 : 2645;
+iX = find(fchanx <= 1608);
+z11 = squeeze(nanmean(reshape(obsrates.rates',72,64,2645),1));
+z12 = squeeze(nanmean(reshape(umbcL3.umbcL3_spectral_rates',72,64,2645),1));
+z21 = squeeze(nanmean(reshape(era5.era5_spectral_rates',72,64,2645),1));
+z22 = squeeze(nanmean(reshape(merra2.merra2_spectral_rates',72,64,2645),1));
+z31 = squeeze(nanmean(reshape(airsL3.airsL3_spectral_rates',72,64,2645),1));
+z32 = squeeze(nanmean(reshape(climcapsL3.climcapsL3_spectral_rates',72,64,2645),1));
+  plotoptions6.str11 = 'AIRS L1C';   plotoptions6.str12 = 'UMBC';
+  plotoptions6.str21 = 'ERA52';      plotoptions6.str22 = 'MERRA2';
+  plotoptions6.str31 = 'AIRS L3';   plotoptions6.str32 = 'CLIMCAPS';
+  plotoptions6.ystr = 'Latitude';   plotoptions6.xstr = 'Wavenumber / [cm-1]';
+  plotoptions6.maintitle = 'dBT/dt / [K/yr]';
+  plotoptions6.cx = [-1 +1]*0.25; plotoptions6.cmap = llsmap5; plotoptions6.yReverseDir = -1; plotoptions6.yLinearOrLog = +1;
+  tiled_3x2layout(z11(:,iX),z12(:,iX),z21(:,iX),z22(:,iX),z31(:,iX),z32(:,iX),iOffSet+16,plotoptions6,fchanx(iX),unique(YY));
+
+%{
+!!! takes too long!!!
+iX = 2645;
 z11 = obsrates.rates(1:iX,:);
 z12 = umbcL3.umbcL3_spectral_rates(1:iX,:);;
 z21 = era5.era5_spectral_rates(1:iX,:);;
@@ -156,6 +177,7 @@ z32 = climcapsL3.climcapsL3_spectral_rates(1:iX,:);;
   plotoptions6.maintitle = 'dBT/dt / [K/yr]';
   plotoptions6.cx = [-1 +1]*0.25; plotoptions6.cmap = llsmap5; plotoptions6.yReverseDir = -1; plotoptions6.yLinearOrLog = +1;
   tiled_3x2layout(z11',z12',z21',z22',z31',z32',iOffSet+16,plotoptions6,fchanx(1:iX),YY);
+%}
 
 %zall = [z11(:) z12(:) z21(:) z22(:) z31(:) z32(:)]';
 %corrcoef(zall')
@@ -169,6 +191,8 @@ z32 = climcapsL3.climcapsL3_spectral_rates(1:iX,:);;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('showing *** zonal averages *** in Figs 60-66 : zonally averaged 64 latbins so cleaner/less structure than the previous five')
+fprintf(1,'iOffSet = %3i \n',iOffSet)
+fprintf(1,'iOffSet+20 = %3i \n',iOffSet+20)
 figure(iOffSet+20); clf;
   pcolor(fchanx,nanmean(reshape(YY,72,64),1),squeeze(nanmean(reshape(obsrates.rates',72,64,2645),1)));                       
   shading flat; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('Obs Rates'); xlabel('Wavenumber'); ylabel('Latitude'); xlim([640 1640])
@@ -215,6 +239,23 @@ data_fig5c.rlat  = savetherates.latavg;
 data_fig5c.vchan = savetherates.fchanx;
 %% save /umbc/xfs2/strow/asl/s1/sergio/home/git/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig5c.mat data_fig5c
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+oldmat = load('spectral_rate_avgs_umbc_obs_era5_merra2_airsL3_climcapsL3.mat');  %% saved Jan 20, 2025
+
+figure(1); clf; pcolor(data_fig5c.vchan,data_fig5c.rlat,data_fig5c.obs);  shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+figure(3); clf; pcolor(data_fig5c.vchan,data_fig5c.rlat,data_fig5c.era5); shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+
+figure(4); clf; pcolor(oldmat.savetherates.fchanx,oldmat.savetherates.latavg,oldmat.savetherates.obs);  shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+figure(5); clf; pcolor(oldmat.savetherates.fchanx,oldmat.savetherates.latavg,oldmat.savetherates.era5); shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+
+figure(6); clf; pcolor(oldmat.savetherates.fchanx,oldmat.savetherates.latavg,oldmat.savetherates.obs-data_fig5c.obs);   shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+figure(7); clf; pcolor(oldmat.savetherates.fchanx,oldmat.savetherates.latavg,oldmat.savetherates.era5-data_fig5c.era5); shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+
+figure(8); clf; pcolor(oldmat.savetherates.fchanx,oldmat.savetherates.latavg,smoothn(oldmat.savetherates.obs,1));  shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+figure(9); clf; pcolor(oldmat.savetherates.fchanx,oldmat.savetherates.latavg,smoothn(oldmat.savetherates.era5,1)); shading interp; ylabel('Latitude (deg)'); xlabel('Wavenumber cm^{-1}'); xlim([650 1620]); caxis([-1 +1]*0.1); colormap(usa2); colorbar
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+disp('keyboard_nowindow so you can make fig5 for trends paper')
 keyboard_nowindow
 
 quick_tropical_perts

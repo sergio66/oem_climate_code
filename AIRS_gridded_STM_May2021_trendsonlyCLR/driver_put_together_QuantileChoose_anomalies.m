@@ -50,6 +50,7 @@ load h2645structure.mat
 iNumYears = 20;    iNumAnomTimeSteps = 454; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 454!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 iNumYears = 21.75; iNumAnomTimeSteps = 496; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 498!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 iNumYears = 22;    iNumAnomTimeSteps = 500; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 500!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
+iNumYears = 25;    iNumAnomTimeSteps = 525; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 526!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 
 iQAX = input('Enyter iQAX [1,3,4] 3=default : ');
 if length(iQAX) == 0
@@ -70,6 +71,9 @@ for jj = 1 : 64
     elseif iNumYears == 22
       fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_Anomaly_TimeSteps502.mat'];
+    elseif iNumYears == 25
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = [dirData fname '_V1_Anomaly_TimeSteps525.mat'];
     else
       error('unknown iNumYears')
     end

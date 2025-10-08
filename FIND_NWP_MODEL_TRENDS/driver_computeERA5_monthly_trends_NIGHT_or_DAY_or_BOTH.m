@@ -29,9 +29,10 @@ load('llsmap5.mat');
 
 disp('takes about 5 hours for trends')
 
-JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
+JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 23 for the iNumYears 
 if length(JOB) == 0
-  JOB = 20
+  JOB = 20;
+  JOB = 23;
 end
 
 if ~exist('iTrendsOrAnoms')
@@ -52,6 +53,7 @@ if ~exist('iDorA')
   iDorA = +1;   %% NIGHT time (avg of 4 steps, tile center)
   iDorA = 0;    %% 24 hour    (avg of 8 steps, tile center)
 end
+iDorA = +1;   %% NIGHT time (avg of 4 steps, tile center)
 fprintf(1,'iDorA = %2i \n',iDorA)
 
 clear iaFound
@@ -63,6 +65,7 @@ iNumYears = 19; %% 2002/09-2021/08
 iNumYears = 12; %% 2002/09-2014/08
 iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iNumYears = 20; %% 2002/09-2022/08
+iNumYears = 23; %% 2002/09-2025/08
 
 iForwardFrom2002_or_BackwardFrom2022 = -2022; %% new     2022 <---- 20XY
 iForwardFrom2002_or_BackwardFrom2022 = +1;    %% default 2002 ----> 20XY
@@ -121,8 +124,8 @@ end
 fprintf(1,'seeing how many of the expected %3i files exist \n',iaMax);
 disp('  "+" are the 100, "x" are tens .. ')
 
-iOLR = +1;
 iOLR = -1;
+iOLR = +1;
 [iOLR iaMin iaMax]
 for ii = iaMin : iaMax
   if mod(ii,100) == 0
@@ -135,25 +138,24 @@ for ii = iaMin : iaMax
 
   if iOLR < 0
     if iDorA == +1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/era5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/era5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == +10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/randomptera5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/randomptera5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/era5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/era5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/randomptera5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/randomptera5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == 0
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/era5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/era5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == 100
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/randomptera5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/randomptera5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
     end
 
   else
-    error(';l;l;l')
     if iDorA > 0
-      fin = ['XYZ//asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['XYZ//asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
     else
-      fin = ['XYZ//asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['XYZ//asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
     end
   end
 
@@ -185,34 +187,35 @@ if sum(iaFound) < length(iaFound) & iForwardFrom2002_or_BackwardFrom2022 > 0
 elseif iForwardFrom2002_or_BackwardFrom2022 < 0 & sum(iaFound) ~= (iaMax-iaMin + 1)
   disp('these not found going backwards')
   printarray(find(iaFound == 0))
+  fin
   error('not enough')
 end
 
-disp('reading in monthly ERA5 data in /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
+disp('reading in monthly ERA5 data in /asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
 disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')
 fprintf(1,' "+" are the 100, "x" are tens .. need to read in %3i \n',iaMax)
 for ii = iaMin : iaMax
   if iOLR < 0
     if iDorA == +1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/era5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/era5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == +10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/randomptera5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH//DESC/randomptera5_tile_center_DmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -1
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/era5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/era5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == -10
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/randomptera5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/ASC/randomptera5_tile_center_NmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == 0
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/era5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/era5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
     elseif iDorA == 100
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/randomptera5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DAY_NIGHT_BOTH/BOTH/randomptera5_tile_center_BmonthlySST_' num2str(ii,'%03d') '.mat'];
     end
 
   else
     error('lgjd;hjd;js')
     if iDorA > 0
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/DESC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
     else
-      fin = ['/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
+      fin = ['/asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ASC_WithOLR/era5_tile_center_monthlySST_' num2str(ii,'%03d') '.mat'];
     end
   end
 
