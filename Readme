@@ -1,0 +1,13 @@
+After you clone
+[sergio@chip-login3 oem_climate_code]$ git branch
+* master
+
+[sergio@chip-login3 oem_climate_code]$ git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+  remotes/origin/sergio
+
+
+Make sure you switch to branch sergio
+  git checkout sergio
