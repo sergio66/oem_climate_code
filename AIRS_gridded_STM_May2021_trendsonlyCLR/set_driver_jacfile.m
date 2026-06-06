@@ -34,6 +34,8 @@ if driver.i16daytimestep < 0
     %% for now assume same jacs
     AHA = '/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/';
     AHA = '/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/';
+    AHA = '/home/sergio/nogit/TILEJACS/AVG/KCARTA/T_WV_O3/LatBin65/SubsetJacLatbin/';
+    
     %% figure out which latbin
     %% latbin 1 has jacs/points for indices 1:72 + (1-1)*72
     %% latbin 2 has jacs/points for indices 1:72 + (2-1)*72
@@ -43,10 +45,12 @@ if driver.i16daytimestep < 0
     iKCARTAorSARTA = +1;
     iVersJac = 2019;     %% ERA5 from 2002-2019
     iVersJac = 2021;     %% ERA5 from 2002-2021
-
+    iVersJac = 2025;     %% ERA5 from 2002-2025
 
     if settings.dataset == 30
       iVersJac = 2022;   %% ERA5 cldQ from 2002-2022, so use for Q-8 etc (cloudy)  AMSU AMSU AMSU
+    elseif settings.dataset == 19
+      iVersJac = 2025;   %% ERA5 cldQ from 2002-2025, s
     elseif settings.dataset == 5
       iVersJac = 2014;   %% AMIP6/CMIp6 2002-2014, 12 years
     elseif settings.dataset == 6
@@ -109,9 +113,11 @@ if driver.i16daytimestep < 0
           %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/clust_put_together_jacs_clrERA5.m
           AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5,  2002-2022 20 year <CLR>
         end
+      elseif iVersJac == 2025
+        AHA = [AHA '/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(driver.jac_latbin,'%02i') '.mat']; %% ERA5, 2002-2021 19 year	
       else
         iVersJac
-        error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021, 2022 and fake 2023 [2002/09-20XY/08] only')
+        error('iVersJac = [2012,2015 = 2012/05-2019/04]  or 2014, 2019, 2021, 2022 and fake 2023 [2002/09-20XY/08] and 2025 only')
       end
     end
 

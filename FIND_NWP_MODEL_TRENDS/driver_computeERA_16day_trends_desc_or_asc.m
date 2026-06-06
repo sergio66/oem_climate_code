@@ -1,15 +1,17 @@
 %% monthly, 18 years x 12 months/year = 216
 %% monthly, 19 years x 12 months/year = 228
 
-addpath /home/sergio/MATLABCODE/
-addpath /home/sergio/MATLABCODE/PLOTTER
-addpath /home/sergio/MATLABCODE/TIME
-addpath /home/sergio/MATLABCODE/
-addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE/COLORMAP/LLS
-addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MATLAB/
+addpath0
+
+% addpath /home/sergio/MATLABCODE/
+% addpath /home/sergio/MATLABCODE/PLOTTER
+% addpath /home/sergio/MATLABCODE/TIME
+% addpath /home/sergio/MATLABCODE/
+% addpath /home/sergio/MATLABCODE/COLORMAP
+% addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+% addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+% addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
+% addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MATLAB/
 
 if ~exist('iDorA')
   iDorA = -1; %% asc
@@ -23,7 +25,6 @@ iaMax = 365/16*20; iaMax = 460;   %% so this is 20 years
 iaMax = 365/16*23; iaMax = 526;   %% so this is 23 years
 
 error('hmm should you be using driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m')
-
 
 iERAoriERA5 = -1; %% orig
 iERAoriERA5 = +1; %% new

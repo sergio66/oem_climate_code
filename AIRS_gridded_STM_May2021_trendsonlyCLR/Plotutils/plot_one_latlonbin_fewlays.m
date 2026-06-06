@@ -20,7 +20,7 @@ for ii = 1 : 6
   fig_screen(ii);
 end
 
-plevs = load('/home/sergio/MATLABCODE/airslevels.dat');
+plevs = load('/home/sergio/git/matlabcode/airslevels.dat');
 pN = plevs(1:end-1)-plevs(2:end);
 pD = log(plevs(1:end-1)./plevs(2:end));
 plays = pN./pD;
@@ -67,8 +67,10 @@ elseif driver.iNumYears <= 22
 elseif driver.iNumYears <= 23
   if driver.NorD == +1
     era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_desc.mat';
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_desc.mat';    
   elseif driver.NorD == -1
-    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_asc.mat';    
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_asc.mat';
+    era5trendfile = '../FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_asc.mat';        
   end
 else
   error('hmm which era5trendfile to use???')

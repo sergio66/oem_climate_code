@@ -1,18 +1,20 @@
-addpath /home/sergio/MATLABCODE
-addpath /home/sergio/MATLABCODE/TROPOPAUSE
-addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE/COLORMAP/LLS
-addpath /home/sergio/MATLABCODE/PLOTTER
-addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
-addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-addpath /home/sergio/MATLABCODE/NANROUTINES/
-addpath /home/sergio/MATLABCODE/SHOWSTATS/
-addpath ../FIND_NWP_MODEL_TRENDS
-addpath /asl/matlib/science
-addpath /asl/matlib/aslutil
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/maps
+addpath0
+
+% addpath /home/sergio/MATLABCODE
+% addpath /home/sergio/MATLABCODE/TROPOPAUSE
+% addpath /home/sergio/MATLABCODE/COLORMAP
+% addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+% addpath /home/sergio/MATLABCODE/PLOTTER
+% addpath /home/sergio/MATLABCODE/PLOTTER/TILEDPLOTS
+% addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
+% addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+% addpath /home/sergio/MATLABCODE/NANROUTINES/
+% addpath /home/sergio/MATLABCODE/SHOWSTATS/
+% addpath ../FIND_NWP_MODEL_TRENDS
+% addpath /asl/matlib/science
+% addpath /asl/matlib/aslutil
+% addpath /asl/matlib/h4tools
+% addpath /asl/matlib/maps
 
 disp('  ')
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
@@ -20,10 +22,14 @@ disp('make sure you do this before starting Matlab, if you want to run ecRad!!! 
 disp('make sure you do this before starting Matlab, if you want to run ecRad!!! module load netCDF-Fortran/4.4.4-intel-2018b');
 disp('  ')
 
-load llsmap5
-%if length(llsmap5) == 64
-%  llsmap5 = llsmap5(2:end,:);
-%end
+if exist('llsmap5.mat')
+  load llsmap5  
+  %if length(llsmap5) == 64
+  %  llsmap5 = llsmap5(2:end,:);
+  %end
+else
+  llsmap5 = usa2;
+end
 
 llsmap5NAN = [[0.0 0.0 0.0]; llsmap5];
 llsmap5_0 = llsmap5;
@@ -110,9 +116,9 @@ disp('quants for dataset 9,10,11,12     = [0.50 0.80 0.90 0.95 0.97 1.00]');
 disp('quants for dataset 13             = [0.03 0.50 0.97]');
 disp('quants for dataset 14,15,16,17    = [0.50 0.80 0.90 0.95 0.97 1.00]');
 disp('quants for dataset 30 [AMSU only] = [1]');
-dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n (18) Sergio 2002/09-2025/08 23 YEARS new quants iQAX=3 \n  :::  [9 = Default] : ');
+dataset = input('Enter \n (+1) Strow 2002/09-2020/08 Q1-16 \n (-1) Sergio 2002/09-2020/08 Q1-16 \n (2) Sergio 2002/09-2021/07 OLD  Q1-16 \n (3) Sergio 2002/09-2021/08 Extreme \n (-3) Sergio 2002/09-2021/08 Mean \n (4) Sergio 2002/09-2021/08 FULL  Q1-16 \n (5) Sergio 2002/09-2014/08 CMIP6  Q1-16 \n (6) Sergio 2012/05-2019/04 CrIS NSR overlap \n (7) Sergio 2002/09-2022/08 20 YEARS \n (8) Sergio 2015/01-2021/12 OCO2 overlap \n (9,10,11,12) Sergio 2002/09-2022/2007/2012/2017/08 20 YEARS new quants iQAX=3 \n (18,19) Sergio 2002/09-2025/08 23 YEARS new quants iQAX=3 19 uses new chip disks \n  :::  [19 = Default] : ');
 if length(dataset) == 0
-  dataset = 9;
+  dataset = 19;
 end
 
 if dataset == 1 | dataset == -1
@@ -145,6 +151,8 @@ elseif dataset == 17
   iNumYears = 22;
 elseif dataset == 18
   iNumYears = 23;
+elseif dataset == 19
+  iNumYears = 23;
 elseif dataset == 30  %% AMSU
   iNumYears = 20;
 end
@@ -156,12 +164,12 @@ elseif dataset == -3
 elseif dataset >= 9 & dataset < 30
   iQuantile = 05; 
   if iOCBset == 0
-    iQuantile = input('Dataset = 9,10,11,12,18  iOCBset = 0 (obs)  ==> Which quantile 1..5   [3 = Default] : ');
+    iQuantile = input('Dataset = 9,10,11,12,18,19  iOCBset = 0 (obs)  ==> Which quantile 1..5   [3 = Default] : ');
     if length(iQuantile) == 0
       iQuantile = 3;
     end
   elseif iOCBset == 1
-    iQuantile = input('Dataset = 9,10,11,12,18   iOCBset = 1 (cal)  ==> Which quantile 1..16   [16 = Default] : ');
+    iQuantile = input('Dataset = 9,10,11,12,18,19   iOCBset = 1 (cal)  ==> Which quantile 1..16   [16 = Default] : ');
     if length(iQuantile) == 0
       iQuantile = 16;
     end
@@ -278,9 +286,9 @@ if iOCBset == 0
     else
       fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
-  elseif dataset == 18
+  elseif dataset == 18 | dataset == 19
     if iQuantile >= 1 & (iQuantile <= 5 | iQuantile == 50)
-      data_trends = load(['iType_18_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
+      data_trends = load(['iType_' num2str(dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(iQuantile,'%02d') '.mat']);
     else
       fprintf(1,'oops error trying to read in data trends for iOCBset = %2i dataset = %2i iQuantile = %2i \n',iOCBset,dataset,iQuantile);  error('yuk yuk')
     end
@@ -340,7 +348,8 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if dataset < 30
-  moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','b_err_desc');
+  %moonoise = load('iType_4_convert_sergio_clearskygrid_obsonly_Q16.mat','b_err_desc');
+  moonoise = load('iType_19_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat','b_err_desc');  
 elseif dataset == 30
   moonoise = load('iType_30_AMSU_iQAX_01.mat','b_err_desc');
   moonoise.b_err_desc = moonoise.b_err_desc(:,:,1:13);
@@ -734,9 +743,13 @@ disp('ret to continue'); pause;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
+% addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
+% [salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
 
-addpath /home/sergio/MATLABCODE/matlib/science/            %% for usgs_deg10_dem.m that has correct paths
-[salti, landfrac] = usgs_deg10_dem(Y(:),X(:));
+% see more /home/sergio/git/rtpmake/CLUST_RTPMAKE/COMMON_SETTINGS/set_landfrac_using_L1B_L1C_or_usgs.m
+addpath /home/sergio/git/matlabcode/DEM_DigitalELeveationModel
+[salti,landfrac,gebco] = gdemm_dem_and_imerg_lf(Y(:),X(:));
+
 Ylat = Y(:);
 Xlon = X(:);
 % save landfrac_mask4608.mat landfrac Ylat Xlon rlat65 rlon73 rlon rlat
@@ -876,7 +889,9 @@ if isfield(oem,'spectral_deltan00')
   ylabel('solid : mean; dashed : std [K/yr]');
   xlabel('Wavenumber cm-1');
 end
-[pMean17years.salti,pMean17years.landfrac] = usgs_deg10_dem(pMean17years.rlat,pMean17years.rlon);
+
+%[pMean17years.salti,pMean17years.landfrac] = usgs_deg10_dem(pMean17years.rlat,pMean17years.rlon);
+[pMean17years.salti,pMean17years.landfrac] = gdemm_dem_and_imerg_lf(pMean17years.rlat,pMean17years.rlon);
 figure(06); clf; aslmap(06,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt UMBC');     caxis([-1 +1]*0.15); colormap(llsmap5)
 figure(50); clf; aslmap(50,rlat65,rlon73,smoothn((reshape(era5.trend_stemp',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt ERA5'); caxis([-1 +1]*0.15); colormap(llsmap5)
 junk = find(pMean17years.landfrac == 0); fprintf(1,'SKT rates ocean : ERA5 = %8.4f    UMBC = %8.4f K/yr \n',nanmean(era5.trend_stemp(junk)),nanmean(results(junk,6)))

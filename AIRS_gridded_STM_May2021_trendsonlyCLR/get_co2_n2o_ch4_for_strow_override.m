@@ -32,7 +32,7 @@ if iVersJac ~= 2019
   ilatjunkxy = floor((driver.iibin-1)/72)+1;
   ilonjunkxy = driver.iibin - 72 * (ilatjunkxy - 1);
   
-  load /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat
+  load latB64.mat
   rlat65 = latB2; rlon73 = -180 : 5 : +180;
   rlon = -180 : 5 : +180;  rlat = latB2;
   rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
@@ -41,7 +41,7 @@ if iVersJac ~= 2019
   rlatx = rlat(ilatjunkxy);
 
 else
-  addpath /home/sergio/MATLABCODE_Git/PLOTTER
+  %addpath /home/sergio/MATLABCODE_Git/PLOTTER
   lats = -90 : 5 : +90;
   lats = equal_area_spherical_bands(20);
   rlat = 0.5*(lats(1:end-1) + lats(2:end));
@@ -117,8 +117,9 @@ else
     n2ox = n2ox;
     ch4x = ch4x;
   elseif iVersESRL == 4
-    esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2021.mat');
-    esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2022.mat');
+    %esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2021.mat');
+    %esrl_trend = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2022.mat');
+    esrl_trend = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2024.mat');
     if settings.iNumYears > 0
       iNX = settings.iNumYears + 2002;
     elseif settings.iNumYears == -4.0

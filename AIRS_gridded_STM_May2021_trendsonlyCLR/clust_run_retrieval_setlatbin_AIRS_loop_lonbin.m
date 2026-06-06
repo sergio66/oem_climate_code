@@ -51,14 +51,7 @@
 %%  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-addpath /home/sergio/MATLABCODE
-addpath /home/sergio/MATLABCODE/PLOTMISC/
-addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/rtptools
-addpath /asl/matlib/aslutil
-addpath /home/sergio/MATLABCODE/LOADMIE
+addpath0
 
 system_slurm_stats
 
@@ -200,6 +193,9 @@ if driver.iTrendOrAnomaly > 0
   ia_OorC_DataSet_Quantile = [+0 18 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 18, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
   %%%%% for trends paper STOP  %%%%%%%%%%%%%%%%%%%%%%%%%
 
+  %% the dawn of the phoenix chip in June 2026, ost Oct 2025 apocalypse
+  ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 19, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)
+  
 elseif driver.iTrendOrAnomaly < 0
   set_anomaly_info
 end
@@ -239,9 +235,6 @@ JOBTYPE = -1000;  %%% uncomment this when trying to fit for linear rates!!! fix 
 %   iDoAnomalyOrRates = +1;  %% do the anomalies
 % end
 
-%---------------------------------------------------------------------------
-addpath /home/sergio/MATLABCODE/oem_pkg
-addpath Plotutils
 %---------------------------------------------------------------------------
 % Doing debug?
  driver.debug = false;
@@ -498,6 +491,11 @@ for iInd = iXX1 : idX : iXX2
   disp('see driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m')
   disp('see driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m')
   disp('see driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m  driver_put_together_QuantileChoose_trends.m')
+
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%    
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+
   if abs(topts.dataset) == +1
     driver.iNumYears = 18;
   elseif abs(topts.dataset) >= 2 & abs(topts.dataset) <= 4
@@ -545,6 +543,14 @@ for iInd = iXX1 : idX : iXX2
   elseif topts.dataset == 30
     driver.iNumYears = 20;  
     disp(' <<< AMSU 20 years allsky from Stephen Leroy >>> ')
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%    
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+
+  elseif topts.dataset == 19
+    %% fresh start in June 2026
+    driver.iNumYears = 23;  
+    disp(' <<< 2002-2025 AIRS for 23 years, ... the CO2 trends are from 2002 onwards >>>')
   else
     fprintf(1,'topts.dataset = %2i \n',topts.dataset)
     error('unknown topts.dataset')
@@ -1100,3 +1106,5 @@ if driver.i16daytimestep < 0
   disp('plotting trend retrieval')
   plot_one_latlonbin_fewlays
 end
+
+disp('FINISHED!!!!')

@@ -6,8 +6,14 @@
 % Understanding variations in downwelling longwave radiation using Brutsaert’s equation
 % Yinglin Tian1,2, Deyu Zhong1, Sarosh Alam Ghausi2,3, Guangqian Wang1, and Axel Kleidon2
 
-%ceres_ilr = load('../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_T_ilr.mat');
-ceres_ilr = load('../../oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS/ceres_trends_20year_T_ilr.mat');
+ceres_ilr_trends = '../AIRS_gridded_STM_May2021_trendsonlyCLR/ceres_trends_20year_T_ilr.mat';
+ceres_ilr_trends = '../../oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS/ceres_trends_20year_T_ilr.mat';
+if exist(ceres_ilr_trends)
+  ceres_ilr = load(ceres_ilr_trends)
+else
+  fprintf(1,'CERES ILR  %s DNE \n',ceres_ilr_trends);
+  return
+end  
 
 if ~exist('nlays_straight_from_results')
   load ../AIRS_gridded_STM_May2021_trendsonlyCLR/nlays_straight_from_results_50lays.mat

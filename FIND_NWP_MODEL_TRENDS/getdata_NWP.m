@@ -87,7 +87,7 @@ end
 % end
 % iNumYears = 19;
 
-fprintf(1,'getdata_NWP.m : iNumYears = %2i \n',iNumYears)
+fprintf(1,' setting files for getdata_NWP.m : iNWP = %2i iNumYears = %2i iNorD = %2i \n',iNWP,iNumYears,iNorD);
 
 %% airsL3 : 'native' = 180 bins from L3, 'zonal' = 40 equal area latbins, [] = 64x72
 if iNorD > 0
@@ -96,6 +96,7 @@ if iNorD > 0
     %fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat';
     if  iNumYears <= 23 & iNumYears >= 0
       fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_desc.mat'];
     % if iNumYears == 20
     %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
     % elseif iNumYears == 19
@@ -106,6 +107,7 @@ if iNorD > 0
     %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat';
     elseif  iNumYears < 0
       fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];      
     else
       error('ERA5 : needs 01 .. 23 years')
     end
@@ -185,22 +187,26 @@ else
   %amip6 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/AMIP6_atm_data_2002_09_to_2014_08_trends.mat');
 end
 
-fprintf(1,' getdata_NWP.m : NWP : iNWP = %2i iNumYears = %2i : fNWP = %s \n',iNWP,iNumYears,fNWP);
+fprintf(1,' after setting fNWP in getdata_NWP.m : NWP : iNWP = %2i iNumYears = %2i : fNWP = %s \n',iNWP,iNumYears,fNWP);
 nwpChoice = load(fNWP);
 
-load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
+load latB64.mat
 rlat65 = latB2; rlon73 = -180 : 5 : +180;
 rlon = -180 : 5 : +180;  rlat = latB2;
 rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
 rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
 
-load llsmap5;
+if exist('llsmap5.mat')
+  load llsmap5  
+else
+  llsmap5 = usa2;
+end
 iFig = 0;
 iFig = iFig + 1; figure(iFig); clf;  
 aslmap(iFig,rlat65,rlon73,maskLFmatr.*smoothn(reshape(nwpChoice.trend_stemp,72,64)',1),[-90 +90],[-180 +180]);   colormap(llsmap5); caxis([-0.15 +0.15]); title([strNorD ' stemp d/dt ' strChoice ' K/yr']); 
 
 if ~exist('pavgLAY')
-  boo = load('/home/sergio/MATLABCODE/airslevels.dat');
+  boo = load('/home/sergio/git/matlabcode/airslevels.dat');
   pjunkN = boo(1:100)-boo(2:101);
   pjunkD = log(boo(1:100)./boo(2:101));
   pavgLAY = pjunkN./pjunkD;
@@ -209,7 +215,7 @@ if ~exist('pavgLAY')
 end
 
 if ~exist('rlat')
-  load /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
+  load latB64.mat
   rlat65 = latB2; rlon73 = -180 : 5 : +180;
   rlon = -180 : 5 : +180;  rlat = latB2;
   rlon = 0.5*(rlon(1:end-1)+rlon(2:end));

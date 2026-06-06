@@ -1,4 +1,3 @@
-addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
 [g2378,g2645] = compare_goodchans_2378_2645();   %% shows g is index into f-ABCD and NOT chanID
 
 load latB64.mat
@@ -17,7 +16,11 @@ i1227 = find(f >= 1227,1);
 i1226 = find(f >= 1226.5,1);
 i0900 = find(f >= 0900,1);
 
-load llsmap5
+if exist('llsmap5.mat')
+  load llsmap5
+else
+  llsmap5 = usa2;
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

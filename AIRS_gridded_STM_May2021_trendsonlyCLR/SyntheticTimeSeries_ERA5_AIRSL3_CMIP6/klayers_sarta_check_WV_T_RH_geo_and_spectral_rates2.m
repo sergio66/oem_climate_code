@@ -1,3 +1,5 @@
+h72.nchan = length(h72.ichan);
+
 rtpwrite(fip,h72,[],p72,[]);
 klayerser = ['!' klayers ' fin=' fip ' fout=' fop ' >& ugh '];
 sartaer   = ['!' sarta '   fin=' fop ' fout=' frp ' >& ugh2'];
@@ -37,6 +39,12 @@ p72I.gas_6 = p72I.gas_6 .* (ones(101,1)*(ch4ppm_t./ppmvLAY_6(i500,:)));
 ppmvLAY_2 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),2);
 ppmvLAY_4 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),4);
 ppmvLAY_6 = layers2ppmv(h72I,p72I,1:length(p72I.stemp),6);
+
+if h72I.nchan == 0
+  h72I.nchan = h72.nchan;
+  h72I.ichan = h72.ichan;
+  h72I.vchan = h72.vchan;  
+end
 
 disp('doing sarta ...')
 rtpwrite(fop,h72I,ha72I,p72I,pa72I);

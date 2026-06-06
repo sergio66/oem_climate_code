@@ -1,7 +1,11 @@
-rmpath  /asl/matlab2012/rtptoolsV201/
-addpath /asl/matlib/rtptools
+% rmpath  /asl/matlab2012/rtptoolsV201/
+% addpath /asl/matlib/rtptools
 
-load('llsmap5');
+if exist('llsmap5.mat')
+  load('llsmap5');
+else
+  llsmap5 = usa2;
+end
 
 get_the_mean_profiles   %%% in the end, it uses pMean17years whichh came in from read_fileMean17years at beginning of code
 %h = hMean17years; p = pMean17years;
@@ -406,24 +410,29 @@ figure(38); clf; aslmap(38,rlat65,rlon73,10*maskLFmatr.*smoothn(reshape(boo,72,6
 caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt UMBC RH(LT 800-1000 mb) %/decade'); 
 colormap(ct);
 
-had = load('../FIND_NWP_MODEL_TRENDS/hadcrut_surfaceTqRH_trends_2002_2021.mat');
-figure(39); pcolor(had.trend.lon,had.trend.lat,had.trend.rh*10); shading interp; wah = load('coast.mat');; hold on; plot(wah.long,wah.lat,'k'); hold off
-figure(39); pcolor_coast(had.trend.lon,had.trend.lat,had.trend.rh*10,-1); shading interp; 
-figure(39); clf; aslmap(39,rlat65,rlon73,10*maskLFmatr.*smoothn_nan(had.trend.rh_72x64',1), [-90 +90],[-180 +180]);
-%figure(39); clf; aslmap(39,rlat65,rlon73,10*maskLFmatr.*had.trend.rh_72x64', [-90 +90],[-180 +180]);
-caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt Hadley RHSurf %/decade'); 
-colormap(ct);
-
-figure(36); colormap(llsmap5)
-figure(37); colormap(llsmap5)
-figure(38); colormap(llsmap5)
-figure(39); colormap(llsmap5)
-
-waba = had.trend.rh_72x64(:); waba = (isfinite(waba)); waba = reshape(waba,72,64);
-figure(40); plot(nanmean(had.trend.rh*10,1),had.trend.latitude,nanmean(reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
-figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
-figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(waba.*reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
-  hl = legend('Hadley','UMBC','location','best'); ylabel('Latitude'); xlabel('dRH/dt percent/decade'); axis([-2 +2 -90 +90]); 
+hadcrut_file = '../FIND_NWP_MODEL_TRENDS/hadcrut_surfaceTqRH_trends_2002_2021.mat';
+if exist(hadcrut_file)
+had = load(hadcrut_file)
+  figure(39); pcolor(had.trend.lon,had.trend.lat,had.trend.rh*10); shading interp; wah = load('coast.mat');; hold on; plot(wah.long,wah.lat,'k'); hold off
+  figure(39); pcolor_coast(had.trend.lon,had.trend.lat,had.trend.rh*10,-1); shading interp; 
+  figure(39); clf; aslmap(39,rlat65,rlon73,10*maskLFmatr.*smoothn_nan(had.trend.rh_72x64',1), [-90 +90],[-180 +180]);
+  %figure(39); clf; aslmap(39,rlat65,rlon73,10*maskLFmatr.*had.trend.rh_72x64', [-90 +90],[-180 +180]);
+  caxis([-1 +1]/2); caxis([-10 +10]/4); colormap(cmap);  title('d/dt Hadley RHSurf %/decade'); 
+  colormap(ct);
+  
+  figure(36); colormap(llsmap5)
+  figure(37); colormap(llsmap5)
+  figure(38); colormap(llsmap5)
+  figure(39); colormap(llsmap5)
+  
+  waba = had.trend.rh_72x64(:); waba = (isfinite(waba)); waba = reshape(waba,72,64);
+  figure(40); plot(nanmean(had.trend.rh*10,1),had.trend.latitude,nanmean(reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
+  figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
+  figure(40); plot(nanmean(had.trend.rh_72x64*10,1),rlat,nanmean(waba.*reshape(boo,72,64),1)*10,rlat,'r','linewidth',2); plotaxis2;
+    hl = legend('Hadley','UMBC','location','best'); ylabel('Latitude'); xlabel('dRH/dt percent/decade'); axis([-2 +2 -90 +90]);
+else
+  fprintf(1,'HADCRUT file %s DNE \n',hadcrut_file);
+end
 
 figure(41); 
 junk = squeeze(nanmean(reshape(fracWVunc,101,72,64),2));

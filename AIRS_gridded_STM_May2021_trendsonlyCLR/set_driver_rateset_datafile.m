@@ -9,7 +9,11 @@ function [driver,settings] = set_driver_rateset_datafile(driver0,settings0);
 driver = driver0;
 settings = settings0;
 
-switch settings.dataset 
+switch settings.dataset
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%    
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+       
   case -1
     settings.iNumYears = 18;
   case +1
@@ -56,6 +60,14 @@ switch settings.dataset
   %%%%%%%%%%%%%%%%%%%%%%%%%
   case +30
     settings.iNumYears = 20;
+
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%    
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+  %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
+    
+  case +19
+    settings.iNumYears = 23;
+    
 end
 
 %fprintf(1,' in set_driver_rateset_datafile.m : [settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i \n',[settings.descORasc driver.i16daytimestep settings.dataset])
@@ -67,7 +79,7 @@ if settings.dataset == -2
   disp('AIRS 16 year rates or anomalies, NO nu cal done')
   error('oops not done')
 
-elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 18
+elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 19
   disp('AIRS 07 or 18 or 19 or 20 or 22 or 23 year rates or anomalies, nu cal done in there')
   if settings.descORasc == +1 & driver.i16daytimestep < 0 & settings.dataset == 1    
     disp('doing Strow 18 yr gridded quantile rates')
@@ -267,7 +279,7 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 18
       driver.rateset.datafile  = 'AHAH';
     end
 
-  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & (settings.dataset >= 16 & settings.dataset <= 18)
+  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & (settings.dataset >= 16 & settings.dataset <= 19)
     disp('doing Sergio FULL 22/04 year gridded quantile rates 2002/09-2024/08  2020/07-2024/06, NEW WAY of doing quantile iQAX = 3')
     fprintf(1,'dataset = %2i where 13,14,15 are for 22,04 years of AIRS data .... \n',settings.dataset)
     driver.rateset.datafile  = [];
@@ -276,6 +288,8 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 18
     elseif settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 17
       driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
     elseif settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 18
+      driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+    elseif settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 19
       driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
@@ -304,6 +318,12 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 18
       driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_AMSU_iQAX_' num2str(driver.iQuantile,'%02d') '.mat'];           
     end
 
+end
+
+if ~isfield(driver.rateset,'datafile')
+  fprintf(1,'OOOPS : set_driver_rateset_datafile.m did not set datafile \n')
+  fprintf(1,'[settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i \n',[settings.descORasc driver.i16daytimestep settings.dataset])
+  error('please check')
 end
 
 fprintf(1,'driver.rateset.datafile = %s \n',driver.rateset.datafile)

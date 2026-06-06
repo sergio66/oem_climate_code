@@ -12,6 +12,9 @@ TESTOLR_KCARTA
 UPLOOKJAC
 PDF*
 
+AllDemJacsClr
+AllDemJacsClrCol
+
 # from diff_m_or_f_files
 diff_kcarta_results.txt
 diff_results.txt

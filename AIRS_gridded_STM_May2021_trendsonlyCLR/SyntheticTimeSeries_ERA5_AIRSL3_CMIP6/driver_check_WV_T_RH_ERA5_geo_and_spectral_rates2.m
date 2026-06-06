@@ -1,14 +1,17 @@
 %% this tries to loop over the 64 zonal bins using the cluster
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE/COLORMAP/LLS
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/aslutil
-addpath /home/sergio/MATLABCODE/TIME
-addpath /home/sergio/MATLABCODE
-%addpath ../../../FIND_TRENDS/
-addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
-addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
+
+addpath0
+
+% addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+% addpath /home/sergio/MATLABCODE/COLORMAP
+% addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+% addpath /asl/matlib/h4tools
+% addpath /asl/matlib/aslutil
+% addpath /home/sergio/MATLABCODE/TIME
+% addpath /home/sergio/MATLABCODE
+% %addpath ../../../FIND_TRENDS/
+% addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+% addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 
 %% check_all_jobs_done('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_rlat',64,'_2002_09_2024_08.mat');
 
@@ -44,10 +47,15 @@ YMStart = [2008 09];  YMEnd = [2022 08];  %% Ryan said they fixed O3 after 2007 
 YMStart = [2020 07];  YMEnd = [2024 06];  %% hot hot hot trends
 YMStart = [2002 09];  YMEnd = [2024 06];  %% 22 year trends
 YMStart = [2002 09];  YMEnd = [2024 08];  %% 22 year trends
+YMStart = [2002 09];  YMEnd = [2025 08];  %% 22 year trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-load('llsmap5.mat');
+if exist('llsmap5.mat')
+  load('llsmap5.mat');
+else
+  llsmap5 = usa2;
+end
 
 iOops = +1;
 if iOops < 0
@@ -104,7 +112,7 @@ else
     zonalplays = p.plays(1:100,3000);
   else
     %% new code
-    junk = load('/home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/h2645structure.mat');
+    junk = load('/home/sergio/git//oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/h2645structure.mat');
     h.ichan = junk.h.ichan;
     h.vchan = junk.h.vchan;
     do_XX_YY_from_X_Y
@@ -126,15 +134,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[hkcarta_emis,~,kcarta_emis,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp');
+fRTP = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp';
+fRTP = '/home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp';
+[hkcarta_emis,~,kcarta_emis,~] = rtpread(fRTP);
 ind = (1:72) + (JOB-1)*72;
 p.salti = kcarta_emis.salti;
 p.spres = kcarta_emis.spres;
 [hkcarta_emis,kcarta_emis] = subset_rtp(hkcarta_emis,kcarta_emis,[],[],ind);
 
 %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends.m  and do_the_AIRSL3_trends.m
+disp(' ')
 disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
 disp('if you get silly messages like "YM timeperiod  = 2002/ 9 --> 2022/ 8 needs 240 of 228 timesteps" then check this >>>>>>>>')
+disp(' ')
 
 %% NOTE THIS IS JUST HOW MUCH DATA YOU HAVE, AND IS DIFFERENT THAN YMStart,YMEnd where you set ACTUAL startYY/stopYY for trends
 iYS = 2002; iYE = 2021;
@@ -143,18 +155,28 @@ iYS = 2002; iYE = 2024;
 
 if iNorD > 0
   %% see  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m  and do_the_AIRSL3_trends.m
-  %era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat');
-  %era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat');
-  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat');
-  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat');
+  name_era5_64x72 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_desc.mat';
+  name_era5_64x72 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_desc.mat';
+  name_era5_64x72 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_desc.mat';
+  name_era5_64x72 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_desc.mat';
+  name_era5_64x72 = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_desc.mat';  
 else
-  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2022_08_asc.mat');
-  era5_64x72 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_asc.mat');
+  name_era5_64x72 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2022_08_asc.mat';
+  name_era5_64x72 = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_2024_08_asc.mat';
+  name_era5_64x72 = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_asc.mat';    
+end
+
+if exist(name_era5_64x72)
+  era5_64x72 = load(name_era5_64x72);
+else
+  fprintf(1,'%s DNE \n',name_era5_64x72)
+  error('check file names')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[numtimesteps0,~] = size(era5_64x72.all.mmw);
+%%% .all --> .pall
+[numtimesteps0,~] = size(era5_64x72.pall.mmw);
 numtimesteps = numtimesteps0;
 fprintf(1,'driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m : numtimesteps = %3i \n',numtimesteps)
 
@@ -212,23 +234,23 @@ mm = mm(usethese);
 dd = dd(usethese);
 
 numtimesteps = length(yy);
-era5_64x72.all.yy        = era5_64x72.all.yy(usethese);
-era5_64x72.all.mm        = era5_64x72.all.mm(usethese);
-era5_64x72.all.dd        = era5_64x72.all.dd(usethese);
-era5_64x72.all.nwp_ptemp = era5_64x72.all.nwp_ptemp(usethese,:,:);
-era5_64x72.all.nwp_gas_1 = era5_64x72.all.nwp_gas_1(usethese,:,:);
-era5_64x72.all.nwp_gas_3 = era5_64x72.all.nwp_gas_3(usethese,:,:);
-era5_64x72.all.nwp_rh    = era5_64x72.all.nwp_rh(usethese,:,:);
-era5_64x72.all.nwp_plevs = era5_64x72.all.nwp_plevs(usethese,:,:);
-era5_64x72.all.ptemp     = era5_64x72.all.ptemp(usethese,:,:);
-era5_64x72.all.gas_1     = era5_64x72.all.gas_1(usethese,:,:);
-era5_64x72.all.gas_3     = era5_64x72.all.gas_3(usethese,:,:);
-era5_64x72.all.mmw       = era5_64x72.all.mmw(usethese,:);
-era5_64x72.all.stemp     = era5_64x72.all.stemp(usethese,:);
-era5_64x72.all.nlays     = era5_64x72.all.nlays(usethese,:);
-era5_64x72.all.RH        = era5_64x72.all.RH(usethese,:,:);
-era5_64x72.all.TwSurf    = era5_64x72.all.TwSurf(usethese,:);
-era5_64x72.all.RHSurf    = era5_64x72.all.RHSurf(usethese,:);
+era5_64x72.pall.yy        = era5_64x72.pall.yy(usethese);
+era5_64x72.pall.mm        = era5_64x72.pall.mm(usethese);
+era5_64x72.pall.dd        = era5_64x72.pall.dd(usethese);
+era5_64x72.pall.nwp_ptemp = era5_64x72.pall.nwp_ptemp(usethese,:,:);
+era5_64x72.pall.nwp_gas_1 = era5_64x72.pall.nwp_gas_1(usethese,:,:);
+era5_64x72.pall.nwp_gas_3 = era5_64x72.pall.nwp_gas_3(usethese,:,:);
+era5_64x72.pall.nwp_rh    = era5_64x72.pall.nwp_rh(usethese,:,:);
+era5_64x72.pall.nwp_plevs = era5_64x72.pall.nwp_plevs(usethese,:,:);
+era5_64x72.pall.ptemp     = era5_64x72.pall.ptemp(usethese,:,:);
+era5_64x72.pall.gas_1     = era5_64x72.pall.gas_1(usethese,:,:);
+era5_64x72.pall.gas_3     = era5_64x72.pall.gas_3(usethese,:,:);
+era5_64x72.pall.mmw       = era5_64x72.pall.mmw(usethese,:);
+era5_64x72.pall.stemp     = era5_64x72.pall.stemp(usethese,:);
+era5_64x72.pall.nlays     = era5_64x72.pall.nlays(usethese,:);
+era5_64x72.pall.RH        = era5_64x72.pall.RH(usethese,:,:);
+era5_64x72.pall.TwSurf    = era5_64x72.pall.TwSurf(usethese,:);
+era5_64x72.pall.RHSurf    = era5_64x72.pall.RHSurf(usethese,:);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -256,8 +278,15 @@ else
   ch4ppm = 1813 * ones(size(co2ppm))/1000;
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
 klayers = '/asl/packages/klayersV205/BinV201/klayers_airs';
 sarta   = '/home/chepplew/gitLib/sarta/bin/airs_l1c_2834_cloudy_may19_prod_v3';;
+
+%% /home/sergio/git/rtpmake/CLUST_RTPMAKE/COMMON_SETTINGS/set_path_to_execs.m
+klayers = '/home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_80km/klayersV205_0_80km/BinV221/klayers_airs';
+sarta   = '/home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/bin/jac_airs_l1c_2834_cloudy_apr26_H2024';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iConstORVary == +1
   if iNorD > 0
@@ -322,20 +351,20 @@ for ii = JOB
   end
   
   iNlev = 37;
-  plevsnwp  = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))';
+  plevsnwp  = squeeze(era5_64x72.pall.nwp_plevs(1,:,3000))';
   p72.nlevs = ones(size(p72.rtime)) * iNlev;
-  p72.plevs = squeeze(era5_64x72.all.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
+  p72.plevs = squeeze(era5_64x72.pall.nwp_plevs(1,:,3000))' * ones(1,72*numtimesteps);
   
   p72.rlat  = rlat(ii) * ones(1,72*numtimesteps); p72.rlat = p72.rlat(:)';
   p72.rlon = rlon' * ones(1,numtimesteps);        p72.rlon = p72.rlon(:)';
   p72.plat = p72.rlat;
   p72.plon = p72.rlon;
   
-  junk = era5_64x72.all.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
-  junk = era5_64x72.all.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
-  junk = era5_64x72.all.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
-  junk = era5_64x72.all.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
-  junk = era5_64x72.all.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.pall.stemp;     junk = reshape(junk,numtimesteps,72,64);    junk = squeeze(junk(:,:,ii)); junk = junk'; p72.stemp = reshape(junk,1,72*numtimesteps);
+  junk = era5_64x72.pall.nwp_ptemp; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.ptemp = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.pall.nwp_gas_1; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_1 = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.pall.nwp_gas_3; junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.gas_3 = reshape(junk,iNlev,72*numtimesteps);
+  junk = era5_64x72.pall.nwp_rh;    junk = reshape(junk,numtimesteps,iNlev,72,64); junk = squeeze(junk(:,:,:,ii)); junk = permute(junk,[2 3 1]); p72.rh    = reshape(junk,iNlev,72*numtimesteps);
 
 %  p72.scanang = zeros(size(p72.stemp));
 %  p72.satzen = zeros(size(p72.stemp));

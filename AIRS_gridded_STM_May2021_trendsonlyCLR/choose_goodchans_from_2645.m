@@ -49,6 +49,7 @@ ch = ch(good);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hdffile = '/home/sergio/MATLABCODE/airs_l1c_srf_tables_lls_20181205.hdf';   % what he gave in Dec 2018
+hdffile = '/home/sergio/git/matlabcode/matlibSergio/matlab2012/srftest/SRF_TABLES/airs_l1c_srf_tables_lls_20181205.hdf';
 vchan2834 = hdfread(hdffile,'freq');
 fairs = vchan2834;
 load sarta_chans_for_l1c.mat

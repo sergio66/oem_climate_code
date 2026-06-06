@@ -1,9 +1,10 @@
 %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m
 %% see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m
 
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/aslutil
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+addpath0
+addpath /umbc/rs/pi_sergio/WorkDirDec2025/rtpmake/CLUST_RTPMAKE/COMMON_SETTINGS   %% for sarta_chans_for_l1c.mat
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%% ORIG CODE %%%%%%%
 %% recall log10(X) = log(X)/log(10)
@@ -14,8 +15,11 @@ addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
 %% disp('WARNING here we use log10 jacs ie multiply gas jacs by log_e_(10) ie jac --> jac * log(10) = 2.3026')
 %%%%%%%% ORIG CODE %%%%%%%
 
+%% JOB = 1 : 64 for the 64 latbins
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
-%JOB = 32
+if length(JOB) == 0
+  JOB = 32;
+end
 
 miaow = load('sarta_chans_for_l1c.mat');
 ind2834to2645 = miaow.ichan;
@@ -23,6 +27,7 @@ ind2834to2645 = miaow.ichan;
 iOldORNew = +1;   %% the 17 year ERA-I
 iOldORNew = +2;   %% the 19 year ERA5 2002/09-2021/08
 iOldORNew = +12;  %% the 12 year ERA5 2002/09-2014/08
+iOldORNew = +23;  %% the 23 year ERA5 2002/09-2025/08
 
 if iOldORNew < 0
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  %%% NEED TO REDO
@@ -40,6 +45,10 @@ elseif iOldORNew == 12
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjac12yearLatBin' num2str(JOB,'%02i') '.mat'];  
   foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_12yr_' num2str(JOB,'%02i') '.mat'];
   foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_12yr_' num2str(JOB,'%02i') '.mat'];
+elseif iOldORNew == 23
+  SARTAjac    = ['AllDemJacsClr/LatBin65/SubsetJacLatbin/subjac23yearLatBin' num2str(JOB,'%02i') '.mat'];  
+  foutsubjac  = ['AllDemJacsClr/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_23yr_' num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['AllDemJacsClr/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_23yr_' num2str(JOB,'%02i') '.mat'];
 else
   error('unknown iOldORNew')
 end
@@ -53,7 +62,11 @@ if exist(foutsubjac2)
 %  error('foutsubjac2 exists')
 end
 
-sarta = load(SARTAjac);
+if exist(SARTAjac)
+  sarta = load(SARTAjac);
+else
+  fprintf(1,'sarta jac %s DNE \n',SARTAjac);
+end
 
 if iOldORNew == 0
   [h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002/summary_17years_all_lat_all_lon_2002_2019.rtp');  %% already has palts
@@ -63,10 +76,15 @@ elseif iOldORNew == 2
   [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2021_monthlyERA5.rp.rtp');
 elseif iOldORNew == 12
   [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_12years_all_lat_all_lon_2002_2014_monthlyERA5.rp.rtp');
+elseif iOldORNew == 23
+  %[h,ha,p,pa] = rtpread('/home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.rp.rtp');
+  [h,ha,p,pa] = rtpread('/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/summary_23yrs_era5_monthly_clr.rp.rtp');  
 end
 
-plot(1:72,p.stemp(sarta.subjac.indices),'b-',1:72,sarta.subjac.stemp,'r.-')
-pause(1); 
+if exist(SARTAjac)
+  plot(1:72,p.stemp(sarta.subjac.indices),'b-',1:72,sarta.subjac.stemp,'r.-')
+  pause(1);
+end  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 factor_log10 = log(10); %% this changes gas jac scaling to log10
@@ -83,9 +101,13 @@ for lon = 1 : 72
   end
 
   ind_subset_junk_ii = ind_subset_junk(lon);
+  
+  %% note the AllDemJacsClr,AllDemJacsClrCol symbolic links
+  %%  ln -s  /home/sergio/nogit/TILEJACS/AVG/KCARTA/T_WV_O3/ AllDemJacsClr
   frad0 = ['AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
   fz    = ['AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
-  fcol  = ['AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  %%  ln -s  /home/sergio/nogit/TILEJACS/AVG/KCARTA/COL/ AllDemJacsClrCol  
+  fcol  = ['AllDemJacsClrCol/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
   iaIndices(lon) = ind_subset_junk_ii;
 
   arad0 = load(frad0);
@@ -123,19 +145,29 @@ for lon = 1 : 72
   ix = ind + numlays*0; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*factor_log10;  %% WV
     [an(1) an(end) ix(1) ix(end)]; 
     wvind = fliplr(an);
-    figure(2); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',...
+    if exist(SARTAjac)    
+      figure(2); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r',...
                     aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacWV(1:numlays,:,lon)),1),'g'); title('WV')
-     hl = legend('sum(Kc(1:97))','sarta','location','best','fontsize',10);
-
+      hl = legend('sum(Kc(1:97))','sarta','location','best','fontsize',10);
+    else
+      figure(2); plot(aout.fKc,sum(az.rKc(:,ix),2)*factor_log10,'r'); title('WV')
+      hl = legend('sum(Kc(1:97))','location','best','fontsize',10);
+    end
+    
   ix = ind + numlays*2; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix);  %% T
     [an(1) an(end) ix(1) ix(end)];
     tzind = fliplr(an);
-    figure(3); plot(aout.fKc,sum(az.rKc(:,ix),2),'r',aout.fKc,acol.rKc(:,7),'b.-',...
-                    aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacT(1:numlays,:,lon)),1),'g'); title('T')
-%    figure(3); plot(aout.fKc,sum(az.rKc(:,ix),2),'r',aout.fKc,(tcol(:,7)-trad0),'b.-',...
-%                    aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacT(1:numlays,:,lon)),1),'g'); title('T')
-     hl = legend('sum(Kc(1:97))','col Kc','sarta','location','best','fontsize',10);
-
+    if exist(SARTAjac)        
+      figure(3); plot(aout.fKc,sum(az.rKc(:,ix),2),'r',aout.fKc,acol.rKc(:,7),'b.-',...
+                      aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacT(1:numlays,:,lon)),1),'g'); title('T')
+%      figure(3); plot(aout.fKc,sum(az.rKc(:,ix),2),'r',aout.fKc,(tcol(:,7)-trad0),'b.-',...
+%                      aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacT(1:numlays,:,lon)),1),'g'); title('T')
+       hl = legend('sum(Kc(1:97))','col Kc','sarta','location','best','fontsize',10);
+     else
+       figure(3); plot(aout.fKc,sum(az.rKc(:,ix),2),'r',aout.fKc,acol.rKc(:,7),'b.-')
+       hl = legend('sum(Kc(1:97))','col Kc','location','best','fontsize',10);
+     end
+     
   figure(4); clf
   %% except we do not do col O3 in COL CLR jacs
   ix = ind + numlays*1; [~,an] = size(aout.jac); an = an + (1:numlays); an = fliplr(an); aout.jac(:,an) = az.rKc(:,ix)*factor_log10;  %% O3
@@ -150,14 +182,21 @@ for lon = 1 : 72
 %}
 
   ixx = numlays*4 + 1;  %% surface temp
-  figure(1); plot(aout.fKc,aout.jac,aout.fKc,az.rKc(:,ixx),'b');   
-  figure(5); plot(aout.fKc,az.rKc(:,ixx),'ro-',aout.fKc,aout.jac(:,6),'bx-',...
+  figure(1); plot(aout.fKc,aout.jac,aout.fKc,az.rKc(:,ixx),'b');
+  if exist(SARTAjac)          
+    figure(5); plot(aout.fKc,az.rKc(:,ixx),'ro-',aout.fKc,aout.jac(:,6),'bx-',...
                   aout.fKc(ind2834to2645),squeeze(sarta.subjac.jacST(:,lon)),'g.');  title('SurfT')
-     hl = legend('Kc','for retr','sarta','location','best','fontsize',10);
-  figure(6); plot(aout.fKc,aout.jac(:,1),'b',...
+      hl = legend('Kc','for retr','sarta','location','best','fontsize',10);
+    figure(6); plot(aout.fKc,aout.jac(:,1),'b',...
                   aout.fKc(ind2834to2645),sum(squeeze(sarta.subjac.jacCO2z(1:numlays,:,lon)),1),'g'); title('CO2')
-     hl = legend('for retr','sarta','location','best','fontsize',10);
-
+      hl = legend('for retr','sarta','location','best','fontsize',10);
+  else
+    figure(5); plot(aout.fKc,az.rKc(:,ixx),'ro-',aout.fKc,aout.jac(:,6),'bx-');  title('SurfT')
+      hl = legend('Kc','for retr','location','best','fontsize',10);
+    figure(6); plot(aout.fKc,aout.jac(:,1),'b'); title('CO2')
+      hl = legend('for retr','location','best','fontsize',10);
+  end
+  
   aout.fKc = aout.fKc(ind2834to2645);
   aout.jac = aout.jac(ind2834to2645,:);
 
@@ -219,8 +258,10 @@ kcarta.subjac.ppmv4 = ppmv4(i500mb,ind_subset_junk);
 kcarta.subjac.ppmv6 = ppmv6(i500mb,ind_subset_junk);
 kcarta.subjac.indices = iaIndices;
 
-sum(sarta.subjac.indices - iaIndices)
-  
+if exist(SARTAjac)
+  sum(sarta.subjac.indices - iaIndices)
+end
+
 subjac = kcarta.subjac;
 
 kcarta.subjac.comment{1} = 'see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Oct2020_startSept2002_trendsonly/clust_put_together_jacs_clr.m     for ERAI';
@@ -234,6 +275,7 @@ if ~exist(foutsubjac)
   eval(saver)
 
   save(foutsubjac2,'-struct', 'subjac');
+  disp('saved the data! done')
 else
   fprintf(1,'%s already exists \n',foutsubjac)
 end

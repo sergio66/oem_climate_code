@@ -3,11 +3,16 @@
     for how to make the tile quantiles and trends
 
 (A) to make the averages ERA5 profiles, 4608 tiles
-(B) use this to make the kCARTA ERA5 trend jacs
+(B) use this to make the kCARTA ERA5 trend jacs for T,WV,O3 (97 layer)
+(C) use this to make the kCARTA ERA5 trend jacs for CO2/N2O/CH4/CFC11/CFC12 (column)
+(D) Put together the jacobians
+(E) Use it in trend retrievals
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 (A) to make the averages ERA5 profiles, 4608 tiles
+---------------------------------------------------
+
 very easy, go to 
   /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
 Edit driver_makeavgprofile_ERA5_monthly_desc_or_asc.m so you correctly set the start/stop time 
@@ -18,15 +23,27 @@ Run the code
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-(B) use this to make the kCARTA ERA5 trend jacs
+(B) use this to make the kCARTA ERA5 trend jacs for T,WV,O3 (97 layer)
+------------------------------------------------------------------------
 
 Then for example
-  cp /umbc/xfs2/strow/asl/s1/sergio/home/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/summary_07years_all_lat_all_lon_2012_2019_monthlyERA5.rp.rtp RTP/.
-  cd /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES
+  look at /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/driver_makeavgprofile_ERA5_monthly_desc_or_asc_clearonly.m, makes the summary*.rtp
+     MAKE SURE the emis/rho are finite for all hingepoints, else kCARTA crashes!
+     
+% git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_starts_Sept2002/call_save_split_apart_rtp_howard_bins_startSept2002_16daysavgs.m:1:% based on call_save_split_apart_rtp_howard_bins_startSept2002.m
+% git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_starts_Sept2002/driver_split_apart_rtp_howard_bins.m:153:call_save_split_apart_rtp_howard_bins
+% git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_starts_Sept2002/driver_split_apart_rtp_howard_bins_startSept2002.m:122:call_save_split_apart_rtp_howard_bins_startSept2002
+
+  cd /home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES
+  ln -s /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/summary_07years_all_lat_all_lon_2012_2019_monthlyERA5.rp.rtp RTP/.
+  ln -s /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp RTP/.  
   edit set_rtp.m                                      so it is looking for this files 
        set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m    so it is gonna do eitherr T(z),WV(z),O3(z) jacs or col jacs
-  rmer_slurm_JUNKrad.sc; sbatch -p cpu2021                              --array=1-4608 sergio_matlab_jobB.sbatch 1
-
+   %% clrsky, use LBLRTM ODs  ****************************** CLR JACS 97 layers eg for 64x72 grids *** USE THIS FOR WV,O3,T ****       
+   iKCKD =  43; iHITRAN = 2024; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +1;   gg = 1001;  
+  %% rmer_slurm_JUNKrad.sc; sbatch -p cpu2021           --array=1-4608 sergio_matlab_jobB.sbatch 1
+  rmer_slurm_JUNKconv.sc; rmer_slurm_JUNKrad.sc; sbatch --array=1-4608 sergio_matlab_chip.sbatch 1
+  
 Then for example
   cd  /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK
   mkdir AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly
@@ -40,21 +57,55 @@ When all 4608 are done
   ie when ls -lt ../ind*jac.mat | wc -l = 4608
     mv ../ind*jac.mat AllDemJacsClr/.
     mv ../ind*.mat AllDemJacsClr/.    
+  or
+    mv JUNK/individual_prof_convolved_kcarta_airs_*  /home/sergio/nogit/TILEJACS/AVG/KCARTA/T_WV_O3
 
-  then go back to /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/
-  edit   set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m    so it is gonna the other of  T(z),WV(z),O3(z) jacs or col jacs  
-  rmer_slurm_JUNKrad.sc; sbatch -p cpu2021                              --array=1-4608 sergio_matlab_jobB.sbatch 1
-  cd  /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK
-  cd  AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly  
-  when all 4608 are done
-  ie when ls -lt ../ind*coljac.mat | wc -l = 4608
-    mv ../ind*coljac.mat AllDemJacsClr/.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(C) use this to make the kCARTA ERA5 trend jacs for CO2/N2O/CH4/CFC11/CFC12 (column)
+then go back to /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/ to make CO2/CH4/N2O/CFC11/CFC12 column jacs 
+    edit   set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m    so it is gonna the other of  T(z),WV(z),O3(z) jacs or col jacs
+        iKCKD =  43; iHITRAN = 2024; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +100; gg = 2456;  %% clrsky, use LBLRTM ODs  ****************************** COL CLR JACS eg for 64x72 grids : does G2,G4,G5,G6,G51,G52,T(z),ST
+    
+    rmer_slurm_JUNKrad.sc; sbatch -p cpu2021                              --array=1-4608 sergio_matlab_jobB.sbatch 1
+    cd  /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK
+    cd  AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly  
+    when all 4608 are done
+    ie when ls -lt ../ind*coljac.mat | wc -l = 4608
+    mv JUNK/ind*coljac.mat AllDemJacsClr/.
+  or
+    mv JUNK/ind*coljac.mat  /home/sergio/nogit/TILEJACS/AVG/KCARTA/T_WV_O3
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(D) Put together the jacobians
+-------------------------------
+
+the big fat jac files are put together using code in eg
+
+[sergio@c24-52 GENERIC_RADSnJACS_MANYPROFILES]$ ls /home/sergio/git/kcarta_gen/RUN_HPC/*/*/clust_put_together_jacs_clrERA5.m
+/home/sergio/git/kcarta_gen/RUN_HPC/OUTPUT_mfiles/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m
+/home/sergio/git/kcarta_gen/RUN_HPC/OUTPUT_mfiles/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m
+/home/sergio/git/kcarta_gen/RUN_HPC/OUTPUT_mfiles/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/clust_put_together_jacs_clrERA5.m
+/home/sergio/git/kcarta_gen/RUN_HPC/OUTPUT_mfiles/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09_V2/clust_put_together_jacs_clrERA5.m
+/home/sergio/git/kcarta_gen/RUN_HPC/OUTPUT_mfiles/AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly/clust_put_together_jacs_clrERA5.m   ----> copy this here
 
 Edit clust_put_together_jacs_clrERA5.m so that eg 
     iOldORNew = +07;  %% the 07 year ERA5 2012/05-2019/04
-  and there are two more instances (looking for the firectories, and looking for eg 
+    iOldORNew = +23;  %% the 23 year ERA5 2002/09-2025/08    
+  and there are two more instances (looking for the directories, and looking for eg
     /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_07years_all_lat_all_lon_2012_2019_monthlyERA5.rp.rtp
-  kleenslurm; sbatch -p high_mem --array=1-64 sergio_matlab_jobB.sbatch 2
+    /home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp -->
+       /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp
+    
+  kleenslurm; sbatch  --array=1-64 sergio_matlab_chip.sbatch 8
+
+VERY VERY FAST if the cluster works
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(E) Use it in trend retrievals
+-------------------------------
 
 Then of course, go to eg strow_override_defaults_latbins_AIRS_fewlays.m
      iVersJac == 2012; will deal with this (settings.dataset == 6), so keep looking for iVersJac and edit as needed

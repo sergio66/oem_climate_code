@@ -1,1 +1,1 @@
-SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/do_idRH.m
+../AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/do_idRH.m

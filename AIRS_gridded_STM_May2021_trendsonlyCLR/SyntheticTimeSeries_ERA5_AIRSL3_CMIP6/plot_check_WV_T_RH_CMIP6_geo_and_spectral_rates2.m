@@ -1,5 +1,7 @@
-addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
-addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+% addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS
+% addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+addpath /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS
+addpath /home/sergio/git/oem_climate_jacs/StrowCodeforTrendsAndAnomalies/
 
 disp('plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2 : did preliminaries, starting the spectral and geophysical trends ...')
 
@@ -27,14 +29,15 @@ if isfield(p72x,'verybad')
   end
 end
 
+%% cmip6_64x72.all -- cmip6_64x72.pall etc
 fchanx = h72x.vchan;
 plevsx = p72x.plevs(1:97,20);
 rlatx  = unique(p72.rlat);
 if iType == 6 | iType == 61
-  plevsnwp = squeeze(cmip6_64x72.all.nwp_plevs(1,:,3000));
+  plevsnwp = squeeze(cmip6_64x72.pall.nwp_plevs(1,:,3000));
   iNlev = 19;
 elseif iType == 5 | iType == 51
-  plevsnwp = squeeze(era5_64x72.all.nwp_plevs(1,:,3000));
+  plevsnwp = squeeze(era5_64x72.pall.nwp_plevs(1,:,3000));
   iNlev = 37;
 end
 

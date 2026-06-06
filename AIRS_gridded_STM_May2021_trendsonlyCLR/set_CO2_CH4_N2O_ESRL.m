@@ -15,10 +15,12 @@ else
     [co2x,n2ox,ch4x] = get_co2_n2o_ch4_for_strow_override_backwards(driver,settings,iVersJac); %% sets co2x,n2ox,ch4x using 2-19 years :: AIRS which starts in 2002/09
 end
 
+iHaveGlobalTracker = -1;  %% /home/sergio/git/matlabcode/ESRL_TRACE_GAS/fill_co2_carbontracker.m has lost Chris data
+
 iAdjCo2 = +1;
 co2x = co2x * iAdjCo2;
 
-if iAdjCo2 >= 1
+if iAdjCo2 >= 1 & iHaveGlobalTracker > 0
   JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
   co2x = get_ESRL_TRACE_GAS_2002_2022(JOBJOBJOB,driver.iNumYears);
 
@@ -77,8 +79,11 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
   if settings.co2lays == 1
     %% disp('now doing apriori WV(RH) settings')
     %xb(1:5) = xb(1:5)*10;
-    %[hhh,~,ppp,~] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp');
-    [hhh,~,ppp,~] = rtpread('/asl/s1/sergio/alldata/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp');
+    %[hhh,~,ppp,~] = rtpread('
+    fERA5 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp';
+    fERA5 = '/asl/s1/sergio/alldata/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp';
+    fERA5 = '/home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp';
+    [hhh,~,ppp,~] = rtpread(fERA5);
     RH0  = layeramt2RH(hhh,ppp);
     mmw0 = mmwater_rtp(hhh,ppp);
     for iiii = 1 : length(ppp.stemp)

@@ -3,19 +3,22 @@
 %% this is copied and modified from driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
 
 %% this tries to loop over the 64 zonal bins using the cluster
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
-addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE/COLORMAP/LLS
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/aslutil
-addpath /home/sergio/MATLABCODE/TIME
-addpath /home/sergio/MATLABCODE
-%addpath ../../../FIND_TRENDS/
-addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
-addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
-addpath /home/sergio/MATLABCODE_Git/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MATLAB/
+
+addpath0
+
+% addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
+% addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD
+% addpath /home/sergio/MATLABCODE/COLORMAP
+% addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+% addpath /asl/matlib/h4tools
+% addpath /asl/matlib/aslutil
+% addpath /home/sergio/MATLABCODE/TIME
+% addpath /home/sergio/MATLABCODE
+% %addpath ../../../FIND_TRENDS/
+% addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/StrowCodeforTrendsAndAnomalies/
+% addpath /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
+% addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/Strow_humidity/convert_humidity/
+% addpath /home/sergio/MATLABCODE_Git/CONVERT_GAS_UNITS/IDL_WV_ROUTINES/atmos_phys/MATLAB/
 
 %% check_all_jobs_done('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_rlat',64,'_2002_09_2024_08.mat');
 %% check_all_jobs_done('/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/reconstruct_era5_spectra_geo_idRH_6_rlat',64,'_2002_09_2024_08.mat');

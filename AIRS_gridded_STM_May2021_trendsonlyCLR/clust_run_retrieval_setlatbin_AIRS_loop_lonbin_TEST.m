@@ -51,14 +51,7 @@
 %%  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-addpath /home/sergio/MATLABCODE
-addpath /home/sergio/MATLABCODE/PLOTMISC/
-addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
-addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/rtptools
-addpath /asl/matlib/aslutil
-addpath /home/sergio/MATLABCODE/LOADMIE
+addpath0
 
 system_slurm_stats
 
@@ -227,9 +220,6 @@ JOBTYPE = -1000;  %%% uncomment this when trying to fit for linear rates!!! fix 
 %   iDoAnomalyOrRates = +1;  %% do the anomalies
 % end
 
-%---------------------------------------------------------------------------
-addpath /home/sergio/MATLABCODE/oem_pkg
-addpath Plotutils
 %---------------------------------------------------------------------------
 % Doing debug?
  driver.debug = false;

@@ -12,16 +12,16 @@ title('CO2 trends; \newline notice blue end = red begin')
 
 if iNumYears > 0
   %% going forwards since 2002/09
-  boo05 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2007_08.mat');
-  boo10 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2012_08.mat');
-  boo15 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2017_08.mat');
-  boo20 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
+  boo05 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2007_08.mat');
+  boo10 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2012_08.mat');
+  boo15 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2017_08.mat');
+  boo20 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
 else
   %% going backwards from  2022/08
-  boo05 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2017_09_2022_08.mat');
-  boo10 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2012_09_2022_08.mat');
-  boo15 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2007_09_2022_08.mat');
-  boo20 = load('/home/sergio/MATLABCODE_Git/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
+  boo05 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2017_09_2022_08.mat');
+  boo10 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2012_09_2022_08.mat');
+  boo15 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2007_09_2022_08.mat');
+  boo20 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
 end
 
 co2x_05 = boo05.trend(JOBJOBJOB);

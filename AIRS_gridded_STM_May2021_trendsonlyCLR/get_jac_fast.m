@@ -34,9 +34,11 @@ elseif iVersJac == 2012 | iVersJac == 2015
   see_clust_put_together_jacs_clrERA5_2012
 elseif iVersJac == 2014
   see_clust_put_together_jacs_clrERA5_2014
+elseif iVersJac == 2025
+  see_clust_put_together_jacs_clrERA5_2025
 else
   iVersJac
-  error('iVersJac = 2012,2014,2019,2021,2022 only')
+  error('iVersJac = 2012,2014,2019,2021,2022,2025 only')
 end
 
 if ~exist('colo3')
@@ -158,6 +160,7 @@ if iSaveJac > 0
   eval(saverjac);
 end
 
-oo = load('/asl/s1/sergio/alldata/AIRSPRODUCTS_JACOBIANS/TRP/g2_jac.mat');
-plot(h.vchan,m_ts_jac(:,1),oo.fout,sum(oo.jout')*2.2/370)
-
+if exist('/asl/s1/sergio/alldata/AIRSPRODUCTS_JACOBIANS/TRP/g2_jac.mat');
+  %oo = load('/asl/s1/sergio/alldata/AIRSPRODUCTS_JACOBIANS/TRP/g2_jac.mat');
+  plot(h.vchan,m_ts_jac(:,1),oo.fout,sum(oo.jout')*2.2/370)
+end

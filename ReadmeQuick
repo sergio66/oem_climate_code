@@ -1,8 +1,96 @@
+Contents
+1) Setting up the clone of oem_climate_code
+2) Setting up Output directory
+3) Setting up the clone of oem_pkg
+4) Remembering where the tile data is
+(A) AIRS_gridded_STM_May2021_trendsonlyCLR
+(B) ERA5 monthly, also see Readme_make_avg_profs_N_jacs_4608
+(C) make RTP files
+(D) FIND_NWP_MODEL_TRENDS
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+1) Setting up the clone
+-----------------------
+
+After you clone
+
+[sergio@chip-login3 oem_climate_code]$ git branch
+* master
+[sergio@chip-login3 oem_climate_code]$ git branch -a*
+master  remotes/origin/HEAD -> origin/master
+remotes/origin/master
+remotes/origin/sergi
+
+oMake sure you switch to branch sergio  git checkout sergio
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+2) Setting up Output directory
+------------------------------
+
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ls  Output
+Output
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ls -lt Output
+lrwxrwxrwx 1 sergio pi_sergio 39 Mar 19 08:16 Output -> /asl/s1/sergio/alldata/Tiles4608/Output
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ mkdir /home/sergio/nogit/Tiles4608
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ mkdir /home/sergio/nogit/Tiles4608/Output
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ rm Output
+
+rm: remove symbolic link 'Output'? y
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/Tiles4608/Output .
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+3) Setting up the clone of oem_pkg
+-----------------------------------
+[sergio@chip-login2 oem_pkg]$ git remote --v
+origin	git@github.com:sergio66/oem_pkg.git (fetch)
+origin	git@github.com:sergio66/oem_pkg.git (push)
+
+[sergio@chip-login2 oem_pkg]$ git branch -a
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main
+  remotes/origin/master
+  remotes/origin/strow
+
+[sergio@chip-login2 oem_pkg]$ git checkout strow
+Branch 'strow' set up to track remote branch 'strow' from 'origin'.
+Switched to a new branch 'strow'
+
+[sergio@chip-login2 oem_pkg]$ ls -lt
+total 122
+-rw-rw-r-- 1 sergio pi_sergio 39258 Jun  5 06:47 rodgers_sequential.m
+-rw-rw-r-- 1 sergio pi_sergio  1910 Jun  5 06:47 sergio_oem_lls.m
+-rw-rw-r-- 1 sergio pi_sergio 16961 Jun  5 06:47 rodgers.m
+-rw-rw-r-- 1 sergio pi_sergio  1852 Jun  5 06:47 oem_lls_orig.m
+-rw-rw-r-- 1 sergio pi_sergio  2626 Jun  5 06:47 retrieval.m
+-rw-rw-r-- 1 sergio pi_sergio  4198 Jun  5 06:47 oem_lls.m
+-rw-rw-r-- 1 sergio pi_sergio   932 Jun  5 06:47 inverse_minimum_eigenvalue_matrix_optim.m
+-rw-rw-r-- 1 sergio pi_sergio   662 Jun  5 06:47 inverse_ridge_regression_matrix.m
+-rw-rw-r-- 1 sergio pi_sergio  1487 Jun  5 06:47 inverse_minimum_eigenvalue_matrix.m
+-rw-rw-r-- 1 sergio pi_sergio  1038 Jun  5 06:47 get_l.m
+-rw-rw-r-- 1 sergio pi_sergio  4474 Jun  5 06:47 get_sequential_indices_params.m
+-rw-rw-r-- 1 sergio pi_sergio  8898 Jun  5 06:47 get_inv_se_rcov_iSequential.m
+-rw-rw-r-- 1 sergio pi_sergio  6327 Jun  5 06:47 get_inv_se_rcov_allchans_allparams.m
+-rw-rw-r-- 1 sergio pi_sergio  8550 Jun  5 06:47 get_inv_se_rcov_allchans_allparams_notused.m
+-rw-rw-r-- 1 sergio pi_sergio  6139 Jun  5 06:47 do_the_dof_avg_kernel.m
+-rw-rw-r-- 1 sergio pi_sergio 15348 Jun  5 06:47 common_rodgers_initializations1.m
+drwxrwxr-x 4 sergio pi_sergio    21 Jun  5 06:47 Test
+drwxrwxr-x 2 sergio pi_sergio    14 Jun  5 06:47 Changelog
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+4) Remembering where the tile data is
+-----------------------------------------
+
 If Howard has added in eg 2024-09 to 2025/08 and you did all necessary thinngs in
-  /oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
+  /oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
   (see ReadmeQuick there)
   
-[sergio@c24-52 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ls -lt ../../oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
+[sergio@c24-52 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ls -lt ../../oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
 total 2031648
 drwxrwxr-x  6 sergio pi_strow       73728 Sep 27 03:03 Code_For_HowardObs_TimeSeries
 drwxrwxr-x  4 sergio pi_strow      188416 Sep 27 03:03 Code_for_TileTrends
@@ -15,9 +103,9 @@ this is what you need to do in oem_pkg_run
 ------------------------------------------
 
 1) these two need to put together the latest trends and anomlaies made in
-  /oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
+  /oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
 -rw-rw-r-- 1 sergio pi_strow  35144 Sep 27 03:19 driver_put_together_QuantileChoose_trends.m
--rw-rw-r-- 1 sergio pi_sergio 20710 Sep 27 04:14 driver_contrast_obsrates_05_10_15_20_23.m
+-rw-rw-r-- 1 sergio pi_sergio 20710 Sep 27 04:14 driver_contrast_obsrates_05_10_15_20_23.m     no real need for this, esp since I have "lost" years 0-22
 
 2) then this allows you to compare to earlier trends
 -rw-rw-r-- 1 sergio pi_strow  19983 Sep 26 14:40 driver_put_together_QuantileChoose_anomalies.m
@@ -25,16 +113,42 @@ this is what you need to do in oem_pkg_run
 3) need to tell the main trend retrieval code about eg option (1*0 is for 2002/09 - 2025/08
 -rw-rw-r-- 1 sergio pi_strow  57198 Sep 27 03:49 clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
 
-4) this points to the file names that need to be used
+4) this points to the file names that need to be used/changed
 -rw-rw-r-- 1 sergio pi_strow   1519 Sep 27 09:03 get_the_mean_profiles.m
 -rw-rw-r-- 1 sergio pi_strow   1607 Sep 27 08:57 read_fileMean17years.m
 -rw-rw-r-- 1 sergio pi_strow  19655 Sep 27 03:46 set_driver_rateset_datafile.m
 
-5) finally you needs to look at the results after the trend or anomaly retreival
+5) Starting afresh after we lost out disks in Oct 2025
+-rw-rw-r-- 1 sergio pi_sergio 18867 Jun  5 06:42 set_CO2_CH4_N2O_ESRL.m
+-rw-rw-r-- 1 sergio pi_sergio  1960 Jun  5 01:11 get_ESRL_TRACE_GAS_2002_2022.m
+-rw-rw-r-- 1 sergio pi_sergio  5732 Jun  5 01:02 get_co2_n2o_ch4_for_strow_override.m
+-rw-rw-r-- 1 sergio pi_sergio  7380 Jun  5 00:57 choose_goodchans_from_2645.m
+-rw-rw-r-- 1 sergio pi_sergio  6855 Jun  5 00:52 get_jac_fast.m
+-rw-rw-r-- 1 sergio pi_sergio 13226 Jun  5 00:51 see_clust_put_together_jacs_clrERA5_2025.m
+-rw-rw-r-- 1 sergio pi_sergio 14134 Jun  5 00:40 clust_put_together_jacs_clrERA5.m
+-rw-rw-r-- 1 sergio pi_sergio  9326 Jun  5 00:35 set_driver_jacfile.m
+-rw-rw-r-- 1 sergio pi_sergio 14651 Jun  5 00:26 set_the_jacobians.m
+-rw-rw-r-- 1 sergio pi_sergio 20803 Jun  4 23:31 set_driver_rateset_datafile.m
+-rw-rw-r-- 1 sergio pi_sergio 58223 Jun  4 23:23 clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+-rw-rw-r-- 1 sergio pi_sergio  1988 Jun  4 23:15 addpath0.m
+-rw-rw-r-- 1 sergio pi_sergio 54114 Jun  4 23:15 clust_run_retrieval_setlatbin_AIRS_loop_lonbin_TEST.m
+-rw-rw-r-- 1 sergio pi_sergio 36928 Jun  4 22:26 driver_put_together_QuantileChoose_trends.m
+-rw-rw-r-- 1 sergio pi_sergio  4466 Jun  4 22:25 figs_put_together_QuantileChoose_trends.m
+
+6) when happy use
+   sergio_matlab_chip.sbatch
+
+7) ERA5 Spectral rates : Make sure run all 64 latbins of
+     SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/klayers_sarta_check_WV_T_RH_geo_and_spectral_rates2.m
+  
+8) finally you needs to look at the results after the trend or anomaly retreival
 -rw-rw-r-- 1 sergio pi_strow  45168 Sep 27 09:00 driver_gather_gridded_retrieval_results.m
 
-(B) ERA5 monthly
-----------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(B) ERA5 monthly, also see Readme_make_avg_profs_N_jacs_4608
+------------------------------------------------------------
+
 more /home/sergio/git/Readme_RTP_PIPELINE/Readme_ERA5_monthly_pipeline
 
 cd /home/sergio/git/era5_pipeline/
@@ -53,6 +167,8 @@ test using     python test_download.py
   
 ./ERA5_get_monthly_avg.sh era5.driver
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 (C) make RTP files
 ------------------
 
@@ -68,13 +184,14 @@ sbatch  --array=241-276  sergio_matlab_chip.sbatch 10  iDorA = +1  D
 sbatch  --array=241-276  sergio_matlab_chip.sbatch 10  iDorA = -1  N
 sbatch  --array=241-276  sergio_matlab_chip.sbatch 10  iDorA = 0   N+D
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 (D) FIND_NWP_MODEL_TRENDS
 -------------------------
 
 driver_computeERA5_monthly_trends_desc_or_asc.m           ??  TRY THIS ONE, EASIER!
 driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m  ??
 
-(E) Go to ../AIRS_gridded_STM_May2021_trendsonlyCLR
----------------------------------------------------
+Go to ../AIRS_gridded_STM_May2021_trendsonlyCLR
 
 And update/compare to driver_gather_gridded_retrieval_results.m
