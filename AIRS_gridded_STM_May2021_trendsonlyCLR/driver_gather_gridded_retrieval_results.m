@@ -951,7 +951,7 @@ savesmallFATfile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% then look at model data
+%% then look at model data or just do OLR trends and feedbacks
 disp('if you really only want feedbacks then all you have to do is run "simple_get_the_model_trends_do_feedbacks" which gets the model trends, then runs do_feedbacks');
 iX = input('do all the complicated stuff (+1) or just the simple stuff/feedbacks (default, -1) : ');
 if length(iX) == 0

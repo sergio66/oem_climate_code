@@ -6,16 +6,6 @@
 
 disp('  ')
 disp('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-disp('  ')
-disp('make sure you do this before starting Matlab, if you want to run ecRad!!!')
-disp('module load netCDF-Fortran/4.4.4-intel-2018b');
-disp('  ')
-disp('make sure you do this before starting Matlab, if you want to run ecRad!!!')
-disp('module load netCDF-Fortran/4.4.4-intel-2018b');
-disp('  ')
-disp('make sure you do this before starting Matlab, if you want to run ecRad!!!')
-disp('module load netCDF-Fortran/4.4.4-intel-2018b');
-disp('  ')
 
 disp('each model takes about 15 minutes for SARTA and ecRad to run completely ie 15 min for UMBC, 45 min for ERA5/AIRSL3/CMIP6, 45 min for MERRA2/CLIMCAPSL3/AMIP6')
 disp('so much better if you can read in pre-computed ERA5/AIRSL3/CMIP6 and MERRA2/CLIMCAPSL3/AMIP6')
@@ -37,29 +27,11 @@ iLambda_UseGlobalSST = +1;
 
 iUMBCexist = -1;   %% we have to  make a fresh umbc OLR feedback computation
 
-if iSwap_ERA_2012_08_15 < 0
-  feedbacknameUMBC = ['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '.mat'];
-else
-  feedbacknameUMBC = ['/asl/s1/sergio/JUNK/olr_feedbacks_UMBC_numyears_' num2str(iNumYears,'%02d') '_swap_profile.mat'];
-end
-
+feedbacknameUMBC = 'ThisDoesNotExist';
+iRaw_or_Unc = +1; %% just do it
 if iRaw_or_Unc == -1
   feedbacknameUMBC = feedbacknameUMBC(1:end-4);
   feedbacknameUMBC = [feedbacknameUMBC '_unc_factor' num2str(maxratio,'%0.2f') '.mat'];
-end
-
-if iAllorSeasonal == -1
-  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
-  feedbacknameUMBC = [feedbacknameUMBC '_DJF.mat'];
-elseif iAllorSeasonal == -2
-  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
-  feedbacknameUMBC = [feedbacknameUMBC '_MAM.mat'];
-elseif iAllorSeasonal == -3
-  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
-  feedbacknameUMBC = [feedbacknameUMBC '_JJA.mat'];
-elseif iAllorSeasonal == -4
-  feedbacknameUMBC = feedbacknameUMBC(1:end-4);
-  feedbacknameUMBC = [feedbacknameUMBC '_SON.mat'];
 end
 
 do_compute_save_UMBC_feedbacks

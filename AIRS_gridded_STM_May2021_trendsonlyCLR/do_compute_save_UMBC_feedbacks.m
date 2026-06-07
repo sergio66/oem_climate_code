@@ -1,3 +1,4 @@
+eedbacknameUMBC = 'ThisDoesNotExist';
 if ~exist('umbc_spectral_olr') 
   if exist(feedbacknameUMBC)
     iUMBCexist = +1;
@@ -18,6 +19,21 @@ if ~exist('umbc_spectral_olr')
     end
   else
     umbc_spectral_olr = struct;    %% so it has no fields
+    disp('doing compare_two_structures(p,pMean17years) since we send "p" in ')
+    compare_two_structures(p,pMean17years);
+    if h.pfields == 1 | ~isfield(p,'rcalc')
+      disp('making p.rcalc ....')
+      pcopy = p;
+      hcopy = h;      
+      klayers = '/home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/KLAYERS_RTPv221_150levs_80km/klayersV205_0_80km/BinV221/klayers_airs';
+      sarta   = '/home/sergio/git/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/bin/jac_airs_l1c_2834_cloudy_apr26_H2024';
+      rtpwrite('olrjunk.op.rtp',h,ha,p,pa);
+      sartaer = ['!time ' sarta ' fin=olrjunk.op.rtp fout=olrjunk.rp.rtp'];
+      eval(sartaer)
+      [h,~,p,~] = rtpread('olrjunk.rp.rtp');
+      rmer = ['!/bin/rm olrjunk.op.rtp olrjunk.rp.rtp'];
+      eval(rmer)
+    end
     umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,-1,rlat65,rlon73,'UMBC');
     %%% compute_feedbacks_umbc_ecRad   ; pause(0.1)
   end
@@ -53,7 +69,10 @@ if junk > 0
       if length(junk2) == 0
         junk2 = -1;
       end
-    end       
+    end
+    if ~exist('strUMBC')
+      strUMBC = 'tempStrUMBC';
+    end    
     saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays strUMBC iNumYears'];  %% if you only want to save UMBC
     if junk2 > 0
       fprintf(1,'saving to %s \n',feedbacknameUMBC);

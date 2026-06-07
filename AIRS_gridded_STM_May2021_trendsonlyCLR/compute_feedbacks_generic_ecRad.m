@@ -71,6 +71,9 @@ era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+addpath /home/sergio/git/IR_NIR_VIS_UV_RTcodes/RobinHoganECMWF/ECRAD_ECMWF_version_of_flux/ecRad/create_ecrad_inputSergio/
+addpath /home/sergio/git/IR_NIR_VIS_UV_RTcodes/RRTM/v3.3/rrtm_lw/DRIVER_CODE_RRTM_Band17/
+
 if nargin < 9
   error('need at least 9 args')
 end
@@ -97,14 +100,12 @@ fracWV  = trend_gas_1;   [mmbad,nnbad] = find(isinf(fracWV) | isnan(fracWV) > 1 
 fracO3  = trend_gas_3;   [mmbad,nnbad] = find(isinf(fracO3) | isnan(fracO3) > 1 | (isinf(fracO3) > 1));     [bad] = find(isinf(fracO3) | isnan(fracO3) > 1 | (isinf(fracO3) > 1));     fracO3(bad) = 0;
 
 cdRRTMback = ['cd ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/'];
+cdRRTMback = ['cd ~/git/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/'];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iLambda_UseGlobalSST_regress = +1;   %% new way, use global avg SST, much safer (less likely to be 0)
 iLambda_UseGlobalSST_regress = -1;   %% old way till March 2022, using computed SST per tile instead of glabal average; dangerous because if dSST = 0 oopsie when dividing
-
-addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RobinHoganECMWF/ECRAD_ECMWF_version_of_flux/ecRad/create_ecrad_inputSergio/
-addpath /home/sergio/IR_NIR_VIS_UV_RTcodes/RRTM/v3.3/rrtm_lw/DRIVER_CODE_RRTM_Band17/
 
 %% trying a faster method see     jaja = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);    driver_run_ecRad_rtp_loop_over_profiles.m iMethod = -1
 %% scatter_coast(p.rlon,p.rlat,50,(x_spectral_olr.olr0_ecRad.clr-jaja.clr)./x_spectral_olr.olr0_ecRad.clr*100); colormap(usa2); caxis([-1 +1])

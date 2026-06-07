@@ -35,13 +35,17 @@ aslmap(176,fig13_400mb.rlat65,fig13_400mb.rlon73,fig13_400mb.era5_wv_400,[-90 +9
     text(-0.25,-1.625,'yr^{-1}','fontsize',14)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-oldfig13 = load('/home/sergio/MATLABCODE/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig13.mat');
-aslmap(275,oldfig13.fig13_400mb.rlat65,fig13_400mb.rlon73,fig13_400mb.umbc_wv_400,[-90 +90],[-180 +180]); caxis([-1 +1]*cxmax); colormap(llsmap5);
+jgr_locate = '/home/sergio/MATLABCODE/oem_pkg_run/MATFILES_for_JGR_trends_paper/fig13.mat';
+jgr_locate = '/home/sergio/git/JGR_July2025/PLOTTER/fig13.mat';
+if exist(jgr_locate)
+  oldfig13 = load(jgr_locate);
+  aslmap(275,oldfig13.fig13_400mb.rlat65,fig13_400mb.rlon73,fig13_400mb.umbc_wv_400,[-90 +90],[-180 +180]); caxis([-1 +1]*cxmax); colormap(llsmap5);
     set(gca,'fontsize',18)
     text(-0.25,-1.625,'yr^{-1}','fontsize',14)
-aslmap(276,oldfig13.fig13_400mb.rlat65,fig13_400mb.rlon73,fig13_400mb.era5_wv_400,[-90 +90],[-180 +180]); caxis([-1 +1]*cxmax); colormap(llsmap5);
+  aslmap(276,oldfig13.fig13_400mb.rlat65,fig13_400mb.rlon73,fig13_400mb.era5_wv_400,[-90 +90],[-180 +180]); caxis([-1 +1]*cxmax); colormap(llsmap5);
     set(gca,'fontsize',18)
     text(-0.25,-1.625,'yr^{-1}','fontsize',14)
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

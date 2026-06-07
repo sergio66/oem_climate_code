@@ -14,7 +14,9 @@ if ~exist('iNumYears')
   elseif a.topts.dataset == 11
     iNumYears = 10;  %% 2002 - 2022
   elseif a.topts.dataset == 12
-    iNumYears = 15;  %% 2002 - 2022
+    iNumYears = 15;  %% 2002 - 2017
+  elseif a.topts.dataset == 19
+    iNumYears = 23;  %% 2002 - 2025
   end
 end
 
@@ -25,6 +27,10 @@ if ~exist('iNumYears')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if ~exist('iGet_ERA5_AIRSL3_AMIP')
+  iGet_ERA5_AIRSL3_AMIP = -1;
+end
 
 if iGet_ERA5_AIRSL3_AMIP > 0
   addpath ../FIND_NWP_MODEL_TRENDS
@@ -57,6 +63,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+if ~exist('iRaw_or_Unc')
+  iRaw_or_Unc = +1;
+end  
 if iRaw_or_Unc == -1
   update_deltaT_WV_O3_SKT_using_uncertainty
 end
@@ -69,9 +78,12 @@ if length(junk) == 0
 end
 if junk > 0
   if ~exist('lps0')
-    addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/
+    %addpath /home/sergio/MATLABCODE/CONVERT_GAS_UNITS/
     [mmw0,lps0] = mmwater_rtp_pstop_lapse(h,p);
   end
+  
   %do_feedbacks
-  do_feedbacks_wrt_globalSST
+  do_feedbacks_wrt_globalSST        %% 2024 when we stopped doing OLR for JGR paper, but lost t all in Oct 2025 disk crash
+  do_feedbacks_wrt_globalSST_2026   %% 2026 when desperatley trying to recreate things
+  
 end
