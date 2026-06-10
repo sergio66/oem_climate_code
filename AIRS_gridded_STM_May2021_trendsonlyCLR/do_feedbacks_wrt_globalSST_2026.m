@@ -21,6 +21,35 @@ disp('  ')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+disp('see also show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m')
+disp('see also show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m')
+disp('see also show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m show_olr_ecRad_feedback.m')
+% iaComputeWhichFeedback = 9999 for all things together, r none
+% iaComputeWhichFeedback = [9999];  %% do the things for the direct comparisons ie ALL perturbations together
+% if iaComputeWhichFeedback ~= 0
+%   umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'UMBC');
+% else
+%   umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',[]    ,[]    ,[]    ,umbc_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'UMBC');
+% end
+% if iaComputeWhichFeedback ~= 0
+%   era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,era5.trend_ptemp,era5.trend_gas_1,era5.trend_gas_3,era5_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'ERA5');
+% else
+%   era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp,[]              ,[]              ,[]              ,era5_spectral_olr,iaComputeWhichFeedback,rlat65,rlon73,+1,'ERA5');
+% end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(100); clf; imagesc(deltaT);           colormap(llsmap5); colorbar; caxis([-1 +1]*1e-1); title('UMBC Tz rates')
+figure(101); clf; imagesc(era5.trend_ptemp); colormap(llsmap5); colorbar; caxis([-1 +1]*1e-1); title('ERA5 Tz rates')
+
+figure(102); clf; imagesc(fracWV);           colormap(llsmap5); colorbar; caxis([-1 +1]*1e-2); title('UMBC WV rates')
+figure(103); clf; imagesc(era5.trend_gas_1); colormap(llsmap5); colorbar; caxis([-1 +1]*1e-2); title('ERA5 WV rates')
+
+figure(104); clf; imagesc(fracO3);           colormap(llsmap5); colorbar; caxis([-1 +1]*1e-2); title('UMBC O3 rates')
+figure(105); clf; imagesc(era5.trend_gas_3); colormap(llsmap5); colorbar; caxis([-1 +1]*1e-2); title('ERA5 O3 rates')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear feedbackname*
 clear *spectral_olr
 iLambda_UseGlobalSST = +1;
@@ -35,6 +64,15 @@ if iRaw_or_Unc == -1
 end
 
 do_compute_save_UMBC_feedbacks
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%{
+%% this is part of do_compute_save_AIRSL3_ERA5_CMIP6_feedbacks, only for ERA5
+do_compute_save_ERA5_feedbacks
+
+do_compare_UMBC_vs_ERA5_feedbacks(umbc_spectral_olr,era5_spectral_olr,results(:,6),era5.trend_stemp);
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% FRESH COMPUTE  NWP/AIRSL3/XMIP6 %%%%%%%%%%%%%%%%%%%%%%%%%%

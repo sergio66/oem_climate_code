@@ -83,7 +83,7 @@ if junk > 0
   end
   
   %do_feedbacks
-  do_feedbacks_wrt_globalSST        %% 2024 when we stopped doing OLR for JGR paper, but lost t all in Oct 2025 disk crash
+  %do_feedbacks_wrt_globalSST        %% 2024 when we stopped doing OLR for JGR paper, but lost t all in Oct 2025 disk crash
   do_feedbacks_wrt_globalSST_2026   %% 2026 when desperatley trying to recreate things
   
 end

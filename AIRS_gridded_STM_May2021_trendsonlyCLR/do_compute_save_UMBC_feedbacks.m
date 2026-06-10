@@ -1,4 +1,4 @@
-eedbacknameUMBC = 'ThisDoesNotExist';
+feedbacknameUMBC = 'ThisDoesNotExist';
 if ~exist('umbc_spectral_olr') 
   if exist(feedbacknameUMBC)
     iUMBCexist = +1;
@@ -18,7 +18,11 @@ if ~exist('umbc_spectral_olr')
       clear junk
     end
   else
-    umbc_spectral_olr = struct;    %% so it has no fields
+    iTest100profiles = -1;  %% default
+    if iTest100profiles > 0
+      do_ecrad_UMBC_Test100profiles
+    end
+    
     disp('doing compare_two_structures(p,pMean17years) since we send "p" in ')
     compare_two_structures(p,pMean17years);
     if h.pfields == 1 | ~isfield(p,'rcalc')
@@ -34,7 +38,10 @@ if ~exist('umbc_spectral_olr')
       rmer = ['!/bin/rm olrjunk.op.rtp olrjunk.rp.rtp'];
       eval(rmer)
     end
-    umbc_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,-1,rlat65,rlon73,'UMBC');
+    umbc_spectral_olr       = struct;    %% so it has no fields    
+    umbc_spectral_olr       = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_olr,-1,rlat65,rlon73,-1,'UMBC');
+    umbc_spectral_delta_olr = struct;    %% so it has no fields        
+    umbc_spectral_delta_olr = compute_feedbacks_generic_ecRad(h,p,results,results(:,6)',deltaT,fracWV,fracO3,umbc_spectral_delta_olr,8888,rlat65,rlon73,-1,'UMBC');    
     %%% compute_feedbacks_umbc_ecRad   ; pause(0.1)
   end
 end
@@ -73,10 +80,11 @@ if junk > 0
     if ~exist('strUMBC')
       strUMBC = 'tempStrUMBC';
     end    
-    saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr results resultsWV resultsT resultsO3 pavg plays strUMBC iNumYears'];  %% if you only want to save UMBC
+    saver = ['save ' feedbacknameUMBC ' umbc_spectral_olr umbc_spectral_delta_olr results resultsWV resultsT resultsO3 pavg plays strUMBC iNumYears'];  %% if you only want to save UMBC
     if junk2 > 0
       fprintf(1,'saving to %s \n',feedbacknameUMBC);
       eval(saver);
+      %%%% mver = ['!mv ThisDoesNotExist.mat umbc_only_OLR_feedbacks_23years_try1.mat']; eveal(mver)
     else
       fprintf(1,'this already exists %s not saving \n',feedbacknameUMBC);
     end

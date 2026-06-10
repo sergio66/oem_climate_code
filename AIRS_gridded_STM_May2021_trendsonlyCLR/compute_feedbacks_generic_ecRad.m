@@ -1,7 +1,27 @@
-function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,trend_ptemp,trend_gas_1,trend_gas_3,x_spectral_olr0,iaComputeWhichFeedback,rlat65,rlon73,iPlotResults,caModelStr)
+function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,trend_ptemp,trend_gas_1,trend_gas_3,x_spectral_olr0,iaComputeWhichFeedback,rlat65,rlon73,iPlotResults,caModelStr,iDebug)
 
-%% function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,trend_ptemp,trend_gas_1,trend_gas_3,x_spectral_olr0,iaComputeWhichFeedback,rlat65,rlon73,iPlotResults,caModelStr)
-%%                                                           1 2   3        4           5           6           7             8               9               [10      11     12           13 ]
+%% function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,trend_ptemp,trend_gas_1,trend_gas_3,x_spectral_olr0,iaComputeWhichFeedback,rlat65,rlon73,iPlotResults,caModelStr,iDebug)
+%%                                                           1 2   3        4           5           6           7             8               9               [10      11     12           13          14 ]
+
+if nargin < 9
+  error('need at least 9 args')
+end
+
+if nargin == 9 | nargin == 10
+  do_XX_YY_from_X_Y
+end
+
+if nargin <= 11
+  iPlotResults = -1;  
+  caModelStr = 'XYZ';
+  iDebug = -1;
+elseif nargin <= 12
+  caModelStr = 'XYZ';
+  iDebug = -1;
+elseif nargin <= 13  
+  iDebug = -1;
+end
+
 %% input
 %%   h,p       = average profile used for jacobians
 %%   results   = results(1:6,1:4608) which will have CO/N2O/CH4 trends in first three
@@ -16,6 +36,7 @@ function x_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,trend_skt,
 %%                                                               [[planck lapse o3 wv] [skt tz/co2] [simple all     LAMBDA ONLY]]
 %%                                                                                                  [atm/skt/GHG                ]
 %%   ** note 9999 only does ecRad calcs, then returns
+%%   ** note 8888 does base calcs, and all perturbation calcs so that OLR trend = OLR(pert) - OLR0
 %%
 %%   [rlat65,rlon73,iPlotRresults] are optional args if you need to plot results
 %% note if iaComputeWhichFeedback === 0 then you do not need to run ecRad which means do not need T(z),WV(z),O3(z) trends, only need SKT trends (and potential gas_2,gas_4,gas_6) trends ....
@@ -72,15 +93,20 @@ era5_spectral_olr = compute_feedbacks_generic_ecRad(h,p,results,era5.trend_stemp
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath /home/sergio/git/IR_NIR_VIS_UV_RTcodes/RobinHoganECMWF/ECRAD_ECMWF_version_of_flux/ecRad/create_ecrad_inputSergio/
-addpath /home/sergio/git/IR_NIR_VIS_UV_RTcodes/RRTM/v3.3/rrtm_lw/DRIVER_CODE_RRTM_Band17/
+addpath /home/sergio/git/IR_NIR_VIS_UV_RTcodes/RRTM/RUN_RRTM/DRIVER_CODE_RRTM_Band17
 
-if nargin < 9
-  error('need at least 9 args')
-end
+% disp('testing O3')
+% iaComputeWhichFeedback = 3;
+% trend_gas_3 = 0.5 * ones(size(trend_gas_3));
+% iDebug = +1;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% see “Simpson's Law” and the Spectral Cancellation of Climate Feedbacks
 %% Nadir Jeevanjee1 , Daniel D. B. Koll2, and Nicholas Lutsko3
-%% GRL eevanjee, N., Koll, D. D. B., & Lutsko, N. (2021). “Simpson's Law” and
+%% GRL Jeevanjee, N., Koll, D. D. B., & Lutsko, N. (2021). “Simpson's Law” and
 %%  the spectral cancellation of climate feedbacks. Geophysical Research Letters, 48, e2021GL093699. https://doi. org/10.1029/2021GL093699
 
 if length(fieldnames(x_spectral_olr0)) > 0
@@ -98,10 +124,14 @@ deltaST = trend_skt;     [mmbad,nnbad] = find(isinf(deltaST) | isnan(deltaST) > 
 deltaT  = trend_ptemp;   [mmbad,nnbad] = find(isinf(deltaT) | isnan(deltaT) > 1 | (isinf(deltaT) > 1));     [bad] = find(isinf(deltaT) | isnan(deltaT) > 1 | (isinf(deltaT) > 1));     deltaT(bad) = 0;
 fracWV  = trend_gas_1;   [mmbad,nnbad] = find(isinf(fracWV) | isnan(fracWV) > 1 | (isinf(fracWV) > 1));     [bad] = find(isinf(fracWV) | isnan(fracWV) > 1 | (isinf(fracWV) > 1));     fracWV(bad) = 0;
 fracO3  = trend_gas_3;   [mmbad,nnbad] = find(isinf(fracO3) | isnan(fracO3) > 1 | (isinf(fracO3) > 1));     [bad] = find(isinf(fracO3) | isnan(fracO3) > 1 | (isinf(fracO3) > 1));     fracO3(bad) = 0;
+%whos bad mmbad nnbad
+%error('bad')
 
 cdRRTMback = ['cd ~/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/'];
 cdRRTMback = ['cd ~/git/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/'];
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iLambda_UseGlobalSST_regress = +1;   %% new way, use global avg SST, much safer (less likely to be 0)
@@ -113,25 +143,79 @@ iLambda_UseGlobalSST_regress = -1;   %% old way till March 2022, using computed 
 
 %% iaComputeWhichFeedback == 0 ==> just in case there are updates to eg compute_feedbacks_ecRad_calcs.m, compute_feedbacks_regress_ecRad_calcs.m
 
-if iaComputeWhichFeedback == -1
-  %% if iaComputeWhichFeedback == =-1 then you are recomputing ALL SIX feedbacks, so may as well re-do base OLR calc
-  disp('computing BASE OLR')
-  px = p;
-  x_spectral_olr.olr0 = compute_olr(h,px);
-  %x_spectral_olr.olr0_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0); %%% <<<<<<<<<<<<<<<<<<<<<<<<<<<
-  x_spectral_olr.olr0_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
-  eval(cdRRTMback);
-end
+%% if iaComputeWhichFeedback == -1 then you are recomputing ALL SIX feedbacks, so may as well re-do base OLR calc
+disp('computing BASE OLR')
+px = p;
+x_spectral_olr.olr0 = compute_olr(h,px);
+%x_spectral_olr.olr0_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0); %%% <<<<<<<<<<<<<<<<<<<<<<<<<<<
+x_spectral_olr.olr0_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+eval(cdRRTMback);
 
 indSST    = deltaST;
 globalSST = nanmean(indSST);
 
+if iDebug > 0
+  disp('did base OLR; ret to continue A'); pause
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+iDoThis = -1;
+if length(intersect(iaComputeWhichFeedback,8888)) == +1
+  iDoThis = +1;
+end
+
+if iDoThis > 0
+  %% all perts in one gulp so you can do OLR trend = OLR (all perts) - OLR (base)
+  
+  x_spectral_olr.perts8888 = struct;
+
+  disp('perturbing Tsurf, tracegas, T(z),WV(z),O3(z)) in one go, to compute feedback in one gulp!!!! and then exit code')
+  
+    px = p;
+    
+    %px.gas_2 = px.gas_2*(1+2.2/400);
+    %if iLambda_UseGlobalSST == -1
+    %  px.stemp = px.stemp + indSST;
+    %else
+    %  px.stemp = px.stemp + globalSST;
+    %end
+    
+    px.gas_2 = px.gas_2 .* (ones(101,1)*(1+results(:,1)'/400));
+    px.gas_4 = px.gas_4 .* (ones(101,1)*(1+results(:,2)'/300));
+    px.gas_6 = px.gas_6 .* (ones(101,1)*(1+results(:,3)'/1800));
+    px.stemp = px.stemp + indSST;
+    px.ptemp(1:100,:) = px.ptemp(1:100,:) + trend_ptemp(1:100,:);
+    fracJUNK = trend_gas_1(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+      px.gas_1(1:100,:) = px.gas_1(1:100,:) .* (1 + fracJUNK);
+    fracJUNK = trend_gas_3(1:100,:); bad = find(isnan(fracJUNK)); fracJUNK(bad) = 0;
+      px.gas_3(1:100,:) = px.gas_3(1:100,:) .* (1 + fracJUNK);
+    x_spectral_olr.perts8888.atm_skt_ghg_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
+    eval(cdRRTMback);
+    
+    boo0 = -(x_spectral_olr.perts8888.atm_skt_ghg_ecRad.clr - x_spectral_olr.olr0_ecRad.clr);
+    scatter_coast(p.rlon,p.rlat,100,boo0./indSST); colormap jet
+    junk0 = polyfit(indSST,boo0,1);
+    [nn,nx,ny,nmean,nstd] = myhist2d(indSST,boo0,-0.15:0.01:+0.15,-0.4:0.05:+0.4);
+    str1 = ['atm/skt + GHG \newline d(OLR) = ' num2str(junk0(1)) ' d(SST) + ' num2str(junk0(2))];
+    xlabel('dSST'); ylabel('d(OLR)'); 
+    title(str1); fprintf(1,'%s \n',str1);
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  return
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+  
 iDoThis = -1;
 if length(intersect(iaComputeWhichFeedback,9999)) == +1
   iDoThis = +1;
 end
+
 if iDoThis > 0
   %% all perts
 
@@ -140,7 +224,7 @@ if iDoThis > 0
   end
 
   if ~isfield(x_spectral_olr.perts9999,'atm_skt_ghg_ecRad')
-    disp('perturbing Tsurf, T(z),WV(z),O3(z)) in one go, to compute feedback in one gulp!!!! and then exit code')
+    disp('perturbing Tsurf, tracegas, T(z),WV(z),O3(z)) in one go, to compute feedback in one gulp!!!! and then exit code')
   
     px = p;
     
@@ -323,6 +407,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+if iDebug > 0
+  disp('now gonna do individual perts, ret to continue'); pause
+end
+
 %%% Jeevanjee, N., Koll, D. D. B., & Lutsko, N. (2021). “Simpson's Law” and
 %%% the spectral cancellation of climate  feedbacks. Geophysical Research
 %%% Letters, 48, e2021GL093699. https://doi.org/10.1029/2021GL093699
@@ -348,6 +436,9 @@ if length(intersect(iaComputeWhichFeedback,[-1 1])) == 1
   %x_spectral_olr.planck_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
   x_spectral_olr.planck_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
   eval(cdRRTMback);
+  if iDebug > 0  
+    disp('ret to continue Tz,ST'); pause
+  end
 end
 
 % The lapse-rate feedback is minus the OLR response to the
@@ -371,9 +462,12 @@ if length(intersect(iaComputeWhichFeedback,[-1 2])) == 1
   %x_spectral_olr.lapse_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
   x_spectral_olr.lapse_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
   eval(cdRRTMback);
+  if iDebug > 0    
+    disp('ret to continue Lapse'); pause
+  end
 end
 
-% The water vapor feedback λwv is then minus the OLR response to the change in qv,
+% The water vapor feedback λwv is then minus the OLR response to the change in wv,
 % holding temperatures fixed
 if length(intersect(iaComputeWhichFeedback,[-1 4])) == 1
   disp('perturbing WV(z) for wv OLR feedback')
@@ -390,6 +484,9 @@ if length(intersect(iaComputeWhichFeedback,[-1 4])) == 1
   %x_spectral_olr.wv_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
   x_spectral_olr.wv_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
   eval(cdRRTMback);
+  if iDebug > 0    
+    disp('ret to continue WV'); pause
+  end
 end
 
 %%%%%%%%%% 
@@ -406,6 +503,10 @@ if length(intersect(iaComputeWhichFeedback,[-1 3])) == 1
   %x_spectral_olr.o3_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
   x_spectral_olr.o3_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
   eval(cdRRTMback);
+  if iDebug > 0
+    %nanmean(fracJUNK(:))
+    disp('ret to continue O3'); pause
+  end
 end
 
 if length(intersect(iaComputeWhichFeedback,[-1 5])) == 1
@@ -421,6 +522,9 @@ if length(intersect(iaComputeWhichFeedback,[-1 5])) == 1
   %x_spectral_olr.skt_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
   x_spectral_olr.skt_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
   eval(cdRRTMback);
+  if iDebug > 0    
+    disp('ret to continue SKT'); pause
+  end
 end
   
 if length(intersect(iaComputeWhichFeedback,[-1 6])) == 1
@@ -438,6 +542,9 @@ if length(intersect(iaComputeWhichFeedback,[-1 6])) == 1
   %x_spectral_olr.ptemp_co2_rrtm  = driver_rrtm_no_xsec_nocloud_twoslab_band17only_loop(h,px,0);
   x_spectral_olr.ptemp_co2_ecRad = superdriver_run_ecRad_rtp_loop_over_profiles(h,px,-1);               
   eval(cdRRTMback);
+  if iDebug > 0    
+    disp('ret to continue CO2/Tz'); pause
+  end  
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -455,12 +562,9 @@ end
 
 %% change radiance mW --> W and then multiply by pi for flux
 ix1 = 1:2162; ix2 = 2163:2645;  %% basically have two bands of detectors!
-
+ 
 x_spectral_olr = compute_feedbacks_regress_olr_sarta_calcs(x_spectral_olr,deltaST,iLambda_UseGlobalSST_regress,h);
 
-if nargin <= 12  
-  caModelStr = 'XYZ';
-end
 figure(71); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.planck); caxis([-4 0]*1);  colormap(jet);  title([caModelStr ' \lambda_{Planck} sarta'])
 figure(72); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.lapse);  caxis([-5 +5]*1); colormap(usa2); title([caModelStr ' \lambda_{Lapse} sarta'])
 figure(73); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.wv);     caxis([-2 +2]*1); colormap(usa2); title([caModelStr ' \lambda_{WV} sarta'])
@@ -470,26 +574,23 @@ figure(74); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_sarta.skt);  
 %%%%%%%%%%%%% COMPUTE COMPLETE FEEDBACKS FROM ECRAD %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-x_spectral_olr = compute_feedbacks_regress_olr_ecRad_calcs(x_spectral_olr,deltaST,iLambda_UseGlobalSST_regress,caModelStr);
-
 %% planck_ecRad ---> savenums(1,:) ./ indSST
 %% lapse_ecRad ---> savenums(2,:)  ./ indSST
 %% wv_ecRad ---> savenums(4,:)     ./ indSST
 %% skt_ecRad ---> savenums(5,:)    ./ indSST
 
-junkSKT = x_spectral_olr.feedback_ecRad.global_coslat_wgt_skt;
-figure(75); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(1,:)/junkSKT); caxis([-4 0]*1.5); colormap(jet);  title([caModelStr ' \lambda_{Planck} ecRad'])
-figure(76); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(2,:)/junkSKT); caxis([-5 +5]*2);  colormap(usa2); title([caModelStr ' \lambda_{Lapse} ecRad'])
-figure(77); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(4,:)/junkSKT); caxis([-2 +2]*2);  colormap(usa2); title([caModelStr ' \lambda_{WV} ecRad'])
-figure(78); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(5,:)/junkSKT); caxis([-2 0]*1);   colormap(jet);  title([caModelStr ' \lambda_{Skt} ecRad'])
+if isfield(x_spectral_olr,'planck_ecRad') & isfield(x_spectral_olr,'lapse_ecRad') & isfield(x_spectral_olr,'wv_ecRad') & isfield(x_spectral_olr,'o3_ecRad') & isfield(x_spectral_olr,'skt_ecRad') & isfield(x_spectral_olr,'ptemp_co2_ecRad')
+  x_spectral_olr = compute_feedbacks_regress_olr_ecRad_calcs(x_spectral_olr,deltaST,iLambda_UseGlobalSST_regress,caModelStr);
+  junkSKT = x_spectral_olr.feedback_ecRad.global_coslat_wgt_skt;
+  figure(75); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(1,:)/junkSKT); caxis([-4 0]*1.5); colormap(jet);  title([caModelStr ' \lambda_{Planck} ecRad'])
+  figure(76); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(2,:)/junkSKT); caxis([-5 +5]*2);  colormap(usa2); title([caModelStr ' \lambda_{Lapse} ecRad'])
+  figure(77); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(4,:)/junkSKT); caxis([-2 +2]*2);  colormap(usa2); title([caModelStr ' \lambda_{WV} ecRad'])
+  figure(78); scatter_coast(p.rlon,p.rlat,50,x_spectral_olr.feedback_ecRad.savenums(5,:)/junkSKT); caxis([-2 0]*1);   colormap(jet);  title([caModelStr ' \lambda_{Skt} ecRad'])
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%  DONE, EITHER EXIT OR MAKE PLOTS %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if nargin < 12
-  iPlotResults = -1;
-end
 
 if iPlotResults > 0
   figsmap = colormap_soden_held_jclim2007;
