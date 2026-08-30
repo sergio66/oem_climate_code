@@ -7,6 +7,8 @@ Contents
 (B) ERA5 monthly, also see Readme_make_avg_profs_N_jacs_4608
 (C) make RTP files
 (D) FIND_NWP_MODEL_TRENDS
+(E) MLS trends in FIND_NWP_MODEL_TRENDS
+(f) diff from eg older clones
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -39,8 +41,10 @@ lrwxrwxrwx 1 sergio pi_sergio 39 Mar 19 08:16 Output -> /asl/s1/sergio/alldata/T
 
 rm: remove symbolic link 'Output'? y
 [sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/Tiles4608/Output .
+mkdir Output/Quantile03
 
-
+Also make Output_Day
+mkdir Output_Day/Quantile03
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 3) Setting up the clone of oem_pkg
@@ -119,20 +123,29 @@ this is what you need to do in oem_pkg_run
 -rw-rw-r-- 1 sergio pi_strow  19655 Sep 27 03:46 set_driver_rateset_datafile.m
 
 5) Starting afresh after we lost out disks in Oct 2025
--rw-rw-r-- 1 sergio pi_sergio 18867 Jun  5 06:42 set_CO2_CH4_N2O_ESRL.m
--rw-rw-r-- 1 sergio pi_sergio  1960 Jun  5 01:11 get_ESRL_TRACE_GAS_2002_2022.m
--rw-rw-r-- 1 sergio pi_sergio  5732 Jun  5 01:02 get_co2_n2o_ch4_for_strow_override.m
--rw-rw-r-- 1 sergio pi_sergio  7380 Jun  5 00:57 choose_goodchans_from_2645.m
--rw-rw-r-- 1 sergio pi_sergio  6855 Jun  5 00:52 get_jac_fast.m
--rw-rw-r-- 1 sergio pi_sergio 13226 Jun  5 00:51 see_clust_put_together_jacs_clrERA5_2025.m
--rw-rw-r-- 1 sergio pi_sergio 14134 Jun  5 00:40 clust_put_together_jacs_clrERA5.m
--rw-rw-r-- 1 sergio pi_sergio  9326 Jun  5 00:35 set_driver_jacfile.m
--rw-rw-r-- 1 sergio pi_sergio 14651 Jun  5 00:26 set_the_jacobians.m
--rw-rw-r-- 1 sergio pi_sergio 20803 Jun  4 23:31 set_driver_rateset_datafile.m
--rw-rw-r-- 1 sergio pi_sergio 58223 Jun  4 23:23 clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
--rw-rw-r-- 1 sergio pi_sergio  1988 Jun  4 23:15 addpath0.m
--rw-rw-r-- 1 sergio pi_sergio 54114 Jun  4 23:15 clust_run_retrieval_setlatbin_AIRS_loop_lonbin_TEST.m
--rw-rw-r-- 1 sergio pi_sergio 36928 Jun  4 22:26 driver_put_together_QuantileChoose_trends.m
+* indicates you need to edit this each time you add in new trend/anom option eg
+   to set an option eg OLD (1)-(18) for 09/02002 to 08/2024, NEW (19) for 09/02002 to 08/2025, (20) for 01/2003 to 12/2022
+   driver_gather_gridded_retrieval_results
+  -rw-rw-r-- 1 sergio pi_sergio 18867 Jun  5 06:42 set_CO2_CH4_N2O_ESRL.m
+  -rw-rw-r-- 1 sergio pi_sergio  1960 Jun  5 01:11 get_ESRL_TRACE_GAS_2002_2022.m
+  -rw-rw-r-- 1 sergio pi_sergio  5732 Jun  5 01:02 get_co2_n2o_ch4_for_strow_override.m
+  -rw-rw-r-- 1 sergio pi_sergio  7380 Jun  5 00:57 choose_goodchans_from_2645.m
+  -rw-rw-r-- 1 sergio pi_sergio 14134 Jun  5 00:40 clust_put_together_jacs_clrERA5.m
+  -rw-rw-r-- 1 sergio pi_sergio 14651 Jun  5 00:26 set_the_jacobians.m
+  -rw-rw-r-- 1 sergio pi_sergio  1988 Jun  4 23:15 addpath0.m
+
+* -rw-rw-r-- 1 sergio pi_sergio 37263 Mar 19 08:16 build_cov_matrices.m                                     diff build_cov_matrices.m /home/sergio/git/JGR_July2025/CODE/.  tells you how to get back to JGR July 2025 paper
+* -rw-rw-r-- 1 sergio pi_sergio 46375 Aug 21 05:03 driver_gather_gridded_retrieval_results.m                so you can read in eg option 20 (2003/01 to 2022/12)
+* -rw-rw-r-- 1 sergio pi_sergio 13226 Jun  5 00:51 see_clust_put_together_jacs_clrERA5_2025.m
+* -rw-rw-r-- 1 sergio pi_sergio  6855 Jun  5 00:52 get_jac_fast.m                                           calls eg see_clust_put_together_jacs_clrERA5_2025
+* -rw-rw-r-- 1 sergio pi_sergio  9326 Jun  5 00:35 set_driver_jacfile.m                                     calls set_driver_jacfile.m, set_anomalies_jacfile.m
+    -rw-rw-r-- 1 sergio pi_sergio   560 Aug 21 04:42 set_driver_jacfile.m
+    -rw-rw-r-- 1 sergio pi_sergio  2238 Aug 21 04:41 set_anomalies_jacfile.m
+* -rw-rw-r-- 1 sergio pi_sergio 20803 Jun  4 23:31 set_driver_rateset_datafile.m
+* -rw-rw-r-- 1 sergio pi_sergio 58223 Jun  4 23:23 clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m         to set an option eg OLD (1)-(18) for 09/02002 to 08/2024, NEW (19) for 09/02002 to 08/2025, (20) for 01/2003 to 12/2022
+  -rw-rw-r-- 1 sergio pi_sergio 54114 Jun  4 23:15 clust_run_retrieval_setlatbin_AIRS_loop_lonbin_TEST.m    to set an option eg OLD (1)_(18) for 09/02002 to 08/2024, NEW (19) for 09/02002 to 08/2025, (20) for 01/2003 to 12/2022
+* -rw-rw-r-- 1 sergio pi_sergio 36928 Jun  4 22:26 driver_put_together_QuantileChoose_trends.m              to set an option eg OLR (1)-(18) for 09/02002 to 08/2024, NEW (19) for 09/02002 to 08/2025, (20) for 01/2003 to 12/2022
+
 -rw-rw-r-- 1 sergio pi_sergio  4466 Jun  4 22:25 figs_put_together_QuantileChoose_trends.m
 
 6) when happy use
@@ -195,3 +208,81 @@ driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m  ??
 Go to ../AIRS_gridded_STM_May2021_trendsonlyCLR
 
 And update/compare to driver_gather_gridded_retrieval_results.m
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(E) MLS trends in FIND_NWP_MODEL_TRENDS
+---------------------------------------
+
+Getting MLS L3 data
+  see /home/sergio/git/rtpmake/CLUST_RTPMAKE/CLUSTMAKE_MLS/Readme_GetData
+  data stored in MLS data in /umbc/xfs3/strow/asl/mls
+Putting into monthly rtp files  
+  see /home/sergio/git/rtpmake/CLUST_RTPMAKE/CLUSTMAKE_MLS/clust_compute_mls_profile_rtpfiles.m  to make MLS monthly after downloading from NASA https://search.earthdata.nasa.gov/
+  see /home/sergio/git/rtpmake/CLUST_RTPMAKE/CLUSTMAKE_MLS/clust_compute_mls_profile_rtpfiles.m
+    which is run using eg sbatch -p cpu2024  --array=1-216 sergio_matlab_jobB.sbatch 1   for 2004/09-2022/08
+                          sbatch -p cpu2024  --array=1-252 sergio_matlab_jobB.sbatch 1   for 2004/09-2025/08    
+
+  mls_T  = ['/asl/xfs3/mls/ML3MBT_004/MLS-Aura_L3MB-Temperature_v04-23-c02_' num2str(yyuse(ii)) '.nc'];
+  mls_W  = ['/asl/xfs3/mls/ML3MBH2O_004/MLS-Aura_L3MB-H2O_v04-23-c02_' num2str(yyuse(ii)) '.nc'];
+  mls_O3 = ['/asl/xfs3/mls/ML3MBO3_004/MLS-Aura_L3MB-O3_v04-23-c02_' num2str(yyuse(ii)) '.nc'];
+
+  mls_T  = ['/asl/xfs3/mls/ML3MBT_004/MLS-Aura_L3MB-Temperature_v04*' num2str(yyuse(ii)) '.nc'];
+    bonk = dir(mls_T);
+    mls_T = ['/asl/xfs3/mls/ML3MBT_004/' bonk.name];
+  mls_W  = ['/asl/xfs3/mls/ML3MBH2O_004/MLS-Aura_L3MB-H2O_v04*' num2str(yyuse(ii)) '.nc'];
+    bonk = dir(mls_W);
+    mls_W = ['/asl/xfs3/mls/ML3MBH2O_004/' bonk.name];
+  mls_O3 = ['/asl/xfs3/mls/ML3MBO3_004/MLS-Aura_L3MB-O3_v04*' num2str(yyuse(ii)) '.nc'];
+    bonk = dir(mls_O3);
+    mls_O3 = ['/asl/xfs3/mls/ML3MBO3_004/' bonk.name];
+
+Making trends
+  see  FIND_NWP_MODEL_TRENDS/driver_computeMLS_monthly_trends.m
+saved into eg
+>> ls -lt MLS_atm_data_2004_09*
+   -rw-rw-r-- 1 sergio pi_sergio   20204866 Aug 28 12:37 MLS_atm_data_2004_09_to_2025_08_trends.mat
+   -rw-rw-r-- 1 sergio pi_sergio 1550876198 Aug 28 08:12 MLS_atm_data_2004_09_to_2025_08.mat
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(F) diff from eg older clones
+-----------------------------
+
+can reclone into home/sergio/nogit/JUNK/oem_climate_code/
+then git checkout eg July9_2025
+now all this is a little messed up since I have moved files around eg at time of writing this,
+  dir2 is Oct 17,2024 commit (not july 9, 2025)
+
+dir1 = '/umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/Earlier_Tries_Jul2025JGR/July9_2025_commit/';
+dir2 = '/home/sergio/nogit/JUNK/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/';
+
+diff_m_or_f_files(dir1,dir2);
+
+diffing /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/Earlier_Tries_Jul2025JGR/July9_2025_commit/ and /home/sergio/nogit/JUNK/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/
+>>>>>>>>>>> WARNING choose_goodchans_from_2645.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING compare_OLR_from_monthly_2_OLR_from_sarta.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_compare_cldy_Qtrends_2002_2022.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_compare_read64x72flux72_save64zonalflux_ERA5_dRH_anom.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_gather_gridded_retrieval_results.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_trendspaper_figure15_uncertainty_ztest.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_ESRL_TRACE_GAS_2002_2022.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_co2_n2o_ch4_for_strow_override.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_jac_fast.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING quick_compare_era5_retrieval.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING read_fileMean17years.m WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING see_clust_put_together_jacs_cldERA5_2022.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING set_CO2_CH4_N2O_ESRL.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING set_driver_rateset_datafile.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING statistical_significance_sergio.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING wrapper_driver_gather_ALL_rates_AIRSL3_NWP_XMIP.m are different WARNING <<<<<<<<<<<<<
+
+mostly paths that have changed.
+In particular
+  get_jac_fast.m
+  set_driver_rateset_datafile.m
+  read_fileMean17years.m
+  set_CO2_CH4_N2O_ESRL.m
+  get_co2_n2o_ch4_for_strow_override.m
+are particularly important

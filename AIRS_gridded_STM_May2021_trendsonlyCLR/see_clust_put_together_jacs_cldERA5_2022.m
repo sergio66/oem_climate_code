@@ -16,6 +16,7 @@ ind2834to2645 = miaow.ichan;
 if ~exist('iOldORNew')
   iOldORNew = +9;  %% the 19 year ERA5 cld, Q09
   iOldORNew = +5;  %% the 20 year ERA5 clr (Q0.97-->1) Q05
+  iOldORNew = +3;  %% the 20 year ERA5 clr, redone
 end
 
 if iOldORNew == 9
@@ -32,6 +33,13 @@ elseif iOldORNew == 5
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
   foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_20yr_'           num2str(JOB,'%02i') '.mat'];
   foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(JOB,'%02i') '.mat'];
+
+elseif iOldORNew == 3
+  %% see ~sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/
+  SARTAjac = ['AllDemJacsClr_20yrs/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
+  foutsubjac  = ['AllDemJacsClr_20yrs/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_20yr_'           num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['AllDemJacsClr_20yrs/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(JOB,'%02i') '.mat'];
+
 else
   error('unknown iOldORNew')
 end
@@ -42,9 +50,11 @@ if iOldORNew == 9
   [h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
   thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09//';
   fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
-elseif iOldORNew == 5
-  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
+
+elseif iOldORNew == 5 |  iOldOrNew == 3
+  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp');
   thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/';
+  thedir0 = '/umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/';  
   fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
 end
 
@@ -76,10 +86,10 @@ for lon = iLonBin
     frad0 = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
     fz    = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
     fcol  = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
-  elseif iOldORNew == 5
-    frad0 = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
-    fz    = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
-    fcol  = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  elseif iOldORNew == 5 | iOldORNew == 3
+    frad0 = [thedir0 '/AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+    fz    = [thedir0 '/AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+    fcol  = [thedir0 '/AllDemJacsClrCol_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
   end
 
   fprintf(1,'in see_clust_put_together_jacs_cldERA5_2022.m : iOldORNew  = %2i \n',iOldORNew);

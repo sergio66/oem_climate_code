@@ -1,8 +1,10 @@
 if exist('llsmap5.mat')
   colorstr = 'llsmap5';
+  load llsmap5
 else
   colorstr = 'usa2';
 end
+colorstr = 'usa2';
 
 figure(1); clf; scatter_coast(pall.rlon,pall.rlat,40,trend_stemp); title('ERA5 trend  stemp K/yr');    caxis([-1 +1]*0.15); colormap(colorstr);
 figure(2); clf; scatter_coast(pall.rlon,pall.rlat,40,trend_RHSurf); title('ERA5 trend  UGH RHsurf pc/yr'); caxis([-1 +1]*0.4); colormap(colorstr);

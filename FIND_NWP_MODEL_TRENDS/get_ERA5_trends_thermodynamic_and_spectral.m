@@ -1,14 +1,19 @@
-function era5 = get_ERA5_trends_thermodynamic_and_spectral(iNumYears,iNorD);
+function era5 = get_ERA5_trends_thermodynamic_and_spectral(iNumYears,iNorD,iAorOrL);
 
-load('../AIRS_gridded_STM_May2021_trendsonlyCLR/h2645structure.mat');
+load('/home/sergio/git/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/h2645structure.mat');
 
 if nargin == 0
   iNumYears = 20;
   iNumYears = 23;
 
   iNorD = +1;
+  iAorOrL = 0;
 elseif nargin == 1
-  iNorD = +1;  
+  iNorD = +1;
+  iAorOrL = 0;
+
+elseif nargin == 2
+  iAorOrL = 0;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +49,7 @@ else
   iEorMFstr = '/ERA5/reconstruct_era5_spectra_geo_rlat';
 end
 
-era5 = getdata_NWP(5,iNorD,iNumYearsX);
+era5 = getdata_NWP(5,iNorD,iAorOrL,iNumYearsX);
 
 %% from get_the_model_spectral_trends.m
 disp('get_ERA5_trends_thermodynamic_and_spectral.m : loading in ERA5 spectral and geo trends')
@@ -67,11 +72,17 @@ for ii = 1 : 64
   if iStart2002 == -1
     fname = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/' iEorMstrSPECTRA '/' iEorMFstr num2str(ii,'%02i') '_2018_09_2022_08.mat'];
   end
+
+  if exist(fname)
+    junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
+    junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
+    ind = (ii-1)*72 + (1:72);
+    era5.era5_spectral_rates(:,ind) = thesave;
+  else
+    era5.era5_spectral_rates(:,ind) = 0;
+    fchanx = h.vchan;
+  end
   
-  junk = load(fname,'fchanx');  fchanx   = junk.fchanx;
-  junk = load(fname,'thesave'); thesave = junk.thesave.xtrendSpectral;
-  ind = (ii-1)*72 + (1:72);
-  era5.era5_spectral_rates(:,ind) = thesave;
 end
 fprintf(1,'\n');
 

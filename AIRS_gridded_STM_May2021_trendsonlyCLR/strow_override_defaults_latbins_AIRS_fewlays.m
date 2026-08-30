@@ -219,6 +219,7 @@ iAdjLowerAtmWVfrac = 0;                             %% WARNING this also sets WV
 iAdjLowerAtmWVfrac = 1;                             %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 iAdjLowerAtmWVfrac = topts.iAdjLowerAtmWVfrac;      %% WARNING this also sets WV in lower part of atmos, depending on dBT1231/dt by using iAdjLoweAtmWVfrac !!!!!
 driver.co2adj_ESRL = -9999;
+
 if driver.ia_OorC_DataSet_Quantile(1) == 0
   %% these are obs, so use CO2 trends!!
   set_CO2_CH4_N2O_ESRL                                %% can set CO2/CH4/N2O to ESRL rates, can also set low atm dWV/dt using Isaac Held delta(RH)=0

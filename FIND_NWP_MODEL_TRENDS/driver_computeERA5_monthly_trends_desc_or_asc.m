@@ -9,6 +9,8 @@ addpath0
 
 dirout0 = 'MEAN_PROFILES/';
 
+do_XX_YY_from_X_Y
+
 if exist('llsmap5.mat')
   load('llsmap5.mat');
 end
@@ -38,18 +40,18 @@ disp('<RET> to continue'); pause
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 20 for the iNumYears 
 if length(JOB) == 0
-  JOB = 20;
   JOB = 22;
   JOB = 23;  
+  JOB = 20;
 end
 
-iNumYears = 18; %% 2002/09-2020/08
-iNumYears = 19; %% 2002/09-2021/08
-iNumYears = 12; %% 2002/09-2014/08
-iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iNumYears = 20; %% 2002/09-2022/08
-iNumYears = 22; %% 2002/09-2024/06
-iNumYears = 23; %% 2002/09-2024/06
+% iNumYears = 18; %% 2002/09-2020/08
+% iNumYears = 19; %% 2002/09-2021/08
+% iNumYears = 12; %% 2002/09-2014/08
+% iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% iNumYears = 22; %% 2002/09-2024/06
+% iNumYears = 23; %% 2002/09-2024/06
+% iNumYears = 20; %% 2002/09-2022/08
 
 iNumYears = JOB;
 
@@ -57,6 +59,8 @@ yymmS = [2020 07]; yymmE = [2024 06];
 yymmS = [2002 09]; yymmE = [2024 06];
 yymmS = [2002 09]; yymmE = [2024 08];
 yymmS = [2002 09]; yymmE = [yymmS(1)+iNumYears 08];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %iaFound = zeros(1,iNumYears*12);
 
@@ -366,6 +370,7 @@ if iSave > 0 | iEnsureSave > 0
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
 do_the_avg_of_all
 foutjunk_avg = [dirout0 '/' 'avg_' foutjunk0];
 if iSave > 0 | iEnsureSave > 0

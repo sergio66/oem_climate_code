@@ -3,12 +3,17 @@
 # clust_run_retrieval_latbins_AIRS_iasitimespan_loop_anomaly.m clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
 #   can take two arguments, first one is switch for 1,2,3,4,5,6,7 and second is +/-1 for D/N or forward/backward
 #
-# run this with   kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)
-#   or            kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)
-#                 kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)
-#                 kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)
-#                 kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)
+# run this with   kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)  +/- 1 is for N/D
+#   or            kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)  +/- 1 is for N/D
+#                 kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)  +/- 1 is for N/D
+#                 kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)  +/- 1 is for N/D
+#                 kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 or 1  +/- 1   == TRENDS, looping forward(0) or backward(1)  +/- 1 is for N/D
 #
+#       kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch F/B(0/1) N/D(+1,-1)  for forwards/backwards  night/day
+# so eg kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch       for night
+# so eg kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 +1  for night
+# so eg kleenslurm; sbatch   --array=1-64 sergio_matlab_chip.sbatch 0 -1  for day
+
 ########################################################################
 #
 # run this with   kleenslurm; sbatch   --array=1-40 sergio_matlab_chip.sbatch      for clust_run_retrieval_setlatbin_AIRS_loop_lonbinV2

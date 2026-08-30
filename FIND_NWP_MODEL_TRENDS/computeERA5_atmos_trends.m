@@ -110,6 +110,7 @@ for ii = 1 : 4608
     end
   end
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %fprintf(1,'doing 100 layers OP ptemp,rh,gas_1,gas_3 trends ii = %4i of 4608 \n',ii)
   for ll = 1 : 100    
     data = squeeze(pall.ptemp(:,ll,ii));  
@@ -122,7 +123,7 @@ for ii = 1 : 4608
       trend_ptemp_err(ll,ii) = NaN;
     end
 
-    data = squeeze(pall.gas_1(:,ll,ii));  data = data/mean(data); 
+    data = squeeze(pall.gas_1(:,ll,ii));  data = data/nanmean(data); 
     boo = find(isfinite(data));
     boo = intersect(boo,thetimeSeason);
     if length(boo) > 20
@@ -132,7 +133,7 @@ for ii = 1 : 4608
       trend_gas_1_err(ll,ii) = NaN;
     end
 
-    data = squeeze(pall.gas_3(:,ll,ii));  data = data/mean(data); 
+    data = squeeze(pall.gas_3(:,ll,ii));  data = data/nanmean(data); 
     boo = find(isfinite(data));
     boo = intersect(boo,thetimeSeason);
     if length(boo) > 20

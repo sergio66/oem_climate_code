@@ -1,0 +1,267 @@
+Contents
+1) No need to git checkout oem_pkg because last commit was in 2024
+2) Need to git checkout oem_climate_code
+3) These are the basic easy things from Linux command line
+4) Code changes in some of the files, also basic so mostly paths to eg jac file, spectral trends, ESRL
+  xnw see_clust_put_together_jacs_cldERA5_2022.m
+  xnw see_clust_put_together_jacs_cldERA5_2022.m
+  xnw choose_goodchans_from_2645.m
+  xnw get_co2_n2o_ch4_for_strow_override.m
+  xnw get_ESRL_TRACE_GAS_2002_2022.m
+  xnw set_ESRL_TRACE_GAS_2002_2022.m
+5) So look at file listing to see what changed  
+6) Can also directly copy files in /home/sergio/git/JGR_July2025/CODE to see what happens ...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+You will have to evenutally have some of these
+lrwxrwxrwx 1 sergio pi_sergio        59 Aug 26 21:46 AllDemJacsClrCol -> /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/COL/
+lrwxrwxrwx 1 sergio pi_sergio        63 Aug 26 21:46 AllDemJacsClr -> /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/T_WV_O3/
+drwxrwxr-x 3 sergio pi_sergio         1 Aug 26 19:16 Output
+drwxrwxr-x 2 sergio pi_sergio        21 Aug 26 19:11 Plotutils
+lrwxrwxrwx 1 sergio pi_sergio       117 Jun  4 22:27 latB64.mat -> /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+1) No need to git checkout oem_pkg because last commit was in 2024
+
+[sergio@chip-login2 oem_pkg]$ git remote --v
+origin	git@github.com:sergio66/oem_pkg.git (fetch)
+origin	git@github.com:sergio66/oem_pkg.git (push)
+
+
+commit abb03f7da437c8603aec4deaaeae0b8d08973748 (HEAD -> strow, origin/strow)
+Author: Sergio Machado <sergio@umbc.edu>
+Date:   Thu Aug 1 11:44:47 2024 -0400
+
+    SSM : added in code for AMSU only (driver.dataset == 30)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+2) Need to git checkout oem_climate_code
+
+[sergio@c24-52 AIRS_gridded_STM_May2021_trendsonlyCLR]$ git remote --v
+origin	git@github.com:sergio66/oem_climate_code.git (fetch)
+origin	git@github.com:sergio66/oem_climate_code.git (push)
+
+commit 3af9e093e247381a424f275591bf3aeba56eb70b (HEAD)
+Author: Sergio Machado <sergio@umbc.edu>
+Date:   Wed Jul 9 08:49:34 2025 -0400
+
+    SSM : codes for JGR paper revioin July 20205
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+commit e8ed3f4ec61d14f91c9dfa1255579cf6115658cf
+Author: Sergio Machado <sergio@umbc.edu>
+Date:   Thu Oct 17 15:52:05 2024 -0400
+
+    SSM : this is the trends paper, uncertainty analysis, Thursday 10/17/2024 commit 4db48b207035582965f45ca58db2d60d47e93e5b
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+commit 906703152c402d9a6bfb2285b710fd2e56cd2459
+Author: Sergio Machado <sergio@umbc.edu>
+Date:   Thu Jul 25 17:50:16 2024 -0400
+
+    SSM : used this code for trend paper revision sent to Ryan and Larrabee V2
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+3) These are the basic easy things from Linux command line
+
+ git clone git@github.com:sergio66/oem_climate_code.git
+ cd oem_climate_code
+ ls
+ more Readme
+ git branch
+ git branch -a
+ git checkout sergio
+ git log
+ git checkout 3af9e093e247381a424f275591bf3aeba56eb70b
+ git log
+ cd AIRS_gridded_STM_May2021_trendsonlyCLR 
+ cp -a /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/sergio_matlab_chip.sbatch .
+ cp -a /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat .
+ cp -a /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/latB64.mat .
+ mkdir Output
+ mkdir Output/Quantile03
+ ls -lt Output
+ rm Output
+ mkdir Output
+ mkdir Output/Quantile03
+ lsltmat
+ cp -a /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/addpath0.m .        for clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/T_WV_O3/ AllDemJacsClr                                 REALLY NOT NEEDED
+ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/COL/ AllDemJacsClrCol                                  REALLY NOT NEEDED
+ cp -a /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/driver_gather_gridded_retrieval_results.m .      overwrites existing file
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+4) Code changes in some of the files, also basic so mostly paths to eg jac file, spectral trends, ESRL
+
+>>>> 
+ 1043  26/08/26 21:42:05 xnw see_clust_put_together_jacs_cldERA5_2022.m
+   see_clust_put_together_jacs_cldERA5_2022.m
+if ~exist('iOldORNew')
+  iOldORNew = +9;  %% the 19 year ERA5 cld, Q09
+  iOldORNew = +5;  %% the 20 year ERA5 clr (Q0.97-->1) Q05
+  iOldORNew = +3;  %% the 20 year ERA5 clr, redone
+end
+
+if iOldORNew == 9
+  %% see ~sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/
+  SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
+  foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_cld_subjacLatBin_kCARTA_ERA5_20yr_CLD_Q09_'           num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_' num2str(JOB,'%02i') '.mat'];
+
+  foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_cld_subjacLatBin_kCARTA_ERA5_20yr_CLD_Q09_v2_'           num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_cld_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_CLD_Q09_v2_' num2str(JOB,'%02i') '.mat'];
+
+elseif iOldORNew == 5
+  %% see ~sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/
+  SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  
+  foutsubjac  = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_20yr_'           num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(JOB,'%02i') '.mat'];
+
+elseif iOldORNew == 3
+  %% see ~sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09/
+  SARTAjac = ['AllDemJacsClr_20yrs/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];
+  foutsubjac  = ['AllDemJacsClr_20yrs/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_20yr_'           num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['AllDemJacsClr_20yrs/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_20yr_' num2str(JOB,'%02i') '.mat'];
+
+else
+  error('unknown iOldORNew')
+end
+
+%sarta = load(SARTAjac);
+
+if iOldORNew == 9
+  [h,ha,p,pa] = rtpread('/asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center12months/DESC/2012/FixedNAN/all4608_era5_full12months_Qcumulative09.rtp');
+  thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09//';
+  fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
+elseif iOldORNew == 5 | iOldORNew == 3
+  %[h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
+  %thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/';
+
+  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp');
+  thedir0 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Mar2023_startSept2002_endAug2022_trendsonly/';
+  thedir0 = '/umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/';
+
+  fprintf(1,'get_jac_fast --> see_clust_put_together_jacs_clrERA5_2022.m --> iOldORNew == 2022 (ERA5) JOB = %2i   \n',JOB);
+end   
+>>>
+
+for lon = iLonBin
+
+  ind_subset_junk_ii = ind_subset_junk(lon);
+  if iOldORNew == 9
+    frad0 = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+    fz    = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+    fcol  = [thedir0 '/AllDemJacsCld_Q09/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  elseif iOldORNew == 5 | iOldORNew == 3
+  elseif iOldORNew == 5 | iOldORNew == 3
+    frad0 = [thedir0 '/AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+    fz    = [thedir0 '/AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+    fcol  = [thedir0 '/AllDemJacsClrCol_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  end
+
+>>> 
+ 1044  26/08/26 21:59:05 xnw see_clust_put_together_jacs_cldERA5_2022.m
+%oo = load('/asl/s1/sergio/alldata/AIRSPRODUCTS_JACOBIANS/TRP/g2_jac.mat');
+%plot(h.vchan,m_ts_jac(:,1),oo.fout,sum(oo.jout')*2.2/370)
+
+>>>
+ 1045  26/08/26 22:16:05 xnw choose_goodchans_from_2645.m
+hdffile = '/home/sergio/git/matlabcode/matlibSergio/matlab2012/srftest/SRF_TABLES/airs_l1c_srf_tables_lls_20181205.hdf';
+
+>>>
+1045  26/08/26 22:16:05 xnw get_co2_n2o_ch4_for_strow_override.m
+  load latB64.mat
+  esrl_trend = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/esrl_co2_ch4_trends_vs_lat_2002_Nyears_2024.mat');
+
+1045  26/08/26 22:18:05 xnw get_ESRL_TRACE_GAS_2002_2022.m
+if iNumYears > 0
+  %% going forwards since 2002/09
+  boo05 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2007_08.mat');
+  boo10 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2012_08.mat');
+  boo15 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2017_08.mat');
+  boo20 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
+else
+  %% going backwards from  2022/08
+  boo05 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2017_09_2022_08.mat');
+  boo10 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2012_09_2022_08.mat');
+  boo15 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2007_09_2022_08.mat');
+  boo20 = load('/home/sergio/git/matlabcode/ESRL_TRACE_GAS/carbon_tracker_500mb_2002_09_2022_08.mat');
+end
+
+1045  26/08/26 22:18:05 xnw set_ESRL_TRACE_GAS_2002_2022.m
+iHaveGlobalTracker = -1;  %% /home/sergio/git/matlabcode/ESRL_TRACE_GAS/fill_co2_carbontracker.m has lost Chris data
+
+iAdjCo2 = +1;
+co2x = co2x * iAdjCo2;
+
+if iAdjCo2 >= 1 & iHaveGlobalTracker > 0
+  JOBJOBJOB = (driver.iLat-1)*72 + driver.iLon;
+  co2x = get_ESRL_TRACE_GAS_2002_2022(JOBJOBJOB,driver.iNumYears);
+
+    fERA5 = '/asl/s1/sergio/alldata/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp';
+    fERA5 = '/home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp';
+    [hhh,~,ppp,~] = rtpread(fERA5);
+
+>> which get_ERA5_trends_thermodynamic_and_spectral
+/umbc/rs/pi_sergio/TonsOfData/JUNK/oem_climate_code/FIND_NWP_MODEL_TRENDS/get_ERA5_trends_thermodynamic_and_spectral.m
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+5) So look at file listing to see what changed
+-----------------------------------------------
+
+-rw-rw-r-- 1 sergio pi_sergio     11771 Aug 27 07:35 Reademe_redoJGR2025
+-rw-rw-r-- 1 sergio pi_sergio     54423 Aug 27 07:16 clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+-rw-rw-r-- 1 sergio pi_sergio     30771 Aug 27 00:52 ughboo.m
+-rw-rw-r-- 1 sergio pi_sergio     46819 Aug 27 00:52 driver_gather_gridded_retrieval_results.m
+-rw-rw-r-- 1 sergio pi_sergio     10892 Aug 26 23:01 sergio_matlab_chip.sbatch
+-rw-rw-r-- 1 sergio pi_sergio     18979 Aug 26 22:58 set_CO2_CH4_N2O_ESRL.m
+-rw-rw-r-- 1 sergio pi_sergio      2893 Aug 26 22:28 get_ESRL_TRACE_GAS_2002_2022.m
+-rw-rw-r-- 1 sergio pi_sergio      5829 Aug 26 22:24 get_co2_n2o_ch4_for_strow_override.m
+-rw-rw-r-- 1 sergio pi_sergio      7381 Aug 26 22:17 choose_goodchans_from_2645.m
+-rw-rw-r-- 1 sergio pi_sergio      6703 Aug 26 21:59 get_jac_fast.m
+-rw-rw-r-- 1 sergio pi_sergio     12659 Aug 26 21:57 see_clust_put_together_jacs_cldERA5_2022.m
+lrwxrwxrwx 1 sergio pi_sergio        59 Aug 26 21:46 AllDemJacsClrCol -> /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/COL/
+lrwxrwxrwx 1 sergio pi_sergio        63 Aug 26 21:46 AllDemJacsClr -> /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/T_WV_O3/
+drwxrwxr-x 3 sergio pi_sergio         1 Aug 26 19:16 Output
+
+everythig else comes straight from git commit
+-rw-rw-r-- 1 sergio pi_sergio     16997 Aug 26 19:11 strow_override_defaults_latbins_AIRS_fewlays.m
+-rw-rw-r-- 1 sergio pi_sergio      2996 Aug 26 19:11 simple_get_the_model_trends_do_feedbacks.m
+-rw-rw-r-- 1 sergio pi_sergio     14498 Aug 26 19:11 set_the_AMSU_jcobians.m
+-rw-rw-r-- 1 sergio pi_sergio     19346 Aug 26 19:11 set_driver_rateset_datafile.m
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+6) Can also directly copy files in /home/sergio/git/JGR_July2025/CODE to see what happens ...
+----------------------------------------------------------------------------------------------
+mkdir JGR_July2025_CODE
+cd    JGR_July2025_CODE
+cp -a /home/sergio/git/JGR_July2025/CODE/*.m .
+cp -a ../sergio_matlab_chip.sbatch .
+
+ln -s ../iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat .
+ln -s latB64.mat .
+
+mkdir Output
+mkdir Output/Quantile03
+
+edit clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+  so addpath is replaced by addpath0
+
+You will have to evenutally have some of these
+lrwxrwxrwx 1 sergio pi_sergio        59 Aug 26 21:46 AllDemJacsClrCol -> /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/COL/
+lrwxrwxrwx 1 sergio pi_sergio        63 Aug 26 21:46 AllDemJacsClr -> /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/T_WV_O3/
+drwxrwxr-x 3 sergio pi_sergio         1 Aug 26 19:16 Output
+drwxrwxr-x 2 sergio pi_sergio        21 Aug 26 19:11 Plotutils
+lrwxrwxrwx 1 sergio pi_sergio       117 Jun  4 22:27 latB64.mat -> /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries/latB64.mat

@@ -2,7 +2,10 @@ disp('going to do MODIS aerosol,cloud , CERES, OHC etc .. ret to continue');  pa
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-modis_aerosol = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/MODIS_L3_AEROSOL_TRENDS/modis_L3_aerosol_trends_2002_0009_2024_0006.mat');
+dirx = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/';
+dirx = '/home/sergio/git/oem_climate_jacs/';
+
+modis_aerosol = load([dirx '/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/MODIS_L3_AEROSOL_TRENDS/modis_L3_aerosol_trends_2002_0009_2024_0006.mat']);
 
 figure(11); clf; pcolor(2002 + modis_aerosol.doy2002/365,rlat,squeeze(nanmean(modis_aerosol.anom_deepblue,1))); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*3); title('MODIS Deep Blue anomaly')
 figure(11); clf; pcolor(2002 + modis_aerosol.doy2002/365,rlat,squeeze(nanmean(modis_aerosol.anom_od,1))); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*3); title('MODIS AOD anomaly')
@@ -23,7 +26,7 @@ figure(11); clf; plot(2002 + modis_aerosol.doy2002/365,aod_anom_cosavg,'k',2002 
 disp('did MODIS aerosol ... ret to continue');  pause
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-modis_cloud = load('/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/MODIS_L3_AEROSOL_TRENDS/modis_L3_cloud_trends_2002_0009_2024_0006.mat');
+modis_cloud = load([dirx '/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/MODIS_L3_AEROSOL_TRENDS/modis_L3_cloud_trends_2002_0009_2024_0006.mat']);
 
 figure(11); clf; pcolor(2002 + modis_cloud.doy2002/365,rlat,squeeze(nanmean(modis_cloud.anom_cldfrac,1))); shading interp; colorbar; colormap(usa2); caxis([-1 +1]*0.1); title('MODIS CldFrac anomaly')
 figure(11); clf; pcolor(2002 + modis_cloud.doy2002/365,rlat,squeeze(nanmean(modis_cloud.anom_cldtop,1)));  shading interp; colorbar; colormap(usa2); caxis([-1 +1]*10);  title('MODIS CldTop anomaly')
@@ -77,7 +80,10 @@ wind = wind_speed_changes();
 disp('did ERA wspeed and stemp .... ret to continue'); pause
 
 figure(12);
-addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS
+%addpath /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS
+adder = ['addpath ' dirx '/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/CERES_L3_TRENDS'];
+eval(adder)
+
 ceres_trend = quick_ceres_flux_cloud_anomaly_look();
 disp('did CERES .... ret to continue'); pause
 

@@ -10,6 +10,9 @@ end
 
 fprintf(1,'computeERA5_surface_trends.m : iAllorSeasonal = %2i \n',iAllorSeasonal)
 
+if ~exist('iOLR')
+  iOLR = -1;
+end  
 if iOLR > 0
   disp('   .... iOLR > 0 so doing d2m/t2m/olr/ilr etc trends ...')
 end

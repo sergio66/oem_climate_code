@@ -4,6 +4,8 @@ driver          = driver0;
 settings        = settings0;
 iNlays_retrieve = iNlays_retrieve0;
 
+set_iMidPoint_TimeStepUse
+
 % Get jacobians, and combine the 97 layer T(z)/WV(z)/O3(z) into N layers
 
 %[m_ts_jac0,nlays,qrenorm]  = get_jac(driver.jacobian.filename,driver.jac_indexINSIDEbin,iVersJac);
@@ -19,8 +21,35 @@ iConstantJac_or_DoSARTA_Analytic_per_timestep = +1;  %% old style, constant     
 
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
   %% trends
-  [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+  if topts.iXJac == 2
+    disp('reading in trends jacs : kCARTA : DEFAULT')
+    [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+  elseif topts.iXJac == 1
+    disp('on the fly making trends jacs : SARTA')    
+    [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_sarta_analyticjac_fast(settings.iNumYears,driver.iibin,driver.iLon,driver.iLat,topts,driver);
+    %{
+    [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
 
+    %% before I did qrenorm in get_sarta_analyticjac_fast
+      plot(freq2645,m_ts_jac0(:,1)/100/2.2,freq2645,xm_ts_jac0(:,1)); xlim([645 2645])
+      plot(freq2645,m_ts_jac0(:,1)/100/2.2,freq2645,xm_ts_jac0(:,1)); xlim([645 1645])
+      plot(freq2645,m_ts_jac0(:,3)/100/5,freq2645,xm_ts_jac0(:,3)); xlim([645 1645])
+    
+    %% after I did qrenorm in get_sarta_analyticjac_fast
+      ixx = 1; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = 2; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = 3; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = 6; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = (1:nlays); ixx = 6 + ixx + 0*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('WV')
+      ixx = (1:nlays); ixx = 6 + ixx + 1*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('Tz')
+      ixx = (1:nlays); ixx = 6 + ixx + 2*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2)); xlim([645 1645]); title('O3')
+    %}
+    
+  else
+    topts.iXJac
+    error('topts.iXJac should be 1 or 2 when doing trends')
+  end
+  
 elseif driver.ia_OorC_DataSet_Quantile(1) == 2
   %% anomalies
   if iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
@@ -156,15 +185,21 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
     m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/3
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/3
   end
+
 elseif driver.i16daytimestep < 0
   %% this is for 1 average rate
+  iReplaceCO2jac = -1;
   if iXJac == 0
     fprintf(1,'not updating CO2/N2O/CH4 jacs for TRENDS ... keeping same jacs, give better results\n');
   elseif iXJac == 1 | iXJac == 2
-    fprintf(1,'updating CO2/N2O/CH4 jacs for TRENDS ...\n');
-    m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,iMidPoint_TimeStepUse,3);
-    m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,iMidPoint_TimeStepUse,3);
-    m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,iMidPoint_TimeStepUse,3);
+    if iReplaceCO2jac > 0
+      fprintf(1,'updating CO2/N2O/CH4 jacs for TRENDS ...\n');
+      m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,iMidPoint_TimeStepUse,3);
+      m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,iMidPoint_TimeStepUse,3);
+      m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,iMidPoint_TimeStepUse,3);
+    else
+      fprintf(1,'NOT updating CO2/N2O/CH4 jacs for TRENDS ...\n');
+    end
   end
 end
 

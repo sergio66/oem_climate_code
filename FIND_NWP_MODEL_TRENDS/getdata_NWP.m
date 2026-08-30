@@ -1,9 +1,12 @@
 function nwpChoice   = getdata_NWP(iNWP,iNorD,iAorOrL,iNumYears);
 
-addpath /asl/matlib/maps/
-addpath /home/sergio/MATLABCODE/COLORMAP/LLS
-addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
-addpath /home/sergio/MATLABCODE/PLOTTER
+%% changed /home/sergio/MATLABCODE/oem_pkg_run/ to /home/sergio/git/oem_climate_code/
+  
+addpath0
+% addpath /asl/matlib/maps/
+% addpath /home/sergio/MATLABCODE/COLORMAP/LLS
+% addpath /home/sergio/MATLABCODE/CRODGERS_FAST_CLOUD/
+% addpath /home/sergio/MATLABCODE/PLOTTER
 
 %   iNWP = 1   ERA
 %          2   MERRA2
@@ -93,27 +96,27 @@ fprintf(1,' setting files for getdata_NWP.m : iNWP = %2i iNumYears = %2i iNorD =
 if iNorD > 0
   strNorD = 'NIGHT';
   if iNWP == 5
-    %fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat';
+    %fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat';
     if  iNumYears <= 23 & iNumYears >= 0
-      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
       fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_trends_desc.mat'];
     % if iNumYears == 20
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
     % elseif iNumYears == 19
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat';
     % elseif iNumYears == 12
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat';
     % elseif iNumYears == 07
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat';
     elseif  iNumYears < 0
-      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];
       fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];      
     else
       error('ERA5 : needs 01 .. 23 years')
     end
     strChoice  = 'ERA5';
   elseif iNWP == 1
-    fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_desc.mat';
+    fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_desc.mat';
     strChoice  = 'ERA-I';
   elseif iNWP == 2
     iNumYears0 = iNumYears;
@@ -125,45 +128,48 @@ if iNorD > 0
       fprintf(1,'getdata_NWP.m for MERRA2 : You want trends for %2i years but can only find closest = %2i years \n',iNumYears0,iNumYears);
     end
     if length(intersect(iNumYears,[05 10 12 15 19 20])) == 1
-      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
     else
       iaJunk = [5 10 15 20 12 18 19];
       moo = abs(iaJunk-iNumYears);
       moo = find(moo == min(moo),1);    
       iNumYearsPowWow = 2002+iaJunk(moo);
-      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_' num2str(2002+iNumYearsPowWow) '_08_trends_desc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_' num2str(2002+iNumYearsPowWow) '_08_trends_desc.mat'];
       disp('MERRA2 : needs 12,19 or 05,10,15,20 years, subbing in closest year')
     end
     strChoice  = 'MERRA2';
   else
     error('unknown NWP choice')
   end
-  %cmip6 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat');
-  %amip6 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/AMIP6_atm_data_2002_09_to_2014_08_trends.mat');
+  %cmip6 = load('/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat');
+  %amip6 = load('/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/AMIP6_atm_data_2002_09_to_2014_08_trends.mat');
 else
   strNorD = 'DAY';
   if iNWP == 5
-    fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat';
+    %fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_07_trends_asc.mat';
     %if iNumYears == 19
-    %  fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat'; %%% OOER may not have run this off yet
+    %  fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_asc.mat'; %%% OOER may not have run this off yet
     %elseif iNumYears == 12
-    %  fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_asc.mat'; %%% OOER may not have run this off yet
+    %  fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_asc.mat'; %%% OOER may not have run this off yet
     %elseif iNumYears == 07
-    %  fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_asc.mat';
+    %  fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_asc.mat';
     %end
 
     if  iNumYears <= 23 & iNumYears >= 0
-      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_asc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_' num2str(2002+iNumYears) '_08_trends_desc.mat'];
+      disp(' '); disp('    >>> in getdata_NWP.m : warning lazy not yet done ERA5 NWP day trends; reading in NIGHT trends'); disp(' ')
+      
     % if iNumYears == 20
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2022_08_trends_desc.mat';
     % elseif iNumYears == 19
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2021_08_trends_desc.mat';
     % elseif iNumYears == 12
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2002_09_to_2014_08_trends_desc.mat';
     % elseif iNumYears == 07
-    %   fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat';
+    %   fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_data_2012_05_to_2019_04_trends_desc.mat';
     elseif  iNumYears < 0
-      fNWP = ['/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];
+      fNWP = ['/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA5_atm_N_cld_data_' num2str(2022 - abs(iNumYears)) '_09_to_2022_08_trends_desc.mat'];
     else
       error('ERA5 : needs 01 .. 23 years')
     end
@@ -171,20 +177,20 @@ else
     
     strChoice  = 'ERA5';
   elseif iNWP == 1
-    fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_asc.mat';
+    fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/ERA_atm_data_2002_09_to_2019_08_16day_trends_asc.mat';
     strChoice  = 'ERA-I';
   elseif iNWP == 2
     if iNumYears == 19
-      fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_trends_desc.mat';
+      fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2021_08_trends_desc.mat';
     elseif iNumYears == 12
-      fNWP = '/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat';
+      fNWP = '/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/MERRA2_atm_data_2002_09_to_2014_08_trends_desc.mat';
     end
     strChoice  = 'MERRA2';
   else
     error('unknown NWP choice')
   end
-  %cmip6 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat');
-  %amip6 = load('/home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/AMIP6_atm_data_2002_09_to_2014_08_trends.mat');
+  %cmip6 = load('/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/CMIP6_atm_data_2002_09_to_2014_08_trends.mat');
+  %amip6 = load('/home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/AMIP6_atm_data_2002_09_to_2014_08_trends.mat');
 end
 
 fprintf(1,' after setting fNWP in getdata_NWP.m : NWP : iNWP = %2i iNumYears = %2i : fNWP = %s \n',iNWP,iNumYears,fNWP);

@@ -9,6 +9,8 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 miaow = load('sarta_chans_for_l1c.mat');
 ind2834to2645 = miaow.ichan;
 
+error('do not use ... use clust_put_together_jacs_clr_ERA5.m')
+
 iOldORNew = +1;
 if iOldORNew < 0
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  %%% NEED TO REDO
@@ -51,9 +53,9 @@ for lon = 1 : 72
   end
 
   ind_subset_junk_ii = ind_subset_junk(lon);
-  frad0 = ['AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
-  fz    = ['AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
-  fcol  = ['AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  frad0 = ['AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+  fz    = ['AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+  fcol  = ['AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
   iaIndices(lon) = ind_subset_junk_ii;
 
   arad0 = load(frad0);

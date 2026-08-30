@@ -76,8 +76,12 @@ else
   error('hmm which era5trendfile to use???')
 end
 fprintf(1,'comparing retrived trends for iNumyears = %2i against %s \n',driver.iNumYears,era5trendfile);
-era5 = load(era5trendfile);
-
+if exist(era5trendfile)
+  era5 = load(era5trendfile);
+else
+  fprintf(1,'%s DNE, exiting \n',era5trendfile)
+  return
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for ii = 1

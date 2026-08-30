@@ -1,0 +1,53 @@
+The .m files in this directory are the minimum you require. For a
+better understanding of this code, please refer to the JGR paper
+(initial submission : early 2025, first revision submitted July 2025)
+
+these are the 32 essential files to runs AIRS L1C trends forwards!!!
+mv set_CO2_CH4_N2O_ESRL.m get_jac_fast.m set_driver_rateset_datafile.m clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m build_cov_matrices.m do_the_cov_set_numbers.m set_driver_jacfile.m get_rates.m set_the_jacobians.m strow_override_defaults_latbins_AIRS_fewlays.m check_settings.m change_important_topts_settings.m find_the_oem_channels.m get_co2_n2o_ch4_for_strow_override.m set_the_AMSU_jcobians.m see_clust_put_together_jacs_cldERA5_2022.m set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m check_driver.m get_ESRL_TRACE_GAS_2002_2022.m jeevanjee_PBL_deltaRH_Ts.m estimate_fracWV_for_deltaRH_zero.m precipitation_vs_skt_changes.m find_wgtA_wgtB.m trop_index.m set_Tz_O3z_noFit.m set_zeroWV_nofit.m show_unc.m combinejaclays.m set_zeroT_nofit.m set_zeroO3_nofit.m nc_rates.m choose_goodchans_from_2645.m ../.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This spectral trend climate analysis code assumes you have 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A : Spectral trends and uncertainties
+(a) tiled AIRS radiance trends and uncertainties and lag1 corrections
+    4608 tiles x 2645 AIRS L1C channels for each of the above
+(b) you can also generate spectral trends from eg ERA5, MERRA2, AIRS v7 L3, CLIMCAPS L3 monthly data
+    matched to the tiles
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+B : Accurate Jacobians
+(a) jacobians need to be available (for T/WV/O3/surf temp/trace gas) for each tile
+    T(z), WV(z), O3(z) jacobians are 100 layers x 2645 channels for AIRS L1C, for each tile
+    SKT jacs are 1 x 2645 for each tile
+    Trace Gas Column jacs (Co2,N2O,CH4,CFC11,CFC12) are also 1 x 2645 for each tile
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+C : Running the code
+    Code is designed to run on the UMBC HPC cluster
+    One tile can be run using the main driver code
+      clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+    Inside that code, there are many default setting you can adjust using "topts," such as
+      day or night
+      number of channels
+      which quantile you are using (Q01-Q05)
+      do you wish to stick to AIRS 100 layers, or combine/sum jacobians for eg 50 layers or 33 layers
+      tweak the covariance matrices (Tikhonov or exponential decay, diagonal etc)
+
+    This is fast, less than 30 seconds per tile
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+D : output files go to Output or Output_Day 
+   (depending on whether you chose day trends or night trends to be analyzed)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We are not providing eg AIRS L1C tiled quantile trends since those are huge .mat files and can be generated
+by downloading the L1C data and tiling it by 16 day intervals. 
+
+Please contact Sergio DeSouza-Machado (sergio@umbc.edu) if you have questions

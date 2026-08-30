@@ -40,14 +40,16 @@ YMStart = [2015 01];  YMEnd = [2021 12];  %% OCO2
 YMStart = [2014 09];  YMEnd = [2021 08];  %% OCO2
 YMStart = [2002 09];  YMEnd = [2021 08];  %% 19 years
 YMStart = [2018 09];  YMEnd = [2022 08];  %% last 4 years
-YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years
+YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years, for JGR paper
 
 YMStart = [2008 09];  YMEnd = [2022 08];  %% Ryan said they fixed O3 after 2007 so start 2008not yet done
 
 YMStart = [2020 07];  YMEnd = [2024 06];  %% hot hot hot trends
 YMStart = [2002 09];  YMEnd = [2024 06];  %% 22 year trends
 YMStart = [2002 09];  YMEnd = [2024 08];  %% 22 year trends
-YMStart = [2002 09];  YMEnd = [2025 08];  %% 22 year trends
+YMStart = [2002 09];  YMEnd = [2025 08];  %% 23 year trends
+
+YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years, for JGR paper
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -57,6 +59,7 @@ else
   llsmap5 = usa2;
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 iOops = +1;
 if iOops < 0
   

@@ -11,10 +11,13 @@ iLatX = 07;
 iLatX = 11;
 iLatX = settings.iLatX;
 
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1; %% this is what we had upto Apr 2022, which was the JPL Sounder team Meeting, dataset=4,Quantile=16 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) did not square fmat, 
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 1; %% this is what we had upto Apr 2022, which was the JPL Sounder team Meeting, dataset=4,Quantile=16 :
+                                               %% namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) did not square fmat, 
                                                %% 04/23/2022 commit 30d2e554a97b34b0923ad58346d183a3c10d6bcb
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 2; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) fmat -> fmat.*fmat
-iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 3; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 : namely (1) mat_odX = exp(-mat_odZ.^2./(LscaleX^2));               and (2) fmat -> fmat.*fmat  used in paper
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 2; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 :
+                                               %% namely (1) l_c = cov_set(1); mat_od = exp(-mat_od.^2./(1*l_c^2)); and (2) fmat -> fmat.*fmat
+iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 3; %% this is new Aug 2022, put into CRIS_new_clear_scan_January2020//build_cov_matrices.m in June 2022 :
+                                               %% namely (1) mat_odX = exp(-mat_odZ.^2./(LscaleX^2));               and (2) fmat -> fmat.*fmat  used in paper
 
 iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = 3;
 if driver.ia_OorC_DataSet_Quantile(1:3) == [+0 04 16]
@@ -144,8 +147,8 @@ elseif driver.i16daytimestep < 0 & topts.dataset < 30
   iCovSetNumber = 19;    %% did it for 18 year rates 2002/09 to 2021/08 
   iCovSetNumber = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=07,Q=16
   iCovSetNumber = 20.1;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=09,Q=16, ocb_set = 1 (cal) gives great results == ERA spectral trends
-  iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=09,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)  %%% AIRS trends paper
   iCovSetNumber = 23;    %% did it for 23 year rates 2002/09 to 2025/08 dataset=18,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)  
+  iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=09,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)  %%% AIRS trends paper
 
   if topts.dataset == -1 | topts.dataset == +1
     iCovSetNumber = 18;    %% did it for 18 year rates 2002/09 to 2020/08   
@@ -159,13 +162,13 @@ elseif driver.i16daytimestep < 0 & topts.dataset < 30
     iCovSetNumber = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
   elseif topts.dataset == 7
     iCovSetNumber = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=7,Q=16
-  elseif topts.dataset >= 9 & topts.dataset <= 17
+  elseif (topts.dataset >= 9 & topts.dataset <= 17) | topts.dataset == 20
     if topts.ocb_set == 1
       iCovSetNumber = 20.1;  %% did it for 20 year CAL rates 2002/09 to 2022/08 dataset=9,Q=16, CAL
     elseif topts.ocb_set == 0
       iCovSetNumber = 20.2;  %% did it for 20 year OBS rates 2002/09 to 2022/08 dataset=9,Q=05, OBS
     end
-  elseif topts.dataset == 18
+  elseif topts.dataset == 19
     iCovSetNumber = 23;  %% did it for 23 year rates 2002/09 to 2025/08 dataset=18, Q=03
   end
 

@@ -39,7 +39,7 @@ if driver.iNumYears > 0
 else
   fprintf(1,'co2x rate in set_CO2_CH4_N2O_ESRL.m = %6.3f ppmv/yr for %2i iNumYears starting backward from 2022 and ending at %4i \n',co2x,driver.iNumYears,2022-(-driver.iNumYears));
 end
-
+ 
 %[settings.set_tracegas driver.i16daytimestep settings.ocb_set settings.model]
 
 % if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set == 1 & settings.model ~= 5
@@ -79,10 +79,27 @@ if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <=
   if settings.co2lays == 1
     %% disp('now doing apriori WV(RH) settings')
     %xb(1:5) = xb(1:5)*10;
-    %[hhh,~,ppp,~] = rtpread('
-    fERA5 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp';
-    fERA5 = '/asl/s1/sergio/alldata/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp';
-    fERA5 = '/home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp';
+
+    %fERA5 = '/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_19years_all_lat_all_lon_2002_2019_monthlyERA5.rp.rtp';
+    %fERA5 = '/asl/s1/sergio/alldata/MakeAvgProfs2002_2020/summary_17years_all_lat_all_lon_2002_2019.rtp';
+    if topts.dataset == 9
+      settings.iNumYears = 20;
+    else
+      settings.iNumYears = 23;
+    end
+    if settings.iNumYears <= 20
+      fERA5 = '/home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp';
+    else
+      fERA5 = '/home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp';
+    end
+    if ~exist('fileMean17years')
+      iNumYears = settings.iNumYears;
+      read_fileMean17years
+      fprintf(1,'doing read_fileMean17years inside set_CO2_CH4_N2O_ESRL.m \n')
+    end
+    fERA5 = fileMean17years;
+    fprintf(1,'set_CO2_CH4_N2O_ESRL.m : fERA5 = %s \n',fERA5)
+    
     [hhh,~,ppp,~] = rtpread(fERA5);
     RH0  = layeramt2RH(hhh,ppp);
     mmw0 = mmwater_rtp(hhh,ppp);

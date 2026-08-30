@@ -83,9 +83,9 @@ ind_subset_junk = (1:72) + (ind_lat_junk-1)*72;
 for lon = iLonBin
 
   ind_subset_junk_ii = ind_subset_junk(lon);
-  frad0 = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
-  fz    = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
-  fcol  = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  frad0 = [thedir0 '/AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+  fz    = [thedir0 '/AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+  fcol  = [thedir0 '/AllDemJacsClr_20yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
   iaIndices = ind_subset_junk_ii;
 
   fprintf(1,'in see_clust_put_together_jacs_clrERA5_2012.m : iOldORNew  = %2i \n',iOldORNew);

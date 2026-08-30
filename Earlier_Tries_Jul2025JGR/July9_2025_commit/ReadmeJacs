@@ -1,0 +1,39 @@
+see code in /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020
+and rtp , mat, summary files in 
+  DATA -> /asl/s1/sergio/MakeAvgProfs2002_2020
+  DATA_StartSept2002 -> /asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002
+in that subdir
+
+The latter is the more important! So look at the 
+  Code_For_HowardObs_TimeSeries/
+in that subdir ie
+
+/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_For_HowardObs_TimeSeries
+
+see eg driver_convert_WRONG_latlon_individual_2_CORRECT_latlon.m for eg 
+  /asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002/summary_17years_all_lat_all_lon_2002_2019.rtp
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[sergio@taki-usr2 TILES_TILES_TILES_MakeAvgCldProfs2002_2020]$ grep -in summary_17years */*.m
+***** -rw-rw-r-- 1 sergio pi_strow 5783  Nov 2  2020 Code_starts_Sept2002/call_save_split_apart_rtp_howard_bins_startSept2002.m:93:foutNyearaverage = ['DATA_StartSept2002/summary_17years_all_lat_all_lon_2002_2019.rtp']; **********
+  and then I must have added palts somewhere after that (maybe /home/sergio/MKCARTA/WORKRUN_TARA/GENERIC/IPFILES)
+***** -rw-rw-r-- 1 sergio pi_strow 4459 Jun 26 06:36 Code_starts_Sept2002/call_save_split_apart_rtp_howard_bins_startSept2002_16daysavgsFORanom.m will do the 16day averages for anomalies
+
+-------------------------
+other possibility (discard this) is
+-rw-rw-r-- 1 sergio pi_strow 5783  Sep 24 2020 Code_For_AIRS_STM_Oct2020_allstarts_Jan20XY/call_save_split_apart_rtp_howard_bins.m:91:foutNyearaverage = ['DATA/summary_17years_all_lat_all_lon_2002_2019.rtp'];
+  this code is called by ERR NOTHING
+  -rw-rw-r-- 1 sergio pi_strow 4717 Nov  2  2020 TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_starts_Sept2002/driver_split_apart_rtp_howard_bins_startSept2002.m
+  and then I must have added palts somewhere after that (maybe /home/sergio/MKCARTA/WORKRUN_TARA/GENERIC/IPFILES)
+-------------------------
+
+other contenders
+-rw-rw-r-- 1 sergio pi_strow 10058 Nov 30 2020 Code_For_HowardObs_TimeSeries/driver_convert_WRONG_latlon_individual_2_CORRECT_latlon.m:22:use_this_rtp = 'RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002.rtp';
+-rw-rw-r-- 1 sergio pi_strow 10058 Nov 30 2020 Code_For_HowardObs_TimeSeries/driver_convert_WRONG_latlon_individual_2_CORRECT_latlon.m:23:use_this_rtp = '/asl/s1/sergio/MakeAvgProfs2002_2020_startSept2002/summary_17years_all_lat_all_lon_2002_2019.rtp';
+-rw-rw-r-- 1 sergio pi_strow 5783  Sep 24 2020 Code_starts_Sept2002/call_save_split_apart_rtp_howard_bins.m:91:foutNyearaverage = ['DATA/summary_17years_all_lat_all_lon_2002_2019.rtp'];
+-rw-rw-r-- 1 sergio pi_strow 15612 Nov  6 2020 Code_starts_Sept2002/clust_make_profs_data_howard_bins_OneYearStartJan1_Asc.m:72:%% rember in RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002.rtp
+-rw-rw-r-- 1 sergio pi_strow 15612 Nov  6 2020 Code_starts_Sept2002/clust_make_profs_data_howard_bins_OneYearStartJan1_Desc.m:72:%% rember in RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002.rtp
+-rw-rw-r-- 1 sergio pi_strow 15612 Nov  6 2020 Code_starts_Sept2002/clust_make_profs_data_howard_bins_OneYearStartJan1.m:73:%% rember in RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002.rtp
+-rw-rw-r-- 1 sergio pi_strow 15612 Nov  6 2020 Code_starts_Sept2002/test_make_profs_data_howard_bins_OneYearStartJan1.m:73:%% rember in RTP/summary_17years_all_lat_all_lon_2002_2019_palts_startSept2002.rtp
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

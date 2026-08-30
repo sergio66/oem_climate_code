@@ -159,3 +159,6 @@ if iCovSetNumber == 23
   cov_set(2:3) = cov_set0(2:3)/5;
   cov_set(5:6) = cov_set0(5:6)/5;
 end
+
+%'do_covset_20p2'
+%disp('ret to continue'); pause

@@ -273,3 +273,4 @@ aslmap(27,rlat65,rlon73,maskLFmatr.*smoothn((reshape(fluxX.p2x.olrclr-flux0.p2x.
 caxis([-0.5 +0.5])
 %}
 
+disp('now can run      savesmallFATfile')

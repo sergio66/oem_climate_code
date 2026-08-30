@@ -1,3 +1,8 @@
+This file is in AIRS_gridded_STM_May2021_trendsonlyCLR/Readme_make_avg_profs_N_jacs_4608
+
+Contents
+---------
+
 (1) look at 
       /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Readme 
     for how to make the tile quantiles and trends
@@ -13,14 +18,26 @@
 (A) to make the averages ERA5 profiles, 4608 tiles
 ---------------------------------------------------
 
-very easy, go to 
-  /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
-Edit driver_makeavgprofile_ERA5_monthly_desc_or_asc.m so you correctly set the start/stop time 
+First off 
+  edit FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m
+  run  FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m
+to make eg
+  fERA5_monthly = 'MEAN_PROFILES//avg_ERA5_atm_N_cld_data_2002_09_to_2022_08_desc.mat';
+  
+Then you need to edit
+     driver_makeavgprofile_ERA5_monthly_desc_or_asc.m             or
+     driver_makeavgprofile_ERA5_monthly_desc_or_asc_clearonly.m
+so you correctly set the start/stop time     
   iStartY = 2002; iStartYM = 09; iStopY = 2021; iStopYM = 08;
   iStartY = 2002; iStartYM = 09; iStopY = 2014; iStopYM = 08; %% Joao wants AMIP/CMIP
   iStartY = 2012; iStartYM = 05; iStopY = 2019; iStopYM = 04; %% CRIS NSR
-Run the code
-
+Run the code. It calls
+  [yavg,bady0] = fix_nan_emis(yavg);
+so there are no NaNs in emissivity, else SARTA and KCARTA get rightfully annoyed. It makes eg
+  -rw-rw-r-- 1 sergio pi_sergio 89934929 Aug 23 05:14 summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp
+  -rw-rw-r-- 1 sergio pi_sergio 41181994 Aug 23 05:14 summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp  
+  -rw-rw-r-- 1 sergio pi_sergio  8630009 Aug 23 05:13 summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.ip.rtp
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 (B) use this to make the kCARTA ERA5 trend jacs for T,WV,O3 (97 layer)
@@ -36,11 +53,17 @@ Then for example
 
   cd /home/sergio/git/kcarta_gen/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES
   ln -s /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/summary_07years_all_lat_all_lon_2012_2019_monthlyERA5.rp.rtp RTP/.
-  ln -s /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp RTP/.  
+  ln -s /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.op.rtp RTP/.
+  ln -s /home/sergio/git/oem_climate_code/FIND_NWP_MODEL_TRENDS/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.op.rtp RTP/.
+  
   edit set_rtp.m                                      so it is looking for this files 
        set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m    so it is gonna do eitherr T(z),WV(z),O3(z) jacs or col jacs
+                                                      so it runs correct kcarta eg KCARTA H2024/CKD4.3 or H2020/CKD3.2
+						      
    %% clrsky, use LBLRTM ODs  ****************************** CLR JACS 97 layers eg for 64x72 grids *** USE THIS FOR WV,O3,T ****       
-   iKCKD =  43; iHITRAN = 2024; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +1;   gg = 1001;  
+   iKCKD =  32; iHITRAN = 2020; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +1;   gg = 1001;   for the 2002/09-2022/08 to duplicate JGR2025
+   iKCKD =  43; iHITRAN = 2024; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +1;   gg = 1001;   for all others
+
   %% rmer_slurm_JUNKrad.sc; sbatch -p cpu2021           --array=1-4608 sergio_matlab_jobB.sbatch 1
   rmer_slurm_JUNKconv.sc; rmer_slurm_JUNKrad.sc; sbatch --array=1-4608 sergio_matlab_chip.sbatch 1
   
@@ -48,34 +71,58 @@ Then for example
   cd  /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK
   mkdir AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly
   cd  AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly
-    mkdir AllDemJacsClr
+#    mkdir AllDemJacsClr
+#    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.m .
+#    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.mat .
+#    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.sbatch .
+   mkdir AllDemJacsClr_23yrs
+   cd AllDemJacsClr_23yrs
     cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.m .
     cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.mat .
-    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.sbatch .
-  
+    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.sbatch .   
+
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2025_midpt/T_WV_O3/ AllDemJacsClr_23yrs
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2025_midpt/COL/ AllDemJacsClrCol_23yrs
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/COL/ AllDemJacsClrCol_20yrs
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/T_WV_O3/ AllDemJacsClr_20yrs
+
 When all 4608 are done
-  ie when ls -lt ../ind*jac.mat | wc -l = 4608
-    mv ../ind*jac.mat AllDemJacsClr/.
-    mv ../ind*.mat AllDemJacsClr/.    
-  or
-    mv JUNK/individual_prof_convolved_kcarta_airs_*  /home/sergio/nogit/TILEJACS/AVG/KCARTA/T_WV_O3
+  ie when
+    ls -lt ../ind*jac.mat | wc -l = 4608    
+%  then
+%  before Sept 2025 disk crash
+%    mv ../ind*jac.mat AllDemJacsClr/.
+%    mv ../ind*.mat AllDemJacsClr/.    
+%  or
+%  start again, after 2026
+    mv JUNK/individual_prof_convolved_kcarta_airs_*  /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2025_midpt/T_WV_O3       H2024/CKD4.3 for 2002/09 - 2025/08 midpt (originally just /home/sergio/nogit/TILEJACS/AVG/KCARTA/T_WV_O3)
+    mv JUNK/individual_prof_convolved_kcarta_airs_*  /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/T_WV_O3       H2020/CKD3.2 for 2002/09 - 2022/08 midpt    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 (C) use this to make the kCARTA ERA5 trend jacs for CO2/N2O/CH4/CFC11/CFC12 (column)
 then go back to /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/ to make CO2/CH4/N2O/CFC11/CFC12 column jacs 
     edit   set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m    so it is gonna the other of  T(z),WV(z),O3(z) jacs or col jacs
-        iKCKD =  43; iHITRAN = 2024; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +100; gg = 2456;  %% clrsky, use LBLRTM ODs  ****************************** COL CLR JACS eg for 64x72 grids : does G2,G4,G5,G6,G51,G52,T(z),ST
-    
+        iKCKD =  43; iHITRAN = 2024; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +100;   gg = 2456;  %% clrsky, use LBLRTM ODs  ****************************** COL CLR JACS eg for 64x72 grids : does G2,G4,G5,G6,G51,G52,T(z),ST
+        iKCKD =  32; iHITRAN = 2020; iDoLBLRTM = 2; iDoRad = 3;  iDoCloud = -1; iDoJac = +100;   gg = 2456;  %% clrsky, use LBLRTM ODs  ****************************** COL CLR JACS eg for 64x72 grids : does G2,G4,G5,G6,G51,G52,T(z),ST
+
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2025_midpt/T_WV_O3/ AllDemJacsClr_23yrs
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2025_midpt/COL/     AllDemJacsClrCol_23yrs
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/COL/     AllDemJacsClrCol_20yrs
+[sergio@chip-login2 AIRS_gridded_STM_May2021_trendsonlyCLR]$ ln -s /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/T_WV_O3/ AllDemJacsClr_20yrs
+
     rmer_slurm_JUNKrad.sc; sbatch -p cpu2021                              --array=1-4608 sergio_matlab_jobB.sbatch 1
     cd  /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK
     cd  AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly  
-    when all 4608 are done
-    ie when ls -lt ../ind*coljac.mat | wc -l = 4608
-    mv JUNK/ind*coljac.mat AllDemJacsClr/.
-  or
-    mv JUNK/ind*coljac.mat  /home/sergio/nogit/TILEJACS/AVG/KCARTA/T_WV_O3
-
+ when all 4608 are done
+%    ie when ls -lt ../ind*coljac.mat | wc -l = 4608
+%  before Sept 2025 disk crash
+%    mv JUNK/ind*coljac.mat AllDemJacsClr/.
+%  or
+%  start again, after 2026
+ç    mv JUNK/ind*coljac.mat  /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2025_midpt/COL        H2024/CKD4.3 for 2002/09 - 2025/08 midpt (originally just /home/sergio/nogit/TILEJACS/AVG/KCARTA/COLR)
+    mv JUNK/ind*coljac.mat  /home/sergio/nogit/TILEJACS/AVG/KCARTA_2002_2022_midpt/COL        H2020/CKD3.2 for 2002/09 - 2022/08 midpt
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 (D) Put together the jacobians
@@ -90,6 +137,10 @@ the big fat jac files are put together using code in eg
 /home/sergio/git/kcarta_gen/RUN_HPC/OUTPUT_mfiles/AIRS_gridded_Nov2022_startSept2002_endAug2022_trendsonly_cldy_Q09_V2/clust_put_together_jacs_clrERA5.m
 /home/sergio/git/kcarta_gen/RUN_HPC/OUTPUT_mfiles/AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly/clust_put_together_jacs_clrERA5.m   ----> copy this here
 
+Use this one
+[sergio@chip-login1 oem_climate_code]$ ls -lt */clust_put_together_jacs_clrERA5.m
+-rw-rw-r-- 1 sergio pi_sergio 14134 Jun  5 00:40 AIRS_gridded_STM_May2021_trendsonlyCLR/clust_put_together_jacs_clrERA5.m
+
 Edit clust_put_together_jacs_clrERA5.m so that eg 
     iOldORNew = +07;  %% the 07 year ERA5 2012/05-2019/04
     iOldORNew = +23;  %% the 23 year ERA5 2002/09-2025/08    
@@ -101,6 +152,9 @@ Edit clust_put_together_jacs_clrERA5.m so that eg
   kleenslurm; sbatch  --array=1-64 sergio_matlab_chip.sbatch 8
 
 VERY VERY FAST if the cluster works
+
+mkdir AllDemJacsClr_2yrs/LatBin65/SubsetJacLatbin
+mkdir AllDemJacsClr_20yrs/LatBin65/SubsetJacLatbin
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

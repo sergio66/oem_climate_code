@@ -4,6 +4,8 @@
 % addpath /asl/matlib/aslutil/
 
 addpath /home/sergio/git/rtpmake/CLUST_RTPMAKE/COMMON_SETTINGS
+addpath /home/sergio/MATLABCODE/COLORMAP/
+
 addpath0
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,20 +31,34 @@ topts.sarta   = sartaCld;
 iStartY = 2002; iStartYM = 09; iStopY = 2021; iStopYM = 08; 
 iStartY = 2002; iStartYM = 09; iStopY = 2014; iStopYM = 08; %% Joao wants AMIP/CMIP
 iStartY = 2012; iStartYM = 05; iStopY = 2019; iStopYM = 04; %% CRIS NSR
-iStartY = 2002; iStartYM = 09; iStopY = 2022; iStopYM = 08;
-iStartY = 2002; iStartYM = 09; iStopY = 2025; iStopYM = 08; %% AIRS
+iStartY = 2002; iStartYM = 09; iStopY = 2025; iStopYM = 08; %% AIRS, latest
+iStartY = 2002; iStartYM = 09; iStopY = 2022; iStopYM = 08; %% AIRS JGR paper
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% likely made by /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m
-if ~exist('all') & iStopY == 2021
-  load ERA5_atm_data_2002_09_to_2021_08_desc.mat
-elseif ~exist('all') & iStopY == 2022
-  load ERA5_atm_data_2002_09_to_2022_08_desc.mat
-elseif ~exist('pall') & iStopY == 2025
-  load MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_desc.mat
+if ~exist('all','var') & iStopY == 2021
+  fERA5_monthly = 'ERA5_atm_data_2002_09_to_2021_08_desc.mat';
+elseif ~exist('all','var') & iStopY == 2022
+  fERA5_monthly = 'MEAN_PROFILES/ERA5_atm_data_2002_09_to_2022_08_desc.mat';
+  fERA5_monthly = 'MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2022_08_desc.mat';
+elseif ~exist('pall','var') & iStopY == 2025
+  fERA5_monthly = 'MEAN_PROFILES/ERA5_atm_N_cld_data_2002_09_to_2025_08_desc.mat';
 end
+
+loader = ['load ' fERA5_monthly];
+fprintf(1,'loading  %s \n',fERA5_monthly);
+eval(loader);
+if iStopY < 2022
+  pall = all;
+  clear('all');
+end  
+
 %% likely made by /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/driver_computeERA5_monthly_trends_desc_or_asc.m
 
-%% before it ws "all" not it is "pall"
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% before it was "all" not it is "pall"
 booS = find(pall.yy == iStartY & pall.mm == iStartYM);
 booE = find(pall.yy == iStopY & pall.mm == iStopYM);
 ind = booS : booE;
@@ -152,6 +168,9 @@ if ~exist(foutNyearaverageIP)
   yavg.plat = yavg.rlat;
   yavg.plon = yavg.rlon;
   yavg.nlevs = 37 * ones(size(yavg.stemp));
+
+  [yavg,bady0] = fix_nan_emis(yavg);
+
   rtpwrite(foutNyearaverageIP,havg,ha,yavg,pa);
   klayerser = ['!' topts.klayers ' fin=' foutNyearaverageIP ' fout=' foutNyearaverageOP]; eval(klayerser);
 
@@ -187,33 +206,50 @@ if ~exist(foutNyearaverageIP)
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% compare pnew profiles with pERAI
-  addpath /home/sergio/MATLABCODE/COLORMAP/
-  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.stemp-pERAI.stemp); title('stemp : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/1)
-
-  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i500mb,:)-pERAI.ptemp(i500mb,:)); title('500 mb T(z) : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
-  scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i850mb,:)-pERAI.ptemp(i850mb,:)); title('850 mb T(z) : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
-
-  mmwI = mmwater_rtp(hERAI,pERAI);
-  mmw5 = mmwater_rtp(hnew,pnew);
-  scatter_coast(yavg.rlon,yavg.rlat,50,mmw5-mmwI); title('mmw : ERA5 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/1)
-
-  mmwI_300 = mmwater_rtp(hERAI,pERAI,300);
-  mmw5_300 = mmwater_rtp(hnew,pnew,300);
-  scatter_coast(yavg.rlon,yavg.rlat,50,mmw5_300-mmwI_300); title('mmw to 300 mb : ERA5 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/100)
-
+  if exist('pERAI')
+    scatter_coast(yavg.rlon,yavg.rlat,50,pnew.stemp-pERAI.stemp); title('stemp : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/1)
+  
+    scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i500mb,:)-pERAI.ptemp(i500mb,:)); title('500 mb T(z) : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
+    scatter_coast(yavg.rlon,yavg.rlat,50,pnew.ptemp(i850mb,:)-pERAI.ptemp(i850mb,:)); title('850 mb T(z) : ERA5 - ERA-Interim'); colormap(usa2); caxis([-10 +10]/10)
+  
+    mmwI = mmwater_rtp(hERAI,pERAI);
+    mmw5 = mmwater_rtp(hnew,pnew);
+    scatter_coast(yavg.rlon,yavg.rlat,50,mmw5-mmwI); title('mmw : ERA5 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/1)
+  
+    mmwI_300 = mmwater_rtp(hERAI,pERAI,300);
+    mmw5_300 = mmwater_rtp(hnew,pnew,300);
+    scatter_coast(yavg.rlon,yavg.rlat,50,mmw5_300-mmwI_300); title('mmw to 300 mb : ERA5 - ERA-Interim'); colormap(usa2); caxis([-1 +1]/100)
+  end
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 disp(' ')
-lser = ['!ls -lt ' foutNyearaverageIP ' ' foutNyearaverageOP];
+lser = ['!ls -lt ' foutNyearaverageIP ' ' foutNyearaverageOP ' ' foutNyearaverageRP];
 eval(lser)
 
 disp(' ')
 disp('to make kCARTA jacs : see ../AIRS_gridded_STM_May2021_trendsonlyCLR/Readme_make_avg_profs_N_jacs_4608')
 
+disp(' ')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
+disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
+%disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
+%disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
+%disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
+disp('now make kCARTA jacs and look at eg /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/clust_put_together_jacs_clrERA5.m');
+disp('now make kCARTA jacs and look at eg /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/clust_put_together_jacs_clrERA5.m');
+disp('now make kCARTA jacs and look at eg /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/clust_put_together_jacs_clrERA5.m');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
-erro('check bad emis')
+error('check bad emis')
 
 %{
 TURNS OUT KCARTA fails on a number of profiles, since the emissivity of first 5 freqs hinges is NaN over land (Africa, Asia, the Americas)
@@ -274,15 +310,6 @@ rtpwrite('summary_23years_all_lat_all_lon_2002_2025_monthlyERA5.ip.rtp',h,ha,pne
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-disp(' ')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
-disp('now make kCARTA jacs and look at eg /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/clust_put_together_jacs_clrERA5.m')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

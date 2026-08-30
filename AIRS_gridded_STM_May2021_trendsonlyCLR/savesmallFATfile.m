@@ -69,7 +69,8 @@ genericoutname = ['/home/sergio/nogit/JUNK/TILES_saveresults/smallgather_tileCLR
   fprintf(1,'suggested name uncX1   %s \n',genericoutname);
 genericoutname = ['/home/sergio/nogit/JUNK/TILES_saveresults/smallgather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2025jacs_startwith' start_apriori_str '_uncX3_'   numretlayers_str '_' strMODELS '_feedback.mat']; 
   fprintf(1,'suggested name uncX3   %s \n',genericoutname);
-genericoutname = ['/home/sergio/nogit/JUNK/TILES_saveresults/smallgather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d') '_newERA5_2025jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; 
+genericoutname = ['/home/sergio/nogit/JUNK/TILES_saveresults/smallgather_tileCLRnight_' cGorS '_dataset' num2str(dataset,'%02d') '_Q' num2str(iQuantile,'%02d')];
+genericoutname = [genericoutname '_newERA5_2025jacs_startwith' start_apriori_str '_uncX100_' numretlayers_str '_' strMODELS '_feedback.mat']; 
   fprintf(1,'suggested name uncX100 %s \n',genericoutname);
 
 junk = input('save savesmallFATfile???? (-1 default/+1) : ');
@@ -111,8 +112,14 @@ if junk == 1
       saver = [saver ' *_ak*_era5* era5_plays era5_*rate pjunk20 h p'];
     end
 
-    eval(saver);
-    fprintf(1,'done saving, saver = %s \n',saver)
+    iSure = input('are you sure you want to save a file [last chance to get out, default -1] ');
+    if length(iSure) == 0
+      iSure = -1;
+    end
+    if iSure > 0
+      eval(saver);
+      fprintf(1,'done saving, saver = %s \n',saver)
+    end
     
     quick_compare_era5_retrieval
 

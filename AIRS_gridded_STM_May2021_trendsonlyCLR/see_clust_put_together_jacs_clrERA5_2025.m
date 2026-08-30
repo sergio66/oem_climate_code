@@ -31,9 +31,9 @@ elseif iOldORNew == 2
   foutsubjac2 = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020_startSept2002/Retrieval/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_Dec2021_' num2str(JOB,'%02i') '.mat'];
 elseif iOldORNew == 3
   %% see clust_put_together_jacs_clrERA5.m
-  SARTAjac    = ['AllDemJacsClr/LatBin65/SubsetJacLatbin/subjac23yearLatBin' num2str(JOB,'%02i') '.mat'];  
-  foutsubjac  = ['AllDemJacsClr/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_23yr_' num2str(JOB,'%02i') '.mat'];
-  foutsubjac2 = ['AllDemJacsClr/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_23yr_' num2str(JOB,'%02i') '.mat'];
+  SARTAjac    = ['AllDemJacsClr_23yrs/LatBin65/SubsetJacLatbin/subjac23yearLatBin' num2str(JOB,'%02i') '.mat'];  
+  foutsubjac  = ['AllDemJacsClr_23yrs/LatBin65/SubsetJacLatbin/kcarta_clr_subjacLatBin_kCARTA_ERA5_23yr_' num2str(JOB,'%02i') '.mat'];
+  foutsubjac2 = ['AllDemJacsClr_23yrs/LatBin65/SubsetJacLatbin/kcarta_clr_subjac_nostruct_LatBin_kCARTA_ERA5_23yr_' num2str(JOB,'%02i') '.mat'];
 else
   error('unknown iOldORNew')
 end
@@ -58,7 +58,7 @@ elseif iOldORNew == 3
 end
 
 lps = compute_lapse_rate(h,p);
-profilejunk.nlays = p.nlevs(:,(iLatBin-1)*72+iLonBin)-1;
+profilejunk.nlays = p.nlevs((iLatBin-1)*72+iLonBin)-1;
 profilejunk.plays = plevs2plays(p.plevs(:,(iLatBin-1)*72+iLonBin));
 profilejunk.ptemp = p.ptemp(:,(iLatBin-1)*72+iLonBin);
 profilejunk.gas_1 = p.gas_1(:,(iLatBin-1)*72+iLonBin);
@@ -81,9 +81,9 @@ ind_subset_junk = (1:72) + (ind_lat_junk-1)*72;
 for lon = iLonBin
 
   ind_subset_junk_ii = ind_subset_junk(lon);
-  frad0 = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
-  fz    = [thedir0 '/AllDemJacsClr/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
-  fcol  = [thedir0 '/AllDemJacsClrCol/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
+  frad0 = [thedir0 '/AllDemJacsClr_23yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '.mat'];
+  fz    = [thedir0 '/AllDemJacsClr_23yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_jac.mat'];
+  fcol  = [thedir0 '/AllDemJacsClrCol_23yrs/individual_prof_convolved_kcarta_airs_' num2str(ind_subset_junk_ii) '_coljac.mat'];
   iaIndices = ind_subset_junk_ii;
 
   fprintf(1,'in see_clust_put_together_jacs_clrERA5_2021.m : iOldORNew  = %2i \n',iOldORNew);

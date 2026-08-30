@@ -20,7 +20,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('takes about 5 hours for trends')
+disp('takes about 2 hours for geo trends')
 
 JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));   %% 1 : 23 for the iNumYears 
 if length(JOB) == 0
@@ -57,8 +57,10 @@ iNumYears = 18; %% 2002/09-2020/08
 iNumYears = 19; %% 2002/09-2021/08
 iNumYears = 12; %% 2002/09-2014/08
 iNumYears = 070; %% 2012/05-2019/04 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-iNumYears = 20; %% 2002/09-2022/08
 iNumYears = 23; %% 2002/09-2025/08
+iNumYears = 20; %% 2002/09-2022/08
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 iForwardFrom2002_or_BackwardFrom2022 = -2022; %% new     2022 <---- 20XY
 iForwardFrom2002_or_BackwardFrom2022 = +1;    %% default 2002 ----> 20XY
@@ -183,6 +185,8 @@ elseif iForwardFrom2002_or_BackwardFrom2022 < 0 & sum(iaFound) ~= (iaMax-iaMin +
   fin
   error('not enough')
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('reading in monthly ERA5 data in /asl/s1/sergio/alldata/MakeAvgObsStats2002_2020_startSept2002_v3/TimeSeries/ERA5/Tile_Center/ ')
 disp('  made by /home/sergio/MATLABCODE/RTPMAKE/CLUST_RTPMAKE/CLUSTMAKE_ERA5/clust_loop_make_monthly_tile_center_asc_or_desc.m')

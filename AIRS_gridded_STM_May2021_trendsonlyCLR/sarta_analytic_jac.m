@@ -1,5 +1,8 @@
 function [m_ts_jac0,nlays,qrenorm,freq2645,colo3,profilejunk] = sarta_analytic_jac(driver,info_about_time_lat,iRunSartaJac);
 
+%% see sarta_analytic_jac.m
+%% see sarta_analytic_jac_trend.m
+
 if nargin == 2
   iRunSartaJac = +1;
 end
@@ -115,6 +118,7 @@ jacOZ = jac3(1:iaNumLay,:);
 %% output
 m_ts_jac0 = [jac2; jac4; jac6; 0*jac2; 0*jac2; jacST; jacWV; jacTZ; jacOZ]';
 nlays = iaNumLay;
-[mm,nn] = size(m_ts_jac0); qrenorm = ones(1,mm);
+[mm,nn] = size(m_ts_jac0);
+qrenorm = ones(1,mm);
 freq2645 = w;
 colo3 = nansum(jac3,1);

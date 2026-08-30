@@ -1,0 +1,62 @@
+(1) look at 
+      /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Readme 
+    for how to make the tile quantiles and trends
+
+(A) to make the averages ERA5 profiles, 4608 tiles
+(B) use this to make the kCARTA ERA5 trend jacs
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(A) to make the averages ERA5 profiles, 4608 tiles
+very easy, go to 
+  /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/
+Edit driver_makeavgprofile_ERA5_monthly_desc_or_asc.m so you correctly set the start/stop time 
+  iStartY = 2002; iStartYM = 09; iStopY = 2021; iStopYM = 08;
+  iStartY = 2002; iStartYM = 09; iStopY = 2014; iStopYM = 08; %% Joao wants AMIP/CMIP
+  iStartY = 2012; iStartYM = 05; iStopY = 2019; iStopYM = 04; %% CRIS NSR
+Run the code
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(B) use this to make the kCARTA ERA5 trend jacs
+
+Then for example
+  cp /umbc/xfs2/strow/asl/s1/sergio/home/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/summary_07years_all_lat_all_lon_2012_2019_monthlyERA5.rp.rtp RTP/.
+  cd /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES
+  edit set_rtp.m                                      so it is looking for this files 
+       set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m    so it is gonna do eitherr T(z),WV(z),O3(z) jacs or col jacs
+  rmer_slurm_JUNKrad.sc; sbatch -p cpu2021                              --array=1-4608 sergio_matlab_jobB.sbatch 1
+
+Then for example
+  cd  /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK
+  mkdir AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly
+  cd  AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly
+    mkdir AllDemJacsClr
+    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.m .
+    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.mat .
+    cp -a ../AIRS_gridded_Aug2022_startSept2002_endAug2014_trendsonly/*.sbatch .
+  
+When all 4608 are done
+  ie when ls -lt ../ind*jac.mat | wc -l = 4608
+    mv ../ind*jac.mat AllDemJacsClr/.
+    mv ../ind*.mat AllDemJacsClr/.    
+
+  then go back to /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/
+  edit   set_gasOD_cumOD_rad_jac_flux_cloud_lblrtm.m    so it is gonna the other of  T(z),WV(z),O3(z) jacs or col jacs  
+  rmer_slurm_JUNKrad.sc; sbatch -p cpu2021                              --array=1-4608 sergio_matlab_jobB.sbatch 1
+  cd  /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK
+  cd  AIRS_gridded_Sept2022_startMay2012_endApr2019_trendsonly  
+  when all 4608 are done
+  ie when ls -lt ../ind*coljac.mat | wc -l = 4608
+    mv ../ind*coljac.mat AllDemJacsClr/.
+
+Edit clust_put_together_jacs_clrERA5.m so that eg 
+    iOldORNew = +07;  %% the 07 year ERA5 2012/05-2019/04
+  and there are two more instances (looking for the firectories, and looking for eg 
+    /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_07years_all_lat_all_lon_2012_2019_monthlyERA5.rp.rtp
+  kleenslurm; sbatch -p high_mem --array=1-64 sergio_matlab_jobB.sbatch 2
+
+Then of course, go to eg strow_override_defaults_latbins_AIRS_fewlays.m
+     iVersJac == 2012; will deal with this (settings.dataset == 6), so keep looking for iVersJac and edit as needed
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -8,6 +8,8 @@ JOB = str2num(getenv('SLURM_ARRAY_TASK_ID'));
 miaow = load('sarta_chans_for_l1c.mat');
 ind2834to2645 = miaow.ichan;
 
+error('do not use ... use clust_put_together_jacs_clr_ERA5.m')
+
 iOldORNew = +1;
 if iOldORNew < 0
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  %%% NEED TO REDO

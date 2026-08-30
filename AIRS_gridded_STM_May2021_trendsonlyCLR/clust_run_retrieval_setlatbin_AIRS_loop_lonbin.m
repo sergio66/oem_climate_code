@@ -89,6 +89,8 @@ else
     JOB = 2;
     JOB = 45;
     JOB = 32;
+    JOB = 1;
+    JOB = 35;    
   end
 end
 
@@ -176,7 +178,6 @@ if driver.iTrendOrAnomaly > 0
   %%%%%%%%%%%%%%%%%%%%%%%%%
 
   ia_OorC_DataSet_Quantile = [+0 16 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 16,  iQuantile = 03   04 year rates, 2020/07-2024/06
-
   
   %%%%% for trends paper START %%%%%%%%%%%%%%%%%%%%%%%%%
   ia_OorC_DataSet_Quantile = [+1 09 16  5   ]; %% ocb_set = 1 : ERA5 cal fit,    dataset = 9,  iQuantile = 16   20 year rates
@@ -189,12 +190,18 @@ if driver.iTrendOrAnomaly > 0
   
   %% /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/iType_16_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat
   ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
   ia_OorC_DataSet_Quantile = [+0 18 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 18, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
+  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 AIRS obs Q(0.90-->1)
   %%%%% for trends paper STOP  %%%%%%%%%%%%%%%%%%%%%%%%%
 
-  %% the dawn of the phoenix chip in June 2026, ost Oct 2025 apocalypse
-  ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 19, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %% the dawn of the phoenix chip in June 2026, after the Oct 2025 apocalypse
+  ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 19, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)    
+  ia_OorC_DataSet_Quantile = [+0 20 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2003/01-2022/12 AIRS obs Q(0.90-->1)
+  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
   
 elseif driver.iTrendOrAnomaly < 0
   set_anomaly_info
@@ -323,6 +330,7 @@ for iInd = iXX1 : idX : iXX2
     driver.anomalyinfo.fatprofilebin  = mapAnomData_to_processor(iInd,1);  %% NEW when doing about 10 anomaly time series, from get_anomaly_processors (1) GLOBAL (2) TROICAL (3-30) FAT LATBINS
 
     junkx = load(anomalydatafile,'usethese');
+    driver.anomalyinfo.latbin  = mapAnomData_to_processor(iInd,1);  %% NEW when doing about 10 anomaly time series, from get_anomaly_processors
     driver.anomalyinfo.latbin = ceil(nanmean(junkx.usethese{mapAnomData_to_processor(iInd,1)}));
     driver.anomalyinfo.lonbin  = 36;
 
@@ -418,7 +426,7 @@ for iInd = iXX1 : idX : iXX2
   topts.iaSequential = [214 150 60 100 150 60];    %% sequential, like SingleFootprint, decent column water results at tropics!, not so good polar WV results
   topts.iaSequential = -1;                         %% default one gulp, gives good results at poles but bad column water results at tropics!
   topts.iaSequential = [210 150 60 100 150 60];    %% sequential, like SingleFootprint, but now use 210 !!!! gives slightly better results than 214, decent column water results at tropics!, not so good polar WV results
-
+  
   %% see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m
   %% see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m
   %% see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m see driver_put_together_QuantileChoose_trends.m
@@ -448,6 +456,9 @@ for iInd = iXX1 : idX : iXX2
   % topts.dataset   = +16;   %% (+16) AIRS  4 year quantile dataset, Sergio May 2023    2020/07-2024/06 FULL 04 years, HOT HOT HOT new way of doing quantile iQAX = 3  ************************
   % topts.dataset   = +17;   %% (+17) AIRS 14 year quantile dataset, Sergio May 2023    2002/09-2024/06 FULL 22 years, new way of doing quantile iQAX = 3  ************************
   % topts.dataset   = +18;   %% (+18) AIRS 23 year quantile dataset, Sergio May 2023    2002/09-2025/08 FULL 23 years, new way of doing quantile iQAX = 3  ************************  
+  % topts.dataset   = +19;   %% (+19) AIRS 20 year quantile dataset, Sergio May 2023    2003/01-2022/12 Ryan, FULL 20 years, new way of doing quantile iQAX = 3  ************************  
+
+%% eg ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20,  iQuantile = 03   20 year rates, 2003/01-2022/12
 
   % topts.dataset   = +30;   %% (+30) AMSU 20 year average dataset, Sergio May 2024    2002/09-2022/08 FULL 20 years, one one quantile (avg), given by Stephen Leroy  ************************
 
@@ -472,6 +483,16 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%
 
+% change_important_topts_settings.m:86:  topts.iXJac        = 0;    %% const jacs, see below also
+% change_important_topts_settings.m:102:%% topts.iXJac = 0; %% const geo kcarta jacs
+% change_important_topts_settings.m:103:%% topts.iXJac = 1; %% varying geo sarta jacs
+% change_important_topts_settings.m:104:topts.iXJac = 2; %% varying geo kcarta jacs DEFAULT >>>>>>>
+
+  topts.iXJac = 1; %% varying geo sarta jacs  
+  topts.iXJac = 2; %% varying geo kcarta jacs DEFAULT >>>>>>>
+
+  %%%%%%%%%%
+  
   driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss
   if ia_OorC_DataSet_Quantile(1) == 0 & ia_OorC_DataSet_Quantile(2) ~= 14
     %% ia_OorC_DataSet_Quantile(2) == 14 is 2018-2022 = 4 year dataset sp emiss can't have changed
@@ -480,9 +501,11 @@ for iInd = iXX1 : idX : iXX2
   end
   driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss default
 
+  driver.NorD = -1; %% day, asc
+  driver.NorD = +1; %% night, desc  DEFAULT
   if ~exist('NorD')
-    NorD = -1; %% day, asc
     NorD = +1; %% night, desc  DEFAULT
+    NorD = -1; %% day, asc
   end
   driver.NorD = NorD;
   
@@ -496,53 +519,55 @@ for iInd = iXX1 : idX : iXX2
   %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
   %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
 
-  if abs(topts.dataset) == +1
-    driver.iNumYears = 18;
-  elseif abs(topts.dataset) >= 2 & abs(topts.dataset) <= 4
-    driver.iNumYears = 18;
-  elseif topts.dataset == 5
-    driver.iNumYears = 12;
-  elseif topts.dataset == 6
-    driver.iNumYears = 07; %% oops 2012-2019
-  elseif topts.dataset == 7
-    driver.iNumYears = 20;
-  elseif topts.dataset == 8
-    driver.iNumYears = 07; %% oops 2015-2021
-  elseif topts.dataset == 9
-    driver.iNumYears = 20;
-    disp('STANDARD 20 years, used for AIRS STM and trends paper')
-  elseif topts.dataset == 10
-    driver.iNumYears = 05;
-    disp('STANDARD 05 years')
-  elseif topts.dataset == 11
-    driver.iNumYears = 10;
-    disp('STANDARD 10 years')
-  elseif topts.dataset == 12
-    driver.iNumYears = 15;
-    disp('STANDARD 15 years')
-  elseif topts.dataset == 13
-    driver.iNumYears = 20;
-    disp('20 years, Q01-03 NEW DEFN ???')
-    driver.iNumYears = 08;
-    disp('08 years, Q01-03 NEW DEFN ???')
-  elseif topts.dataset == 14
-    driver.iNumYears = -04;  
-    disp(' <<< 2018-2022 : warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2018 >>>')
-  elseif topts.dataset == 15
-    driver.iNumYears = 14;  
-    disp(' <<< 2008-2022 IASI overlap arning ... the CO2 trends are from 2002 onwards, but this dataset is from 2008 >>>')
-  elseif topts.dataset == 16
-    driver.iNumYears = 4;  
-    disp(' <<< 2020-2024 AIRS hot 4 years, ... the CO2 trends are from 2002 onwards >>>')
-  elseif topts.dataset == 17
-    driver.iNumYears = 22;  
-    disp(' <<< 2002-2024 AIRS for 22 years, ... the CO2 trends are from 2002 onwards >>>')
-  elseif topts.dataset == 18
-    driver.iNumYears = 23;  
-    disp(' <<< 2002-2025 AIRS for 23 years, ... the CO2 trends are from 2002 onwards >>>')
-  elseif topts.dataset == 30
-    driver.iNumYears = 20;  
-    disp(' <<< AMSU 20 years allsky from Stephen Leroy >>> ')
+  if abs(topts.dataset) == 0
+    error('ooh')
+  % elseif abs(topts.dataset) == +1
+  %   driver.iNumYears = 18;
+  % elseif abs(topts.dataset) >= 2 & abs(topts.dataset) <= 4
+  %   driver.iNumYears = 18;
+  % elseif topts.dataset == 5
+  %   driver.iNumYears = 12;
+  % elseif topts.dataset == 6
+  %   driver.iNumYears = 07; %% oops 2012-2019
+  % elseif topts.dataset == 7
+  %   driver.iNumYears = 20;
+  % elseif topts.dataset == 8
+  %   driver.iNumYears = 07; %% oops 2015-2021
+  % elseif topts.dataset == 9
+  %   driver.iNumYears = 20;
+  %   disp('STANDARD 20 years, used for AIRS STM and trends paper')
+  % elseif topts.dataset == 10
+  %   driver.iNumYears = 05;
+  %   disp('STANDARD 05 years')
+  % elseif topts.dataset == 11
+  %   driver.iNumYears = 10;
+  %   disp('STANDARD 10 years')
+  % elseif topts.dataset == 12
+  %   driver.iNumYears = 15;
+  %   disp('STANDARD 15 years')
+  % elseif topts.dataset == 13
+  %   driver.iNumYears = 20;
+  %   disp('20 years, Q01-03 NEW DEFN ???')
+  %   driver.iNumYears = 08;
+  %   disp('08 years, Q01-03 NEW DEFN ???')
+  % elseif topts.dataset == 14
+  %   driver.iNumYears = -04;  
+  %   disp(' <<< 2018-2022 : warning ... the CO2 trends are from 2002 onwards, but this dataset is from 2018 >>>')
+  % elseif topts.dataset == 15
+  %   driver.iNumYears = 14;  
+  %   disp(' <<< 2008-2022 IASI overlap arning ... the CO2 trends are from 2002 onwards, but this dataset is from 2008 >>>')
+  % elseif topts.dataset == 16
+  %   driver.iNumYears = 4;  
+  %   disp(' <<< 2020-2024 AIRS hot 4 years, ... the CO2 trends are from 2002 onwards >>>')
+  % elseif topts.dataset == 17
+  %   driver.iNumYears = 22;  
+  %   disp(' <<< 2002-2024 AIRS for 22 years, ... the CO2 trends are from 2002 onwards >>>')
+  % elseif topts.dataset == 18
+  %   driver.iNumYears = 23;  
+  %   disp(' <<< 2002-2025 AIRS for 23 years, ... the CO2 trends are from 2002 onwards >>>')
+  % elseif topts.dataset == 30
+  %   driver.iNumYears = 20;  
+  %   disp(' <<< AMSU 20 years allsky from Stephen Leroy >>> ')
   %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%    
   %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
   %%% XXXXXXXXXXXXXXXXXXXXXXXXX ALL THIS LOST in Oct 2025 XXXXXXXXXXXXXXXXXXXXXXXXX %%%
@@ -551,6 +576,14 @@ for iInd = iXX1 : idX : iXX2
     %% fresh start in June 2026
     driver.iNumYears = 23;  
     disp(' <<< 2002-2025 AIRS for 23 years, ... the CO2 trends are from 2002 onwards >>>')
+  elseif topts.dataset == 20
+    %% fresh start in Aug 2026
+    driver.iNumYears = 20;  
+    disp(' <<< 2003/01-2022/12 AIRS for 20 years, ... the CO2 trends are from 2002 onwards >>>')
+  elseif topts.dataset == 09
+    %% fresh start in Aug 2026
+    driver.iNumYears = 20;  
+    disp(' <<< 2002/09-2022/08 AIRS for 20 years, ... the CO2 trends are from 2002 onwards >>>')
   else
     fprintf(1,'topts.dataset = %2i \n',topts.dataset)
     error('unknown topts.dataset')
@@ -582,7 +615,7 @@ for iInd = iXX1 : idX : iXX2
     topts.TfacAdjAtmosphericAmplification = 1.00;       %% this is an additional adjutment factor for a-priori WV believe it or not , pretty good BUT JUST LEAVE IT AS 1.0
   end
 
-  %% do this if you want NO WV adj anywaehre, for LLS SARTA report for JPL
+  %% do this if you want NO WV adj anywhere, for LLS SARTA report for JPL
   %% else comment it out if you want to compare to ERA5 trends
   if driver.iNumYears < 0
     iAdjLowerAtmWVfrac = 0;
@@ -631,7 +664,25 @@ for iInd = iXX1 : idX : iXX2
 
   topts.ocb_set = ia_OorC_DataSet_Quantile(1);
 
-  % << set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m >>
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+  %% this if main if-then
+  %% see set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m : uses settings.set_era5_cmip6_airsL3 
+  topts.set_era5_cmip6_airsL3 = 6;           %% use AMIP6    a priori
+  topts.set_era5_cmip6_airsL3 = 3;           %% use AIRSL3   a priori
+  topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
+  topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
+  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
+  topts.set_era5_cmip6_airsL3 = 0;           %% use 0        a priori, DEFAULT
+  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori >>>>
+
+  %% see driver_put_together_QuantileChoose_trends.m
+  if (length(intersect(ia_OorC_DataSet_Quantile(2),[10 11 12 12 13 15 16 17 18])) == 1) & topts.set_era5_cmip6_airsL3 == 8
+    error('MLS UT/LS WV a-priori only for 20 or 23 years years!!!!')
+  end
+
+  % set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m
+  %   this is inside the main if-then
   %   settings.set_era5_cmip6_airsL3_WV_T_O3 == -1   : set all
   %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +1   : set WV
   %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +2   : set T/ST
@@ -640,26 +691,16 @@ for iInd = iXX1 : idX : iXX2
   %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +5   : set ST
   %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +10  : set lower WV
   %   settings.set_era5_cmip6_airsL3_WV_T_O3 == +100 : set lower WV/upper WV with MLS
-
+  %% see set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m : uses set_era5_cmip6_airsL3_WV_T_O3
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +2;  %% use T+ST
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +40; %% use T only in the lower trop to "start things" in the polar region, based on BT1231
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +4;  %% use T only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +1;  %% use WV only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
+  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% set all
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +100 %% set lower WV a priori, and then also upper WV with MLS   >>>>>
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% use WV/T/ST/O3, DEFAULT
 
-  topts.set_era5_cmip6_airsL3 = 6;           %% use AMIP6    a priori
-  topts.set_era5_cmip6_airsL3 = 3;           %% use AIRSL3   a priori
-  topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
-  topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
-  topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
-  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori >>>>
-  topts.set_era5_cmip6_airsL3 = 0;           %% use 0        a priori, DEFAULT
-
-  if (length(intersect(ia_OorC_DataSet_Quantile(2),[10 11 12])) == 1) & topts.set_era5_cmip6_airsL3 == 8
-    error('MLS UT/LS WV a-priori only for 20 years!!!!')
-  end
+  %%%%%%%%%%%%%%%%%%%%%%%%%
   
   if ia_OorC_DataSet_Quantile(1) == 1 & topts.set_era5_cmip6_airsL3 ~= 0
     %% this is synthetic rates, and starting with big a-priori .... so do not mess with lower atm WV!!!
@@ -724,6 +765,7 @@ for iInd = iXX1 : idX : iXX2
   %% NorD > 0 ==> night
   if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+    driver.outfilename = ['OutputAnomaly/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
     driver.outfilename = ['OutputAnomaly_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
   elseif topts.ocb_set == 2 & driver.i16daytimestep > 0 & driver.NorD > 0 %% NIGHT TIME ANOMALIES, NEW
@@ -754,6 +796,10 @@ for iInd = iXX1 : idX : iXX2
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output_Day/Extreme/'];
+    driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+
+  elseif topts.ocb_set == 2 & driver.i16daytimestep >= 0 & driver.NorD > 0 %% NIGHT TIME ANOMALIES
+    outdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
 
   end
