@@ -1,3 +1,6 @@
+See /AIRS_gridded_STM_May2021_trendsonlyCLR/compare_JGR_July2025_gitCODE.m for
+comparison of fig5 in JGR paper vs what I now have after the Great Disk Crash of Oct 2025
+
 Contents
 1) Setting up the clone of oem_climate_code
 2) Setting up Output directory
@@ -202,13 +205,25 @@ sbatch  --array=241-276  sergio_matlab_chip.sbatch 10  iDorA = 0   N+D
 (D) FIND_NWP_MODEL_TRENDS
 -------------------------
 
-driver_computeERA5_monthly_trends_desc_or_asc.m           ??  TRY THIS ONE, EASIER!
-driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m  ??
+To make geophysical trends
+  cd FIND_NWP_MODEL_TRENDS
+  driver_computeERA5_monthly_trends_desc_or_asc.m           ??  TRY THIS ONE, EASIER!
+  driver_computeERA5_monthly_trends_NIGHT_or_DAY_or_BOTH.m  ??
+  
+  Go to ../AIRS_gridded_STM_May2021_trendsonlyCLR
+  
+  And update/compare to driver_gather_gridded_retrieval_results.m
 
-Go to ../AIRS_gridded_STM_May2021_trendsonlyCLR
+To make spectral trends
+  cd AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/
+  edit and run driver_check_WV_T_RH_ERA5_geo_and_spectral_rates2.m
+    YMStart = [2002 09];  YMEnd = [2025 08];  %% 23 year trends
+    YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years, for JGR paper
+  when happy,
+    kleenslurm;sbatch  --exclude= --array=1-64 sergio_matlab_chip.sbatch 5
 
-And update/compare to driver_gather_gridded_retrieval_results.m
-
+  then put together using
+    driver_gather_era5_spectral_trends.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 (E) MLS trends in FIND_NWP_MODEL_TRENDS
@@ -249,13 +264,107 @@ saved into eg
 (F) diff from eg older clones
 -----------------------------
 
+<<<<< Best git repo is July 25, 2024 >>>>>
+almost reproduces what is in JGR 2025 paper
+commit 906703152c402d9a6bfb2285b710fd2e56cd2459 (HEAD)
+Author: Sergio Machado <sergio@umbc.edu>
+Date:   Thu Jul 25 17:50:16 2024 -0400
+    SSM : used this code for trend paper revision sent to Ryan and Larrabee V2
+<<<<< Best git repo is July 25, 2024 >>>>>
+
 can reclone into home/sergio/nogit/JUNK/oem_climate_code/
 then git checkout eg July9_2025
+                  eg July25_2024    *** best restart ***
+		  
 now all this is a little messed up since I have moved files around eg at time of writing this,
   dir2 is Oct 17,2024 commit (not july 9, 2025)
 
-dir1 = '/umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/Earlier_Tries_Jul2025JGR/July9_2025_commit/';
+%%%
+dir2 = '/umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/Earlier_Tries_Jul2025JGR/July25_2024_commit_good/';
+%%%
+dir1 = '/home/sergio/git/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/';
+%%%
+
+diff_m_or_f_files(dir1,dir2);
+
+diffing /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/Earlier_Tries_Jul2025JGR/July25_2024_commit_good/ and /home/sergio/git/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/ 
+>>>>>>>>>>> WARNING build_cov_matrices.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING change_important_topts_settings.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING check_settings.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING clust_put_together_jacs.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING clust_put_together_jacs_clr.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING clust_put_together_jacs_clrERA5.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING compute_feedbacks_generic_ecRad.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING compute_feedbacks_regress_olr_sarta_calcs.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING do_compute_save_UMBC_feedbacks.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING do_feedbacks_wrt_globalSST.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING do_the_cov_set_numbers.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_compare_05_10_15_20_spectral_rates.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_compare_cldy_Qtrends_2002_2022.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_contrast_obsrates_05_10_15_20.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_gather_gridded_anomaly_retrieval_results.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_gather_gridded_retrieval_results.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_put_together_QuantileChoose_anomalies.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_put_together_QuantileChoose_trends.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_read_kcarta_fluxes_for_paper.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING driver_read_kcarta_radiances_for_paper.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING figs_put_together_QuantileChoose_trends.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING find_T_RH_trends.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING gather_gridded_retrieval_results_plots.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_ESRL_TRACE_GAS_2002_2022.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_anomaly_processors.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_co2_n2o_ch4_for_strow_override.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_jac_fast.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_rates.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING get_the_mean_profiles.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING guess_delta_ILR.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING make_globalavg_and_onetile_anomaly.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING plot_ERA_vs_UMBC.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING plot_anomalies_All.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING plot_driver_gather_gridded_retrieval_results.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING read_fileMean17years.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING savebigFATfile.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING savesmallFATfile.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING see_clust_put_together_jacs_clr.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING see_clust_put_together_jacs_clrERA5_2012.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING see_clust_put_together_jacs_clrERA5_2014.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING see_clust_put_together_jacs_clrERA5_2021.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING set_CO2_CH4_N2O_ESRL.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING set_driver_jacfile.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING set_driver_rateset_datafile.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING set_the_jacobians.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING simple_get_the_model_trends_do_feedbacks.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING statistical_significance_sergio.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING statistical_significance_strow.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING strow_override_defaults_latbins_AIRS_fewlays.m are different WARNING <<<<<<<<<<<<<
+>>>>>>>>>>> WARNING wrapper_driver_gather_ALL_rates_AIRSL3_NWP_XMIP.m are different WARNING <<<<<<<<<<<<<
+
+%%%%%%%%%%%%%%%%%%%%%%%%% >>>>>>>>>>>>>>>>>>>>>>>>> %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%
 dir2 = '/home/sergio/nogit/JUNK/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/';
+dir2 = '/umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/Earlier_Tries_Jul2025JGR/July9_2025_commit/';
+%%%
+dir1 = '/home/sergio/git/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/';
+%%%
+
+inside dir1, there are the new dates ... so these were the ones I had to modify to run on chip (after they were commited on taki)
+-rw-rw-r-- 1 sergio pi_sergio 16261 Sep  1 09:43 read_loop_lonbins.m
+-rw-rw-r-- 1 sergio pi_sergio 48947 Sep  1 04:14 clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+-rw-rw-r-- 1 sergio pi_sergio 36599 Sep  1 04:12 driver_gather_gridded_retrieval_results.m
+-rw-rw-r-- 1 sergio pi_sergio 13229 Sep  1 04:12 read_loop_latbins.m
+-rw-rw-r-- 1 sergio pi_sergio 16273 Aug 31 22:22 strow_override_defaults_latbins_AIRS_fewlays.m
+-rw-rw-r-- 1 sergio pi_sergio  8301 Aug 31 21:49 get_rates.m
+-rw-rw-r-- 1 sergio pi_sergio 19463 Aug 31 21:24 set_CO2_CH4_N2O_ESRL.m
+-rw-rw-r-- 1 sergio pi_sergio  1600 Aug 31 14:26 read_fileMean17years.m
+-rw-rw-r-- 1 sergio pi_sergio  5437 Aug 31 14:20 get_co2_n2o_ch4_for_strow_override.m
+-rw-rw-r-- 1 sergio pi_sergio  7380 Aug 31 14:18 choose_goodchans_from_2645.m
+-rw-rw-r-- 1 sergio pi_sergio  6683 Aug 31 14:15 get_jac_fast.m
+-rw-rw-r-- 1 sergio pi_sergio 12360 Aug 31 14:11 see_clust_put_together_jacs_cldERA5_2022.m
+-rw-rw-r-- 1 sergio pi_sergio 11752 Aug 31 14:09 see_clust_put_together_jacs_cldERA5_2022_orig.m
+-rw-rw-r-- 1 sergio pi_sergio 17483 Aug 31 14:06 set_driver_rateset_datafile.m
 
 diff_m_or_f_files(dir1,dir2);
 
@@ -286,3 +395,6 @@ In particular
   set_CO2_CH4_N2O_ESRL.m
   get_co2_n2o_ch4_for_strow_override.m
 are particularly important
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

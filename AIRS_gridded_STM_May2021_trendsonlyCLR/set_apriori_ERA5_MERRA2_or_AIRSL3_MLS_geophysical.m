@@ -25,7 +25,7 @@
 xbINITIAL = xb;
 
 if settings.set_era5_cmip6_airsL3 == 0
-  disp('apriori will be using ZERO (no ERA5 trends being used)')
+  disp('apriori will be using ZERO (no NWP trends being used, nothing in lower at or upper atm)')
 
 elseif settings.set_era5_cmip6_airsL3 == 5
   disp(' apriori will be using ERA5 trends')

@@ -202,6 +202,7 @@ if driver.iTrendOrAnomaly > 0
   ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 19, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)    
   ia_OorC_DataSet_Quantile = [+0 20 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2003/01-2022/12 AIRS obs Q(0.90-->1)
   ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
+  ia_OorC_DataSet_Quantile = [+1 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 ERA5 calc Q(0.90-->1)  
   
 elseif driver.iTrendOrAnomaly < 0
   set_anomaly_info
@@ -504,8 +505,8 @@ for iInd = iXX1 : idX : iXX2
   driver.NorD = -1; %% day, asc
   driver.NorD = +1; %% night, desc  DEFAULT
   if ~exist('NorD')
-    NorD = +1; %% night, desc  DEFAULT
     NorD = -1; %% day, asc
+    NorD = +1; %% night, desc  DEFAULT
   end
   driver.NorD = NorD;
   
@@ -673,9 +674,14 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
   topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
   topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
-  topts.set_era5_cmip6_airsL3 = 0;           %% use 0        a priori, DEFAULT
-  topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori >>>>
-
+  if topts.ocb_set(1) == 1
+    %% calc
+    topts.set_era5_cmip6_airsL3 = 0;           %% use 0        a priori, DEFAULT
+  elseif topts.ocb_set(1) == 0
+    %% obs
+    topts.set_era5_cmip6_airsL3 = 8;           %% use MLS      a priori >>>>
+  end
+  
   %% see driver_put_together_QuantileChoose_trends.m
   if (length(intersect(ia_OorC_DataSet_Quantile(2),[10 11 12 12 13 15 16 17 18])) == 1) & topts.set_era5_cmip6_airsL3 == 8
     error('MLS UT/LS WV a-priori only for 20 or 23 years years!!!!')
@@ -697,8 +703,13 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +4;  %% use T only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +1;  %% use WV only
   topts.set_era5_cmip6_airsL3_WV_T_O3 = +10; %% use WV only in the lower trop to "start things" in the polar region, based on BT1231
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% set all
-  topts.set_era5_cmip6_airsL3_WV_T_O3 = +100 %% set lower WV a priori, and then also upper WV with MLS   >>>>>
+  if topts.ocb_set(1) == 1
+    %% calc  
+    topts.set_era5_cmip6_airsL3_WV_T_O3 = -1;  %% set all
+  elseif topts.ocb_set(1) == 0
+    %% obs    
+    topts.set_era5_cmip6_airsL3_WV_T_O3 = +100 %% set lower WV a priori, and then also upper WV with MLS   >>>>>
+  end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
   

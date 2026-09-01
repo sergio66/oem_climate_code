@@ -683,6 +683,8 @@ end
 driver.oem.cov_set = cov_set;
 driver.oem.fmat    = fmat;
 
+fprintf(1,'build_cov_matrices.m : iCov_SqrFmatd_MatOd_Apr2022SounderMeeting = %2i \n',iCov_SqrFmatd_MatOd_Apr2022SounderMeeting)
+fprintf(1,'                                                   iCovSetNumber = %4.2f \n',iCovSetNumber)
 fprintf(1,'cov_set : length scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
   junk = cov_set([2 3 4  11]); fprintf(1,'      T  : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk)
   junk = cov_set([5 6 7  12]); fprintf(1,'      WV : sig_trop  sig_strat cwide alpha = %8.6e %8.6e %8.6e %8.6e \n',junk);
@@ -692,3 +694,5 @@ fprintf(1,'cov_set : length scale (raw i-j index)  lc = %8.6f \n',cov_set(1));
 
 oem = driver.oem;
 show_unc
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

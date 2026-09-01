@@ -107,7 +107,13 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 29
     elseif settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 20
       driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
     elseif settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 9
-      driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];           
+      driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_obsonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];
+
+
+    elseif settings.ocb_set == 1  & driver.i16daytimestep < 0 & settings.dataset == 9
+      %driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_iQAX_3_convert_sergio_clearskygrid_calonly_Q' num2str(driver.iQuantile,'%02d') '.mat'];
+      driver.rateset.datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5//20yrs/ERA5_spectraltrends_2002_09_2022_08.mat'];
+      
     elseif settings.ocb_set == -1  & driver.i16daytimestep < 0
       driver.rateset.datafile  = 'AHAH';
     end
@@ -123,22 +129,23 @@ elseif abs(settings.dataset) >= 1 & abs(settings.dataset) <= 29
     driver.rateset.datafile = [];
   end
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-  % elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & (settings.dataset == 30)
-  %   disp('doing Sergio FULL 20 year AMSU AMSU AMSU gridded quantile rates 2002/09-2022/08 , just one case (all average) iQAX = 1')
-  %   fprintf(1,'dataset = %2i for 20 years of AMSU data .... \n',settings.dataset)
-  %   driver.rateset.datafile  = [];
-  %   if settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 30
-  %     driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_AMSU_iQAX_' num2str(driver.iQuantile,'%02d') '.mat'];           
-  %   end
-
+%  elseif settings.descORasc == +1 & driver.i16daytimestep < 0 & (settings.dataset == 30)
+%     disp('doing Sergio FULL 20 year AMSU AMSU AMSU gridded quantile rates 2002/09-2022/08 , just one case (all average) iQAX = 1')
+%     fprintf(1,'dataset = %2i for 20 years of AMSU data .... \n',settings.dataset)
+%     driver.rateset.datafile  = [];
+%     if settings.ocb_set == 0  & driver.i16daytimestep < 0 & settings.dataset == 30
+%       driver.rateset.datafile  = ['iType_' num2str(settings.dataset) '_AMSU_iQAX_' num2str(driver.iQuantile,'%02d') '.mat'];           
+%     end
+    
 end
 
 if ~isfield(driver.rateset,'datafile')
   fprintf(1,'OOOPS : set_driver_rateset_datafile.m did not set datafile \n')
+  fprintf(1,'[settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i \n',[settings.descORasc driver.i16daytimestep settings.dataset])
+  error('please check')
+end
+if length(driver.rateset.datafile) == 0
+  fprintf(1,'OOOPS : set_driver_rateset_datafile.m did not set datafile ... length(length(driver.rateset.datafile) == 0  \n')
   fprintf(1,'[settings.descORasc driver.i16daytimestep settings.dataset] = %3i %3i %3i \n',[settings.descORasc driver.i16daytimestep settings.dataset])
   error('please check')
 end

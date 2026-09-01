@@ -70,21 +70,25 @@ list_files = {...
 'strow_override_defaults_latbins_AIRS_fewlays.m',...
 'trop_index.m'}
 
-for ii = 1 : length(list_files)
-  clc
-  differ = ['!diff ' list_files{ii} ' /home/sergio/git/JGR_July2025/CODE/.'];
-  eval(differ)
-  disp(' ')
-  fprintf(1,'>>>> just diffed %s ret to continue if big changes, see OOPS above\n',list_files{ii});
-  pause
+iDo = -1;
+if iDo > 0
+  for ii = 1 : length(list_files)
+    clc
+    differ = ['!diff ' list_files{ii} ' /home/sergio/git/JGR_July2025/CODE/.'];
+    eval(differ)
+    disp(' ')
+    fprintf(1,'>>>> just diffed %s ret to continue if big changes, see OOPS above\n',list_files{ii});
+    pause
+  end
 end  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear all
 load iType_9_iQAX_3_convert_sergio_clearskygrid_obsonly_Q03.mat
+load SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/20yrs//ERA5_spectraltrends_2002_09_2022_08.mat
 
-addpath /home/sergio/git/JGR_July2025/PLOTTER
+addpath /home/sergio/git/JGR_2025_PAPER/JGR_July2025/PLOTTER
 make_jgr_fig3
 
 figure(5); clf; plot(h.vchan,squeeze(nanmean(b_desc,1)))
@@ -94,8 +98,13 @@ figure(6); clf; plot(h.vchan,squeeze(nanmean(squeeze(nanmean(b_err_desc,1)),1)))
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(1); clf
+figure(2); clf
+figure(3); clf
 make_jgr_fig5
 ax = axis; cx = caxis;
+figure(1); title('paper dBTObs/dt');
+figure(2); title('paper noise');
+figure(3); title('paper dBTCal/dt');
 
 yy = unique(Y);
 figure(7); clf; pcolor(h.vchan,yy,squeeze(nanmean(b_asc,1)))
@@ -105,3 +114,15 @@ shading flat; colorbar; colormap(usa2); caxis(cx); axis(ax);
 figure(8); clf;
 pcolor(h.vchan,yy,data_fig5b.l1c_trendD - squeeze(nanmean(b_desc,1)))
 shading flat; colorbar; colormap(usa2); caxis(cx/50); axis(ax);
+
+wah = reshape(era5_rates_desc,2645,72,64);
+figure(9); clf; pcolor(h.vchan,yy,squeeze(nanmean(wah,2))')
+shading flat; colorbar; colormap(usa2); caxis(cx); axis(ax);
+
+figure(10); clf; pcolor(h.vchan,yy,data_fig5c.era5-0*squeeze(nanmean(wah,2))')
+shading flat; colorbar; colormap(usa2); caxis(cx/50); axis(ax);
+
+figure(7);  title('new dBTObs/dt');
+figure(8);  title('paper-new dBTObs/dt');
+figure(9);  title('new dBTCal/dt');
+figure(10); title('paper-new dBTCal/dt');

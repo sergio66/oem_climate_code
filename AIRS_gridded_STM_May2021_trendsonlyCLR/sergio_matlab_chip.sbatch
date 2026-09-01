@@ -58,6 +58,7 @@
 #SBATCH --cluster=chip-cpu            ## desired cluster
 #SBATCH --account=pi_strow
 #SBATCH --qos=shared                  ## qos to get as many cpu2024 as possible, else put pi_strow
+#####SBATCH --qos=pi_strow                 ## to get exclusive privilege
 
 ########################################################################
 

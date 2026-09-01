@@ -13,6 +13,7 @@ end
 
 iStartYY = 2018; iNumYears = 04;
 iStartYY = 2002; iNumYears = 22;
+iStartYY = 2002; iNumYears = 20;
 
 % ls -lt /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_15*.rp.rtp
 % -rw-rw-r-- 1 sergio pi_strow 316109325 Oct 29 15:35 /home/sergio/MATLABCODE/oem_pkg_run/FIND_NWP_MODEL_TRENDS/SimulateTimeSeries/ERA5/simulate64binsERA5_15_2002_09_2022_08.rp.rtp
@@ -24,8 +25,8 @@ end;
 
 if ~exist('iNumYears')
   iNumYears = 19;
-  iNumYears = 20;
   iNumYears = 22;
+  iNumYears = 20;
 end
 
 if ~exist('iModel')
@@ -54,7 +55,10 @@ if length(JOB) == 0
 end
 
 workdir = '/home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/';
+workdir = '/home/sergio/git/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/';
+
 JOB_YYS_YYE_str = [num2str(JOB) '_' num2str(iStartYY) '_09_' num2str(iStartYY+iNumYears) '_08.rp.rtp'];
+
 STS = 'SimulateTimeSeries/';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

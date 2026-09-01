@@ -32,6 +32,8 @@ if length(JOB) == 0
   JOB = 31;
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 iNorD = -1; %% day
 iNorD = +1; %% night DEFAULT
 iNumYears = 20;
@@ -47,8 +49,8 @@ YMStart = [2008 09];  YMEnd = [2022 08];  %% Ryan said they fixed O3 after 2007 
 YMStart = [2020 07];  YMEnd = [2024 06];  %% hot hot hot trends
 YMStart = [2002 09];  YMEnd = [2024 06];  %% 22 year trends
 YMStart = [2002 09];  YMEnd = [2024 08];  %% 22 year trends
-YMStart = [2002 09];  YMEnd = [2025 08];  %% 23 year trends
 
+YMStart = [2002 09];  YMEnd = [2025 08];  %% 23 year trends
 YMStart = [2002 09];  YMEnd = [2022 08];  %% 20 years, for JGR paper
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -313,6 +315,11 @@ else
   end
 end
 
+iNumYears = YMEnd(1) - YMStart(1);
+dirout = [dirout '/' num2str(iNumYears) 'yrs/'];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 co2ppm_t = [];
 n2oppm_t = [];
 ch4ppm_t = [];
@@ -415,9 +422,20 @@ for ii = JOB
 
   pwd
   disp(' ')
-  disp('output in eg           SimulateTimeSeries/ NIGHTorAVG   or    DAY /ERA5/reconstruct_era5_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
-  disp('         also makes eg SimulateTimeSeries/ NIGHTorAVG   or    DAY /ERA5/simulate64binsERA5_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
+  disp('output in eg           SimulateTimeSeries/ NIGHTorAVG/Xyrs/   or    DAY /ERA5/Xyrs/ reconstruct_era5_spectra_geo_rlat[01-64]_2002_09_2022_08.mat')
+  disp('         also makes eg SimulateTimeSeries/ NIGHTorAVG/Xyrs/   or    DAY /ERA5/Xyrs/ simulate64binsERA5_[01-64]_2002_09_2022_08.[i/o/r]p.rtp');
   disp('then run driver_spectral_trends_latbin_1_64_sarta.m using   sbatch  --array=1-64 sergio_matlab_jobB.sbatch 12; make sure you set iModel correctly')
   disp(' ')
 
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%{
+load STS/NIGHTorAVG/ERA5//20yrs/reconstruct_era5_spectra_geo_rlat32_2002_09_2022_08.mat
+plot(fchanx,nanmean(thesave.xtrendSpectral,2))
+xlim([645 1645]])
+
+put all together with
+  driver_gather_era5_spectral_trends.m  
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
