@@ -115,10 +115,8 @@ jacTZ = jacT(1:iaNumLay,:);
 jacWV = jac1(1:iaNumLay,:);
 jacOZ = jac3(1:iaNumLay,:);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% output
-m_ts_jac0 = [jac2; jac4; jac6; 0*jac2; 0*jac2; jacST; jacWV; jacTZ; jacOZ]';
-nlays = iaNumLay;
-[mm,nn] = size(m_ts_jac0);
-qrenorm = ones(1,mm);
-freq2645 = w;
-colo3 = nansum(jac3,1);
+qrenorm_sarta_analyticjac
+

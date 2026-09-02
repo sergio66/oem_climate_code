@@ -7,7 +7,12 @@ Date:   Thu Jul 25 17:50:16 2024 -0400
     SSM : used this code for trend paper revision sent to Ryan and Larrabee V2
 <<<<< Best git repo from taki.rs.umbc.edu is July 25, 2024 >>>>>    
 
-The Sept 1, 2026 git commit will pretty much reproduce this : 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<<<<< The Sept 1, 2026 git commit will pretty much reproduce this >>>>>
+commit eea0e9a3b1b964cd51b4bbae2d32fd86a656af62 (HEAD -> sergio, origin/sergio)
+Author: Sergio Machado <sergio@umbc.edu>
+Date:   Tue Sep 1 21:07:41 2026 -0400
 
   SSM : rewinding to recreate July 25, 2025 results in JGR paper; Part 3
   having checked against July 25, 2024 commit, found the mistakes :
@@ -17,12 +22,21 @@ The Sept 1, 2026 git commit will pretty much reproduce this :
   have line 60-65 of if settings.co2lays == 1 & settings.ocb_set <= 1
   have xb(1)-co2x,xb(2)=n2ox,xb(3)=ch4x
 
+Also checked it works with SARTA jacs on the fly ; % topts.iXJac = -1; %% const geo sarta jacs, on the fly
+However there are issues with thermodynamics trends, which maybe tracebale to SARTA CH4/N2O
+jacs since the biass in the 1250-1350 cm-1 region are large. See
+  (F) Testing SARTA jacs
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 See /AIRS_gridded_STM_May2021_trendsonlyCLR/compare_JGR_July2025_gitCODE.m for
 comparison of fig5 in JGR paper vs what I now have after the Great Disk Crash of Oct 2025
 
 Contents
+--------
+
 1) Setting up the clone of oem_climate_code
 2) Setting up Output directory
 3) Setting up the clone of oem_pkg
@@ -32,7 +46,8 @@ Contents
 (C) make RTP files
 (D) FIND_NWP_MODEL_TRENDS
 (E) MLS trends in FIND_NWP_MODEL_TRENDS
-(f) diff from eg older clones
+(F) Testing SARTA jacs
+(G) diff from eg older clones
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -282,7 +297,40 @@ saved into eg
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-(F) diff from eg older clones
+(F) Testing SARTA jacs
+----------------------
+
+%% see sarta_analytic_jac.m        %% for anomalies
+%% see sarta_analytic_jac_trend.m  %% for trends
+
+testing the code : see    set_the_jacobians.m    from lines 30-47
+    [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_sarta_analyticjac_fast(settings.iNumYears,driver.iibin,driver.iLon,driver.iLat,topts,driver);
+
+    % keyboard_nowindow
+    %{
+    put keyboard_nowindow or something before this line and call       test_sarta_vs_kcarta_jacs.m    
+    which has all this
+    
+    [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+
+    %% before I did qrenorm in get_sarta_analyticjac_fast
+      plot(freq2645,m_ts_jac0(:,1)/100/2.2,freq2645,xm_ts_jac0(:,1)); xlim([645 2645])
+      plot(freq2645,m_ts_jac0(:,1)/100/2.2,freq2645,xm_ts_jac0(:,1)); xlim([645 1645])
+      plot(freq2645,m_ts_jac0(:,3)/100/5,freq2645,xm_ts_jac0(:,3)); xlim([645 1645])
+    
+    %% after I did qrenorm in get_sarta_analyticjac_fast
+      ixx = 1; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = 2; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = 3; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = 6; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
+      ixx = (1:nlays); ixx = 6 + ixx + 0*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('WV')
+      ixx = (1:nlays); ixx = 6 + ixx + 1*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('Tz')
+      ixx = (1:nlays); ixx = 6 + ixx + 2*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('O3')
+    %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+(G) diff from eg older clones
 -----------------------------
 
 <<<<< Best git repo from taki.rs.umbc.edu is July 25, 2024 >>>>>    

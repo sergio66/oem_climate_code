@@ -496,9 +496,10 @@ for iInd = iXX1 : idX : iXX2
 
 % topts.iXJac = 1;  %% varying geo sarta jacs  
 % topts.iXJac = 2;  %% varying geo kcarta jacs
-% topts.iXJac = -1; %% const sarta jacs ON THE FLY
+%%%%% 
 % topts.iXJac = 0;  %% const geo kcarta jacs DEFAULT >>>>>>>  
-
+ topts.iXJac = -1; %% const geo sarta jacs, on the fly
+  
   %%%%%%%%%%
   
   driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss

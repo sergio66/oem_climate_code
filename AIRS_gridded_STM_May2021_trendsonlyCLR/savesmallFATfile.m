@@ -1,6 +1,11 @@
 if ~exist('strMODELS')
   strMODELS = 'NoMODELS';
 end
+
+if topts.iXJac == -1
+  strMODELS = [strMODELS '_sartajac'];
+end
+
 disp('suggested final save names ...')
 if topts.set_era5_cmip6_airsL3 == 5
   start_apriori_str = 'ERA5';

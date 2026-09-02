@@ -454,7 +454,7 @@ plays = flipud(plays);
 clear pavg
 
 iLoopXY = +1; %% loop over lonbins, plot zonal avg once after all 64 lats,72 lons tried to be read
-iLoopXY = -1; %% loop over latbins, plot zonal avg each time after all 64 lats tried to be read, so 72 plots
+iLoopXY = -1; %% loop over latbins, plot zonal avg each time after all 64 lats tried to be read, so 72 plots DEFAULT
 
 iDoAgain = +1;
 if iLoopXY > 0

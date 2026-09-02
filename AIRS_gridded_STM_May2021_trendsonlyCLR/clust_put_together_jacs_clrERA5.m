@@ -25,13 +25,15 @@ end
 miaow = load('sarta_chans_for_l1c.mat');
 ind2834to2645 = miaow.ichan;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
 iOldORNew = +1;   %% the 17 year ERA-I
 iOldORNew = +2;   %% the 19 year ERA5 2002/09-2021/08 H2020/CKD3.2
 iOldORNew = +12;  %% the 12 year ERA5 2002/09-2014/08 H2020/CKD3.2
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %% redone after the Great Crash of Oct 2025
 iOldORNew = +23;  %% the 23 year ERA5 2002/09-2025/08 H2024/CKD4.3 done Jun 2026
-iOldORNew = +20;  %% the 12 year ERA5 2002/09-2022/08 H2020/CKD3.2 done Aug 2026
+iOldORNew = +20;  %% the 20 year ERA5 2002/09-2022/08 H2020/CKD3.2 done Aug 2026
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iOldORNew < 0
   SARTAjac = ['/asl/s1/sergio/rtp/MakeAvgProfs2002_2020/Retrieval/LatBin65/SubsetJacLatbin/subjacLatBin' num2str(JOB,'%02i') '.mat'];  %%% NEED TO REDO
@@ -166,8 +168,9 @@ for lon = 1 : 72
   aout.jac(:,5) = acol.rKc(:,6);     %%% CFC12
   aout.jac(:,6) = acol.rKc(:,8);     %%% ST
 
+% kcarta nml = 2 4 5 6 51 52 T ST
 %  aout.jac(:,1) = (tcol(:,1)-trad0)*factor_log10;     %%% CO2
-%  aout.jac(:,2) = (tcol(:,3)-trad0)*factor_log10;     %%% N2O
+%  aout.jac(:,2) = (tcol(:,2)-trad0)*factor_log10;     %%% N2O
 %  aout.jac(:,3) = (tcol(:,4)-trad0)*factor_log10;     %%% CH4
 %  aout.jac(:,4) = tcol(:,3) * 0; %%% cng1
 %  aout.jac(:,5) = tcol(:,3) * 0; %%% cng2
@@ -280,13 +283,14 @@ ppmv2 = layers2ppmv(h,p,1:length(p.stemp),2);
 ppmv4 = layers2ppmv(h,p,1:length(p.stemp),4);
 ppmv6 = layers2ppmv(h,p,1:length(p.stemp),6);
 
-%kcarta.subjac.rlon = sarta.subjac.rlon;
-%kcarta.subjac.rlat = sarta.subjac.rlat;
-%kcarta.subjac.stemp = sarta.subjac.stemp;
-%kcarta.subjac.nlevs = sarta.subjac.nlevs;
-%kcarta.subjac.ppmv2 = sarta.subjac.ppmv2;
-%kcarta.subjac.ppmv4 = sarta.subjac.ppmv4;
-%kcarta.subjac.ppmv6 = sarta.subjac.ppmv6;
+% kcarta.subjac.rlon = sarta.subjac.rlon;
+% kcarta.subjac.rlat = sarta.subjac.rlat;
+% kcarta.subjac.stemp = sarta.subjac.stemp;
+% kcarta.subjac.nlevs = sarta.subjac.nlevs;
+% kcarta.subjac.ppmv2 = sarta.subjac.ppmv2;
+% kcarta.subjac.ppmv4 = sarta.subjac.ppmv4;
+% kcarta.subjac.ppmv6 = sarta.subjac.ppmv6;
+
 kcarta.subjac.rlon = p.rlon(ind_subset_junk);
 kcarta.subjac.rlat = p.rlat(ind_subset_junk);
 kcarta.subjac.stemp = p.stemp(ind_subset_junk);
@@ -306,6 +310,10 @@ kcarta.subjac.comment{1} = 'see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJ
 kcarta.subjac.comment{2} = 'see /home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/JUNK/AIRS_gridded_Dec2021_startSept2002_trendsonly/clust_put_together_jacs_clrERA5.m for ERA5';
 
 subjac = kcarta.subjac;
+
+subjac.ichan = h.ichan;
+subjac.vchan = h.vchan;
+
 clear sarta kcarta
 
 if ~exist(foutsubjac)
@@ -319,3 +327,4 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

@@ -1,5 +1,9 @@
+iCountStart0 = 0;
+iCount = 0;
+
 while iDoAgain > 0
   for ii = 1 : 72
+    iCountStart0 = iCount;  %% count at beginning of lonbin
     for jj = 1 : 64
       iibin = (jj-1)*72 + ii;
       if iOCBset == 0
@@ -239,23 +243,27 @@ while iDoAgain > 0
     figure(6)
     pcolor(reshape(results(:,6),72,64)); colorbar; caxis([-1 +1]*0.15); colormap(llsmap5);
 
-    load latB64.mat
-    rlat65 = latB2; rlon73 = -180 : 5 : +180;
-    rlon = -180 : 5 : +180;  rlat = latB2; 
-    rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-    rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-    aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
-    
-    jett = jet(64); jett(1,:) = 1;
-    %figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
-    %figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-    figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,pavg,waha);  shading interp; colorbar('horizontal'); set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
-    figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,pavg,waha);  shading interp; colorbar('horizontal'); set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.01)
-      figure(29); set(gca,'yscale','log'); ylim([10 1000]);       figure(30); set(gca,'yscale','linear'); ylim([100 1000]);
-    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(rlon,rlat,waha'); shading flat;   colorbar; set(gca,'ydir','normal');  
-      title([num2str(sum(iaFound(:))) ' / 4608 = ' num2str(100*sum(iaFound(:))/4608) ' % made so far']);  
-      xlabel('Longitude'); ylabel('Latitude'); colormap(jett); 
-    pause(0.1)
+    iCount = sum(iaFound);
+    if iCount > iCountStart0
+      %% do the plots
+      load latB64.mat
+      rlat65 = latB2; rlon73 = -180 : 5 : +180;
+      rlon = -180 : 5 : +180;  rlat = latB2; 
+      rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
+      rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
+      aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
+      
+      jett = jet(64); jett(1,:) = 1;
+      %figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
+      %figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
+      figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,pavg,waha);  shading interp; colorbar('horizontal'); set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
+      figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,pavg,waha);  shading interp; colorbar('horizontal'); set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.01)
+        figure(29); set(gca,'yscale','log'); ylim([10 1000]);       figure(30); set(gca,'yscale','linear'); ylim([100 1000]);
+      figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(rlon,rlat,waha'); shading flat;   colorbar; set(gca,'ydir','normal');  
+        title([num2str(sum(iaFound(:))) ' / 4608 = ' num2str(100*sum(iaFound(:))/4608) ' % made so far']);  
+        xlabel('Longitude'); ylabel('Latitude'); colormap(jett); 
+      pause(0.1)
+    end
     
   end      %% for ii loop over lons 1-72
 
@@ -269,7 +277,8 @@ while iDoAgain > 0
   
   display('Trying to look at atributes of the last file that should have been read in .... ')
   lser = ['!ls -lt ' fnamelastloaded]; eval(lser)
-  
+
+  iCount = sum(iaFound);
   fprintf(1,'found %4i of %4i \n',sum(iaFound),64*72)
   iDoAgain = -1;
   if sum(iaFound) < 64*72

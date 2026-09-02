@@ -26,7 +26,8 @@ end
 if iVersJac == 2019
   see_clust_put_together_jacs_clr
 elseif iVersJac == 2022
-  %% this one gives colo3
+  %% this one gives   colo3  old taki.rs.umbc.edu  pre 2026
+  %% this one no give colo3  new chip.rs.umbc.edui post 2026  
   see_clust_put_together_jacs_cldERA5_2022
 elseif iVersJac == 2021
   see_clust_put_together_jacs_clrERA5_2021
@@ -80,12 +81,21 @@ qrenorm = ones(1,nnF);
 % str2 = '[ [2.2 1.0 5 1 1 0.1][0.001 0.001 0.001 0.001 0.001 0.001] [0.01*ones(1,97)] [0.01*ones(1,97)]] [0.01*ones(1,97)]]';
 % qrenorm = [[2.2 1.0 5 1 1 0.1] [0.01*ones(1,6)] [0.01*ones(1,97)] [0.01*ones(1,97)] [0.01*ones(1,97)]];
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% change all column logjacs which are (BTX-BT0)/logQ = Qo dBT/dQ 
+% so if dQ = 1, then we get (dBT for a 1 unit change) x Qo
+%
+% now see how (dBT for a 1 unit change) = ColLogJac/Qo
+% and then see how it would change for the expcted gas trend eg 2.2 ppmv for CO2
+%
+% ColLogJ --> ColLogJ/Q * trend = (trend/Qo) 
+%
 %qrenorm(1) = 2.2/subjac.ppmv2(iLonBin);         %% 2.2 ppmv/400 ppmv
 %qrenorm(2) = 1.0/(subjac.ppmv4(iLonBin)*1000);  %% 1 ppb/300 ppb
 %qrenorm(3) = 5.0/(subjac.ppmv6(iLonBin)*1000);  %% 5 ppm/1840 ppb
-qrenorm(1) = 2.2/kcarta.subjac.ppmv2;         %% 2.2 ppmv/400 ppmv
-qrenorm(2) = 1.0/(kcarta.subjac.ppmv4*1000);  %% 1 ppb/300 ppb
-qrenorm(3) = 5.0/(kcarta.subjac.ppmv6*1000);  %% 5 ppm/1840 ppb
+qrenorm(1) = 2.2/kcarta.subjac.ppmv2;            %% 2.2 ppmv/400 ppmv       
+qrenorm(2) = 1.0/(kcarta.subjac.ppmv4*1000);     %% 1 ppb/300 ppb
+qrenorm(3) = 5.0/(kcarta.subjac.ppmv6*1000);     %% 5 ppb/1840 ppb
 qrenorm(4) = 1/300;  %% see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/driver_put_together_kcarta_jacs.m
                      %% https://agage.mit.edu/data/agage-data    CFC11 = 242 ppt
 qrenorm(5) = 1/600;  %% see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/MakeJacskCARTA_CLR/driver_put_together_kcarta_jacs.m

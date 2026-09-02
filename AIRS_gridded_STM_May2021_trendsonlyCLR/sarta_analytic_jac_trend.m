@@ -1,7 +1,7 @@
 function [m_ts_jac0,nlays,qrenorm,freq2645,colo3,profilejunk] = sarta_analytic_jac_trend(driver,hMean17years,ha,pMean17years,pa,iiBin);
 
-%% see sarta_analytic_jac.m
-%% see sarta_analytic_jac_trend.m
+%% see sarta_analytic_jac.m        %% for anomalies
+%% see sarta_analytic_jac_trend.m  %% for trends
 
 iRunSartaJac = +1;
 
@@ -60,49 +60,83 @@ rtpwrite(fop,havg,[],pavg,[]);
 sartaer = ['!' sarta ' fin=' fop ' fout=' frp ' listj=100,1,2,3,4,5,6'];
 eval(sartaer);
 
-[w,jacT,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacTZ'],100);
-[w,jac1,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG1'],1);
-[w,jac2,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG2'],2);
-[w,jac3,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG3'],3);
-[w,jac4,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG4'],4);
-[w,jac5,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG5'],5);
-[w,jac6,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG6'],6);
+[w,xjacT,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacTZ'],100);
+[w,xjac1,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG1'],1);
+[w,xjac2,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG2'],2);
+[w,xjac3,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG3'],3);
+[w,xjac4,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG4'],4);
+[w,xjac5,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG5'],5);
+[w,xjac6,iaProf,iaNumLay] = readsarta_jacV2([frp '_jacG6'],6);
 rmer = ['!/bin/rm ' fip ' ' fop  ' ' frp ' ' frp '_jac*' ]; eval(rmer);
 
-jac2 = nansum(jac2,1);
-jac4 = nansum(jac4,1);
-jac6 = nansum(jac6,1);
-jacST = jacT(iaNumLay+1,:);
-jacTZ = jacT(1:iaNumLay,:);
-jacWV = jac1(1:iaNumLay,:);
-jacOZ = jac3(1:iaNumLay,:);
+jac2 = nansum(xjac2,1);
+jac4 = nansum(xjac4,1);
+jac6 = nansum(xjac6,1);
+jacST = xjacT(iaNumLay+1,:);
+jacTZ = xjacT(1:iaNumLay,:);
+jacWV = xjac1(1:iaNumLay,:);
+jacOZ = xjac3(1:iaNumLay,:);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% output
-m_ts_jac0 = [jac2; jac4; jac6; 0*jac2; 0*jac2; jacST; jacWV; jacTZ; jacOZ]';
-nlays = iaNumLay;
+qrenorm_sarta_analyticjac
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[mm,nn] = size(m_ts_jac0);
-qrenorm = ones(1,mm);
+iFiniteDiff = +1;
+iFiniteDiff = -1;
+if iFiniteDiff > 0
+  boo = load(['/umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/AIRS_gridded_STM_May2021_trendsonlyCLR//AllDemJacsClrCol_20yrs/individual_prof_convolved_kcarta_airs_' num2str(iiBin) '_coljac.mat']);
+  
+  pxavg = pavg;
+  rtpwrite(fop,havg,[],pxavg,[]);
+  sartaer = ['!' sarta ' fin=' fop ' fout=' frp];
+  eval(sartaer);
+  [hhh,~,ppp,~] = rtpread(frp);
+  t0 = rad2bt(hhh.vchan,ppp.rcalc);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-%% see [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts)
-qrenorm(1) = 2.2;
-qrenorm(2) = 1.0;
-qrenorm(3) = 5.0;
-qrenorm(4) = 1.0;
-qrenorm(5) = 1.0;
-qrenorm(6) = 0.1;
+  pxavg = pavg;
+  pxavg.gas_2 = pxavg.gas_2 * 1.1;
+  rtpwrite(fop,havg,[],pxavg,[]);
+  sartaer = ['!' sarta ' fin=' fop ' fout=' frp];
+  eval(sartaer);
+  [hhh,~,ppp,~] = rtpread(frp);
+  txavg = rad2bt(hhh.vchan,ppp.rcalc);  
+  finitediff2 = (txavg-t0)/log(1.1);
 
-qrenorm(7:end) = 0.01;
-scale = 0.01;
+  pxavg = pavg;
+  pxavg.gas_4 = pxavg.gas_4 * 1.1;
+  rtpwrite(fop,havg,[],pxavg,[]);
+  sartaer = ['!' sarta ' fin=' fop ' fout=' frp];
+  eval(sartaer);
+  [hhh,~,ppp,~] = rtpread(frp);
+  txavg = rad2bt(hhh.vchan,ppp.rcalc);    
+  finitediff4 = (txavg-t0)/log(1.1);
 
-m_ts_jac0 = [jac2/100/qrenorm(1); jac4/100/qrenorm(2); jac6/100/qrenorm(3); 0*jac2; 0*jac2; jacST/100/qrenorm(6);];
-m_ts_jac0 = [m_ts_jac0;  jacWV*scale; jacTZ*scale; jacOZ*scale;]';
+  pxavg = pavg;
+  pxavg.gas_6 = pxavg.gas_6 * 1.1;
+  rtpwrite(fop,havg,[],pxavg,[]);
+  sartaer = ['!' sarta ' fin=' fop ' fout=' frp];
+  eval(sartaer);
+  [hhh,~,ppp,~] = rtpread(frp);
+  txavg = rad2bt(hhh.vchan,ppp.rcalc);    
+  finitediff6 = (txavg-t0)/log(1.1);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+  pxavg = pavg;
+  pxavg.stemp = pxavg.stemp + 0.1;
+  rtpwrite(fop,havg,[],pxavg,[]);
+  sartaer = ['!' sarta ' fin=' fop ' fout=' frp];
+  eval(sartaer);
+  [hhh,~,ppp,~] = rtpread(frp);
+  txavg = rad2bt(hhh.vchan,ppp.rcalc);    
+  finitediffST = (txavg-t0)/(0.1);
 
-freq2645 = w;
-colo3 = nansum(jac3,1);
+  figure(1); clf; plot(hhh.vchan,jac2,hhh.vchan,finitediff2,boo.fKc,boo.rKc(:,1));   xlim([645 1645]); title('SARTA CO2 jac'); legend('analytic','finitediff','kcarta','location','best')
+  figure(2); clf; plot(hhh.vchan,jac4,hhh.vchan,finitediff4,boo.fKc,boo.rKc(:,2));   xlim([645 1645]); title('SARTA N2O jac'); legend('analytic','finitediff','kcarta','location','best')
+  figure(3); clf; plot(hhh.vchan,jac6,hhh.vchan,finitediff6,boo.fKc,boo.rKc(:,4));   xlim([645 1645]); title('SARTA CH4 jac'); legend('analytic','finitediff','kcarta','location','best')
+  figure(4); clf; plot(hhh.vchan,jacST,hhh.vchan,finitediffST,boo.fKc,boo.rKc(:,8)); xlim([645 1645]); title('SARTA SKT jac'); legend('analytic','finitediff','kcarta','location','best')
 
+  keyboard_nowindow
+  figure(5); clf; plot(hhh.vchan,xjac2,'b',hhh.vchan,jac2,'r')
+end

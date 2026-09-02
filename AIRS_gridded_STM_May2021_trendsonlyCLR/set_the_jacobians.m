@@ -27,7 +27,12 @@ if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
   elseif topts.iXJac == -1
     disp('on the fly making trends jacs : SARTA')    
     [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_sarta_analyticjac_fast(settings.iNumYears,driver.iibin,driver.iLon,driver.iLat,topts,driver);
+
+    %% keyboard_nowindow
     %{
+    put keyboard_nowindow or something before this line and call       test_sarta_vs_kcarta_jacs.m    
+    which has all this
+
     [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
 
     %% before I did qrenorm in get_sarta_analyticjac_fast
@@ -42,7 +47,7 @@ if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
       ixx = 6; plot(freq2645,m_ts_jac0(:,ixx),freq2645,xm_ts_jac0(:,ixx)); xlim([645 1645])
       ixx = (1:nlays); ixx = 6 + ixx + 0*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('WV')
       ixx = (1:nlays); ixx = 6 + ixx + 1*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('Tz')
-      ixx = (1:nlays); ixx = 6 + ixx + 2*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2)); xlim([645 1645]); title('O3')
+      ixx = (1:nlays); ixx = 6 + ixx + 2*nlays; plot(freq2645,sum(m_ts_jac0(:,ixx),2),freq2645,sum(xm_ts_jac0(:,ixx),2));   xlim([645 1645]); title('O3')
     %}
     
   else
@@ -194,8 +199,8 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
 elseif driver.i16daytimestep < 0
   %% this is for 1 average rate
   iReplaceCO2jac = -1;
-  if iXJac == 0 | iXjac == -1
-    fprintf(1,'not updating CO2/N2O/CH4 jacs for TRENDS ... keeping same jacs, give better results\n');
+  if iXJac == 0 | iXJac == -1
+    fprintf(1,'not updating CO2/N2O/CH4 jacs for TRENDS ... keeping same KCARTA/SARTA jacs, give better results\n');
   elseif iXJac == 1 | iXJac == 2
     if iReplaceCO2jac > 0
       fprintf(1,'updating CO2/N2O/CH4 jacs for TRENDS ...\n');
