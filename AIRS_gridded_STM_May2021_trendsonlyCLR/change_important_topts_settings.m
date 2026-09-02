@@ -99,11 +99,13 @@ topts.iDoStrowFiniteJac = +3;       %% DEFAULT +3 stick to Strow  tracegas jacs 
 %% topts.iDoStrowFiniteJac = +4;       %% +3 stick to Strow  tracegas jacs = BT(X(t,latbin)) - BT(2002 X(t,latbin))       done for all anomaly timesteps  with AGE of AIR 
 %% topts.iDoStrowFiniteJac = -1;       %% do not change the time varying anomaly tracegas jacs                            done for all anomaly timesteps works great with new kcarta jacs
 
-%% topts.iXJac = 0; %% const geo kcarta jacs
-%% topts.iXJac = 1; %% varying geo sarta jacs  
-topts.iXJac = 2; %% varying geo kcarta jacs DEFAULT >>>>>>>
+%% topts.iXJac = -1; %% const geo sarta jacs, on the fly
+%% topts.iXJac = 0;  %% const geo kcarta jacs, pre computed DEFAULT >>>>>>>
+%% topts.iXJac = 1;  %% varying geo sarta jacs  
+%% topts.iXJac = 2;  %% varying geo kcarta jacs 
 if iDoAnomalyOrRates == -1
-  topts.iXJac = 0; %% const geo kcarta jacs
+  topts.iXJac = -1; %% const geo sarta jacs, on the fly
+  topts.iXJac = 0;  %% const geo kcarta jacs, precomputed
 end
 
 %% topts.iNlays_retrieve = 10;

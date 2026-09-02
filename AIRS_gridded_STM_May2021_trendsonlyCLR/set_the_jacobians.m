@@ -21,10 +21,10 @@ iConstantJac_or_DoSARTA_Analytic_per_timestep = +1;  %% old style, constant     
 
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
   %% trends
-  if topts.iXJac == 2
-    disp('reading in trends jacs : kCARTA : DEFAULT')
+  if topts.iXJac == 0
+    disp('reading in trends jacs : kCARTA pre computed ')
     [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.iibin,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
-  elseif topts.iXJac == 1
+  elseif topts.iXJac == -1
     disp('on the fly making trends jacs : SARTA')    
     [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_sarta_analyticjac_fast(settings.iNumYears,driver.iibin,driver.iLon,driver.iLat,topts,driver);
     %{
@@ -124,6 +124,7 @@ end
 %figure(12); imagesc(m_ts_jac_o3'); colorbar
 %disp('here 2'); pause
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% replace CO2,N2O,CH4 jacs
 if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
   %% this is for 23*iNumYears anomaly time steps
@@ -142,6 +143,7 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
     m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,1);
     m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,1);
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,1);
+
   elseif iXJac == 2 & iDoStrowFiniteJac == 2
     fprintf(1,'updating time varying kCARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs -1,+2 for testing 6/24-27/2019...\n');
     fprintf(1,'  note before July2, the tracegas profile (CO2/N2O/CH4) was US Std shoehorned and multiplied, so ppm was quite wonky except at 500 mb');
@@ -150,8 +152,8 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
     m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% only used this on 6/26
     m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% added this on 6/27
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,2); %% added this on 6/27
-  elseif iXJac == 2 & iDoStrowFiniteJac == 3
 
+  elseif iXJac == 2 & iDoStrowFiniteJac == 3
     fprintf(1,'NOT NOT NOT NOT updating time varying kCARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs3 for testing 6/24-27/2019...\n');
     %% kcarta strow finite jacs
     %m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,3); %% only used this on 6/26
@@ -167,6 +169,7 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
     m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/3
     m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/3
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/3
+    
   elseif iXJac == 2 & iDoStrowFiniteJac == 4
     fprintf(1,'updating time varying kCARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs3 for testing 12/08/2019 ... age of air\n');
     %% const kCARTA jacs, update the trace gases
@@ -174,6 +177,7 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
     m_ts_jac_coljac = replace_time_co2jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,4); %% only used this on 6/26
     m_ts_jac_coljac = replace_time_n2ojac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,4); %% added this on 6/27
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,4); %% added this on 6/27
+
   elseif iXJac == 1 & iDoStrowFiniteJac == 3
     fprintf(1,'updating time varying SARTA CO2/N2O/CH4 jacs with interpolated BIGSTEP time varying jacs3 for testing 12/08/2019...\n');
     fprintf(1,'else turned off \n')
@@ -186,10 +190,11 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
     m_ts_jac_coljac = replace_time_ch4jac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep,iVarType); %% added this on 8/3
   end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 elseif driver.i16daytimestep < 0
   %% this is for 1 average rate
   iReplaceCO2jac = -1;
-  if iXJac == 0
+  if iXJac == 0 | iXjac == -1
     fprintf(1,'not updating CO2/N2O/CH4 jacs for TRENDS ... keeping same jacs, give better results\n');
   elseif iXJac == 1 | iXJac == 2
     if iReplaceCO2jac > 0
@@ -202,6 +207,8 @@ elseif driver.i16daytimestep < 0
     end
   end
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if settings.co2lays == 3
   m_ts_jac_coljac = replace_time_co2_3layjac(m_ts_jac_coljac,driver.iibin,driver.i16daytimestep);

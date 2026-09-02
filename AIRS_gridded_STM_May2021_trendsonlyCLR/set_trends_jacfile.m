@@ -98,7 +98,7 @@ elseif settings.descORasc == +1
   else
     if topts.iXJac == 2
       disp('set_trends_jacfile.m : reading in trends jacs : kCARTA : DEFAULT')
-    elseif topts.iXJac == 1
+    elseif topts.iXJac == -1
       disp('set_trends_jacfile.m : on the fly SARTA trends jacs')
     end
 
@@ -133,9 +133,9 @@ elseif settings.descORasc == +1
   topts.iVersJac = iVersJac;
 
   clear AHA
-  if topts.iXJac == 2  
+  if topts.iXJac == 0  
     fprintf(1,'reading in jac version %4i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)
-  elseif topts.iXJac == 1
+  elseif topts.iXJac == -1
     fprintf(1,'not reading in jac version %4i constant kcarta jac file %s \n',iVersJac,driver.jacobian.filename)
     disp('since we are running SARTA analytic jacs on the fly')
   end

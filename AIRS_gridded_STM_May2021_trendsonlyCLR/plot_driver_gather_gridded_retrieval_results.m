@@ -100,6 +100,14 @@ figure(3); aslmap(3,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,3),72,6
 figure(4); aslmap(4,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,4),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt CFC11'); caxis([-2 +2]*1e-3)
 figure(5); aslmap(5,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,5),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt CFC12'); caxis([-5 +5]*1e-1)
 figure(6); aslmap(6,rlat65,rlon73,maskLFmatr.*smoothn((reshape(results(:,6),72,64)'),1),[-90 +90],[-180 +180]); colormap(llsmap5);  title('d/dt ST');    caxis([-0.15 +0.15])
+
+[mmjunk,nnjunk,oojunk] = size(data_trends.b_desc);
+if oojunk == 1
+  data_trends.b_desc = reshape(data_trends.b_desc,2645,72,64);
+  data_trends.b_err_desc = reshape(data_trends.b_err_desc,2645,72,64);
+  data_trends.b_desc = permute(data_trends.b_desc,[2 3 1]);
+  data_trends.b_err_desc = permute(data_trends.b_err_desc,[2 3 1]);  
+end  
 if iNorD > 0
   figure(7); aslmap(7,rlat65,rlon73,maskLFmatr.*smoothn((data_trends.b_desc(:,:,i1231)'),1), [-90 +90],[-180 +180]);  colormap(llsmap5);  title('d/dt BT1231'); caxis([-0.1 +0.1])
 else

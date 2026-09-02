@@ -1,3 +1,24 @@
+<<<<< Best git repo from taki.rs.umbc.edu is July 25, 2024 >>>>>
+almost reproduces what is in JGR 2025 paper
+
+commit 906703152c402d9a6bfb2285b710fd2e56cd2459 (HEAD)
+Author: Sergio Machado <sergio@umbc.edu>
+Date:   Thu Jul 25 17:50:16 2024 -0400
+    SSM : used this code for trend paper revision sent to Ryan and Larrabee V2
+<<<<< Best git repo from taki.rs.umbc.edu is July 25, 2024 >>>>>    
+
+The Sept 1, 2026 git commit will pretty much reproduce this : 
+
+  SSM : rewinding to recreate July 25, 2025 results in JGR paper; Part 3
+  having checked against July 25, 2024 commit, found the mistakes :
+  need reg_and_cov regularization in build_cov_matrices.m, and also for
+  this set of ERA5 spectral trends we had CO2/CH4/N2O increasing
+  linearly in the NWP rtp files, so set_CO2_CH4_N2O_ESRL.m needed to
+  have line 60-65 of if settings.co2lays == 1 & settings.ocb_set <= 1
+  have xb(1)-co2x,xb(2)=n2ox,xb(3)=ch4x
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 See /AIRS_gridded_STM_May2021_trendsonlyCLR/compare_JGR_July2025_gitCODE.m for
 comparison of fig5 in JGR paper vs what I now have after the Great Disk Crash of Oct 2025
 
@@ -264,13 +285,13 @@ saved into eg
 (F) diff from eg older clones
 -----------------------------
 
-<<<<< Best git repo is July 25, 2024 >>>>>
+<<<<< Best git repo from taki.rs.umbc.edu is July 25, 2024 >>>>>    
 almost reproduces what is in JGR 2025 paper
 commit 906703152c402d9a6bfb2285b710fd2e56cd2459 (HEAD)
 Author: Sergio Machado <sergio@umbc.edu>
 Date:   Thu Jul 25 17:50:16 2024 -0400
     SSM : used this code for trend paper revision sent to Ryan and Larrabee V2
-<<<<< Best git repo is July 25, 2024 >>>>>
+<<<<< Best git repo from taki.rs.umbc.edu is July 25, 2024 >>>>>        
 
 can reclone into home/sergio/nogit/JUNK/oem_climate_code/
 then git checkout eg July9_2025
@@ -340,6 +361,14 @@ diffing /umbc/rs/pi_sergio/WorkDirDec2025/oem_climate_code/Earlier_Tries_Jul2025
 >>>>>>>>>>> WARNING statistical_significance_strow.m are different WARNING <<<<<<<<<<<<<
 >>>>>>>>>>> WARNING strow_override_defaults_latbins_AIRS_fewlays.m are different WARNING <<<<<<<<<<<<<
 >>>>>>>>>>> WARNING wrapper_driver_gather_ALL_rates_AIRSL3_NWP_XMIP.m are different WARNING <<<<<<<<<<<<<
+
+These are the BIG diffs in Sept 1, 2026
+  build_cov_matrices.m
+  clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m
+  do_the_cov_set_numbers.m
+  set_CO2_CH4_N2O_ESRL.m
+  set_apriori_ERA5_MERRA2_or_AIRSL3_MLS_geophysical.m
+  strow_override_defaults_latbins_AIRS_fewlays.m
 
 %%%%%%%%%%%%%%%%%%%%%%%%% >>>>>>>>>>>>>>>>>>>>>>>>> %%%%%%%%%%%%%%%%%%%%%%%%%
 

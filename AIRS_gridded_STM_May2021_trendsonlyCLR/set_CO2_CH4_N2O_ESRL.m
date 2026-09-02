@@ -60,7 +60,8 @@ end
 if settings.set_tracegas == +1 & driver.i16daytimestep < 0 & settings.ocb_set <= 1 & topts.dataset ~= 30
   fprintf(1,'setting constant rates for tracegas apriori : CO2 = %8.6f  N2O = %8.6f   CH4 = %8.6f \n',co2x,n2ox,ch4x)
 
-  if settings.co2lays == 1 & settings.ocb_set == 0
+%  if settings.co2lays == 1 & settings.ocb_set == 0
+  if settings.co2lays == 1 & settings.ocb_set <= 1
     xb(1) = co2x;  % Set CO2 apriori
     xb(2) = 1;
     xb(3) = ch4x;

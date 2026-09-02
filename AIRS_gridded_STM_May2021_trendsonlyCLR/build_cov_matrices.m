@@ -52,6 +52,7 @@ if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
   ixUseHere = ix;
   iiBinUseHere = driver.iibin;
 elseif abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
+  %see clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m : if ia_OorC_DataSet_Quantile(1) == 2, %get_anomaly_processors  %% this sets mapAnomData_to_processor
   ixUseHere = driver.anomalyinfo.i4608eqv;
   iiBinUseHere = ixUseHere;
 end
@@ -147,8 +148,8 @@ elseif driver.i16daytimestep < 0 & topts.dataset < 30
   iCovSetNumber = 19;    %% did it for 18 year rates 2002/09 to 2021/08 
   iCovSetNumber = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=07,Q=16
   iCovSetNumber = 20.1;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=09,Q=16, ocb_set = 1 (cal) gives great results == ERA spectral trends
-  iCovSetNumber = 23;    %% did it for 23 year rates 2002/09 to 2025/08 dataset=18,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)  
   iCovSetNumber = 20.2;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=09,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)  %%% AIRS trends paper
+  iCovSetNumber = 23;    %% did it for 23 year rates 2002/09 to 2025/08 dataset=18,Q=05, ocb_set = 0 (obs) gives great results == OBS spectral trends, Q01-05 (ie we include 0.97 to 1.0 instead of 0.97 to 0.98)  
 
   if topts.dataset == -1 | topts.dataset == +1
     iCovSetNumber = 18;    %% did it for 18 year rates 2002/09 to 2020/08   
@@ -162,7 +163,7 @@ elseif driver.i16daytimestep < 0 & topts.dataset < 30
     iCovSetNumber = 12;    %% did it for 12 year rates 2002/09 to 2014/08 when Joao asked me to do it for Princeton
   elseif topts.dataset == 7
     iCovSetNumber = 20.0;  %% did it for 20 year rates 2002/09 to 2022/08 dataset=7,Q=16
-  elseif (topts.dataset >= 9 & topts.dataset <= 17) | topts.dataset == 20
+  elseif (topts.dataset >= 9 & topts.dataset < 30) & topts.dataset ~= 19
     if topts.ocb_set == 1
       iCovSetNumber = 20.1;  %% did it for 20 year CAL rates 2002/09 to 2022/08 dataset=9,Q=16, CAL
     elseif topts.ocb_set == 0
@@ -278,7 +279,7 @@ if iCov_SqrFmatd_MatOd_Apr2022SounderMeeting == 1 | driver.ia_OorC_DataSet_Quant
   mat_odT = mat_od;    mat_odWV = mat_od;   mat_odO3 = mat_od;            %% <<<<<<<<<<<< also this works fine for Feb 4, 2023 testing of driver.ia_OorC_DataSet_Quantile == [1 9 16] >>>>>>>>>>>>
 end
 
-%%%%%
+%%%%% ct ct ct
 if abs(driver.ia_OorC_DataSet_Quantile(1)) == 2
   %% anomaly
   iOffX = 10;
@@ -299,7 +300,7 @@ ct(ix).lev3 = ct(ix).lev2;
 ct(ix).width1 = cov_set(4);
 ct(ix).width2 = ct(ix).width1;
 
-%%%%%
+%%%%% cw cw cw
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 20
   %% anomaly or trend
   iOffX = 10;
@@ -320,7 +321,7 @@ cw(ix).lev3 = cw(ix).lev2;
 cw(ix).width1 = cov_set(7);
 cw(ix).width2 = cw(ix).width1;
 
-%%%%%
+%%%%% coz coz coz
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 20
   %% anomaly or trend
   iOffX = 10;
@@ -656,8 +657,8 @@ end
 %% cov = covariance ~ exp(-((i-j/lc).^2)
 %% reg = regulatization = Tikonov
 driver.oem.reg_type = 'reg';         % 'reg_and_cov','cov','reg' are other choices
-driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices DEFAULT
 driver.oem.reg_type = 'cov';         % 'reg_and_cov','cov','reg' are other choices
+driver.oem.reg_type = 'reg_and_cov'; % 'reg_and_cov','cov','reg' are other choices DEFAULT
 
 % Separate reg weights for water, temperature, ozone profiles
 driver.oem.alpha_water = cov_set(12);

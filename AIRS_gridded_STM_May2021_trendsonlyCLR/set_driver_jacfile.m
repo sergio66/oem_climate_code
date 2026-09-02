@@ -7,10 +7,11 @@ iOldORNew = -1;
 
 iXJac = settings.iXJac;
 %if driver.i16daytimestep > 0
-%  iXJac = 0; %% const geo kcarta jcs, default for trends
-%  iXJac = 1; %% varying geo sarta jacs
-%  iXJac = 2; %% varying geo kcarta jacs, default for anomaly
-%  iXJac = 3; %% should really be Q(X --> 1) but hard to get ERA5 conditions for this!
+%  iXJac = 0;  %% const geo kcarta jacs, default for trends
+%  iXJac = -1; %% const geo saarta jacs,on the fly
+%  iXJac = 1;  %% varying geo sarta jacs
+%  iXJac = 2;  %% varying geo kcarta jacs, default for anomaly
+%  iXJac = 3;  %% should really be Q(X --> 1) but hard to get ERA5 conditions for this!
 %end
 
 if driver.i16daytimestep < 0

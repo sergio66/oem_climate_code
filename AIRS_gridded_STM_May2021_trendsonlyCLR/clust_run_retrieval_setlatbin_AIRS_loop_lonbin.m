@@ -201,8 +201,8 @@ if driver.iTrendOrAnomaly > 0
   %% the dawn of the phoenix chip in June 2026, after the Oct 2025 apocalypse
   ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 19, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)    
   ia_OorC_DataSet_Quantile = [+0 20 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2003/01-2022/12 AIRS obs Q(0.90-->1)
-  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
   ia_OorC_DataSet_Quantile = [+1 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 ERA5 calc Q(0.90-->1)  
+  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
   
 elseif driver.iTrendOrAnomaly < 0
   set_anomaly_info
@@ -484,13 +484,20 @@ for iInd = iXX1 : idX : iXX2
 
   %%%%%%%%%%
 
-% change_important_topts_settings.m:86:  topts.iXJac        = 0;    %% const jacs, see below also
-% change_important_topts_settings.m:102:%% topts.iXJac = 0; %% const geo kcarta jacs
-% change_important_topts_settings.m:103:%% topts.iXJac = 1; %% varying geo sarta jacs
-% change_important_topts_settings.m:104:topts.iXJac = 2; %% varying geo kcarta jacs DEFAULT >>>>>>>
+%% change_important_topts_settings.m:86
+%%   topts.iXJac = -1; %% const geo sarta jacs, on the fly
+%%   topts.iXJac = 0;  %% const geo kcarta jacs, pre computed DEFAULT >>>>>>>
+%%   topts.iXJac = 1;  %% varying geo sarta jacs  
+%%   topts.iXJac = 2;  %% varying geo kcarta jacs 
+%%   if iDoAnomalyOrRates == -1
+%%    topts.iXJac = -1; %% const geo sarta jacs, on the fly
+%%   topts.iXJac = 0;  %% const geo kcarta jacs, precomputed
+%% end
 
-  topts.iXJac = 1; %% varying geo sarta jacs  
-  topts.iXJac = 2; %% varying geo kcarta jacs DEFAULT >>>>>>>
+% topts.iXJac = 1;  %% varying geo sarta jacs  
+% topts.iXJac = 2;  %% varying geo kcarta jacs
+% topts.iXJac = -1; %% const sarta jacs ON THE FLY
+% topts.iXJac = 0;  %% const geo kcarta jacs DEFAULT >>>>>>>  
 
   %%%%%%%%%%
   
