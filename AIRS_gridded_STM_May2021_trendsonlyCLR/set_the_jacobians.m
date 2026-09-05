@@ -20,6 +20,12 @@ iConstantJac_or_DoSARTA_Analytic_per_timestep = -1;  %% new style, varying sarta
 iConstantJac_or_DoSARTA_Analytic_per_timestep = +1;  %% old style, constant      jac for all time steps
 
 if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
+  iConstantJac_or_DoSARTA_Analytic_per_timestep = +1;  %% old style, constant      jac for all time steps
+else
+  iConstantJac_or_DoSARTA_Analytic_per_timestep = -1;  %% new style, varying sarta jac for all time steps
+end
+
+if abs(driver.ia_OorC_DataSet_Quantile(1)) <= 1
   %% trends
   if topts.iXJac == 0
     disp('reading in trends jacs : kCARTA pre computed ')
@@ -61,9 +67,35 @@ elseif driver.ia_OorC_DataSet_Quantile(1) == 2
     info_about_time_lat = load(driver.anomalyinfo.datafile,'yy','mm','mm','newLatGrid','rtime','usethese');
     [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk] = sarta_analytic_jac(driver,info_about_time_lat);
     driver.rateset.tropopause_index = xprofilejunk.lps.trp_ind;
-    [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.anomalyinfo.i4608eqv,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
-    new_m_ts_jac0 = combine_sarta_anaytic_precomputed_jacs(xm_ts_jac0,xnlays,xqrenorm,m_ts_jac0,nlays,qrenorm);
-    m_ts_jac0 = new_m_ts_jac0;  
+    iOldOrNew = +1;  %% before Oct 2025
+    iOldOrNew = -1;  %% after  Oct 2025
+    if iOldOrNew > 0
+      [m_ts_jac0,nlays,qrenorm,freq2645,~,profilejunk]  = get_jac_fast(driver.jacobian.filename,driver.anomalyinfo.i4608eqv,driver.iLon,driver.iLat,iVersJac,iOldORNew,topts);
+      new_m_ts_jac0 = combine_sarta_anaytic_precomputed_jacs(xm_ts_jac0,xnlays,xqrenorm,m_ts_jac0,nlays,qrenorm);
+      m_ts_jac0 = new_m_ts_jac0;
+      if ~isfield(profilejunk.pavg,'plays')
+        profilejunk.pavg.plays = plevs2plays(profilejunk.pavg.plevs);
+      end
+      freq2645 = xfreq2645;
+      lps = profilejunk.lps;
+      profilejunk = profilejunk.pavg;
+      profilejunk.nlays = profilejunk.nlevs-1;
+      profilejunk.lps_tropoapauseP   = lps.trp_pHI;
+      profilejunk.lps_tropoapauseind = lps.trp_ind;            
+    else
+      if ~isfield(xprofilejunk.pavg,'plays')
+        xprofilejunk.pavg.plays = plevs2plays(xprofilejunk.pavg.plevs);
+      end
+      freq2645 = xfreq2645;      
+      lps = xprofilejunk.lps;
+      profilejunk = xprofilejunk.pavg;
+      profilejunk.nlays = profilejunk.nlevs-1;
+      profilejunk.lps_tropoapauseP   = lps.trp_pHI;
+      profilejunk.lps_tropoapauseind = lps.trp_ind;      
+      m_ts_jac0 = xm_ts_jac0;
+      nlays     = xnlays;
+      qrenorm   = xqrenorm;      
+    end
   else
     info_about_time_lat = load(driver.anomalyinfo.datafile,'yy','mm','mm','newLatGrid','rtime','usethese');
     [xm_ts_jac0,xnlays,xqrenorm,xfreq2645,~,xprofilejunk] = sarta_analytic_jac(driver,info_about_time_lat,-1);
@@ -131,7 +163,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% replace CO2,N2O,CH4 jacs
-if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
+if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0 
   %% this is for 23*iNumYears anomaly time steps
   %% put in time varying Jacobian, err no more need to do this??? well sarta has older CO2/CH4 but let's comment this for now
   iDoStrowFiniteJac = +2; %% testing Strows finite difference jacs CO2(t)-CO2(370) ...    6/24-27/2019 interp in time, used to be +1
@@ -141,7 +173,7 @@ if driver.i16daytimestep > 0 & iConstantJac_or_DoSARTA_Analytic_per_timestep < 0
   iDoStrowFiniteJac = -1; %% default, rely on time varying CO2/N20/CH4 jacs from kcarta,  done for all anom timsteps
 
   iDoStrowFiniteJac = settings.iDoStrowFiniteJac; %% from 6/29/2019
-
+  
   if iXJac == 0 & iDoStrowFiniteJac == 1
     fprintf(1,'updating const kCARTA CO2/N2O/CH4 jacs with Sergio interpolated time varying jacs...\n');
     %% const kCARTA jacs, update the trace gases
@@ -282,6 +314,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 profilejunk.navg  = length(driver.jacobian.wvjaclays_used);
+
 for iii = 1 : length(driver.jacobian.wvjaclays_used)
   junk = driver.jacobian.wvjaclays_used{iii}-6;
   junk = driver.jacobian.wvjaclays_used{iii}-driver.jacobian.wvjaclays_offset;

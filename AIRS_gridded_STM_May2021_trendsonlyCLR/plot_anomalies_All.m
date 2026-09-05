@@ -1,3 +1,10 @@
+
+fprintf(1,'iNumAnomTimeSteps,iNumAnomTiles,iNumLay   = %5i %5i %5i \n',iNumAnomTimeSteps,iNumAnomTiles,iNumLay)
+fprintf(1,'iNumAnomTimeSteps * iNumAnomTiles,iNumLay = %5i %5i \n',iNumAnomTimeSteps*iNumAnomTiles,iNumLay)
+printarray(size(resultsT),'size(resultsT)')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 junk = iNumAnomTimeSteps * iNumAnomTiles;
 fprintf(1,'found %5i of %5i \n',sum(iaFound),length(iaFound))
 figure(1); clf; waha = reshape(iaFound,iNumAnomTimeSteps,iNumAnomTiles);                                                   
@@ -5,14 +12,10 @@ figure(1); clf; waha = reshape(iaFound,iNumAnomTimeSteps,iNumAnomTiles);
   title([num2str(sum(iaFound(:))) ' / ' num2str(junk)  ' = ' num2str(100*sum(iaFound(:))/junk) ' % made so far']);  
   xlabel('Time'); ylabel('Latitude'); colormap(jett); 
   title('Anomaly Files made')
+figure(2); pcolor(reshape(results(:,6),iNumAnomTimeSteps,iNumAnomTiles)'); title('SKT anomaly'); shading interp; colorbar; colormap(usa2); caxis([-1 +1]/250);
+  title('SKT anomaly')
 
-if ~exist('oni')
-  oni = load('ONI_sep2023.txt');
-  [aaa,bbb] = size(oni);
-  oniS = oni(1,1); oniE = oni(aaa,1);
-  oni = oni(1:aaa,2:bbb); oni = oni'; oni = oni(:);
-  onidd = 1:length(oni); onidd = (onidd-1)/12 + oniS;
-end
+get_oni_data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -52,7 +55,8 @@ tropicsHT2 = find(rlat(1:end) >= -30 & rlat(1:end) <= +30); rlat(tropicsHT2);
 
 tropicsHT  = tropicsHT + (iStartOffset-1);
 tropicsHT2 = tropicsHT2 + (iStartOffset-1);
-iFig = iFig + 1; figure(iFig); clf; waha = reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay); waha = nanmean(waha(:,tropicsHT2,:),2); waha = squeeze(waha)'; 
+iFig = iFig + 1; figure(iFig); clf;
+  waha = reshape(resultsT,iNumAnomTimeSteps,iNumAnomTiles,iNumLay); waha = nanmean(waha(:,tropicsHT2,:),2); waha = squeeze(waha)'; 
   pcolor(yymm,pavg,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('Tropics <UMBC> T(z,lat)');      colormap(llsmap5); caxis([-1 +1]*2)
   pcolor(yymm,pavg,smoothn(waha,1));  shading interp; colorbar; set(gca,'ydir','reverse'); title('Tropics <UMBC> T(z,lat)');      colormap(llsmap5); caxis([-1 +1]*2)
   colormap(llsmap5); caxis([-1 +1]*2); set(gca,'yscale','log'); ylim([10 1000])
@@ -76,6 +80,7 @@ iFig = iFig + 1; figure(iFig); clf
 
 iFig = iFig + 1; figure(iFig)
 wah = reshape(results(:,6),iNumAnomTimeSteps,iNumAnomTiles);
+%wah = wah(2:end); %% sometimes have to be careful with this eg GLOBAL followed by 64 latbins
 %pcolor(yymm,rlat(1:end),(reshape(results(iNumAnomTimeSteps+1:end,6),iNumAnomTimeSteps,iNumAnomTiles-1))'); colorbar; 
 pcolor(yymm,rlat(1:end),wah(:,iStartOffset:iNumAnomTiles)'); colorbar; 
 caxis([-1 +1]*2); colormap(llsmap5); shading interp; title('Anomaly Stemp(t,lat)')

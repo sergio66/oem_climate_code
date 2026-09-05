@@ -5,7 +5,8 @@ load /asl/s1/sergio/JUNK/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnom
 do_XX_YY_from_X_Y
 %}
 
-cos64lat = cos(rlat*pi/180) * ones(1,iNumAnomTimeSteps);
+cos64lat = cos(rlat*pi/180) * ones(1,iNumAnomTimeStepsXYZ);
+
 scalebands = [0 10 10/2 10/5 10/2 10/2 10 10 25 25 100 100 100 300];
 smn = 23; %% this is 1 year,   23 * 16 = 368 days
 smn = 06; %% this is 1/4 year, 06 * 16 =  96 days 

@@ -50,7 +50,65 @@
 %%                    invtype: 1
 %%  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% Sept 2, 2026
+%% not sure which of these sets it was, and whether this was precomputed KCARTA or on-the-fly SARTA jacs ... but these arew generic settings
+%%
+%%  ia_OorC_DataSet_Quantile = [+1 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 ERA5 calc Q(0.90-->1)  
+%%  ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
+%%  ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 19, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)    
+%%  ia_OorC_DataSet_Quantile = [+0 20 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2003/01-2022/12 AIRS obs Q(0.90-->1)
+%%
+%%  moo = load('Output_CAL/Quantile16/test4608.mat');
+%%                               iTrendOrAnomaly: 1
+%%                                         debug: 0
+%%                                     debug_dir: '../Debug'
+%%                      ia_OorC_DataSet_Quantile: [0 9 3 -9999]
+%%                                iAllorSeasonal: 1
+%%                                i16daytimestep: -1
+%%                                         iibin: 4608
+%%                                          iLon: 72
+%%                                          iLat: 64
+%%                                           oem: [1x1 struct]
+%%                                           lls: [1x1 struct]
+%%                             iDebugRatesUseNWP: -1
+%%                               removeEmisTrend: 0
+%%                                          NorD: 1
+%%                                     iQuantile: 3
+%%                                     iNumYears: 20
+%%                                   outfilename: 'Output/Quantile03/test4608.mat'
+%%                                        topts0: [1x1 struct]
+%%                                         topts: [1x1 struct]
+%%                                       rateset: [1x1 struct]
+%%                                    jac_latbin: 64
+%%                            jac_indexINSIDEbin: 72
+%%                                      jacobian: [1x1 struct]
+%%                                       qrenorm: [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 ... ] (1x153 double)
+%%                                   co2adj_ESRL: 1
+%%     iCov_SqrFmatd_MatOd_Apr2022SounderMeeting: 3
+%%                                 iCovSetNumber: 20.2000
+%%                                  iaSequential: [210 150 60 100 150 60]
+%%                                       dataset: 9
+%% 
+%% >> moo.oem
+%%   struct with fields:
+%% 
+%%                   dofit: 1
+%%                   nloop: 1
+%%                 doplots: 0
+%%             sarta_error: 0
+%%                      xb: [153x1 double]
+%%                    wunc: [0.0400 0.0400 0.0399 0.0396 0.0391 0.0376 0.0346 0.0300 0.0254 0.0224 0.0209 0.0204 0.0201 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 ... ] (1x49 double)
+%%                    tunc: [0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2500 0.2501 0.2502 ... ] (1x49 double)
+%%                   ozunc: [0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 0.0200 ... ] (1x49 double)
+%%                     cov: [153x153 double]
+%%                reg_type: 'reg_and_cov'
+%%             alpha_water: 500000
+%%              alpha_temp: 2000
+%%             alpha_ozone: 50000
+%%                 cov_set: [1 0.2500 0.4500 0.5000 0.0400 0.0200 0.5000 0.0200 0.0200 0.5000 2000 500000 50000]
+%%                    fmat: [6x6 double]
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 addpath0
 
 system_slurm_stats
@@ -152,8 +210,8 @@ plot(f,moo0.thesave.xtrend(:,20),'b',f,moo1.trend(:,1532),'r',f,fMERRA2.trend(:,
 %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-driver.iTrendOrAnomaly = -1;   %% anomalies
 driver.iTrendOrAnomaly = +1;   %% trends
+driver.iTrendOrAnomaly = -1;   %% anomalies
 
 if driver.iTrendOrAnomaly > 0
   %% JPL 2021 Science Team Meeting used dataset=4,quantile=16 and Princeton PCTS
@@ -172,7 +230,6 @@ if driver.iTrendOrAnomaly > 0
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
   
-  ia_OorC_DataSet_Quantile = [+2 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year anomalies, 2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
   ia_OorC_DataSet_Quantile = [+0 30 01 -9999]; %% ocb_set = 0 : AMSU obs fit,    dataset = 09, iQuantile = 01    20 year rates,     2002/09-2022/08 AMSU obs Q(0.50-->1) -- technically this is "allsky average' but should be clear
   
   %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -201,20 +258,37 @@ if driver.iTrendOrAnomaly > 0
   %% the dawn of the phoenix chip in June 2026, after the Oct 2025 apocalypse
   ia_OorC_DataSet_Quantile = [+0 19 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 19, iQuantile = 03    23 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)    
   ia_OorC_DataSet_Quantile = [+0 20 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2003/01-2022/12 AIRS obs Q(0.90-->1)
+
   ia_OorC_DataSet_Quantile = [+1 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 09, iQuantile = 03    20 year rates, 2002/09-2022/08 ERA5 calc Q(0.90-->1)  
   ia_OorC_DataSet_Quantile = [+0 09 03 -9999]; %% ocb_set = 0 : AIRSL1C obs fit, dataset = 20, iQuantile = 03    20 year rates, 2002/09-2025/08 AIRS obs Q(0.90-->1)  
-  
+
 elseif driver.iTrendOrAnomaly < 0
-  set_anomaly_info
+  %% see driver_put_together_QuantileChoose_anomalies_zonalavg.m --> driver_stand_alone_make_globalavg_TWP_and_N_average_anomalies_zonalavg.m
+  set_anomaly_info     %% also in driver_gather_gridded_anomaly_retrieval_results.m
+  
+  %get_anomaly_processors  %% this sets mapAnomData_to_processor
+  [jobjunk,mapAnomData_to_processor] = get_anomaly_processors(ia_OorC_DataSet_Quantile,iNumAnomTimeSteps,iNumAnomTiles,iNumAnomJobsPerProc,anomalydatafile,JOB0);
+  
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-if ia_OorC_DataSet_Quantile(1) == 2
-  %get_anomaly_processors  %% this sets mapAnomData_to_processor
-  [jobjunk,mapAnomData_to_processor] = get_anomaly_processors(ia_OorC_DataSet_Quantile,iNumAnomTimeSteps,iNumAnomTiles,iNumAnomJobsPerProc,anomalydatafile,JOB0);
-end
+%% change_important_topts_settings.m:86
+%%   topts.iXJac = -1; %% const geo sarta jacs, on the fly
+%%   topts.iXJac = 0;  %% const geo kcarta jacs, pre computed DEFAULT >>>>>>>
+%%   topts.iXJac = 1;  %% varying geo sarta jacs  
+%%   topts.iXJac = 2;  %% varying geo kcarta jacs 
+%%   if iDoAnomalyOrRates == -1
+%%    topts.iXJac = -1; %% const geo sarta jacs, on the fly
+%%   topts.iXJac = 0;  %% const geo kcarta jacs, precomputed
+%% end
 
+% Set_iXJac = 1;  %% varying geo sarta jacs  
+% Set_iXJac = 2;  %% varying geo kcarta jacs
+%%%%% 
+% Set_iXJac = 0;  %% const geo kcarta jacs DEFAULT >>>>>>>  
+% Set_iXJac = -1; %% const geo sarta jacs, on the fly
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% MAIN CODE %%%%%%% MAIN CODE %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -313,6 +387,7 @@ for iInd = iXX1 : idX : iXX2
   driver.iAllorSeasonal = +1; %% default
   if driver.iTrendOrAnomaly == +1
     driver.iAllorSeasonal = +1; %% default
+    topts.iDoStrowFiniteJac = -1;
   end
 
   %%%%%%%%%% ANOM or RATES %%%%%%%%%%
@@ -409,6 +484,18 @@ for iInd = iXX1 : idX : iXX2
   change_important_topts_settings  % Override many settings and add covariance matrix
 %------------------------------------------------------------------------
 
+  if exist('SetIXJAC')
+    topts.iXJac = Set_IXJac;
+  end
+  if  driver.iTrendOrAnomaly < 0
+    topts.iXJac = 1;  %% sarta jacs
+  end
+
+  if driver.iTrendOrAnomaly == -1
+    driver.iAllorSeasonal = +1; %% default
+    topts.iDoStrowFiniteJac = -1;
+  end
+
   % [150 = T(z)+ST 60 = WV(z) 100 = O3(z)]
   % [210 = surf temp, T(z)        and lowest WV(z)]
   % [214 = surf temp, lowest T(z) and lowest WV(z)]
@@ -482,24 +569,6 @@ for iInd = iXX1 : idX : iXX2
     fprintf(1,'     anomaly --- doing iInd = %5i : %2i : %5i; current iInd, iTimestep = %5i %5i \n',junk);
   end
 
-  %%%%%%%%%%
-
-%% change_important_topts_settings.m:86
-%%   topts.iXJac = -1; %% const geo sarta jacs, on the fly
-%%   topts.iXJac = 0;  %% const geo kcarta jacs, pre computed DEFAULT >>>>>>>
-%%   topts.iXJac = 1;  %% varying geo sarta jacs  
-%%   topts.iXJac = 2;  %% varying geo kcarta jacs 
-%%   if iDoAnomalyOrRates == -1
-%%    topts.iXJac = -1; %% const geo sarta jacs, on the fly
-%%   topts.iXJac = 0;  %% const geo kcarta jacs, precomputed
-%% end
-
-% topts.iXJac = 1;  %% varying geo sarta jacs  
-% topts.iXJac = 2;  %% varying geo kcarta jacs
-%%%%% 
-% topts.iXJac = 0;  %% const geo kcarta jacs DEFAULT >>>>>>>  
- topts.iXJac = -1; %% const geo sarta jacs, on the fly
-  
   %%%%%%%%%%
   
   driver.removeEmisTrend = 0;  %% ignore      changing (LAND) emiss
@@ -682,7 +751,7 @@ for iInd = iXX1 : idX : iXX2
   topts.set_era5_cmip6_airsL3 = -3;          %% use CLIMCAPS a priori
   topts.set_era5_cmip6_airsL3 = 2;           %% use MERRA2   a priori
   topts.set_era5_cmip6_airsL3 = 5;           %% use ERA5     a priori
-  if topts.ocb_set(1) == 1
+  if topts.ocb_set(1) == 1 | topts.ocb_set(1) == 2
     %% calc
     topts.set_era5_cmip6_airsL3 = 0;           %% use 0        a priori, DEFAULT
   elseif topts.ocb_set(1) == 0
@@ -781,16 +850,25 @@ for iInd = iXX1 : idX : iXX2
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  %% NorD > 0 ==> night
-  if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
-    driver.outfilename = ['OutputAnomaly/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-    driver.outfilename = ['OutputAnomaly/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
-    driver.outfilename = ['OutputAnomaly_CAL/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif topts.ocb_set == 2 & driver.i16daytimestep > 0 & driver.NorD > 0 %% NIGHT TIME ANOMALIES, NEW
-    outdir = ['OutputAnomaly/Quantile' num2str(driver.iQuantile,'%02d')];
-    driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+  set_anom_outfilename
 
+  %% anomaly
+  %% NorD > 0 ==> night  
+  if topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
+    driver.outfilename = [zanom_outdir 'Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+    driver.outfilename = [zanom_outdir 'Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+  elseif topts.ocb_set == 2 & driver.i16daytimestep > 0 & driver.NorD > 0 %% NIGHT TIME ANOMALIES, NEW
+    outdir = [zanom_outdir 'Quantile' num2str(driver.iQuantile,'%02d')];
+    driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
+  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD > 0 & topts.dataset ~= 3
+    driver.outfilename = [zanom_outdir 'Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+  %% NorD < 0 ==> day
+  elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
+    driver.outfilename = [zanom_outdir 'Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
+    driver.outfilename = [zanom_outdir 'Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
+
+  %% trend
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset ~= 3
     outdir = ['Output/Quantile' num2str(driver.iQuantile,'%02d')];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
@@ -800,12 +878,6 @@ for iInd = iXX1 : idX : iXX2
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD > 0 & topts.dataset == 3 %% EXTREME
     outdir = ['Output/Extreme/'];
     driver.outfilename = [outdir  '/test' int2str(iInd) '.mat'];
-
-  %% NorD < 0 ==> day
-  elseif topts.ocb_set == 0 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
-    driver.outfilename = ['OutputAnomaly_OBS_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
-  elseif topts.ocb_set == 1 & driver.i16daytimestep > 0 & driver.NorD < 0 & topts.dataset ~= 3
-    driver.outfilename = ['OutputAnomaly_CAL_Day/Quantile' num2str(driver.iQuantile,'%02d') '/' num2str(iInd,'%02d') '/anomtest_timestep' int2str(driver.i16daytimestep) '.mat'];
 
   elseif topts.ocb_set == 0 & driver.i16daytimestep < 0 & driver.NorD < 0 & topts.dataset ~= 3
     outdir = ['Output_Day/Quantile' num2str(driver.iQuantile,'%02d')];

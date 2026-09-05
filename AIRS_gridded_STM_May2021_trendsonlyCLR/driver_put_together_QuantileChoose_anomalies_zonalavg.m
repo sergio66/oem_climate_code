@@ -1,7 +1,16 @@
-addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/rtptools
+addpath0
+
+% addpath /home/sergio/MATLABCODE/COLORMAP
+% addpath /home/sergio/MATLABCODE
+% addpath /asl/matlib/h4tools
+% addpath /asl/matlib/rtptools
+
+disp('WARNING this only allows timeseries of zonal averages!!!!!!!!')
+disp('eg   latbin 32 or latbin 23-45')
+disp('so cannot do eg timeseries of tile 2345 only')
+disp('see eg driver_put_together_QuantileChoose_anomalies.m for that')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% https://www.arm.gov/publications/proceedings/conf05/extended_abs/mlawer_ej.pdf
 RRTM_bands0 = [10 250 500 630 700 820 980 1080 1180 1390 1480 1800 2080 2250 2380 2600 3000];
@@ -17,8 +26,14 @@ RRTM_bands = RRTM_bands0(4:end);
 dirCode = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/';
 dirData = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/';
 
+dirCode = '/home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/';
+dirData = '/home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/';
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp('see /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/driver_bt1231_timeseries_YY0MM0DD0_YYEMMEDDE_0001_4608.m')
+disp('see /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/driver_bt1231_timeseries_YY0MM0DD0_YYEMMEDDE_0001_4608.m')
+disp('ls -lt /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/driver_bt1231_timeseries_YY0MM0DD0_YYEMMEDDE_0001_4608.m')
+disp('-rw-rw-r-- 1 sergio pi_sergio 7221 Sep  3 13:24 /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/driver_bt1231_timeseries_YY0MM0DD0_YYEMMEDDE_0001_4608.m')
+
 disp('see Mitchell_Goldberg-Dissertation.pdf for list of chans : wget https://aosc.umd.edu/sites/default/files/dissertations-theses/Mitchell%20Goldberg-Dissertation.pdf')
 
   disp('Fig 5.8        667.766 cm-1       1 mb')
@@ -40,15 +55,16 @@ disp('see Mitchell_Goldberg-Dissertation.pdf for list of chans : wget https://ao
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-disp('Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m')
-disp('Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m')
-disp('Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m')
+disp('Look at /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m')
+disp('Look at /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m')
+disp('Look at /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m')
 
 load h2645structure.mat
 
 iNumYears = 20;    iNumAnomTimeSteps = 454; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 454!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 iNumYears = 21.75; iNumAnomTimeSteps = 496; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 498!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 iNumYears = 22;    iNumAnomTimeSteps = 500; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 500!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
+iNumYears = 23;    iNumAnomTimeSteps = 525; % 365/16 = 22.8125; floor(iNumYears*22.8125 - 2) = 527!!!! (about 23 timesteps/year, 2 are missing because of missing AIRS data)
 
 iQAX = input('Enyter iQAX [1,3,4] 3=default : ');
 if length(iQAX) == 0
@@ -72,6 +88,9 @@ for jj = 1 : 64
     elseif iNumYears == 22
       fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_Anomaly_TimeSteps502.mat'];
+    elseif iNumYears == 23
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = [dirData fname '_V1_Anomaly_TimeSteps525.mat'];
     else
       error('unknown iNumYears')
     end
@@ -84,6 +103,8 @@ end
 fprintf(1,'found %4i of 4608 anomaly files that look like %s \n',sum(iaFound),fname);
 disp(' ')
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %iHuge = -1;
 %iHuge = +1;
 %iHuge = input('Enter (-1/default) save one channel, all tiles, all timesteps or (+1) save all channels, all tiles, all timesteps (huge memory) or (+2) save f < 1650 cm-1, all timesteps (+3) 450 good channels : ');
@@ -93,7 +114,6 @@ disp(' ')
 iHuge = +1; %% all channels
 
 do_XX_YY_from_X_Y
-coslat = cos(reshape(YY,4608,1)*pi/180)*ones(1,iNumAnomTimeSteps);
 
 %if iHuge > 0
 %  iDorA = input('+1 Desc/default or -1 Asc : ');
@@ -105,28 +125,36 @@ iDorA = 0; %% both day and night
 
 iaFound = zeros(size(iaFound));
 
+iNumAnomTimeStepsXYZ = iNumAnomTimeSteps - 2;
+fprintf(1,'iNumAnomTimeSteps = %3i setting iNumAnomTimeStepsXYZ = %3i ---check this, may be wrong pre-declarations!!!! \n',iNumAnomTimeSteps,iNumAnomTimeStepsXYZ)
+
+%% cos64lat = cos(reshape(YY,4608,1)*pi/180)*ones(1,iNumAnomTimeStepsXYZ);
+coslat = cos(reshape(YY,4608,1)*pi/180)*ones(1,iNumAnomTimeStepsXYZ);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if iHuge == +1
   disp('wow : lotsa lotsa memory! making the btanom and fluxanom ....')
   if iDorA > 0
-    btanomD   = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
-    fluxanomD = zeros(64,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomD   = nan(2645,iNumAnomTimeStepsXYZ,64); %% too much memory!
+    fluxanomD = nan(64,iNumAnomTimeStepsXYZ,length(RRTM_bands));
   elseif iDorA < 0
-    btanomA   = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
-    fluxanomA = zeros(64,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomA   = nan(2645,iNumAnomTimeStepsXYZ,64); %% too much memory!
+    fluxanomA = nan(64,iNumAnomTimeStepsXYZ,length(RRTM_bands));
   else
-    btanomD   = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
-    fluxanomD = zeros(64,iNumAnomTimeSteps,length(RRTM_bands));
-    btanomA   = zeros(2645,iNumAnomTimeSteps,64); %% too much memory!
-    fluxanomA = zeros(64,iNumAnomTimeSteps,length(RRTM_bands));
+    btanomD   = nan(2645,iNumAnomTimeStepsXYZ,64); %% too much memory!
+    fluxanomD = nan(64,iNumAnomTimeStepsXYZ,length(RRTM_bands));
+    btanomA   = nan(2645,iNumAnomTimeStepsXYZ,64); %% too much memory!
+    fluxanomA = nan(64,iNumAnomTimeStepsXYZ,length(RRTM_bands));
   end
   monitor_memory_whos
   ind = 1 : 2645;
 end
 
-bt1231_D = zeros(1,64);
-bt1231_A = zeros(1,64);
-btChID_D = zeros(1,64);
-btChID_A = zeros(1,64);
+bt1231_D = nan(1,64);
+bt1231_A = nan(1,64);
+btChID_D = nan(1,64);
+btChID_A = nan(1,64);
 
 disp('reading in anomalies')
 
@@ -150,32 +178,32 @@ iChIX  = 1861;  %% 1419 cm-1     find(h.vchan >= 1419,1)
 iChID = iChIX;
 iChIA = iChIX;
 
-%% fname = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin64/LonBin72/iQAX_3_fits_LonBin72_LatBin64_V1_200200090001_202200080031_Anomaly_TimeStepsX457.mat'
-%% Look at /home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m
+%% fname = '/home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin64/LonBin72/iQAX_3_fits_LonBin72_LatBin64_V1_200200090001_202200080031_Anomaly_TimeStepsX457.mat'
+%% Look at /home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/clust_tile_anomalies_quantiles.m
 %%   which loads in   fn_summary = sprintf('../DATAObsStats_StartSept2002_CORRECT_LatLon/LatBin%1$02d/LonBin%2$02d/iQAX_3_summarystats_LatBin%1$02d_LonBin%2$02d_timesetps_001_%3$03d_V1.mat',lati,loni,i16daysSteps);
 
-  f2645 = instr_chans2645;
-  f2645 = h.vchan;
+f2645 = instr_chans2645;
+f2645 = h.vchan;
 
 fprintf(1,'iChIX = 1520 and %04i  --> %8.3f    %8.3f cm-1 \n',iChIX,f2645(1520),f2645(iChIX))
 
-%% this is ireelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
-%% this is ireelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
-%% this is ireelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
+%% this is irrelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
+%% this is irrelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
+%% this is irrelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
 i1231 = find(ind == 1520);
 iXCh  = find(ind == iChIX);
 f_ind = f2645(ind);
 fprintf(1,'f2645(1520)  --> h.vchan(i1231)     : %8.6f %8.6f \n',f2645(1520),h.vchan(ind(i1231)))
 fprintf(1,'f2645(iChIX) --> h.vchan(ind(iXCh)) : %8.6f %8.6f \n',f2645(iChIX),h.vchan(ind(iXCh)))
-%% this is ireelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
-%% this is ireelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
-%% this is ireelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
+%% this is irrelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
+%% this is irrelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
+%% this is irrelevant if using ALL channels of f < 620 cm-1 ... but is needed in case using only 480 great channels;
  
 for jj = 1 : 64
   fprintf(1,' \n latbin %2i of 64  will loop over 72 lonbins .... \n',jj);
-  figure(1); clf; plot(bt1231_D'); title('BT 1231'); 
-  figure(2); clf; plot(btChID_D'); title('BT ChID'); 
-  datime = 2002.75 + (1:iNumAnomTimeSteps)*16/365;
+  figure(1); clf; plot(bt1231_D'); title('BT 1231 desc'); 
+  figure(2); clf; plot(btChID_D'); title('BT ChID desc'); 
+  datime = 2002.75 + (1:iNumAnomTimeStepsXYZ)*16/365;
 
   if iDorA == +1
     figure(3); clf; junkjunk = squeeze(btanomD(i1231,:,:))';  pcolor(datime,1:64,junkjunk); shading interp; colormap(usa2); colorbar; caxis([-1 +1]*5); title('BT 1231 anom D');
@@ -206,6 +234,9 @@ for jj = 1 : 64
     elseif iNumYears == 22
       fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
       fname = [dirData fname '_V1_Anomaly_TimeSteps502.mat'];
+    elseif iNumYears == 23
+      fname = ['LatBin' num2str(jj,'%02d') '/LonBin' num2str(ii,'%02d') '/iQAX_' num2str(iQAX) '_fits_LonBin' num2str(ii,'%02d') '_LatBin' num2str(jj,'%02d')];
+      fname = [dirData fname '_V1_Anomaly_TimeSteps525.mat'];      
     else
       error('unknown iNumYears')
     end
@@ -256,6 +287,9 @@ for jj = 1 : 64
 end      %% loop jj
 fprintf(1,'\n');
 
+figure(1); clf; plot(bt1231_D'); title('BT 1231 desc'); 
+figure(2); clf; plot(btChID_D'); title('BT ChID desc'); 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if iDorA > 0
@@ -283,15 +317,58 @@ figure(1); plot(yymm,squeeze(nanmean(fluxanomD(:,:,1),1)))
 
 show_fluxband_anomaly_timeseries
 
+disp('technically from eg put_together_QuantileChoose_anomalies_plots_AND_save_D_zonalavg,m, all you need to doo is load in')
+disp('       /home/sergio/nogit/JUNK/TILES_saveresults/ANOMS_RAW/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_23.00_iNumAnomTimeSteps_525_D.mat')
+disp('and use btanomD AS IS  or run one of the below codes eg stand_alone_make_globalavg_and_N_average_anomalies_zonalavg')
+
 error('gslkjglkgjlksj')
+
+%{
+>> whos btanomD yyD mmD ddD hhD rtimeD comment bt1231_D RRTM_bands fluxanomD ind f_ind
+  Name               Size                      Bytes  Class     Attributes
+
+  RRTM_bands         1x14                        112  double
+  bt1231_D           1x64                        512  double
+  btanomD           64x2645x523            708267520  double
+  comment            1x67                        134  char
+  ddD                1x523                      4184  double
+  f_ind           2645x1                       10580  single
+  fluxanomD         64x523x14                3748864  double
+  hhD                1x523                      4184  double
+  ind                1x2645                    21160  double
+  mmD                1x523                      4184  double
+  rtimeD             1x523                      4184  double
+  yyD                1x523                      4184  double
+%}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if iHuge > 0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+iDoThis = -1;
+if iHuge > 0 & iDoThis > 0
   iX = 1;
   if iX > 0
     %% iQuant = 3;
-    stand_alone_make_globalavg_and_N_average_anomalies_zonalavg        %% global                       and 28 latbins, so you basically have to do all 14500 datapoints ugh!!! to see global, and then tropical
-    stand_alone_make_globalavg_tropics_N_zaverage_anomalies_zonal      %% global and tropics           and 28 latbins, so you can zip through 1000 datapoints and see how things look for global and tropical
-    stand_alone_make_globalavg_TWP_and_N_average_anomalies_zonalavg    %% global and tropic_Lat36Lon36 and 28 latbins, so you can zip through 1000 datapoints and see how things look for global and tropical
+    Choose one of these
+    
+    stand_alone_make_globalavg_and_64_average_anomalies_zonalavg       %% global                       and 64 latbins, so you basically have to do all (64zonal+1global)*500timesteps = 32500 datapoints ugh!!! to see global, and then 64 zonal
+
+    stand_alone_make_globalavg_and_N_average_anomalies_zonalavg        %% global                       and 28 latbins, so you basically have to do all (28zonal+1global)*500stimeteps = 14500 datapoints ugh!!! to see global, and then 28 zonal
+
+    stand_alone_make_globalavg_tropics_N_zaverage_anomalies_zonal      %% global and tropics           and 01 latbins, so you can zip through (1global +1trop)*500stimesteps = 1000 datapoints and see how things look for global and tropical
+    
+    stand_alone_make_globalavg_TWP_and_N_average_anomalies_zonalavg    %% global and tropic_Lat36Lon36 and 01 latbins, so you can zip through (1global +1trop)*500timesteps = 1000 datapoints and see how things look for global and tropical
+
+%{
+No need for these since clust_run_retrieval_setlatbin_AIRS_loop_lonbin.m read in the info and reads in approproate ERA5 rtp file for the timesep, averages profiles, then calls SARTA to make jacs
+    profiles_for_jac_stand_alone_make_globalavg_and_64_average_anomalies_zonalavg
+    profiles_for_jac_stand_alone_make_globalavg_and_N_average_anomalies_zonalavg
+    profiles_for_jac_stand_alone_make_globalavg_tropics_N_zaverage_anomalies_zonal
+    profiles_for_jac_stand_alone_make_globalavg_TWP_and_N_average_anomalies_zonalavg
+
+%}
+
   end
 end
 

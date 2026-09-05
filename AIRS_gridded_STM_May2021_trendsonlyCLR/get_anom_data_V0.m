@@ -9,6 +9,7 @@ else
   iSetType = 1;  % only use facx
   iSetType = 2;  % use noise_16day_avg_mission.mat plus facx
   iSetType = 3;  % use btn_avg.mat                 plus facx
+  iSetType = 4;  % OH BOY, placeholder for now
 
   facx = 0.01; %%% till june 21, 2019
 
@@ -21,23 +22,34 @@ else
   if iSetType == 2
     disp('  get_rates : unc iSetType = 2')
     %% this is next step : spectral, but for any time step scale by sqrt(average counts x 16)
-	anom_noise = load('noise_16day_avg_mission.mat');
+    anom_noise = load('noise_16day_avg_mission.mat');
     anom_noise = anom_noise.btn_av(ix,:);
   elseif iSetType == 3
     disp('  get_rates : unc iSetType = 3')
     %% this is harder :  spectra and for individual timesteps scale by sqrt(average counts x 16)
-    anom_noise = load('btn_avg.mat');
+    anom_noise = load('btn_avg.mat');  %% see get_anomaly_noise.m but this is for 40 latbins AMT paper
 
     if driver.i16daytimestep > 362
       iJunkTimeStep = 362;
     else
       iJunkTimeStep = driver.i16daytimestep;
     end
+    %% anom_noise = squeeze(anom_noise.btn_avg(ix,iJunkTimeStep,:));
+    anom_noise = squeeze(nanmean(squeeze(nanmean(anom_noise.btn_avg,1)),1));
 
+  elseif iSetType == 4
+    disp(' ')
+    disp('  oh boy, placeholder anom_noise.btn_avg for now')
+    disp('  oh boy, placeholder anom_noise.btn_avg for now')
+    disp('  oh boy, placeholder anom_noise.btn_avg for now')
+    disp(' ')    
+    l1c_nedt = instr_chans2645('airs',2);
+    %% there are 10000 obs per 16 day tile, half arer day, half are night
+    %% then lets say we take top 10% for clear
+    Nobs = 120000/2 * 0.1;
+    anom_noise = l1c_nedt/sqrt(Nobs);
   end
 
-  %% anom_noise = squeeze(anom_noise.btn_avg(ix,iJunkTimeStep,:));
-  anom_noise = squeeze(nanmean(squeeze(nanmean(anom_noise.btn_avg,1)),1));
 
   %% see ../AIRS_new_clear_scan_August2019_AMT2020PAPER/get_rates.m
   % badones = [];;

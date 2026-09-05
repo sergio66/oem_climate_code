@@ -1,35 +1,7 @@
-iDoAgain = +1;
-
+fprintf(1,'will loop through %3i timeteps for %2i latbins .. the timesteps will mark off as "o" for 100 and "." for 10 \n',iNumAnomTimeSteps,iNumAnomTiles)
 while iDoAgain > 0
-  for ii = 1 : 64*72
-    if iOCBset == 0
-      if dataset ~= 3
-        if iNorD > 0
-          fname = ['/asl/s1/sergio/Tiles4608/Output_WORKS_May18_2021_Great_AIRS_STM/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here after July 2021
-          fname = ['Output/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-        elseif iNorD < 0
-          fname = ['Output_Day/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
-        end
-      elseif dataset == 3
-        if iNorD > 0
-          fname = ['Output/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-        elseif iNorD < 0
-          fname = ['Output_Day/Extreme/test' num2str(ii) '.mat']; %% stored here before before July 2021
-        end
-      elseif dataset == -3
-        if iNorD > 0
-          fname = ['Output/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-        elseif iNorD < 0
-          fname = ['Output_Day/Quantile00/test' num2str(ii) '.mat']; %% stored here before before July 2021
-        end
-      end
-    elseif iOCBset == 1
-      if iNorD > 0
-        fname =     ['Output_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
-      elseif iNorD < 0
-        fname = ['Output_Day_CAL/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021
-      end
-    end
+  for ii = 1 : iNumAnomTimeSteps * iNumAnomTiles
+    fname = [zanom_outdir '/Quantile' num2str(iQuantile,'%02d') '/test' num2str(ii) '.mat']; %% stored here before before July 2021, and fornew test comparisons
   
     existfname(ii) = exist(fname);
     i10sec = -1;
@@ -41,7 +13,6 @@ while iDoAgain > 0
         i10sec = 1;
       end
     end
-
     %fprintf(1,'%5i    %s \n',existfname(ii),fname)
     if exist(fname) > 0 & iaFound(ii) == 0 & i10sec == 1
       fnamelastloaded = fname;
@@ -65,27 +36,23 @@ while iDoAgain > 0
       save_cov_set.cov_set(:,ii)   = oem.cov_set;
       save_cov_set.fmat(:,ii)      = sqrt(diag(oem.fmat));
       save_cov_set.reg_type        = oem.reg_type;
-
-      %%% so six elements are set here : [1 2 3 4 5 6] typically from [CO2 N2O CH4 CFC11 CFC12 ST]
-        save_cov_set.xb_trace(:,ii)  = oem.xb(1:6);
-        save_cov_set.xf_trace(:,ii)  = oem.finalrates(1:6);
-      %%% so two elements are set here : [1 2] typically from [1 length(jacobian.T/WV/O3_i)]
-        save_cov_set.xb_traceI(:,ii) = jacobian.scalar_i([1 length(jacobian.scalar_i)]); %% Co2/N2O/CH4/CFC11/CFC11/stemp etc
-        save_cov_set.xb_wvzI(:,ii)   = jacobian.water_i([1 length(jacobian.water_i)]);   %% top/bottom
-        save_cov_set.xb_tzzI(:,ii)   = jacobian.temp_i([1 length(jacobian.temp_i)]);     %% top/bottom
-        save_cov_set.xb_ozzI(:,ii)   = jacobian.ozone_i([1 length(jacobian.ozone_i)]);   %% top/bottom
-        %
-        save_cov_set.xb_wvz(:,ii)    = oem.xb(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom
-        save_cov_set.xb_tzz(:,ii)    = oem.xb(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom
-        save_cov_set.xb_ozz(:,ii)    = oem.xb(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom
-        %
-        save_cov_set.xf_wvz(:,ii)    = oem.finalrates(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom
-        save_cov_set.xf_tzz(:,ii)    = oem.finalrates(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom
-        save_cov_set.xf_ozz(:,ii)    = oem.finalrates(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom
+      save_cov_set.xb_traceI(:,ii) = jacobian.scalar_i([1 length(jacobian.scalar_i)]); %% Co2/N2O/CH4/CFC11/CFC11/stemp etc  indices (1,6)
+      save_cov_set.xb_wvzI(:,ii)   = jacobian.water_i([1 length(jacobian.water_i)]);   %% top/bottom indices
+      save_cov_set.xb_tzzI(:,ii)   = jacobian.temp_i([1 length(jacobian.temp_i)]);     %% top/bottom indices
+      save_cov_set.xb_ozzI(:,ii)   = jacobian.ozone_i([1 length(jacobian.ozone_i)]);   %% top/bottom indices
+      save_cov_set.xb_trace(:,ii)  = oem.xb(1:6);                                             %% Co2/N2O/CH4/CFC11/CFC11/stemp etc  init values (1,6)
+      save_cov_set.xb_wvz(:,ii)    = oem.xb(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom init values
+      save_cov_set.xb_tzz(:,ii)    = oem.xb(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom init values
+      save_cov_set.xb_ozz(:,ii)    = oem.xb(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom init values
+      save_cov_set.xf_trace(:,ii)  = oem.finalrates(1:6);                                             %% Co2/N2O/CH4/CFC11/CFC11/stemp etc  final values (1,6)
+      save_cov_set.xf_wvz(:,ii)    = oem.finalrates(jacobian.water_i([1 length(jacobian.water_i)]));  %% top/bottom final values
+      save_cov_set.xf_tzz(:,ii)    = oem.finalrates(jacobian.temp_i([1 length(jacobian.temp_i)]));    %% top/bottom final values
+      save_cov_set.xf_ozz(:,ii)    = oem.finalrates(jacobian.ozone_i([1 length(jacobian.ozone_i)]));  %% top/bottom final values
 
       nlays_straight_from_results(ii) = nn;
       nn0 = min(nn,iNumLay);
 
+      rtime(ii)     = anomalyinfo.rtime;
       xb(ii,1:6)    = oem.xb(1:6);
       xbWV(ii,1:nn) = oem.xb((1:nn)+6+nn*0);
       xbT(ii,1:nn)  = oem.xb((1:nn)+6+nn*1);
@@ -143,9 +110,9 @@ while iDoAgain > 0
            mean_ak_o3 = nan(size(resultsWV));;
         end
   
-        %figure(47); plot(oem.ak_water',pjunk20,'c',max(oem.ak_water'),pjunk20,'rx-',mean(oem.ak_water'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
-        %figure(48); plot(oem.ak_ozone',pjunk20,'c',max(oem.ak_ozone'),pjunk20,'rx-',mean(oem.ak_ozone'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
-        %figure(49); plot(oem.ak_temp',pjunk20,'c',max(oem.ak_temp'),pjunk20,'rx-',mean(oem.ak_temp'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(2); plot(oem.ak_water',pjunk20,'c',max(oem.ak_water'),pjunk20,'rx-',mean(oem.ak_water'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(3); plot(oem.ak_ozone',pjunk20,'c',max(oem.ak_ozone'),pjunk20,'rx-',mean(oem.ak_ozone'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
+        %figure(4); plot(oem.ak_temp',pjunk20,'c',max(oem.ak_temp'),pjunk20,'rx-',mean(oem.ak_temp'),pjunk20,'bx-'); set(gca,'ydir','reverse'); ylim([0.1 1000])
 
         clear waterrate_ak0 waterrate_ak1 o3rate_ak0 o3rate_ak1 temprate_ak0 temprate_ak1
         ix = ii;
@@ -177,11 +144,10 @@ while iDoAgain > 0
           temprate_ak0_era5(ix,1:length(ak)) = (temprate_ak1(ix,:)')';
           temprate_akF_era5(ix,1:length(ak)) = (ak * temprate_ak1(ix,:)')';
       end   %% if iAK > 0
-
       %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%% DO AK %%%%%%%%%%%%%%%%%%%%%%%%%
 
-      junknoise  = nan(iNumChan,1);
-      junknoise2 = nan(iNumChan,1);
+      junknoise  = nan(2645,1);
+      junknoise2 = nan(2645,1);
       junknoise(jacobian.chanset)  = sqrt(diag(oem.se));
       junknoise2(jacobian.chanset) = rateset.unc_rates(jacobian.chanset);
       junknoise2                   = rateset.unc_rates;
@@ -227,10 +193,15 @@ while iDoAgain > 0
       fits(:,ii) = NaN;
       nedt(:,ii) = NaN;
     end
-    if mod(ii,72) == 0
-      fprintf(1,'+ %2i\n',ii/72);
+
+    if mod(ii,iNumAnomTimeSteps) == 0
+      fprintf(1,'+ fat latbin   %2i of %2i \n',ii/iNumAnomTimeSteps,iNumAnomTiles);
     elseif iExist == 1
-      fprintf(1,'o');
+      if mod(ii,100) == 0
+        fprintf(1,'o');
+      elseif mod(ii,10) == 0
+        fprintf(1,'.');
+      end
     elseif iExist == -1
       fprintf(1,' ');
     end
@@ -245,28 +216,35 @@ while iDoAgain > 0
   display('Trying to look at atributes of the last file that should have been read in .... ')
   lser = ['!ls -lt ' fnamelastloaded]; eval(lser)
   
-  fprintf(1,'found %4i of %4i \n',sum(iaFound),64*72)
+  fprintf(1,'found %4i of %4i \n',sum(iaFound),iNumAnomData)
   iDoAgain = -1;
-  if sum(iaFound) < 64*72
-    figure(6)
-    pcolor(reshape(results(:,6),72,64)); colorbar; caxis([-1 +1]*0.15); colormap(llsmap5);
 
-    load latB64.mat
-    rlat65 = latB2; rlon73 = -180 : 5 : +180;
-    rlon = -180 : 5 : +180;  rlat = latB2; 
-    rlon = 0.5*(rlon(1:end-1)+rlon(2:end));
-    rlat = 0.5*(rlat(1:end-1)+rlat(2:end));
-    aslmap(6,rlat65,rlon73,smoothn((reshape(results(:,6)',72,64)') ,1), [-90 +90],[-180 +180]); title('dST/dt so far');     caxis([-1 +1]*0.15); colormap(llsmap5)
-    
-    jett = jet(64); jett(1,:) = 1;
-    %figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.15)
-    %figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,1:iNumLay,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.015)
-    figure(29); clf; waha = squeeze(nanmean(reshape(resultsT,72,64,iNumLay),1)); waha = waha';        pcolor(rlat,pavg,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dT/dt');      colormap(llsmap5); caxis([-1 +1]*0.10)
-    figure(30); clf; waha = squeeze(nanmean(reshape(resultsWV,72,64,iNumLay),1)); waha = waha';       pcolor(rlat,pavg,waha);  shading interp; colorbar; set(gca,'ydir','reverse'); title('UMBC dWVfrac/dt'); colormap(llsmap5); caxis([-1 +1]*0.010)
-      figure(29); set(gca,'yscale','log'); ylim([10 1000]);       figure(30); set(gca,'yscale','linear'); ylim([100 1000]);
-    figure(31); clf; waha = reshape(iaFound,72,64);                                                   pcolor(rlon,rlat,waha'); shading flat;   colorbar; set(gca,'ydir','normal');  
-      title([num2str(sum(iaFound(:))) ' / 4608 = ' num2str(100*sum(iaFound(:))/4608) ' % made so far']);  
-      xlabel('Longitude'); ylabel('Latitude'); colormap(jett); 
+
+  if sum(iaFound) < iNumAnomData
+    if strfind(anomalydatafile,'_tile')
+      plot_anomalies_1
+    else
+      simple = +1;
+      plot_anomalies_All
+    end
+
+    junk_globalavg_rawdata = data_anom.btavgAnomFinal(:,1:iNumAnomTimeSteps);
+    junk_globalavg_spectral_deltan00 = spectral_deltan00(:,1:iNumAnomTimeSteps);
+    figure(2); clf; 
+    plot(yymm,smooth(junk_globalavg_spectral_deltan00(i0723,:),23),'r.-',...
+        yymm,smooth(junk_globalavg_rawdata(i0723,:),23),'r--',...
+       'linewidth',2); plotaxis2;
+    title('Fitted BT0723 data in thick \newline raw data in dashes, CO2 only'); pause(0.1)
+
+    figure(3); clf
+    hold off; wah = save_cov_set.xf_trace(1:6,1:iNumAnomTimeSteps);
+      plot(yymm,wah(1,:),'b',yymm,wah(2,:),'m',yymm,wah(3,:),'g',yymm,wah(4,:),'y',yymm,wah(5,:),'k',yymm,wah(6,:),'r','linewidth',2); hold on; 
+    hold on; wah = save_cov_set.xb_trace(1:6,1:iNumAnomTimeSteps);
+      plot(yymm,wah(1,:),'b--',yymm,wah(2,:),'m--',yymm,wah(3,:),'g--',yymm,wah(4,:),'y--',yymm,wah(5,:),'k--',yymm,wah(6,:),'r--','linewidth',2); hold on; 
+      hl = legend('CO2','N2O','CH4','CFC11','CFC12','ST','location','best');
+      set(gca,'fontsize',10); title('xb(trace gas + ST)');
+    hold off
+
     iDoAgain = input('read in remaining files (-1/+1 Default) : '); 
     if length(iDoAgain) == 0
       iDoAgain = +1;

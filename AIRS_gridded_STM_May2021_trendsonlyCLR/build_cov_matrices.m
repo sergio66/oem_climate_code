@@ -170,7 +170,13 @@ elseif driver.i16daytimestep < 0 & topts.dataset < 30
       iCovSetNumber = 20.2;  %% did it for 20 year OBS rates 2002/09 to 2022/08 dataset=9,Q=05, OBS
     end
   elseif topts.dataset == 19
-    iCovSetNumber = 23;  %% did it for 23 year rates 2002/09 to 2025/08 dataset=18, Q=03
+    if topts.ocb_set == 1
+      iCovSetNumber = 23;    %% did it for 23 year rates 2002/09 to 2025/08 dataset=19, Q=03 ... but trends are so close to dataset 9,20 may as well use  iCovSetNumber = 20.1    
+      iCovSetNumber = 20.1;  %% did it for 20 year CAL rates 2002/09 to 2022/08 dataset=9,Q=16, CAL
+    elseif topts.ocb_set == 0  
+      iCovSetNumber = 23;    %% did it for 23 year rates 2002/09 to 2025/08 dataset=19, Q=03 ... but trends are so close to dataset 9,20 may as well use  iCovSetNumber = 20.2
+      iCovSetNumber = 20.2;  %% did it for 20 year OBS rates 2002/09 to 2022/08 dataset=9,Q=05, OBS      
+    end
   end
 
   driver.iCovSetNumber = iCovSetNumber;

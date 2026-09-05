@@ -7,11 +7,7 @@ figure(1); clf; waha = reshape(iaFound,iNumAnomTimeSteps,iNumAnomTiles);
   title('Anomaly Files made')
 
 if ~exist('oni')
-  oni = load('ONI_sep2023.txt');
-  [aaa,bbb] = size(oni);
-  oniS = oni(1,1); oniE = oni(aaa,1);
-  oni = oni(1:aaa,2:bbb); oni = oni'; oni = oni(:);
-  onidd = 1:length(oni); onidd = (onidd-1)/12 + oniS;
+  get_oni_data
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

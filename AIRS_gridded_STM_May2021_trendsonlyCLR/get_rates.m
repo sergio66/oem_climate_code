@@ -116,6 +116,10 @@ if driver.i16daytimestep < 0
 
   end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+  
 elseif driver.i16daytimestep > 0
   if strfind(driver.anomalyinfo.datafile,'_tile_')
     anom = load(driver.rateset.datafile);

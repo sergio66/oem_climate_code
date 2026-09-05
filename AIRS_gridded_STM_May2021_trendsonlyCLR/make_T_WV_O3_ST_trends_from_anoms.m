@@ -1,14 +1,24 @@
 %%see ~/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/Code_for_TileTrends/tile_fits_quantiles_anomalies.m
+%% addpath /asl/matlib/time
+
 fdirpre      = '../DATAObsStats_StartSept2002_CORRECT_LatLon/';   %% symbolic link to ./DATAObsStats_StartSept2002_CORRECT_LatLon -> /asl/s1/sergio/MakeAvgObsStats2002_2020_startSept2002_CORRECT_LatLon
 fdirpre      = '/home/sergio/MATLABCODE/oem_pkg_run_sergio_AuxJacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/';
+fdirpre      = '/home/sergio/git/oem_climate_jacs/TILES_TILES_TILES_MakeAvgCldProfs2002_2020/DATAObsStats_StartSept2002_CORRECT_LatLon/';
+
 lati = 32; loni = 36; i16daysSteps = 502;
+lati = 32; loni = 36; i16daysSteps = 525;
+
 fn_summary = sprintf('LatBin%1$02d/LonBin%2$02d/iQAX_3_summarystats_LatBin%1$02d_LonBin%2$02d_timesetps_001_%3$03d_V1.mat',lati,loni,i16daysSteps);
 fn_summary = fullfile(fdirpre,fn_summary);
 boo_summary = load(fn_summary,'tai93_desc','timestep_notfound');
-addpath /asl/matlib/time
 mtime = tai2dtime(airs2tai(boo_summary.tai93_desc));
 dtime = datenum(mtime);
 dtime = dtime(setdiff(1:length(dtime),boo_summary.timestep_notfound));
+if length(dtime) > iNumAnomTimeSteps
+  dtime = dtime(1:iNumAnomTimeSteps);
+elseif length(dtime) < iNumAnomTimeSteps
+  error('oops dtime')
+end  
 
 iNumLay6 = 6;
 waha = reshape(results,iNumAnomTimeSteps,iNumAnomTiles,6);

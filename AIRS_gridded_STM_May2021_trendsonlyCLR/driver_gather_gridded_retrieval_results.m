@@ -80,6 +80,8 @@ if length(iAK) == 0
 end
 if iAK > 0
   %% see Plotutils/plot_retrieval_latbins_fewlays
+  %% SEARCH for  << CAN CUT AND PASTE THIS TO RERUN >>
+  
   iNumYears = input('  Enter number of years from 2002-X (so we can load in appropriate ERA5 trend file !!!! [default = 23, can also give =-N for data ending in 2022 (end of mission)] ');  
   if length(iNumYears) == 0
     iNumYears = 20;
@@ -309,13 +311,7 @@ if iOCBset == 0
     error('huh unknown dataset')
   end
 elseif iOCBset == 1
-  if dataset == 9
-    strY = '20yrs';
-  elseif dataset == 19
-    strY = '20yrs';
-  elseif dataset == 18
-    strY = '23yrs';
-  end
+  %% OLD
   % for iibin = 1 : 64
   %   strlatbin = num2str(iibin,'%02d');
   %   datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/ERA5_SARTA_SPECTRAL_RATES/KCARTA_latbin' strlatbin '/sarta_spectral_trends_latbin' strlatbin '.mat'];
@@ -327,7 +323,20 @@ elseif iOCBset == 1
   %   data_trends.b_desc(1:72,iibin,:)     = real(junk.thesave.xtrendSpectral)';
   %   data_trends.b_err_desc(1:72,iibin,:) = real(junk.thesave.xtrendSpectral_unc)';
   % end
-  datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/'  strY '/ERA5_spectraltrends_2002_09_2022_08.mat'];
+
+  %% SEARCH for  << CAN CUT AND PASTE THIS TO RERUN >>
+  if dataset == 9 | dataset == 20
+    %% set 9  is 2002/09 to 2022/08
+    %% set 20 is 2003/01 to 2022/12
+    strY = '20yrs';
+  elseif dataset == 19
+    strY = '23yrs';
+  end
+  if dataset == 9 | dataset == 20
+    datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/'  strY '/ERA5_spectraltrends_2002_09_2022_08.mat'];
+  elseif dataset == 19
+    datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/'  strY '/ERA5_spectraltrends_2002_09_2025_08.mat'];
+  end
   junk = load(datafile);
   data_trends.b_desc = real(junk.era5_rates_desc);
   data_trends.b_err_desc = real(junk.era5_rates_desc_unc);
@@ -345,6 +354,24 @@ end
 
 fnamelastloaded = 'none';
 if ~exist('iaFound')
+  %% SEARCH for  << CAN CUT AND PASTE THIS TO RERUN >>
+  %% along with eg
+  %{
+  %% get ERA5 thermodynamic rates  
+  iNumYears = 20;
+  era5 = get_ERA5_trends_thermodynamic_and_spectral(min(iNumYears,23),iNorD);
+  
+  and if you want, load in spectral raates
+  strY = '20yrs'; dataset = 9;     datafile  = ['SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/STS/NIGHTorAVG/ERA5/'  strY '/ERA5_spectraltrends_2002_09_2022_08.mat'];
+  junk = load(datafile);
+  data_trends.b_desc = real(junk.era5_rates_desc);
+  data_trends.b_err_desc = real(junk.era5_rates_desc_unc);
+  junk = load('h2645structure.mat');
+  data_trends.h.ichan = junk.h.ichan;
+  data_trends.h.vchan = junk.h.vchan;
+  do_XX_YY_from_X_Y
+  %}
+  
   clear results*
   iaFound = zeros(1,4608);
   existfname = zeros(1,4608);

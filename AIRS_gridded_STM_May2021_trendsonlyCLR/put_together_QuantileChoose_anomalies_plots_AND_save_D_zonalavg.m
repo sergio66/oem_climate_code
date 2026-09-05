@@ -30,7 +30,9 @@ if iSave > 0
   else
     fout = ['/asl/s1/sergio/JUNK/anomaly_zonalavg_ALL_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '_D.mat'];  %% orig
     fout = ['/asl/s1/sergio/JUNK/anomaly_iQAX_' num2str(iQAX) '_zonalavg_ALL_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '_D.mat'];
+    fout = ['/home/sergio/nogit/JUNK/TILES_saveresults/ANOMS_RAW/anomaly_iQAX_' num2str(iQAX) '_zonalavg_ALL_Q' num2str(iQuant,'%02d') '_numyears_' num2str(iNumYears,'%6.2f') '_iNumAnomTimeSteps_' num2str(iNumAnomTimeSteps) '_D.mat'];
     saver = ['save -v7.3 ' fout ' btanomD yyD mmD ddD hhD rtimeD comment bt1231_D RRTM_bands fluxanomD ind f_ind'];
   end
   eval(saver)
+  lser = ['!ls -lth ' fout]; eval(lser);
 end

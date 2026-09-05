@@ -1,3 +1,4 @@
+iDoAgain = +1;
 iCountStart0 = 0;
 iCount = 0;
 

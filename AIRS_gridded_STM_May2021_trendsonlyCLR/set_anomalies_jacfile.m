@@ -1,5 +1,6 @@
 fprintf(1,'set_driver_jacfile.m : anomalies!!! latbin = %2i timestep = %3i \n',driver.iLat,driver.i16daytimestep)
 junk = num2str(driver.i16daytimestep,'%03d');
+
 if iXJac == 1
   %% sarta time vary jacs
   driver.jacobian.filename = [];
@@ -52,4 +53,6 @@ end
 
 topts.jacobian.filename = driver.jacobian.filename;
 driver.jacobian.filename = driver.jacobian.filename;
+
+iVersJac = iXJac;
 topts.iVersJac = iVersJac;

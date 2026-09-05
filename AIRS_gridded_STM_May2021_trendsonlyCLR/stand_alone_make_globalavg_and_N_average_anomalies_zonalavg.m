@@ -1,10 +1,12 @@
-btavgAnomFinaladdpath /asl/matlib/science/
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/aslutil
-addpath /home/sergio/MATLABCODE
-addpath /home/sergio/MATLABCODE/PLOTTER
-addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE/TIME
+addpath0
+
+% addpath /asl/matlib/science/
+% addpath /asl/matlib/h4tools
+% addpath /asl/matlib/aslutil
+% addpath /home/sergio/MATLABCODE
+% addpath /home/sergio/MATLABCODE/PLOTTER
+% addpath /home/sergio/MATLABCODE/COLORMAP
+% addpath /home/sergio/MATLABCODE/TIME
 
 disp('just load in the huge mat file with anomalies, and rerun stand_alone_make_globalavg_and_N_average_anomalies_zonalavg.m');  
 disp('just load in the huge mat file with anomalies, and rerun stand_alone_make_globalavg_and_N_average_anomalies_zonalavg.m');  
@@ -13,12 +15,13 @@ disp('just load in the huge mat file with anomalies, and rerun stand_alone_make_
 %{ 
 %% these are made by driver_put_together_QuantileChoose_anomalies_zonalavg.m
 
--rw-rw-r-- 1 sergio pi_strow   654295802 Sep 10 18:49 /asl/s1/sergio/JUNK/anomaly_iQAX_4_zonalavg_ALL_Q01_numyears_22.00_iNumAnomTimeSteps_500_A.mat
--rw-rw-r-- 1 sergio pi_strow   654000927 Sep 10 18:48 /asl/s1/sergio/JUNK/anomaly_iQAX_4_zonalavg_ALL_Q01_numyears_22.00_iNumAnomTimeSteps_500_D.mat
--rw-rw-r-- 1 sergio pi_strow   654737499 Sep  9 20:31 /asl/s1/sergio/JUNK/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat
--rw-rw-r-- 1 sergio pi_strow   654599069 Sep  9 20:31 /asl/s1/sergio/JUNK/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
--rw-rw-r-- 1 sergio pi_strow  8592493709 Sep  1 18:06 /asl/s1/sergio/JUNK/anomaly_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
--rw-rw-r-- 1 sergio pi_strow  8593706139 Sep  1 15:33 /asl/s1/sergio/JUNK/anomaly_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat
+ -rw-rw-r-- 1 sergio pi_sergio 686358563  Sep  3 21:11 /home/sergio/nogit/JUNK/TILES_saveresults/ANOMS_RAW/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_23.00_iNumAnomTimeSteps_525_D.mat
+%-rw-rw-r-- 1 sergio pi_strow   654295802 Sep 10 18:49 /asl/s1/sergio/JUNK/                                anomaly_iQAX_4_zonalavg_ALL_Q01_numyears_22.00_iNumAnomTimeSteps_500_A.mat
+%-rw-rw-r-- 1 sergio pi_strow   654000927 Sep 10 18:48 /asl/s1/sergio/JUNK/                                anomaly_iQAX_4_zonalavg_ALL_Q01_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+%-rw-rw-r-- 1 sergio pi_strow   654737499 Sep  9 20:31 /asl/s1/sergio/JUNK/                                anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat
+%-rw-rw-r-- 1 sergio pi_strow   654599069 Sep  9 20:31 /asl/s1/sergio/JUNK/                                anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+%-rw-rw-r-- 1 sergio pi_strow  8592493709 Sep  1 18:06 /asl/s1/sergio/JUNK/                                anomaly_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
+%-rw-rw-r-- 1 sergio pi_strow  8593706139 Sep  1 15:33 /asl/s1/sergio/JUNK/                                anomaly_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_A.mat
 
 %%%%% can use this as standalone %%%%%
 load /asl/s1/sergio/JUNK/anomaly_iQAX_3_zonalavg_ALL_Q03_numyears_22.00_iNumAnomTimeSteps_500_D.mat
@@ -76,8 +79,10 @@ if ~exist('iNumAnomTimeSteps')
 end
 
 if ~exist('h') | ~exist('p')
-  [h,ha,p,pa] = rtpread('/asl/rtp/airs/airs_l1c_v674/clear/2023/ecmwf_airicrad_day022_clear.rtp');
-  [h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
+  %[h,ha,p,pa] = rtpread('/asl/rtp/airs/airs_l1c_v674/clear/2023/ecmwf_airicrad_day022_clear.rtp');
+  %[h,ha,p,pa] = rtpread('/home/sergio/KCARTA/WORK/RUN_TARA/GENERIC_RADSnJACS_MANYPROFILES/RTP/summary_20years_all_lat_all_lon_2002_2022_monthlyERA5.rp.rtp');
+  read_fileMean17years
+  [h,ha,p,pa] = rtpread(fileMean17years);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -92,21 +97,26 @@ if ~exist('rlat65')
   end
 end
 
-coslat = cos(rlat*pi/180)*ones(1,iNumAnomTimeSteps);
+coslat = cos(rlat*pi/180)*ones(1,iNumAnomTimeStepsXYZ);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-oni = load('ONI_sep2023.txt');
-  [aaa,bbb] = size(oni);
-  oniS = oni(1,1); oniE = oni(aaa,1);
-  oni = oni(1:aaa,2:bbb); oni = oni'; oni = oni(:);
-  onidd = 1:length(oni); onidd = (onidd-1)/12 + oniS;
+if ~exist('oni')
+  get_oni_data
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-alone = load('anomaly_chID_1520_Q03.mat');
+whos btavg*
+disp('clearing all btavg*')
+clear btavg*
+
+alone_anom = 'anomaly_chID_1520_Q03.mat';
+if exist(alone_anom)
+  alone = load(alone_anom);
+end  
 clear btavg* usethese anomavg trendavg
 
 i1231 = find(f_ind >= 1231,1);
@@ -124,19 +134,27 @@ pcolor(2002+daysSince2002A/365,h.vchan(ind),btavg_cos); colorbar; shading flat;
 
 figure(2); clf
 if iNumAnomTimeSteps < 460
-  %plot(2002+daysSince2002A/365,xbtavg_cos(i1231,:),'bx-',2002+daysSince2002A/365,nanmean(alone.btanomX.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2023])
-  plot(2002+daysSince2002A/365,btavg_cos(i1231,:),'b',2002+daysSince2002A/365,nanmean(alone.btanomX.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2023])
+  %plot(2002+daysSince2002A/365,xbtavg_cos(i1231,:),'bx-',2002+daysSince2002A/365,nanmean(alone.btanomX.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2027])
+  plot(2002+daysSince2002A/365,btavg_cos(i1231,:),'b',2002+daysSince2002A/365,nanmean(alone.btanomX.*coslat,1),'linewidth',2); plotaxis2; xlim([2002 2027])
 else
   plot(2002+daysSince2002A/365,btavg_cos(i1231,:),'b'); plotaxis2; title('BT 1231 cos wgt anomaly'); xlim([min(2002+daysSince2002A/365) max(2002+daysSince2002A/365)]); 
 end
 
 figure(3); clf
-wow = btavg_cos(i1231,:);  PW = polyfit(daysSince2002A,wow,1); YPW = polyval(PW,daysSince2002A);
-plot(onidd,oni,'k',2002+daysSince2002A/365,10*smooth(btavg_cos(i1231,:)-YPW,16*2),'r','linewidth',2); xlim([2002 2023])
-plotaxis2; hl = legend('ONI','BT1231 anomaly vers2 CORRECT COSWGT','location','best');
-%xow = xbtavg_cos(i1231,:); PX = polyfit(daysSince2002A,xow,1); YPX = polyval(PX,daysSince2002A);
-%plot(onidd,oni,'k',2002+daysSince2002A/365,10*smooth(xbtavg_cos(i1231,:)-YPX,16*2),'b',2002+daysSince2002A/365,10*smooth(btavg_cos(i1231,:)-YPW,16*2),'r','linewidth',2); xlim([2002 2023])
-%plotaxis2; hl = legend('ONI','BT1231 anomaly vers1','BT1231 anomaly vers2 CORRECT COSWGT','location','best');
+if exist('onidd')
+  wow = btavg_cos(i1231,:);  PW = polyfit(daysSince2002A,wow,1); YPW = polyval(PW,daysSince2002A);
+  plot(onidd,oni,'k',2002+daysSince2002A/365,10*smooth(btavg_cos(i1231,:)-YPW,16*2),'r','linewidth',2); xlim([2002 2027])
+  plotaxis2; hl = legend('ONI','BT1231 anomaly vers2 CORRECT COSWGT','location','best');
+  %xow = xbtavg_cos(i1231,:); PX = polyfit(daysSince2002A,xow,1); YPX = polyval(PX,daysSince2002A);
+  %plot(onidd,oni,'k',2002+daysSince2002A/365,10*smooth(xbtavg_cos(i1231,:)-YPX,16*2),'b',2002+daysSince2002A/365,10*smooth(btavg_cos(i1231,:)-YPW,16*2),'r','linewidth',2); xlim([2002 2027])
+  %plotaxis2; hl = legend('ONI','BT1231 anomaly vers1','BT1231 anomaly vers2 CORRECT COSWGT','location','best');
+else
+  wow = btavg_cos(i1231,:);  PW = polyfit(daysSince2002A,wow,1); YPW = polyval(PW,daysSince2002A);
+  onidd = 2002+daysSince2002A/365;
+  oni = zeros(size(onidd));
+  plot(onidd,oni,'k',2002+daysSince2002A/365,10*smooth(btavg_cos(i1231,:)-YPW,16*2),'r','linewidth',2); xlim([2002 2027])
+  plotaxis2; hl = legend('ONI','BT1231 anomaly vers2 CORRECT COSWGT','location','best');
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,11 +166,12 @@ newLatGrid = [-90 -75 -60 [-55:5:+55] +60 +75 +90];
 
 if ~exist('btavg_newlat0')    %% global average
   iCnt = 0;
+  for iCnt = 0 : 0
     clear junk
-    fprintf(1,'making avg %2i of %2i \n',iCnt, length(newLatGrid)-1);
     usethese{iCnt+1} = find(rlat >= -90 & rlat < +90);
-    usethese{iCnt+1} = find(rlat >= newLatGrid(1) & rlat < newLatGrid(end));
+    usethese{iCnt+1} = find(rlat >= newLatGrid(1)-0.01 & rlat <= newLatGrid(end)+0.01);
     xusethese = usethese{iCnt+1};
+    fprintf(1,'global avg %2i of %2i need to use %3i in average \n',iCnt, length(newLatGrid)-1, length(xusethese));    
     junkcoslat = coslat(xusethese,:);
     for ii = 1 : length(ind)
       moo = squeeze(btanomX(:,ii,:));
@@ -165,14 +184,15 @@ if ~exist('btavg_newlat0')    %% global average
     end
     str = ['btavg_newlat' num2str(iCnt) ' = junk;'];
     eval(str);
+  end
 end
   
 if ~exist('btavg_newlat1')
   for iCnt = 1 : length(newLatGrid)-1
     clear junk
-    fprintf(1,'making avg %2i of %2i \n',iCnt, length(newLatGrid)-1);
-    usethese{iCnt+1} = find(rlat >= newLatGrid(iCnt) & rlat < newLatGrid(iCnt+1));
+    usethese{iCnt+1} = find(rlat >= newLatGrid(iCnt)-0.01 & rlat <= newLatGrid(iCnt+1)+0.01);    
     xusethese = usethese{iCnt+1};
+    fprintf(1,'zonal avg %2i of %2i need to use %3i in average \n',iCnt, length(newLatGrid)-1, length(xusethese));    
     junkcoslat = coslat(xusethese,:);
     for ii = 1 : length(ind)
       moo = squeeze(btanomX(:,ii,:));
@@ -226,6 +246,8 @@ if ~exist('btavg_newlat1')
   end
 
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(4); clf; pcolor(f_ind,meanvaluebin(newLatGrid),anomavg); colormap(usa2); colorbar; caxis([-1 +1]); xlim([640 1640]); shading flat; 
   title('mean spectral anomaly')
@@ -300,12 +322,13 @@ iCnt = 1;
     xlim([640 1640]); ylim([-1 +1]/10); plotaxis2; legend('Cosine Avg Anom/iNumYears/2','BT trend from Cosine Avg Anom','location','best','fontsize',10); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%{
 modis_ceres_era5_anoms
 
 do_ceres_vs_umbc_anomalies_zonalavg
 
 look_for_anomalous_UTLS_WV_zonalavg
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -339,6 +362,7 @@ if iSave > 0
   saver = ['save -v7.3 ' fout ' btavgAnomFinal yy mm dd hh rtime comment usethese newLatGrid anomavg'];
   eval(saver);
   fprintf(1,'saving to %s \n',fout)
+  lser = ['! ls -lth ' fout]; eval(lser)
 end
 %}
 

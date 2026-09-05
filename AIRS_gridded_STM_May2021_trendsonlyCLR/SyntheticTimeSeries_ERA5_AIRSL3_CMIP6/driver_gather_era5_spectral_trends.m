@@ -3,6 +3,7 @@ plot(fchanx,nanmean(thesave.xtrendSpectral,2))
 xlim([645 1645])
 
 iNumYears = 20;
+iNumYears = 23;
 iNorD = 1; %% night
 
 for jj = 1 : 64
@@ -14,12 +15,12 @@ for jj = 1 : 64
   
   ind = (1:72) + (jj-1)*72;
   if iNorD == +1
-    loader = ['load STS/NIGHTorAVG/ERA5//' num2str(iNumYears) 'yrs/reconstruct_era5_spectra_geo_rlat' num2str(jj,'%02d') '_2002_09_2022_08.mat'];
+    loader = ['load STS/NIGHTorAVG/ERA5//' num2str(iNumYears) 'yrs/reconstruct_era5_spectra_geo_rlat' num2str(jj,'%02d') '_2002_09_' num2str(2002 + iNumYears) '_08.mat'];
     eval(loader)
     era5_rates_desc(:,ind)     = thesave.xtrendSpectral;
     era5_rates_desc_unc(:,ind) = thesave.xtrendSpectral_unc;    
   elseif iNorD == -1  
-    loader = ['load STS/NIGHTorAVG/ERA5//' num2str(iNumYears) 'yrs/reconstruct_era5_spectra_geo_rlat' num2str(jj,'%02d') '_2002_09_2022_08_asc.mat'];
+    loader = ['load STS/NIGHTorAVG/ERA5//' num2str(iNumYears) 'yrs/reconstruct_era5_spectra_geo_rlat' num2str(jj,'%02d') '_2002_09_' num2str(2002 + iNumYears) '_08_asc.mat'];
     eval(loader)    
     era5_rates_asc(:,ind)     = thesave.xtrendSpectral;
     era5_rates_asc_unc(:,ind) = thesave.xtrendSpectral_unc;    

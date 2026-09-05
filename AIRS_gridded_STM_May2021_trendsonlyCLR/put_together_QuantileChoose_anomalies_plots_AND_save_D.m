@@ -71,11 +71,9 @@ if iHuge < 0
    hold on; plot(2002+daysSince2002D/365,100*nanmean(btanomD,1),'k','linewidth',2); hold off; plotaxis2;
    
   figure(iOffSet+8); clf
-   oni = load('ONI_sep2023.txt');
-   [aaa,bbb] = size(oni);
-   oniS = oni(1,1); oniE = oni(aaa,1);
-   oni = oni(1:aaa,2:bbb); oni = oni'; oni = oni(:);
-   onidd = 1:length(oni); onidd = (onidd-1)/12 + oniS;
+    if ~exist('oni')
+      get_oni_data
+    end
    plot(onidd,10*oni,'k',2002+daysSince2002D/365,smooth(100*nanmean(btanomD,1),10),'b','linewidth',2); plotaxis2; xlim([2002 2023]); ylim([-1 +1]*50)
    
   P = polyfit(daysSince2002D,nanmean(btanomD,1),1); YP = polyval(P,daysSince2002D);
@@ -109,11 +107,9 @@ elseif iHuge > 0
   hold on; plot(2002+daysSince2002D/365,100*nanmean(moox,1),'k','linewidth',2); hold off; plotaxis2;
   
   figure(iOffSet+8);
-  oni = load('ONI_sep2023.txt');
-  [aaa,bbb] = size(oni);
-  oniS = oni(1,1); oniE = oni(aaa,1);
-  oni = oni(1:aaa,2:bbb); oni = oni'; oni = oni(:);
-  onidd = 1:length(oni); onidd = (onidd-1)/12 + oniS;
+  if ~exist('oni')
+    get_oni_data
+  end
   plot(onidd,10*oni,'k',2002+daysSince2002D/365,smooth(100*nanmean(moox,1),10),'b','linewidth',2); xlim([2002 2023]);
   
   P = polyfit(daysSince2002D,nanmean(moox,1),1); YP = polyval(P,daysSince2002D);

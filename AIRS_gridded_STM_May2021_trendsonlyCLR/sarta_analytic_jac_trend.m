@@ -12,9 +12,18 @@ if iRunSartaJac < 0
   freq2645 = [];
   colo3 = [];
 end
-  
-sarta = '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/bin/jac_airs_l1c_2834_cloudy_may19_prod';
-sarta = '/home/sergio/git/sarta_scatter_rtp_klayers_sergio/JACvers/bin/jac_airs_l1c_2834_cloudy_apr26_H2024';
+
+iH20XY = 20;
+iH20XY = 24;
+
+if iH20XY == 20
+  %% to use "same" jacs as in the JGR 2025 paper, which is H2020, CKD 3.2
+  sarta = '/home/sergio/SARTA_CLOUDY_RTP_KLAYERS_NLEVELS/JACvers/bin/jac_airs_l1c_2834_cloudy_may19_prod';
+  sarta = '/home/sergio/git/sarta_scatter_rtp_klayers_sergio/JACvers/bin/jac_airs_l1c_2834_cloudy_jan25_H2020';
+elseif iH20XY == 24
+  %% to use H2024, CKD 4.3
+  sarta = '/home/sergio/git/sarta_scatter_rtp_klayers_sergio/JACvers/bin/jac_airs_l1c_2834_cloudy_apr26_H2024';
+end
 
 fip = mktempS('xxxjunk_ip');
 fop = mktempS('xxxjunk_op');
@@ -79,7 +88,7 @@ jacOZ = xjac3(1:iaNumLay,:);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% output
+%% output after renormalizing
 qrenorm_sarta_analyticjac
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

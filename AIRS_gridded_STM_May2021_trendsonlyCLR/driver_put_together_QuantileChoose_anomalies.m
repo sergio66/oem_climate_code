@@ -1,7 +1,14 @@
-addpath /home/sergio/MATLABCODE/COLORMAP
-addpath /home/sergio/MATLABCODE
-addpath /asl/matlib/h4tools
-addpath /asl/matlib/rtptools
+addpath0
+
+% addpath /home/sergio/MATLABCODE/COLORMAP
+% addpath /home/sergio/MATLABCODE
+% addpath /asl/matlib/h4tools
+% addpath /asl/matlib/rtptools
+
+disp('WARNING this only allows timeseries of tiles!!!!!!!!')
+disp('eg   tile 2345')
+disp('so cannot do eg timeseries of zonally averaged tiles ')
+disp('see eg driver_put_together_QuantileChoose_anomalies_zonalavg.m for that')
 
 %% see also /home/sergio/MATLABCODE/oem_pkg_run/AIRS_gridded_STM_May2021_trendsonlyCLR/SyntheticTimeSeries_ERA5_AIRSL3_CMIP6/plot_check_WV_T_RH_CMIP6_geo_and_spectral_rates2.m
 %% https://www.arm.gov/publications/proceedings/conf05/extended_abs/mlawer_ej.pdf
